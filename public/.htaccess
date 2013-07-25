@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+	Options -MultiViews
+	RewriteEngine On
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^ index.php [L]
+	RewriteRule ^(.*\.(?:coffee))$ /asset.php?type=coffee&file=/$1 [L,QSA,NC]
+	RewriteRule ^(.*\.(?:less))$ /asset.php?type=less&file=/$1 [L,QSA,NC]
+</IfModule>

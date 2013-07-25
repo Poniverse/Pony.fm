@@ -1,0 +1,19 @@
+<div class="overlay upload-dialog" ng-controller="upload" ng-show="uploadDialogOpen">
+	<div class="inner">
+		<h2 ng-show="state == 'uploading'">
+			<span>{{uploadedFiles}} of {{totalFiles}}</span>
+			Uploading Tracks...
+		</h2>
+		<h2 ng-show="state == 'processing'">Processing...</h2>
+
+		<a href="#" pfm-eat-click class="btn btn-primary close-button" ng-click="close()" ng-show="state == 'finished'">Close <i class="icon-remove"></i></a>
+
+		<ul class="uploads">
+			<li ng-repeat="upload in uploads" ng-class="{'has-error': upload.error != null, 'is-processing': upload.isUploading && upload.error == null && upload.progress >= 100}" ng-animate="'upload-queue'">
+				<p><strong>{{upload.name}}</strong></p>
+				<p ng-show="upload.error != null">{{upload.error}}</p>
+				<div class="bar" pfm-progress-bar="upload.progress"></div>
+			</li>
+		</ul>
+	</div>
+</div>

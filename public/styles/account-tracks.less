@@ -1,0 +1,310 @@
+@import 'base/bootstrap/bootstrap';
+@import 'mixins';
+
+@media (max-width: 1200px) {
+  html {
+	.license-grid {
+	  li {
+		width: 50%;
+
+		> div {
+		  margin: 5px !important;
+		}
+	  }
+	}
+  }
+}
+
+.account-tracks-listing {
+  overflow-y: auto;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+
+  li {
+	.box-sizing(border-box);
+
+	padding: 0px;
+	margin: 0px;
+	line-height: normal;
+
+	&.is-published a {
+	  background: transparent;
+	}
+
+	&.selected, &.selected:hover {
+	  a {
+		#gradient>.vertical(#149bdf, #0480be);
+		cursor: default;
+		color: #fff;
+
+		.published {
+		  color: #eee;
+		}
+	  }
+	}
+
+	a {
+	  .transition(350px ease-out all);
+	  background: fadeout(@yellow, 90%);
+
+	  display: block;
+	  margin: 0px;
+	  padding: 5px;
+	  font-size: 9pt;
+	  font-weight: normal;
+	  overflow: hidden;
+
+	  .image {
+		width: 32px;
+		height: 32px;
+		background: #444;
+		float: left;
+	  }
+
+	  .title {
+		.ellipsis();
+		display: block;
+		margin-left: 37px;
+	  }
+
+	  .published {
+		display: block;
+		color: #777;
+		margin-left: 37px;
+		font-size: 8pt;
+	  }
+
+	  &:hover {
+		background: #ddd;
+		text-decoration: none;
+	  }
+	}
+  }
+}
+
+.two-pane-view {
+  .list {
+	.dropdowns {
+	  margin-top: 0px;
+	}
+  }
+
+  .editor {
+	display: none;
+
+	.form-row {
+	  margin-bottom: 10px;
+
+	  .error {
+		.alert();
+		.alert-error();
+
+		display: none;
+		padding: 3px;
+		font-size: 8pt;
+	  }
+
+	  &.has-error {
+		label {
+		  color: @red;
+		}
+
+		.error {
+		  display: block;
+		}
+	  }
+	}
+
+	.cover-upload {
+	  overflow: hidden;
+
+	  input[type=file] {
+		display: none;
+	  }
+
+	  .btn {
+		.border-radius(0px);
+	  }
+
+	  .preview {
+		border: 1px dashed silver;
+		width: 50px;
+		height: 50px;
+		float: left;
+
+		img {
+		  display: block;
+		  width: 100%;
+		}
+	  }
+
+	  p {
+		font-size: 9pt;
+		color: #555;
+		margin-left: 60px;
+	  }
+	}
+
+	.alert {
+	  .border-radius(0px);
+	  margin-bottom: 10px;
+	}
+
+	.toolbar {
+	  #gradient>.vertical(#555, #222);
+	  list-style: none;
+	  margin: 0px;
+	  margin-bottom: 10px;
+	  padding: 0px;
+	  overflow: hidden;
+
+	  li {
+		float: left;
+
+		a, button {
+		  .border-radius(0px);
+		  font-size: 9pt;
+		}
+
+		&.delete {
+		  float: right;
+		}
+	  }
+	}
+
+	label.strong {
+	  font-size: 8pt;
+	  font-weight: bold;
+	}
+
+	input[type="text"], input[type="password"], input[type="date"], textarea {
+	  padding: 3px;
+	  border: 1px solid;
+	  border-color: #9c9c9c #9c9c9c #ccc #ccc;
+	}
+
+	input[type="text"], input[type="password"], input[type="date"], textarea, select {
+	  .border-radius(0px);
+	  .box-sizing(border-box);
+
+	  display: block;
+	  font-size: 12px;
+	  width: 100%;
+
+	  &:focus {
+		.box-shadow(none);
+	  }
+	}
+
+	label {
+	}
+
+	select {
+	  height: auto;
+	  line-height: normal;
+	  padding: 0px;
+	}
+
+	label {
+	  input[type="checkbox"] {
+		margin: 0px;
+		margin-top: -2px;
+		vertical-align: middle;
+	  }
+	}
+
+	textarea {
+	  height: 60px;
+	}
+  }
+
+  &.closed {
+	.account-tracks-listing {
+	  .clearfix();
+
+	  li {
+		float: left;
+		width: 25%;
+	  }
+	}
+  }
+
+  &.open {
+	.list {
+	  .box-shadow(2px 0px 2px rgba(0, 0, 0, 0.2));
+
+	  width: 250px;
+	  float: left;
+	}
+
+	.editor {
+	  margin-left: 260px;
+	  margin-right: 10px;
+	  display: block;
+
+	  .strech-to-bottom {
+		overflow-y: auto;
+		padding-right: 10px;
+	  }
+	}
+  }
+}
+
+.license-grid {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  list-style: none;
+
+  li {
+	float: left;
+	width: 25%;
+
+	> div {
+	  margin: 0px 5px;
+	  border: 1px solid #ddd;
+	  padding: 10px;
+	  cursor: pointer;
+
+	  strong {
+		font-size: 9pt;
+		display: block;
+		margin: 0px;
+		margin-bottom: 5px;
+		padding: 0px;
+		line-height: normal;
+	  }
+	}
+
+	p {
+	  min-height: 120px;
+	  font-size: 9pt;
+	}
+
+	a {
+	  .border-radius(0px);
+	  display: block;
+	  width: auto;
+	}
+
+	&.selected {
+	  > div {
+		cursor: default;
+		border-color: @blue;
+	  }
+	}
+
+	&:hover > div {
+	  border: 1px solid #3366CC;
+	}
+
+	&:first-child > div {
+	  margin-left: 0px;
+	}
+
+	&:last-child > div {
+	  margin-right: 0px;
+	}
+  }
+}

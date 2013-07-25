@@ -1,0 +1,7 @@
+.svn
+.buildpath
+.project
+.settings
+*.swp
+/docs/*
+.idea

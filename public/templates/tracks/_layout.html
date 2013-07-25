@@ -1,0 +1,14 @@
+<div>
+	<ul class="tabs">
+		<li ng-class="{active: $state.includes('tracks.list')}"><a href="/tracks">Tracks</a></li>
+		<li ng-class="{active: $state.includes('tracks.popular')}"><a href="/tracks/popular">Popular</a></li>
+		<li ng-class="{active: $state.includes('tracks.random')}"><a href="/tracks/random">Random</a></li>
+	</ul>
+
+	<ui-view></ui-view>
+
+	<pre>
+		$state = {{$state.current.name}}
+		$stateParams = {{$stateParams}}
+	</pre>
+</div>

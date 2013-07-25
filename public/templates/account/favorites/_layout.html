@@ -1,0 +1,14 @@
+<div>
+	<ul class="tabs">
+		<li ng-class="{active: $state.includes('account-favorites.tracks')}"><a href="/account/favorites">Tracks</a></li>
+		<li ng-class="{active: $state.includes('account-favorites.albums')}"><a href="/account/favorites/albums">Albums</a></li>
+		<li ng-class="{active: $state.includes('account-favorites.playlists')}"><a href="/account/favorites/playlists">Playlists</a></li>
+	</ul>
+
+	<ui-view></ui-view>
+
+	<pre>
+		$state = {{$state.current.name}}
+		$stateParams = {{$stateParams}}
+	</pre>
+</div>
