@@ -44,9 +44,11 @@
 			if ($area == 'app')
 				return new AssetCollection([
 					new FileAsset('scripts/base/jquery-2.0.2.js'),
+					new FileAsset('scripts/base/jquery-ui.js'),
 					new FileAsset('scripts/base/underscore.js'),
 					new FileAsset('scripts/base/angular.js'),
 					new FileAsset('scripts/base/ui-bootstrap-tpls-0.4.0.js'),
+					new FileAsset('scripts/base/angular-ui-date.js'),
 					new FileAsset('scripts/base/angular-ui-router.js'),
 					new AssetCollection([
 						new GlobAsset('scripts/shared/*.coffee'),
@@ -69,6 +71,7 @@
 				$lastModifiedCollection = new AssetCollection([new GlobAsset("styles/*.less")]);
 
 				$css = new AssetCollection([
+					new FileAsset('styles/base/jquery-ui.css'),
 					new FileAsset('styles/app.less'),
 					new CacheBusterAsset($lastModifiedCollection->getLastModified())
 				], [new \Assetic\Filter\LessFilter('node')]);

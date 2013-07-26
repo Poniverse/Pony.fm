@@ -114,7 +114,7 @@
 					</div>
 					<div class="form-row span6" ng-class="{'has-error': errors.released_at != null}">
 						<label for="released_at" class="strong">Release Date:</label>
-						<input type="text" id="released_at" ng-change="touchModel()" ng-model="edit.released_at" />
+						<input type="text" id="released_at" ui-date ng-model="edit.released_at" ng-change="touchModel()" ui-date-format="yy-mm-dd" />
 						<div class="error">{{errors.released_at}}</div>
 					</div>
 				</div>

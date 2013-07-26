@@ -1,4 +1,4 @@
-angular.module 'ponyfm', ['ui.bootstrap', 'ui.state'], [
+angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date'], [
 	'$routeProvider', '$locationProvider', '$stateProvider', '$dialogProvider'
 	(route, location, state, $dialogProvider) ->
 
