@@ -6,6 +6,9 @@
 	use Commands\EditTrackCommand;
 	use Commands\UploadTrackCommand;
 	use Entities\Track;
+	use Illuminate\Support\Facades\Auth;
+	use Illuminate\Support\Facades\Input;
+	use Illuminate\Support\Facades\Response;
 
 	class TracksController extends \ApiControllerBase {
 		public function postUpload() {
@@ -16,7 +19,7 @@
 		public function getOwned() {
 			$query = Track::summary()->whereNull('deleted_at')->where('user_id', \Auth::user()->id);
 
-			if (\Input::has('published')) {
+			if (Input::has('published')) {
 				$published = \Input::get('published');
 				if ($published)
 					$query->whereNotNull('published_at');
@@ -24,17 +27,17 @@
 					$query->whereNull('published_at');
 			}
 
-			if (\Input::has('order')) {
+			if (Input::has('order')) {
 				$order = \Input::get('order');
 				$parts = explode(',', $order);
 				$query->orderBy($parts[0], $parts[1]);
 			}
 
-			if (\Input::has('genres'))
-				$query->whereIn('genre_id', \Input::get('genres'));
+			if (Input::has('genres'))
+				$query->whereIn('genre_id', Input::get('genres'));
 
-			if (\Input::has('types'))
-				$query->whereIn('track_type_id', \Input::get('types'));
+			if (Input::has('types'))
+				$query->whereIn('track_type_id', Input::get('types'));
 
 			$dbTracks = $query->get();
 			$tracks = [];
@@ -57,7 +60,7 @@
 				];
 			}
 
-			return \Response::json($tracks, 200);
+			return Response::json($tracks, 200);
 		}
 
 		public function getEdit($id) {
@@ -65,10 +68,10 @@
 			if (!$track)
 				return $this->notFound('Track ' . $id . ' not found!');
 
-			if ($track->user_id != \Auth::user()->id)
+			if ($track->user_id != Auth::user()->id)
 				return $this->notAuthorized();
 
-			return \Response::json([
+			return Response::json([
 				'id' => $track->id,
 				'title' => $track->title,
 				'user_id' => $track->user_id,
@@ -94,6 +97,6 @@
 		}
 
 		public function putEdit($id) {
-			return $this->execute(new EditTrackCommand($id, \Input::all()));
+			return $this->execute(new EditTrackCommand($id, Input::all()));
 		}
 	}
