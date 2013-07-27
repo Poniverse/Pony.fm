@@ -30,22 +30,22 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date'], [
 			url: '/playlists'
 			templateUrl: '/templates/account/content/playlists.html'
 
-		state.state 'account-favorites',
-			url: '/account/favorites'
+		state.state 'account-favourites',
+			url: '/account/favourites'
 			abstract: true
-			templateUrl: '/templates/account/favorites/_layout.html'
+			templateUrl: '/templates/account/favourites/_layout.html'
 
-		state.state 'account-favorites.tracks',
+		state.state 'account-favourites.tracks',
 			url: ''
-			templateUrl: '/templates/account/favorites/tracks.html'
+			templateUrl: '/templates/account/favourites/tracks.html'
 
-		state.state 'account-favorites.playlists',
+		state.state 'account-favourites.playlists',
 			url: '/playlists'
-			templateUrl: '/templates/account/favorites/playlists.html'
+			templateUrl: '/templates/account/favourites/playlists.html'
 
-		state.state 'account-favorites.albums',
+		state.state 'account-favourites.albums',
 			url: '/albums'
-			templateUrl: '/templates/account/favorites/albums.html'
+			templateUrl: '/templates/account/favourites/albums.html'
 
 		# Tracks
 

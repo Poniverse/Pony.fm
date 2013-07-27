@@ -2,7 +2,11 @@
 
 	namespace Commands;
 
+	use Entities\Image;
 	use Entities\Track;
+	use External;
+	use Illuminate\Support\Facades\Auth;
+	use Illuminate\Support\Facades\Log;
 
 	class EditTrackCommand extends CommandBase {
 		private $_trackId;
@@ -59,6 +63,12 @@
 			if ($track->published_at == null) {
 				$track->published_at = new \DateTime();
 			}
+
+			if (isset($this->_input['cover'])) {
+				$cover = $this->_input['cover'];
+				$track->cover_id = Image::Upload($cover, Auth::user())->id;
+			} else
+				$track->cover_id = null;
 
 			$track->save();
 

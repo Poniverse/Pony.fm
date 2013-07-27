@@ -46,7 +46,7 @@
 		<ul class="account-tracks-listing strech-to-bottom">
 			<li ng-repeat="track in tracks" ng-class="{selected: track.id == selectedTrack.id, 'is-published': track.is_published}">
 				<a href="/account/content/tracks/{{track.id}}">
-					<div class="image"></div>
+					<img class="image" src="{{track.cover_url}}" />
 					<span class="title">{{track.title}}</span>
 					<span class="published">{{track.created_at | pfmdate:'MM/dd/yyyy'}}</span>
 				</a>
@@ -103,12 +103,15 @@
 					<div class="form-row span6" ng-class="{'has-error': errors.cover != null}">
 						<label class="strong">Track Cover: </label>
 						<div class="cover-upload">
-							<div class="preview"><img id="coverPreview" /></div>
+							<div class="preview" ng-class="{canOpen: isCoverLoaded}" ng-click="previewCover()"><img id="coverPreview" ng-show="isCoverLoaded" /></div>
 							<p>
 								Track cover must be a PNG that is at least 350x350. <br />
-								<a href="#" pfm-eat-click ng-click="uploadTrackCover()" class="btn btn-info btn-small"><i class="icon-upload"></i> Upload Track Cover</a>
 								<input type="file" id="coverImage" onchange="angular.element(this).scope().setCoverImage(this)" />
 							</p>
+							<div class="btn-group">
+								<a href="#" pfm-eat-click ng-click="uploadTrackCover()" class="btn btn-info btn-small"><i class="icon-upload"></i> Upload</a>
+								<a href="#" pfm-eat-click ng-click="clearTrackCover()" class="btn btn-danger btn-small" ng-show="edit.cover"><i class="icon-remove"></i></a>
+							</div>
 							<div class="error">{{errors.cover}}</div>
 						</div>
 					</div>

@@ -42,7 +42,7 @@
 						<li>
 							<h3>Account</h3>
 						</li>
-						<li ng-class="{selected: $state.includes('account-favorites')}"><a href="/account/favorites">Favorites</a></li>
+						<li ng-class="{selected: $state.includes('account-favourites')}"><a href="/account/favourites">Favourites</a></li>
 						<li ng-class="{selected: $state.includes('account-content')}"><a href="/account/content/tracks">Your Content</a></li>
 						<li ng-class="{selected: isActive('/account')}"><a href="/account">Settings</a></li>
 					@endif

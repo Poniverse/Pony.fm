@@ -44,14 +44,12 @@
 				$track->save();
 
 				$destination = $track->getDirectory();
-
-				if (!is_dir($destination))
-					mkdir($destination, 755);
+				$track->ensureDirectoryExists();
 
 				$source = $trackFile->getPathname();
 				$index = 0;
 
-				$procs = [];
+				$processes = [];
 
 				foreach (Track::$Formats as $name => $format) {
 					$target = $destination . '/' . $track->getFilenameFor($name);
@@ -65,10 +63,10 @@
 
 					$pipes = [];
 					$proc = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'a']], $pipes);
-					$procs[] = $proc;
+					$processes[] = $proc;
 				}
 
-				foreach ($procs as $proc)
+				foreach ($processes as $proc)
 					proc_close($proc);
 
 			} catch (\Exception $e) {

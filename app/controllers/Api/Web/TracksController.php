@@ -5,6 +5,8 @@
 	use Commands\DeleteTrackCommand;
 	use Commands\EditTrackCommand;
 	use Commands\UploadTrackCommand;
+	use Cover;
+	use Entities\Image;
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Input;
@@ -51,12 +53,13 @@
 					'is_vocal' => $track->is_vocal,
 					'is_explicit' => $track->is_explicit,
 					'is_downloadable' => $track->is_downloadable,
-					'is_published' => $track->published_at != null,
+					'is_published' => $track->isPublished(),
 					'created_at' => $track->created_at,
 					'published_at' => $track->published_at,
 					'duration' => $track->duration,
 					'genre_id' => $track->genre_id,
 					'track_type_id' => $track->track_type_id,
+					'cover_url' => $track->getCoverUrl(Image::SMALL)
 				];
 			}
 
@@ -78,7 +81,7 @@
 				'slug' => $track->slug,
 				'is_vocal' => (bool)$track->is_vocal,
 				'is_explicit' => (bool)$track->is_explicit,
-				'is_downloadable' => $track->published_at == null ? true : (bool)$track->is_downloadable,
+				'is_downloadable' => !$track->isPublished() ? true : (bool)$track->is_downloadable,
 				'is_published' => $track->published_at != null,
 				'created_at' => $track->created_at,
 				'published_at' => $track->published_at,
@@ -88,7 +91,8 @@
 				'license_id' => $track->license_id != null ? $track->license_id : 3,
 				'description' => $track->description,
 				'lyrics' => $track->lyrics,
-				'released_at' => $track->released_at
+				'released_at' => $track->released_at,
+				'cover_url' => $track->hasCover() ? $track->getCoverUrl(Image::NORMAL) : null
 			], 200);
 		}
 

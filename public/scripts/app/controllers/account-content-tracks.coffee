@@ -1,6 +1,11 @@
 angular.module('ponyfm').controller "account-content-tracks", [
-	'$scope', '$state', 'taxonomies', '$dialog'
-	($scope, $state, taxonomies, $dialog) ->
+	'$scope', '$state', 'taxonomies', '$dialog', 'lightbox'
+	($scope, $state, taxonomies, $dialog, lightbox) ->
+		$('#coverPreview').load () ->
+			$scope.$apply -> $scope.isCoverLoaded = true
+			window.alignVertically(this)
+
+		$scope.isCoverLoaded = false
 		$scope.selectedTrack = null
 		$scope.isDirty = false
 		$scope.taxonomies =
@@ -10,6 +15,10 @@ angular.module('ponyfm').controller "account-content-tracks", [
 
 		$scope.updateIsVocal = () ->
 			delete $scope.errors.lyrics if !$scope.edit.is_vocal
+
+		$scope.previewCover = () ->
+			return if !$scope.edit.cover
+			lightbox.openDataUrl $('#coverPreview').attr 'src'
 
 		$scope.updateTrack = (track) ->
 			xhr = new XMLHttpRequest()
@@ -49,6 +58,8 @@ angular.module('ponyfm').controller "account-content-tracks", [
 
 				if file.type != 'image/png'
 					$scope.errors.cover = 'Cover image must be a png!'
+					$scope.isCoverLoaded = false
+					$scope.edit.cover = null
 					return
 
 				delete $scope.errors.cover
@@ -57,6 +68,10 @@ angular.module('ponyfm').controller "account-content-tracks", [
 				reader.onload = (e) -> previewElement.src = e.target.result
 				reader.readAsDataURL file
 				$scope.edit.cover = file
+
+		$scope.clearTrackCover = () ->
+			$scope.isCoverLoaded = false
+			delete $scope.edit.cover
 
 		$scope.filters =
 			published: [
@@ -129,6 +144,7 @@ angular.module('ponyfm').controller "account-content-tracks", [
 
 		selectTrack = (t) ->
 			$scope.selectedTrack = t
+			$scope.isCoverLoaded = false
 			return if !t
 			$.getJSON('/api/web/tracks/edit/' + t.id)
 				.done (track) -> $scope.$apply ->

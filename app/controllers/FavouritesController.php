@@ -1,6 +1,6 @@
 <?php
 
-	class FavoritesController extends Controller {
+	class FavouritesController extends Controller {
 		public function getTracks() {
 			return View::make('shared.null');
 		}

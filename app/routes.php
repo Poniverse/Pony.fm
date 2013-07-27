@@ -25,6 +25,10 @@
 	Route::get('/about', function() { return View::make('pages.about'); });
 	Route::get('/faq', function() { return View::make('pages.faq'); });
 
+	Route::get('i{id}/{type}.png', 'ImagesController@getImage');
+
+	Route::get('u{id}/avatar_{type}.png', 'UsersController@getAvatar');
+
 	Route::group(['prefix' => 'api/web'], function() {
 		Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
 
@@ -47,9 +51,9 @@
 
 	Route::group(['prefix' => 'account'], function() {
 		Route::group(['before' => 'auth'], function(){
-			Route::get('/favorites', 'FavoritesController@getTracks');
-			Route::get('/favorites/albums', 'FavoritesController@getAlbums');
-			Route::get('/favorites/playlists', 'FavoritesController@getPlaylists');
+			Route::get('/favourites', 'FavouritesController@getTracks');
+			Route::get('/favourites/albums', 'FavouritesController@getAlbums');
+			Route::get('/favourites/playlists', 'FavouritesController@getPlaylists');
 
 			Route::get('/content/tracks', 'ContentController@getTracks');
 			Route::get('/content/tracks/{id}', 'ContentController@getTracks');

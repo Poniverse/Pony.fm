@@ -2,6 +2,7 @@
 
 	namespace Entities;
 
+	use Cover;
 	use Whoops\Example\Exception;
 
 	class Track extends \Eloquent {
@@ -16,22 +17,48 @@
 		];
 
 		public static function summary() {
-			return self::select('id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at', 'duration', 'is_downloadable', 'genre_id', 'track_type_id');
+			return self::select('id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at', 'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id');
 		}
 
 		protected $table = 'tracks';
+
+		public function ensureDirectoryExists() {
+			$destination = $this->getDirectory();
+
+			if (!is_dir($destination))
+				mkdir($destination, 755);
+		}
+
+		public function hasCover() {
+			return $this->cover_id != null;
+		}
+
+		public function cover() {
+			return $this->belongsTo('Entities\Image');
+		}
+
+		public function isPublished() {
+			return $this->published_at != null && $this->deleted_at == null;
+		}
+
+		public function getCoverUrl($type = Cover::NORMAL) {
+			if (!$this->hasCover())
+				return $this->user->getAvatarUrl($type);
+
+			return $this->cover->getUrl($type);
+		}
+
+		public function getDirectory() {
+			$dir = (string) ( floor( $this->id / 100 ) * 100 );
+			return \Config::get('app.files_directory') . '/tracks/' . $dir;
+		}
 
 		public function getDates() {
 			return ['created_at', 'deleted_at', 'published_at', 'released_at'];
 		}
 
 		public function user() {
-			return $this->belongsTo('User');
-		}
-
-		public function getDirectory() {
-			$dir = (string) ( floor( $this->id / 100 ) * 100 );
-			return \Config::get('app.files_directory') . '/tracks/' . $dir;
+			return $this->belongsTo('Entities\User');
 		}
 
 		public function getFilenameFor($format) {

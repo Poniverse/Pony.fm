@@ -39,7 +39,6 @@ class CreateTracksTable extends Migration {
 			$table->text('lyrics')->nullable();
 			$table->boolean('is_vocal');
 			$table->boolean('is_explicit');
-			$table->integer('cover_id')->nullable()->unsigned()->default(NULL);
 			$table->boolean('is_downloadable');
 			$table->float('duration')->unsigned();
 
