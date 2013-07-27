@@ -4,5 +4,10 @@ angular.module('ponyfm').factory('lightbox', [
 			$.colorbox
 				html: '<img src="' + src + '" />'
 				transition: 'none'
+
+		openImageUrl: (src) ->
+			$.colorbox
+				href: src
+				transition: 'none'
 ])
 

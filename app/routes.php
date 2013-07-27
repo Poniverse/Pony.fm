@@ -39,6 +39,7 @@
 		});
 
 		Route::group(['before' => 'auth'], function() {
+			Route::get('/images/owned', 'Api\Web\ImagesController@getOwned');
 			Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
 			Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 		});

@@ -15,6 +15,17 @@
 			if (!$image)
 				App::abort(404);
 
-			return File::inline($image->getFile($coverType['id']), $image->mime, $image->filename);
+			$filename = $image->getFile($coverType['id']);
+			$lastModified = filemtime($filename);
+
+			if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $lastModified == $_SERVER['HTTP_IF_MODIFIED_SINCE']) {
+				header('HTTP/1.0 304 Not Modified');
+				exit();
+			}
+
+			header('Last-Modified: ' . $lastModified);
+			header('Cache-Control: max-age=' . (60 * 60 * 24 * 7));
+
+			return File::inline($filename, $image->mime, $image->filename);
 		}
 	}

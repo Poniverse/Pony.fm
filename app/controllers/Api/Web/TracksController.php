@@ -92,7 +92,8 @@
 				'description' => $track->description,
 				'lyrics' => $track->lyrics,
 				'released_at' => $track->released_at,
-				'cover_url' => $track->hasCover() ? $track->getCoverUrl(Image::NORMAL) : null
+				'cover_url' => $track->hasCover() ? $track->getCoverUrl(Image::NORMAL) : null,
+				'real_cover_url' => $track->getCoverUrl(Image::NORMAL)
 			], 200);
 		}
 

@@ -8,6 +8,7 @@ angular.module('ponyfm').controller "account-content-tracks", [
 		$scope.isCoverLoaded = false
 		$scope.selectedTrack = null
 		$scope.isDirty = false
+		$scope.isSaving = false
 		$scope.taxonomies =
 			trackTypes: taxonomies.trackTypes
 			licenses: taxonomies.licenses
@@ -18,11 +19,22 @@ angular.module('ponyfm').controller "account-content-tracks", [
 
 		$scope.previewCover = () ->
 			return if !$scope.edit.cover
-			lightbox.openDataUrl $('#coverPreview').attr 'src'
+			if typeof($scope.edit.cover) == 'object'
+				lightbox.openDataUrl $('#coverPreview').attr 'src'
+			else
+				lightbox.openImageUrl $scope.edit.cover
+
+		$scope.selectGalleryImage = (image) ->
+			$('#coverPreview').attr 'src', image.url
+			$scope.edit.cover_id = image.id
+			$scope.edit.remove_cover = false
+			$scope.edit.cover = null
+			$scope.isDirty = true
 
 		$scope.updateTrack = (track) ->
 			xhr = new XMLHttpRequest()
 			xhr.onload = -> $scope.$apply ->
+				$scope.isSaving = false
 				if xhr.status != 200
 					errors =
 						if xhr.getResponseHeader('content-type') == 'application/json'
@@ -40,12 +52,15 @@ angular.module('ponyfm').controller "account-content-tracks", [
 			formData = new FormData();
 			_.each $scope.edit, (value, name) ->
 				if name == 'cover'
-					formData.append name, value, value.name
+					return if value == null
+					if typeof(value) == 'object'
+						formData.append name, value, value.name
 				else
 					formData.append name, value
 
 			xhr.open 'POST', '/api/web/tracks/edit/' + $scope.edit.id, true
 			xhr.setRequestHeader 'X-Token', pfm.token
+			$scope.isSaving = true
 			xhr.send formData
 
 		$scope.uploadTrackCover = () ->
@@ -53,6 +68,7 @@ angular.module('ponyfm').controller "account-content-tracks", [
 
 		$scope.setCoverImage = (input) ->
 			$scope.$apply ->
+				delete $scope.edit.cover_id
 				previewElement = $('#coverPreview')[0]
 				file = input.files[0]
 
@@ -71,6 +87,9 @@ angular.module('ponyfm').controller "account-content-tracks", [
 
 		$scope.clearTrackCover = () ->
 			$scope.isCoverLoaded = false
+			$scope.isDirty = true
+			$scope.edit.remove_cover = true
+			delete $scope.edit.cover_id
 			delete $scope.edit.cover
 
 		$scope.filters =
@@ -162,6 +181,20 @@ angular.module('ponyfm').controller "account-content-tracks", [
 						genre_id: track.genre_id
 						track_type_id: track.track_type_id
 						released_at: if track.released_at then track.released_at.date else ''
+						remove_cover: false
+						cover: track.cover_url
+
+					trackDbItem = tracksDb[t.id]
+					trackDbItem.title = track.title
+					trackDbItem.is_explicit = track.is_explicit
+					trackDbItem.is_vocal = track.is_vocal
+					trackDbItem.genre_id = track.genre_id
+					trackDbItem.is_published = track.is_published
+					trackDbItem.cover_url = track.real_cover_url
+
+					if track.cover_url
+						$('#coverPreview').attr 'src', track.cover_url
+						$scope.isCoverLoaded = true
 
 		$scope.touchModel = -> $scope.isDirty = true
 

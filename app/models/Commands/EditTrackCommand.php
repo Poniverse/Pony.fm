@@ -42,7 +42,8 @@
 				'genre_id'		=>	'required|exists:genres,id',
 				'cover'			=>	'image|mimes:png|min_width:350|min_height:350',
 				'track_type_id'	=>	'required|exists:track_types,id',
-				'songs'			=>	'required_when:track_type,2|exists:songs,id'
+				'songs'			=>	'required_when:track_type,2|exists:songs,id',
+				'cover_id'		=>  'exists:images,id'
 			]);
 
 			if ($validator->fails())
@@ -64,10 +65,13 @@
 				$track->published_at = new \DateTime();
 			}
 
-			if (isset($this->_input['cover'])) {
+			if (isset($this->_input['cover_id'])) {
+				$track->cover_id = $this->_input['cover_id'];
+			}
+			else if (isset($this->_input['cover'])) {
 				$cover = $this->_input['cover'];
 				$track->cover_id = Image::Upload($cover, Auth::user())->id;
-			} else
+			} else if ($this->_input['remove_cover'] == 'true')
 				$track->cover_id = null;
 
 			$track->save();
