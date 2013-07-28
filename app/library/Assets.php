@@ -49,10 +49,12 @@
 					new FileAsset('scripts/base/underscore.js'),
 					new FileAsset('scripts/base/angular.js'),
 					new FileAsset('scripts/base/ui-bootstrap-tpls-0.4.0.js'),
+					new FileAsset('scripts/base/angular-ui-sortable.js'),
 					new FileAsset('scripts/base/angular-ui-date.js'),
 					new FileAsset('scripts/base/angular-ui-router.js'),
 					new AssetCollection([
 						new GlobAsset('scripts/shared/*.coffee'),
+						new GlobAsset('scripts/shared/*.js'),
 						new GlobAsset('scripts/app/*.coffee'),
 						new GlobAsset('scripts/app/services/*.coffee'),
 						new GlobAsset('scripts/app/filters/*.coffee'),

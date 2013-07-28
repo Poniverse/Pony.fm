@@ -2,6 +2,7 @@
 
 	namespace Commands;
 
+	use Entities\Album;
 	use Entities\Image;
 	use Entities\Track;
 	use External;
@@ -44,6 +45,7 @@
 				'track_type_id'	=> 'required|exists:track_types,id',
 				'songs'			=> 'required_when:track_type,2|exists:songs,id',
 				'cover_id'		=> 'exists:images,id',
+				'album_id'		=> 'exists:albums,id'
 			];
 
 			if ($this->_input['track_type_id'] == 2)
@@ -66,6 +68,24 @@
 			$track->is_downloadable = $this->_input['is_downloadable'] == 'true';
 			$track->is_vocal = $isVocal;
 
+			if (isset($this->_input['album_id']) && strlen(trim($this->_input['album_id']))) {
+				if ($track->album_id != null && $track->album_id != $this->_input['album_id'])
+					$this->removeTrackFromAlbum($track);
+
+				if ($track->album_id != $this->_input['album_id']) {
+					$album = Album::find($this->_input['album_id']);
+					$track->track_number = $album->tracks()->count() + 1;
+					$track->album_id = $this->_input['album_id'];
+				}
+			} else {
+				if ($track->album_id != null) {
+					$this->removeTrackFromAlbum($track);
+				}
+
+				$track->track_number = null;
+				$track->album_id = null;
+			}
+
 			if ($track->track_type_id == 2) {
 				$track->showSongs()->sync(explode(',', $this->_input['show_song_ids']));
 			} else
@@ -84,8 +104,23 @@
 			} else if ($this->_input['remove_cover'] == 'true')
 				$track->cover_id = null;
 
+			$track->updateTags();
 			$track->save();
 
 			return CommandResponse::succeed();
+		}
+
+		private function removeTrackFromAlbum($track) {
+			$album = $track->album;
+			$index = 0;
+
+			foreach ($album->tracks as $track) {
+				if ($track->id == $this->_trackId)
+					continue;
+
+				$track->track_number = ++$index;
+				$track->updateTags();
+				$track->save();
+			}
 		}
 	}

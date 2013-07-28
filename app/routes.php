@@ -29,15 +29,27 @@
 
 	Route::get('u{id}/avatar_{type}.png', 'UsersController@getAvatar');
 
+	Route::get('playlist/{id}/{slug}', 'PlaylistsController@getPlaylist');
+	Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
+	Route::get('p{id}', 'PlaylistsController@getShortlink');
+
 	Route::group(['prefix' => 'api/web'], function() {
 		Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
+
+		Route::get('/playlists/show/{id}', 'Api\Web\PlaylistsController@getShow');
 
 		Route::group(['before' => 'auth|csrf'], function() {
 			Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
 			Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
-			Route::post('/tracks/edit/{id}', 'Api\Web\TracksController@putEdit');
+			Route::post('/tracks/edit/{id}', 'Api\Web\TracksController@postEdit');
 
 			Route::post('/albums/create', 'Api\Web\AlbumsController@postCreate');
+			Route::post('/albums/delete/{id}', 'Api\Web\AlbumsController@postDelete');
+			Route::post('/albums/edit/{id}', 'Api\Web\AlbumsController@postEdit');
+
+			Route::post('/playlists/create', 'Api\Web\PlaylistsController@postCreate');
+			Route::post('/playlists/delete/{id}', 'Api\Web\PlaylistsController@postDelete');
+			Route::post('/playlists/edit/{id}', 'Api\Web\PlaylistsController@postEdit');
 		});
 
 		Route::group(['before' => 'auth'], function() {
@@ -48,6 +60,9 @@
 
 			Route::get('/albums/owned', 'Api\Web\AlbumsController@getOwned');
 			Route::get('/albums/edit/{id}', 'Api\Web\AlbumsController@getEdit');
+
+			Route::get('/playlists/owned', 'Api\Web\PlaylistsController@getOwned');
+			Route::get('/playlists/pinned', 'Api\Web\PlaylistsController@getPinned');
 		});
 
 		Route::group(['before' => 'csrf'], function(){

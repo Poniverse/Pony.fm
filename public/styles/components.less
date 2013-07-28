@@ -40,6 +40,20 @@ html body {
   }
 }
 
+html .dropdown-menu {
+  .border-radius(0px);
+  padding: 0px;
+
+  > li {
+	margin: 0px;
+
+	> a {
+	  padding: 3px 10px;
+	  font-size: 8pt;
+	}
+  }
+}
+
 .dropdowns {
   .clearfix();
 
@@ -109,7 +123,7 @@ html body {
   }
 
   .btn {
-	.border-radius(0px);
+	.border-radius(0px) !important;
   }
 
   .preview {
@@ -144,5 +158,15 @@ html body {
 
   p {
 	font-size: 9pt;
+  }
+}
+
+.modal {
+  form {
+	margin: 0px;
+  }
+
+  .btn {
+	.border-radius(0px);
   }
 }

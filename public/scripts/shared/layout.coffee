@@ -3,7 +3,7 @@ window.handleResize = () ->
 	$siteBody = $ '.site-body'
 	$siteBody.height windowHeight - $('header').height() - 1
 
-	$('.strech-to-bottom').each () ->
+	$('.stretch-to-bottom').each () ->
 		$this = $ this
 		$this.height windowHeight - $this.offset().top
 

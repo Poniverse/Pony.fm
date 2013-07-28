@@ -251,21 +251,57 @@ header {
 		line-height: normal;
 		font-weight: bold;
 		margin: 0px;
+		position: relative;
+
+		a {
+		  .not-selectable();
+
+		  display: block;
+		  position: absolute;
+		  right: 0px;
+		  top: 0px;
+		  padding: 5px;
+		  line-height: normal;
+		  text-decoration: none;
+		  font-size: 12px;
+		  width: 22px;
+		  text-align: center;
+		  color: rgba(255, 255, 255, .7);
+
+		  &.selected, &.selected:hover {
+			color: @blue;
+			cursor: default;
+		  }
+
+		  &:hover {
+			color: #fff;
+		  }
+
+		  &.view-all {
+			right: 22px;
+		  }
+		}
 	  }
 
-	  ul {
+	  > ul {
 		margin: 0px;
 		padding: 0px;
 		list-style: none;
 
-		li {
+		> li {
 		  margin: 0px;
 		  padding: 0px;
 		  line-height: normal;
 
-		  a {
+		  .dropdown-menu {
+			width: 148px;
+			min-width: 148px;
+		  }
+
+		  > a {
 			.border-radius(0px);
 			.not-selectable();
+			.ellipsis();
 
 			font-size: 12px;
 			margin: 0px;
@@ -282,11 +318,27 @@ header {
 			  width: 22px;
 			  text-align: center;
 			}
+
+			&:hover {
+			  color: #fff;
+			}
+
+			&.menu {
+			  float: right;
+			  font-size: 15px;
+			  display: none;
+			}
+		  }
+
+		  &:hover {
+			> a.menu {
+			  display: block;
+			}
 		  }
 
 		  &.selected, &.selected:hover {
-			a {
-			  color: #fff;
+			> a:not(.menu) {
+			  color: @blue;
 			  cursor: default;
 			}
 		  }
@@ -298,12 +350,6 @@ header {
 			  color: #555;
 			  font-style: italic;
 			  font-size: 8pt;
-			}
-		  }
-
-		  &:hover {
-			a {
-			  color: #fff;
 			}
 		  }
 		}

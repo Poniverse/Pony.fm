@@ -26,7 +26,7 @@
 	</header>
 
 	<div class="site-body">
-		<section class="sidebar">
+		<section class="sidebar" ng-controller="sidebar">
 			<nav>
 				<ul>
 					<li><h3>Discover</h3></li>
@@ -36,11 +36,30 @@
 					<li ng-class="{selected: $state.includes('artists')}"><a href="/artists">Artists <i class="icon-user"></i></a></li>
 
 					@if (Auth::check())
-						<li><h3>Playlists</h3></li>
-						<li class="none"><span>no playlists</span></li>
+						<li>
+							<h3>
+								<a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="icon-plus"></i></a>
+								<a href="/account/playlists" ng-class="{selected: $state.is('account-content-playlists')}" title="View Playlists" class="view-all"><i class="icon-list"></i></a>
+								Playlists
+							</h3>
+						</li>
+						<li class="none" ng-show="!playlists.length"><span>no pinned playlists</span></li>
+						<li class="dropdown" ng-repeat="playlist in playlists" ng-cloak ng-class="{selected: $state.is('playlist') && $state.params.id == playlist.id}">
+							<a class="menu dropdown-toggle" pfm-eat-click href="#"><i class="icon-ellipsis-vertical"></i></a>
+							<a href="{{Helpers::angular('playlist.url')}}" ng-bind="playlist.title"></a>
+
+							<ul class="dropdown-menu">
+								<li><a href="#" pfm-eat-click ng-click="editPlaylist(playlist)">Edit</a></li>
+								<li><a href="#" pfm-eat-click ng-click="unpinPlaylist(playlist)">Unpin</a></li>
+								<li><a href="#" pfm-eat-click ng-click="deletePlaylist(playlist)" ng-show="playlist.user_id == auth.user_id">Delete</a></li>
+							</ul>
+						</li>
 
 						<li>
-							<h3>Account</h3>
+							<h3>
+								<a href="#" title="Upload Track"><i class="icon-upload"></i></a>
+								Account
+							</h3>
 						</li>
 						<li ng-class="{selected: $state.includes('account-favourites')}"><a href="/account/favourites">Favourites</a></li>
 						<li ng-class="{selected: $state.includes('account-content')}"><a href="/account/tracks">Your Content</a></li>

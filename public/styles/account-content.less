@@ -15,6 +15,70 @@
   }
 }
 
+ul.playlists {
+  overflow-y: auto;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  margin: 0px 5px;
+  margin-top: 10px;
+
+  li {
+	overflow: hidden;
+	margin: 0px;
+	padding: 0px;
+	height: 40px;
+	border-bottom: 1px solid #ddd;
+
+	img {
+	  border-right: 1px solid #ddd;
+	  padding: 0px;
+	  display: block;
+	  height: 40px;
+	  width: 40px;
+	  float: left;
+	}
+
+	.btn-group {
+	  float: right;
+	  display: block;
+	  margin-top: 7px;
+	  margin-right: 7px;
+
+	  .btn {
+		.border-radius(0px);
+	  }
+	}
+
+	a.main {
+	  display: block;
+	  text-decoration: none;
+	  color: #444;
+
+	  .is-public {
+		display: block;
+		float: right;
+		font-weight: bold;
+		margin-top: 10px;
+		margin-right: 10px;
+		font-size: 8pt;
+	  }
+
+	  .title {
+		.ellipsis();
+		margin-left: 50px;
+		line-height: 40px;
+		height: 40px;
+		display: block;
+	  }
+
+	  &:hover {
+		background: #eee;
+	  }
+	}
+  }
+}
+
 .image-selector {
   width: 500px;
   max-height: 300px;
@@ -47,6 +111,42 @@
   }
 }
 
+html {
+  .two-pane-view.closed {
+	.account-albums-listing {
+	  li {
+		.box-sizing(border-box);
+		width: 20%;
+
+		a {
+		  padding: 15px;
+
+		  .image {
+			.img-polaroid();
+			position: relative;
+			left: -5px;
+			width: 100%;
+			height: auto;
+			float: none;
+		  }
+
+		  .title {
+			margin: 0px;
+			font-size: 12pt;
+			padding: 0px;
+			margin-top: 5px;
+		  }
+
+		  .published {
+			margin: 0px;
+			padding: 0px;
+		  }
+		}
+	  }
+	}
+  }
+}
+
 .account-tracks-listing, .account-albums-listing {
   overflow-y: auto;
   margin: 0px;
@@ -69,8 +169,8 @@
 	  font-size: 9pt;
 	}
 
-	&.is-published a {
-	  background: transparent;
+	&.is-not-published a {
+	  background: fadeout(@yellow, 90%);
 	}
 
 	&.selected, &.selected:hover {
@@ -87,7 +187,6 @@
 
 	a {
 	  .transition(350px ease-out all);
-	  background: fadeout(@yellow, 90%);
 
 	  display: block;
 	  margin: 0px;
@@ -134,11 +233,60 @@
   .editor {
 	display: none;
 
-	.show-songs {
+	.album-track-listing {
+	  padding: 0px;
+	  clear: both;
+	  margin: 0px;
+	  margin-top: 10px;
+	  list-style: none;
+
+	  li {
+		overflow: hidden;
+		line-height: normal;
+		padding: 0px;
+		margin: 0px;
+		font-size: 8pt;
+		border-bottom: 1px dashed #ddd;
+
+		div {
+		  padding: 2px;
+		}
+
+		span {
+		  display: block;
+		  float: left;
+		  margin-left: 5px;
+		  margin-top: 2px;
+		}
+
+		.btn {
+		  line-height: normal;
+		  padding: 2px 5px;
+		  margin: 0px;
+		}
+
+		&.ui-sortable-helper {
+		  #gradient>.vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
+		  border: none;
+		  color: #fff;
+		}
+
+		&.ui-sortable-placeholder {
+		  background: @yellow;
+		}
+	  }
+	}
+
+	.show-songs, .album {
 	  .btn {
-		.border-radius(0px);
 		display: block;
 		float: none;
+	  }
+	}
+
+	.show-songs, .album, .track-selector {
+	  .btn {
+		.border-radius(0px);
 		padding: 3px 10px;
 		font-size: 8pt;
 		text-align: left;
@@ -189,101 +337,6 @@
 		}
 	  }
 	}
-
-	.form-row {
-	  margin-bottom: 10px;
-
-	  .error {
-		.alert();
-		.alert-error();
-
-		display: none;
-		padding: 3px;
-		font-size: 8pt;
-	  }
-	}
-
-	.has-error {
-	  label {
-		color: @red;
-	  }
-
-	  .error {
-		display: block;
-	  }
-	}
-
-	.alert {
-	  .border-radius(0px);
-	  margin-bottom: 10px;
-	}
-
-	.toolbar {
-	  #gradient>.vertical(#555, #222);
-	  list-style: none;
-	  margin: 0px;
-	  margin-bottom: 10px;
-	  padding: 0px;
-	  overflow: hidden;
-
-	  li {
-		float: left;
-
-		a, button {
-		  .border-radius(0px);
-		  font-size: 9pt;
-		}
-
-		&.delete {
-		  float: right;
-		}
-	  }
-	}
-
-	label.strong {
-	  font-size: 8pt;
-	  font-weight: bold;
-	}
-
-	input[type="text"], input[type="password"], input[type="date"], textarea {
-	  padding: 3px;
-	  border: 1px solid;
-	  border-color: #9c9c9c #9c9c9c #ccc #ccc;
-	}
-
-	input[type="text"], input[type="password"], input[type="date"], textarea, select {
-	  .border-radius(0px);
-	  .box-sizing(border-box);
-
-	  display: block;
-	  font-size: 12px;
-	  width: 100%;
-
-	  &:focus {
-		.box-shadow(none);
-	  }
-	}
-
-	label {
-	}
-
-	select {
-	  height: auto;
-	  line-height: normal;
-	  padding: 0px;
-	}
-
-	label {
-	  input[type="checkbox"] {
-		margin: 0px;
-		margin-top: -2px;
-		vertical-align: middle;
-	  }
-	}
-
-	textarea {
-	  height: 60px;
-	}
   }
 
   &.closed {
@@ -313,7 +366,7 @@
 	  margin-right: 10px;
 	  display: block;
 
-	  .strech-to-bottom {
+	  .stretch-to-bottom {
 		overflow-y: auto;
 		padding-right: 10px;
 	  }

@@ -18,6 +18,14 @@
 			return $this->execute(new UploadTrackCommand());
 		}
 
+		public function postDelete($id) {
+			return $this->execute(new DeleteTrackCommand($id));
+		}
+
+		public function postEdit($id) {
+			return $this->execute(new EditTrackCommand($id, Input::all()));
+		}
+
 		public function getOwned() {
 			$query = Track::summary()->whereNull('deleted_at')->where('user_id', \Auth::user()->id);
 
@@ -33,6 +41,13 @@
 				$order = \Input::get('order');
 				$parts = explode(',', $order);
 				$query->orderBy($parts[0], $parts[1]);
+			}
+
+			if (Input::has('in_album')) {
+				if (Input::get('in_album') == 'true')
+					$query->whereNotNull('album_id');
+				else
+					$query->whereNull('album_id');
 			}
 
 			if (Input::has('genres'))
@@ -99,15 +114,8 @@
 				'released_at' => $track->released_at,
 				'cover_url' => $track->hasCover() ? $track->getCoverUrl(Image::NORMAL) : null,
 				'real_cover_url' => $track->getCoverUrl(Image::NORMAL),
-				'show_songs' => $showSongs
+				'show_songs' => $showSongs,
+				'album_id' => $track->album_id
 			], 200);
-		}
-
-		public function postDelete($id) {
-			return $this->execute(new DeleteTrackCommand($id));
-		}
-
-		public function putEdit($id) {
-			return $this->execute(new EditTrackCommand($id, Input::all()));
 		}
 	}

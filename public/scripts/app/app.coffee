@@ -1,4 +1,4 @@
-angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date'], [
+angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'], [
 	'$routeProvider', '$locationProvider', '$stateProvider', '$dialogProvider'
 	(route, location, state, $dialogProvider) ->
 
@@ -37,9 +37,10 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date'], [
 			templateUrl: '/templates/account/content/album.html'
 			controller: 'account-albums-edit'
 
-		state.state 'account-content.playlists',
-			url: '/playlists'
+		state.state 'account-content-playlists',
+			url: '/account/playlists'
 			templateUrl: '/templates/account/content/playlists.html'
+			controller: 'account-playlists'
 
 		state.state 'account-favourites',
 			url: '/account/favourites'
@@ -88,6 +89,11 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date'], [
 		state.state 'playlists',
 			url: '/playlists'
 			templateUrl: '/templates/playlists/index.html'
+
+		state.state 'playlist',
+			url: '/playlist/:id/:slug'
+			templateUrl: '/templates/playlists/show.html'
+			controller: 'playlist'
 
 		# Artists
 

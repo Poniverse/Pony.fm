@@ -3,6 +3,7 @@
 	namespace Commands;
 
 	use Entities\Track;
+	use Illuminate\Support\Facades\Log;
 
 	class UploadTrackCommand extends CommandBase {
 		/**
@@ -38,7 +39,6 @@
 			try {
 				$track->user_id = $user->id;
 				$track->title = pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME);
-				$track->slug = \Str::slug($track->title);
 				$track->duration = $audio->getDuration();
 
 				$track->save();
@@ -58,7 +58,7 @@
 					$command = str_replace('{$source}', '"' . $source . '"', $command);
 					$command = str_replace('{$target}', '"' . $target . '"', $command);
 
-					\Log::info('Encoding ' . $track->id . ' into ' . $target);
+					Log::info('Encoding ' . $track->id . ' into ' . $target);
 					$this->notify('Encoding ' . $name, $index / count(Track::$Formats) * 100);
 
 					$pipes = [];
@@ -68,6 +68,8 @@
 
 				foreach ($processes as $proc)
 					proc_close($proc);
+
+				$track->updateTags();
 
 			} catch (\Exception $e) {
 				$track->delete();

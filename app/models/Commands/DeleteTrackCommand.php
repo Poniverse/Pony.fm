@@ -26,7 +26,15 @@
 		 * @return CommandResponse
 		 */
 		public function execute() {
-			$this->_track->delete();
+			if ($this->_track->album_id != null) {
+				$album = $this->_track->album;
+				$this->_track->album_id = null;
+				$this->_track->track_number = null;
+				$this->_track->delete();
+				$album->updateTrackNumbers();
+			} else
+				$this->_track->delete();
+
 			return CommandResponse::succeed();
 		}
 	}

@@ -1,5 +1,12 @@
 angular.module('ponyfm').directive 'pfmPopup', () ->
 	(scope, element, attrs) ->
+		align = 'left'
+		elementId = attrs.pfmPopup
+		if elementId.indexOf ',' != -1
+			parts = elementId.split ','
+			elementId = parts[0]
+			align = parts[1]
+
 		$popup = $ '#' + attrs.pfmPopup
 		$element = $ element
 		$positionParent = null
@@ -18,11 +25,14 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 			position = $element.offset()
 			parentPosition = $positionParent.offset()
 
+			windowWidth = $(window).width() - 15
 			left = position.left
 			right = left + $popup.width()
-			windowWidth = $(window).width() - 15
-			if right > windowWidth
+
+			if align == 'left' && right > windowWidth
 				left -= right - windowWidth
+			else if align == 'right'
+				left -= $popup.outerWidth() - $element.outerWidth()
 
 			height = 'auto'
 			top = position.top + $element.height() + 10
@@ -34,7 +44,7 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 			return {
 				left: left - parentPosition.left - 2
 				top: top - parentPosition.top,
-				height: height}
+				height: height - 15}
 
 		windowResizeHandler = () ->
 			return if !open

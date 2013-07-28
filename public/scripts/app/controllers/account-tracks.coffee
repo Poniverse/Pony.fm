@@ -7,6 +7,16 @@ angular.module('ponyfm').controller "account-tracks", [
 		$scope.taxonomies = taxonomies
 		$scope.selectedSongsTitle = 'None'
 		$scope.selectedSongs = {}
+		$scope.albums = []
+		$scope.selectedAlbum = null
+
+		tracksDb = {}
+		albumsDb = {}
+
+		$scope.selectAlbum = (album) ->
+			$scope.selectedAlbum = album
+			$scope.edit.album_id = if album then album.id else null
+			$scope.isDirty = true
 
 		$scope.setCover = (image, type) ->
 			delete $scope.edit.cover_id
@@ -20,6 +30,13 @@ angular.module('ponyfm').controller "account-tracks", [
 				$scope.edit.cover_id = image.id
 
 			$scope.isDirty = true
+
+		refreshAlbums = () ->
+			$.getJSON('/api/web/albums/owned')
+				.done (albums) -> $scope.$apply ->
+					albumsDb[album.id] = album for album in albums
+					$scope.albums = albums
+					$scope.selectedAlbum = if $scope.edit && $scope.edit.album_id then albumsDb[$scope.edit.album_id] else null
 
 		updateSongDisplay = () ->
 			if _.size $scope.selectedSongs
@@ -136,8 +153,6 @@ angular.module('ponyfm').controller "account-tracks", [
 			query = parts.join '&'
 			$.getJSON('/api/web/tracks/owned?' + query).done (tracks) -> $scope.$apply -> showTracks tracks
 
-		tracksDb = {}
-
 		showTracks = (tracks) ->
 			tracksDb = {}
 			$scope.tracks = tracks
@@ -164,6 +179,7 @@ angular.module('ponyfm').controller "account-tracks", [
 						released_at: if track.released_at then track.released_at.date else ''
 						remove_cover: false
 						cover: track.cover_url
+						album_id: track.album_id
 
 					trackDbItem = tracksDb[t.id]
 					trackDbItem.title = track.title
@@ -173,6 +189,7 @@ angular.module('ponyfm').controller "account-tracks", [
 					trackDbItem.is_published = track.is_published
 					trackDbItem.cover_url = track.real_cover_url
 
+					$scope.selectedAlbum = if track.album_id then albumsDb[track.album_id] else null
 					$scope.selectedSongs = {}
 					$scope.selectedSongs[song.id] = song for song in track.show_songs
 					updateSongDisplay()
@@ -204,4 +221,6 @@ angular.module('ponyfm').controller "account-tracks", [
 		$scope.$on '$stateChangeStart', (e) ->
 			return if $scope.selectedTrack == null || !$scope.isDirty
 			e.preventDefault() if !confirm('Are you sure you want to leave this page without saving your changes?')
+
+		refreshAlbums()
 ]
