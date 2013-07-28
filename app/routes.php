@@ -36,6 +36,8 @@
 			Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
 			Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
 			Route::post('/tracks/edit/{id}', 'Api\Web\TracksController@putEdit');
+
+			Route::post('/albums/create', 'Api\Web\AlbumsController@postCreate');
 		});
 
 		Route::group(['before' => 'auth'], function() {

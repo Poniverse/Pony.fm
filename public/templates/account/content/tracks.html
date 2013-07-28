@@ -121,28 +121,9 @@
 				<div class="row-fluid">
 					<div class="form-row span6" ng-class="{'has-error': errors.cover != null}">
 						<label class="strong">Track Cover: </label>
-						<div class="cover-upload">
-							<div class="preview" ng-class="{canOpen: isCoverLoaded}" ng-click="previewCover()"><img id="coverPreview" ng-show="isCoverLoaded" /></div>
-							<p>
-								Track cover must be a PNG that is at least 350x350. <br />
-								<input type="file" id="coverImage" onchange="angular.element(this).scope().setCoverImage(this)" />
-							</p>
-							<div class="btn-group">
-								<a href="#" pfm-popup="image-selector" class="btn btn-small"><i class="icon-picture"></i> Gallery</a>
-								<a href="#" pfm-eat-click ng-click="uploadTrackCover()" class="btn btn-info btn-small"><i class="icon-upload"></i> Upload</a>
-								<a href="#" pfm-eat-click ng-click="clearTrackCover()" class="btn btn-danger btn-small" ng-show="edit.cover || edit.cover_id"><i class="icon-remove"></i></a>
-							</div>
-							<div id="image-selector" class="pfm-popup image-selector" ng-controller="account-image-select">
-								<ul>
-									<li ng-repeat="image in images" ng-click="selectGalleryImage(image)">
-										<img ng-src="{{image.url}}" />
-									</li>
-								</ul>
-							</div>
-							<div class="error">{{errors.cover}}</div>
-						</div>
+						<pfm-image-upload set-image="setCover" image="edit.cover" />
 					</div>
-					<div class="form-row span6" ng-class="{'has-error': errors.released_at != null}">
+					<div class="form-row span6">
 						<label for="released_at" class="strong">Release Date:</label>
 						<input ng-disabled="isSaving" type="text" id="released_at" ui-date ng-model="edit.released_at" ng-change="touchModel()" ui-date-format="yy-mm-dd" />
 						<div class="error">{{errors.released_at}}</div>

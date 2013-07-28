@@ -9,11 +9,11 @@
 <div class="two-pane-view" ng-class="{open: data.isEditorOpen, closed: !data.isEditorOpen}">
 	<div class="list">
 		<ul class="account-albums-listing strech-to-bottom">
-			<li ng-repeat="album in albums" ng-class="{selected: album.id == data.selectedAlbum.id">
+			<li ng-repeat="album in albums" ng-class="{selected: album.id == data.selectedAlbum.id}">
 				<a href="/account/albums/edit/{{album.id}}">
 					<img class="image" ng-src="{{album.cover_url}}" />
-					<span class="title">{{albums.title}}</span>
-					<span class="published">{{albums.created_at | pfmdate:'MM/dd/yyyy'}}</span>
+					<span class="title">{{album.title}}</span>
+					<span class="published">{{album.created_at | pfmdate:'MM/dd/yyyy'}}</span>
 				</a>
 			</li>
 			<li ng-show="!albums.length" class="empty">

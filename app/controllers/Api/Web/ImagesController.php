@@ -19,8 +19,12 @@
 			foreach ($query->get() as $image) {
 				$images[] = [
 					'id' => $image->id,
-					'url' => $image->getUrl(Image::SMALL),
-					'url_normal' => $image->getUrl(Image::NORMAL),
+					'urls' => [
+						'small' => $image->getUrl(Image::SMALL),
+						'normal' => $image->getUrl(Image::NORMAL),
+						'thumbnail' => $image->getUrl(Image::THUMBNAIL),
+						'original' => $image->getUrl(Image::ORIGINAL)
+					],
 					'filename' => $image->filename
 				];
 			}

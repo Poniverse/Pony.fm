@@ -201,66 +201,15 @@
 		padding: 3px;
 		font-size: 8pt;
 	  }
-
-	  &.has-error {
-		label {
-		  color: @red;
-		}
-
-		.error {
-		  display: block;
-		}
-	  }
 	}
 
-	.cover-upload {
-	  overflow: hidden;
+	.has-error {
+	  label {
+		color: @red;
+	  }
 
 	  .error {
-		clear: left;
-		margin-top: 14px;
-	  }
-
-	  input[type=file] {
-		display: none;
-	  }
-
-	  .btn {
-		.border-radius(0px);
-	  }
-
-	  .preview {
-		.img-polaroid();
-		overflow: hidden;
-		width: 46px;
-		height: 46px;
-		float: left;
-
-		img {
-		  position: relative;
-		  display: block;
-		  width: 100%;
-		}
-
-		&.canOpen {
-		  cursor: pointer;
-
-		  &:hover {
-			border-color: @blue;
-			border-style: solid;
-		  }
-		}
-	  }
-
-	  p, .btn-group {
-		color: #555;
-		margin-left: 60px;
 		display: block;
-		margin-bottom: 1px;
-	  }
-
-	  p {
-		font-size: 9pt;
 	  }
 	}
 

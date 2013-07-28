@@ -1,17 +1,25 @@
 angular.module('ponyfm').controller "account-tracks", [
 	'$scope', '$state', 'taxonomies', '$dialog', 'lightbox'
 	($scope, $state, taxonomies, $dialog, lightbox) ->
-		$('#coverPreview').load () ->
-			$scope.$apply -> $scope.isCoverLoaded = true
-			window.alignVertically(this)
-
-		$scope.isCoverLoaded = false
 		$scope.selectedTrack = null
 		$scope.isDirty = false
 		$scope.isSaving = false
 		$scope.taxonomies = taxonomies
 		$scope.selectedSongsTitle = 'None'
 		$scope.selectedSongs = {}
+
+		$scope.setCover = (image, type) ->
+			delete $scope.edit.cover_id
+			delete $scope.edit.cover
+
+			if image == null
+				$scope.edit.remove_cover = true
+			else if type == 'file'
+				$scope.edit.cover = image
+			else if type == 'gallery'
+				$scope.edit.cover_id = image.id
+
+			$scope.isDirty = true
 
 		updateSongDisplay = () ->
 			if _.size $scope.selectedSongs
@@ -30,25 +38,6 @@ angular.module('ponyfm').controller "account-tracks", [
 
 		$scope.updateIsVocal = () ->
 			delete $scope.errors.lyrics if !$scope.edit.is_vocal
-
-		$scope.previewCover = () ->
-			return if !$scope.edit.cover && !$scope.edit.cover_id
-
-			if $scope.edit.cover_id
-				lightbox.openImageUrl $scope.cover_url
-			else
-				if typeof($scope.edit.cover) == 'object'
-					lightbox.openDataUrl $('#coverPreview').attr 'src'
-				else
-					lightbox.openImageUrl $scope.edit.cover
-
-		$scope.selectGalleryImage = (image) ->
-			$('#coverPreview').attr 'src', image.url
-			$scope.edit.cover_id = image.id
-			$scope.cover_url = image.url_normal
-			$scope.edit.remove_cover = false
-			$scope.edit.cover = null
-			$scope.isDirty = true
 
 		$scope.updateTrack = (track) ->
 			xhr = new XMLHttpRequest()
@@ -84,35 +73,6 @@ angular.module('ponyfm').controller "account-tracks", [
 			xhr.setRequestHeader 'X-Token', pfm.token
 			$scope.isSaving = true
 			xhr.send formData
-
-		$scope.uploadTrackCover = () ->
-			$("#coverImage").trigger 'click'
-
-		$scope.setCoverImage = (input) ->
-			$scope.$apply ->
-				delete $scope.edit.cover_id
-				previewElement = $('#coverPreview')[0]
-				file = input.files[0]
-
-				if file.type != 'image/png'
-					$scope.errors.cover = 'Cover image must be a png!'
-					$scope.isCoverLoaded = false
-					$scope.edit.cover = null
-					return
-
-				delete $scope.errors.cover
-				$scope.isDirty = true
-				reader = new FileReader()
-				reader.onload = (e) -> previewElement.src = e.target.result
-				reader.readAsDataURL file
-				$scope.edit.cover = file
-
-		$scope.clearTrackCover = () ->
-			$scope.isCoverLoaded = false
-			$scope.isDirty = true
-			$scope.edit.remove_cover = true
-			delete $scope.edit.cover_id
-			delete $scope.edit.cover
 
 		$scope.filters =
 			published: [
@@ -185,7 +145,6 @@ angular.module('ponyfm').controller "account-tracks", [
 
 		selectTrack = (t) ->
 			$scope.selectedTrack = t
-			$scope.isCoverLoaded = false
 			return if !t
 			$.getJSON('/api/web/tracks/edit/' + t.id)
 				.done (track) -> $scope.$apply ->
@@ -213,10 +172,6 @@ angular.module('ponyfm').controller "account-tracks", [
 					trackDbItem.genre_id = track.genre_id
 					trackDbItem.is_published = track.is_published
 					trackDbItem.cover_url = track.real_cover_url
-
-					if track.cover_url
-						$('#coverPreview').attr 'src', track.cover_url
-						$scope.isCoverLoaded = true
 
 					$scope.selectedSongs = {}
 					$scope.selectedSongs[song.id] = song for song in track.show_songs

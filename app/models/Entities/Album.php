@@ -9,7 +9,7 @@
 		protected $softDelete = true;
 
 		public static function summary() {
-			return self::select('id', 'title', 'user_id', 'slug', 'created_at');
+			return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'cover_id');
 		}
 
 		protected $table = 'albums';
