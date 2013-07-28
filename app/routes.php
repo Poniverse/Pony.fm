@@ -40,8 +40,12 @@
 
 		Route::group(['before' => 'auth'], function() {
 			Route::get('/images/owned', 'Api\Web\ImagesController@getOwned');
+
 			Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
 			Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
+
+			Route::get('/albums/owned', 'Api\Web\AlbumsController@getOwned');
+			Route::get('/albums/edit/{id}', 'Api\Web\AlbumsController@getEdit');
 		});
 
 		Route::group(['before' => 'csrf'], function(){
@@ -52,14 +56,16 @@
 
 	Route::group(['prefix' => 'account'], function() {
 		Route::group(['before' => 'auth'], function(){
-			Route::get('/favourites', 'FavouritesController@getTracks');
+			Route::get('/favourites/tracks', 'FavouritesController@getTracks');
 			Route::get('/favourites/albums', 'FavouritesController@getAlbums');
 			Route::get('/favourites/playlists', 'FavouritesController@getPlaylists');
 
-			Route::get('/content/tracks', 'ContentController@getTracks');
-			Route::get('/content/tracks/{id}', 'ContentController@getTracks');
-			Route::get('/content/albums', 'ContentController@getAlbums');
-			Route::get('/content/playlists', 'ContentController@getPlaylists');
+			Route::get('/tracks', 'ContentController@getTracks');
+			Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
+			Route::get('/albums', 'ContentController@getAlbums');
+			Route::get('/albums/edit/{id}', 'ContentController@getAlbums');
+			Route::get('/albums/create', 'ContentController@getAlbums');
+			Route::get('/playlists', 'ContentController@getPlaylists');
 
 			Route::get('/', 'AccountController@getIndex');
 		});

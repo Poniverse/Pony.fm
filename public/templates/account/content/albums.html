@@ -1,1 +1,27 @@
-<h1>Your Albums</h1>
+<ul class="dropdowns">
+	<li class="dropdown">
+		<a class="btn" href="/account/albums/create">
+			<i class="icon-plus"></i> Create Album
+		</a>
+	</li>
+</ul>
+
+<div class="two-pane-view" ng-class="{open: data.isEditorOpen, closed: !data.isEditorOpen}">
+	<div class="list">
+		<ul class="account-albums-listing strech-to-bottom">
+			<li ng-repeat="album in albums" ng-class="{selected: album.id == data.selectedAlbum.id">
+				<a href="/account/albums/edit/{{album.id}}">
+					<img class="image" ng-src="{{album.cover_url}}" />
+					<span class="title">{{albums.title}}</span>
+					<span class="published">{{albums.created_at | pfmdate:'MM/dd/yyyy'}}</span>
+				</a>
+			</li>
+			<li ng-show="!albums.length" class="empty">
+				No albums found...
+			</li>
+		</ul>
+	</div>
+
+	<div class="editor" ui-view>
+	</div>
+</div>

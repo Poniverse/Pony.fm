@@ -45,7 +45,7 @@
 			return $this->published_at != null && $this->deleted_at == null;
 		}
 
-		public function getCoverUrl($type = Cover::NORMAL) {
+		public function getCoverUrl($type = Image::NORMAL) {
 			if (!$this->hasCover())
 				return $this->user->getAvatarUrl($type);
 

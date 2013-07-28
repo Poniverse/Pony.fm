@@ -1,0 +1,46 @@
+<form novalidate ng-submit="updateAlbum()">
+	<ul class="toolbar">
+		<li>
+			<button type="submit" class="btn" ng-class="{disabled: !isDirty || isSaving, 'btn-primary': isDirty}">
+				Save Changes
+				<i ng-show="isSaving" class="icon-cog icon-spin icon-large"></i>
+			</button>
+		</li>
+		<li class="delete"><a ng-class="{disabled: isSaving}" class="btn btn-danger" href="#" ng-click="deleteAlbum(selectedAlbum)" pfm-eat-click>Delete Album</a></li>
+	</ul>
+	<div class="strech-to-bottom">
+		<div class="form-row" ng-class="{'has-error': errors.title != null}">
+			<label for="title" class="strong">Title:</label>
+			<input ng-disabled="isSaving" ng-change="touchModel()" placeholder="Album Title" type="text" id="title" ng-model="album.title" />
+			<div class="error">{{errors.title}}</div>
+		</div>
+		<div class="form-row" ng-class="{'has-error': errors.description != null}">
+			<label for="description" class="strong">Description:</label>
+			<textarea ng-disabled="isSaving" ng-change="touchModel()" placeholder="Description (optional)" id="description" ng-model="album.description"></textarea>
+			<div class="error">{{errors.description}}</div>
+		</div>
+		<div class="form-row" ng-class="{'has-error': errors.cover != null}">
+			<label class="strong">Album Cover: </label>
+			<div class="cover-upload">
+				<div class="preview" ng-class="{canOpen: isCoverLoaded}" ng-click="previewCover()"><img id="coverPreview" ng-show="isCoverLoaded" /></div>
+				<p>
+					Image must be a PNG that is at least 350x350. <br />
+					<input type="file" id="coverImage" onchange="angular.element(this).scope().setCoverImage(this)" />
+				</p>
+				<div class="btn-group">
+					<a href="#" pfm-popup="image-selector" class="btn btn-small"><i class="icon-picture"></i> Gallery</a>
+					<a href="#" pfm-eat-click ng-click="uploadAlbumCover()" class="btn btn-info btn-small"><i class="icon-upload"></i> Upload</a>
+					<a href="#" pfm-eat-click ng-click="clearAlbumCover()" class="btn btn-danger btn-small" ng-show="album.cover || album.cover_id"><i class="icon-remove"></i></a>
+				</div>
+				<div id="image-selector" class="pfm-popup image-selector" ng-controller="account-image-select">
+					<ul>
+						<li ng-repeat="image in images" ng-click="selectGalleryImage(image)">
+							<img ng-src="{{image.url}}" />
+						</li>
+					</ul>
+				</div>
+				<div class="error">{{errors.cover}}</div>
+			</div>
+		</div>
+	</div>
+</form>

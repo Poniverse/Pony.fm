@@ -1,4 +1,4 @@
-angular.module('ponyfm').controller "account-content-tracks", [
+angular.module('ponyfm').controller "account-tracks", [
 	'$scope', '$state', 'taxonomies', '$dialog', 'lightbox'
 	($scope, $state, taxonomies, $dialog, lightbox) ->
 		$('#coverPreview').load () ->

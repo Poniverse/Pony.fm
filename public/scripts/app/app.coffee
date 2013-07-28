@@ -10,21 +10,32 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date'], [
 			controller: 'account-settings'
 
 		state.state 'account-content',
-			url: '/account/content'
+			url: '/account'
 			abstract: true
 			templateUrl: '/templates/account/content/_layout.html'
 
 		state.state 'account-content.tracks',
 			url: '/tracks'
 			templateUrl: '/templates/account/content/tracks.html'
-			controller: 'account-content-tracks'
+			controller: 'account-tracks'
 
 		state.state 'account-content.tracks.edit',
-			url: '/:track_id'
+			url: '/edit/:track_id'
 
 		state.state 'account-content.albums',
 			url: '/albums'
 			templateUrl: '/templates/account/content/albums.html'
+			controller: 'account-albums'
+
+		state.state 'account-content.albums.create',
+			url: '/create'
+			templateUrl: '/templates/account/content/album.html'
+			controller: 'account-albums-edit'
+
+		state.state 'account-content.albums.edit',
+			url: '/edit/:album_id'
+			templateUrl: '/templates/account/content/album.html'
+			controller: 'account-albums-edit'
 
 		state.state 'account-content.playlists',
 			url: '/playlists'

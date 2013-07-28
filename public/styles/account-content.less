@@ -47,7 +47,7 @@
   }
 }
 
-.account-tracks-listing {
+.account-tracks-listing, .account-albums-listing {
   overflow-y: auto;
   margin: 0px;
   padding: 0px;
@@ -59,6 +59,15 @@
 	padding: 0px;
 	margin: 0px;
 	line-height: normal;
+
+	&.empty {
+	  .alert();
+	  float: none !important;
+	  width: auto !important;
+	  display: block;
+	  padding: 5px;
+	  font-size: 9pt;
+	}
 
 	&.is-published a {
 	  background: transparent;
@@ -329,12 +338,15 @@
   }
 
   &.closed {
-	.account-tracks-listing {
+	.account-tracks-listing, .account-albums-listing {
 	  .clearfix();
 
 	  li {
 		float: left;
 		width: 25%;
+
+		&.empty {
+		}
 	  }
 	}
   }
