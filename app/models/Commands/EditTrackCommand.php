@@ -70,7 +70,7 @@
 			}
 			else if (isset($this->_input['cover'])) {
 				$cover = $this->_input['cover'];
-				$track->cover_id = Image::Upload($cover, Auth::user())->id;
+				$track->cover_id = Image::upload($cover, Auth::user())->id;
 			} else if ($this->_input['remove_cover'] == 'true')
 				$track->cover_id = null;
 

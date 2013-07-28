@@ -15,11 +15,11 @@
 		public static $ImageTypes = [
 			self::NORMAL   =>  ['id' =>  self::NORMAL,    'name' => 'normal',    'width' => 350,  'height' => 350],
 			self::ORIGINAL =>  ['id' =>  self::ORIGINAL,  'name' => 'original',  'width' => null, 'height' => null],
-			self::SMALL    =>  ['id' =>  self::SMALL, 	 'name' => 'small',      'width' => 100,  'height' => 100],
+			self::SMALL    =>  ['id' =>  self::SMALL, 	  'name' => 'small',      'width' => 100,  'height' => 100],
 			self::THUMBNAIL => ['id' =>  self::THUMBNAIL, 'name' => 'thumbnail', 'width' => 50,   'height' => 50]
 		];
 
-		public static function GetImageTypeFromName($name) {
+		public static function getImageTypeFromName($name) {
 			foreach (self::$ImageTypes as $cover) {
 				if ($cover['name'] != $name)
 					continue;
@@ -30,7 +30,7 @@
 			return null;
 		}
 
-		public static function Upload($file, $user) {
+		public static function upload($file, $user) {
 			$hash = md5_file($file->getPathname());
 			$image = Image::whereHash($hash)->whereUploadedBy($user->id)->first();
 

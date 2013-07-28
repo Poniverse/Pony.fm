@@ -6,7 +6,7 @@
 
 	class ImagesController extends Controller {
 		public function getImage($id, $type) {
-			$coverType = Image::GetImageTypeFromName($type);
+			$coverType = Image::getImageTypeFromName($type);
 
 			if ($coverType == null)
 				App::abort(404);

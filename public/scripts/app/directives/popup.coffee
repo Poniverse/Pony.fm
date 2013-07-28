@@ -23,11 +23,18 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 				$popup.removeClass 'open'
 				return
 
-			position = $element.offset()
 			$popup.addClass 'open'
+
+			position = $element.offset()
+			left = position.left
+			right = left + $popup.width()
+			windowWidth = $(window).width() - 15
+			if right > windowWidth
+				left -= right - windowWidth
+
 			$popup.css
 				top: position.top + $element.height() + 10
-				left: position.left
+				left: left
 
 			open = true
 
