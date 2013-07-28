@@ -47,6 +47,7 @@
 					new FileAsset('scripts/base/jquery-ui.js'),
 					new FileAsset('scripts/base/jquery.colorbox.js'),
 					new FileAsset('scripts/base/underscore.js'),
+					new FileAsset('scripts/base/moment.js'),
 					new FileAsset('scripts/base/angular.js'),
 					new FileAsset('scripts/base/ui-bootstrap-tpls-0.4.0.js'),
 					new FileAsset('scripts/base/angular-ui-sortable.js'),

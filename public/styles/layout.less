@@ -6,9 +6,42 @@ html, body {
 }
 
 html body {
-  background: #2D2D2D;
   height: 100%;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  background: url('http://mlpforums.com/public/style_images/mlp/bg1.png');
+}
+
+.background-color {
+  background: rgba(42, 42, 42, 1);
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 50%;
+  height: 100%;
+  z-index: -5;
+}
+
+.background-one, .background-two {
+  z-index: -4;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  height: 100%;
+  width: 350px;
+  position: fixed;
+  background-size: 35%;
+}
+
+html .background-one {
+  background-image: url('/images/octavia.png');
+  background-position: bottom right;
+  opacity: .1;
+}
+
+html .background-two {
+  background-image: url('/images/vinyl.png');
+  background-position: bottom left;
+  opacity: .1;
+  display: none;
 }
 
 .site-content {
@@ -44,6 +77,7 @@ html body {
 
 header {
   .clearfix();
+  background: #222;
 
   > div {
 	max-width: 1200px;
@@ -75,7 +109,8 @@ header {
   .now-playing {
 	.clearfix();
 	margin-top: 5px;
-	margin-left: 144px;
+	padding-left: 5px;
+	margin-left: 149px;
 	background: #222;
 
 	.current-track {
@@ -90,6 +125,7 @@ header {
 	}
 
 	.transport {
+	  display: none;
 	  margin-top: 5px;
 	  margin-left: 6px;
 	  height: 5px;
@@ -239,14 +275,13 @@ header {
 	float: left;
 	width: 148px;
 	z-index: 2000;
-	background: #2D2D2D;
 
 	nav {
 	  h3 {
 		color: rgba(255, 255, 255, .6);
 		font-size: 12px;
 		padding: 5px;
-		background: rgba(0, 0, 0, .4);
+		background: #222;
 		line-height: normal;
 		font-weight: bold;
 		margin: 0px;
@@ -358,39 +393,50 @@ header {
 
   .site-content {
 	overflow: hidden;
-	border: 2px solid #222;
+	border: 5px solid #222;
 	border-top: none;
 	border-bottom: none;
-	.box-sizing(border-box);
 
 	height: 100%;
 	margin-left: 148px;
 
 	> div {
+	  .box-sizing(border-box);
 	  overflow: hidden;
 	  width: 100%;
 	  height: 100%;
 	  background: #fff;
+	  padding: 0px 15px;
+	  padding-top: 10px;
 	}
   }
 }
 
 .site-content {
   h1 {
-	padding: 5px 15px;
-	color: #000;
-	border-bottom: 2px solid #fd8500;
-	margin-bottom: -2px;
-	font-size: 12pt;
-	margin: 0px;
+	border: none;
+	background: none;
+	color: #747474;
+	font-weight: 300;
+	font-size: 24px;
 	line-height: normal;
 	font-weight: normal;
+	margin: 0px;
+	padding: 5px 0px;
+
+	a {
+	  display: block;
+	  float: right;
+	  font-size: 10pt;
+	  margin-top: 8px;
+	  text-decoration: none;
+	}
   }
 
   > div > .tabs {
 	.clearfix();
 	list-style: none;
-	border-bottom: 2px solid #ddd;
+	border-bottom: 4px solid #ddd;
 	margin: 0px;
 	padding: 0px;
 
@@ -401,26 +447,26 @@ header {
 
 	  a {
 		display: block;
-		float: left;
-		padding: 5px 15px;
-		color: #9c9c9c;
-		font-size: 12pt;
+		border: none;
+		background: none;
+		color: #747474;
+		font-weight: 300;
+		font-size: 15px;
+		line-height: normal;
+		font-weight: normal;
+		padding: 5px 10px;
 
 		&:hover {
 		  color: #000;
 		  text-decoration: none;
-		  border-bottom: 2px solid #fd8500;
-		  margin-bottom: -2px;
 		}
 	  }
 
 	  &.active {
-		#gradient>.vertical(#ddd, #eee);
-
 		a {
 		  color: #000;
-		  border-bottom: 2px solid orange;
-		  margin-bottom: -2px;
+		  border-bottom: 4px solid orange;
+		  margin-bottom: -4px;
 		  cursor: default;
 		}
 	  }

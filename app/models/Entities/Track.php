@@ -6,6 +6,7 @@
 	use External;
 	use getid3_writetags;
 	use Illuminate\Support\Facades\Log;
+	use Illuminate\Support\Facades\URL;
 	use Illuminate\Support\Str;
 	use Whoops\Example\Exception;
 	use Traits\SlugTrait;
@@ -51,6 +52,10 @@
 
 		public function getYear() {
 			return date('Y', strtotime($this->release_date));
+		}
+
+		public function getUrlAttribute() {
+			return URL::to('/tracks/' . $this->id . '/' . $this->slug);
 		}
 
 		public function getReleaseDate() {

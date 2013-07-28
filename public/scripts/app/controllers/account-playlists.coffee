@@ -32,7 +32,6 @@ angular.module('ponyfm').controller "account-playlists", [
 					$scope.playlists.splice _.indexOf($scope.playlists, (p) -> p.id == playlist.id), 1
 
 		$scope.$on 'playlist-updated', (e, playlist) ->
-			console.log playlist
 			index = _.indexOf($scope.playlists, (p) -> p.id == playlist.id)
 			content = $scope.playlists[index]
 			_.each playlist, (value, name) -> content[name] = value

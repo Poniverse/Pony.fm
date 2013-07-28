@@ -1,0 +1,81 @@
+@import 'base/bootstrap/bootstrap';
+@import 'mixins';
+
+.dashboard {
+  section {
+	.box-sizing(border-box);
+
+	width: 50%;
+	float: left;
+
+	&:first-child {
+	  padding-right: 10px;
+	}
+
+	&:last-child {
+	  padding-left: 10px;
+	}
+  }
+}
+
+.tracks-listing {
+  overflow-y: auto;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+
+  li {
+	overflow: hidden;
+	margin: 5px 0px;
+	padding: 0px;
+	padding-bottom: 5px;
+
+	img {
+	  .img-polaroid();
+	  padding: 3px;
+	  padding: 0px;
+	  display: block;
+	  height: 40px;
+	  width: 40px;
+	  float: left;
+	}
+
+	.icons {
+	  float: right;
+	  font-size: 13px;
+
+	  a, span {
+		display: block;
+		float: left;
+		margin: 0px 3px;
+	  }
+
+	  .icon-microphone-off {
+		opacity: .5;
+	  }
+	}
+
+	.info {
+	  margin-left: 51px;
+	  line-height: normal;
+
+	  .title {
+		.ellipsis();
+		display: block;
+		text-decoration: none;
+		color: @blue;
+	  }
+
+	  .metadata {
+		margin-top: 3px;
+		display: block;
+		color: #777;
+		font-size: 8pt;
+
+		a {
+		  color: fadeOut(@blue, 10%);
+		}
+	  }
+	}
+  }
+}

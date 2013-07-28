@@ -1,7 +1,6 @@
 angular.module('ponyfm').controller "sidebar", [
 	'$scope', '$dialog', 'playlists'
 	($scope, $dialog, playlists) ->
-
 		$scope.playlists = playlists.pinnedPlaylists
 
 		$scope.createPlaylist = () ->

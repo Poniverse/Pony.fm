@@ -7,6 +7,7 @@
 	use Illuminate\Auth\UserInterface;
 	use Illuminate\Auth\Reminders\RemindableInterface;
 	use Illuminate\Support\Facades\URL;
+	use Illuminate\Support\Str;
 	use Ratchet\Wamp\Exception;
 
 	class User extends \Eloquent implements UserInterface, RemindableInterface {
@@ -15,6 +16,10 @@
 
 		public function avatar() {
 			return $this->belongsTo('Entities\Image');
+		}
+
+		public function getUrlAttribute() {
+			return URL::to('/' . $this->slug);
 		}
 
 		public function getAuthIdentifier() {
@@ -27,6 +32,11 @@
 
 		public function getReminderEmail() {
 			return $this->email;
+		}
+
+		public function setDisplayName($value) {
+			$this->attributes['display_name'] = $value;
+			$this->attributes['slug'] = Str::slug($value);
 		}
 
 		public function getAvatarUrl($type = Image::NORMAL) {

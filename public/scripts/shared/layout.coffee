@@ -7,6 +7,12 @@ window.handleResize = () ->
 		$this = $ this
 		$this.height windowHeight - $this.offset().top
 
+	backgroundOne = $ '.background-one'
+	backgroundTwo = $ '.background-two'
+
+	backgroundOne.css 'left', $('.site-content ').offset().left - backgroundOne.width()
+	backgroundTwo.css 'left', $('.site-content').offset().left + $('.site-content').width()
+
 window.alignVertically = (element) ->
 	$element = $(element)
 	$parent = $element.parent()

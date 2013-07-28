@@ -11,6 +11,7 @@
 |
 */
 
+	Route::get('/dashboard', 'TracksController@getIndex');
 	Route::get('/tracks', 'TracksController@getIndex');
 	Route::get('/tracks/popular', 'TracksController@getIndex');
 	Route::get('/tracks/random', 'TracksController@getIndex');
@@ -37,6 +38,10 @@
 		Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
 
 		Route::get('/playlists/show/{id}', 'Api\Web\PlaylistsController@getShow');
+
+		Route::get('/tracks/recent', 'Api\Web\TracksController@getRecent');
+
+		Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 
 		Route::group(['before' => 'auth|csrf'], function() {
 			Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
