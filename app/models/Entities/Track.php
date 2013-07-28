@@ -37,6 +37,10 @@
 			return $this->belongsTo('Entities\Image');
 		}
 
+		public function showSongs() {
+			return $this->belongsToMany('Entities\ShowSong');
+		}
+
 		public function isPublished() {
 			return $this->published_at != null && $this->deleted_at == null;
 		}

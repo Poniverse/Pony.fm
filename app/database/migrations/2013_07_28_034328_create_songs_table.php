@@ -11,7 +11,7 @@ class CreateSongsTable extends Migration {
 			$table->string('slug', 200)->indexed();
 		});
 
-		Schema::create('track_show_songs', function($table) {
+		Schema::create('show_song_track', function($table) {
 			$table->increments('id');
 			$table->integer('track_id')->unsigned();
 			$table->integer('show_song_id')->unsigned();
@@ -2039,12 +2039,12 @@ Twilight Sparkle: Yes! Everythingâ€™s going to be just fine!",
 	}
 
 	public function down() {
-		Schema::table('track_show_songs', function($table){
-			$table->drop_foreign('track_show_songs_track_id_foreign');
-			$table->drop_foreign('track_show_songs_show_song_id_foreign');
+		Schema::table('show_song_track', function($table){
+			$table->drop_foreign('show_song_track_track_id_foreign');
+			$table->drop_foreign('show_song_track_show_song_id_foreign');
 		});
 
-		Schema::drop('track_show_songs');
+		Schema::drop('show_song_track');
 		Schema::drop('show_songs');
 	}
 }

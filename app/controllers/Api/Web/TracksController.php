@@ -67,12 +67,17 @@
 		}
 
 		public function getEdit($id) {
-			$track = Track::find($id);
+			$track = Track::with('showSongs')->find($id);
 			if (!$track)
 				return $this->notFound('Track ' . $id . ' not found!');
 
 			if ($track->user_id != Auth::user()->id)
 				return $this->notAuthorized();
+
+			$showSongs = [];
+			foreach ($track->showSongs as $showSong) {
+				$showSongs[] = ['id' => $showSong->id, 'title' => $showSong->title];
+			}
 
 			return Response::json([
 				'id' => $track->id,
@@ -93,7 +98,8 @@
 				'lyrics' => $track->lyrics,
 				'released_at' => $track->released_at,
 				'cover_url' => $track->hasCover() ? $track->getCoverUrl(Image::NORMAL) : null,
-				'real_cover_url' => $track->getCoverUrl(Image::NORMAL)
+				'real_cover_url' => $track->getCoverUrl(Image::NORMAL),
+				'show_songs' => $showSongs
 			], 200);
 		}
 

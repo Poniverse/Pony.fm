@@ -9,24 +9,43 @@ angular.module('ponyfm').controller "account-content-tracks", [
 		$scope.selectedTrack = null
 		$scope.isDirty = false
 		$scope.isSaving = false
-		$scope.taxonomies =
-			trackTypes: taxonomies.trackTypes
-			licenses: taxonomies.licenses
-			genres: taxonomies.genres
+		$scope.taxonomies = taxonomies
+		$scope.selectedSongsTitle = 'None'
+		$scope.selectedSongs = {}
+
+		updateSongDisplay = () ->
+			if _.size $scope.selectedSongs
+				$scope.selectedSongsTitle = (_.map _.values($scope.selectedSongs), (s) -> s.title).join(', ')
+			else
+				$scope.selectedSongsTitle = 'None'
+
+		$scope.toggleSong = (song) ->
+			$scope.isDirty = true
+			if $scope.selectedSongs[song.id]
+				delete $scope.selectedSongs[song.id]
+			else
+				$scope.selectedSongs[song.id] = song
+
+			updateSongDisplay()
 
 		$scope.updateIsVocal = () ->
 			delete $scope.errors.lyrics if !$scope.edit.is_vocal
 
 		$scope.previewCover = () ->
-			return if !$scope.edit.cover
-			if typeof($scope.edit.cover) == 'object'
-				lightbox.openDataUrl $('#coverPreview').attr 'src'
+			return if !$scope.edit.cover && !$scope.edit.cover_id
+
+			if $scope.edit.cover_id
+				lightbox.openImageUrl $scope.cover_url
 			else
-				lightbox.openImageUrl $scope.edit.cover
+				if typeof($scope.edit.cover) == 'object'
+					lightbox.openDataUrl $('#coverPreview').attr 'src'
+				else
+					lightbox.openImageUrl $scope.edit.cover
 
 		$scope.selectGalleryImage = (image) ->
 			$('#coverPreview').attr 'src', image.url
 			$scope.edit.cover_id = image.id
+			$scope.cover_url = image.url_normal
 			$scope.edit.remove_cover = false
 			$scope.edit.cover = null
 			$scope.isDirty = true
@@ -57,6 +76,9 @@ angular.module('ponyfm').controller "account-content-tracks", [
 						formData.append name, value, value.name
 				else
 					formData.append name, value
+
+			if $scope.edit.track_type_id == 2
+				formData.append 'show_song_ids', _.map(_.values($scope.selectedSongs), (s) -> s.id).join()
 
 			xhr.open 'POST', '/api/web/tracks/edit/' + $scope.edit.id, true
 			xhr.setRequestHeader 'X-Token', pfm.token
@@ -195,6 +217,10 @@ angular.module('ponyfm').controller "account-content-tracks", [
 					if track.cover_url
 						$('#coverPreview').attr 'src', track.cover_url
 						$scope.isCoverLoaded = true
+
+					$scope.selectedSongs = {}
+					$scope.selectedSongs[song.id] = song for song in track.show_songs
+					updateSongDisplay()
 
 		$scope.touchModel = -> $scope.isDirty = true
 

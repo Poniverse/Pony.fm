@@ -20,6 +20,7 @@
 				$images[] = [
 					'id' => $image->id,
 					'url' => $image->getUrl(Image::SMALL),
+					'url_normal' => $image->getUrl(Image::NORMAL),
 					'filename' => $image->filename
 				];
 			}

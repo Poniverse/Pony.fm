@@ -34,17 +34,22 @@
 		public function execute() {
 			$isVocal = isset($this->_input['is_vocal']) && $this->_input['is_vocal'] == 'true' ? true : false;
 
-			$validator = \Validator::make($this->_input, [
-				'title'			=>	'required|min:3|max:80',
-				'released_at'	=>	'before:today' . ($this->_input['released_at'] != "" ? '|date' : ''),
-				'lyrics'		=>	$isVocal ? 'required' : '',
-				'license_id'	=>	'required|exists:licenses,id',
-				'genre_id'		=>	'required|exists:genres,id',
-				'cover'			=>	'image|mimes:png|min_width:350|min_height:350',
-				'track_type_id'	=>	'required|exists:track_types,id',
-				'songs'			=>	'required_when:track_type,2|exists:songs,id',
-				'cover_id'		=>  'exists:images,id'
-			]);
+			$rules = [
+				'title'			=> 'required|min:3|max:80',
+				'released_at'	=> 'before:today' . ($this->_input['released_at'] != "" ? '|date' : ''),
+				'lyrics'		=> $isVocal ? 'required' : '',
+				'license_id'	=> 'required|exists:licenses,id',
+				'genre_id'		=> 'required|exists:genres,id',
+				'cover'			=> 'image|mimes:png|min_width:350|min_height:350',
+				'track_type_id'	=> 'required|exists:track_types,id',
+				'songs'			=> 'required_when:track_type,2|exists:songs,id',
+				'cover_id'		=> 'exists:images,id',
+			];
+
+			if ($this->_input['track_type_id'] == 2)
+				$rules['show_song_ids'] = 'required|exists:show_songs,id';
+
+			$validator = \Validator::make($this->_input, $rules);
 
 			if ($validator->fails())
 				return CommandResponse::fail($validator);
@@ -60,6 +65,11 @@
 			$track->is_explicit = $this->_input['is_explicit'] == 'true';
 			$track->is_downloadable = $this->_input['is_downloadable'] == 'true';
 			$track->is_vocal = $isVocal;
+
+			if ($track->track_type_id == 2) {
+				$track->showSongs()->sync(explode(',', $this->_input['show_song_ids']));
+			} else
+				$track->showSongs()->sync([]);
 
 			if ($track->published_at == null) {
 				$track->published_at = new \DateTime();
