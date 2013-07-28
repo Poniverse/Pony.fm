@@ -67,16 +67,16 @@
 
 		protected $table = 'images';
 
-		public function getUrl($type = Cover::NORMAL) {
+		public function getUrl($type = self::NORMAL) {
 			$type = self::$ImageTypes[$type];
 			return URL::to('i' . $this->id . '/' . $type['name'] . '.png');
 		}
 
-		public function getFile($type = Cover::NORMAL) {
+		public function getFile($type = self::NORMAL) {
 			return $this->getDirectory() . '/' . $this->getFilename($type);
 		}
 
-		public function getFilename($type = Cover::NORMAL) {
+		public function getFilename($type = self::NORMAL) {
 			$typeInfo = self::$ImageTypes[$type];
 			return $this->id . '_' . $typeInfo['name'] . '.png';
 		}

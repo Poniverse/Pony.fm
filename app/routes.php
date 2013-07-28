@@ -50,9 +50,13 @@
 			Route::post('/playlists/create', 'Api\Web\PlaylistsController@postCreate');
 			Route::post('/playlists/delete/{id}', 'Api\Web\PlaylistsController@postDelete');
 			Route::post('/playlists/edit/{id}', 'Api\Web\PlaylistsController@postEdit');
+
+			Route::post('/account/settings/save', 'Api\Web\AccountController@postSave');
 		});
 
 		Route::group(['before' => 'auth'], function() {
+			Route::get('/account/settings', 'Api\Web\AccountController@getSettings');
+
 			Route::get('/images/owned', 'Api\Web\ImagesController@getOwned');
 
 			Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');

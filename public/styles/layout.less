@@ -25,12 +25,12 @@ html body {
 }
 
 .site-content-animate-enter {
-  opacity: 0;
   .transition(all 400ms ease-out);
+  .transform(translate(0, -100%));
 }
 
 .site-content-animate-enter.site-content-animate-enter-active {
-  opacity: 1;
+  .transform(translate(0, 0));
 }
 
 .site-content-animate-leave {
@@ -39,8 +39,7 @@ html body {
 }
 
 .site-content-animate-leave.site-content-animate-leave-active {
-  opacity: .5;
-  .transform(scale(.95));
+  .transform(translate(0, 100%));
 }
 
 header {

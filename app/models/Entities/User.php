@@ -6,16 +6,14 @@
 	use Gravatar;
 	use Illuminate\Auth\UserInterface;
 	use Illuminate\Auth\Reminders\RemindableInterface;
+	use Illuminate\Support\Facades\URL;
+	use Ratchet\Wamp\Exception;
 
 	class User extends \Eloquent implements UserInterface, RemindableInterface {
 		protected $table = 'users';
 		protected $hidden = ['password_hash', 'password_salt', 'bio'];
 
 		public function avatar() {
-			return $this->hasOne('Entities\Image');
-		}
-
-		public function cover() {
 			return $this->belongsTo('Entities\Image');
 		}
 
@@ -31,9 +29,9 @@
 			return $this->email;
 		}
 
-		public function getAvatarUrl($type = Cover::NORMAL) {
+		public function getAvatarUrl($type = Image::NORMAL) {
 			if (!$this->uses_gravatar)
-				return $this->cover->getUrl();
+				return $this->avatar->getUrl();
 
 			$email = $this->gravatar;
 			if (!strlen($email))
@@ -42,11 +40,11 @@
 			return Gravatar::getUrl($email, Image::$ImageTypes[$type]['width']);
 		}
 
-		public function getAvatarFile($type = Cover::NORMAL) {
+		public function getAvatarFile($type = Image::NORMAL) {
 			if ($this->uses_gravatar)
-				return $this->user->getAvatar($type);
+				throw new Exception('Cannot get avatar file if this user is configured to use Gravatar!');
 
-			$cover = Cover::$Covers[$type];
-			return URL::to('t' . $this->id . '/cover_' . $cover['name'] . '.png?' . $this->cover_id);
+			$imageType = Image::$ImageTypes[$type];
+			return URL::to('t' . $this->id . '/cover_' . $imageType['name'] . '.png?' . $this->cover_id);
 		}
 	}
