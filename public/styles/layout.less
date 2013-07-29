@@ -21,60 +21,6 @@ html body {
   z-index: -5;
 }
 
-.background-one, .background-two {
-  z-index: -4;
-  background-repeat: no-repeat;
-  background-position: bottom right;
-  height: 100%;
-  width: 350px;
-  position: fixed;
-  background-size: 35%;
-}
-
-html .background-one {
-  background-image: url('/images/octavia.png');
-  background-position: bottom right;
-  opacity: .1;
-}
-
-html .background-two {
-  background-image: url('/images/vinyl.png');
-  background-position: bottom left;
-  opacity: .1;
-  display: none;
-}
-
-.site-content {
-  .perspective();
-  position: relative;
-}
-
-.site-content-animate-enter, .site-content-animate-leave {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-}
-
-.site-content-animate-enter {
-  .transition(all 400ms ease-out);
-  .transform(translate(0, -100%));
-}
-
-.site-content-animate-enter.site-content-animate-enter-active {
-  .transform(translate(0, 0));
-}
-
-.site-content-animate-leave {
-  .transition(all 400ms ease-out);
-  .transform(translate(0, 0));
-}
-
-.site-content-animate-leave.site-content-animate-leave-active {
-  .transform(translate(0, 100%));
-}
-
 header {
   .clearfix();
   background: #222;
@@ -392,23 +338,35 @@ header {
   }
 
   .site-content {
+	.perspective();
 	overflow: hidden;
 	border: 5px solid #222;
 	border-top: none;
 	border-bottom: none;
+	position: relative;
 
 	height: 100%;
 	margin-left: 148px;
 
 	> div {
 	  .box-sizing(border-box);
-	  overflow: hidden;
 	  width: 100%;
 	  height: 100%;
 	  background: #fff;
 	  padding: 0px 15px;
 	  padding-top: 10px;
 	}
+  }
+}
+
+.inner-view {
+  position: relative;
+
+  > div {
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	position: relative;
   }
 }
 

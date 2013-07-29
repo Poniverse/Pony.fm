@@ -88,7 +88,7 @@
 				</ul>
 			</nav>
 		</section>
-		<section ui-view class="site-content" ng-animate="'site-content-animate'">
+		<section ui-view class="site-content">
 			@yield('app_content')
 		</section>
 	</div>

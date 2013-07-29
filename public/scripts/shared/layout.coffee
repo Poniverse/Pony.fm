@@ -2,16 +2,17 @@ window.handleResize = () ->
 	windowHeight = $(window).height()
 	$siteBody = $ '.site-body'
 	$siteBody.height windowHeight - $('header').height() - 1
+	redo = false
 
 	$('.stretch-to-bottom').each () ->
 		$this = $ this
-		$this.height windowHeight - $this.offset().top
+		newHeight = windowHeight - $this.offset().top + 1
+		if newHeight <= 0
+			redo = true
+		else
+			$this.height newHeight
 
-	backgroundOne = $ '.background-one'
-	backgroundTwo = $ '.background-two'
-
-	backgroundOne.css 'left', $('.site-content ').offset().left - backgroundOne.width()
-	backgroundTwo.css 'left', $('.site-content').offset().left + $('.site-content').width()
+	window.setTimeout(window.handleResize, 0) if redo
 
 window.alignVertically = (element) ->
 	$element = $(element)
