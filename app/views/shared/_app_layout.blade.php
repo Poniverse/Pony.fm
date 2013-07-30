@@ -88,9 +88,9 @@
 				</ul>
 			</nav>
 		</section>
-		<section ui-view class="site-content">
+		<ui-view class="site-content">
 			@yield('app_content')
-		</section>
+		</ui-view>
 	</div>
 
 	<ng-include src="'templates/partials/upload-dialog.html'" />

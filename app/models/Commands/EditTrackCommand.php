@@ -107,7 +107,7 @@
 			$track->updateTags();
 			$track->save();
 
-			return CommandResponse::succeed();
+			return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);
 		}
 
 		private function removeTrackFromAlbum($track) {

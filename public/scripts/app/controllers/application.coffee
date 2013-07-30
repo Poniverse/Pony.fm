@@ -1,52 +1,51 @@
 angular.module('ponyfm').controller "application", [
-	'$scope', 'auth', '$location', 'upload', '$state', '$stateParams', 'taxonomies'
-	($scope, auth, $location, upload, $state, $stateParams, taxonomies) ->
+	'$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector'
+	($scope, auth, $location, upload, $state, $stateParams, $injector) ->
 		$scope.auth = auth.data
 		$scope.$state = $state
 		$scope.$stateParams = $stateParams
+		$loadingElement = null
 
 		$scope.logout = () ->
 			auth.logout().done -> location.reload()
 
 		$scope.isActive = (loc) -> $location.path() == loc
 		$scope.$on '$viewContentLoaded', () ->
-			window.setTimeout window.handleResize, 500
+			window.handleResize()
 
-		# Show loading screen here?
-		taxonomies.refresh()
+			if $loadingElement
+				$loadingElement.removeClass 'loading'
+				$loadingElement = null
 
-		$scope.mainViewAnimation = 'slide-down';
-
+		statesPreloaded = {}
 		$scope.$on '$stateChangeStart', (e, newState, newParams, oldState) ->
-			oldIndex =
-				if (oldState && oldState.navigation && oldState.navigation.index)
-					oldState.navigation.index
-				else
-					0
+			return if !oldState || !newState.controller
 
-			newIndex =
-				if (newState && newState.navigation && newState.navigation.index)
-					newState.navigation.index
-				else
-					0
+			preloader = window.pfm.preloaders[newState.controller]
+			return if !preloader
 
-			oldSubIndex =
-				if (oldState && oldState.navigation && oldState.navigation.subIndex)
-					oldState.navigation.subIndex
-				else
-					0
+			if statesPreloaded[newState]
+				delete statesPreloaded[newState]
+				return
 
-			newSubIndex =
-				if (newState && newState.navigation && newState.navigation.subIndex)
-					newState.navigation.subIndex
-				else
-					0
+			e.preventDefault()
 
-			$scope.mainViewAnimation = 'slide-down' if oldIndex > newIndex
-			$scope.mainViewAnimation = 'slide-up' if oldIndex < newIndex
-			$scope.mainViewAnimation = 'slide-right' if oldIndex == newIndex
+			selector = ''
+			newParts = newState.name.split '.'
+			oldParts = oldState.name.split '.'
+			zipped = _.zip(newParts, oldParts)
+			for i in [0..zipped.length]
+				break if !zipped[i] || zipped[i][0] != zipped[i][1]
+				selector += ' ui-view '
 
-			$scope.subViewAnimation = 'slide-right' if oldSubIndex > newSubIndex
-			$scope.subViewAnimation = 'slide-left' if oldSubIndex < newSubIndex
-			$scope.subViewAnimation = 'slide-up' if oldSubIndex == newSubIndex
+			selector += ' ui-view ' if newState.name != oldState.name
+
+			$loadingElement = $ selector
+			$loadingElement.addClass 'loading'
+
+			stateToInject = angular.copy newState
+			stateToInject.params = newParams
+			$injector.invoke(preloader, null, {$state: stateToInject}).then ->
+				statesPreloaded[newState] = true
+				$state.transitionTo newState, newParams
 ]

@@ -21,6 +21,36 @@ html body {
   z-index: -5;
 }
 
+ui-view {
+  display: block;
+
+  &:before {
+	.transition(opacity 250ms);
+
+	opacity: 0;
+	background: #fff;
+	content: ' ';
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	display: block;
+	overflow: hidden;
+  }
+
+  &.loading {
+	position: relative;
+
+	&:before {
+	  opacity: .8;
+	  width: 100%;
+	  height: 100%;
+	}
+  }
+}
+
 header {
   .clearfix();
   background: #222;

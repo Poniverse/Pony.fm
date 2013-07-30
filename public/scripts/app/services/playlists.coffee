@@ -1,8 +1,20 @@
 angular.module('ponyfm').factory('playlists', [
-	'$rootScope', '$state'
-	($rootScope, $state) ->
+	'$rootScope', '$state', '$http'
+	($rootScope, $state, $http) ->
+		playlistDef = null
+
 		self =
 			pinnedPlaylists: []
+			refreshOwned: (force) ->
+				force = force || false
+				return playlistDef if !force && playlistDef
+
+				playlistDef = new $.Deferred()
+				$http.get('/api/web/playlists/owned').success (playlists) ->
+					playlistDef.resolve playlists
+
+				playlistDef
+
 			refresh: () ->
 				$.getJSON('/api/web/playlists/pinned')
 					.done (playlists) -> $rootScope.$apply ->

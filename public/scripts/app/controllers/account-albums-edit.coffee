@@ -1,6 +1,16 @@
+window.pfm.preloaders['account-albums-edit'] = [
+	'account-tracks', 'account-albums', '$state'
+	(tracks, albums, $state) ->
+		defs = [tracks.refresh()]
+		if $state.params.album_id
+			defs.push albums.getEdit($state.params.album_id, true)
+
+		$.when.all defs
+]
+
 angular.module('ponyfm').controller "account-albums-edit", [
-	'$scope', '$state', 'taxonomies', '$dialog', 'lightbox'
-	($scope, $state, taxonomies, $dialog, lightbox) ->
+	'$scope', '$state', '$dialog', 'account-albums'
+	($scope, $state, $dialog, albums) ->
 		$scope.isNew = $state.params.album_id == undefined
 		$scope.data.isEditorOpen = true
 		$scope.errors = {}
@@ -38,33 +48,6 @@ angular.module('ponyfm').controller "account-albums-edit", [
 
 			$scope.isDirty = true
 
-		$scope.refresh = () ->
-			return if $scope.isNew
-			$.getJSON('/api/web/albums/edit/' + $state.params.album_id)
-				.done (album) -> $scope.$apply ->
-					$scope.isDirty = false
-					$scope.errors = {}
-					$scope.album =
-						id: album.id
-						title: album.title
-						description: album.description
-						remove_cover: false
-						cover: album.cover_url
-
-					$scope.tracks = []
-					$scope.tracks.push track for track in album.tracks
-					$scope.trackIds[track.id] = track for track in album.tracks
-					$scope.data.selectedAlbum.title = album.title
-					$scope.data.selectedAlbum.description = album.description
-					$scope.data.selectedAlbum.covers.normal = album.real_cover_url
-
-		if $scope.isNew
-			$scope.album =
-				title: ''
-				description: ''
-		else
-			$scope.refresh();
-
 		$scope.$on '$destroy', -> $scope.data.isEditorOpen = false
 
 		$scope.saveAlbum = ->
@@ -92,7 +75,9 @@ angular.module('ponyfm').controller "account-albums-edit", [
 					$scope.$emit 'album-created'
 					$state.transitionTo 'account-content.albums.edit', {album_id: response.id}
 				else
-					$scope.refresh()
+					$scope.isDirty = false
+					$scope.data.selectedAlbum.title = $scope.album.title
+					$scope.data.selectedAlbum.covers.normal = response.real_cover_url
 
 			formData = new FormData()
 
@@ -134,7 +119,29 @@ angular.module('ponyfm').controller "account-albums-edit", [
 
 			$scope.isDirty = true
 
-		$scope.$on '$stateChangeStart', (e) ->
-			return if $scope.selectedTrack == null || !$scope.isDirty
+		if !$scope.isNew
+			albums.getEdit($state.params.album_id).done (album) ->
+				$scope.album =
+					id: album.id
+					title: album.title
+					description: album.description
+					remove_cover: false
+					cover: album.cover_url
+
+				$scope.tracks = []
+				$scope.tracks.push track for track in album.tracks
+				$scope.trackIds[track.id] = track for track in album.tracks
+
+		else
+			$scope.album =
+				title: ''
+				description: ''
+
+		window.onbeforeunload = ->
+			return if !$scope.isDirty
+			"Are you sure you want to leave this page without saving your changes?"
+
+		$scope.$on '$locationChangeStart', (e) ->
+			return if !$scope.isDirty
 			e.preventDefault() if !confirm('Are you sure you want to leave this page without saving your changes?')
 ]

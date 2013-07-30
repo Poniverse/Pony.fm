@@ -1,6 +1,6 @@
 angular.module('ponyfm').factory('taxonomies', [
-	'$rootScope'
-	($rootScope) ->
+	'$rootScope', '$http'
+	($rootScope, $http) ->
 		def = null
 
 		self =
@@ -9,17 +9,18 @@ angular.module('ponyfm').factory('taxonomies', [
 			genres: []
 			showSongs: []
 			refresh: () ->
-				return def if def != null
+				return def.promise() if def != null
 
 				def = new $.Deferred()
-				$.getJSON('/api/web/taxonomies/all')
-					.done (taxonomies) -> $rootScope.$apply ->
+				$http.get('/api/web/taxonomies/all')
+					.success (taxonomies) ->
 						self.trackTypes.push t for t in taxonomies.track_types
 						self.licenses.push t for t in taxonomies.licenses
 						self.genres.push t for t in taxonomies.genres
 						self.showSongs.push t for t in taxonomies.show_songs
 						def.resolve self
-				def
+
+				def.promise()
 
 		self
 ])

@@ -12,9 +12,6 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 		$positionParent = null
 		open = false
 
-		$popup.parents().each () ->
-			$this = $ this
-			$positionParent = $this if $positionParent == null && ($this.css('position') == 'relative' || $this.is 'body')
 
 		documentClickHandler = () ->
 			return if !open
@@ -22,6 +19,10 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 			open = false
 
 		calculatePosition = ->
+			$popup.parents().each () ->
+				$this = $ this
+				$positionParent = $this if $positionParent == null && ($this.css('position') == 'relative' || $this.is 'body')
+
 			position = $element.offset()
 			parentPosition = $positionParent.offset()
 
@@ -42,7 +43,7 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 				height = windowHeight - top;
 
 			return {
-				left: left - parentPosition.left - 2
+				left: left - parentPosition.left - 5
 				top: top - parentPosition.top,
 				height: height - 15}
 
@@ -70,13 +71,15 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 			$popup.addClass 'open'
 
 			$popup.css 'height', 'auto'
-			position = calculatePosition()
-			$popup.css
-				left: position.left
-				top: position.top
-				height: position.height
+			window.setTimeout (->
+				position = calculatePosition()
+				$popup.css
+					left: position.left
+					top: position.top
+					height: position.height
 
-			open = true
+				open = true
+			), 0
 
 		scope.$on '$destroy', () ->
 			$(document.body).unbind 'click', documentClickHandler

@@ -61,6 +61,6 @@
 			$this->_album->syncTrackIds($trackIds);
 			$this->_album->save();
 
-			return CommandResponse::succeed();
+			return CommandResponse::succeed(['real_cover_url' => $this->_album->getCoverUrl(Image::NORMAL)]);
 		}
 	}

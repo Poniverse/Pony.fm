@@ -1,12 +1,17 @@
+window.pfm.preloaders['account-playlists'] = [
+	'playlists'
+	(playlists) -> playlists.refreshOwned true
+]
+
 angular.module('ponyfm').controller "account-playlists", [
 	'$scope', 'auth', '$dialog', 'playlists'
 	($scope, auth, $dialog, playlists) ->
 		$scope.playlists = []
 
-		$scope.refresh = ->
-			$.get('/api/web/playlists/owned')
-				.done (playlists) -> $scope.$apply ->
-					$scope.playlists.push playlist for playlist in playlists
+		loadPlaylists = (playlists) ->
+			$scope.playlists.push playlist for playlist in playlists
+
+		playlists.refreshOwned().done loadPlaylists
 
 		$scope.editPlaylist = (playlist) ->
 			dialog = $dialog.dialog
@@ -36,6 +41,4 @@ angular.module('ponyfm').controller "account-playlists", [
 			content = $scope.playlists[index]
 			_.each playlist, (value, name) -> content[name] = value
 			$scope.playlists.sort (left, right) -> left.title.localeCompare right.title
-
-		$scope.refresh();
 ]
