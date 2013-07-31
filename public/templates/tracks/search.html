@@ -54,7 +54,7 @@
 	</li>
 </ul>
 
-<div class="pagination" ng-show="totalPages > 0">
+<div class="pagination" ng-show="totalPages > 1">
 	<ul>
 		<li ng-class="{disabled: !prevPage}"><a href="#" ng-click="gotoPage(prevPage);" pfm-eat-click>Prev</a></li>
 		<li ng-repeat="page in pages" ng-class="{active: page == currentPage}">

@@ -67,6 +67,11 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 
 		# Tracks
 
+		state.state 'track',
+			url: '/tracks/{id:[^\-]+}-{slug}'
+			templateUrl: '/templates/tracks/show.html'
+			controller: 'track'
+
 		state.state 'tracks',
 			url: '/tracks'
 			templateUrl: '/templates/tracks/_layout.html'
@@ -104,7 +109,7 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 			templateUrl: '/templates/playlists/index.html'
 
 		state.state 'playlist',
-			url: '/playlist/:id/:slug'
+			url: '/playlist/{id:[^\-]+}-{slug}'
 			templateUrl: '/templates/playlists/show.html'
 			controller: 'playlist'
 

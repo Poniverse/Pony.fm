@@ -28,6 +28,84 @@
 			return self::select('id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at', 'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id');
 		}
 
+		public static function mapPublicTrackShow($track) {
+			$returnValue = self::mapPublicTrackSummary($track);
+			$returnValue['description'] = $track->description;
+			$returnValue['lyrics'] = $track->lyrics;
+			return $returnValue;
+		}
+
+		public static function mapPublicTrackSummary($track) {
+			return [
+				'id' => $track->id,
+				'title' => $track->title,
+				'user' => [
+					'id' => $track->user->id,
+					'name' => $track->user->display_name,
+					'url' => $track->user->url
+				],
+				'url' => $track->url,
+				'slug' => $track->slug,
+				'is_vocal' => $track->is_vocal,
+				'is_explicit' => $track->is_explicit,
+				'is_downloadable' => $track->is_downloadable,
+				'is_published' => $track->isPublished(),
+				'published_at' => $track->published_at,
+				'duration' => $track->duration,
+				'genre' => $track->genre != null
+					?
+					[
+						'id' => $track->genre->id,
+						'slug' => $track->genre->slug,
+						'name' => $track->genre->name
+					] : null,
+				'track_type_id' => $track->track_type_id,
+				'covers' => [
+					'thumbnail' => $track->getCoverUrl(Image::THUMBNAIL),
+					'small' => $track->getCoverUrl(Image::SMALL),
+					'normal' => $track->getCoverUrl(Image::NORMAL)
+				]
+			];
+		}
+
+		public static function mapPrivateTrackShow($track) {
+			$showSongs = [];
+			foreach ($track->showSongs as $showSong) {
+				$showSongs[] = ['id' => $showSong->id, 'title' => $showSong->title];
+			}
+
+			$returnValue = self::mapPrivateTrackSummary($track);
+			$returnValue['album_id'] = $track->album_id;
+			$returnValue['show_songs'] = $showSongs;
+			$returnValue['real_cover_url'] = $track->getCoverUrl(Image::NORMAL);
+			$returnValue['cover_url'] = $track->hasCover() ? $track->getCoverUrl(Image::NORMAL) : null;
+			$returnValue['released_at'] = $track->released_at;
+			$returnValue['lyrics'] = $track->lyrics;
+			$returnValue['description'] = $track->description;
+			$returnValue['is_downloadable'] = !$track->isPublished() ? true : (bool)$track->is_downloadable;
+			$returnValue['license_id'] = $track->license_id != null ? $track->license_id : 3;
+			return $returnValue;
+		}
+
+		public static function mapPrivateTrackSummary($track) {
+			return [
+				'id' => $track->id,
+				'title' => $track->title,
+				'user_id' => $track->user_id,
+				'slug' => $track->slug,
+				'is_vocal' => $track->is_vocal,
+				'is_explicit' => $track->is_explicit,
+				'is_downloadable' => $track->is_downloadable,
+				'is_published' => $track->isPublished(),
+				'created_at' => $track->created_at,
+				'published_at' => $track->published_at,
+				'duration' => $track->duration,
+				'genre_id' => $track->genre_id,
+				'track_type_id' => $track->track_type_id,
+				'cover_url' => $track->getCoverUrl(Image::SMALL)
+			];
+		}
+
 		protected $table = 'tracks';
 
 		public function genre() {
@@ -54,8 +132,15 @@
 			return date('Y', strtotime($this->release_date));
 		}
 
+		public function canView($user) {
+			if ($this->isPublished())
+				return true;
+
+			return $this->user_id == $user->id;
+		}
+
 		public function getUrlAttribute() {
-			return URL::to('/tracks/' . $this->id . '/' . $this->slug);
+			return URL::to('/tracks/' . $this->id . '-' . $this->slug);
 		}
 
 		public function getReleaseDate() {

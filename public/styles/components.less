@@ -98,11 +98,11 @@ html .dropdown-menu {
 
 	  li.selected {
 		a {
-		  background: @green;
+		  background: @blue;
 		  color: #fff;
 
 		  &:hover {
-			background: fadeout(@green, 20%);
+			background: fadeout(@blue, 20%);
 		  }
 		}
 	  }
@@ -191,22 +191,51 @@ html .dropdown-menu {
 }
 
 html {
+  .breadcrumb {
+	.border-radius(0px);
+	background: #eee;
+	margin-bottom: 10px;
+	font-size: 10pt;
+  }
+
   .pagination {
 	border: none;
+	background: #ccc;
+	margin: 5px 0px;
+	padding: 0px;
+	overflow: hidden;
+
+	ul {
+	  .border-radius(0px);
+	  margin: 5px;
+	  display: block;
+	  overflow: hidden;
+
+	  > li:first-child > a, > li:last-child > a {
+		.border-radius(0px);
+	  }
+
+	  li {
+		display: block;
+		float: left;
+
+		a {
+		  .border-radius(0px);
+		  border: none;
+		  padding: 1px 10px;
+		  display: block;
+		  float: left;
+		}
+	  }
+
+	  li.active a {
+		background: #444;
+		color: #ddd;
+	  }
+	}
 
 	&.pagination-right {
 	  float: right;
-	}
-
-	li a {
-	  .border-radius(0px);
-	  border: none;
-	  padding: 1px 10px;
-	}
-
-	li.active a {
-	  background: #444;
-	  color: #ddd;
 	}
   }
 }

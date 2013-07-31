@@ -1,7 +1,8 @@
 angular.module('ponyfm').factory('tracks', [
 	'$rootScope', '$http', 'taxonomies'
 	($rootScope, $http, taxonomies) ->
-		def = null
+		filterDef = null
+		trackCache = {}
 
 		class Query
 			cachedDef: null
@@ -97,7 +98,7 @@ angular.module('ponyfm').factory('tracks', [
 			fetch: () ->
 				return @cachedDef if @cachedDef
 				@cachedDef = new $.Deferred()
-				def = @cachedDef
+				trackDef = @cachedDef
 
 				query = '/api/web/tracks?'
 				parts = ['page=' + @page]
@@ -115,18 +116,28 @@ angular.module('ponyfm').factory('tracks', [
 					for listener in @listeners
 						listener tracks
 
-					def.resolve tracks
+					trackDef.resolve tracks
 
-				def.promise()
+				trackDef.promise()
 
 		self =
 			filters: {}
 
-			createQuery: -> new Query self.filters
-			loadFilters: ->
-				return def if def
+			fetch: (id, force) ->
+				force = force || false
+				return trackCache[id] if !force && trackCache[id]
+				trackDef = new $.Deferred()
+				$http.get('/api/web/tracks/' + id).success (track) ->
+					trackDef.resolve track
 
-				def = new $.Deferred()
+				trackCache[id] = trackDef.promise()
+
+			createQuery: -> new Query self.filters
+
+			loadFilters: ->
+				return filterDef if filterDef
+
+				filterDef = new $.Deferred()
 				self.filters.isVocal =
 					type: 'single'
 					values: [
@@ -174,9 +185,9 @@ angular.module('ponyfm').factory('tracks', [
 							id: song.id
 
 					self.mainQuery = self.createQuery()
-					def.resolve self
+					filterDef.resolve self
 
-				def.promise()
+				filterDef.promise()
 
 		self
 ])

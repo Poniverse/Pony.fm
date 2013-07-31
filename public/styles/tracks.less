@@ -126,3 +126,63 @@
 	}
   }
 }
+
+.track-details {
+  .cover-image {
+	img {
+	  .img-polaroid();
+	}
+  }
+
+  .lyrics {
+	position: relative;
+	overflow: hidden;
+	padding: 0px;
+	margin: 0px;
+
+	h2 {
+	}
+
+	.reveal {
+	  #gradient>.vertical(rgba(255,255,255,0), rgba(255,255,255,1));
+	  .box-sizing(border-box);
+	  position: absolute;
+	  top: 0px;
+	  left: 0px;
+	  width: 100%;
+	  height: 100%;
+	  z-index: 400;
+	  border: 2px solid #fff;
+	  cursor: pointer;
+
+	  &:hover {
+		border: 2px solid @blue;
+	  }
+
+	  a {
+		.box-sizing(border-box);
+		display: block;
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		width: 100%;
+		background: #eee;
+		padding: 3px;
+		z-index: 500;
+		text-decoration: none;
+		font-size: 10pt;
+	  }
+	}
+  }
+}
+
+html {
+  .track-toolbar {
+	background: #eee;
+	padding: 5px;
+
+	> .btn:first-child, > .btn:last-child {
+	  .border-radius(0px);
+	}
+  }
+}

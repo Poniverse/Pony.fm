@@ -35,7 +35,7 @@
 						<li ng-class="{selected: $state.includes('home')}"><a href="/">Home</a></li>
 					@endif
 					<li><h3>Discover</h3></li>
-					<li ng-class="{selected: $state.includes('tracks')}"><a href="/tracks">Music <i class="icon-music"></i></a></li>
+					<li ng-class="{selected: $state.includes('tracks') || $state.includes('track')}"><a href="/tracks">Music <i class="icon-music"></i></a></li>
 					<li ng-class="{selected: $state.includes('albums')}"><a href="/albums">Albums <i class="icon-music"></i></a></li>
 					<li ng-class="{selected: $state.includes('playlists')}"><a href="/playlists">Playlists <i class="icon-music"></i></a></li>
 					<li ng-class="{selected: $state.includes('artists')}"><a href="/artists">Artists <i class="icon-user"></i></a></li>

@@ -1,0 +1,57 @@
+<div>
+	<ul class="breadcrumb">
+		<li><a href="/tracks">Tracks</a> <span class="divider">/</span></li>
+		<li><a href="/tracks?filter=genres-{{track.genre.id}}">{{track.genre.name}}</a> <span class="divider">/</span></li>
+		<li class="active">{{track.title}}</li>
+	</ul>
+
+	<div class="track-toolbar btn-group pull-right">
+		<a href="#" class="btn btn-small">
+			Favourite This!
+			<i class="icon-star-empty"></i>
+		</a>
+		<a href="#" class="btn btn-small">
+			Add to Playlist <i class="caret"></i>
+		</a>
+		<div class="dropdown">
+			<a href="#" class="btn btn-small btn-info dropdown-toggle">
+				Downloads <i class="caret"></i>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a href="#"></a></li>
+			</ul>
+		</div>
+	</div>
+
+	<h1>
+		{{track.title}}
+		<span class="subtitle">
+			by: <a href="{{track.user.url}}">{{track.user.name}}</a>
+		</span>
+	</h1>
+
+	<div class="track-details">
+		<div class="row-fluid">
+			<div class="span7">
+				<div class="description">
+					<p ng-bind-html-unsafe="track.description | noHTML | newlines"></p>
+				</div>
+
+				<div ng-show="track.is_vocal && track.lyrics.length" class="lyrics-panel">
+					<h2>Lyrics</h2>
+					<div class="lyrics revealable">
+						<div class="reveal">
+							<a href="#">Click to reveal full lyrics...</a>
+						</div>
+						<p class="content" ng-bind-html-unsafe="track.lyrics | noHTML | newlines"></p>
+					</div>
+				</div>
+			</div>
+			<div class="span5 cover-image">
+				<img ng-src="{{track.covers.normal}}" />
+			</div>
+		</div>
+
+		<h2>Comments</h2>
+	</div>
+</div>

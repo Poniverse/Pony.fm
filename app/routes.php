@@ -16,6 +16,9 @@
 	Route::get('/tracks/popular', 'TracksController@getIndex');
 	Route::get('/tracks/random', 'TracksController@getIndex');
 
+	Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
+	Route::get('t{id}', 'TracksController@getShortlink' );
+
 	Route::get('/albums', 'AlbumsController@getIndex');
 	Route::get('/artists', 'ArtistsController@getIndex');
 	Route::get('/playlists', 'PlaylistsController@getIndex');
@@ -30,7 +33,6 @@
 
 	Route::get('u{id}/avatar_{type}.png', 'UsersController@getAvatar');
 
-	Route::get('playlist/{id}/{slug}', 'PlaylistsController@getPlaylist');
 	Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
 	Route::get('p{id}', 'PlaylistsController@getShortlink');
 
@@ -41,6 +43,7 @@
 
 		Route::get('/tracks/recent', 'Api\Web\TracksController@getRecent');
 		Route::get('/tracks', 'Api\Web\TracksController@getIndex');
+		Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');
 
 		Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 

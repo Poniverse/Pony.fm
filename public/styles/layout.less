@@ -403,12 +403,11 @@ header {
 }
 
 .site-content {
-  h1 {
+  h1, h2 {
 	border: none;
 	background: none;
 	color: #747474;
 	font-weight: 300;
-	font-size: 24px;
 	line-height: normal;
 	font-weight: normal;
 	margin: 0px;
@@ -421,6 +420,27 @@ header {
 	  margin-top: 8px;
 	  text-decoration: none;
 	}
+
+	.subtitle {
+	  font-size: 10pt;
+	  display: block;
+	  padding: 3px 0px;
+
+	  a {
+		float: none;
+		display: inline;
+	  }
+	}
+  }
+
+  h1 {
+	font-size: 24px;
+  }
+
+  h2 {
+	font-size: 20px;
+	border-bottom: 2px solid #ddd;
+	margin-bottom: 2px;
   }
 
   > div > .tabs {
@@ -606,4 +626,8 @@ html {
 
 .upload-queue-leave {
   .transform(scale(1));
+}
+
+.stretch-to-bottom {
+  overflow-y: auto;
 }

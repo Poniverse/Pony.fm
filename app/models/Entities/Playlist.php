@@ -39,7 +39,7 @@
 		}
 
 		public function getUrlAttribute() {
-			return '/playlist/' . $this->id . '/' . $this->slug;
+			return '/playlist/' . $this->id . '-' . $this->slug;
 		}
 
 		public function getCoverUrl($type = Image::NORMAL) {

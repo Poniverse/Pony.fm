@@ -9,6 +9,17 @@ window.handleResize = () ->
 		if newHeight > 0
 			$this.height newHeight
 
+	$('.revealable').each () ->
+		$this = $ this
+		$this.data 'real-height', $this.height()
+		$this.css
+			height: '15em'
+
+		$this.find('.reveal').click (e) ->
+			e.preventDefault()
+			$this.css {height: 'auto'}
+			$(this).fadeOut 200
+
 window.alignVertically = (element) ->
 	$element = $(element)
 	$parent = $element.parent()

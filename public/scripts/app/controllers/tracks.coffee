@@ -1,3 +1,9 @@
+window.pfm.preloaders['tracks'] = [
+	'tracks', '$state'
+	(tracks) ->
+		tracks.loadFilters()
+]
+
 angular.module('ponyfm').controller "tracks", [
 	'$scope', 'tracks', '$state'
 	($scope, tracks, $state) ->
@@ -30,4 +36,6 @@ angular.module('ponyfm').controller "tracks", [
 
 		$scope.gotoPage = (page) ->
 			$state.transitionTo 'tracks.search.list', {filter: $state.params.filter, page: page}
+
+		$scope.$on '$destroy', -> tracks.mainQuery = tracks.createQuery()
 ]
