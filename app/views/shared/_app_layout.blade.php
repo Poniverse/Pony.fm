@@ -34,7 +34,6 @@
 					@else
 						<li ng-class="{selected: $state.includes('home')}"><a href="/">Home</a></li>
 					@endif
-					<li><a href="/tracks">Now Playing</a></li>
 					<li><h3>Discover</h3></li>
 					<li ng-class="{selected: $state.includes('tracks')}"><a href="/tracks">Music <i class="icon-music"></i></a></li>
 					<li ng-class="{selected: $state.includes('albums')}"><a href="/albums">Albums <i class="icon-music"></i></a></li>

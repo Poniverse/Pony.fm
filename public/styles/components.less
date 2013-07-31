@@ -1,5 +1,5 @@
-@import 'base/bootstrap/bootstrap';
-@import 'mixins';
+@import-once 'base/bootstrap/bootstrap';
+@import-once 'mixins';
 
 .fade-hide, .fade-show {
   .transition(all cubic-bezier(0.250, 0.460, 0.450, 0.940) 350ms);
@@ -51,6 +51,25 @@ html .dropdown-menu {
 	  padding: 3px 10px;
 	  font-size: 8pt;
 	}
+
+	> .dont-close {
+	  float: right;
+	  display: block;
+	  width: 24px;
+	  text-align: center;
+	  padding: 3px 3px;
+	}
+
+	> .dont-close + a {
+	  margin-right: 30px;
+	  clear: none;
+	}
+
+	&.selected {
+	  > .dont-close i:before {
+		content: "\f068";
+	  }
+	}
   }
 }
 
@@ -79,12 +98,11 @@ html .dropdown-menu {
 
 	  li.selected {
 		a {
-		  #gradient>.vertical(@green, darken(@green, 5%));
+		  background: @green;
 		  color: #fff;
-		  font-weight: bold;
 
 		  &:hover {
-			#gradient>.vertical(fadeout(@green, 20%), fadeout(darken(@green, 5%), 20%));
+			background: fadeout(@green, 20%);
 		  }
 		}
 	  }
@@ -169,5 +187,26 @@ html .dropdown-menu {
 
   .btn {
 	.border-radius(0px);
+  }
+}
+
+html {
+  .pagination {
+	border: none;
+
+	&.pagination-right {
+	  float: right;
+	}
+
+	li a {
+	  .border-radius(0px);
+	  border: none;
+	  padding: 1px 10px;
+	}
+
+	li.active a {
+	  background: #444;
+	  color: #ddd;
+	}
   }
 }

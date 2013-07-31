@@ -137,10 +137,6 @@ angular.module('ponyfm').controller "account-albums-edit", [
 				title: ''
 				description: ''
 
-		window.onbeforeunload = ->
-			return if !$scope.isDirty
-			"Are you sure you want to leave this page without saving your changes?"
-
 		$scope.$on '$locationChangeStart', (e) ->
 			return if !$scope.isDirty
 			e.preventDefault() if !confirm('Are you sure you want to leave this page without saving your changes?')

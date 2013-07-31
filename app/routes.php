@@ -40,6 +40,7 @@
 		Route::get('/playlists/show/{id}', 'Api\Web\PlaylistsController@getShow');
 
 		Route::get('/tracks/recent', 'Api\Web\TracksController@getRecent');
+		Route::get('/tracks', 'Api\Web\TracksController@getIndex');
 
 		Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 

@@ -1,5 +1,5 @@
-@import 'base/bootstrap/bootstrap';
-@import 'mixins';
+@import-once 'base/bootstrap/bootstrap';
+@import-once 'mixins';
 
 html, body {
   height: 100%;
@@ -13,6 +13,7 @@ html body {
 
 .background-color {
   background: rgba(42, 42, 42, 1);
+  background-image: url('/images/pattern4.jpg');
   position: fixed;
   left: 0px;
   top: 0px;
@@ -32,7 +33,7 @@ ui-view {
 	content: ' ';
 	top: 0px;
 	left: 0px;
-	z-index: 1000;
+	z-index: 999;
 	width: 0px;
 	height: 0px;
 	position: absolute;
@@ -53,6 +54,7 @@ ui-view {
 
 header {
   .clearfix();
+  .box-shadow(0px 1px 8px rgba(0, 0, 0, 0.2));
   background: #222;
 
   > div {

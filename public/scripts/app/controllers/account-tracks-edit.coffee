@@ -138,10 +138,6 @@ angular.module('ponyfm').controller "account-tracks-edit", [
 						$scope.$emit 'track-deleted'
 						$state.transitionTo 'account-content.tracks'
 
-		window.onbeforeunload = ->
-			return if !$scope.isDirty
-			"Are you sure you want to leave this page without saving your changes?"
-
 		$scope.$on '$locationChangeStart', (e) ->
 			return if !$scope.isDirty
 			e.preventDefault() if !confirm('Are you sure you want to leave this page without saving your changes?')

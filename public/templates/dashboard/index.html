@@ -7,19 +7,22 @@
 			</h1>
 			<ul class="tracks-listing stretch-to-bottom">
 				<li ng-repeat="track in recentTracks">
-					<img ng-src="{{track.covers.thumbnail}}" />
+					<div class="image">
+						<a href="#" class="play-button"><i class="icon-play"></i></a>
+						<img ng-src="{{track.covers.thumbnail}}" />
+					</div>
 					<div class="icons">
 						<span><i ng-class="{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
 						<a href="#"><i class="icon-star-empty"></i></a>
 					</div>
-					<div class="info">
-						<a href="{{track.url}}" class="title">{{track.title}}</a>
-							<span class="metadata">
-								by: <a href="{{track.user.url}}">{{track.user.name}}</a> /
-								<a href="#">{{track.genre.name}}</a> /
-								{{track.published_at.date | momentFromNow}}
-							</span>
-					</div>
+					<a class="info" href="{{track.url}}">
+						<span class="title">{{track.title}}</span>
+						<span class="metadata">
+							by: <span class="artist">{{track.user.name}}</span> /
+							<span class="genre">{{track.genre.name}}</span> /
+							{{track.published_at.date | momentFromNow}}
+						</span>
+					</a>
 				</li>
 			</ul>
 		</div>
@@ -32,19 +35,22 @@
 			</h1>
 			<ul class="tracks-listing stretch-to-bottom">
 				<li ng-repeat="track in recentTracks">
-					<img ng-src="{{track.covers.thumbnail}}" />
+					<div class="image">
+						<a href="#" class="play-button"><i class="icon-play"></i></a>
+						<img ng-src="{{track.covers.thumbnail}}" />
+					</div>
 					<div class="icons">
 						<span><i ng-class="{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
 						<a href="#"><i class="icon-star-empty"></i></a>
 					</div>
-					<div class="info">
-						<a href="{{track.url}}" class="title">{{track.title}}</a>
-							<span class="metadata">
-								by: <a href="{{track.user.url}}">{{track.user.name}}</a> /
-								<a href="#">{{track.genre.name}}</a> /
-								{{track.published_at.date | momentFromNow}}
-							</span>
-					</div>
+					<a class="info" href="{{track.url}}">
+						<span class="title">{{track.title}}</span>
+						<span class="metadata">
+							by: <span class="artist">{{track.user.name}}</span> /
+							<span class="genre">{{track.genre.name}}</span> /
+							{{track.published_at.date | momentFromNow}}
+						</span>
+					</a>
 				</li>
 			</ul>
 		</div>

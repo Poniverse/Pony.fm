@@ -1,14 +1,15 @@
+window.pfm.preloaders['dashboard'] = [
+	'dashboard'
+	(dashboard) -> dashboard.refresh(true)
+]
+
 angular.module('ponyfm').controller "dashboard", [
-	'$scope'
-	($scope) ->
+	'$scope', 'dashboard'
+	($scope, dashboard) ->
 		$scope.recentTracks = null
 		$scope.popularTracks = null
 
-		$scope.refresh = () ->
-			$.getJSON('/api/web/dashboard')
-				.done (res) -> $scope.$apply ->
-					$scope.recentTracks = res.recent_tracks
-					$scope.popularTracks = res.popular_tracks
-
-		$scope.refresh()
+		dashboard.refresh().done (res) ->
+			$scope.recentTracks = res.recent_tracks
+			$scope.popularTracks = res.popular_tracks
 ]

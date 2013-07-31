@@ -34,37 +34,30 @@
 			$tracks = [];
 
 			foreach ($query->get() as $track) {
-				$tracks[] = [
-					'id' => $track->id,
-					'title' => $track->title,
-					'user' => [
-						'id' => $track->user->id,
-						'name' => $track->user->display_name,
-						'url' => $track->user->url
-					],
-					'url' => $track->url,
-					'slug' => $track->slug,
-					'is_vocal' => $track->is_vocal,
-					'is_explicit' => $track->is_explicit,
-					'is_downloadable' => $track->is_downloadable,
-					'is_published' => $track->isPublished(),
-					'published_at' => $track->published_at,
-					'duration' => $track->duration,
-					'genre' => [
-						'id' => $track->genre->id,
-						'slug' => $track->genre->slug,
-						'name' => $track->genre->name
-					],
-					'track_type_id' => $track->track_type_id,
-					'covers' => [
-						'thumbnail' => $track->getCoverUrl(Image::THUMBNAIL),
-						'small' => $track->getCoverUrl(Image::SMALL),
-						'normal' => $track->getCoverUrl(Image::NORMAL)
-					]
-				];
+				$tracks[] = $this->mapPublicTrack($track);
 			}
 
 			return Response::json($tracks, 200);
+		}
+
+		public function getIndex() {
+			$page = 1;
+
+			if (Input::has('page'))
+				$page = Input::get('page');
+
+			$query = Track::summary()->whereNotNull('published_at');
+			$this->applyFilters($query);
+
+			$totalCount = $query->count();
+			$query->take(30)->skip(30 * ($page - 1));
+			$tracks = [];
+
+			foreach ($query->get() as $track) {
+				$tracks[] = $this->mapPublicTrack($track);
+			}
+
+			return Response::json(["tracks" => $tracks, "current_page" => $page, "total_pages" => ceil($totalCount / 30)], 200);
 		}
 
 		public function getOwned() {
@@ -78,24 +71,7 @@
 					$query->whereNull('published_at');
 			}
 
-			if (Input::has('order')) {
-				$order = \Input::get('order');
-				$parts = explode(',', $order);
-				$query->orderBy($parts[0], $parts[1]);
-			}
-
-			if (Input::has('in_album')) {
-				if (Input::get('in_album') == 'true')
-					$query->whereNotNull('album_id');
-				else
-					$query->whereNull('album_id');
-			}
-
-			if (Input::has('genres'))
-				$query->whereIn('genre_id', Input::get('genres'));
-
-			if (Input::has('types'))
-				$query->whereIn('track_type_id', Input::get('types'));
+			$this->applyFilters($query);
 
 			$dbTracks = $query->get();
 			$tracks = [];
@@ -158,5 +134,76 @@
 				'show_songs' => $showSongs,
 				'album_id' => $track->album_id
 			], 200);
+		}
+
+		private function mapPublicTrack($track) {
+			return [
+				'id' => $track->id,
+				'title' => $track->title,
+				'user' => [
+					'id' => $track->user->id,
+					'name' => $track->user->display_name,
+					'url' => $track->user->url
+				],
+				'url' => $track->url,
+				'slug' => $track->slug,
+				'is_vocal' => $track->is_vocal,
+				'is_explicit' => $track->is_explicit,
+				'is_downloadable' => $track->is_downloadable,
+				'is_published' => $track->isPublished(),
+				'published_at' => $track->published_at,
+				'duration' => $track->duration,
+				'genre' => $track->genre != null
+					?
+					[
+						'id' => $track->genre->id,
+						'slug' => $track->genre->slug,
+						'name' => $track->genre->name
+					] : null,
+				'track_type_id' => $track->track_type_id,
+				'covers' => [
+					'thumbnail' => $track->getCoverUrl(Image::THUMBNAIL),
+					'small' => $track->getCoverUrl(Image::SMALL),
+					'normal' => $track->getCoverUrl(Image::NORMAL)
+				]
+			];
+		}
+
+		private function applyFilters($query) {
+			if (Input::has('order')) {
+				$order = \Input::get('order');
+				$parts = explode(',', $order);
+				$query->orderBy($parts[0], $parts[1]);
+			}
+
+			if (Input::has('is_vocal')) {
+				$isVocal = \Input::get('is_vocal');
+				if ($isVocal == 'true')
+					$query->whereIsVocal(true);
+				else
+					$query->whereIsVocal(false);
+			}
+
+			if (Input::has('in_album')) {
+				if (Input::get('in_album') == 'true')
+					$query->whereNotNull('album_id');
+				else
+					$query->whereNull('album_id');
+			}
+
+			if (Input::has('genres'))
+				$query->whereIn('genre_id', Input::get('genres'));
+
+			if (Input::has('types'))
+				$query->whereIn('track_type_id', Input::get('types'));
+
+			if (Input::has('songs')) {
+				$query->join('show_song_track', 'tracks.id', '=', 'show_song_track.track_id')
+					->whereIn('show_song_track.show_song_id', Input::get('songs'));
+
+				$query->select('tracks.*');
+			}
+
+			return $query;
 		}
 	}

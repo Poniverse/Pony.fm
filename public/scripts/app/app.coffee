@@ -69,7 +69,26 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 
 		state.state 'tracks',
 			url: '/tracks'
-			templateUrl: '/templates/tracks/index.html'
+			templateUrl: '/templates/tracks/_layout.html'
+			abstract: true
+
+		state.state 'tracks.search',
+			templateUrl: '/templates/tracks/search.html'
+			controller: 'tracks'
+
+		state.state 'tracks.search.list',
+			url: '?filter&page'
+			templateUrl: '/templates/tracks/search-list.html'
+			controller: 'tracks-list'
+
+		state.state 'tracks.popular',
+			url: '/popular'
+			templateUrl: '/templates/tracks/search.html'
+			controller: 'tracks'
+
+		state.state 'tracks.random',
+			url: '/random'
+			templateUrl: '/templates/tracks/search.html'
 			controller: 'tracks'
 
 		# Albums
@@ -121,7 +140,7 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 		if window.pfm.auth.isLogged
 			state.state 'home',
 				url: '/'
-				templateUrl: '/templates/dashboard.html'
+				templateUrl: '/templates/dashboard/index.html'
 				controller: 'dashboard'
 		else
 			state.state 'home',

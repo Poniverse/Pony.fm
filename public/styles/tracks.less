@@ -1,5 +1,5 @@
-@import 'base/bootstrap/bootstrap';
-@import 'mixins';
+@import-once 'base/bootstrap/bootstrap';
+@import-once 'mixins';
 
 .dashboard {
   section {
@@ -24,25 +24,72 @@
   padding: 0px;
   list-style: none;
 
+  &.two-column {
+	li {
+	  .box-sizing(border-box);
+
+	  width: 50%;
+	  float: left;
+	  margin: 0px;
+	  padding: 5px;
+	}
+  }
+
   li {
 	overflow: hidden;
-	margin: 5px 0px;
+	margin: 10px 0px;
 	padding: 0px;
-	padding-bottom: 5px;
 
-	img {
-	  .img-polaroid();
-	  padding: 3px;
-	  padding: 0px;
-	  display: block;
+	&:hover {
+	  background: #eee;
+
+	  .image {
+		.play-button {
+		  display: block;
+		}
+	  }
+	}
+
+	.image {
 	  height: 40px;
 	  width: 40px;
 	  float: left;
+	  position: relative;
+
+	  .play-button {
+		.transition(background 250ms ease-out);
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		line-height: 38px;
+		text-align: center;
+		font-size: 12pt;
+		color: #fff;
+		text-decoration: none;
+		background: rgba(0, 0, 0, .4);
+		display: none;
+
+		&:hover {
+		  background: rgba(0, 0, 0, .8);
+		}
+	  }
+
+	  img {
+		.img-polaroid();
+		padding: 3px;
+		padding: 0px;
+		display: block;
+		height: 38px;
+		width: 38px;
+	  }
 	}
 
 	.icons {
 	  float: right;
 	  font-size: 13px;
+	  margin-right: 2px;
 
 	  a, span {
 		display: block;
@@ -56,7 +103,11 @@
 	}
 
 	.info {
-	  margin-left: 51px;
+	  text-decoration: none;
+	  display: block;
+	  padding: 3px 0px;
+	  margin-left: 40px;
+	  padding-left: 5px;
 	  line-height: normal;
 
 	  .title {
@@ -71,10 +122,6 @@
 		display: block;
 		color: #777;
 		font-size: 8pt;
-
-		a {
-		  color: fadeOut(@blue, 10%);
-		}
 	  }
 	}
   }
