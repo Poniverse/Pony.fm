@@ -31,15 +31,19 @@
 		}
 
 		public static function upload($file, $user) {
+			$userId = $user;
+			if ($user instanceof User)
+				$userId = $user->id;
+
 			$hash = md5_file($file->getPathname());
-			$image = Image::whereHash($hash)->whereUploadedBy($user->id)->first();
+			$image = Image::whereHash($hash)->whereUploadedBy($userId)->first();
 
 			if ($image)
 				return $image;
 
 			$image = new Image();
 			try {
-				$image->uploaded_by = $user->id;
+				$image->uploaded_by = $userId;
 				$image->size = $file->getSize();
 				$image->filename = $file->getClientOriginalName();
 				$image->extension = $file->getClientOriginalExtension();

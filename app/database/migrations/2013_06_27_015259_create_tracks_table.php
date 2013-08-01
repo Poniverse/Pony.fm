@@ -106,6 +106,11 @@ class CreateTracksTable extends Migration {
 			'title'			=>	'Ponified Song',
 			'editor_title'	=>	'a non-pony song, turned pony'
 		]);
+
+		DB::table('track_types')->insert([
+			'title'			=>	'Official Show Audio Remix',
+			'editor_title'	=>	'a remix of official show audio'
+		]);
 	}
 
 	public function down() {
