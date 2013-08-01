@@ -1,0 +1,31 @@
+<div class="current-track" ng-show="player.isPlaying">
+	<div class="image">
+		<img ng-src="{{player.currentTrack.covers.thumbnail}}" />
+	</div>
+	<div class="transport" ng-click="seek($event)">
+		<div class="bar" pfm-progress-bar="player.currentTrack.progress"></div>
+		<div class="loader-bar" pfm-progress-bar="player.currentTrack.loadingProgress"></div>
+	</div>
+	<ul class="buttons">
+		<li><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="icon-fast-backward"></i></a></li>
+		<li>
+			<a pfm-eat-click ng-click="playPause()" class="play" href="#">
+				<i class="icon-pause" ng-show="player.currentTrack.isPlaying"></i>
+				<i class="icon-play" ng-hide="player.currentTrack.isPlaying"></i>
+			</a>
+		</li>
+		<li><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="icon-fast-forward"></i></a></li>
+		<li>
+			<a pfm-eat-click ng-click="" class="volume" href="#">
+				<i class="icon-volume-up"></i>
+			</a>
+			<div class="volume-slider">
+				<div class="bar"><a href="#" class="knob">&nbsp;</a></div>
+			</div>
+		</li>
+	</ul>
+	<div class="title">
+		<span class="song"><a href="{{player.currentTrack.url}}">{{player.currentTrack.title}}</a></span>
+		<span class="artist"><a href="{{player.currentTrack.user.url}}">{{player.currentTrack.user.name}}</a></span>
+	</div>
+</div>

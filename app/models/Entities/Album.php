@@ -3,6 +3,7 @@
 	namespace Entities;
 
 	use Cover;
+	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\URL;
 	use Whoops\Example\Exception;
 	use Traits\SlugTrait;
@@ -16,10 +17,24 @@
 			return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'cover_id');
 		}
 
+		public function scopeDetails($query) {
+			if (Auth::check()) {
+				$query->with(['favourites' => function($query) {
+					$query->whereUserId(Auth::user()->id);
+				}]);
+			}
+
+			return !$query;
+		}
+
 		protected $table = 'albums';
 
 		public function user() {
 			return $this->belongsTo('Entities\User');
+		}
+
+		public function favourites() {
+			return $this->hasMany('Entities\Favourite');
 		}
 
 		public function cover() {
@@ -28,6 +43,10 @@
 
 		public function tracks() {
 			return $this->hasMany('Entities\Track')->orderBy('track_number', 'asc');
+		}
+
+		public function comments(){
+			return $this->hasMany('Entities\Comment');
 		}
 
 		public static function mapPublicAlbumSummary($album) {
@@ -46,7 +65,8 @@
 					'id' => $album->user->id,
 					'name' => $album->user->display_name,
 					'url' => $album->user->url,
-				]
+				],
+				'is_favourited' => $album->favourites->count() > 0
 			];
 		}
 

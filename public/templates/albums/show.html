@@ -5,10 +5,7 @@
 	</ul>
 
 	<div class="track-toolbar btn-group pull-right">
-		<a href="#" class="btn btn-small">
-			Favourite This!
-			<i class="icon-star-empty"></i>
-		</a>
+		<pfm-favourite-button resource="album" type="album"></pfm-favourite-button>
 		<div class="dropdown">
 			<a href="#" class="btn btn-small btn-info dropdown-toggle">
 				Downloads <i class="caret"></i>
@@ -34,20 +31,10 @@
 				</div>
 
 				<h2>Tracks</h2>
-				<pfm-tracks-list tracks="album.tracks" />
+				<pfm-tracks-list tracks="album.tracks"></pfm-tracks-list>
 
 				<h2>Comments</h2>
-				<div class="comments">
-					<div class="alert alert-info" ng-show="album.comments.count == 0">
-						There are no comments yet!
-					</div>
-					<form class="pfm-form">
-						<div class="form-row">
-							<textarea></textarea>
-						</div>
-						<button type="submit" class="btn disabled">Post Comment</button>
-					</form>
-				</div>
+				<pfm-comments type="album" resource="album"></pfm-comments>
 			</div>
 			<div class="span4 cover-image">
 				<img ng-src="{{album.covers.normal}}" />

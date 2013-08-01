@@ -1,4 +1,4 @@
-<div class="track-details">
+<div class="track-details" xmlns="http://www.w3.org/1999/html">
 	<ul class="breadcrumb">
 		<li><a href="/tracks">Tracks</a> <span class="divider">/</span></li>
 		<li><a href="/tracks?filter=genres-{{track.genre.id}}">{{track.genre.name}}</a> <span class="divider">/</span></li>
@@ -6,10 +6,7 @@
 	</ul>
 
 	<div class="track-toolbar btn-group pull-right">
-		<a href="#" class="btn btn-small">
-			Favourite This!
-			<i class="icon-star-empty"></i>
-		</a>
+		<pfm-favourite-button resource="track" type="track"></pfm-favourite-button>
 		<div class="dropdown">
 			<a href="#" class="btn btn-small btn-info dropdown-toggle">
 				Downloads <i class="caret"></i>
@@ -19,16 +16,22 @@
 			</ul>
 		</div>
 		<div class="dropdown">
-			<a href="#" class="btn btn-small dropdown-toggle">
+			<a href="#" class="btn btn-small dropdown-toggle" ng-show="auth.isLogged">
 				Add to Playlist <i class="caret"></i>
 			</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="playlist in playlists"><a href="{{playlist.url}}">{{playlist.title}}</a></li>
-				<li><a href="#" class="btn-primary">Add to New Playlist</a></li>
+				<li ng-repeat="playlist in playlists">
+					<a ng-class="{disabled: playlist.message, 'btn-success': playlist.message}" href="{{playlist.url}}" pfm-eat-click ng-click="addToPlaylist(playlist); $event.stopPropagation()">
+						<span ng-hide="playlist.message">{{playlist.title}}</span>
+						<span ng-show="playlist.message">{{playlist.message}}</span>
+					</a>
+				</li>
+				<li><a href="#" class="btn-primary" pfm-eat-click ng-click="addToNewPlaylist()">Add to New Playlist</a></li>
 			</ul>
 		</div>
 	</div>
 
+	<pfm-tracks-list tracks="trackArray"></pfm-tracks-list>
 	<h1>
 		{{track.title}}
 		<span class="subtitle">
@@ -58,17 +61,7 @@
 				</div>
 
 				<h2>Comments</h2>
-				<div class="comments">
-					<div class="alert alert-info" ng-show="track.comments.count == 0">
-						There are no comments yet!
-					</div>
-					<form class="pfm-form">
-						<div class="form-row">
-							<textarea></textarea>
-						</div>
-						<button type="submit" class="btn disabled">Post Comment</button>
-					</form>
-				</div>
+				<pfm-comments type="track" resource="track"></pfm-comments>
 			</div>
 			<div class="span4 cover-image">
 				<img ng-src="{{track.covers.normal}}" />

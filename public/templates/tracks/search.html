@@ -1,6 +1,6 @@
 <ul class="dropdowns">
 	<li class="dropdown">
-		<a class="dropdown-toggle btn">
+		<a class="dropdown-toggle btn" ng-class="{'btn-info': query.filters.trackTypes.selectedArray.length}">
 			Type: <strong>{{query.filters.trackTypes.title}}</strong>
 		</a>
 		<ul class="dropdown-menu">
@@ -11,7 +11,7 @@
 		</ul>
 	</li>
 	<li class="dropdown">
-		<a class="dropdown-toggle btn">
+		<a class="dropdown-toggle btn" ng-class="{'btn-info': query.filters.showSongs.selectedArray.length}">
 			Show Songs: <strong>{{query.filters.showSongs.title}}</strong>
 		</a>
 		<ul class="dropdown-menu">
@@ -22,7 +22,7 @@
 		</ul>
 	</li>
 	<li class="dropdown">
-		<a class="dropdown-toggle btn">
+		<a class="dropdown-toggle btn" ng-class="{'btn-info': query.filters.genres.selectedArray.length}">
 			Genre: <strong>{{query.filters.genres.title}}</strong>
 		</a>
 		<ul class="dropdown-menu">
@@ -33,7 +33,7 @@
 		</ul>
 	</li>
 	<li class="dropdown">
-		<a class="dropdown-toggle btn">
+		<a class="dropdown-toggle btn" ng-class="{'btn-info': !query.filters.isVocal.isDefault}">
 			Is Vocal: <strong>{{query.filters.isVocal.title}}</strong>
 		</a>
 		<ul class="dropdown-menu">
@@ -43,7 +43,7 @@
 		</ul>
 	</li>
 	<li class="dropdown">
-		<a class="dropdown-toggle btn">
+		<a class="dropdown-toggle btn" ng-class="{'btn-info': !query.filters.sort.isDefault}">
 			Order: <strong>{{query.filters.sort.title}}</strong>
 		</a>
 		<ul class="dropdown-menu">

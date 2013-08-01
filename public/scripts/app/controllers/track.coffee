@@ -5,14 +5,47 @@ window.pfm.preloaders['track'] = [
 ]
 
 angular.module('ponyfm').controller "track", [
-	'$scope', 'tracks', '$state', 'playlists', 'auth'
-	($scope, tracks, $state, playlists, auth) ->
+	'$scope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog'
+	($scope, tracks, $state, playlists, auth, favourites, $dialog) ->
 		tracks.fetch($state.params.id).done (trackResponse) ->
 			$scope.track = trackResponse.track
+			$scope.trackArray = [$scope.track]
 
 		$scope.playlists = []
 
 		if auth.data.isLogged
 			playlists.refreshOwned().done (lists) ->
 				$scope.playlists.push list for list in lists
+
+		$scope.favouriteWorking = false
+
+		$scope.toggleFavourite = (track) ->
+			$scope.favouriteWorking = true
+			favourites.toggle('track', track.id).done (res) ->
+				track.is_favourited = res.is_favourited
+				$scope.favouriteWorking = false
+
+		$scope.addToNewPlaylist = () ->
+			dialog = $dialog.dialog
+				templateUrl: '/templates/partials/playlist-dialog.html'
+				controller: 'playlist-form'
+				resolve: {
+					playlist: () ->
+						is_public: true
+						is_pinned: true
+						name: ''
+						description: ''
+				}
+
+			dialog.open().then (playlist) ->
+				return if !playlist
+
+				playlists.addTrackToPlaylist playlist.id, $scope.track.id
+				$state.transitionTo 'playlist', {id: playlist.id}
+
+		$scope.addToPlaylist = (playlist) ->
+			return if playlist.message
+
+			playlists.addTrackToPlaylist(playlist.id, $scope.track.id).done (res) ->
+				playlist.message = res.message
 ]

@@ -6,6 +6,7 @@
 	use Commands\EditTrackCommand;
 	use Commands\UploadTrackCommand;
 	use Cover;
+	use Entities\Favourite;
 	use Entities\Image;
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,7 @@
 		}
 
 		public function getShow($id) {
-			$track = Track::find($id);
+			$track = Track::details()->withComments()->find($id);
 			if (!$track || !$track->canView(Auth::user()))
 				return $this->notFound('Track not found!');
 
@@ -35,7 +36,7 @@
 		}
 
 		public function getRecent() {
-			$query = Track::summary()->with(['genre', 'user', 'cover'])->whereNotNull('published_at')->orderBy('published_at', 'desc')->take(15);
+			$query = Track::summary()->details()->with(['genre', 'user', 'cover'])->whereNotNull('published_at')->orderBy('published_at', 'desc')->take(30);
 			if (!Auth::check() || !Auth::user()->can_see_explicit_content)
 				$query->whereIsExplicit(false);
 
@@ -54,15 +55,23 @@
 			if (Input::has('page'))
 				$page = Input::get('page');
 
-			$query = Track::summary()->whereNotNull('published_at');
+			$query = Track::summary()
+				->details()
+				->whereNotNull('published_at')
+				->with('user', 'genre');
+
 			$this->applyFilters($query);
 
 			$totalCount = $query->count();
 			$query->take(30)->skip(30 * ($page - 1));
 
 			$tracks = [];
-			foreach ($query->get() as $track)
+			$ids = [];
+
+			foreach ($query->get() as $track) {
 				$tracks[] = Track::mapPublicTrackSummary($track);
+				$ids[] = $track->id;
+			}
 
 			return Response::json(["tracks" => $tracks, "current_page" => $page, "total_pages" => ceil($totalCount / 30)], 200);
 		}

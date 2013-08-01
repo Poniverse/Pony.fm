@@ -1,3 +1,44 @@
-<div>
-	<h1>{{playlist.title}}</h1>
+<div class="playlist-details">
+	<ul class="breadcrumb">
+		<li><a href="/account/playlists">Your Playlists</a> <span class="divider">/</span></li>
+		<li class="active">{{playlist.title}}</li>
+	</ul>
+
+	<div class="track-toolbar btn-group pull-right">
+		<div class="dropdown">
+			<a href="#" class="btn btn-small btn-info dropdown-toggle">
+				Downloads <i class="caret"></i>
+			</a>
+			<ul class="dropdown-menu">
+				<li ng-repeat="format in playlist.formats"><a href="{{format.url}}">{{format.name}}</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<h1>
+		{{playlist.title}}
+	</h1>
+
+	<div class="stretch-to-bottom">
+		<div class="row-fluid">
+			<div class="span9">
+				<div class="description">
+					<p ng-bind-html-unsafe="playlist.description | noHTML | newlines"></p>
+				</div>
+
+				<h2>Tracks</h2>
+				<pfm-tracks-list tracks="playlist.tracks"></pfm-tracks-list>
+
+				<h2>Comments</h2>
+				<pfm-comments type="playlist" resource="playlist"></pfm-comments>
+			</div>
+			<div class="span3 cover-image">
+				<div class="fb-like" data-href="{{playlist.url}}" data-send="false" data-layout="button_count" data-width="20" data-show-faces="false"></div>
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{playlist.url}}" data-text="{{playlist.title + ' by ' + playlist.user.name + ' on Pony.fm'}}" data-via="ponyfm">Tweet</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+				<a href="#" class="btn btn-info">Share or Embed</a>
+			</div>
+		</div>
+	</div>
 </div>

@@ -1,11 +1,12 @@
-angular.module('ponyfm').controller 'playlist', [
-	'$scope', '$state'
-	($scope, $state) ->
-		console.log $state.params.id
-		$scope.refresh = () ->
-			$.getJSON('/api/web/playlists/show/' + $state.params.id)
-				.done (playlist) -> $scope.$apply ->
-					$scope.playlist = playlist
+window.pfm.preloaders['playlist'] = [
+	'$state', 'playlists'
+	($state, playlists) ->
+		playlists.fetch $state.params.id, true
+]
 
-		$scope.refresh()
+angular.module('ponyfm').controller 'playlist', [
+	'$scope', '$state', 'playlists'
+	($scope, $state, playlists) ->
+		playlists.fetch($state.params.id).done (playlist) ->
+			$scope.playlist = playlist
 ]

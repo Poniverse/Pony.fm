@@ -9,6 +9,8 @@
 	use Commands\EditTrackCommand;
 	use Cover;
 	use Entities\Album;
+	use Entities\Comment;
+	use Entities\Favourite;
 	use Entities\Image;
 	use Entities\Track;
 	use Entities\User;
@@ -17,6 +19,33 @@
 	use Illuminate\Support\Facades\Response;
 
 	class ArtistsController extends \ApiControllerBase {
+		public function getFavourites($slug) {
+			$user = User::whereSlug($slug)->first();
+			if (!$user)
+				App::abort(404);
+
+			$favs = Favourite::whereUserId($user->id)->with([
+				'track' => function($query) { $query->details(); },
+				'album' => function($query) { $query->details(); }])->get();
+
+			$tracks = [];
+			$albums = [];
+
+			foreach ($favs as $fav) {
+				if ($fav->type == 'Entities\Track') {
+					$tracks[] = Track::mapPublicTrackSummary($fav->track);
+				}
+				else if ($fav->type == 'Entities\Album') {
+					$albums[] = Album::mapPublicAlbumSummary($fav->album);
+				}
+			}
+
+			return Response::json([
+				'tracks' => $tracks,
+				'albums' => $albums
+			], 200);
+		}
+
 		public function getContent($slug) {
 			$user = User::whereSlug($slug)->first();
 			if (!$user)
@@ -49,15 +78,20 @@
 		}
 
 		public function getShow($slug) {
-			$user = User::whereSlug($slug)->first();
+			$user = User::whereSlug($slug)->with(['comments' => function ($query) { $query->with('user'); }])->first();
 			if (!$user)
 				App::abort(404);
 
-			$trackQuery = Track::summary()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(10);
+			$trackQuery = Track::summary()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(20);
 			$latestTracks = [];
 
 			foreach ($trackQuery->get() as $track) {
 				$latestTracks[] = Track::mapPublicTrackSummary($track);
+			}
+
+			$comments = [];
+			foreach ($user->comments as $comment) {
+				$comments[] = Comment::mapPublic($comment);
 			}
 
 			return Response::json([
@@ -73,7 +107,7 @@
 					'followers' => [],
 					'following' => [],
 					'latest_tracks' => $latestTracks,
-					'comments' => ['count' => 0, 'list' => []],
+					'comments' => ['count' => count($comments), 'list' => $comments],
 					'bio' => $user->bio,
 					'mlpforums_username' => $user->mlpforums_name
 				]

@@ -2,18 +2,13 @@
 
 	namespace Api\Web;
 
-	use Commands\CreateAlbumCommand;
+	use Commands\AddTrackToPlaylistCommand;
 	use Commands\CreatePlaylistCommand;
-	use Commands\DeleteAlbumCommand;
 	use Commands\DeletePlaylistCommand;
-	use Commands\DeleteTrackCommand;
-	use Commands\EditAlbumCommand;
 	use Commands\EditPlaylistCommand;
-	use Commands\EditTrackCommand;
-	use Cover;
 	use Entities\Album;
+	use Entities\Comment;
 	use Entities\Image;
-	use Entities\PinnedPlaylist;
 	use Entities\Playlist;
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
@@ -33,10 +28,24 @@
 			return $this->execute(new DeletePlaylistCommand($id, Input::all()));
 		}
 
+		public function postAddTrack($id) {
+			return $this->execute(new AddTrackToPlaylistCommand($id, Input::get('track_id')));
+		}
+
 		public function getShow($id) {
-			$playlist = Playlist::find($id);
+			$playlist = Playlist::with(['tracks' => function($query) { $query->details(); }, 'comments' => function($query) { $query->with('user'); }])->find($id);
 			if (!$playlist || !$playlist->canView(Auth::user()))
 				App::abort('404');
+
+			$tracks = [];
+			foreach ($playlist->tracks as $track) {
+				$tracks[] = Track::mapPublicTrackSummary($track);
+			}
+
+			$comments = [];
+			foreach ($playlist->comments as $comment) {
+				$comments[] = Comment::mapPublic($comment);
+			}
 
 			return Response::json([
 				'id' => $playlist->id,
@@ -50,7 +59,9 @@
 					'normal' => $playlist->getCoverUrl(Image::NORMAL)
 				],
 				'is_pinned' => true,
-				'is_public' => $playlist->is_public == 1
+				'is_public' => $playlist->is_public == 1,
+				'tracks' => $tracks,
+				'comments' => ['count' => count($comments), 'list' => $comments],
 			], 200);
 		}
 

@@ -6,6 +6,7 @@ angular.module('ponyfm').directive 'pfmAlbumsList', () ->
 		class: '@class'
 
 	controller: [
-		'$scope'
-		($scope) ->
+		'$scope', 'auth'
+		($scope, auth) ->
+			$scope.auth = auth.data
 	]

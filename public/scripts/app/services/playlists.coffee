@@ -2,9 +2,20 @@ angular.module('ponyfm').factory('playlists', [
 	'$rootScope', '$state', '$http'
 	($rootScope, $state, $http) ->
 		playlistDef = null
+		playlists = {}
 
 		self =
 			pinnedPlaylists: []
+
+			fetch: (id, force) ->
+				force = force || false
+				return playlists[id] if !force && playlists[id]
+				def = new $.Deferred()
+				$http.get('/api/web/playlists/' + id).success (playlist) ->
+					def.resolve playlist
+
+				playlists[id] = def.promise()
+
 			refreshOwned: (force) ->
 				force = force || false
 				return playlistDef if !force && playlistDef
@@ -14,6 +25,13 @@ angular.module('ponyfm').factory('playlists', [
 					playlistDef.resolve playlists
 
 				playlistDef
+
+			addTrackToPlaylist: (playlistId, trackId) ->
+				def = new $.Deferred()
+				$http.post('/api/web/playlists/' + playlistId + '/add-track', {track_id: trackId, _token: pfm.token}).success (res) ->
+					def.resolve(res)
+
+				def
 
 			refresh: () ->
 				$.getJSON('/api/web/playlists/pinned')

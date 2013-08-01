@@ -18,6 +18,7 @@
 
 	Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
 	Route::get('t{id}', 'TracksController@getShortlink' );
+	Route::get('t{id}/stream', 'TracksController@getStream' );
 	Route::get('t{id}/dl.{extension}', 'TracksController@getDownload' );
 
 	Route::get('albums', 'AlbumsController@getIndex');
@@ -52,6 +53,10 @@
 		Route::get('/albums', 'Api\Web\AlbumsController@getIndex');
 		Route::get('/albums/{id}', 'Api\Web\AlbumsController@getShow')->where('id', '\d+');
 
+		Route::get('/playlists/{id}', 'Api\Web\PlaylistsController@getShow')->where('id', '\d+');
+
+		Route::get('/comments/{type}/{id}', 'Api\Web\CommentsController@getIndex')->where('id', '\d+');
+
 		Route::get('/artists', 'Api\Web\ArtistsController@getIndex');
 		Route::get('/artists/{slug}', 'Api\Web\ArtistsController@getShow');
 		Route::get('/artists/{slug}/content', 'Api\Web\ArtistsController@getContent');
@@ -71,8 +76,13 @@
 			Route::post('/playlists/create', 'Api\Web\PlaylistsController@postCreate');
 			Route::post('/playlists/delete/{id}', 'Api\Web\PlaylistsController@postDelete');
 			Route::post('/playlists/edit/{id}', 'Api\Web\PlaylistsController@postEdit');
+			Route::post('/playlists/{id}/add-track', 'Api\Web\PlaylistsController@postAddTrack');
+
+			Route::post('/comments/{type}/{id}', 'Api\Web\CommentsController@postCreate')->where('id', '\d+');
 
 			Route::post('/account/settings/save', 'Api\Web\AccountController@postSave');
+
+			Route::post('/favourites/toggle', 'Api\Web\FavouritesController@postToggle');
 		});
 
 		Route::group(['before' => 'auth'], function() {

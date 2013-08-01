@@ -12,7 +12,7 @@ class CreateUsersTable extends Migration {
 			$table->boolean('sync_names')->default(true);
 			$table->string('password_hash', 32);
 			$table->string('password_salt', 5);
-			$table->string('email', 150)->unique();
+			$table->string('email', 150)->indexed();
 			$table->string('gravatar')->nullable();
 			$table->string('slug');
 			$table->boolean('uses_gravatar')->default(true);

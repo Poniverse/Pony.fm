@@ -5,22 +5,7 @@
 		<div>
 			<h1><a href="/">Pony.fm</a></h1>
 			<div class="now-playing">
-				<div class="current-track">
-					<div class="transport">
-						<div class="bar" style="width: 44%;"></div>
-					</div>
-					<div class="image"></div>
-					<ul class="buttons">
-						<li><a class="previous" href="#"><i class="icon-fast-backward"></i></a></li>
-						<li><a class="play" href="#"><i class="icon-pause"></i></a></li>
-						<li><a class="next" href="#"><i class="icon-fast-forward"></i></a></li>
-						<li><a class="volume" href="#"><i class="icon-volume-up"></i></a></li>
-					</ul>
-					<div class="title">
-						<span class="song"><a href="#">Love Me Cheerilee</a></span>
-						<span class="artist"><a href="#">MandoPony</a></span>
-					</div>
-				</div>
+				<pfm-player></pfm-player>
 			</div>
 		</div>
 	</header>
@@ -65,7 +50,7 @@
 								Account
 							</h3>
 						</li>
-						<li ng-class="{selected: $state.includes('account-favourites')}"><a href="/account/favourites">Favourites</a></li>
+						{{-- <li ng-class="{selected: $state.includes('account-favourites')}"><a href="/account/favourites">Favourites</a></li> --}}
 						<li ng-class="{selected: $state.includes('account-content')}"><a href="/account/tracks">Your Content</a></li>
 						<li ng-class="{selected: isActive('/account')}"><a href="/account">Settings</a></li>
 					@endif
@@ -74,7 +59,7 @@
 
 					@if (!Auth::check())
 						<li ng-class="{selected: isActive('/login')}"><a href="/login">Login</a></li>
-						<li ng-class="{selected: isActive('/register')}"><a href="/register">Register</a></li>
+						{{-- <li ng-class="{selected: isActive('/register')}"><a href="/register">Register</a></li> --}}
 					@endif
 
 					<li ng-class="{selected: isActive('/about')}"><a href="/about">About</a></li>

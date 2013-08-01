@@ -14,7 +14,15 @@
 		}
 
 		public function tracks() {
-			return $this->belongsToMany('Entities\Track')->orderBy('position', 'asc');
+			return $this
+				->belongsToMany('Entities\Track')
+				->withPivot('position')
+				->withTimestamps()
+				->orderBy('position', 'asc');
+		}
+
+		public function comments(){
+			return $this->hasMany('Entities\Comment');
 		}
 
 		public function pins() {

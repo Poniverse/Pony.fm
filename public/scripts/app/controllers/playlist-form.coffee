@@ -16,12 +16,12 @@ angular.module('ponyfm').controller "playlist-form", [
 					playlists.editPlaylist($scope.form)
 
 			def
-				.done ->
-					dialog.close()
+				.done (res) ->
+					dialog.close(res)
 
 				.fail (errors)->
 					$scope.errors = errors
 					$scope.isLoading = false
 
-		$scope.close = () -> dialog.close()
+		$scope.close = () -> dialog.close(null)
 ]

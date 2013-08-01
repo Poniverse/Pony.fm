@@ -7,3 +7,7 @@
 	RewriteRule ^(.*\.(?:coffee))$ /asset.php?type=coffee&file=/$1 [L,QSA,NC]
 	RewriteRule ^(.*\.(?:less))$ /asset.php?type=less&file=/$1 [L,QSA,NC]
 </IfModule>
+
+<IfModule xsendfile_module>
+	XSendFile On
+</IfModule>

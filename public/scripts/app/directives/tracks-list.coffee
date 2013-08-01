@@ -6,6 +6,15 @@ angular.module('ponyfm').directive 'pfmTracksList', () ->
 		class: '@class'
 
 	controller: [
-		'$scope'
-		($scope) ->
+		'$scope', 'favourites', 'player', 'auth'
+		($scope, favourites, player, auth) ->
+			$scope.auth = auth.data
+
+			$scope.toggleFavourite = (track) ->
+				favourites.toggle('track', track.id).done (res) ->
+					track.is_favourited = res.is_favourited
+
+			$scope.play = (track) ->
+				index = _.indexOf $scope.tracks, (t) -> t.id == track.id
+				player.playTracks $scope.tracks, index
 	]

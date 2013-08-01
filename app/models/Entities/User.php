@@ -18,6 +18,10 @@
 			return $this->belongsTo('Entities\Image');
 		}
 
+		public function comments(){
+			return $this->hasMany('Entities\Comment', 'profile_id');
+		}
+
 		public function getUrlAttribute() {
 			return URL::to('/' . $this->slug);
 		}

@@ -1,10 +1,18 @@
 angular.module('ponyfm').controller "application", [
-	'$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector'
-	($scope, auth, $location, upload, $state, $stateParams, $injector) ->
+	'$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope'
+	($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope) ->
 		$scope.auth = auth.data
 		$scope.$state = $state
 		$scope.$stateParams = $stateParams
 		$loadingElement = null
+
+		$rootScope.safeApply = (fn) ->
+			phase = $rootScope.$$phase
+			if (phase == '$apply' || phase == 'digest')
+				fn()
+				return
+
+			$rootScope.$apply fn
 
 		$scope.logout = () ->
 			auth.logout().done -> location.reload()

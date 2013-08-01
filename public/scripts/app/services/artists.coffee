@@ -4,6 +4,7 @@ angular.module('ponyfm').factory('artists', [
 		artistPage = []
 		artists = {}
 		artistContent = {}
+		artistFavourites = {}
 
 		self =
 			filters: {}
@@ -38,6 +39,16 @@ angular.module('ponyfm').factory('artists', [
 					artistsDef.resolve albums
 
 				artistContent[slug] = artistsDef.promise()
+
+			fetchFavourites: (slug, force) ->
+				force = force || false
+				slug = 1 if !slug
+				return artistFavourites[slug] if !force && artistFavourites[slug]
+				artistsDef = new $.Deferred()
+				$http.get('/api/web/artists/' + slug + '/favourites').success (albums) ->
+					artistsDef.resolve albums
+
+				artistFavourites[slug] = artistsDef.promise()
 
 		self
 ])

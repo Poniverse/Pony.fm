@@ -1,12 +1,15 @@
 <ul class="tracks-listing {{class}}">
-	<li ng-repeat="track in tracks">
+	<li ng-repeat="track in tracks" ng-class="{'can-favourite': auth.isLogged, 'is-favourited': track.is_favourited, 'is-playing': track.isPlaying}">
 		<div class="image">
-			<a href="#" class="play-button"><i class="icon-play"></i></a>
+			<a href="#" class="play-button" pfm-eat-click ng-click="play(track)">
+				<i class="icon-play" ng-show="!track.isPlaying"></i>
+				<i class="icon-pause" ng-hide="!track.isPlaying"></i>
+			</a>
 			<img ng-src="{{track.covers.thumbnail}}" />
 		</div>
 		<div class="icons">
 			<span><i ng-class="{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
-			<a href="#"><i class="icon-star-empty"></i></a>
+			<a pfm-eat-click class="icon-favourite" href="#" ng-click="toggleFavourite(track)" ng-show="auth.isLogged"><i class="icon-star-empty"></i></a>
 		</div>
 		<a class="info" href="{{track.url}}">
 			<span class="title">{{track.title}}</span>
@@ -16,5 +19,8 @@
 				{{track.published_at.date | momentFromNow}}
 			</span>
 		</a>
+	</li>
+	<li ng-show="!tracks.length" class="empty">
+		No tracks found...
 	</li>
 </ul>

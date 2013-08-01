@@ -2040,8 +2040,8 @@ Twilight Sparkle: Yes! Everythingâ€™s going to be just fine!",
 
 	public function down() {
 		Schema::table('show_song_track', function($table){
-			$table->drop_foreign('show_song_track_track_id_foreign');
-			$table->drop_foreign('show_song_track_show_song_id_foreign');
+			$table->dropForeign('show_song_track_track_id_foreign');
+			$table->dropForeign('show_song_track_show_song_id_foreign');
 		});
 
 		Schema::drop('show_song_track');

@@ -6,6 +6,7 @@
 	use External;
 	use getid3_writetags;
 	use Helpers;
+	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Log;
 	use Illuminate\Support\Facades\URL;
 	use Illuminate\Support\Str;
@@ -29,6 +30,20 @@
 			return self::select('id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at', 'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id');
 		}
 
+		public function scopeDetails($query) {
+			if (Auth::check()) {
+				$query->with(['favourites' => function($query) {
+					$query->whereUserId(Auth::user()->id);
+				}]);
+			}
+
+			return !$query;
+		}
+
+		public function scopeWithComments($query) {
+			$query->with(['comments' => function($query) { $query->with('user'); }]);
+		}
+
 		public static function mapPublicTrackShow($track) {
 			$returnValue = self::mapPublicTrackSummary($track);
 			$returnValue['description'] = $track->description;
@@ -38,7 +53,14 @@
 				'plays' => 0,
 				'downloads' => 0
 			];
-			$returnValue['comments'] = ['count' => 0, 'list' => []];
+
+			$comments = [];
+
+			foreach ($track->comments as $comment) {
+				$comments[] = Comment::mapPublic($comment);
+			}
+
+			$returnValue['comments'] = ['count' => count($comments), 'list' => $comments];
 
 			if ($track->album_id != null) {
 				$returnValue['album'] = [
@@ -94,7 +116,9 @@
 					'thumbnail' => $track->getCoverUrl(Image::THUMBNAIL),
 					'small' => $track->getCoverUrl(Image::SMALL),
 					'normal' => $track->getCoverUrl(Image::NORMAL)
-				]
+				],
+				'is_favourited' => $track->favourites->count() > 0,
+				'duration' => $track->duration
 			];
 		}
 
@@ -140,6 +164,14 @@
 
 		public function genre() {
 			return $this->belongsTo('Entities\Genre');
+		}
+
+		public function comments(){
+			return $this->hasMany('Entities\Comment');
+		}
+
+		public function favourites() {
+			return $this->hasMany('Entities\Favourite');
 		}
 
 		public function cover() {

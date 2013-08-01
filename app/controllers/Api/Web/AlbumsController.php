@@ -4,11 +4,9 @@
 
 	use Commands\CreateAlbumCommand;
 	use Commands\DeleteAlbumCommand;
-	use Commands\DeleteTrackCommand;
 	use Commands\EditAlbumCommand;
-	use Commands\EditTrackCommand;
-	use Cover;
 	use Entities\Album;
+	use Entities\Comment;
 	use Entities\Image;
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
@@ -29,7 +27,7 @@
 		}
 
 		public function getShow($id) {
-			$album = Album::with('tracks', 'user')->find($id);
+			$album = Album::with(['tracks', 'user', 'comments' => function($query) { $query->with('user'); }])->details()->find($id);
 			if (!$album)
 				App::abort(404);
 
@@ -45,6 +43,11 @@
 					'extension' => $format['extension'],
 					'url' => $album->getDownloadUrl($name)
 				];
+			}
+
+			$comments = [];
+			foreach ($album->comments as $comment) {
+				$comments[] = Comment::mapPublic($comment);
 			}
 
 			return Response::json([
@@ -71,7 +74,8 @@
 						'views' => 0,
 						'downloads' => 0
 					],
-					'comments' => ['count' => 0, 'list' => []]
+					'comments' => ['count' => count($comments), 'list' => $comments],
+					'is_favourited' => $album->favourites->count() > 0
 				]
 			], 200);
 		}
@@ -82,7 +86,8 @@
 				$page = Input::get('page');
 
 			$query = Album::summary()
-				->with('tracks', 'user')
+				->with(['tracks' => function($query) { $query->details(); }, 'user'])
+				->details()
 				->orderBy('created_at', 'desc')
 				->whereRaw('(SELECT COUNT(id) FROM tracks WHERE tracks.album_id = albums.id) > 0');
 

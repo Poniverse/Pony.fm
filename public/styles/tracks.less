@@ -1,8 +1,44 @@
 @import-once 'base/bootstrap/bootstrap';
 @import-once 'mixins';
 
+.comments {
+  ul {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	margin-bottom: 5px;
+
+	li {
+	  .clearfix();
+	  margin: 0px;
+	  padding: 3px;
+	  border-bottom: 1px solid #ddd;
+
+	  .meta {
+		font-size: 8pt;
+		float: right;
+	  }
+
+	  .content {
+		margin-left: 45px;
+
+	  }
+
+	  img {
+		.img-polaroid();
+
+		float: left;
+		width: 32px;
+		height: 32px;
+		padding: 2px;
+	  }
+	}
+  }
+}
+
 .dashboard {
   section {
+	/*
 	.box-sizing(border-box);
 
 	width: 50%;
@@ -15,6 +51,7 @@
 	&:last-child {
 	  padding-left: 10px;
 	}
+	*/
   }
 }
 
@@ -60,13 +97,45 @@
 	overflow: hidden;
 	margin: 10px 0px;
 	padding: 0px;
+	line-height: normal;
 
-	&:hover {
+	&.empty {
+	  .alert();
+	  .border-radius(0px);
+	  float: none !important;
+	  width: auto !important;
+	  display: block;
+	  margin-top: 5px;
+	  padding: 5px;
+	  font-size: 9pt;
+
+	  &:hover {
+		background-color: @warningBackground;
+	  }
+	}
+
+	&:hover, &.is-playing {
 	  background: #eee;
 
 	  .image {
 		.play-button {
 		  display: block;
+		}
+	  }
+	}
+
+	&.is-favourited {
+	  .icon-favourite {
+		color: @orange;
+		text-decoration: none;
+
+		i {
+		  color: #FFD76E;
+		  text-shadow: 0px 0px 2px rgba(0,0,0,0.8);
+
+		  &:before {
+			content: "\f005"
+		  }
 		}
 	  }
 	}
@@ -109,13 +178,18 @@
 
 	.icons {
 	  float: right;
-	  font-size: 13px;
+	  font-size: 14px;
 	  margin-right: 2px;
+
+	  a {
+		text-decoration: none;
+	  }
 
 	  a, span {
 		display: block;
 		float: left;
 		margin: 0px 3px;
+		line-height: 0px;
 	  }
 
 	  .icon-microphone-off {
@@ -166,7 +240,7 @@
   }
 }
 
-.user-details, .track-details, .album-details {
+.user-details, .track-details, .album-details, .playlist-details {
   .comments {
 	.alert {
 	  .border-radius(0px);
@@ -212,11 +286,8 @@
   }
 }
 
-.track-details, .album-details {
+.track-details, .album-details, .playlist-details {
   h1 {
-	.box-shadow(0px 2px 3px rgba(0, 0, 0, .3));
-	background: #eee;
-	padding: 5px;
   }
 
   .lyrics {
@@ -259,6 +330,45 @@
 		text-decoration: none;
 		font-size: 10pt;
 	  }
+	}
+  }
+}
+
+.track-details {
+  h1 {
+	margin-left: 55px;
+  }
+
+  .tracks-listing li .image .play-button {
+	display: block;
+  }
+
+  .tracks-listing {
+	float: left;
+	margin-top: 5px;
+  }
+
+  .tracks-listing li {
+	margin: 0px;
+	margin-bottom: 5px;
+	float: left;
+
+	.image {
+	  height: 50px;
+	  width: 50px;
+
+	  .play-button {
+		line-height: 48px;
+	  }
+
+	  img {
+		width: 48px;
+		height: 48px;
+	  }
+	}
+
+	.icons, .info {
+	  display: none;
 	}
   }
 }
