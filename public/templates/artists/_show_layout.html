@@ -1,0 +1,34 @@
+<div class="user-details">
+	<ul class="breadcrumb">
+		<li><a href="/artists">Artist Directory</a> <span class="divider">/</span></li>
+		<li class="active">{{artist.name}}</li>
+	</ul>
+
+	<div class="track-toolbar btn-group pull-right">
+		<a href="#" class="btn btn-small">
+			Follow
+		</a>
+		<a href="#" class="btn btn-small">
+			Send a Message
+		</a>
+		<a href="#" class="btn btn-small">
+			MLP Forums Profile
+		</a>
+	</div>
+
+	<div class="header">
+		<h1>
+			{{artist.name}}
+		</h1>
+
+		<ul class="tabs">
+			<li ng-class="{active: $state.includes('artist.profile')}"><a href="{{artist.slug}}">Profile</a></li>
+			<li ng-class="{active: $state.includes('artist.content')}"><a href="{{artist.slug}}/content">Content</a></li>
+			<li ng-class="{active: $state.includes('artist.favourites')}"><a href="{{artist.slug}}/favourites">Favourites</a></li>
+		</ul>
+	</div>
+
+	<div class="stretch-to-bottom">
+		<ui-view></ui-view>
+	</div>
+</div>

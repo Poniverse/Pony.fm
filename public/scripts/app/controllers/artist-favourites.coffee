@@ -1,10 +1,10 @@
-window.pfm.preloaders['artist'] = [
+window.pfm.preloaders['artist-favourites'] = [
 	'artists', '$state'
 	(artists, $state) ->
 		artists.fetch $state.params.slug, true
 ]
 
-angular.module('ponyfm').controller "artist", [
+angular.module('ponyfm').controller "artist-favourites", [
 	'$scope', 'artists', '$state'
 	($scope, artists, $state) ->
 		artists.fetch($state.params.slug).done (artistResponse) ->

@@ -5,26 +5,7 @@
 				<a href="#"><i class="icon-music"></i> see more</a>
 				The Newest Tunes
 			</h1>
-			<ul class="tracks-listing stretch-to-bottom">
-				<li ng-repeat="track in recentTracks">
-					<div class="image">
-						<a href="#" class="play-button"><i class="icon-play"></i></a>
-						<img ng-src="{{track.covers.thumbnail}}" />
-					</div>
-					<div class="icons">
-						<span><i ng-class="{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
-						<a href="#"><i class="icon-star-empty"></i></a>
-					</div>
-					<a class="info" href="{{track.url}}">
-						<span class="title">{{track.title}}</span>
-						<span class="metadata">
-							by: <span class="artist">{{track.user.name}}</span> /
-							<span class="genre">{{track.genre.name}}</span> /
-							{{track.published_at.date | momentFromNow}}
-						</span>
-					</a>
-				</li>
-			</ul>
+			<pfm-tracks-list tracks="recentTracks" />
 		</div>
 	</section>
 	<section class="popular">
@@ -33,26 +14,7 @@
 				<a href="#"><i class="icon-star"></i> see more</a>
 				What's Popular Today
 			</h1>
-			<ul class="tracks-listing stretch-to-bottom">
-				<li ng-repeat="track in recentTracks">
-					<div class="image">
-						<a href="#" class="play-button"><i class="icon-play"></i></a>
-						<img ng-src="{{track.covers.thumbnail}}" />
-					</div>
-					<div class="icons">
-						<span><i ng-class="{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
-						<a href="#"><i class="icon-star-empty"></i></a>
-					</div>
-					<a class="info" href="{{track.url}}">
-						<span class="title">{{track.title}}</span>
-						<span class="metadata">
-							by: <span class="artist">{{track.user.name}}</span> /
-							<span class="genre">{{track.genre.name}}</span> /
-							{{track.published_at.date | momentFromNow}}
-						</span>
-					</a>
-				</li>
-			</ul>
+			<pfm-tracks-list tracks="recentTracks" />
 		</div>
 	</section>
 </div>

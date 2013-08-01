@@ -1,0 +1,27 @@
+<div class="row-fluid">
+	<div class="span6">
+		<div ng-show="artist.bio.trim().length">
+			<h2>Bio</h2>
+			<div class="description">
+				<p ng-bind-html-unsafe="artist.bio | noHTML | newlines"></p>
+			</div>
+		</div>
+
+		<h2>Comments</h2>
+		<div class="comments">
+			<div class="alert alert-info" ng-show="artist.comments.count == 0">
+				There are no comments yet!
+			</div>
+			<form class="pfm-form">
+				<div class="form-row">
+					<textarea></textarea>
+				</div>
+				<button type="submit" class="btn disabled">Post Comment</button>
+			</form>
+		</div>
+	</div>
+	<div class="span6 cover-image">
+		<h2>Recent Tracks</h2>
+		<pfm-tracks-list tracks="artist.latest_tracks" class="two-column no-artist" />
+	</div>
+</div>

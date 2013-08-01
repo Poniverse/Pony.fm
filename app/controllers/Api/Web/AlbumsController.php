@@ -93,23 +93,7 @@
 			$albums = [];
 
 			foreach ($query->get() as $album) {
-				$albums[] = [
-					'id' => $album->id,
-					'track_count' => $album->tracks->count(),
-					'title' => $album->title,
-					'slug' => $album->slug,
-					'created_at' => $album->created_at,
-					'covers' => [
-						'small' => $album->getCoverUrl(Image::SMALL),
-						'normal' => $album->getCoverUrl(Image::NORMAL)
-					],
-					'url' => $album->url,
-					'user' => [
-						'id' => $album->user->id,
-						'name' => $album->user->display_name,
-						'url' => $album->user->url,
-					]
-				];
+				$albums[] = Album::mapPublicAlbumSummary($album);
 			}
 
 			return Response::json(["albums" => $albums, "current_page" => $page, "total_pages" => ceil($count / $perPage)], 200);

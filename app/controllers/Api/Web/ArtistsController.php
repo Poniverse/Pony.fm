@@ -17,10 +17,48 @@
 	use Illuminate\Support\Facades\Response;
 
 	class ArtistsController extends \ApiControllerBase {
+		public function getContent($slug) {
+			$user = User::whereSlug($slug)->first();
+			if (!$user)
+				App::abort(404);
+
+			$query = Track::summary()->whereUserId($user->id)->whereNotNull('published_at');
+			$tracks = [];
+			$singles = [];
+
+			foreach ($query->get() as $track) {
+				if ($track->album_id != null)
+					$tracks[] = Track::mapPublicTrackSummary($track);
+				else
+					$singles[] = Track::mapPublicTrackSummary($track);
+			}
+
+			$query = Album::summary()
+				->with('tracks', 'user')
+				->orderBy('created_at', 'desc')
+				->whereRaw('(SELECT COUNT(id) FROM tracks WHERE tracks.album_id = albums.id) > 0')
+				->whereUserId($user->id);
+
+			$albums = [];
+
+			foreach ($query->get() as $album) {
+				$albums[] = Album::mapPublicAlbumSummary($album);
+			}
+
+			return Response::json(['singles' => $singles, 'albumTracks' => $tracks, 'albums' => $albums], 200);
+		}
+
 		public function getShow($slug) {
 			$user = User::whereSlug($slug)->first();
 			if (!$user)
 				App::abort(404);
+
+			$trackQuery = Track::summary()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(10);
+			$latestTracks = [];
+
+			foreach ($trackQuery->get() as $track) {
+				$latestTracks[] = Track::mapPublicTrackSummary($track);
+			}
 
 			return Response::json([
 				'artist' => [
@@ -31,7 +69,13 @@
 						'small' => $user->getAvatarUrl(Image::SMALL),
 						'normal' => $user->getAvatarUrl(Image::NORMAL)
 					],
-					'created_at' => $user->created_at
+					'created_at' => $user->created_at,
+					'followers' => [],
+					'following' => [],
+					'latest_tracks' => $latestTracks,
+					'comments' => ['count' => 0, 'list' => []],
+					'bio' => $user->bio,
+					'mlpforums_username' => $user->mlpforums_name
 				]
 			], 200);
 		}

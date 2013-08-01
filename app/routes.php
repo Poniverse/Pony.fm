@@ -53,7 +53,9 @@
 		Route::get('/albums/{id}', 'Api\Web\AlbumsController@getShow')->where('id', '\d+');
 
 		Route::get('/artists', 'Api\Web\ArtistsController@getIndex');
-		Route::get('/artists/{slug}', 'Api\Web\ArtistsController@getShow')->where('id', '[-\w]');
+		Route::get('/artists/{slug}', 'Api\Web\ArtistsController@getShow');
+		Route::get('/artists/{slug}/content', 'Api\Web\ArtistsController@getContent');
+		Route::get('/artists/{slug}/favourites', 'Api\Web\ArtistsController@getFavourites');
 
 		Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 
@@ -113,6 +115,8 @@
 
 	Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
 	Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
-	Route::get('{slug}', 'ArtistsController@getProfile')->where('id', '[-\w]');
+	Route::get('{slug}', 'ArtistsController@getProfile');
+	Route::get('{slug}/content', 'ArtistsController@getProfile');
+	Route::get('{slug}/favourites', 'ArtistsController@getProfile');
 
 	Route::get('/', 'HomeController@getIndex');

@@ -1,20 +1,3 @@
-<ul class="tracks-listing two-column stretch-to-bottom">
-	<li ng-repeat="track in tracks">
-		<div class="image">
-			<a href="#" class="play-button"><i class="icon-play"></i></a>
-			<img ng-src="{{track.covers.thumbnail}}" />
-		</div>
-		<div class="icons">
-			<span><i ng-class="{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
-			<a href="#"><i class="icon-star-empty"></i></a>
-		</div>
-		<a class="info" href="{{track.url}}">
-			<span class="title">{{track.title}}</span>
-			<span class="metadata">
-				by: <span class="artist">{{track.user.name}}</span> /
-				<span class="genre">{{track.genre.name}}</span> /
-				{{track.published_at.date | momentFromNow}}
-			</span>
-		</a>
-	</li>
-</ul>
+<div class="stretch-to-bottom">
+	<pfm-tracks-list tracks="tracks" class="two-column" />
+</div>

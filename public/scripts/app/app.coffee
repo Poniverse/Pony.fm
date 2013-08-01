@@ -174,8 +174,24 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 		# Final catch-all for aritsts
 		state.state 'artist',
 			url: '^/:slug'
-			templateUrl: '/templates/artists/show.html'
+			templateUrl: '/templates/artists/_show_layout.html'
+			abstract: true
 			controller: 'artist'
+
+		state.state 'artist.profile',
+			url: ''
+			templateUrl: '/templates/artists/profile.html'
+			controller: 'artist-profile'
+
+		state.state 'artist.content',
+			url: '/content'
+			templateUrl: '/templates/artists/content.html'
+			controller: 'artist-content'
+
+		state.state 'artist.favourites',
+			url: '/favourites'
+			templateUrl: '/templates/artists/favourites.html'
+			controller: 'artist-favourites'
 
 		route.otherwise '/'
 
