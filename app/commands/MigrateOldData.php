@@ -136,21 +136,20 @@ class MigrateOldData extends Command {
 				'slug' => $playlist->slug,
 				'id' => $playlist->id,
 				'user_id' => $playlist->user_id,
-				'is_pinned' => true,
 				'is_public' => true
 			]);
 		}
 
 		$this->info('Syncing Playlist Tracks');
-		$oldPlaylistTracks = $oldDb->table('playlist_tracks');
+		$oldPlaylistTracks = $oldDb->table('playlist_track');
 		foreach ($oldPlaylistTracks as $playlistTrack) {
 			DB::table('playlist_tracks')->insert([
 				'id' => $playlistTrack['id'],
-				'created_at' => $playlistTrack['created_at'],
-				'updated_at' => $playlistTrack['updated_at'],
-				'position' => $playlistTrack['position'],
-				'playlist_id' => $playlistTrack['playlist_id'],
-				'track_id' => $playlistTrack['track_id']
+				'created_at' => $playlistTrack->created_at,
+				'updated_at' => $playlistTrack->updated_at,
+				'position' => $playlistTrack->position,
+				'playlist_id' => $playlistTrack->playlist_id,
+				'track_id' => $playlistTrack->track_id
 			]);
 		}
 
