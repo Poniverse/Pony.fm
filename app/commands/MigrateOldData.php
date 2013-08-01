@@ -141,10 +141,10 @@ class MigrateOldData extends Command {
 		}
 
 		$this->info('Syncing Playlist Tracks');
-		$oldPlaylistTracks = $oldDb->table('playlist_track');
+		$oldPlaylistTracks = $oldDb->table('playlist_track')->get();
 		foreach ($oldPlaylistTracks as $playlistTrack) {
 			DB::table('playlist_tracks')->insert([
-				'id' => $playlistTrack['id'],
+				'id' => $playlistTrack->id,
 				'created_at' => $playlistTrack->created_at,
 				'updated_at' => $playlistTrack->updated_at,
 				'position' => $playlistTrack->position,
@@ -154,7 +154,7 @@ class MigrateOldData extends Command {
 		}
 
 		$this->info('Syncing Comments');
-		$oldComments = $oldDb->table('comments');
+		$oldComments = $oldDb->table('comments')->get();
 		foreach ($oldComments as $fav) {
 			DB::table('comments')->insert([
 				'id' => $fav->id,
@@ -171,7 +171,7 @@ class MigrateOldData extends Command {
 		}
 
 		$this->info('Syncing Favourites');
-		$oldFavs = $oldDb->table('favourites');
+		$oldFavs = $oldDb->table('favourites')->get();
 		foreach ($oldFavs as $fav) {
 			DB::table('favourites')->insert([
 				'id' => $fav->id,

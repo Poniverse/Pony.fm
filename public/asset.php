@@ -44,7 +44,8 @@
 		} else {
 			$filePath = trim($_GET['file'], '/');
 			$lastModifiedCollection = new AssetCollection([new GlobAsset("styles/*.less")]);
-			$bundle = new AssetCollection([new FileAsset($filePath), new CacheBusterAsset($lastModifiedCollection->getLastModified())], [new LessFilter('node')]);
+			$bundle = new AssetCollection([new FileAsset($filePath), new CacheBusterAsset($lastModifiedCollection->getLastModified())],
+				[new LessFilter(Config::get('app.node'), Config::get('app.node_paths'))]);
 			$bundle->setTargetPath($filePath);
 		}
 
