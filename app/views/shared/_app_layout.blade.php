@@ -36,9 +36,8 @@
 					@endif
 					<li><h3>Discover</h3></li>
 					<li ng-class="{selected: $state.includes('tracks') || $state.includes('track')}"><a href="/tracks">Music <i class="icon-music"></i></a></li>
-					<li ng-class="{selected: $state.includes('albums')}"><a href="/albums">Albums <i class="icon-music"></i></a></li>
-					<li ng-class="{selected: $state.includes('playlists')}"><a href="/playlists">Playlists <i class="icon-music"></i></a></li>
-					<li ng-class="{selected: $state.includes('artists')}"><a href="/artists">Artists <i class="icon-user"></i></a></li>
+					<li ng-class="{selected: $state.includes('albums') || $state.includes('album')}"><a href="/albums">Albums <i class="icon-th-list"></i></a></li>
+					<li ng-class="{selected: $state.includes('artists') || $state.includes('artist')}"><a href="/artists">Artists <i class="icon-user"></i></a></li>
 
 					@if (Auth::check())
 						<li>
@@ -102,7 +101,17 @@
 
 @section('scripts')
 
+	<div id="fb-root"></div>
+
 	<script>
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=186765381447538";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
 		window.pfm = {
 			token: "{{Session::token()}}",
 			auth: {

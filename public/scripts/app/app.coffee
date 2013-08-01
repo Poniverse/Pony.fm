@@ -101,6 +101,18 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 		state.state 'albums',
 			url: '/albums'
 			templateUrl: '/templates/albums/index.html'
+			controller: 'albums'
+			abstract: true
+
+		state.state 'albums.list',
+			url: '?page'
+			templateUrl: '/templates/albums/list.html'
+			controller: 'albums-list'
+
+		state.state 'album',
+			url: '/albums/{id:[^\-]+}-{slug}'
+			templateUrl: '/templates/albums/show.html'
+			controller: 'album'
 
 		# Playlists
 
@@ -118,6 +130,13 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 		state.state 'artists',
 			url: '/artists'
 			templateUrl: '/templates/artists/index.html'
+			controller: 'artists'
+			abstract: true
+
+		state.state 'artists.list',
+			url: '?page'
+			templateUrl: '/templates/artists/list.html'
+			controller: 'artists-list'
 
 		# Pages
 
@@ -151,6 +170,12 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 			state.state 'home',
 				url: '/'
 				templateUrl: '/templates/home/index.html'
+
+		# Final catch-all for aritsts
+		state.state 'artist',
+			url: '^/:slug'
+			templateUrl: '/templates/artists/show.html'
+			controller: 'artist'
 
 		route.otherwise '/'
 

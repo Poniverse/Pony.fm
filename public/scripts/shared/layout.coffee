@@ -11,9 +11,15 @@ window.handleResize = () ->
 
 	$('.revealable').each () ->
 		$this = $ this
+		return if $this.data 'real-height'
 		$this.data 'real-height', $this.height()
 		$this.css
 			height: '15em'
+
+#		if $this.height() > $this.data 'real-height'
+#			$this.css {height: 'auto'}
+#			$this.find('.reveal').css {display: 'none'}
+#			return
 
 		$this.find('.reveal').click (e) ->
 			e.preventDefault()

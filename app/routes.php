@@ -18,10 +18,14 @@
 
 	Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
 	Route::get('t{id}', 'TracksController@getShortlink' );
+	Route::get('t{id}/dl.{extension}', 'TracksController@getDownload' );
 
-	Route::get('/albums', 'AlbumsController@getIndex');
-	Route::get('/artists', 'ArtistsController@getIndex');
-	Route::get('/playlists', 'PlaylistsController@getIndex');
+	Route::get('albums', 'AlbumsController@getIndex');
+	Route::get('albums/{id}-{slug}', 'AlbumsController@getShow');
+	Route::get('a{id}', 'AlbumsController@getShortlink')->where('id', '\d+');
+
+	Route::get('artists', 'ArtistsController@getIndex');
+	Route::get('playlists', 'PlaylistsController@getIndex');
 
 	Route::get('/login', function() { return View::make('auth.login'); });
 	Route::get('/register', function() { return View::make('auth.register'); });
@@ -29,12 +33,12 @@
 	Route::get('/about', function() { return View::make('pages.about'); });
 	Route::get('/faq', function() { return View::make('pages.faq'); });
 
-	Route::get('i{id}/{type}.png', 'ImagesController@getImage');
+	Route::get('i{id}/{type}.png', 'ImagesController@getImage')->where('id', '\d+');
 
-	Route::get('u{id}/avatar_{type}.png', 'UsersController@getAvatar');
+	Route::get('u{id}/avatar_{type}.png', 'UsersController@getAvatar')->where('id', '\d+');
 
 	Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
-	Route::get('p{id}', 'PlaylistsController@getShortlink');
+	Route::get('p{id}', 'PlaylistsController@getShortlink')->where('id', '\d+');
 
 	Route::group(['prefix' => 'api/web'], function() {
 		Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
@@ -44,6 +48,12 @@
 		Route::get('/tracks/recent', 'Api\Web\TracksController@getRecent');
 		Route::get('/tracks', 'Api\Web\TracksController@getIndex');
 		Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');
+
+		Route::get('/albums', 'Api\Web\AlbumsController@getIndex');
+		Route::get('/albums/{id}', 'Api\Web\AlbumsController@getShow')->where('id', '\d+');
+
+		Route::get('/artists', 'Api\Web\ArtistsController@getIndex');
+		Route::get('/artists/{slug}', 'Api\Web\ArtistsController@getShow')->where('id', '[-\w]');
 
 		Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 
@@ -100,5 +110,9 @@
 			Route::get('/', 'AccountController@getIndex');
 		});
 	});
+
+	Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
+	Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
+	Route::get('{slug}', 'ArtistsController@getProfile')->where('id', '[-\w]');
 
 	Route::get('/', 'HomeController@getIndex');

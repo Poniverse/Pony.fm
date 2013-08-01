@@ -1,4 +1,4 @@
-<div>
+<div class="track-details">
 	<ul class="breadcrumb">
 		<li><a href="/tracks">Tracks</a> <span class="divider">/</span></li>
 		<li><a href="/tracks?filter=genres-{{track.genre.id}}">{{track.genre.name}}</a> <span class="divider">/</span></li>
@@ -10,15 +10,21 @@
 			Favourite This!
 			<i class="icon-star-empty"></i>
 		</a>
-		<a href="#" class="btn btn-small">
-			Add to Playlist <i class="caret"></i>
-		</a>
 		<div class="dropdown">
 			<a href="#" class="btn btn-small btn-info dropdown-toggle">
 				Downloads <i class="caret"></i>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="#"></a></li>
+				<li ng-repeat="format in track.formats"><a href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
+			</ul>
+		</div>
+		<div class="dropdown">
+			<a href="#" class="btn btn-small dropdown-toggle">
+				Add to Playlist <i class="caret"></i>
+			</a>
+			<ul class="dropdown-menu">
+				<li ng-repeat="playlist in playlists"><a href="{{playlist.url}}">{{playlist.title}}</a></li>
+				<li><a href="#" class="btn-primary">Add to New Playlist</a></li>
 			</ul>
 		</div>
 	</div>
@@ -26,13 +32,17 @@
 	<h1>
 		{{track.title}}
 		<span class="subtitle">
+			<span ng-show="track.album">
+				from: <a href="{{track.album.url}}">{{track.album.title}}</a>
+			</span>
+
 			by: <a href="{{track.user.url}}">{{track.user.name}}</a>
 		</span>
 	</h1>
 
-	<div class="track-details">
+	<div class="stretch-to-bottom">
 		<div class="row-fluid">
-			<div class="span7">
+			<div class="span8">
 				<div class="description">
 					<p ng-bind-html-unsafe="track.description | noHTML | newlines"></p>
 				</div>
@@ -46,12 +56,37 @@
 						<p class="content" ng-bind-html-unsafe="track.lyrics | noHTML | newlines"></p>
 					</div>
 				</div>
+
+				<h2>Comments</h2>
+				<div class="comments">
+					<div class="alert alert-info" ng-show="track.comments.count == 0">
+						There are no comments yet!
+					</div>
+					<form class="pfm-form">
+						<div class="form-row">
+							<textarea></textarea>
+						</div>
+						<button type="submit" class="btn disabled">Post Comment</button>
+					</form>
+				</div>
 			</div>
-			<div class="span5 cover-image">
+			<div class="span4 cover-image">
 				<img ng-src="{{track.covers.normal}}" />
+
+				<div class="fb-like" data-href="{{track.url}}" data-send="false" data-layout="button_count" data-width="20" data-show-faces="false"></div>
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{track.url}}" data-text="{{track.title + ' by ' + track.user.name + ' on Pony.fm'}}" data-via="ponyfm">Tweet</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+				<a href="#" class="btn btn-info">Share or Embed</a>
+
+				<h2>Stats</h2>
+				<ul class="stats">
+					<li>Published: <strong>{{track.published_at | pfmdate:"short"}}</strong></li>
+					<li>Views: <strong>{{track.stats.views}}</strong></li>
+					<li>Plays: <strong>{{track.stats.plays}}</strong></li>
+					<li>Downloads: <strong>{{track.stats.downloads}}</strong></li>
+				</ul>
 			</div>
 		</div>
-
-		<h2>Comments</h2>
 	</div>
 </div>

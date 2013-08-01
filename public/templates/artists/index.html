@@ -1,3 +1,15 @@
 <div>
-	<h1>Artists</h1>
+	<h1>Artist Directory</h1>
+
+	<div class="pagination" ng-show="totalPages > 1">
+		<ul>
+			<li ng-class="{disabled: !prevPage}"><a href="#" ng-click="gotoPage(prevPage);" pfm-eat-click>Prev</a></li>
+			<li ng-repeat="page in pages" ng-class="{active: page == currentPage}">
+				<a href="#" ng-click="gotoPage(page);" pfm-eat-click>{{page}}</a>
+			</li>
+			<li ng-class="{disabled: !nextPage}"><a href="#" ng-click="gotoPage(nextPage);" pfm-eat-click>Next</a></li>
+		</ul>
+	</div>
+
+	<ui-view></ui-view>
 </div>

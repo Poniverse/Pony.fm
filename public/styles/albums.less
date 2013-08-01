@@ -1,0 +1,97 @@
+@import-once 'base/bootstrap/bootstrap';
+@import-once 'mixins';
+
+.albums-listing, .artist-listing {
+  overflow-y: auto;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+
+  li {
+	.box-sizing(border-box);
+	width: 20%;
+
+	float: left;
+	padding: 0px;
+	margin: 0px;
+	line-height: normal;
+
+	&.empty {
+	  .alert();
+	  float: none !important;
+	  width: auto !important;
+	  display: block;
+	  padding: 5px;
+	  font-size: 9pt;
+	}
+
+	&.is-not-published a {
+	  background: fadeout(@yellow, 90%);
+	}
+
+	&.selected, &.selected:hover {
+	  a {
+		#gradient>.vertical(#149bdf, #0480be);
+		cursor: default;
+		color: #fff;
+
+		.published {
+		  color: #eee;
+		}
+	  }
+	}
+
+	a {
+	  .transition(350px ease-out all);
+
+	  display: block;
+	  margin: 0px;
+	  font-size: 9pt;
+	  font-weight: normal;
+	  overflow: hidden;
+	  padding: 15px;
+
+	  .image {
+	  }
+
+	  .title {
+		margin: 0px;
+		font-size: 12pt;
+		padding: 0px;
+		margin-top: 5px;
+	  }
+
+	  .published {
+		margin: 0px;
+		padding: 0px;
+	  }
+
+	  .image {
+		.img-polaroid();
+		float: left;
+		display: block;
+		position: relative;
+		left: -5px;
+		width: 100%;
+		height: auto;
+		float: none;
+	  }
+
+	  .title {
+		.ellipsis();
+		display: block;
+	  }
+
+	  .published {
+		display: block;
+		color: #777;
+		font-size: 8pt;
+	  }
+
+	  &:hover {
+		background: #ddd;
+		text-decoration: none;
+	  }
+	}
+  }
+}

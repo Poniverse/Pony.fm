@@ -5,6 +5,7 @@
 	use Cover;
 	use External;
 	use getid3_writetags;
+	use Helpers;
 	use Illuminate\Support\Facades\Log;
 	use Illuminate\Support\Facades\URL;
 	use Illuminate\Support\Str;
@@ -32,6 +33,35 @@
 			$returnValue = self::mapPublicTrackSummary($track);
 			$returnValue['description'] = $track->description;
 			$returnValue['lyrics'] = $track->lyrics;
+			$returnValue['stats'] = [
+				'views' => 0,
+				'plays' => 0,
+				'downloads' => 0
+			];
+			$returnValue['comments'] = ['count' => 0, 'list' => []];
+
+			if ($track->album_id != null) {
+				$returnValue['album'] = [
+					'title' => $track->album->title,
+					'url' => $track->album->url,
+				];
+			}
+
+			$formats = [];
+
+			foreach (self::$Formats as $name => $format) {
+				$file = $track->getFileFor($name);
+				$url = $track->getUrlFor($name);
+				$size = 0;
+
+				if (is_file($file))
+					$size = filesize($file);
+
+				$formats[] = ['name' => $name, 'extension' => $format['extension'], 'url' => $url, 'size' => Helpers::formatBytes($size)];
+			}
+
+			$returnValue['formats'] = $formats;
+
 			return $returnValue;
 		}
 
@@ -202,6 +232,14 @@
 
 			$format = self::$Formats[$format];
 			return "{$this->getDirectory()}/{$this->id}.{$format['extension']}";
+		}
+
+		public function getUrlFor($format) {
+			if (!isset(self::$Formats[$format]))
+				throw new Exception("$format is not a valid format!");
+
+			$format = self::$Formats[$format];
+			return URL::to('/t' . $this->id . '/dl.' . $format['extension']);
 		}
 
 		public function updateTags() {

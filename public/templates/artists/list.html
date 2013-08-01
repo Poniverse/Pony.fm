@@ -1,0 +1,14 @@
+<ul class="artist-listing stretch-to-bottom">
+	<li ng-repeat="artist in artists">
+		<a href="{{artist.url}}">
+			<img class="image" ng-src="{{artist.avatars.normal}}" />
+			<span class="title">{{artist.name}}</span>
+			<span class="published">
+				joined {{artist.created_at | momentFromNow}}
+			</span>
+		</a>
+	</li>
+	<li ng-show="!artists.length" class="empty">
+		No artists found...
+	</li>
+</ul>

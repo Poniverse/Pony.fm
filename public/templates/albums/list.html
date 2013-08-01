@@ -1,0 +1,14 @@
+<ul class="albums-listing stretch-to-bottom">
+	<li ng-repeat="album in albums">
+		<a href="{{album.url}}">
+			<img class="image" ng-src="{{album.covers.normal}}" />
+			<span class="title">{{album.title}}</span>
+			<span class="published">
+				by {{album.user.name}}
+			</span>
+		</a>
+	</li>
+	<li ng-show="!albums.length" class="empty">
+		No albums found...
+	</li>
+</ul>

@@ -3,6 +3,7 @@
 	namespace Entities;
 
 	use Cover;
+	use Illuminate\Support\Facades\URL;
 	use Whoops\Example\Exception;
 	use Traits\SlugTrait;
 
@@ -31,6 +32,14 @@
 
 		public function hasCover() {
 			return $this->cover_id != null;
+		}
+
+		public function getUrlAttribute() {
+			return URL::to('albums/' . $this->id . '-' . $this->slug);
+		}
+
+		public function getDownloadUrl($format) {
+			return URL::to('a' . $this->id . '/dl.' . Track::$Formats[$format]['extension']);
 		}
 
 		public function getCoverUrl($type = Image::NORMAL) {

@@ -127,14 +127,60 @@
   }
 }
 
-.track-details {
+.track-details, .album-details {
+  h1 {
+	.box-shadow(0px 2px 3px rgba(0, 0, 0, .3));
+	background: #eee;
+	padding: 5px;
+  }
+
+  .comments {
+	.alert {
+	  .border-radius(0px);
+	  margin: 5px 0px;
+	}
+
+	button {
+	  .border-radius(0px);
+	}
+  }
+
+  .stretch-to-bottom {
+	padding-top: 10px;
+  }
+
   .cover-image {
 	img {
 	  .img-polaroid();
+	  .box-sizing(border-box);
+	  width: 100%;
+	  display: block;
+	  margin-bottom: 5px;
+	}
+
+	.btn {
+	  .border-radius(0px);
+	  display: block;
+	  width: 'auto';
+	  margin: 5px 0px;
+	}
+
+	.stats {
+	  margin: 0px;
+	  padding: 0px;
+	  list-style: none;
+
+	  li {
+		margin: 0px;
+		padding: 5px 0px;
+		border-bottom: 1px solid #ddd;
+	  }
 	}
   }
 
   .lyrics {
+	font-size: 10pt;
+	color: #222;
 	position: relative;
 	overflow: hidden;
 	padding: 0px;
@@ -178,11 +224,27 @@
 
 html {
   .track-toolbar {
-	background: #eee;
 	padding: 5px;
 
-	> .btn:first-child, > .btn:last-child {
+	.btn:first-child, > .btn:last-child {
 	  .border-radius(0px);
+	}
+
+	> .btn {
+	  border-right: none;
+	}
+
+	.dropdown:first-child {
+	  border-right: 1px solid #cccccc;
+	}
+
+	.dropdown {
+	  float: right;
+	  border-right: none;
+
+	  .btn-primary {
+		color: #fff;
+	  }
 	}
   }
 }

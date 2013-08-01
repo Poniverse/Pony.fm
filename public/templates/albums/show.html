@@ -1,0 +1,88 @@
+<div class="album-details">
+	<ul class="breadcrumb">
+		<li><a href="/albums">Albums</a> <span class="divider">/</span></li>
+		<li class="active">{{album.title}}</li>
+	</ul>
+
+	<div class="track-toolbar btn-group pull-right">
+		<a href="#" class="btn btn-small">
+			Favourite This!
+			<i class="icon-star-empty"></i>
+		</a>
+		<div class="dropdown">
+			<a href="#" class="btn btn-small btn-info dropdown-toggle">
+				Downloads <i class="caret"></i>
+			</a>
+			<ul class="dropdown-menu">
+				<li ng-repeat="format in album.formats"><a href="{{format.url}}">{{format.name}}</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<h1>
+		{{album.title}}
+		<span class="subtitle">
+			by: <a href="{{album.user.url}}">{{album.user.name}}</a>
+		</span>
+	</h1>
+
+	<div class="stretch-to-bottom">
+		<div class="row-fluid">
+			<div class="span8">
+				<div class="description">
+					<p ng-bind-html-unsafe="album.description | noHTML | newlines"></p>
+				</div>
+
+				<h2>Tracks</h2>
+				<ul class="tracks-listing">
+					<li ng-repeat="track in album.tracks">
+						<div class="image">
+							<a href="#" class="play-button"><i class="icon-play"></i></a>
+							<img ng-src="{{track.covers.thumbnail}}" />
+						</div>
+						<div class="icons">
+							<span><i ng-class="{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
+							<a href="#"><i class="icon-star-empty"></i></a>
+						</div>
+						<a class="info" href="{{track.url}}">
+							<span class="title">{{track.title}}</span>
+						<span class="metadata">
+							by: <span class="artist">{{track.user.name}}</span> /
+							<span class="genre">{{track.genre.name}}</span> /
+							{{track.published_at.date | momentFromNow}}
+						</span>
+						</a>
+					</li>
+				</ul>
+
+				<h2>Comments</h2>
+				<div class="comments">
+					<div class="alert alert-info" ng-show="album.comments.count == 0">
+						There are no comments yet!
+					</div>
+					<form class="pfm-form">
+						<div class="form-row">
+							<textarea></textarea>
+						</div>
+						<button type="submit" class="btn disabled">Post Comment</button>
+					</form>
+				</div>
+			</div>
+			<div class="span4 cover-image">
+				<img ng-src="{{album.covers.normal}}" />
+
+				<div class="fb-like" data-href="{{album.url}}" data-send="false" data-layout="button_count" data-width="20" data-show-faces="false"></div>
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{album.url}}" data-text="{{album.title + ' by ' + album.user.name + ' on Pony.fm'}}" data-via="ponyfm">Tweet</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+				<a href="#" class="btn btn-info">Share or Embed</a>
+
+				<h2>Stats</h2>
+				<ul class="stats">
+					<li>Views: <strong>{{album.stats.views}}</strong></li>
+					<li>Downloads: <strong>{{album.stats.downloads}}</strong></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
