@@ -7,6 +7,7 @@
 	use getid3_writetags;
 	use Helpers;
 	use Illuminate\Support\Facades\Auth;
+	use Illuminate\Support\Facades\Cache;
 	use Illuminate\Support\Facades\Log;
 	use Illuminate\Support\Facades\URL;
 	use Illuminate\Support\Str;
@@ -72,14 +73,12 @@
 			$formats = [];
 
 			foreach (self::$Formats as $name => $format) {
-				$file = $track->getFileFor($name);
-				$url = $track->getUrlFor($name);
-				$size = 0;
-
-				if (is_file($file))
-					$size = filesize($file);
-
-				$formats[] = ['name' => $name, 'extension' => $format['extension'], 'url' => $url, 'size' => Helpers::formatBytes($size)];
+				$formats[] = [
+					'name' => $name,
+					'extension' => $format['extension'],
+					'url' => $track->getUrlFor($name),
+					'size' => Helpers::formatBytes($track->getFilesize($name))
+				];
 			}
 
 			$returnValue['formats'] = $formats;
@@ -118,7 +117,10 @@
 					'normal' => $track->getCoverUrl(Image::NORMAL)
 				],
 				'is_favourited' => $track->favourites->count() > 0,
-				'duration' => $track->duration
+				'duration' => $track->duration,
+				'streams' => [
+					'mp3' => $track->getStreamUrl('MP3')
+				]
 			];
 		}
 
@@ -194,6 +196,18 @@
 			return date('Y', strtotime($this->release_date));
 		}
 
+		public function getFilesize($formatName) {
+			return Cache::remember($this->getCacheKey('filesize-' . $formatName), 1440, function () use ($formatName) {
+				$file = $this->getFileFor($formatName);
+				$size = 0;
+
+				if (is_file($file))
+					$size = filesize($file);
+
+				return $size;
+			});
+		}
+
 		public function canView($user) {
 			if ($this->isPublished())
 				return true;
@@ -239,6 +253,10 @@
 			}
 
 			return $this->cover->getUrl($type);
+		}
+
+		public function getStreamUrl($format) {
+			return URL::to('/t' . $this->id . '/stream');
 		}
 
 		public function getDirectory() {
@@ -355,5 +373,9 @@
 			} else {
 				Log::error('Failed to write tags!<br />' . implode('<br /><br />', $tagWriter->errors));
 			}
+		}
+
+		private function getCacheKey($key) {
+			return 'track-' . $this->id . '-' . $key;
 		}
 	}

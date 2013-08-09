@@ -137,9 +137,10 @@
 				$query->whereIn('track_type_id', Input::get('types'));
 
 			if (Input::has('songs')) {
-				$query->join('show_song_track', 'tracks.id', '=', 'show_song_track.track_id')
-					->whereIn('show_song_track.show_song_id', Input::get('songs'));
-
+				$query->join('show_song_track', function($join) {
+					$join->on('tracks.id', '=', 'show_song_track.track_id');
+				});
+				$query->whereIn('show_song_track.show_song_id', Input::get('songs'));
 				$query->select('tracks.*');
 			}
 

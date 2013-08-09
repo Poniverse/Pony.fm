@@ -3,7 +3,9 @@
 	namespace Entities;
 
 	use Cover;
+	use Helpers;
 	use Illuminate\Support\Facades\Auth;
+	use Illuminate\Support\Facades\Cache;
 	use Illuminate\Support\Facades\URL;
 	use Whoops\Example\Exception;
 	use Traits\SlugTrait;
@@ -49,6 +51,39 @@
 			return $this->hasMany('Entities\Comment');
 		}
 
+		public static function mapPublicAlbumShow($album) {
+			$tracks = [];
+			foreach ($album->tracks as $track) {
+				$tracks[] = Track::mapPublicTrackSummary($track);
+			}
+
+			$formats = [];
+			foreach (Track::$Formats as $name => $format) {
+				$formats[] = [
+					'name' => $name,
+					'extension' => $format['extension'],
+					'url' => $album->getDownloadUrl($name),
+					'size' => Helpers::formatBytes($album->getFilesize($name))
+				];
+			}
+
+			$comments = [];
+			foreach ($album->comments as $comment) {
+				$comments[] = Comment::mapPublic($comment);
+			}
+
+			$data = self::mapPublicAlbumSummary($album);
+			$data['tracks'] = $tracks;
+			$data['comments'] = ['count' => count($comments), 'list' => $comments];
+			$data['formats'] = $formats;
+			$data['stats'] = [
+				'views' => 0,
+				'downloads' => 0
+			];
+
+			return $data;
+		}
+
 		public static function mapPublicAlbumSummary($album) {
 			return [
 				'id' => $album->id,
@@ -80,6 +115,21 @@
 
 		public function getDownloadUrl($format) {
 			return URL::to('a' . $this->id . '/dl.' . Track::$Formats[$format]['extension']);
+		}
+
+		public function getFilesize($format) {
+			$tracks = $this->tracks()->get();
+			if (!count($tracks))
+				return 0;
+
+			return Cache::remember($this->getCacheKey('filesize-' . $format), 1440, function() use ($tracks, $format) {
+				$size = 0;
+				foreach ($tracks as $track) {
+					$size += $track->getFilesize($format);
+				}
+
+				return $size;
+			});
 		}
 
 		public function getCoverUrl($type = Image::NORMAL) {
@@ -176,5 +226,13 @@
 			foreach ($albumsToFix as $album) {
 				$album->updateTrackNumbers();
 			}
+
+			foreach (Track::$Formats as $name => $format) {
+				Cache::forget($this->getCacheKey('filesize' . $name));
+			}
+		}
+
+		private function getCacheKey($key) {
+			return 'album-' . $this->id . '-' . $key;
 		}
 	}

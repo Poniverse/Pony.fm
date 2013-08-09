@@ -7,7 +7,7 @@ angular.module('ponyfm').factory('player', [
 			self.currentTrack = track
 			$rootScope.$broadcast 'player-starting-track', track
 			self.currentSound = soundManager.createSound
-				url: '/t' + track.id + '/stream',
+				url: track.streams.mp3,
 				volume: self.volume
 
 				whileloading: () -> $rootScope.safeApply ->
