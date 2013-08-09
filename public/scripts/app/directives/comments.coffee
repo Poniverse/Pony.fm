@@ -6,7 +6,7 @@ angular.module('ponyfm').directive 'pfmComments', () ->
 		type: '@type'
 
 	controller: [
-		'$scope', 'comments'
+		'$scope', 'comments', 'auth'
 		($scope, comments, auth) ->
 
 			$scope.isWorking = false

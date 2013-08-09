@@ -11,7 +11,7 @@
 				Downloads <i class="caret"></i>
 			</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="format in album.formats"><a href="{{format.url}}">{{format.name}}</a></li>
+				<li ng-repeat="format in album.formats"><a href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
 			</ul>
 		</div>
 	</div>
@@ -31,7 +31,7 @@
 				</div>
 
 				<h2>Tracks</h2>
-				<pfm-tracks-list tracks="album.tracks"></pfm-tracks-list>
+				<pfm-tracks-list tracks="album.tracks" class="condensed no-artist"></pfm-tracks-list>
 
 				<h2>Comments</h2>
 				<pfm-comments type="album" resource="album"></pfm-comments>

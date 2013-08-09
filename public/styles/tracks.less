@@ -36,25 +36,6 @@
   }
 }
 
-.dashboard {
-  section {
-	/*
-	.box-sizing(border-box);
-
-	width: 50%;
-	float: left;
-
-	&:first-child {
-	  padding-right: 10px;
-	}
-
-	&:last-child {
-	  padding-left: 10px;
-	}
-	*/
-  }
-}
-
 .tracks-listing {
   overflow-y: auto;
   margin: 0px;
@@ -68,6 +49,13 @@
 		  display: none;
 		}
 	  }
+	}
+  }
+
+  &.condensed {
+	li {
+	  margin: 0px;
+	  border-bottom: 1px solid #ddd;
 	}
   }
 
@@ -114,7 +102,27 @@
 	  }
 	}
 
-	&:hover, &.is-playing {
+	&.is-playing, &:hover.is-playing {
+	  background: #444;
+
+	  .icons {
+		span, a {
+		  color: #fff;
+		}
+	  }
+
+	  .info {
+		.title {
+		  color: rgba(255, 255, 255, .9);
+		}
+
+		.metadata {
+		  color: #ddd;
+		}
+	  }
+	}
+
+	&:hover {
 	  background: #eee;
 
 	  .image {
@@ -180,6 +188,7 @@
 	  float: right;
 	  font-size: 14px;
 	  margin-right: 2px;
+	  margin-top: 4px;
 
 	  a {
 		text-decoration: none;

@@ -31,52 +31,8 @@
 			if (!$album)
 				App::abort(404);
 
-			$tracks = [];
-			foreach ($album->tracks as $track) {
-				$tracks[] = Track::mapPublicTrackSummary($track);
-			}
-
-			$formats = [];
-			foreach (Track::$Formats as $name => $format) {
-				$formats[] = [
-					'name' => $name,
-					'extension' => $format['extension'],
-					'url' => $album->getDownloadUrl($name)
-				];
-			}
-
-			$comments = [];
-			foreach ($album->comments as $comment) {
-				$comments[] = Comment::mapPublic($comment);
-			}
-
 			return Response::json([
-				'album' => [
-					'id' => $album->id,
-					'formats' => $formats,
-					'track_count' => $album->tracks->count(),
-					'title' => $album->title,
-					'description' => $album->description,
-					'slug' => $album->slug,
-					'created_at' => $album->created_at,
-					'covers' => [
-						'small' => $album->getCoverUrl(Image::SMALL),
-						'normal' => $album->getCoverUrl(Image::NORMAL)
-					],
-					'url' => $album->url,
-					'user' => [
-						'id' => $album->user->id,
-						'name' => $album->user->display_name,
-						'url' => $album->user->url,
-					],
-					'tracks' => $tracks,
-					'stats' => [
-						'views' => 0,
-						'downloads' => 0
-					],
-					'comments' => ['count' => count($comments), 'list' => $comments],
-					'is_favourited' => $album->favourites->count() > 0
-				]
+				'album' => Album::mapPublicAlbumShow($album)
 			], 200);
 		}
 
