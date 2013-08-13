@@ -1,11 +1,11 @@
 window.handleResize = () ->
 	windowHeight = $(window).height()
 	$siteBody = $ '.site-body'
-	$siteBody.height windowHeight - $('header').height() - 1
+	$siteBody.height windowHeight - $('header').height()
 
 	$('.stretch-to-bottom').each () ->
 		$this = $ this
-		newHeight = windowHeight - $this.offset().top + 1
+		newHeight = windowHeight - $this.offset().top
 		if newHeight > 0
 			$this.height newHeight
 
@@ -15,11 +15,6 @@ window.handleResize = () ->
 		$this.data 'real-height', $this.height()
 		$this.css
 			height: '15em'
-
-#		if $this.height() > $this.data 'real-height'
-#			$this.css {height: 'auto'}
-#			$this.find('.reveal').css {display: 'none'}
-#			return
 
 		$this.find('.reveal').click (e) ->
 			e.preventDefault()

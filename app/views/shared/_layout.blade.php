@@ -11,9 +11,6 @@
 		@yield('styles')
 	</head>
 	<body ng-app="ponyfm" ng-controller="application" uploader>
-		<div class="background-color"></div>
-		<div class="background-two"></div>
-		<div class="background-one"></div>
 		@yield('content')
 		@yield('scripts')
 	</body>

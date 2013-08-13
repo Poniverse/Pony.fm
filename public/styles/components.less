@@ -1,27 +1,159 @@
 @import-once 'base/bootstrap/bootstrap';
 @import-once 'mixins';
+@import-once 'variables';
 
-.fade-hide, .fade-show {
-  .transition(all cubic-bezier(0.250, 0.460, 0.450, 0.940) 350ms);
+.stretch-to-bottom {
+  overflow-y: auto;
 }
 
-.fade-hide {
-  opacity:1;
+.dropdowns {
+  .clearfix();
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  margin-bottom: 10px;
+
+  > li {
+	float: left;
+	margin: 0px;
+	padding: 0px;
+	margin-right: 10px;
+	line-height: normal;
+
+	&.open {
+	  > .btn {
+		background: @pfm-purple;
+		color: #fff;
+	  }
+
+	  .dropdown-menu {
+		.box-shadow(none);
+
+		margin: 0px;
+		border: 2px solid @pfm-purple;
+
+		li.selected {
+		  a {
+			background: @pfm-purple;
+			color: #fff;
+		  }
+		}
+
+		li {
+		  a:hover {
+			background: lighten(@pfm-purple, 5%);
+		  }
+		}
+	  }
+	}
+
+	> .btn {
+	  border: none;
+	  background: #eee;
+	  font-size: 8pt;
+	  padding: 3px 7px;
+	  text-shadow: none;
+
+	  &.btn-info {
+		background: @pfm-purple;
+	  }
+	}
+  }
 }
 
-.fade-hide.fade-hide-active {
-  opacity:0;
+.tabs {
+  .clearfix();
+
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  margin-bottom: 10px;
+  border-bottom: 4px solid #ddd;
+  font-size: 15px;
+
+  li {
+	margin: 0px;
+	float: left;
+	line-height: normal;
+
+	a {
+	  padding: 5px 13px;
+	  display: block;
+	  color: #555;
+
+	  &:hover {
+		text-decoration: none;
+	  }
+	}
+
+	&.active {
+	  a {
+		background: #eee;
+		color: #000;
+		border-bottom: 4px solid @pfm-purple;
+		margin-bottom: -4px;
+	  }
+	}
+  }
 }
 
-.fade-show {
-  opacity:0;
+ui-view {
+  display: block;
+
+  &:before {
+	.transition(opacity 250ms);
+
+	opacity: 0;
+	background: #fff;
+	content: ' ';
+	top: 0px;
+	left: 0px;
+	z-index: 999;
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	display: block;
+	overflow: hidden;
+  }
+
+  &.loading {
+	position: relative;
+
+	&:before {
+	  opacity: .8;
+	  width: 100%;
+	  height: 100%;
+	}
+  }
 }
 
-.fade-show.fade-show-active {
-  opacity:1;
+.toolbar {
+  #gradient>.vertical(#555, #222);
+  list-style: none;
+  margin: 0px;
+  margin-bottom: 10px;
+  padding: 0px;
+  overflow: hidden;
+
+  li {
+	float: left;
+
+	a, button {
+	  .border-radius(0px);
+	  font-size: 9pt;
+	}
+
+	&.delete {
+	  float: right;
+	}
+  }
 }
 
 html body {
+  .btn {
+	.border-radius(0px);
+  }
+
   .ui-datepicker {
 	.border-radius(0px);
 
@@ -34,9 +166,11 @@ html body {
 	  border-bottom: 1px solid #777;
 	  margin: -3px;
 	}
+  }
 
-	.ui-datepicker-calendar {
-	}
+  .alert {
+	.border-radius(0px);
+	margin-bottom: 10px;
   }
 }
 
@@ -68,48 +202,6 @@ html .dropdown-menu {
 	&.selected {
 	  > .dont-close i:before {
 		content: "\f068";
-	  }
-	}
-  }
-}
-
-.dropdowns {
-  .clearfix();
-
-  list-style: none;
-  padding: 0px;
-  margin: 10px 0px;
-
-  > li {
-	margin: 0px;
-	margin-right: 5px;
-	padding: 0px;
-	float: left;
-
-	> a {
-	  .border-radius(0px);
-	  padding: 3px 10px;
-	  font-size: 8pt;
-	}
-
-	ul {
-	  .border-radius(0px);
-	  padding: 0px;
-
-	  li.selected {
-		a {
-		  background: @blue;
-		  color: #fff;
-
-		  &:hover {
-			background: fadeout(@blue, 20%);
-		  }
-		}
-	  }
-
-	  a {
-		padding: 3px 10px;
-		font-size: 8pt;
 	  }
 	}
   }
@@ -184,10 +276,6 @@ html .dropdown-menu {
   form {
 	margin: 0px;
   }
-
-  .btn {
-	.border-radius(0px);
-  }
 }
 
 html {
@@ -200,8 +288,9 @@ html {
 
   .pagination {
 	border: none;
-	background: #ddd;
-	margin: 5px 0px;
+	background: #eee;
+	margin: 0px;
+	margin-bottom: 10px;
 	padding: 0px;
 	overflow: hidden;
 
@@ -225,11 +314,12 @@ html {
 		  padding: 1px 10px;
 		  display: block;
 		  float: left;
+		  color: @pfm-purple;
 		}
 	  }
 
 	  li.active a {
-		background: #444;
+		background: @pfm-purple;
 		color: #ddd;
 	  }
 	}

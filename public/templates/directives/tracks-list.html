@@ -13,11 +13,8 @@
 		</div>
 		<a class="info" href="{{track.url}}">
 			<span class="title">{{track.title}}</span>
-			<span class="metadata">
-				<span class="artist">by: {{track.user.name}} /</span>
-				<span class="genre">{{track.genre.name}}</span> /
-				{{track.published_at.date | momentFromNow}}
-			</span>
+			<span class="published-at">{{track.published_at.date | momentFromNow}}</span>
+			<span class="artist">{{track.user.name}} / {{track.genre.name}}</span>
 		</a>
 	</li>
 	<li ng-show="!tracks.length" class="empty">

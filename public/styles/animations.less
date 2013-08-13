@@ -1,6 +1,26 @@
 @import-once 'base/bootstrap/bootstrap';
 @import-once 'mixins';
 
+.fade-hide, .fade-show {
+  .transition(all cubic-bezier(0.250, 0.460, 0.450, 0.940) 350ms);
+}
+
+.fade-hide {
+  opacity:1;
+}
+
+.fade-hide.fade-hide-active {
+  opacity:0;
+}
+
+.fade-show {
+  opacity:0;
+}
+
+.fade-show.fade-show-active {
+  opacity:1;
+}
+
 .slide-down-enter, .slide-down-leave,
 .slide-up-enter, .slide-up-leave,
 .slide-right-enter, .slide-right-leave {

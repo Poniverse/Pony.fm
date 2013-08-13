@@ -1,0 +1,101 @@
+@import-once 'variables';
+@import-once 'mixins';
+
+.track-player {
+  overflow: hidden;
+  padding: 10px;
+
+  .image {
+	float: left;
+	width: 43px;
+	height: 43px;
+
+	img {
+	  .img-polaroid();
+	  display: block;
+	  width: 100%;
+	  padding: 1px;
+	}
+  }
+
+  .inner {
+	margin-left: 55px;
+  }
+
+  .song, .artist {
+	.ellipsis();
+	line-height: normal;
+	display: block;
+
+	a {
+	  color: #555;
+
+	  &:hover {
+		text-decoration: none;
+		color: #111;
+	  }
+	}
+  }
+
+  .song {
+	font-weight: bold;
+  }
+
+  .volume-slider {
+	display: none;
+  }
+
+  .transport {
+	background: @pfm-light-grey;
+	height: 8px;
+	position: relative;
+	cursor: pointer;
+	margin-top: 4px;
+
+	.bar {
+	  z-index: 500;
+	  background: @pfm-purple;
+	}
+
+	.loader-bar {
+	  z-index: 200;
+	  background: #ddd;
+	}
+
+	.bar, .loader-bar {
+	  position: absolute;
+	  top: 0px;
+	  left: 0px;
+	  height: 100%;
+	}
+  }
+
+  .buttons {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	float: right;
+
+	li {
+	  line-height: normal;
+	  float: left;
+	  margin: 0px;
+	  padding: 0px;
+	  font-size: 15pt;
+
+	  > a {
+		display: block;
+		padding: 5px 0px;
+		width: 40px;
+		text-align: center;
+		color: #5A5A5A;
+
+		&:hover {
+		  text-decoration: none;
+		  background: darken(#eee, 10%);
+		  color: #000;
+		}
+	  }
+	}
+  }
+}
