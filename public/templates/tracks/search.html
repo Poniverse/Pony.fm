@@ -1,7 +1,7 @@
 <ul class="dropdowns">
 	<li class="dropdown">
 		<a class="dropdown-toggle btn" ng-class="{'btn-info': query.filters.trackTypes.selectedArray.length}">
-			Type: <strong>{{query.filters.trackTypes.title}}</strong>
+			Type: <strong class="ng-cloak">{{query.filters.trackTypes.title}}</strong>
 		</a>
 		<ul class="dropdown-menu">
 			<li ng-repeat="type in filters.trackTypes.values" ng-class="{selected: query.isIdSelected('trackTypes', type.id)}">

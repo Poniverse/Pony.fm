@@ -17,5 +17,5 @@ angular.module('ponyfm').controller "artists", [
 		$scope.$on 'artists-feteched', (e, list) -> refreshPages(list)
 
 		$scope.gotoPage = (page) ->
-			$state.transitionTo 'artists.list', {page: page}
+			$state.transitionTo 'content.artists.list', {page: page}
 ]

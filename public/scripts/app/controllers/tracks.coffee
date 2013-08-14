@@ -13,15 +13,15 @@ angular.module('ponyfm').controller "tracks", [
 
 		$scope.toggleListFilter = (filter, id) ->
 			$scope.query.toggleListFilter filter, id
-			$state.transitionTo 'tracks.search.list', {filter: $scope.query.toFilterString()}
+			$state.transitionTo 'content.tracks.list', {filter: $scope.query.toFilterString()}
 
 		$scope.setFilter = (filter, value) ->
 			$scope.query.setFilter filter, value
-			$state.transitionTo 'tracks.search.list', {filter: $scope.query.toFilterString()}
+			$state.transitionTo 'content.tracks.list', {filter: $scope.query.toFilterString()}
 
 		$scope.setListFilter = (filter, id) ->
 			$scope.query.setListFilter filter, id
-			$state.transitionTo 'tracks.search.list', {filter: $scope.query.toFilterString()}
+			$state.transitionTo 'content.tracks.list', {filter: $scope.query.toFilterString()}
 
 		tracks.mainQuery.listen (searchResults) ->
 			$scope.tracks = searchResults.tracks
@@ -35,7 +35,7 @@ angular.module('ponyfm').controller "tracks", [
 			$scope.pages = [1..$scope.totalPages]
 
 		$scope.gotoPage = (page) ->
-			$state.transitionTo 'tracks.search.list', {filter: $state.params.filter, page: page}
+			$state.transitionTo 'content.tracks.list', {filter: $state.params.filter, page: page}
 
 		$scope.$on '$destroy', -> tracks.mainQuery = tracks.createQuery()
 ]

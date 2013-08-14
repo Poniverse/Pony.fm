@@ -1,0 +1,8 @@
+<ul class="tabs">
+	<li ng-class="{active: $state.includes('content.tracks') || $state.includes('content.track')}"><a href="/tracks">Tracks</a></li>
+	<li ng-class="{active: $state.includes('content.artists') || $state.includes('content.artist')}"><a href="/artists">Artists</a></li>
+	<li ng-class="{active: $state.includes('content.albums') || $state.includes('content.album')}"><a href="/albums">Albums</a></li>
+	<li ng-class="{active: $state.includes('content.playlists') || $state.includes('content.playlist')}"><a href="/playlists">Playlists</a></li>
+</ul>
+
+<ui-view></ui-view>

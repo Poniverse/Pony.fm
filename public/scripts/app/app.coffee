@@ -1,10 +1,10 @@
 window.pfm.preloaders = {}
 
-angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'], [
-	'$routeProvider', '$locationProvider', '$stateProvider', '$dialogProvider', '$injector'
-	(route, location, state, $dialogProvider, $injector) ->
+module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable']
 
-		service = (name) -> angular.element(document.body).injector().get name
+module.config [
+	'$locationProvider', '$stateProvider', '$dialogProvider'
+	(location, state, $dialogProvider) ->
 
 		# Account
 
@@ -67,73 +67,64 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 
 		# Tracks
 
-		state.state 'track',
+		state.state 'content',
+			abstract: true
+			templateUrl: '/templates/content/_layout.html'
+
+		state.state 'content.tracks',
+			templateUrl: '/templates/tracks/search.html'
+			controller: 'tracks'
+			url: '/tracks'
+			abstract: true
+
+		state.state 'content.tracks.list',
+			url: '^/tracks?filter&page'
+			templateUrl: '/templates/tracks/search-list.html'
+			controller: 'tracks-list'
+
+		state.state 'content.track',
 			url: '/tracks/{id:[^\-]+}-{slug}'
 			templateUrl: '/templates/tracks/show.html'
 			controller: 'track'
 
-		state.state 'tracks',
-			url: '/tracks'
-			templateUrl: '/templates/tracks/_layout.html'
-			abstract: true
-
-		state.state 'tracks.search',
-			templateUrl: '/templates/tracks/search.html'
-			controller: 'tracks'
-
-		state.state 'tracks.search.list',
-			url: '?filter&page'
-			templateUrl: '/templates/tracks/search-list.html'
-			controller: 'tracks-list'
-
-		state.state 'tracks.popular',
-			url: '/popular'
-			templateUrl: '/templates/tracks/search.html'
-			controller: 'tracks'
-
-		state.state 'tracks.random',
-			url: '/random'
-			templateUrl: '/templates/tracks/search.html'
-			controller: 'tracks'
-
 		# Albums
 
-		state.state 'albums',
+		state.state 'content.albums',
 			url: '/albums'
 			templateUrl: '/templates/albums/index.html'
 			controller: 'albums'
 			abstract: true
 
-		state.state 'albums.list',
+		state.state 'content.albums.list',
 			url: '?page'
 			templateUrl: '/templates/albums/list.html'
 			controller: 'albums-list'
 
-		state.state 'album',
+		state.state 'content.album',
 			url: '/albums/{id:[^\-]+}-{slug}'
 			templateUrl: '/templates/albums/show.html'
 			controller: 'album'
 
 		# Playlists
 
-		state.state 'playlists',
+		state.state 'content.playlists',
 			url: '/playlists'
 			templateUrl: '/templates/playlists/index.html'
 
-		state.state 'playlist',
+		state.state 'content.playlist',
 			url: '/playlist/{id:[^\-]+}-{slug}'
 			templateUrl: '/templates/playlists/show.html'
 			controller: 'playlist'
 
 		# Artists
 
-		state.state 'artists',
+		state.state 'content.artists',
 			url: '/artists'
 			templateUrl: '/templates/artists/index.html'
 			controller: 'artists'
 			abstract: true
 
-		state.state 'artists.list',
+		state.state 'content.artists.list',
 			url: '?page'
 			templateUrl: '/templates/artists/list.html'
 			controller: 'artists-list'
@@ -172,28 +163,26 @@ angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable'],
 				templateUrl: '/templates/home/index.html'
 
 		# Final catch-all for aritsts
-		state.state 'artist',
-			url: '^/:slug'
+		state.state 'content.artist',
+			url: '^/{slug}'
 			templateUrl: '/templates/artists/_show_layout.html'
 			abstract: true
 			controller: 'artist'
 
-		state.state 'artist.profile',
+		state.state 'content.artist.profile',
 			url: ''
 			templateUrl: '/templates/artists/profile.html'
 			controller: 'artist-profile'
 
-		state.state 'artist.content',
+		state.state 'content.artist.content',
 			url: '/content'
 			templateUrl: '/templates/artists/content.html'
 			controller: 'artist-content'
 
-		state.state 'artist.favourites',
+		state.state 'content.artist.favourites',
 			url: '/favourites'
 			templateUrl: '/templates/artists/favourites.html'
 			controller: 'artist-favourites'
-
-		route.otherwise '/'
 
 		location.html5Mode(true);
 		$dialogProvider.options

@@ -19,7 +19,7 @@ angular.module('ponyfm').controller "application", [
 
 		$scope.isActive = (loc) -> $location.path() == loc
 		$scope.$on '$viewContentLoaded', () ->
-			window.handleResize()
+			window.setTimeout (-> window.handleResize()), 0
 
 			if $loadingElement
 				$loadingElement.removeClass 'loading'

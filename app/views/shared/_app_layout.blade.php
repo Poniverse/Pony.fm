@@ -15,7 +15,7 @@
 			@else
 				<li ng-class="{selected: $state.includes('home')}"><a href="/">Home <i class="icon-home"></i></a></li>
 			@endif
-			<li ng-class="{selected: $state.includes('tracks') || $state.includes('track') || $state.includes('albums') || $state.includes('album') || $state.includes('artists') || $state.includes('artist')}">
+			<li ng-class="{selected: $state.includes('content')}">
 				<a href="/tracks">Discover <i class="icon-music"></i></a>
 			</li>
 
@@ -34,7 +34,7 @@
 					</h3>
 				</li>
 				<li class="none" ng-show="!playlists.length"><span>no pinned playlists</span></li>
-				<li class="dropdown" ng-repeat="playlist in playlists" ng-cloak ng-class="{selected: $state.is('playlist') && $state.params.id == playlist.id}">
+				<li class="dropdown" ng-repeat="playlist in playlists" ng-cloak ng-class="{selected: $state.is('content.playlist') && $state.params.id == playlist.id}">
 					<a class="menu dropdown-toggle" pfm-eat-click href="#"><i class="icon-ellipsis-vertical"></i></a>
 					<a href="{{Helpers::angular('playlist.url')}}" ng-bind="playlist.title"></a>
 
