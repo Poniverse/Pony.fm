@@ -1,10 +1,4 @@
 <div class="track-details" xmlns="http://www.w3.org/1999/html">
-	<ul class="breadcrumb">
-		<li><a href="/tracks">Tracks</a> <span class="divider">/</span></li>
-		<li><a href="/tracks?filter=genres-{{track.genre.id}}">{{track.genre.name}}</a> <span class="divider">/</span></li>
-		<li class="active">{{track.title}}</li>
-	</ul>
-
 	<div class="track-toolbar btn-group pull-right">
 		<pfm-favourite-button resource="track" type="track"></pfm-favourite-button>
 		<div class="dropdown">
@@ -31,7 +25,7 @@
 		</div>
 	</div>
 
-	<pfm-tracks-list tracks="trackArray"></pfm-tracks-list>
+	<pfm-track-player track="track"></pfm-track-player>
 	<h1>
 		{{track.title}}
 		<span class="subtitle">

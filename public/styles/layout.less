@@ -7,14 +7,12 @@ html, body {
 
 html body {
   height: 100%;
-  background: @pfm-dark-grey;
+  background: #444;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 header, .site-body {
-  .box-shadow(0 0 7px rgba(0, 0, 0, .3));
-  max-width: 1200px;
-  margin: auto;
+  .box-shadow(0 0 7px rgba(0, 0, 0, .6));
 }
 
 header {
@@ -50,9 +48,9 @@ header {
 }
 
 .sidebar {
+  background: @pfm-light-grey;
   width: @pfm-sidebar-size;
   height: 100%;
-  background: @pfm-light-grey;
   float: left;
   list-style: none;
   padding: 0px;
@@ -68,6 +66,7 @@ header {
 	  background: #fff;
 
 	  > a {
+		cursor: default;
 		color: #000;
 	  }
 	}

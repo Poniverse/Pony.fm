@@ -23,6 +23,10 @@ angular.module('ponyfm').controller "tracks", [
 			$scope.query.setListFilter filter, id
 			$state.transitionTo 'content.tracks.list', {filter: $scope.query.toFilterString()}
 
+		$scope.clearFilter = (filter) ->
+			$scope.query.clearFilter filter
+			$state.transitionTo 'content.tracks.list', {filter: $scope.query.toFilterString()}
+
 		tracks.mainQuery.listen (searchResults) ->
 			$scope.tracks = searchResults.tracks
 			$scope.currentPage = parseInt(searchResults.current_page)

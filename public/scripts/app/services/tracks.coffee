@@ -12,7 +12,9 @@ angular.module('ponyfm').factory('tracks', [
 			constructor: (@availableFilters) ->
 				@filters = {}
 				@hasLoadedFilters = false
+				@resetFilters()
 
+			resetFilters: ->
 				_.each @availableFilters, (filter, name) =>
 					if filter.type == 'single'
 						@filters[name] = _.find filter.values, (f) -> f.isDefault
@@ -37,6 +39,19 @@ angular.module('ponyfm').factory('tracks', [
 				filter.selectedObject = {}
 				filter.selectedObject[id] = filterToAdd
 				filter.title = filterToAdd.title
+
+			clearFilter: (type) ->
+				@cachedDef = null
+				@page = 1
+				filter = @availableFilters[type]
+
+				if filter.type == 'single'
+					@filters[type] = _.find filter.values, (f) -> f.isDefault
+				else
+					currentFilter = @filters[type]
+					currentFilter.selectedArray = []
+					currentFilter.selectedObject = {}
+					currentFilter.title = 'Any'
 
 			toggleListFilter: (type, id) ->
 				@cachedDef = null
@@ -82,8 +97,10 @@ angular.module('ponyfm').factory('tracks', [
 
 			fromFilterString: (str) ->
 				@hasLoadedFilters = true
-				return if !str
-				filters = str.split '!'
+				@cachedDef = null
+				@resetFilters()
+
+				filters = (str || "").split '!'
 				for filter in filters
 					parts = filter.split '-'
 					name = parts[0]
@@ -91,7 +108,8 @@ angular.module('ponyfm').factory('tracks', [
 
 					if @availableFilters[name].type == 'single'
 						filterToSet = _.find @availableFilters[name].values, (f) -> f.query == parts[1]
-						filterToSet = _.find @availableFilters[name].values, (f) -> f.isDefault if filterToSet == null
+						filterToSet = (_.find @availableFilters[name].values, (f) -> f.isDefault) if filterToSet == null
+						@setFilter name, filterToSet
 					else
 						@toggleListFilter name, id for id in _.rest parts, 1
 
@@ -115,6 +133,7 @@ angular.module('ponyfm').factory('tracks', [
 					@tracks = tracks
 					for listener in @listeners
 						listener tracks
+
 
 					trackDef.resolve tracks
 
@@ -150,7 +169,7 @@ angular.module('ponyfm').factory('tracks', [
 					type: 'single'
 					values: [
 						{title: 'Newest to Oldest', query: '', isDefault: true, filter: 'order=created_at,desc'},
-						{title: 'Oldest to Newest', query: 'created_at,asc', isDefault: true, filter: 'order=created_at,asc'}
+						{title: 'Oldest to Newest', query: 'created_at,asc', isDefault: false, filter: 'order=created_at,asc'}
 					]
 
 				self.filters.genres =

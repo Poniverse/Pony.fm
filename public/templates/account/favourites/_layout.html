@@ -1,8 +1,8 @@
 <div>
 	<ul class="tabs">
-		<li ng-class="{active: $state.includes('account-favourites.tracks')}"><a href="/account/favourites">Tracks</a></li>
-		<li ng-class="{active: $state.includes('account-favourites.albums')}"><a href="/account/favourites/albums">Albums</a></li>
-		<li ng-class="{active: $state.includes('account-favourites.playlists')}"><a href="/account/favourites/playlists">Playlists</a></li>
+		<li ng-class="{active: stateIncludes('account-favourites.tracks')}"><a href="/account/favourites">Tracks</a></li>
+		<li ng-class="{active: stateIncludes('account-favourites.albums')}"><a href="/account/favourites/albums">Albums</a></li>
+		<li ng-class="{active: stateIncludes('account-favourites.playlists')}"><a href="/account/favourites/playlists">Playlists</a></li>
 	</ul>
 
 	<ui-view></ui-view>

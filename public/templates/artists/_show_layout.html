@@ -22,9 +22,9 @@
 		</h1>
 
 		<ul class="tabs">
-			<li ng-class="{active: $state.includes('artist.profile')}"><a href="{{artist.slug}}">Profile</a></li>
-			<li ng-class="{active: $state.includes('artist.content')}"><a href="{{artist.slug}}/content">Content</a></li>
-			<li ng-class="{active: $state.includes('artist.favourites')}"><a href="{{artist.slug}}/favourites">Favourites</a></li>
+			<li ng-class="{active: stateIncludes('artist.profile')}"><a href="{{artist.slug}}">Profile</a></li>
+			<li ng-class="{active: stateIncludes('artist.content')}"><a href="{{artist.slug}}/content">Content</a></li>
+			<li ng-class="{active: stateIncludes('artist.favourites')}"><a href="{{artist.slug}}/favourites">Favourites</a></li>
 		</ul>
 	</div>
 

@@ -1,7 +1,7 @@
 <div>
 	<ul class="tabs">
-		<li ng-class="{active: $state.includes('account-content.tracks')}"><a href="/account/tracks">Tracks</a></li>
-		<li ng-class="{active: $state.includes('account-content.albums')}"><a href="/account/albums">Albums</a></li>
+		<li ng-class="{active: stateIncludes('account-content.tracks')}"><a href="/account/tracks">Tracks</a></li>
+		<li ng-class="{active: stateIncludes('account-content.albums')}"><a href="/account/albums">Albums</a></li>
 	</ul>
 
 	<ui-view></ui-view>

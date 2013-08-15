@@ -2,10 +2,8 @@ window.pfm.preloaders['tracks-list'] = [
 	'tracks', '$state'
 	(tracks, $state) ->
 		tracks.loadFilters().then(->
-			if !tracks.mainQuery.hasLoadedFilters
-				tracks.mainQuery.fromFilterString($state.params.filter)
-			if $state.params.page
-				tracks.mainQuery.setPage $state.params.page
+			tracks.mainQuery.fromFilterString($state.params.filter)
+			tracks.mainQuery.setPage $state.params.page || 1
 
 			tracks.mainQuery.fetch()
 		)

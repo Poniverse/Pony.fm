@@ -4,6 +4,7 @@ angular.module('ponyfm').directive 'pfmPlayer', () ->
 	restrict: 'E'
 	templateUrl: '/templates/directives/player.html'
 	scope: {}
+	replace: true
 
 	compile: (element) ->
 		$element = element

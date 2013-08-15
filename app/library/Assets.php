@@ -47,6 +47,7 @@
 					new FileAsset('scripts/base/jquery-ui.js'),
 					new FileAsset('scripts/base/jquery.cookie.js'),
 					new FileAsset('scripts/base/jquery.colorbox.js'),
+					new FileAsset('scripts/base/jquery.viewport.js'),
 					new FileAsset('scripts/base/underscore.js'),
 					new FileAsset('scripts/base/moment.js'),
 					new FileAsset('scripts/base/soundmanager2-nodebug.js'),

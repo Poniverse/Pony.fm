@@ -2,6 +2,8 @@
 @import-once 'mixins';
 @import-once 'variables';
 
+@icon-size: 42px;
+
 .tracks-listing.four-columns {
   li {
 	float: left;
@@ -23,9 +25,40 @@
   }
 }
 
-.tracks-listing {
-  @icon-size: 42px;
+.single-player, .tracks-listing li .image {
+  float: left;
+  width: @icon-size;
+  height: @icon-size;
+  position: relative;
 
+  .play-button {
+	.transition(background 250ms ease-out);
+
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	line-height: 38px;
+	text-align: center;
+	font-size: 12pt;
+	color: #fff;
+	text-decoration: none;
+	background: rgba(0, 0, 0, .4);
+	display: none;
+
+	&:hover {
+	  background: rgba(0, 0, 0, .8);
+	}
+  }
+
+  img {
+	display: block;
+	width: 100%;
+  }
+}
+
+.tracks-listing {
   margin: 0px;
   padding: 0px;
   list-style: none;
@@ -34,43 +67,27 @@
 	.clearfix();
 	.box-sizing(border-box);
 
+	&.empty {
+	  .border-radius(0px);
+	  background: lighten(@pfm-purple, 30%);
+	  border: 1px solid lighten(@pfm-purple, 10%);
+	  color: lighten(@pfm-purple, 3%);
+	  float: none !important;
+	  width: auto !important;
+	  display: block;
+	  margin-top: 5px;
+	  padding: 5px;
+	  font-size: 9pt;
+
+	  &:hover {
+		background-color: lighten(@pfm-purple, 30%);
+	  }
+	}
+
 	line-height: normal;
 	margin: 5px 0px;
 	padding: 0px;
 	padding-right: 10px;
-
-	.image {
-	  float: left;
-	  width: @icon-size;
-	  height: @icon-size;
-	  position: relative;
-
-	  .play-button {
-		.transition(background 250ms ease-out);
-
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		width: 100%;
-		height: 100%;
-		line-height: 38px;
-		text-align: center;
-		font-size: 12pt;
-		color: #fff;
-		text-decoration: none;
-		background: rgba(0, 0, 0, .4);
-		display: none;
-
-		&:hover {
-		  background: rgba(0, 0, 0, .8);
-		}
-	  }
-
-	  img {
-		display: block;
-		width: 100%;
-	  }
-	}
 
 	.icons {
 	  float: right;

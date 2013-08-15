@@ -9,7 +9,6 @@ angular.module('ponyfm').controller "track", [
 	($scope, tracks, $state, playlists, auth, favourites, $dialog) ->
 		tracks.fetch($state.params.id).done (trackResponse) ->
 			$scope.track = trackResponse.track
-			$scope.trackArray = [$scope.track]
 
 		$scope.playlists = []
 

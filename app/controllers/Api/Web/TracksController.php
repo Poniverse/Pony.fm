@@ -51,6 +51,7 @@
 
 		public function getIndex() {
 			$page = 1;
+			$perPage = 60;
 
 			if (Input::has('page'))
 				$page = Input::get('page');
@@ -63,7 +64,7 @@
 			$this->applyFilters($query);
 
 			$totalCount = $query->count();
-			$query->take(30)->skip(30 * ($page - 1));
+			$query->take($perPage)->skip(30 * ($page - 1));
 
 			$tracks = [];
 			$ids = [];
@@ -73,7 +74,7 @@
 				$ids[] = $track->id;
 			}
 
-			return Response::json(["tracks" => $tracks, "current_page" => $page, "total_pages" => ceil($totalCount / 30)], 200);
+			return Response::json(["tracks" => $tracks, "current_page" => $page, "total_pages" => ceil($totalCount / $perPage)], 200);
 		}
 
 		public function getOwned() {

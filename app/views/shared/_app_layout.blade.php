@@ -11,16 +11,16 @@
 	<div class="site-body">
 		<ul class="sidebar" ng-controller="sidebar">
 			@if (Auth::check())
-				<li ng-class="{selected: $state.includes('home')}"><a href="/">Dashboard <i class="icon-home"></i></a></li>
+				<li ng-class="{selected: stateIncludes('home')}"><a href="/">Dashboard <i class="icon-home"></i></a></li>
 			@else
-				<li ng-class="{selected: $state.includes('home')}"><a href="/">Home <i class="icon-home"></i></a></li>
+				<li ng-class="{selected: stateIncludes('home')}"><a href="/">Home <i class="icon-home"></i></a></li>
 			@endif
-			<li ng-class="{selected: $state.includes('content')}">
+			<li ng-class="{selected: stateIncludes('content')}">
 				<a href="/tracks">Discover <i class="icon-music"></i></a>
 			</li>
 
 			@if (Auth::check())
-				<li ng-class="{selected: $state.includes('account-content') || isActive('/account')}"><a href="/account/tracks">Account <i class="icon-user"></i></a></li>
+				<li ng-class="{selected: stateIncludes('account-content') || isActive('/account')}"><a href="/account/tracks">Account <i class="icon-user"></i></a></li>
 			@endif
 
 			<li ng-class="{selected: isActive('/about')}"><a href="/about">Meta <i class="icon-info"></i></a></li>

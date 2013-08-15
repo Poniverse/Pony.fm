@@ -20,6 +20,34 @@
 	margin-right: 10px;
 	line-height: normal;
 
+	> .btn {
+	  float: left;
+	  display: block;
+	}
+
+	> .btn + .btn {
+	  .transition(background 300ms ease-out);
+
+	  display: none;
+	  margin: 0px;
+	}
+
+	&.has-filter {
+	  > .btn {
+		background: @pfm-purple;
+		color: #fff;
+	  }
+
+	  > .btn + .btn {
+		display: block;
+		background: darken(@pfm-purple, 20%);
+
+		&:hover {
+		  background: darken(@pfm-purple, 40%);
+		}
+	  }
+	}
+
 	&.open {
 	  > .btn {
 		background: @pfm-purple;
@@ -320,7 +348,7 @@ html {
 
 	  li.active a {
 		background: @pfm-purple;
-		color: #ddd;
+		color: #fff;
 	  }
 	}
 

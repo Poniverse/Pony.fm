@@ -5,6 +5,7 @@ angular.module('ponyfm').controller "application", [
 		$scope.$state = $state
 		$scope.$stateParams = $stateParams
 		$loadingElement = null
+		loadingStateName = null
 
 		$rootScope.safeApply = (fn) ->
 			phase = $rootScope.$$phase
@@ -25,8 +26,20 @@ angular.module('ponyfm').controller "application", [
 				$loadingElement.removeClass 'loading'
 				$loadingElement = null
 
+		$scope.stateIncludes = (state) ->
+			if $loadingElement
+				newParts = state.split '.'
+				oldParts = loadingStateName.split '.'
+				for i in [0..newParts.length]
+					continue if !newParts[i]
+					return false if newParts[i] != oldParts[i]
+
+				return true
+			else
+				$state.includes(state)
+
 		statesPreloaded = {}
-		$scope.$on '$stateChangeStart', (e, newState, newParams, oldState) ->
+		$scope.$on '$stateChangeStart', (e, newState, newParams, oldState, oldParams) ->
 			return if !oldState || !newState.controller
 
 			preloader = window.pfm.preloaders[newState.controller]
@@ -37,6 +50,7 @@ angular.module('ponyfm').controller "application", [
 				return
 
 			e.preventDefault()
+			loadingStateName = newState.name
 
 			selector = ''
 			newParts = newState.name.split '.'
