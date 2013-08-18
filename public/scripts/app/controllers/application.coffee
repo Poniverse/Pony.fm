@@ -1,9 +1,10 @@
 angular.module('ponyfm').controller "application", [
-	'$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope'
-	($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope) ->
+	'$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope', 'playlists'
+	($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope, playlists) ->
 		$scope.auth = auth.data
 		$scope.$state = $state
 		$scope.$stateParams = $stateParams
+		$scope.isPinnedPlaylistSelected = false
 		$loadingElement = null
 		loadingStateName = null
 
@@ -40,6 +41,11 @@ angular.module('ponyfm').controller "application", [
 
 		statesPreloaded = {}
 		$scope.$on '$stateChangeStart', (e, newState, newParams, oldState, oldParams) ->
+			$scope.isPinnedPlaylistSelected = false
+
+			if newState.name == 'content.playlist'
+				$scope.isPinnedPlaylistSelected = playlists.isPlaylistPinned newParams.id
+
 			return if !oldState || !newState.controller
 
 			preloader = window.pfm.preloaders[newState.controller]

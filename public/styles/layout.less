@@ -65,7 +65,7 @@ header {
 	&.selected {
 	  background: #fff;
 
-	  > a {
+	  > a, > a:hover {
 		cursor: default;
 		color: #000;
 	  }
@@ -113,7 +113,11 @@ header {
 	  padding: 10px 25px;
 	  padding-right: 0px;
 	  overflow: hidden;
-	  color: #fff;
+	  color: fadeout(#fff, 20%);
+
+	  &:hover {
+		color: #fff;
+	  }
 
 	  > i {
 		display: block;

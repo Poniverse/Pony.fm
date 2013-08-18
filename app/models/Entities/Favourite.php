@@ -11,19 +11,19 @@
 		|--------------------------------------------------------------------------
 		*/
 
-		public function user(){
+		public function user() {
 			return $this->belongsTo('Entities\User');
 		}
 
-		public function track(){
+		public function track() {
 			return $this->belongsTo('Entities\Track');
 		}
 
-		public function album(){
+		public function album() {
 			return $this->belongsTo('Entities\Album');
 		}
 
-		public function playlist(){
+		public function playlist() {
 			return $this->belongsTo('Entities\Playlist');
 		}
 

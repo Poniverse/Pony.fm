@@ -85,9 +85,10 @@
 	}
 
 	line-height: normal;
-	margin: 5px 0px;
-	padding: 0px;
+	padding: 5px 0px;
+	margin: 0px;
 	padding-right: 10px;
+	position: relative;
 
 	.icons {
 	  float: right;
@@ -127,21 +128,26 @@
 	  margin-top: 5px;
 	}
 
-	.artist, .published-at, .genre {
+	.artist, .stats, .genre, .stats-expanded {
 	  color: #777;
 	  font-size: 80%;
 	}
 
-	.published-at {
+	.stats {
 	  float: right;
+	  padding: 3px;
+
+	  strong {
+		color: darken(@pfm-purple, 25%);
+	  }
 	}
 
-	.artist, .published-at {
+	.artist, .stats {
 	  margin-top: 2px;
 	}
 
 	&:hover {
-	  background: #eee;
+	  background: #dedede;
 
 	  .image {
 		.play-button {

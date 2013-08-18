@@ -16,6 +16,9 @@ angular.module('ponyfm').factory('playlists', [
 
 				playlists[id] = def.promise()
 
+			isPlaylistPinned: (id) ->
+				_.find(self.pinnedPlaylists, (p) -> `p.id == id`) != undefined
+
 			refreshOwned: (force) ->
 				force = force || false
 				return playlistDef if !force && playlistDef
