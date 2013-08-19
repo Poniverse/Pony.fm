@@ -1,5 +1,5 @@
 <ul class="tracks-listing {{class}}">
-	<li ng-repeat="track in tracks" ng-class="{'can-favourite': auth.isLogged, 'is-favourited': track.is_favourited, 'is-playing': track.isPlaying}">
+	<li ng-repeat="track in tracks" ng-class="{'can-favourite': auth.isLogged, 'is-favourited': auth.isLogged && track.user_data.is_favourited, 'is-playing': track.isPlaying, 'has-played': auth.isLogged && track.user_data.views}">
 		<div class="image">
 			<a href="#" class="play-button" pfm-eat-click ng-click="play(track)">
 				<i class="icon-play" ng-show="!track.isPlaying"></i>
@@ -13,7 +13,11 @@
 		</div>
 		<a class="info" href="{{track.url}}">
 			<span class="title">{{track.title}}</span>
-			<span class="stats" title="5 Favourites / 2 Comments / 10 Downloads"><strong>5</strong>f, <strong>2</strong>c, <strong>10</strong>d</span>
+			<span class="stats" title="{{track.stats.favourites}} Favourites / {{track.stats.comments}} Comments / {{track.stats.plays}} Plays">
+				<strong>{{track.stats.favourites}}</strong>f
+				<strong>{{track.stats.comments}}</strong>c
+				<strong>{{track.stats.plays}}</strong>p
+			</span>
 			<span class="artist">{{track.user.name}} / {{track.genre.name}}</span>
 		</a>
 	</li>

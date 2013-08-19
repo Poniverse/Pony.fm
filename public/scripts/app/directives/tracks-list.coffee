@@ -12,7 +12,7 @@ angular.module('ponyfm').directive 'pfmTracksList', () ->
 
 			$scope.toggleFavourite = (track) ->
 				favourites.toggle('track', track.id).done (res) ->
-					track.is_favourited = res.is_favourited
+					track.user_data.is_favourited = res.is_favourited
 
 			$scope.play = (track) ->
 				index = _.indexOf $scope.tracks, (t) -> t.id == track.id

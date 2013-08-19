@@ -23,7 +23,7 @@ angular.module('ponyfm').factory('albums', [
 				id = 1 if !id
 				return albums[id] if !force && albums[id]
 				albumsDef = new $.Deferred()
-				$http.get('/api/web/albums/' + id).success (albums) ->
+				$http.get('/api/web/albums/' + id + '?log=true').success (albums) ->
 					albumsDef.resolve albums
 
 				albums[id] = albumsDef.promise()

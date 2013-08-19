@@ -1,5 +1,6 @@
 <?php
 
+	use Entities\ResourceLogItem;
 	use Entities\Track;
 	use Illuminate\Support\Facades\App;
 
@@ -33,10 +34,40 @@
 				App::abort(404);
 
 			$format = Track::$Formats['MP3'];
+			ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $format['index']);
 
 			$response = Response::make('', 200);
 			$response->header('X-Sendfile', $track->getFileFor('MP3'));
-			$response->header('Content-Disposition', 'filename=' . $track->getFilenameFor('MP3'));
+			$response->header('Content-Disposition', 'filename="' . $track->getFilenameFor('MP3') . '"');
+			$response->header('Content-Type', $format['mime_type']);
+
+			return $response;
+		}
+
+		public function getDownload($id, $extension) {
+			$track = Track::find($id);
+			if (!$track || !$track->canView(Auth::user()))
+				App::abort(404);
+
+			$format = null;
+			$formatName = null;
+
+			foreach (Track::$Formats as $name => $item) {
+				if ($item['extension'] == $extension) {
+					$format = $item;
+					$formatName = $name;
+					break;
+				}
+			}
+
+			if ($format == null)
+				App::abort(404);
+
+			ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $format['index']);
+
+			$response = Response::make('', 200);
+			$response->header('X-Sendfile', $track->getFileFor($formatName));
+			$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
 			$response->header('Content-Type', $format['mime_type']);
 
 			return $response;

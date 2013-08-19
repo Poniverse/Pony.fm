@@ -1,6 +1,8 @@
 <?php
 
 	use Entities\Album;
+	use Entities\ResourceLogItem;
+	use Entities\Track;
 
 	class AlbumsController extends Controller {
 		public function getIndex() {
@@ -24,5 +26,29 @@
 				App::abort(404);
 
 			return Redirect::action('AlbumsController@getTrack', [$id, $album->slug]);
+		}
+
+		public function getDownload($id, $extension) {
+			$album = Album::with('tracks', 'user')->find($id);
+			if (!$album)
+				App::abort(404);
+
+			$format = null;
+			$formatName = null;
+
+			foreach (Track::$Formats as $name => $item) {
+				if ($item['extension'] == $extension) {
+					$format = $item;
+					$formatName = $name;
+					break;
+				}
+			}
+
+			if ($format == null)
+				App::abort(404);
+
+			ResourceLogItem::logItem('album', $id, ResourceLogItem::DOWNLOAD, $format['index']);
+			$downloader = new AlbumDownloader($album, $formatName);
+			$downloader->download();
 		}
 	}

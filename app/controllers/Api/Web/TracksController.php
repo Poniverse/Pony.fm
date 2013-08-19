@@ -8,6 +8,8 @@
 	use Cover;
 	use Entities\Favourite;
 	use Entities\Image;
+	use Entities\ResourceLogItem;
+	use Entities\ResourceUser;
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Input;
@@ -32,6 +34,11 @@
 			if (!$track || !$track->canView(Auth::user()))
 				return $this->notFound('Track not found!');
 
+			if (Input::get('log')) {
+				ResourceLogItem::logItem('track', $id, ResourceLogItem::VIEW);
+				$track->view_count++;
+			}
+
 			return Response::json(['track' => Track::mapPublicTrackShow($track)], 200);
 		}
 
@@ -51,7 +58,7 @@
 
 		public function getIndex() {
 			$page = 1;
-			$perPage = 60;
+			$perPage = 45;
 
 			if (Input::has('page'))
 				$page = Input::get('page');
@@ -64,7 +71,7 @@
 			$this->applyFilters($query);
 
 			$totalCount = $query->count();
-			$query->take($perPage)->skip(30 * ($page - 1));
+			$query->take($perPage)->skip($perPage * ($page - 1));
 
 			$tracks = [];
 			$ids = [];

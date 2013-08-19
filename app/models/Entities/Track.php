@@ -20,20 +20,20 @@
 		use SlugTrait;
 
 		public static $Formats = [
-			'FLAC' 		 => ['extension' => 'flac', 	'tag_format' => 'metaflac', 		'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/flac', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec flac -aq 8 -f flac {$target}'],
-			'MP3' 		 => ['extension' => 'mp3', 		'tag_format' => 'id3v2.3', 			'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/mpeg', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libmp3lame -ab 320k -f mp3 {$target}'],
-			'OGG Vorbis' => ['extension' => 'ogg', 		'tag_format' => 'vorbiscomment',	'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/ogg',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libvorbis -aq 7 -f ogg {$target}'],
-			'AAC'  		 => ['extension' => 'm4a', 		'tag_format' => 'AtomicParsley', 	'tag_method' => 'updateTagsWithAtomicParsley', 'mime_type' => 'audio/mp4',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libfaac -ab 256k -f mp4 {$target}'],
-			'ALAC' 		 => ['extension' => 'alac.m4a', 'tag_format' => 'AtomicParsley', 	'tag_method' => 'updateTagsWithAtomicParsley', 'mime_type' => 'audio/mp4',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec alac {$target}'],
+			'FLAC' 		 => ['index' => 0, 'extension' => 'flac', 		'tag_format' => 'metaflac', 		'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/flac', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec flac -aq 8 -f flac {$target}'],
+			'MP3' 		 => ['index' => 1, 'extension' => 'mp3', 		'tag_format' => 'id3v2.3', 			'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/mpeg', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libmp3lame -ab 320k -f mp3 {$target}'],
+			'OGG Vorbis' => ['index' => 2, 'extension' => 'ogg', 		'tag_format' => 'vorbiscomment',	'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/ogg',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libvorbis -aq 7 -f ogg {$target}'],
+			'AAC'  		 => ['index' => 3, 'extension' => 'm4a', 		'tag_format' => 'AtomicParsley', 	'tag_method' => 'updateTagsWithAtomicParsley', 'mime_type' => 'audio/mp4',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libfaac -ab 256k -f mp4 {$target}'],
+			'ALAC' 		 => ['index' => 4, 'extension' => 'alac.m4a', 	'tag_format' => 'AtomicParsley', 	'tag_method' => 'updateTagsWithAtomicParsley', 'mime_type' => 'audio/mp4',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec alac {$target}'],
 		];
 
 		public static function summary() {
-			return self::select('id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at', 'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id');
+			return self::select('id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at', 'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id', 'comment_count', 'download_count', 'view_count', 'play_count', 'favourite_count');
 		}
 
 		public function scopeDetails($query) {
 			if (Auth::check()) {
-				$query->with(['favourites' => function($query) {
+				$query->with(['users' => function($query) {
 					$query->whereUserId(Auth::user()->id);
 				}]);
 			}
@@ -49,11 +49,6 @@
 			$returnValue = self::mapPublicTrackSummary($track);
 			$returnValue['description'] = $track->description;
 			$returnValue['lyrics'] = $track->lyrics;
-			$returnValue['stats'] = [
-				'views' => 0,
-				'plays' => 0,
-				'downloads' => 0
-			];
 
 			$comments = [];
 
@@ -61,7 +56,7 @@
 				$comments[] = Comment::mapPublic($comment);
 			}
 
-			$returnValue['comments'] = ['count' => count($comments), 'list' => $comments];
+			$returnValue['comments'] = $comments;
 
 			if ($track->album_id != null) {
 				$returnValue['album'] = [
@@ -87,6 +82,27 @@
 		}
 
 		public static function mapPublicTrackSummary($track) {
+			$userData = [
+				'stats' => [
+					'views' => 0,
+					'plays' => 0,
+					'downloads' => 0
+				],
+				'is_favourited' => false
+			];
+
+			if ($track->users->count()) {
+				$userRow = $track->users[0];
+				$userData = [
+					'stats' => [
+						'views' => $userRow->view_count,
+						'plays' => $userRow->play_count,
+						'downloads' => $userRow->download_count,
+					],
+					'is_favourited' => $userRow->is_favourited
+				];
+			}
+
 			return [
 				'id' => $track->id,
 				'title' => $track->title,
@@ -94,6 +110,13 @@
 					'id' => $track->user->id,
 					'name' => $track->user->display_name,
 					'url' => $track->user->url
+				],
+				'stats' => [
+					'views' => $track->view_count,
+					'plays' => $track->play_count,
+					'downloads' => $track->download_count,
+					'comments' => $track->comment_count,
+					'favourites' => $track->favourite_count
 				],
 				'url' => $track->url,
 				'slug' => $track->slug,
@@ -116,11 +139,10 @@
 					'small' => $track->getCoverUrl(Image::SMALL),
 					'normal' => $track->getCoverUrl(Image::NORMAL)
 				],
-				'is_favourited' => $track->favourites->count() > 0,
-				'duration' => $track->duration,
 				'streams' => [
 					'mp3' => $track->getStreamUrl('MP3')
-				]
+				],
+				'user_data' => $userData
 			];
 		}
 
@@ -182,6 +204,10 @@
 
 		public function showSongs() {
 			return $this->belongsToMany('Entities\ShowSong');
+		}
+
+		public function users() {
+			return $this->hasMany('Entities\ResourceUser');
 		}
 
 		public function user() {
@@ -274,6 +300,14 @@
 
 			$format = self::$Formats[$format];
 			return "{$this->id}.{$format['extension']}";
+		}
+
+		public function getDownloadFilenameFor($format) {
+			if (!isset(self::$Formats[$format]))
+				throw new Exception("$format is not a valid format!");
+
+			$format = self::$Formats[$format];
+			return "{$this->title}.{$format['extension']}";
 		}
 
 		public function getFileFor($format) {

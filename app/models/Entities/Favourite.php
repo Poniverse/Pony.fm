@@ -4,6 +4,7 @@
 
 	class Favourite extends \Eloquent {
 		protected $table = 'favourites';
+		public $timestamps = false;
 
 		/*
 		|--------------------------------------------------------------------------
@@ -44,7 +45,7 @@
 
 			// no resource - this should never happen under real circumstances
 			else
-				return NULL;
+				return null;
 		}
 
 		public function getTypeAttribute(){

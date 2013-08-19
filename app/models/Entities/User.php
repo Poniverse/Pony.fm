@@ -45,7 +45,7 @@
 
 		public function getAvatarUrl($type = Image::NORMAL) {
 			if (!$this->uses_gravatar)
-				return $this->avatar->getUrl();
+				return $this->avatar->getUrl($type);
 
 			$email = $this->gravatar;
 			if (!strlen($email))

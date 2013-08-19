@@ -6,7 +6,7 @@
 				Downloads <i class="caret"></i>
 			</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="format in track.formats"><a href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
+				<li ng-repeat="format in track.formats"><a target="_blank" href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
 			</ul>
 		</div>
 		<div class="dropdown">
@@ -50,7 +50,7 @@
 						<div class="reveal">
 							<a href="#">Click to reveal full lyrics...</a>
 						</div>
-						<p class="content" ng-bind-html-unsafe="track.lyrics | noHTML | newlines"></p>
+						<p class="content" ng-bind-html="track.lyrics | noHTML | newlines | trust"></p>
 					</div>
 				</div>
 
@@ -72,6 +72,7 @@
 					<li>Views: <strong>{{track.stats.views}}</strong></li>
 					<li>Plays: <strong>{{track.stats.plays}}</strong></li>
 					<li>Downloads: <strong>{{track.stats.downloads}}</strong></li>
+					<li>Favourites: <strong>{{track.stats.favourites}}</strong></li>
 				</ul>
 			</div>
 		</div>

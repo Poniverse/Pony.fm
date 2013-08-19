@@ -7,9 +7,10 @@ class CreateComments extends Migration {
 		Schema::create('comments', function($table){
 			$table->increments('id');
 			$table->integer('user_id')->unsigned();
-			$table->timestamps();
 			$table->string('ip_address', 46);
 			$table->text('content');
+
+			$table->timestamps();
 			$table->timestamp('deleted_at')->nullable()->index();
 
 			$table->integer('profile_id')->unsigned()->nullable()->index();

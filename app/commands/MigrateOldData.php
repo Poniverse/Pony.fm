@@ -14,11 +14,11 @@
 		}
 
 		public function fire() {
+			$oldDb = DB::connection('old');
+
 			$this->call('migrate:refresh');
 
-			$oldDb = DB::connection('old');
 			$oldUsers = $oldDb->table('users')->get();
-
 			$this->info('Syncing Users');
 			foreach ($oldUsers as $user) {
 				$displayName = $user->display_name;
@@ -51,9 +51,14 @@
 
 				$coverId = null;
 				if (!$user->uses_gravatar) {
-					$coverFile = $this->getIdDirectory('users', $user->id) . '/' . $user->id . '_.png';
-					$coverId = \Entities\Image::upload(new Symfony\Component\HttpFoundation\File\UploadedFile($coverFile, $user->id . '_.png'), $user->id)->id;
-					DB::table('users')->where('id', $user->id)->update(['avatar_id' => $coverId]);
+					try {
+						$coverFile = $this->getIdDirectory('users', $user->id) . '/' . $user->id . '_.png';
+						$coverId = \Entities\Image::upload(new Symfony\Component\HttpFoundation\File\UploadedFile($coverFile, $user->id . '_.png'), $user->id)->id;
+						DB::table('users')->where('id', $user->id)->update(['avatar_id' => $coverId]);
+					} catch (\Exception $e) {
+						$this->error('Could copy user avatar ' . $user->id . ' because ' . $e->getMessage());
+						DB::table('users')->where('id', $user->id)->update(['uses_gravatar' => true]);
+					}
 				}
 			}
 
@@ -70,6 +75,9 @@
 			$this->info('Syncing Albums');
 			$oldAlbums = $oldDb->table('albums')->get();
 			foreach ($oldAlbums as $playlist) {
+				$logViews = $oldDb->table('album_log_views')->whereAlbumId($playlist->id)->get();
+				$logDownload = $oldDb->table('album_log_downloads')->whereAlbumId($playlist->id)->get();
+
 				DB::table('albums')->insert([
 					'title' => $playlist->title,
 					'description' => $playlist->description,
@@ -78,8 +86,39 @@
 					'deleted_at' => $playlist->deleted_at,
 					'slug' => $playlist->slug,
 					'id' => $playlist->id,
-					'user_id' => $playlist->user_id
+					'user_id' => $playlist->user_id,
+					'view_count' => 0,
+					'download_count' => 0
 				]);
+
+				foreach ($logViews as $logItem) {
+					try {
+						DB::table('resource_log_items')->insert([
+							'user_id' => $logItem->user_id,
+							'log_type' => \Entities\ResourceLogItem::VIEW,
+							'album_id' => $logItem->album_id,
+							'created_at' => $logItem->created_at,
+							'ip_address' => $logItem->ip_address,
+						]);
+					} catch (\Exception $e) {
+						$this->error('Could insert log item for album ' . $playlist->id . ' because ' . $e->getMessage());
+					}
+				}
+
+				foreach ($logDownload as $logItem) {
+					try {
+						DB::table('resource_log_items')->insert([
+							'user_id' => $logItem->user_id,
+							'log_type' => \Entities\ResourceLogItem::DOWNLOAD,
+							'album_id' => $logItem->album_id,
+							'created_at' => $logItem->created_at,
+							'ip_address' => $logItem->ip_address,
+							'track_format_id' => $logItem->track_file_format_id - 1
+						]);
+					} catch (\Exception $e) {
+						$this->error('Could insert log item for album ' . $playlist->id . ' because ' . $e->getMessage());
+					}
+				}
 			}
 
 			$this->info('Syncing Tracks');
@@ -87,9 +126,17 @@
 			foreach ($oldTracks as $track) {
 				$coverId = null;
 				if ($track->cover) {
-					$coverFile = $this->getIdDirectory('tracks', $track->id) . '/' . $track->id  . '_' . $track->cover . '.png';
-					$coverId = \Entities\Image::upload(new Symfony\Component\HttpFoundation\File\UploadedFile($coverFile, $track->id . '_' . $track->cover . '.png'), $track->user_id)->id;
+					try {
+						$coverFile = $this->getIdDirectory('tracks', $track->id) . '/' . $track->id  . '_' . $track->cover . '.png';
+						$coverId = \Entities\Image::upload(new Symfony\Component\HttpFoundation\File\UploadedFile($coverFile, $track->id . '_' . $track->cover . '.png'), $track->user_id)->id;
+					} catch (\Exception $e) {
+						$this->error('Could copy track cover ' . $track->id . ' because ' . $e->getMessage());
+					}
 				}
+
+				$trackLogViews = $oldDb->table('track_log_views')->whereTrackId($track->id)->get();
+				$trackLogPlays = $oldDb->table('track_log_plays')->whereTrackId($track->id)->get();
+				$trackLogDownload = $oldDb->table('track_log_downloads')->whereTrackId($track->id)->get();
 
 				DB::table('tracks')->insert([
 					'id' => $track->id,
@@ -112,22 +159,75 @@
 					'album_id' => $track->album_id,
 					'cover_id' => $coverId,
 					'license_id' => $track->license_id,
-					'duration' => $track->duration
+					'duration' => $track->duration,
+					'view_count' => 0,
+					'play_count' => 0,
+					'download_count' => 0
 				]);
+
+				foreach ($trackLogViews as $logItem) {
+					try {
+						DB::table('resource_log_items')->insert([
+							'user_id' => $logItem->user_id,
+							'log_type' => \Entities\ResourceLogItem::VIEW,
+							'track_id' => $logItem->track_id,
+							'created_at' => $logItem->created_at,
+							'ip_address' => $logItem->ip_address
+						]);
+					} catch (\Exception $e) {
+						$this->error('Could insert log item for track ' . $track->id . ' because ' . $e->getMessage());
+					}
+				}
+
+				foreach ($trackLogPlays as $logItem) {
+					try {
+						DB::table('resource_log_items')->insert([
+							'user_id' => $logItem->user_id,
+							'log_type' => \Entities\ResourceLogItem::PLAY,
+							'track_id' => $logItem->track_id,
+							'created_at' => $logItem->created_at,
+							'ip_address' => $logItem->ip_address
+						]);
+					} catch (\Exception $e) {
+						$this->error('Could insert log item for track ' . $track->id . ' because ' . $e->getMessage());
+					}
+				}
+
+				foreach ($trackLogDownload as $logItem) {
+					try {
+						DB::table('resource_log_items')->insert([
+							'user_id' => $logItem->user_id,
+							'log_type' => \Entities\ResourceLogItem::DOWNLOAD,
+							'track_id' => $logItem->track_id,
+							'created_at' => $logItem->created_at,
+							'ip_address' => $logItem->ip_address,
+							'track_format_id' => $logItem->track_file_format_id - 1
+						]);
+					} catch (\Exception $e) {
+						$this->error('Could insert log item for track ' . $track->id . ' because ' . $e->getMessage());
+					}
+				}
 			}
 
 			$oldShowSongs = $oldDb->table('song_track')->get();
 			foreach ($oldShowSongs as $song) {
-				DB::table('show_song_track')->insert([
-					'id' => $song->id,
-					'show_song_id' => $song->song_id,
-					'track_id' => $song->track_id
-				]);
+				try {
+					DB::table('show_song_track')->insert([
+						'id' => $song->id,
+						'show_song_id' => $song->song_id,
+						'track_id' => $song->track_id
+					]);
+				} catch (\Exception $e) {
+					$this->error('Could insert show track item for ' . $song->track_id . ' because ' . $e->getMessage());
+				}
 			}
 
 			$this->info('Syncing Playlists');
 			$oldPlaylists = $oldDb->table('playlists')->get();
 			foreach ($oldPlaylists as $playlist) {
+				$logViews = $oldDb->table('playlist_log_views')->wherePlaylistId($playlist->id)->get();
+				$logDownload = $oldDb->table('playlist_log_downloads')->wherePlaylistId($playlist->id)->get();
+
 				DB::table('playlists')->insert([
 					'title' => $playlist->title,
 					'description' => $playlist->description,
@@ -137,8 +237,39 @@
 					'slug' => $playlist->slug,
 					'id' => $playlist->id,
 					'user_id' => $playlist->user_id,
-					'is_public' => true
+					'is_public' => true,
+					'view_count' => 0,
+					'download_count' => 0,
 				]);
+
+				foreach ($logViews as $logItem) {
+					try {
+						DB::table('resource_log_items')->insert([
+							'user_id' => $logItem->user_id,
+							'log_type' => \Entities\ResourceLogItem::VIEW,
+							'playlist_id' => $logItem->playlist_id,
+							'created_at' => $logItem->created_at,
+							'ip_address' => $logItem->ip_address,
+						]);
+					} catch (\Exception $e) {
+						$this->error('Could insert log item for playlist ' . $playlist->id . ' because ' . $e->getMessage());
+					}
+				}
+
+				foreach ($logDownload as $logItem) {
+					try {
+						DB::table('resource_log_items')->insert([
+							'user_id' => $logItem->user_id,
+							'log_type' => \Entities\ResourceLogItem::DOWNLOAD,
+							'playlist_id' => $logItem->playlist_id,
+							'created_at' => $logItem->created_at,
+							'ip_address' => $logItem->ip_address,
+							'track_format_id' => $logItem->track_file_format_id - 1
+						]);
+					} catch (\Exception $e) {
+						$this->error('Could insert log item for playlist ' . $playlist->id . ' because ' . $e->getMessage());
+					}
+				}
 			}
 
 			$this->info('Syncing Playlist Tracks');
@@ -183,7 +314,6 @@
 						'id' => $fav->id,
 						'user_id' => $fav->user_id,
 						'created_at' => $fav->created_at,
-						'updated_at' => $fav->updated_at,
 						'track_id' => $fav->track_id,
 						'album_id' => $fav->album_id,
 						'playlist_id' => $fav->playlist_id,
@@ -199,8 +329,7 @@
 			return \Config::get('app.files_directory') . '/' . $type . '/' . $dir;
 		}
 
-		protected function getArguments()
-		{
+		protected function getArguments() {
 			return [];
 		}
 

@@ -15,9 +15,8 @@ angular.module('ponyfm').directive 'pfmComments', () ->
 
 			refresh = () ->
 				comments.fetchList($scope.type, $scope.resource.id, true).done (comments) ->
-					$scope.resource.comments.count = comments.count
-					$scope.resource.comments.list.length = 0
-					$scope.resource.comments.list.push comment for comment in comments.list
+					$scope.resource.comments.length = 0
+					$scope.resource.comments.push comment for comment in comments.list
 					$scope.isWorking = false
 
 			$scope.addComment = () ->

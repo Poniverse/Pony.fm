@@ -43,6 +43,12 @@ class CreateTracksTable extends Migration {
 			$table->boolean('is_downloadable');
 			$table->float('duration')->unsigned();
 
+			$table->integer('play_count')->unsigned();
+			$table->integer('view_count')->unsigned();
+			$table->integer('download_count')->unsigned();
+			$table->integer('favourite_count')->unsigned();
+			$table->integer('comment_count')->unsigned();
+
 			$table->timestamps();
 			$table->timestamp('deleted_at')->nullable()->index();
 			$table->timestamp('published_at')->nullable()->index();

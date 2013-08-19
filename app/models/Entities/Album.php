@@ -16,12 +16,12 @@
 		use SlugTrait;
 
 		public static function summary() {
-			return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'cover_id');
+			return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'cover_id', 'comment_count', 'download_count', 'view_count', 'favourite_count');
 		}
 
 		public function scopeDetails($query) {
 			if (Auth::check()) {
-				$query->with(['favourites' => function($query) {
+				$query->with(['users' => function($query) {
 					$query->whereUserId(Auth::user()->id);
 				}]);
 			}
@@ -33,6 +33,10 @@
 
 		public function user() {
 			return $this->belongsTo('Entities\User');
+		}
+
+		public function users() {
+			return $this->hasMany('Entities\ResourceUser');
 		}
 
 		public function favourites() {
@@ -76,21 +80,42 @@
 			$data['tracks'] = $tracks;
 			$data['comments'] = ['count' => count($comments), 'list' => $comments];
 			$data['formats'] = $formats;
-			$data['stats'] = [
-				'views' => 0,
-				'downloads' => 0
-			];
 
 			return $data;
 		}
 
 		public static function mapPublicAlbumSummary($album) {
+			$userData = [
+				'stats' => [
+					'views' => 0,
+					'downloads' => 0
+				],
+				'is_favourited' => false
+			];
+
+			if ($album->users->count()) {
+				$userRow = $album->users[0];
+				$userData = [
+					'stats' => [
+						'views' => $userRow->view_count,
+						'downloads' => $userRow->download_count,
+					],
+					'is_favourited' => $userRow->is_favourited
+				];
+			}
+
 			return [
 				'id' => $album->id,
 				'track_count' => $album->tracks->count(),
 				'title' => $album->title,
 				'slug' => $album->slug,
 				'created_at' => $album->created_at,
+				'stats' => [
+					'views' => $album->view_count,
+					'downloads' => $album->download_count,
+					'comments' => $album->comment_count,
+					'favourites' => $album->favourite_count
+				],
 				'covers' => [
 					'small' => $album->getCoverUrl(Image::SMALL),
 					'normal' => $album->getCoverUrl(Image::NORMAL)
@@ -101,7 +126,7 @@
 					'name' => $album->user->display_name,
 					'url' => $album->user->url,
 				],
-				'is_favourited' => $album->favourites->count() > 0
+				'user_data' => $userData
 			];
 		}
 

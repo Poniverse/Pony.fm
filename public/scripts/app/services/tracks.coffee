@@ -146,7 +146,7 @@ angular.module('ponyfm').factory('tracks', [
 				force = force || false
 				return trackCache[id] if !force && trackCache[id]
 				trackDef = new $.Deferred()
-				$http.get('/api/web/tracks/' + id).success (track) ->
+				$http.get('/api/web/tracks/' + id + '?log=true').success (track) ->
 					trackDef.resolve track
 
 				trackCache[id] = trackDef.promise()
@@ -168,8 +168,10 @@ angular.module('ponyfm').factory('tracks', [
 				self.filters.sort =
 					type: 'single'
 					values: [
-						{title: 'Newest to Oldest', query: '', isDefault: true, filter: 'order=created_at,desc'},
-						{title: 'Oldest to Newest', query: 'created_at,asc', isDefault: false, filter: 'order=created_at,asc'}
+						{title: 'Latest', query: '', isDefault: true, filter: 'order=created_at,desc'},
+						{title: 'Most Played', query: 'play_count', isDefault: false, filter: 'order=play_count,desc'},
+						{title: 'Most Downloaded', query: 'download_count', isDefault: false, filter: 'order=download_count,desc'},
+						{title: 'Most Favourited', query: 'favourite_count', isDefault: false, filter: 'order=favourite_count,desc'}
 					]
 
 				self.filters.genres =

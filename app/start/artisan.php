@@ -12,3 +12,4 @@
 */
 
 	Artisan::add(new MigrateOldData);
+	Artisan::add(new RefreshCache);

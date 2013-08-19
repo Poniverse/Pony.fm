@@ -11,7 +11,7 @@
 				Downloads <i class="caret"></i>
 			</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="format in album.formats"><a href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
+				<li ng-repeat="format in album.formats"><a target="_blank" href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
 			</ul>
 		</div>
 	</div>
@@ -49,6 +49,7 @@
 				<ul class="stats">
 					<li>Views: <strong>{{album.stats.views}}</strong></li>
 					<li>Downloads: <strong>{{album.stats.downloads}}</strong></li>
+					<li>Favourites: <strong>{{album.stats.favourites}}</strong></li>
 				</ul>
 			</div>
 		</div>

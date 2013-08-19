@@ -24,6 +24,7 @@
 	Route::get('albums', 'AlbumsController@getIndex');
 	Route::get('albums/{id}-{slug}', 'AlbumsController@getShow');
 	Route::get('a{id}', 'AlbumsController@getShortlink')->where('id', '\d+');
+	Route::get('a{id}/dl.{extension}', 'AlbumsController@getDownload' );
 
 	Route::get('artists', 'ArtistsController@getIndex');
 	Route::get('playlists', 'PlaylistsController@getIndex');

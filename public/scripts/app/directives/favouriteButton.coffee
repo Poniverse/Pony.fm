@@ -16,5 +16,5 @@ angular.module('ponyfm').directive 'pfmFavouriteButton', () ->
 				$scope.isWorking = true
 				favourites.toggle($scope.type, $scope.resource.id).done (res) ->
 					$scope.isWorking = false
-					$scope.resource.is_favourited = res.is_favourited
+					$scope.resource.user_data.is_favourited = res.is_favourited
 	]

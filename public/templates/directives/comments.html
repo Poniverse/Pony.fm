@@ -2,8 +2,8 @@
 	<div class="alert alert-info" ng-show="resource.comments.count == 0">
 		There are no comments yet!
 	</div>
-	<ul ng-show="resource.comments.count > 0">
-		<li ng-repeat="comment in resource.comments.list">
+	<ul ng-show="resource.comments.length > 0">
+		<li ng-repeat="comment in resource.comments">
 			<div class="meta">
 				<a href="{{comment.user.url}}">{{comment.user.name}}</a> posted
 				{{comment.created_at.date | momentFromNow}}

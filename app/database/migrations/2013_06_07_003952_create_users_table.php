@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration {
 			$table->boolean('uses_gravatar')->default(true);
 			$table->boolean('can_see_explicit_content');
 			$table->text('bio');
+			$table->integer('comment_count')->unsigned();
 			$table->timestamps();
 		});
 

@@ -8,6 +8,7 @@
 	use Entities\Album;
 	use Entities\Comment;
 	use Entities\Image;
+	use Entities\ResourceLogItem;
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Input;
@@ -27,9 +28,14 @@
 		}
 
 		public function getShow($id) {
-			$album = Album::with(['tracks', 'user', 'comments' => function($query) { $query->with('user'); }])->details()->find($id);
+			$album = Album::with(['tracks' => function($query) { $query->details(); }, 'user', 'comments' => function($query) { $query->with('user'); }])->details()->find($id);
 			if (!$album)
 				App::abort(404);
+
+			if (Input::get('log')) {
+				ResourceLogItem::logItem('album', $id, ResourceLogItem::VIEW);
+				$album->view_count++;
+			}
 
 			return Response::json([
 				'album' => Album::mapPublicAlbumShow($album)
