@@ -1,6 +1,8 @@
 <?php
 
 	use Entities\Playlist;
+	use Entities\ResourceLogItem;
+	use Entities\Track;
 	use Illuminate\Support\Facades\Redirect;
 
 	class PlaylistsController extends Controller {
@@ -25,5 +27,29 @@
 				App::abort(404);
 
 			return Redirect::action('PlaylistsController@getPlaylist', [$id, $playlist->slug]);
+		}
+
+		public function getDownload($id, $extension) {
+			$playlist = Playlist::with('tracks', 'user', 'tracks.album')->find($id);
+			if (!$playlist || !$playlist->is_public)
+				App::abort(404);
+
+			$format = null;
+			$formatName = null;
+
+			foreach (Track::$Formats as $name => $item) {
+				if ($item['extension'] == $extension) {
+					$format = $item;
+					$formatName = $name;
+					break;
+				}
+			}
+
+			if ($format == null)
+				App::abort(404);
+
+			ResourceLogItem::logItem('playlist', $id, ResourceLogItem::DOWNLOAD, $format['index']);
+			$downloader = new PlaylistDownloader($playlist, $formatName);
+			$downloader->download();
 		}
 	}

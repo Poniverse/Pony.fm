@@ -5,12 +5,13 @@
 	</ul>
 
 	<div class="track-toolbar btn-group pull-right">
+		<pfm-favourite-button resource="playlist" type="playlist"></pfm-favourite-button>
 		<div class="dropdown">
 			<a href="#" class="btn btn-small btn-info dropdown-toggle">
 				Downloads <i class="caret"></i>
 			</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="format in playlist.formats"><a href="{{format.url}}">{{format.name}}</a></li>
+				<li ng-repeat="format in playlist.formats"><a target="_blank" href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
 			</ul>
 		</div>
 	</div>
@@ -38,6 +39,13 @@
 				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 				<a href="#" class="btn btn-info">Share or Embed</a>
+
+				<h2>Stats</h2>
+				<ul class="stats">
+					<li>Views: <strong>{{playlist.stats.views}}</strong></li>
+					<li>Downloads: <strong>{{playlist.stats.downloads}}</strong></li>
+					<li>Favourites: <strong>{{playlist.stats.favourites}}</strong></li>
+				</ul>
 			</div>
 		</div>
 	</div>

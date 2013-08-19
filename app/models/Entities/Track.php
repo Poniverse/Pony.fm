@@ -245,6 +245,14 @@
 			return URL::to('/tracks/' . $this->id . '-' . $this->slug);
 		}
 
+		public function getDownloadDirectoryAttribute() {
+			if ($this->album) {
+				return $this->user->display_name . '/' . $this->album->title;
+			}
+
+			return $this->user->display_name;
+		}
+
 		public function getReleaseDate() {
 			if($this->attributes['released_at'] !== NULL)
 				return $this->attributes['released_at'];
@@ -281,7 +289,7 @@
 			return $this->cover->getUrl($type);
 		}
 
-		public function getStreamUrl($format) {
+		public function getStreamUrl() {
 			return URL::to('/t' . $this->id . '/stream');
 		}
 

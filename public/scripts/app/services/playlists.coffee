@@ -11,7 +11,7 @@ angular.module('ponyfm').factory('playlists', [
 				force = force || false
 				return playlists[id] if !force && playlists[id]
 				def = new $.Deferred()
-				$http.get('/api/web/playlists/' + id).success (playlist) ->
+				$http.get('/api/web/playlists/' + id + '?log=true').success (playlist) ->
 					def.resolve playlist
 
 				playlists[id] = def.promise()
