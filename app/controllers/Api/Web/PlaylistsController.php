@@ -34,7 +34,7 @@
 		}
 
 		public function getShow($id) {
-			$playlist = Playlist::with(['tracks.user', 'tracks' => function($query) { $query->details(); }, 'comments', 'comments.user'])->details()->find($id);
+			$playlist = Playlist::with(['tracks.user', 'tracks.genre', 'tracks.cover', 'tracks.album', 'tracks' => function($query) { $query->details(); }, 'comments', 'comments.user'])->details()->find($id);
 			if (!$playlist || !$playlist->canView(Auth::user()))
 				App::abort('404');
 

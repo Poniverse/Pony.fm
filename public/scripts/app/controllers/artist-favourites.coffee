@@ -1,7 +1,7 @@
 window.pfm.preloaders['artist-favourites'] = [
 	'artists', '$state'
 	(artists, $state) ->
-		artists.fetchFavourites $state.params.slug, true
+		$.when.all [artists.fetch($state.params.slug), artists.fetchFavourites($state.params.slug, true)]
 ]
 
 angular.module('ponyfm').controller "artist-favourites", [

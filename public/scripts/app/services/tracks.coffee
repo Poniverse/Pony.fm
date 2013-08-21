@@ -86,12 +86,13 @@ angular.module('ponyfm').factory('tracks', [
 			toFilterString: ->
 				parts = []
 				_.each @availableFilters, (filter, name) =>
+					filterName = filter.name
 					if filter.type == 'single'
 						return if @filters[name].query == ''
-						parts.push(name + '-' + @filters[name].query)
+						parts.push(filterName + '-' + @filters[name].query)
 					else
 						return if @filters[name].selectedArray.length == 0
-						parts.push(name + '-' + _.map(@filters[name].selectedArray, (f) -> f.id).join '-')
+						parts.push(filterName + '-' + _.map(@filters[name].selectedArray, (f) -> f.id).join '-')
 
 				return parts.join '!'
 
@@ -101,17 +102,26 @@ angular.module('ponyfm').factory('tracks', [
 				@resetFilters()
 
 				filters = (str || "").split '!'
-				for filter in filters
-					parts = filter.split '-'
-					name = parts[0]
-					return if !@availableFilters[name]
+				for queryFilter in filters
+					parts = queryFilter.split '-'
+					queryName = parts[0]
 
-					if @availableFilters[name].type == 'single'
-						filterToSet = _.find @availableFilters[name].values, (f) -> f.query == parts[1]
-						filterToSet = (_.find @availableFilters[name].values, (f) -> f.isDefault) if filterToSet == null
-						@setFilter name, filterToSet
+					filterName = null
+					filter = null
+
+					for name,f of @availableFilters
+						continue if f.name != queryName
+						filterName = name
+						filter = f
+
+					return if !filter
+
+					if filter.type == 'single'
+						filterToSet = _.find filter.values, (f) -> f.query == parts[1]
+						filterToSet = (_.find filter.values, (f) -> f.isDefault) if filterToSet == null
+						@setFilter filterName, filterToSet
 					else
-						@toggleListFilter name, id for id in _.rest parts, 1
+						@toggleListFilter filterName, id for id in _.rest parts, 1
 
 			fetch: () ->
 				return @cachedDef if @cachedDef
@@ -159,6 +169,7 @@ angular.module('ponyfm').factory('tracks', [
 				filterDef = new $.Deferred()
 				self.filters.isVocal =
 					type: 'single'
+					name: 'vocal'
 					values: [
 						{title: 'Either', query: '', isDefault: true, filter: ''},
 						{title: 'Yes', query: 'yes', isDefault: false, filter: 'is_vocal=true'},
@@ -167,25 +178,29 @@ angular.module('ponyfm').factory('tracks', [
 
 				self.filters.sort =
 					type: 'single'
+					name: 'sort'
 					values: [
 						{title: 'Latest', query: '', isDefault: true, filter: 'order=created_at,desc'},
-						{title: 'Most Played', query: 'play_count', isDefault: false, filter: 'order=play_count,desc'},
-						{title: 'Most Downloaded', query: 'download_count', isDefault: false, filter: 'order=download_count,desc'},
-						{title: 'Most Favourited', query: 'favourite_count', isDefault: false, filter: 'order=favourite_count,desc'}
+						{title: 'Most Played', query: 'plays', isDefault: false, filter: 'order=play_count,desc'},
+						{title: 'Most Downloaded', query: 'downloads', isDefault: false, filter: 'order=download_count,desc'},
+						{title: 'Most Favourited', query: 'favourites', isDefault: false, filter: 'order=favourite_count,desc'}
 					]
 
 				self.filters.genres =
 					type: 'list'
+					name: 'genres'
 					values: []
 					filterName: 'genres'
 
 				self.filters.trackTypes =
 					type: 'list'
+					name: 'types'
 					values: []
 					filterName: 'types'
 
 				self.filters.showSongs =
 					type: 'list'
+					name: 'songs'
 					values: []
 					filterName: 'songs'
 

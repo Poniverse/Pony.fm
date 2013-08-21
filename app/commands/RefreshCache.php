@@ -13,6 +13,8 @@ class RefreshCache extends Command {
 	}
 
 	public function fire() {
+		DB::connection()->disableQueryLog();
+
 		DB::table('tracks')->update(['comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.track_id = tracks.id AND deleted_at IS NULL)')]);
 		DB::table('albums')->update(['comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.album_id = albums.id AND deleted_at IS NULL)')]);
 		DB::table('playlists')->update(['comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.playlist_id = playlists.id AND deleted_at IS NULL)')]);

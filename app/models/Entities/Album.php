@@ -143,7 +143,7 @@
 		}
 
 		public function getFilesize($format) {
-			$tracks = $this->tracks()->get();
+			$tracks = $this->tracks;
 			if (!count($tracks))
 				return 0;
 

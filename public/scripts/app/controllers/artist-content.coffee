@@ -1,7 +1,7 @@
 window.pfm.preloaders['artist-content'] = [
 	'artists', '$state'
 	(artists, $state) ->
-		$.when.all [artists.fetch($state.params.slug, true), artists.fetchContent($state.params.slug, true)]
+		$.when.all [artists.fetch($state.params.slug), artists.fetchContent($state.params.slug, true)]
 ]
 
 angular.module('ponyfm').controller "artist-content", [

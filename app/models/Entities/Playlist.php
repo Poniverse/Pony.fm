@@ -4,6 +4,7 @@
 	use Helpers;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Cache;
+	use Illuminate\Support\Facades\Log;
 	use Illuminate\Support\Facades\URL;
 	use Traits\SlugTrait;
 
@@ -78,7 +79,7 @@
 
 			return [
 				'id' => $playlist->id,
-				'track_count' => $playlist->tracks->count(),
+				'track_count' => $playlist->tracks()->count(),
 				'title' => $playlist->title,
 				'slug' => $playlist->slug,
 				'created_at' => $playlist->created_at,
@@ -149,7 +150,7 @@
 		}
 
 		public function getFilesize($format) {
-			$tracks = $this->tracks()->get();
+			$tracks = $this->tracks;
 			if (!count($tracks))
 				return 0;
 
@@ -178,6 +179,6 @@
 		}
 
 		private function getCacheKey($key) {
-			return 'album-' . $this->id . '-' . $key;
+			return 'playlist-' . $this->id . '-' . $key;
 		}
 	}

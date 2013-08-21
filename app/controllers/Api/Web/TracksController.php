@@ -13,6 +13,7 @@
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Input;
+	use Illuminate\Support\Facades\Log;
 	use Illuminate\Support\Facades\Response;
 
 	class TracksController extends \ApiControllerBase {
@@ -66,7 +67,7 @@
 			$query = Track::summary()
 				->details()
 				->whereNotNull('published_at')
-				->with('user', 'genre');
+				->with('user', 'genre', 'cover', 'album', 'album.user');
 
 			$this->applyFilters($query);
 

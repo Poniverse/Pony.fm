@@ -14,6 +14,8 @@
 		}
 
 		public function fire() {
+			DB::connection()->disableQueryLog();
+
 			$oldDb = DB::connection('old');
 
 			$this->call('migrate:refresh');

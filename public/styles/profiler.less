@@ -1,0 +1,158 @@
+html {
+  .profiler-open {
+	header, .site-body {
+	  margin-right: 403px;
+	}
+
+	.profiler {
+	  width: 400px;
+	  height: 100%;
+	  background: rgba(0, 0, 0, .85);
+	  border-left: 3px solid #111;
+
+	  .buttons {
+		background: #222;
+
+		.clear-button {
+		  display: block;
+		}
+
+		.open-button {
+		  i:before {
+			content: "\f077";
+		  }
+		}
+	  }
+
+	  .requests {
+		display: block;
+	  }
+	}
+  }
+}
+
+.profiler {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  height: auto;
+  z-index: 1000;
+
+  font-size: 8pt;
+  color: #fff;
+
+  .buttons {
+	padding: 5px;
+	overflow: hidden;
+
+	> a {
+	  float: right;
+	  padding: 2px 10px;
+	  background: #e67e22;
+	  color: #fff;
+
+	  &:hover {
+		text-decoration: none;
+	  }
+	}
+
+	.clear-button {
+	  margin-right: 5px;
+	  display: none;
+	}
+  }
+
+  ul {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+
+	li {
+	  margin: 0px;
+	  padding: 0px;
+	  line-height: normal;
+	}
+  }
+
+  .requests {
+	display: none;
+	position: absolute;
+	top: 33px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	overflow-y: auto;
+
+	> li {
+
+	  h3, h4 {
+		padding: 5px;
+		margin: 0px;
+		line-height: normal;
+		font-size: 8pt;
+		font-weight: normal;
+	  }
+
+	  h3 {
+		background: #34495e;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+
+		.method {
+		  display: block;
+		  float: right;
+		  background: #95a5a6;
+		  padding: 5px;
+		  margin: -5px;
+		  min-width: 50px;
+		}
+	  }
+
+	  h4 {
+		padding: 5px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		cursor: pointer;
+
+		&.open {
+		  white-space: pre-wrap;
+		  text-overflow: clip;
+		  overflow: visible;
+		  background: #111;
+		}
+
+		&.log-info {
+		  background: #7f8c8d;
+		}
+
+		&.log-warning {
+		  background: #d35400;
+		}
+
+		&.log-error {
+		  background: #c0392b;
+		}
+	  }
+
+	  .time {
+		float: right;
+		padding: 5px;
+		background: #2c3e50;
+		display: block;
+		margin-left: 5px;
+	  }
+
+	  li {
+		position: relative;
+		font-family: 'Consolas';
+
+		.clear {
+		  clear: both;
+		}
+	  }
+	}
+  }
+}

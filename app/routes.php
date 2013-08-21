@@ -11,6 +11,10 @@
 |
 */
 
+	if (Config::get('app.debug')) {
+		Route::get('/api/web/profiler/{id}', 'Api\Web\ProfilerController@getRequest');
+	}
+
 	Route::get('/dashboard', 'TracksController@getIndex');
 	Route::get('/tracks', 'TracksController@getIndex');
 	Route::get('/tracks/popular', 'TracksController@getIndex');

@@ -41,8 +41,8 @@
 		}
 
 		public static function scriptAssetCollection($area) {
-			if ($area == 'app')
-				return new AssetCollection([
+			if ($area == 'app') {
+				$collection = new AssetCollection([
 					new FileAsset('scripts/base/jquery-2.0.2.js'),
 					new FileAsset('scripts/base/jquery-ui.js'),
 					new FileAsset('scripts/base/jquery.cookie.js'),
@@ -70,6 +70,19 @@
 					])
 				]);
 
+				if (Config::get('app.debug')) {
+					$collection->add(new GlobAsset('scripts/debug/*.js'));
+
+					$collection->add(new AssetCollection([
+						new GlobAsset('scripts/debug/*.coffee'),
+					], [
+						new CoffeeScriptFilter(Config::get('app.coffee'))
+					]));
+				}
+
+				return $collection;
+			}
+
 			throw new Exception();
 		}
 
@@ -83,6 +96,11 @@
 					new FileAsset('styles/app.less'),
 					new CacheBusterAsset($lastModifiedCollection->getLastModified())
 				], [new \Assetic\Filter\LessFilter('node')]);
+
+				if (Config::get('app.debug')) {
+					$css->add(new FileAsset('styles/profiler.less'));
+					$css->add(new FileAsset('styles/prettify.css'));
+				}
 
 				return $css;
 			}

@@ -25,6 +25,11 @@
 				App::abort(404);
 
 			$favs = Favourite::whereUserId($user->id)->with([
+				'track.genre',
+				'track.cover',
+				'track.user',
+				'album.cover',
+				'album.user',
 				'track' => function($query) { $query->details(); },
 				'album' => function($query) { $query->details(); }])->get();
 
@@ -51,7 +56,7 @@
 			if (!$user)
 				App::abort(404);
 
-			$query = Track::summary()->whereUserId($user->id)->whereNotNull('published_at');
+			$query = Track::summary()->with('genre', 'cover', 'user')->details()->whereUserId($user->id)->whereNotNull('published_at');
 			$tracks = [];
 			$singles = [];
 
@@ -82,7 +87,7 @@
 			if (!$user)
 				App::abort(404);
 
-			$trackQuery = Track::summary()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(20);
+			$trackQuery = Track::summary()->with('genre', 'cover', 'user')->details()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(20);
 			$latestTracks = [];
 
 			foreach ($trackQuery->get() as $track) {
