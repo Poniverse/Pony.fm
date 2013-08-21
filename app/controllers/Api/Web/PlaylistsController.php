@@ -70,7 +70,7 @@
 		}
 
 		public function getOwned() {
-			$query = Playlist::summary()->with('pins')->where('user_id', \Auth::user()->id)->orderBy('title', 'asc')->get();
+			$query = Playlist::summary()->with('pins', 'tracks', 'tracks.cover')->where('user_id', \Auth::user()->id)->orderBy('title', 'asc')->get();
 			$playlists = [];
 			foreach ($query as $playlist) {
 				$playlists[] = [
