@@ -68,9 +68,9 @@
 			}
 
 			$query = Album::summary()
-				->with('tracks', 'user')
+				->with('user')
 				->orderBy('created_at', 'desc')
-				->whereRaw('(SELECT COUNT(id) FROM tracks WHERE tracks.album_id = albums.id) > 0')
+				->where('track_count', '>', 0)
 				->whereUserId($user->id);
 
 			$albums = [];
@@ -125,7 +125,7 @@
 				$page = Input::get('page');
 
 			$query = User::orderBy('created_at', 'desc')
-				->whereRaw('(SELECT COUNT(id) FROM tracks WHERE tracks.user_id = users.id) > 0');
+				->where('track_count', '>', 0);
 
 			$count = $query->count();
 			$perPage = 15;

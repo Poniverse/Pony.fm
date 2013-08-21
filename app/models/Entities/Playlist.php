@@ -79,7 +79,7 @@
 
 			return [
 				'id' => $playlist->id,
-				'track_count' => $playlist->tracks()->count(),
+				'track_count' => $playlist->track_count,
 				'title' => $playlist->title,
 				'slug' => $playlist->slug,
 				'created_at' => $playlist->created_at,

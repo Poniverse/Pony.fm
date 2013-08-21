@@ -12,6 +12,7 @@ class CreatePlaylists extends Migration {
 			$table->text('description');
 			$table->boolean('is_public');
 
+			$table->integer('track_count')->unsigned();
 			$table->integer('view_count')->unsigned();
 			$table->integer('download_count')->unsigned();
 			$table->integer('favourite_count')->unsigned();

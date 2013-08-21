@@ -5,8 +5,10 @@
 	use Entities\Album;
 	use Entities\Image;
 	use Entities\Track;
+	use Entities\User;
 	use External;
 	use Illuminate\Support\Facades\Auth;
+	use Illuminate\Support\Facades\DB;
 	use Illuminate\Support\Facades\Log;
 
 	class EditTrackCommand extends CommandBase {
@@ -76,6 +78,10 @@
 					$album = Album::find($this->_input['album_id']);
 					$track->track_number = $album->tracks()->count() + 1;
 					$track->album_id = $this->_input['album_id'];
+
+					Album::whereId($album->id)->update([
+						'track_count' => DB::raw('SELECT COUNT(id) FROM tracks WHERE album_id = ' . $album->id)
+					]);
 				}
 			} else {
 				if ($track->album_id != null) {
@@ -107,6 +113,10 @@
 			$track->updateTags();
 			$track->save();
 
+			User::whereId($this->_track->user_id)->update([
+				'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = ' . $this->_track->user_id . ')')
+			]);
+
 			return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);
 		}
 
@@ -122,5 +132,9 @@
 				$track->updateTags();
 				$track->save();
 			}
+
+			Album::whereId($album->id)->update([
+				'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = ' . $album->id . ')')
+			]);
 		}
 	}

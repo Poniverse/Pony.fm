@@ -7,6 +7,7 @@
 	use Entities\Playlist;
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
+	use Illuminate\Support\Facades\DB;
 
 	class AddTrackToPlaylistCommand extends CommandBase {
 		private $_track;
@@ -32,6 +33,11 @@
 		public function execute() {
 			$songIndex = $this->_playlist->tracks()->count() + 1;
 			$this->_playlist->tracks()->attach($this->_track, ['position' => $songIndex]);
+
+			Playlist::whereId($this->_playlist->id)->update([
+				'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = ' . $this->_playlist->id . ')')
+			]);
+
 			return CommandResponse::succeed(['message' => 'Track added!']);
 		}
 	}

@@ -6,6 +6,7 @@
 	use Entities\Image;
 	use Entities\Track;
 	use Illuminate\Support\Facades\Auth;
+	use Illuminate\Support\Facades\DB;
 	use Illuminate\Support\Facades\Log;
 	use Illuminate\Support\Facades\Validator;
 
@@ -60,6 +61,10 @@
 			$trackIds = explode(',', $this->_input['track_ids']);
 			$this->_album->syncTrackIds($trackIds);
 			$this->_album->save();
+
+			Album::whereId($this->_album->id)->update([
+				'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = ' . $this->_album->id . ')')
+			]);
 
 			return CommandResponse::succeed(['real_cover_url' => $this->_album->getCoverUrl(Image::NORMAL)]);
 		}

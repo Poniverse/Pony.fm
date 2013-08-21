@@ -36,11 +36,15 @@ appendRequest = (method, url, req) ->
 		$liItem.appendTo $logItems
 
 	for query in req.request.queries
+		queryText = query.query
+		for binding in query.bindings
+			queryText = queryText.replace '?', '"' + binding + '"'
+
 		$liItem = $("<li>")
 		($("<span class='time' />").text query.time).appendTo $liItem
 
 		$("<h4 class='prettyprint' />")
-			.html(prettyPrintOne(query.query, 'lang-sql'))
+			.html(prettyPrintOne(queryText, 'lang-sql'))
 			.click () ->
 				$(this).toggleClass 'open'
 			.appendTo($liItem)

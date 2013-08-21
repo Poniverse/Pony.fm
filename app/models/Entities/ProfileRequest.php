@@ -41,7 +41,19 @@
 		}
 
 		public function after($request, $response) {
-			$this->_data['queries'] = DB::getQueryLog();
+			$this->_data['queries'] = [];
+			foreach (DB::getQueryLog() as $query) {
+				if (starts_with($query['query'], 'select * from `cache` where'))
+					continue;
+
+				if (starts_with($query['query'], 'delete from `cache` where'))
+					continue;
+
+				if (starts_with($query['query'], 'insert into `cache`'))
+					continue;
+
+				$this->_data['queries'][] = $query;
+			}
 		}
 
 		public function log($level, $message, $context) {

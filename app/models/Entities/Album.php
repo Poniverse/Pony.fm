@@ -106,7 +106,7 @@
 
 			return [
 				'id' => $album->id,
-				'track_count' => $album->tracks()->count(),
+				'track_count' => $album->track_count,
 				'title' => $album->title,
 				'slug' => $album->slug,
 				'created_at' => $album->created_at,

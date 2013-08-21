@@ -12,6 +12,7 @@ class CreateAlbums extends Migration {
 			$table->text('description');
 			$table->integer('cover_id')->unsigned()->nullable();
 
+			$table->integer('track_count')->unsigned();
 			$table->integer('view_count')->unsigned();
 			$table->integer('download_count')->unsigned();
 			$table->integer('favourite_count')->unsigned();

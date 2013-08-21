@@ -48,8 +48,8 @@
 
 		public function getPinned() {
 			$query = Playlist
-				::with(['tracks.user', 'tracks' => function($query) {}, 'comments', 'comments.user'])
-				->details()
+				::details()
+				->with('tracks', 'tracks.cover', 'tracks.user', 'user')
 				->join('pinned_playlists', function($join) {
 					$join->on('playlist_id', '=', 'playlists.id');
 				})
