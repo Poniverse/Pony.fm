@@ -1,80 +1,72 @@
-<div class="track-details" xmlns="http://www.w3.org/1999/html">
-	<div class="track-toolbar btn-group pull-right">
-		<pfm-favourite-button resource="track" type="track"></pfm-favourite-button>
-		<div class="dropdown">
+<div class="track-details" bindonce="track">
+	<ul class="dropdowns">
+		<li class="dropdown">
 			<a href="#" class="btn btn-small btn-info dropdown-toggle">
-				Downloads <i class="caret"></i>
+				Downloads
 			</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="format in track.formats"><a target="_blank" href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
+				<li bindonce ng-repeat="format in track.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
 			</ul>
-		</div>
-		<div class="dropdown">
+		</li>
+		<li class="dropdown">
 			<a href="#" class="btn btn-small dropdown-toggle" ng-show="auth.isLogged">
-				Add to Playlist <i class="caret"></i>
+				Add to Playlist
 			</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="playlist in playlists">
-					<a ng-class="{disabled: playlist.message, 'btn-success': playlist.message}" href="{{playlist.url}}" pfm-eat-click ng-click="addToPlaylist(playlist); $event.stopPropagation()">
-						<span ng-hide="playlist.message">{{playlist.title}}</span>
+				<li bindonce ng-repeat="playlist in playlists">
+					<a bo-class="{disabled: playlist.message, 'btn-success': playlist.message}" bo-href="playlist.url" pfm-eat-click ng-click="addToPlaylist(playlist); $event.stopPropagation()">
+						<span ng-hide="playlist.message" bo-text="playlist.title"></span>
 						<span ng-show="playlist.message">{{playlist.message}}</span>
 					</a>
 				</li>
 				<li><a href="#" class="btn-primary" pfm-eat-click ng-click="addToNewPlaylist()">Add to New Playlist</a></li>
 			</ul>
-		</div>
-	</div>
+		</li>
+		<li><a href="#" class="btn">Share or Embed</a></li>
+		<li><pfm-favourite-button resource="track" type="track"></pfm-favourite-button></li>
+	</ul>
 
-	<pfm-track-player track="track"></pfm-track-player>
-	<h1>
-		{{track.title}}
-		<span class="subtitle">
-			<span ng-show="track.album">
-				from: <a href="{{track.album.url}}">{{track.album.title}}</a>
+	<header>
+		<pfm-track-player track="track"></pfm-track-player>
+		<h1 bo-text="track.title"></h1>
+		<h2>
+			<span bo-show="track.album">
+				from: <a bo-href="track.album.url" bo-text="track.album.title"></a>
 			</span>
 
-			by: <a href="{{track.user.url}}">{{track.user.name}}</a>
-		</span>
-	</h1>
+			by: <a bo-href="track.user.url" bo-text="track.user.name"></a>
+		</h2>
+	</header>
 
-	<div class="stretch-to-bottom">
-		<div class="row-fluid">
-			<div class="span8">
-				<div class="description">
-					<p ng-bind-html-unsafe="track.description | noHTML | newlines"></p>
-				</div>
+	<div class="stretch-to-bottom details-columns">
+		<div class="right">
+			<img class="cover" bo-src="track.covers.normal" />
 
-				<div ng-show="track.is_vocal && track.lyrics.length" class="lyrics-panel">
-					<h2>Lyrics</h2>
-					<div class="lyrics revealable">
-						<div class="reveal">
-							<a href="#">Click to reveal full lyrics...</a>
-						</div>
-						<p class="content" ng-bind-html="track.lyrics | noHTML | newlines | trust"></p>
+			<ul class="stats">
+				<li>Published: <strong bo-text="track.published_at | pfmdate:'short'"></strong></li>
+				<li>Views: <strong bo-text="track.stats.views"></strong></li>
+				<li>Plays: <strong bo-text="track.stats.plays"></strong></li>
+				<li>Downloads: <strong bo-text="track.stats.downloads"></strong></li>
+				<li>Favourites: <strong bo-text="track.stats.favourites"></strong></li>
+			</ul>
+		</div>
+		<div class="left">
+			<div class="description" bo-show="track.description.length">
+				<h2>Description</h2>
+				<p bo-html="track.description | noHTML | newlines"></p>
+			</div>
+
+			<div bo-show="track.is_vocal && track.lyrics.length" class="lyrics-panel">
+				<h2>Lyrics</h2>
+				<div class="lyrics revealable">
+					<div class="reveal">
+						<a href="#">Click to reveal full lyrics...</a>
 					</div>
+					<p class="content" bo-html="track.lyrics | noHTML | newlines"></p>
 				</div>
-
-				<h2>Comments</h2>
-				<pfm-comments type="track" resource="track"></pfm-comments>
 			</div>
-			<div class="span4 cover-image">
-				<img ng-src="{{track.covers.normal}}" />
 
-				<div class="fb-like" data-href="{{track.url}}" data-send="false" data-layout="button_count" data-width="20" data-show-faces="false"></div>
-				<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{track.url}}" data-text="{{track.title + ' by ' + track.user.name + ' on Pony.fm'}}" data-via="ponyfm">Tweet</a>
-				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-				<a href="#" class="btn btn-info">Share or Embed</a>
-
-				<h2>Stats</h2>
-				<ul class="stats">
-					<li>Published: <strong>{{track.published_at | pfmdate:"short"}}</strong></li>
-					<li>Views: <strong>{{track.stats.views}}</strong></li>
-					<li>Plays: <strong>{{track.stats.plays}}</strong></li>
-					<li>Downloads: <strong>{{track.stats.downloads}}</strong></li>
-					<li>Favourites: <strong>{{track.stats.favourites}}</strong></li>
-				</ul>
-			</div>
+			<pfm-comments type="track" resource="track"></pfm-comments>
 		</div>
 	</div>
 </div>

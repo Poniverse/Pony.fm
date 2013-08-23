@@ -4,6 +4,7 @@ angular.module('ponyfm').directive 'pfmTrackPlayer', () ->
 	scope:
 		track: '=track',
 		class: '@class'
+	replace: true
 
 	controller: [
 		'$scope', 'player'

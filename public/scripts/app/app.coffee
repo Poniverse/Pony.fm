@@ -1,6 +1,6 @@
 window.pfm.preloaders = {}
 
-module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable']
+module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'pasvaz.bindonce']
 
 module.config [
 	'$locationProvider', '$stateProvider', '$dialogProvider'

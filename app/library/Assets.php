@@ -52,6 +52,7 @@
 					new FileAsset('scripts/base/moment.js'),
 					new FileAsset('scripts/base/soundmanager2-nodebug.js'),
 					new FileAsset('scripts/base/angular.js'),
+					new FileAsset('scripts/base/bindonce.js'),
 					new FileAsset('scripts/base/ui-bootstrap-tpls-0.4.0.js'),
 					new FileAsset('scripts/base/angular-ui-sortable.js'),
 					new FileAsset('scripts/base/angular-ui-date.js'),

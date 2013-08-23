@@ -5,6 +5,7 @@ angular.module('ponyfm').directive 'pfmFavouriteButton', () ->
 		resource: '=resource',
 		class: '@class',
 		type: '@type'
+	replace: true
 
 	controller: [
 		'$scope', 'favourites', 'auth'

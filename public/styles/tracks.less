@@ -2,6 +2,66 @@
 @import-once 'mixins';
 @import-once 'variables';
 
+.track-details {
+  > header {
+	padding: 5px;
+	background: #eee;
+	overflow: hidden;
+	margin-bottom: 10px;
+
+	h1 {
+	  margin: 0px;
+	  margin-left: 47px;
+	}
+
+	h2 {
+	  margin: 0px;
+	  margin-left: 47px;
+	  padding: 0px;
+	  font-weight: normal;
+	  clear: none;
+	  line-height: normal;
+	  display: block;
+	  float: none;
+	  font-size: 8pt;
+	  color: #777;
+	  border: none;
+
+	  a {
+		display: inline;
+		float: none;
+		color: #111;
+	  }
+	}
+  }
+
+  h2 {
+	color: #C2889C;
+	font-size: 10pt;
+	border-bottom: 2px solid #ddd;
+	padding: 5px 0px;
+	margin: 0px;
+	margin-bottom: 5px;
+	line-height: normal;
+  }
+
+  .resource-toolbar {
+	.clearfix();
+
+	background: #eee;
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+	margin-bottom: 5px;
+
+	> li {
+	  padding: 5px;
+	  float: left;
+	  margin: 0px;
+	}
+  }
+}
+
 @icon-size: 42px;
 
 .tracks-listing.four-columns {
@@ -23,6 +83,10 @@
 	float: left;
 	width: 50%;
   }
+}
+
+html .single-player .play-button {
+  display: block;
 }
 
 .single-player, .tracks-listing li .image {
