@@ -59,6 +59,7 @@
 		Route::get('/albums', 'Api\Web\AlbumsController@getIndex');
 		Route::get('/albums/{id}', 'Api\Web\AlbumsController@getShow')->where('id', '\d+');
 
+		Route::get('/playlists', 'Api\Web\PlaylistsController@getIndex');
 		Route::get('/playlists/{id}', 'Api\Web\PlaylistsController@getShow')->where('id', '\d+');
 
 		Route::get('/comments/{type}/{id}', 'Api\Web\CommentsController@getIndex')->where('id', '\d+');

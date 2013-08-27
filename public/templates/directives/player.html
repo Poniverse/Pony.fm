@@ -1,5 +1,9 @@
 <div class="track-player" ng-show="player.isPlaying">
 	<ul class="buttons">
+		<li class="status">
+			<strong>{{player.currentTrack.progressSeconds | secondsDisplay}}</strong> /
+			<strong>{{player.currentTrack.duration | secondsDisplay}}</strong>
+		</li>
 		<li><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="icon-fast-backward"></i></a></li>
 		<li>
 			<a pfm-eat-click ng-click="playPause()" class="play" href="#">

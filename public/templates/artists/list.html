@@ -4,7 +4,7 @@
 			<img class="image" ng-src="{{artist.avatars.normal}}" />
 			<span class="title">{{artist.name}}</span>
 			<span class="published">
-				joined {{artist.created_at | momentFromNow}}
+				joined {{artist.created_at.date | momentFromNow}}
 			</span>
 		</a>
 	</li>

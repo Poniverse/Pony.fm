@@ -128,7 +128,7 @@
 				->where('track_count', '>', 0);
 
 			$count = $query->count();
-			$perPage = 15;
+			$perPage = 18;
 
 			$query->skip(($page - 1) * $perPage)->take($perPage);
 			$users = [];

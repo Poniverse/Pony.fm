@@ -110,6 +110,13 @@ module.config [
 		state.state 'content.playlists',
 			url: '/playlists'
 			templateUrl: '/templates/playlists/index.html'
+			controller: 'playlists'
+			abstract: true
+
+		state.state 'content.playlists.list',
+			url: '?page'
+			controller: 'playlists-list'
+			templateUrl: '/templates/playlists/list.html'
 
 		state.state 'content.playlist',
 			url: '/playlist/{id:[^\-]+}-{slug}'

@@ -78,8 +78,9 @@
 
 			$data = self::mapPublicAlbumSummary($album);
 			$data['tracks'] = $tracks;
-			$data['comments'] = ['count' => count($comments), 'list' => $comments];
+			$data['comments'] = $comments;
 			$data['formats'] = $formats;
+			$data['description'] = $album->description;
 
 			return $data;
 		}

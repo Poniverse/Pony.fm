@@ -33,6 +33,31 @@
 			return $this->execute(new AddTrackToPlaylistCommand($id, Input::get('track_id')));
 		}
 
+		public function getIndex() {
+			$page = 1;
+			if (Input::has('page'))
+				$page = Input::get('page');
+
+			$query = Playlist::summary()
+				->with('user', 'user.avatar', 'tracks', 'tracks.cover')
+				->details()
+				->orderBy('created_at', 'desc')
+				->where('track_count', '>', 0)
+				->whereIsPublic(true);
+
+			$count = $query->count();
+			$perPage = 18;
+
+			$query->skip(($page - 1) * $perPage)->take($perPage);
+			$playlists = [];
+
+			foreach ($query->get() as $playlist) {
+				$playlists[] = Playlist::mapPublicPlaylistSummary($playlist);
+			}
+
+			return Response::json(["playlists" => $playlists, "current_page" => $page, "total_pages" => ceil($count / $perPage)], 200);
+		}
+
 		public function getShow($id) {
 			$playlist = Playlist::with(['tracks.user', 'tracks.genre', 'tracks.cover', 'tracks.album', 'tracks' => function($query) { $query->details(); }, 'comments', 'comments.user'])->details()->find($id);
 			if (!$playlist || !$playlist->canView(Auth::user()))

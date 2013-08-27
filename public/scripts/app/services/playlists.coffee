@@ -3,9 +3,21 @@ angular.module('ponyfm').factory('playlists', [
 	($rootScope, $state, $http) ->
 		playlistDef = null
 		playlists = {}
+		playlistPages = []
 
 		self =
 			pinnedPlaylists: []
+
+			fetchList: (page, force) ->
+				force = force || false
+				page = 1 if !page
+				return playlistPages[page] if !force && playlistPages[page]
+				playlistDef = new $.Deferred()
+				$http.get('/api/web/playlists?page=' + page).success (playlists) ->
+					playlistDef.resolve playlists
+					$rootScope.$broadcast 'playlists-feteched', playlists
+
+				playlistPages[page] = playlistDef.promise()
 
 			fetch: (id, force) ->
 				force = force || false

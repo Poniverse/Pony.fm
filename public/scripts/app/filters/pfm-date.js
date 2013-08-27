@@ -11,7 +11,10 @@ angular.module('ponyfm').filter('pfmdate', [
 		function isNumber(value){return typeof value == 'number';}
 
 		function isDate(value){
-			return toString.apply(value) == '[object Date]';
+			if (!value)
+				return false;
+
+			return value.toString() == '[object Date]';
 		}
 
 		function padNumber(num, digits, trim) {

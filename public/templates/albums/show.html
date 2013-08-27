@@ -1,57 +1,46 @@
-<div class="album-details">
-	<ul class="breadcrumb">
-		<li><a href="/albums">Albums</a> <span class="divider">/</span></li>
-		<li class="active">{{album.title}}</li>
-	</ul>
-
-	<div class="track-toolbar btn-group pull-right">
-		<pfm-favourite-button resource="album" type="album"></pfm-favourite-button>
-		<div class="dropdown">
+<div class="resource-details album-details" bindonce="album">
+	<ul class="dropdowns">
+		<li class="dropdown">
 			<a href="#" class="btn btn-small btn-info dropdown-toggle">
-				Downloads <i class="caret"></i>
+				Downloads
 			</a>
 			<ul class="dropdown-menu">
-				<li ng-repeat="format in album.formats"><a target="_blank" href="{{format.url}}">{{format.name}} <small>({{format.size}})</small></a></li>
+				<li bindonce ng-repeat="format in album.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
+			</ul>
+		</li>
+		<li><a href="#" class="btn">Share or Embed</a></li>
+		<li><pfm-favourite-button resource="album" type="album"></pfm-favourite-button></li>
+	</ul>
+
+	<header>
+		<h1 bo-text="album.title"></h1>
+		<h2>
+			by: <a bo-href="album.user.url" bo-text="album.user.name"></a>
+		</h2>
+	</header>
+
+	<div class="stretch-to-bottom details-columns">
+		<div class="right">
+			<img class="cover" bo-src="album.covers.normal" />
+
+			<ul class="stats">
+				<li>Published: <strong bo-text="album.published_at | pfmdate:'short'"></strong></li>
+				<li>Views: <strong bo-text="album.stats.views"></strong></li>
+				<li>Downloads: <strong bo-text="album.stats.downloads"></strong></li>
+				<li>Favourites: <strong bo-text="album.stats.favourites"></strong></li>
 			</ul>
 		</div>
-	</div>
 
-	<h1>
-		{{album.title}}
-		<span class="subtitle">
-			by: <a href="{{album.user.url}}">{{album.user.name}}</a>
-		</span>
-	</h1>
-
-	<div class="stretch-to-bottom">
-		<div class="row-fluid">
-			<div class="span8">
-				<div class="description">
-					<p ng-bind-html-unsafe="album.description | noHTML | newlines"></p>
-				</div>
-
-				<h2>Tracks</h2>
-				<pfm-tracks-list tracks="album.tracks" class="condensed no-artist"></pfm-tracks-list>
-
-				<h2>Comments</h2>
-				<pfm-comments type="album" resource="album"></pfm-comments>
+		<div class="left">
+			<div class="description" bo-show="album.description.length">
+				<h2>Description</h2>
+				<p bo-html="album.description | noHTML | newlines"></p>
 			</div>
-			<div class="span4 cover-image">
-				<img ng-src="{{album.covers.normal}}" />
 
-				<div class="fb-like" data-href="{{album.url}}" data-send="false" data-layout="button_count" data-width="20" data-show-faces="false"></div>
-				<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{album.url}}" data-text="{{album.title + ' by ' + album.user.name + ' on Pony.fm'}}" data-via="ponyfm">Tweet</a>
-				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			<h2>Tracks</h2>
+			<pfm-tracks-list tracks="album.tracks" class="condensed no-artist"></pfm-tracks-list>
 
-				<a href="#" class="btn btn-info">Share or Embed</a>
-
-				<h2>Stats</h2>
-				<ul class="stats">
-					<li>Views: <strong>{{album.stats.views}}</strong></li>
-					<li>Downloads: <strong>{{album.stats.downloads}}</strong></li>
-					<li>Favourites: <strong>{{album.stats.favourites}}</strong></li>
-				</ul>
-			</div>
+			<pfm-comments type="album" resource="album"></pfm-comments>
 		</div>
 	</div>
 </div>

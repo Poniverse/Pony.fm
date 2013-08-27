@@ -14,6 +14,7 @@ angular.module('ponyfm').factory('player', [
 					track.loadingProgress = (self.currentSound.bytesLoaded / self.currentSound.bytesTotal) * 100
 
 				whileplaying: () -> $rootScope.safeApply ->
+					track.progressSeconds = self.currentSound.position / 1000
 					track.progress = (self.currentSound.position / (track.duration * 1000)) * 100
 
 				onfinish: () -> $rootScope.safeApply ->

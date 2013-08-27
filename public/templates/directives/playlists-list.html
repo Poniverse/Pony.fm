@@ -1,0 +1,14 @@
+<ul class="playlists-listing {{class}}">
+	<li ng-repeat="playlist in playlists">
+		<a href="{{playlist.url}}">
+			<img class="image" ng-src="{{playlist.covers.normal}}" height="350" width="350" />
+			<span class="title">{{playlist.title}}</span>
+			<span class="published">
+				by {{playlist.user.name}}
+			</span>
+		</a>
+	</li>
+	<li ng-show="!playlists.length" class="empty">
+		No playlists found...
+	</li>
+</ul>
