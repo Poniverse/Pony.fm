@@ -17,5 +17,6 @@ angular.module('ponyfm').controller "albums", [
 		$scope.$on 'albums-feteched', (e, list) -> refreshPages(list)
 
 		$scope.gotoPage = (page) ->
+			return if !page
 			$state.transitionTo 'content.albums.list', {page: page}
 ]

@@ -28,7 +28,17 @@
 		}
 
 		public function getShow($id) {
-			$album = Album::with(['tracks' => function($query) { $query->details(); }, 'tracks.cover', 'tracks.genre', 'tracks.user', 'user', 'comments' => function($query) { $query->with('user'); }])->details()->find($id);
+			$album = Album::with([
+				'tracks' => function($query) { $query->userDetails(); },
+				'tracks.cover',
+				'tracks.genre',
+				'tracks.user',
+				'user',
+				'comments',
+				'comments.user'])
+				->userDetails()
+				->find($id);
+
 			if (!$album)
 				App::abort(404);
 
@@ -49,12 +59,12 @@
 
 			$query = Album::summary()
 				->with('user', 'user.avatar', 'cover')
-				->details()
+				->userDetails()
 				->orderBy('created_at', 'desc')
 				->where('track_count', '>', 0);
 
 			$count = $query->count();
-			$perPage = 18;
+			$perPage = 40;
 
 			$query->skip(($page - 1) * $perPage)->take($perPage);
 			$albums = [];

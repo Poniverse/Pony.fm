@@ -1,10 +1,17 @@
 <ul class="playlists-listing {{class}}">
-	<li ng-repeat="playlist in playlists">
+	<li ng-repeat="playlist in playlists" bindonce>
 		<a href="{{playlist.url}}">
-			<img class="image" ng-src="{{playlist.covers.normal}}" height="350" width="350" />
-			<span class="title">{{playlist.title}}</span>
-			<span class="published">
-				by {{playlist.user.name}}
+			<img class="image" ng-src="{{playlist.covers.small}}"/>
+			<span class="info">
+				<span class="title">{{playlist.title}}</span>
+				<span class="published">
+					by {{playlist.user.name}}
+				</span>
+				<span class="stats">
+					<strong bo-text="playlist.stats.favourites"></strong> <i class="icon-star"></i>
+					<strong bo-text="playlist.stats.comments"></strong> <i class="icon-comment"></i>
+					<strong bo-text="playlist.stats.downloads"></strong> <i class="icon-download"></i>
+				</span>
 			</span>
 		</a>
 	</li>

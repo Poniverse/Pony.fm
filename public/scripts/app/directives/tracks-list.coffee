@@ -1,6 +1,7 @@
 angular.module('ponyfm').directive 'pfmTracksList', () ->
 	restrict: 'E'
 	templateUrl: '/templates/directives/tracks-list.html'
+	replace: true
 	scope:
 		tracks: '=tracks',
 		class: '@class'

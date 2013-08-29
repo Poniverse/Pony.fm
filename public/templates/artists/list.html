@@ -1,10 +1,12 @@
 <ul class="artist-listing stretch-to-bottom">
-	<li ng-repeat="artist in artists">
+	<li ng-repeat="artist in artists" bindonce>
 		<a href="{{artist.url}}">
-			<img class="image" ng-src="{{artist.avatars.normal}}" />
-			<span class="title">{{artist.name}}</span>
-			<span class="published">
-				joined {{artist.created_at.date | momentFromNow}}
+			<img class="image" bo-src="artist.avatars.small" />
+				<span class="info">
+				<span class="title" bo-text="artist.name"></span>
+				<span class="published">
+					joined <span bo-text="artist.created_at.date | momentFromNow"></span>
+				</span>
 			</span>
 		</a>
 	</li>

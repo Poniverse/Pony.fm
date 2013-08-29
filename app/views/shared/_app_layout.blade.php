@@ -1,6 +1,28 @@
 @extends('shared._layout')
 
 @section('content')
+
+	<div id="fb-root"></div>
+
+	<script>
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '186765381447538',
+				status: true,
+				cookie: true,
+				xfbml: true
+			});
+		};
+
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/all.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+
 	<header>
 		<a href="/">Pony.fm</a>
 		<div class="now-playing">
@@ -51,7 +73,7 @@
 		</ui-view>
 	</div>
 
-	<ng-include src="'templates/partials/upload-dialog.html'" />
+	<ng-include src="'templates/partials/upload-dialog.html'"></ng-include>
 
 @endsection
 
@@ -76,4 +98,7 @@
 	</script>
 
 	{{ Assets::scriptIncludes() }}
+
+	<script src="http://platform.tumblr.com/v1/share.js"></script>
+
 @endsection

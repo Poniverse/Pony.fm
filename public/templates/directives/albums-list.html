@@ -1,10 +1,17 @@
 <ul class="albums-listing {{class}}">
-	<li ng-repeat="album in albums">
-		<a href="{{album.url}}">
-			<img class="image" ng-src="{{album.covers.normal}}" />
-			<span class="title">{{album.title}}</span>
+	<li ng-repeat="album in albums" bindonce>
+		<a bo-href="album.url">
+			<img class="image" bo-src="album.covers.small" />
+			<span class="info">
+			<span class="title" bo-text="album.title"></span>
 			<span class="published">
-				by {{album.user.name}}
+				by <span bo-text="album.user.name"></span>
+			</span>
+				<span class="stats">
+					<strong bo-text="album.stats.favourites"></strong> <i class="icon-star"></i>
+					<strong bo-text="album.stats.comments"></strong> <i class="icon-comment"></i>
+					<strong bo-text="album.stats.downloads"></strong> <i class="icon-download"></i>
+				</span>
 			</span>
 		</a>
 	</li>

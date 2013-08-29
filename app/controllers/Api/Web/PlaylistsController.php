@@ -40,13 +40,13 @@
 
 			$query = Playlist::summary()
 				->with('user', 'user.avatar', 'tracks', 'tracks.cover')
-				->details()
+				->userDetails()
 				->orderBy('created_at', 'desc')
 				->where('track_count', '>', 0)
 				->whereIsPublic(true);
 
 			$count = $query->count();
-			$perPage = 18;
+			$perPage = 40;
 
 			$query->skip(($page - 1) * $perPage)->take($perPage);
 			$playlists = [];
@@ -59,7 +59,7 @@
 		}
 
 		public function getShow($id) {
-			$playlist = Playlist::with(['tracks.user', 'tracks.genre', 'tracks.cover', 'tracks.album', 'tracks' => function($query) { $query->details(); }, 'comments', 'comments.user'])->details()->find($id);
+			$playlist = Playlist::with(['tracks.user', 'tracks.genre', 'tracks.cover', 'tracks.album', 'tracks' => function($query) { $query->userDetails(); }, 'comments', 'comments.user'])->userDetails()->find($id);
 			if (!$playlist || !$playlist->canView(Auth::user()))
 				App::abort('404');
 
@@ -73,7 +73,7 @@
 
 		public function getPinned() {
 			$query = Playlist
-				::details()
+				::userDetails()
 				->with('tracks', 'tracks.cover', 'tracks.user', 'user')
 				->join('pinned_playlists', function($join) {
 					$join->on('playlist_id', '=', 'playlists.id');

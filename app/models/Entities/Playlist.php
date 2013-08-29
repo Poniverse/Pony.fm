@@ -18,7 +18,7 @@
 			return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'is_public', 'description', 'comment_count', 'download_count', 'view_count', 'favourite_count');
 		}
 
-		public function scopeDetails($query) {
+		public function scopeUserDetails($query) {
 			if (Auth::check()) {
 				$query->with(['users' => function($query) {
 					$query->whereUserId(Auth::user()->id);
@@ -53,6 +53,11 @@
 			$data['tracks'] = $tracks;
 			$data['comments'] = $comments;
 			$data['formats'] = $formats;
+			$data['share'] = [
+				'url' => URL::to('/p' . $playlist->id),
+				'tumblrUrl' => 'http://www.tumblr.com/share/link?url=' . urlencode($playlist->url) . '&name=' . urlencode($playlist->title) . '&description=' . urlencode($playlist->description),
+				'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $playlist->title . ' by ' . $playlist->user->display_name . ' on Pony.fm'
+			];
 
 			return $data;
 		}
@@ -117,7 +122,7 @@
 		}
 
 		public function comments(){
-			return $this->hasMany('Entities\Comment');
+			return $this->hasMany('Entities\Comment')->orderBy('created_at', 'desc');
 		}
 
 		public function pins() {

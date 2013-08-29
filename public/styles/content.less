@@ -6,23 +6,41 @@
   margin: 0px;
   padding: 0px;
   list-style: none;
+  overflow: hidden;
+
+  &.two-columns {
+	li {
+	  width: 50%;
+	}
+  }
 
   li {
 	.box-sizing(border-box);
 	float: left;
-	width: 16.6666%;
+	width: 25%;
 	padding: 5px;
 	line-height: normal;
 
 	a {
-	  background: #ddd;
+	  background: #eee;
 	  display: block;
+	  overflow: hidden;
+	  position: relative;
 
 	  img {
 		display: block;
+		float: left;
+		width: 67px;
+		height: 67px;
+		background: #ddd;
 	  }
 
-	  .title, .published {
+	  .info {
+		margin-left: 72px;
+		display: block;
+	  }
+
+	  .title, .published, .stats {
 		display: block;
 		color: #444;
 		padding: 5px;
@@ -32,17 +50,35 @@
 		.ellipsis();
 
 		font-weight: bold;
-		font-size: 12pt;
+		font-size: 11pt;
+		padding-left: 3px;
 		padding-bottom: 0px;
 	  }
 
 	  .published {
-		color: #777;
+		font-size: 8pt;
+		color: #555;
+	  }
+
+	  .published, .stats {
+		padding-top: 0px;
+	  }
+
+	  .stats {
 		font-size: 10pt;
+		color: #777;
+		position: absolute;
+		bottom: 3px;
+		right: 3px;
+
+		strong {
+		  font-weight: normal;
+		}
 	  }
 
 	  &:hover {
 		text-decoration: none;
+		background: #ddd;
 	  }
 	}
   }
@@ -54,6 +90,34 @@
 	  h2, h1 {
 		margin-left: 47px;
 	  }
+	}
+  }
+
+  &.artist-details {
+	> header {
+	  .tabs {
+		clear: left;
+		margin: 0px;
+		margin-top: 5px;
+		border: none;
+		font-size: 9pt;
+
+		li.active {
+		  a {
+			border: none;
+			background: #C1889E;
+			color: #fff;
+		  }
+		}
+	  }
+	}
+  }
+
+  .share-buttons {
+	margin-top: 5px;
+
+	.facebook, .twitter {
+	  margin-top: 3px;
 	}
   }
 
@@ -174,15 +238,8 @@ html .single-player .play-button {
   }
 }
 
-.tracks-listing {
-  margin: 0px;
-  padding: 0px;
-  list-style: none;
-
+html {
   li {
-	.box-sizing(border-box);
-	overflow: hidden;
-
 	&.empty {
 	  .border-radius(0px);
 	  background: lighten(@pfm-purple, 30%);
@@ -199,6 +256,18 @@ html .single-player .play-button {
 		background-color: lighten(@pfm-purple, 30%);
 	  }
 	}
+  }
+}
+
+.tracks-listing {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  overflow: hidden;
+
+  li {
+	.box-sizing(border-box);
+	overflow: hidden;
 
 	line-height: normal;
 	padding: 0px;

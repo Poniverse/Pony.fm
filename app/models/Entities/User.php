@@ -6,6 +6,7 @@
 	use Gravatar;
 	use Illuminate\Auth\UserInterface;
 	use Illuminate\Auth\Reminders\RemindableInterface;
+	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\URL;
 	use Illuminate\Support\Str;
 	use Ratchet\Wamp\Exception;
@@ -14,16 +15,34 @@
 		protected $table = 'users';
 		protected $hidden = ['password_hash', 'password_salt', 'bio'];
 
+		public function scopeUserDetails($query) {
+			if (Auth::check()) {
+				$query->with(['users' => function($query) {
+					$query->whereUserId(Auth::user()->id);
+				}]);
+			}
+
+			return !$query;
+		}
+
 		public function avatar() {
 			return $this->belongsTo('Entities\Image');
 		}
 
-		public function comments(){
-			return $this->hasMany('Entities\Comment', 'profile_id');
+		public function users() {
+			return $this->hasMany('Entities\ResourceUser', 'artist_id');
+		}
+
+		public function comments() {
+			return $this->hasMany('Entities\Comment', 'profile_id')->orderBy('created_at', 'desc');
 		}
 
 		public function getUrlAttribute() {
 			return URL::to('/' . $this->slug);
+		}
+
+		public function getMessageUrlAttribute() {
+			return 'http://mlpforums.com/index.php?app=members&module=messaging&section=send&do=form&fromMemberID='.$this->id;
 		}
 
 		public function getAuthIdentifier() {

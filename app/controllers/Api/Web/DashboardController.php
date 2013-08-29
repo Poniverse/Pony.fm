@@ -14,18 +14,22 @@
 
 	class DashboardController extends \ApiControllerBase {
 		public function getIndex() {
-			$query = Track::summary()->with(['genre', 'user', 'cover'])->details()->whereNotNull('published_at')->orderBy('published_at', 'desc')->take(30);
-			if (!Auth::check() || !Auth::user()->can_see_explicit_content)
-				$query->whereIsExplicit(false);
+			$recentQuery = Track::summary()
+				->with(['genre', 'user', 'cover', 'user.avatar'])
+				->userDetails()
+				->explicitFilter()
+				->published()
+				->orderBy('published_at', 'desc')
+				->take(30);
 
-			$tracks = [];
+			$recentTracks = [];
 
-			foreach ($query->get() as $track) {
-				$tracks[] = Track::mapPublicTrackSummary($track);
+			foreach ($recentQuery->get() as $track) {
+				$recentTracks[] = Track::mapPublicTrackSummary($track);
 			}
 
 			return Response::json([
-				'recent_tracks' => $tracks,
-				'popular_tracks' => $tracks], 200);
+				'recent_tracks' => $recentTracks,
+				'popular_tracks' => Track::popular(30, Auth::check() && Auth::user()->can_see_explicit_content)], 200);
 		}
 	}

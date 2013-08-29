@@ -14,7 +14,7 @@ angular.module('ponyfm').filter('pfmdate', [
 			if (!value)
 				return false;
 
-			return value.toString() == '[object Date]';
+			return Object.prototype.toString.apply(value) == '[object Date]';
 		}
 
 		function padNumber(num, digits, trim) {
@@ -80,6 +80,8 @@ angular.module('ponyfm').filter('pfmdate', [
 			}
 			return obj;
 		}
+
+		var uppercase = function(string){return isString(string) ? string.toUpperCase() : string;};
 
 		var DATE_FORMATS_SPLIT = /((?:[^yMdHhmsaZE']+)|(?:'(?:[^']|'')*')|(?:E+|y+|M+|d+|H+|h+|m+|s+|a|Z))(.*)/,
 			NUMBER_STRING = /^\d+$/;
@@ -190,8 +192,9 @@ angular.module('ponyfm').filter('pfmdate', [
 				date = new Date(date);
 			}
 
-			if (typeof(date) == 'object' && date.date)
+			if (typeof(date) == 'object' && date.date) {
 				date = new Date(date.date);
+			}
 
 			if (!isDate(date)) {
 				return date;

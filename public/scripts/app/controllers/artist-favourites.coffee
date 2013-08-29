@@ -9,5 +9,4 @@ angular.module('ponyfm').controller "artist-favourites", [
 	($scope, artists, $state) ->
 		artists.fetchFavourites($state.params.slug).done (artistResponse) ->
 			$scope.favourites = artistResponse
-			console.log artistResponse
 ]

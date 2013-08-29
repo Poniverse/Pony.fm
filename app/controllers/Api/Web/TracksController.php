@@ -31,7 +31,7 @@
 		}
 
 		public function getShow($id) {
-			$track = Track::details()->withComments()->find($id);
+			$track = Track::userDetails()->withComments()->find($id);
 			if (!$track || !$track->canView(Auth::user()))
 				return $this->notFound('Track not found!');
 
@@ -43,20 +43,6 @@
 			return Response::json(['track' => Track::mapPublicTrackShow($track)], 200);
 		}
 
-		public function getRecent() {
-			$query = Track::summary()->details()->with(['genre', 'user', 'cover'])->whereNotNull('published_at')->orderBy('published_at', 'desc')->take(30);
-			if (!Auth::check() || !Auth::user()->can_see_explicit_content)
-				$query->whereIsExplicit(false);
-
-			$tracks = [];
-
-			foreach ($query->get() as $track) {
-				$tracks[] = Track::mapPublicTrackSummary($track);
-			}
-
-			return Response::json($tracks, 200);
-		}
-
 		public function getIndex() {
 			$page = 1;
 			$perPage = 45;
@@ -65,8 +51,9 @@
 				$page = Input::get('page');
 
 			$query = Track::summary()
-				->details()
-				->whereNotNull('published_at')
+				->userDetails()
+				->explicitFilter()
+				->published()
 				->with('user', 'genre', 'cover', 'album', 'album.user');
 
 			$this->applyFilters($query);

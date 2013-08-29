@@ -30,8 +30,8 @@
 				'track.user',
 				'album.cover',
 				'album.user',
-				'track' => function($query) { $query->details(); },
-				'album' => function($query) { $query->details(); }])->get();
+				'track' => function($query) { $query->userDetails(); },
+				'album' => function($query) { $query->userDetails(); }])->get();
 
 			$tracks = [];
 			$albums = [];
@@ -56,7 +56,7 @@
 			if (!$user)
 				App::abort(404);
 
-			$query = Track::summary()->with('genre', 'cover', 'user')->details()->whereUserId($user->id)->whereNotNull('published_at');
+			$query = Track::summary()->with('genre', 'cover', 'user')->userDetails()->whereUserId($user->id)->whereNotNull('published_at');
 			$tracks = [];
 			$singles = [];
 
@@ -83,11 +83,11 @@
 		}
 
 		public function getShow($slug) {
-			$user = User::whereSlug($slug)->with(['comments' => function ($query) { $query->with('user'); }])->first();
+			$user = User::whereSlug($slug)->userDetails()->with(['comments' => function ($query) { $query->with('user'); }])->first();
 			if (!$user)
 				App::abort(404);
 
-			$trackQuery = Track::summary()->with('genre', 'cover', 'user')->details()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(20);
+			$trackQuery = Track::summary()->with('genre', 'cover', 'user')->userDetails()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(20);
 			$latestTracks = [];
 
 			foreach ($trackQuery->get() as $track) {
@@ -97,6 +97,17 @@
 			$comments = [];
 			foreach ($user->comments as $comment) {
 				$comments[] = Comment::mapPublic($comment);
+			}
+
+			$userData = [
+				'is_following' => false
+			];
+
+			if ($user->users->count()) {
+				$userRow = $user->users[0];
+				$userData = [
+					'is_following' => $userRow->is_followed
+				];
 			}
 
 			return Response::json([
@@ -112,9 +123,11 @@
 					'followers' => [],
 					'following' => [],
 					'latest_tracks' => $latestTracks,
-					'comments' => ['count' => count($comments), 'list' => $comments],
+					'comments' => $comments,
 					'bio' => $user->bio,
-					'mlpforums_username' => $user->mlpforums_name
+					'mlpforums_username' => $user->mlpforums_name,
+					'message_url' => $user->message_url,
+					'user_data' => $userData
 				]
 			], 200);
 		}
@@ -128,7 +141,7 @@
 				->where('track_count', '>', 0);
 
 			$count = $query->count();
-			$perPage = 18;
+			$perPage = 40;
 
 			$query->skip(($page - 1) * $perPage)->take($perPage);
 			$users = [];

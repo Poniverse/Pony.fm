@@ -19,7 +19,7 @@
 			return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'cover_id', 'comment_count', 'download_count', 'view_count', 'favourite_count');
 		}
 
-		public function scopeDetails($query) {
+		public function scopeUserDetails($query) {
 			if (Auth::check()) {
 				$query->with(['users' => function($query) {
 					$query->whereUserId(Auth::user()->id);
@@ -52,7 +52,7 @@
 		}
 
 		public function comments(){
-			return $this->hasMany('Entities\Comment');
+			return $this->hasMany('Entities\Comment')->orderBy('created_at', 'desc');
 		}
 
 		public static function mapPublicAlbumShow($album) {
@@ -81,6 +81,11 @@
 			$data['comments'] = $comments;
 			$data['formats'] = $formats;
 			$data['description'] = $album->description;
+			$data['share'] = [
+				'url' => URL::to('/a' . $album->id),
+				'tumblrUrl' => 'http://www.tumblr.com/share/link?url=' . urlencode($album->url) . '&name=' . urlencode($album->title) . '&description=' . urlencode($album->description),
+				'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $album->title . ' by ' . $album->user->display_name . ' on Pony.fm'
+			];
 
 			return $data;
 		}

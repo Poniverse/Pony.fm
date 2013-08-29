@@ -8,7 +8,7 @@
 				<li bindonce ng-repeat="format in album.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
 			</ul>
 		</li>
-		<li><a href="#" class="btn">Share or Embed</a></li>
+		<li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share or Embed</a></li>
 		<li><pfm-favourite-button resource="album" type="album"></pfm-favourite-button></li>
 	</ul>
 
@@ -23,8 +23,14 @@
 		<div class="right">
 			<img class="cover" bo-src="album.covers.normal" />
 
+			<div class="share-buttons" pfm-share-buttons>
+				<a class="tumblr" bo-href="album.share.tumblrUrl" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('http://platform.tumblr.com/v1/share_4.png') top left no-repeat transparent;"></a>
+				<div class="facebook fb-like" data-href="{{album.url}}" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>
+				<iframe class="twitter" allowtransparency="true" frameborder="0" scrolling="no" bo-src="album.share.twitterUrl" style="width:130px; height:20px;"></iframe>
+			</div>
+
 			<ul class="stats">
-				<li>Published: <strong bo-text="album.published_at | pfmdate:'short'"></strong></li>
+				<li>Published: <strong bo-text="album.created_at | pfmdate:'medium'"></strong></li>
 				<li>Views: <strong bo-text="album.stats.views"></strong></li>
 				<li>Downloads: <strong bo-text="album.stats.downloads"></strong></li>
 				<li>Favourites: <strong bo-text="album.stats.favourites"></strong></li>

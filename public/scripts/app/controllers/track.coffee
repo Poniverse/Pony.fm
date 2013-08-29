@@ -7,8 +7,11 @@ window.pfm.preloaders['track'] = [
 angular.module('ponyfm').controller "track", [
 	'$scope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog'
 	($scope, tracks, $state, playlists, auth, favourites, $dialog) ->
+		track = null
+
 		tracks.fetch($state.params.id).done (trackResponse) ->
 			$scope.track = trackResponse.track
+			track = trackResponse.track
 
 		$scope.playlists = []
 
@@ -23,6 +26,12 @@ angular.module('ponyfm').controller "track", [
 			favourites.toggle('track', track.id).done (res) ->
 				track.is_favourited = res.is_favourited
 				$scope.favouriteWorking = false
+
+		$scope.share = () ->
+			dialog = $dialog.dialog
+				templateUrl: '/templates/partials/track-share-dialog.html',
+				controller: ['$scope', ($scope) -> $scope.track = track; $scope.close = () -> dialog.close()]
+			dialog.open()
 
 		$scope.addToNewPlaylist = () ->
 			dialog = $dialog.dialog

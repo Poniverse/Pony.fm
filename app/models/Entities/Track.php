@@ -8,6 +8,7 @@
 	use Helpers;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Cache;
+	use Illuminate\Support\Facades\DB;
 	use Illuminate\Support\Facades\Log;
 	use Illuminate\Support\Facades\URL;
 	use Illuminate\Support\Str;
@@ -31,7 +32,7 @@
 			return self::select('id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at', 'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id', 'comment_count', 'download_count', 'view_count', 'play_count', 'favourite_count');
 		}
 
-		public function scopeDetails($query) {
+		public function scopeUserDetails($query) {
 			if (Auth::check()) {
 				$query->with(['users' => function($query) {
 					$query->whereUserId(Auth::user()->id);
@@ -41,8 +42,50 @@
 			return !$query;
 		}
 
+		public function scopePublished($query) {
+			$query->whereNotNull('published_at');
+		}
+
+		public function scopeExplicitFilter($query) {
+			if (!Auth::check() || !Auth::user()->can_see_explicit_content)
+				$query->whereIsExplicit(false);
+		}
+
 		public function scopeWithComments($query) {
 			$query->with(['comments' => function($query) { $query->with('user'); }]);
+		}
+
+		public static function popular($count, $allowExplicit = false) {
+			$tracks = Cache::remember('popular_tracks-' . ($allowExplicit ? 'explicit' : 'safe'), 5, function() use ($allowExplicit) {
+				$query = static
+					::with(['user', 'genre', 'cover', 'user.avatar'])
+					->published()
+					->whereIsExplicit($allowExplicit)
+					->join(DB::raw('
+						(	SELECT `track_id`, `created_at`
+							FROM `resource_log_items`
+							WHERE `created_at` > now() - INTERVAL 1 DAY
+						) AS ranged_plays'),
+							'tracks.id', '=', 'ranged_plays.track_id')
+					->groupBy('id')
+					->orderBy('plays', 'desc')
+					->take(20);
+				return $query->get(['*', DB::raw('count(*) as plays')]);
+			});
+
+			$results = [];
+			$i = 0;
+
+			foreach($tracks as $track) {
+				if ($i < $count) {
+					$results[] = self::mapPublicTrackSummary($track);
+					$i++;
+				} else {
+					break;
+				}
+			}
+
+			return $results;
 		}
 
 		public static function mapPublicTrackShow($track) {
@@ -75,6 +118,15 @@
 					'size' => Helpers::formatBytes($track->getFilesize($name))
 				];
 			}
+
+			$returnValue['share'] = [
+				'url' => URL::to('/t' . $track->id),
+				'html' => '<iframe src="https://pony.fm/t' . $track->id . '/embed" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
+				'bbcode' => '[url=' . $track->url . '][img]' . $track->getCoverUrl() . '[/img][/url]',
+				'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $track->title . ' by ' . $track->user->display_name . ' on Pony.fm'
+			];
+
+			$returnValue['share']['tumblrUrl'] = 'http://www.tumblr.com/share/video?embed=' . urlencode($returnValue['share']['html']) . '&caption=' . urlencode($track->title);
 
 			$returnValue['formats'] = $formats;
 
@@ -191,7 +243,7 @@
 		}
 
 		public function comments(){
-			return $this->hasMany('Entities\Comment');
+			return $this->hasMany('Entities\Comment')->orderBy('created_at', 'desc');
 		}
 
 		public function favourites() {

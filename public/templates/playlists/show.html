@@ -8,7 +8,7 @@
 				<li bindonce ng-repeat="format in playlist.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
 			</ul>
 		</li>
-		<li><a href="#" class="btn">Share or Embed</a></li>
+		<li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
 		<li><pfm-favourite-button resource="playlist" type="playlist"></pfm-favourite-button></li>
 	</ul>
 
@@ -19,13 +19,18 @@
 		</h2>
 	</header>
 
-
 	<div class="stretch-to-bottom details-columns">
 		<div class="right">
 			<img class="cover" bo-src="playlist.covers.normal" />
 
+			<div class="share-buttons" pfm-share-buttons>
+				<a class="tumblr" bo-href="playlist.share.tumblrUrl" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('http://platform.tumblr.com/v1/share_4.png') top left no-repeat transparent;"></a>
+				<div class="facebook fb-like" data-href="{{playlist.url}}" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>
+				<iframe class="twitter" allowtransparency="true" frameborder="0" scrolling="no" bo-src="playlist.share.twitterUrl" style="width:130px; height:20px;"></iframe>
+			</div>
+
 			<ul class="stats">
-				<li>Created: <strong bo-text="playlist.created_at.date | pfmdate:'short'"></strong></li>
+				<li>Created: <strong bo-text="playlist.created_at | pfmdate:'medium'"></strong></li>
 				<li>Views: <strong bo-text="playlist.stats.views"></strong></li>
 				<li>Downloads: <strong bo-text="playlist.stats.downloads"></strong></li>
 				<li>Favourites: <strong bo-text="playlist.stats.favourites"></strong></li>

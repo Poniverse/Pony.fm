@@ -52,7 +52,6 @@
 
 		Route::get('/playlists/show/{id}', 'Api\Web\PlaylistsController@getShow');
 
-		Route::get('/tracks/recent', 'Api\Web\TracksController@getRecent');
 		Route::get('/tracks', 'Api\Web\TracksController@getIndex');
 		Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');
 
@@ -90,6 +89,8 @@
 			Route::post('/account/settings/save', 'Api\Web\AccountController@postSave');
 
 			Route::post('/favourites/toggle', 'Api\Web\FavouritesController@postToggle');
+
+			Route::post('/follow/toggle', 'Api\Web\FollowController@postToggle');
 		});
 
 		Route::group(['before' => 'auth'], function() {

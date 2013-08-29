@@ -5,8 +5,17 @@ window.pfm.preloaders['playlist'] = [
 ]
 
 angular.module('ponyfm').controller 'playlist', [
-	'$scope', '$state', 'playlists'
-	($scope, $state, playlists) ->
-		playlists.fetch($state.params.id).done (playlist) ->
-			$scope.playlist = playlist
+	'$scope', '$state', 'playlists', '$dialog'
+	($scope, $state, playlists, $dialog) ->
+		playlist = null
+
+		playlists.fetch($state.params.id).done (playlistResponse) ->
+			$scope.playlist = playlistResponse
+			playlist = playlistResponse
+
+		$scope.share = () ->
+			dialog = $dialog.dialog
+				templateUrl: '/templates/partials/playlist-share-dialog.html',
+				controller: ['$scope', ($scope) -> $scope.playlist = playlist; $scope.close = () -> dialog.close()]
+			dialog.open()
 ]

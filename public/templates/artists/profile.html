@@ -1,17 +1,16 @@
 <div class="row-fluid">
 	<div class="span6">
-		<div ng-show="artist.bio.trim().length">
+		<div bo-show="artist.bio.trim().length">
 			<h2>Bio</h2>
 			<div class="description">
-				<p ng-bind-html-unsafe="artist.bio | noHTML | newlines"></p>
+				<p bo-html="artist.bio | noHTML | newlines"></p>
 			</div>
 		</div>
 
-		<h2>Comments</h2>
 		<pfm-comments type="user" resource="artist"></pfm-comments>
 	</div>
 	<div class="span6 cover-image">
 		<h2>Recent Tracks</h2>
-		<pfm-tracks-list tracks="artist.latest_tracks" class="two-column no-artist" />
+		<pfm-tracks-list tracks="artist.latest_tracks" class="two-columns no-artist" />
 	</div>
 </div>

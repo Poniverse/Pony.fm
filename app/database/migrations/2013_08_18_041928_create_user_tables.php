@@ -11,6 +11,7 @@ class CreateUserTables extends Migration {
 			$table->integer('track_id')->unsigned()->nullable()->index();
 			$table->integer('album_id')->unsigned()->nullable()->index();
 			$table->integer('playlist_id')->unsigned()->nullable()->index();
+			$table->integer('artist_id')->unsigned()->nullable()->index();
 
 			$table->boolean('is_followed');
 			$table->boolean('is_favourited');
@@ -20,12 +21,13 @@ class CreateUserTables extends Migration {
 			$table->integer('play_count');
 			$table->integer('download_count');
 
+			$table->foreign('artist_id')->references('id')->on('users')->on_delete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->on_delete('cascade');
-			$table->foreign('track_id')->references('id')->on('tracks');
-			$table->foreign('album_id')->references('id')->on('albums');
-			$table->foreign('playlist_id')->references('id')->on('playlists');
+			$table->foreign('track_id')->references('id')->on('tracks')->on_delete('cascade');;
+			$table->foreign('album_id')->references('id')->on('albums')->on_delete('cascade');;
+			$table->foreign('playlist_id')->references('id')->on('playlists')->on_delete('cascade');;
 
-			$table->unique(['user_id', 'track_id', 'album_id', 'playlist_id']);
+			$table->unique(['user_id', 'track_id', 'album_id', 'playlist_id', 'artist_id']);
 		});
 
 		Schema::create('resource_log_items', function($table){

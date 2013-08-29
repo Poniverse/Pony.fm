@@ -1,14 +1,14 @@
 <div class="comments" bindonce>
 	<h2>All Comments ({{resource.comments.length}})</h2>
-	<div class="alert alert-info" ng-show="resource.comments.length == 0">
-		There are no comments yet!
-	</div>
 	<form class="pfm-form" ng-submit="addComment()" ng-show="auth.isLogged">
 		<div class="form-row">
 			<input type="text" ng-model="content" placeholder="Write a comment..." />
 		</div>
 	</form>
-	<ul ng-show="resource.comments.length > 0">
+	<ul>
+		<li ng-show="resource.comments.length == 0" class="empty">
+			There are no comments yet!
+		</li>
 		<li bindonce ng-repeat="comment in resource.comments">
 			<img bo-src="comment.user.avatars.thumbnail" />
 			<div class="content">
