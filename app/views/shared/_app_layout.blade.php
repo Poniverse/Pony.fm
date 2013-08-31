@@ -54,8 +54,8 @@
 			</li>
 
 			@if (Auth::check())
-				<li ng-class="{selected: stateIncludes('account')}"><a href="/account/tracks">Account <i class="icon-user"></i></a></li>
 				<li ng-class="{selected: stateIncludes('favourites')}"><a href="/account/favourites/tracks">Favourites <i class="icon-star"></i></a></li>
+				<li ng-class="{selected: stateIncludes('account')}"><a href="/account/tracks">Account <i class="icon-user"></i></a></li>
 			@endif
 
 			<li ng-class="{selected: isActive('/about')}"><a href="/about">About <i class="icon-info"></i></a></li>
@@ -101,6 +101,20 @@
 				@endif
 			}
 		};
+	</script>
+
+	<script>
+		{{-- Google Analytics --}}
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-29463256-1']);
+		_gaq.push(['_setDomainName', 'pony.fm']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
 	</script>
 
 	{{ Assets::scriptIncludes() }}

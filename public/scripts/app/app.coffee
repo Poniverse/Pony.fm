@@ -1,10 +1,18 @@
 window.pfm.preloaders = {}
 
-module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'pasvaz.bindonce']
+module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'pasvaz.bindonce', 'angularytics']
+
+module.run [
+	'Angularytics',
+	(analyitcs) ->
+		analyitcs.init()
+]
 
 module.config [
-	'$locationProvider', '$stateProvider', '$dialogProvider'
-	(location, state, $dialogProvider) ->
+	'$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider'
+	(location, state, $dialogProvider, analytics) ->
+
+		analytics.setEventHandlers ['Google']
 
 		# Upload
 
@@ -178,6 +186,7 @@ module.config [
 			state.state 'home',
 				url: '/'
 				templateUrl: '/templates/home/index.html'
+				controller: 'home'
 
 		# Final catch-all for aritsts
 		state.state 'content.artist',

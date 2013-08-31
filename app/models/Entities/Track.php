@@ -68,22 +68,17 @@
 					->groupBy('id')
 					->orderBy('plays', 'desc')
 					->take(20);
-				return $query->get(['*', DB::raw('count(*) as plays')]);
+
+				$results = [];
+
+				foreach($query->get(['*', DB::raw('count(*) as plays')]) as $track) {
+					$results[] = self::mapPublicTrackSummary($track);
+				}
+
+				return $results;
 			});
 
-			$results = [];
-			$i = 0;
-
-			foreach($tracks as $track) {
-				if ($i < $count) {
-					$results[] = self::mapPublicTrackSummary($track);
-					$i++;
-				} else {
-					break;
-				}
-			}
-
-			return $results;
+			return $tracks;
 		}
 
 		public static function mapPublicTrackShow($track) {

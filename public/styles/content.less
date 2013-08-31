@@ -2,6 +2,37 @@
 @import-once 'mixins';
 @import-once 'variables';
 
+@media (max-width: 1300px) and (min-width: 720px) {
+  html {
+	.albums-listing, .playlists-listing, .artist-listing {
+	  &.two-columns li {
+		width: auto;
+		float: none;
+	  }
+
+	  li {
+		width: 33.33333%;
+	  }
+	}
+  }
+}
+
+@media (max-width: 720px) {
+  html {
+	.albums-listing, .playlists-listing, .artist-listing {
+	  &.two-columns li {
+		width: auto;
+		float: none;
+	  }
+
+	  li {
+		width: auto;
+		float: none;
+	  }
+	}
+  }
+}
+
 .albums-listing, .playlists-listing, .artist-listing {
   margin: 0px;
   padding: 0px;
@@ -179,6 +210,46 @@
 }
 
 @icon-size: 42px;
+
+@media (max-width: 1300px) and (min-width: 720px) {
+  html {
+	.tracks-listing {
+	  &.four-columns li {
+		width: 33.333%;
+	  }
+
+	  &.three-columns li {
+		width: 50%;
+	  }
+
+	  &.two-columns li {
+		width: auto;
+		float: none;
+	  }
+	}
+  }
+}
+
+@media (max-width: 720px) {
+  html {
+	.tracks-listing {
+	  &.four-columns li {
+		width: auto;
+		float: none;
+	  }
+
+	  &.three-columns li {
+		width: auto;
+		float: none;
+	  }
+
+	  &.two-columns li {
+		width: auto;
+		float: none;
+	  }
+	}
+  }
+}
 
 .tracks-listing.four-columns {
   li {

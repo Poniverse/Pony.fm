@@ -1,37 +1,33 @@
-<div>
-	<h1>Pony.fm BETA 2 Preview</h1>
+<div class="stretch-to-bottom">
+	<div class="welcome">
+		<h1>Welcome to Pony.fm</h1>
+		<p>The pony fan music site. By a brony, for bronies.</p>
+		<p>
+			We provide a comprehensive set of free tools to host, distribute, and catalogue your music, integrated with a rich community experience for artists and listeners alike.
+		</p>
+		<p>
+			Features include <strong>unlimited downloads</strong>, <strong>unlimited uploads</strong>, <strong>lossless uploads</strong> and much more! Click <a href="/about">here</a> to get all of our features!
+		</p>
+	</div>
 
-	<p>
-		Welcome to Pony.fm's BETA 2 preview! If you were looking for the functional website, head on over to <a href="http://pony.fm" target="_blank">Pony.fm</a>.
-	</p>
+	<div class="dashboard">
+		<section class="recent-tracks">
+			<div>
+				<h1>
+					<a href="/tracks"><i class="icon-music"></i> see more</a>
+					The Newest Tunes
+				</h1>
+				<pfm-tracks-list tracks="recentTracks" class="two-columns"></pfm-tracks-list>
+			</div>
+		</section>
 
-	<p>
-		This is an early look at the next Pony.fm release. <a href="http://pony.fm" target="_blank">Pony.fm</a> is a music hosting website
-		for Bronies - and you can learn more about it <a href="http://pony.fm/about" target="_blank">here</a>.
-	</p>
-
-	<p>
-		This web application is under <strong>heavy development</strong>. While you are free to browse around, please note
-		that although the track and user data on this site is a copy of Pony.fm - all data will be <strong>erased</strong> when
-		the preview ends, or whenever we feel like. As such, please do not use this application for hosting your new music.
-	</p>
-
-	<p>
-		At this time, many features are notably missing - such as:
-	</p>
-	<ul>
-		<li>Mobile friendly design</li>
-		<li>Artist following</li>
-		<li>Notifications</li>
-		<li>Public playlists</li>
-		<li>Music Downloads</li>
-	</ul>
-	<p>
-		And more. The layout and design is also subject to change in the future.
-	</p>
-	<p>
-		However, we welcome any and all feedback - so if you have a suggestion or bug report, you can hop on over to
-		<a href="http://mlpforums.com/forum/62-ponyfm/" target="_blank">Pony.fm's Forum</a>.
-	</p>
-	<p>We hope you enjoy taking a look at the future of Pony.fm as much as we did building it!</p>
+		<section class="popular-tracks">
+			<div>
+				<h1>
+					What's Popular Today
+				</h1>
+				<pfm-tracks-list tracks="popularTracks" class="two-columns"></pfm-tracks-list>
+			</div>
+		</section>
+	</div>
 </div>

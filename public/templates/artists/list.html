@@ -1,16 +1,18 @@
-<ul class="artist-listing stretch-to-bottom">
-	<li ng-repeat="artist in artists" bindonce>
-		<a href="{{artist.url}}">
-			<img class="image" bo-src="artist.avatars.small" />
-				<span class="info">
-				<span class="title" bo-text="artist.name"></span>
-				<span class="published">
-					joined <span bo-text="artist.created_at.date | momentFromNow"></span>
+<div class="stretch-to-bottom">
+	<ul class="artist-listing">
+		<li ng-repeat="artist in artists" bindonce>
+			<a href="{{artist.url}}">
+				<img class="image" bo-src="artist.avatars.small" />
+					<span class="info">
+					<span class="title" bo-text="artist.name"></span>
+					<span class="published">
+						joined <span bo-text="artist.created_at.date | momentFromNow"></span>
+					</span>
 				</span>
-			</span>
-		</a>
-	</li>
-	<li ng-show="!artists.length" class="empty">
-		No artists found...
-	</li>
-</ul>
+			</a>
+		</li>
+		<li ng-show="!artists.length" class="empty">
+			No artists found...
+		</li>
+	</ul>
+</div>

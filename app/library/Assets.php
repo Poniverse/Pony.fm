@@ -57,6 +57,7 @@
 					new FileAsset('scripts/base/angular-ui-sortable.js'),
 					new FileAsset('scripts/base/angular-ui-date.js'),
 					new FileAsset('scripts/base/angular-ui-router.js'),
+					new FileAsset('scripts/base/angularytics.js'),
 					new AssetCollection([
 						new GlobAsset('scripts/shared/*.coffee'),
 						new GlobAsset('scripts/shared/*.js'),
