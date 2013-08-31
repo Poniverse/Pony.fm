@@ -26,6 +26,18 @@
 	<header>
 		<a href="/">Pony.fm</a>
 		<div class="now-playing">
+			@if (Auth::check())
+				<div class="user-details dropdown">
+					<a class="avatar dropdown-toggle" href="#">
+						<img src="{{Auth::user()->getAvatarUrl(\Entities\Image::THUMBNAIL)}}" />
+						<span><i class="icon-chevron-down"></i></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="{{Auth::user()->url}}">Your Profile</a></li>
+						<li><a href="#" pfm-eat-click ng-click="logout()">Logout</a></li>
+					</ul>
+				</div>
+			@endif
 			<pfm-player></pfm-player>
 		</div>
 	</header>
@@ -42,29 +54,25 @@
 			</li>
 
 			@if (Auth::check())
-				<li ng-class="{selected: stateIncludes('account-content') || isActive('/account')}"><a href="/account/tracks">Account <i class="icon-user"></i></a></li>
+				<li ng-class="{selected: stateIncludes('account')}"><a href="/account/tracks">Account <i class="icon-user"></i></a></li>
+				<li ng-class="{selected: stateIncludes('favourites')}"><a href="/account/favourites/tracks">Favourites <i class="icon-star"></i></a></li>
 			@endif
 
-			<li ng-class="{selected: isActive('/about')}"><a href="/about">Meta <i class="icon-info"></i></a></li>
+			<li ng-class="{selected: isActive('/about')}"><a href="/about">About <i class="icon-info"></i></a></li>
 
 			@if (Auth::check())
+				<li class="uploader" ng-class="{selected: stateIncludes('uploader')}">
+					<a href="/account/uploader">Upload Music <i class="icon-upload-alt"></i></a>
+				</li>
 				<li>
 					<h3>
 						<a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="icon-plus"></i></a>
-						<a href="/account/playlists" ng-class="{selected: $state.is('account-content-playlists')}" title="View Playlists" class="view-all"><i class="icon-list"></i></a>
 						Playlists
 					</h3>
 				</li>
 				<li class="none" ng-show="!playlists.length"><span>no pinned playlists</span></li>
 				<li class="dropdown" ng-repeat="playlist in playlists" ng-cloak ng-class="{selected: stateIncludes('content.playlist') && $state.params.id == playlist.id}">
-					<a class="menu dropdown-toggle" pfm-eat-click href="#"><i class="icon-ellipsis-vertical"></i></a>
 					<a href="{{Helpers::angular('playlist.url')}}" ng-bind="playlist.title"></a>
-
-					<ul class="dropdown-menu">
-						<li><a href="#" pfm-eat-click ng-click="editPlaylist(playlist)">Edit</a></li>
-						<li><a href="#" pfm-eat-click ng-click="unpinPlaylist(playlist)">Unpin</a></li>
-						<li><a href="#" pfm-eat-click ng-click="deletePlaylist(playlist)" ng-show="playlist.user_id == auth.user_id">Delete</a></li>
-					</ul>
 				</li>
 			@endif
 		</ul>
@@ -72,8 +80,6 @@
 			@yield('app_content')
 		</ui-view>
 	</div>
-
-	<ng-include src="'templates/partials/upload-dialog.html'"></ng-include>
 
 @endsection
 

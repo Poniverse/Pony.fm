@@ -41,7 +41,7 @@ angular.module('ponyfm').directive 'pfmPlayer', () ->
 
 			moveVolumeSlider = (absoluteY) ->
 				newY = absoluteY - $bar.offset().top;
-				maxY = $bar.height() - ($knob.height() / 2)
+				maxY = $bar.height() - ($knob.height() / 2) - 8
 
 				newY = 0 if newY < 0
 				newY = maxY if newY > maxY
@@ -54,11 +54,11 @@ angular.module('ponyfm').directive 'pfmPlayer', () ->
 				e.preventDefault()
 				e.stopPropagation()
 
-			$slider.click (e) -> $scope.$apply -> moveVolumeSlider(e.pageY)
+			$slider.click (e) -> $scope.$apply -> moveVolumeSlider(e.pageY - 8)
 
 			$(document).mousemove (e) ->
 				return if !isSliding
-				moveVolumeSlider(e.pageY)
+				moveVolumeSlider(e.pageY - 8)
 
 			$knob.mousedown (e) ->
 				e.preventDefault()

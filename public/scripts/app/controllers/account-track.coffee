@@ -1,12 +1,12 @@
-window.pfm.preloaders['account-tracks-edit'] = [
+window.pfm.preloaders['account-track'] = [
 	'account-tracks', 'account-albums', 'taxonomies', '$state'
 	(tracks, albums, taxonomies, state) ->
 		$.when.all [albums.refresh(), taxonomies.refresh(), tracks.getEdit(state.params.track_id, true)]
 ]
 
-angular.module('ponyfm').controller "account-tracks-edit", [
-	'$scope', '$state', 'taxonomies', '$dialog', 'account-albums', 'account-tracks'
-	($scope, $state, taxonomies, $dialog, albums, tracks) ->
+angular.module('ponyfm').controller "account-track", [
+	'$scope', '$state', 'taxonomies', '$dialog', 'account-albums', 'account-tracks', 'images'
+	($scope, $state, taxonomies, $dialog, albums, tracks, images) ->
 		$scope.isDirty = false
 		$scope.isSaving = false
 		$scope.taxonomies = taxonomies
@@ -85,6 +85,7 @@ angular.module('ponyfm').controller "account-tracks-edit", [
 				trackDbItem.cover_url = track.real_cover_url
 				$scope.isDirty = false
 				$scope.errors = {}
+				images.refresh true
 
 			formData = new FormData();
 			_.each $scope.edit, (value, name) ->
@@ -136,7 +137,7 @@ angular.module('ponyfm').controller "account-tracks-edit", [
 				$.post('/api/web/tracks/delete/' + track.id, {_token: window.pfm.token})
 					.then -> $scope.$apply ->
 						$scope.$emit 'track-deleted'
-						$state.transitionTo 'account-content.tracks'
+						$state.transitionTo 'account.tracks'
 
 		$scope.$on '$locationChangeStart', (e) ->
 			return if !$scope.isDirty

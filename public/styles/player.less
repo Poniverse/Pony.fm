@@ -2,7 +2,7 @@
 @import-once 'mixins';
 
 .track-player {
-  overflow: hidden;
+  margin-right: 75px;
   padding: 10px;
 
   .image {
@@ -104,6 +104,47 @@
 		  text-decoration: none;
 		  background: darken(#eee, 10%);
 		  color: #000;
+		}
+	  }
+
+	  &.volume {
+		position: relative;
+
+		.volume-slider {
+		  display: none;
+		  z-index: 1000;
+		  position: absolute;
+		  left: 0px;
+		  top: 33px;
+		  width: 100%;
+		  height: 150px;
+		  background: #ddd;
+
+		  .bar {
+			background: @pfm-purple;
+			width: 10px;
+			margin: auto;
+			height: 100%;
+			position: relative;
+		  }
+
+		  .knob {
+			position: absolute;
+			top: 0px;
+			left: -3px;
+
+			background: darken(@pfm-purple, 20%);
+			width: 16px;
+			height: 16px;
+		  }
+		}
+
+		&:hover, &.keep-open {
+		  .volume-slider {
+			display: block;
+		  }
+
+		  background: #ddd;
 		}
 	  }
 	}

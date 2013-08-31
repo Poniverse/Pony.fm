@@ -6,64 +6,74 @@ module.config [
 	'$locationProvider', '$stateProvider', '$dialogProvider'
 	(location, state, $dialogProvider) ->
 
+		# Upload
+
+		state.state 'uploader',
+			url: '/account/uploader'
+			templateUrl: '/templates/uploader/index.html'
+			controller: 'uploader'
+
 		# Account
 
 		state.state 'account',
 			url: '/account'
+			abstract: true
+			templateUrl: '/templates/account/_layout.html'
+
+		state.state 'account.settings',
+			url: ''
 			templateUrl: '/templates/account/settings.html'
 			controller: 'account-settings'
 
-		state.state 'account-content',
-			url: '/account'
-			abstract: true
-			templateUrl: '/templates/account/content/_layout.html'
-
-		state.state 'account-content.tracks',
+		state.state 'account.tracks',
 			url: '/tracks'
-			templateUrl: '/templates/account/content/tracks.html'
+			templateUrl: '/templates/account/tracks.html'
 			controller: 'account-tracks'
 
-		state.state 'account-content.tracks.edit',
+		state.state 'account.tracks.edit',
 			url: '/edit/:track_id'
-			templateUrl: '/templates/account/content/track.html'
-			controller: 'account-tracks-edit'
+			templateUrl: '/templates/account/track.html'
+			controller: 'account-track'
 
-		state.state 'account-content.albums',
+		state.state 'account.albums',
 			url: '/albums'
-			templateUrl: '/templates/account/content/albums.html'
+			templateUrl: '/templates/account/albums.html'
 			controller: 'account-albums'
 
-		state.state 'account-content.albums.create',
+		state.state 'account.albums.create',
 			url: '/create'
-			templateUrl: '/templates/account/content/album.html'
+			templateUrl: '/templates/account/album.html'
 			controller: 'account-albums-edit'
 
-		state.state 'account-content.albums.edit',
+		state.state 'account.albums.edit',
 			url: '/edit/:album_id'
-			templateUrl: '/templates/account/content/album.html'
+			templateUrl: '/templates/account/album.html'
 			controller: 'account-albums-edit'
 
-		state.state 'account-content-playlists',
-			url: '/account/playlists'
-			templateUrl: '/templates/account/content/playlists.html'
+		state.state 'account.playlists',
+			url: '/playlists'
+			templateUrl: '/templates/account/playlists.html'
 			controller: 'account-playlists'
 
-		state.state 'account-favourites',
+		state.state 'favourites',
 			url: '/account/favourites'
 			abstract: true
-			templateUrl: '/templates/account/favourites/_layout.html'
+			templateUrl: '/templates/favourites/_layout.html'
 
-		state.state 'account-favourites.tracks',
-			url: ''
-			templateUrl: '/templates/account/favourites/tracks.html'
+		state.state 'favourites.tracks',
+			url: '/tracks'
+			templateUrl: '/templates/favourites/tracks.html'
+			controller: 'favourites-tracks'
 
-		state.state 'account-favourites.playlists',
+		state.state 'favourites.playlists',
 			url: '/playlists'
-			templateUrl: '/templates/account/favourites/playlists.html'
+			templateUrl: '/templates/favourites/playlists.html'
+			controller: 'favourites-playlists'
 
-		state.state 'account-favourites.albums',
+		state.state 'favourites.albums',
 			url: '/albums'
-			templateUrl: '/templates/account/favourites/albums.html'
+			templateUrl: '/templates/favourites/albums.html'
+			controller: 'favourites-albums'
 
 		# Tracks
 
@@ -72,14 +82,14 @@ module.config [
 			templateUrl: '/templates/content/_layout.html'
 
 		state.state 'content.tracks',
-			templateUrl: '/templates/tracks/search.html'
+			templateUrl: '/templates/tracks/index.html'
 			controller: 'tracks'
 			url: '/tracks'
 			abstract: true
 
 		state.state 'content.tracks.list',
 			url: '^/tracks?filter&page'
-			templateUrl: '/templates/tracks/search-list.html'
+			templateUrl: '/templates/tracks/list.html'
 			controller: 'tracks-list'
 
 		state.state 'content.track',

@@ -1,21 +1,19 @@
 angular.module('ponyfm').directive 'uploader', [
 	'upload'
-	(upload) -> (scope) ->
-		$body = $ 'body'
-		$notice = $("<div class='file-over-notice'><p>Drop the files anywhere to begin your upload!</p></div>").appendTo($body)
-		notice = $notice[0]
+	(upload) -> (scope, element) ->
+		$dropzone = $(element)
 
-		window.addEventListener 'dragover', (e) ->
+		$dropzone[0].addEventListener 'dragover', (e) ->
 			e.preventDefault()
-			$body.addClass 'file-over'
+			$dropzone.addClass 'file-over'
 
-		notice.addEventListener 'dragleave', (e) ->
+		$dropzone[0].addEventListener 'dragleave', (e) ->
 			e.preventDefault()
-			$body.removeClass 'file-over'
+			$dropzone.removeClass 'file-over'
 
-		notice.addEventListener 'drop', (e) ->
+		$dropzone[0].addEventListener 'drop', (e) ->
 			e.preventDefault()
-			$body.removeClass 'file-over'
+			$dropzone.removeClass 'file-over'
 
 			files = e.target.files || e.dataTransfer.files
 			scope.$apply -> upload.upload files

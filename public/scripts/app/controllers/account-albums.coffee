@@ -13,6 +13,8 @@ angular.module('ponyfm').controller "account-albums", [
 			selectedAlbum: null
 			tracksDb: []
 
+		selectAlbum = (album) -> $scope.data.selectedAlbum = album
+
 		updateTracks = (tracks) ->
 			$scope.data.tracksDb.push track for track in tracks
 
@@ -31,8 +33,6 @@ angular.module('ponyfm').controller "account-albums", [
 				selectAlbum albumsDb[$state.params.album_id]
 
 		albums.refresh().done updateAlbums
-
-		selectAlbum = (album) -> $scope.data.selectedAlbum = album
 
 		$scope.$on '$stateChangeSuccess', () ->
 			if $state.params.album_id

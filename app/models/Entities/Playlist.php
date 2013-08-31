@@ -105,7 +105,11 @@
 					'name' => $playlist->user->display_name,
 					'url' => $playlist->user->url,
 				],
-				'user_data' => $userData
+				'user_data' => $userData,
+				'permissions' => [
+					'delete' => Auth::check() && Auth::user()->id == $playlist->user_id,
+					'edit' => Auth::check() && Auth::user()->id == $playlist->user_id
+				]
 			];
 		}
 

@@ -35,12 +35,11 @@
 		 * @return CommandResponse
 		 */
 		public function execute() {
-			$isVocal = isset($this->_input['is_vocal']) && $this->_input['is_vocal'] == 'true' ? true : false;
+			$isVocal = (isset($this->_input['is_vocal']) && $this->_input['is_vocal'] == 'true') ? true : false;
 
 			$rules = [
 				'title'			=> 'required|min:3|max:80',
 				'released_at'	=> 'before:today' . ($this->_input['released_at'] != "" ? '|date' : ''),
-				'lyrics'		=> $isVocal ? 'required' : '',
 				'license_id'	=> 'required|exists:licenses,id',
 				'genre_id'		=> 'required|exists:genres,id',
 				'cover'			=> 'image|mimes:png|min_width:350|min_height:350',
@@ -49,6 +48,9 @@
 				'cover_id'		=> 'exists:images,id',
 				'album_id'		=> 'exists:albums,id'
 			];
+
+			if ($isVocal)
+				$rules['lyrics'] = 'required';
 
 			if ($this->_input['track_type_id'] == 2)
 				$rules['show_song_ids'] = 'required|exists:show_songs,id';
@@ -80,7 +82,7 @@
 					$track->album_id = $this->_input['album_id'];
 
 					Album::whereId($album->id)->update([
-						'track_count' => DB::raw('SELECT COUNT(id) FROM tracks WHERE album_id = ' . $album->id)
+						'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = ' . $album->id . ')')
 					]);
 				}
 			} else {

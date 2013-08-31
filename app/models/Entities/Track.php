@@ -38,8 +38,6 @@
 					$query->whereUserId(Auth::user()->id);
 				}]);
 			}
-
-			return !$query;
 		}
 
 		public function scopePublished($query) {
@@ -194,7 +192,11 @@
 				'streams' => [
 					'mp3' => $track->getStreamUrl('MP3')
 				],
-				'user_data' => $userData
+				'user_data' => $userData,
+				'permissions' => [
+					'delete' => Auth::check() && Auth::user()->id == $track->user_id,
+					'edit' => Auth::check() && Auth::user()->id == $track->user_id
+				]
 			];
 		}
 

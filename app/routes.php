@@ -106,6 +106,10 @@
 
 			Route::get('/playlists/owned', 'Api\Web\PlaylistsController@getOwned');
 			Route::get('/playlists/pinned', 'Api\Web\PlaylistsController@getPinned');
+
+			Route::get('/favourites/tracks', 'Api\Web\FavouritesController@getTracks');
+			Route::get('/favourites/albums', 'Api\Web\FavouritesController@getAlbums');
+			Route::get('/favourites/playlists', 'Api\Web\FavouritesController@getPlaylists');
 		});
 
 		Route::group(['before' => 'csrf'], function(){
@@ -126,6 +130,8 @@
 			Route::get('/albums/edit/{id}', 'ContentController@getAlbums');
 			Route::get('/albums/create', 'ContentController@getAlbums');
 			Route::get('/playlists', 'ContentController@getPlaylists');
+
+			Route::get('/uploader', 'UploaderController@getIndex');
 
 			Route::get('/', 'AccountController@getIndex');
 		});

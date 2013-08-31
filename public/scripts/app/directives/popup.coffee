@@ -43,7 +43,7 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 				height = windowHeight - top;
 
 			return {
-				left: left - parentPosition.left - 5
+				left: left - parentPosition.left
 				top: top - parentPosition.top,
 				height: height - 15}
 

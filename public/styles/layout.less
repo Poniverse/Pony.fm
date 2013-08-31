@@ -33,6 +33,50 @@ header {
 	  text-decoration: none;
 	}
   }
+
+  .user-details {
+	float: right;
+	margin-right: 10px;
+	margin-top: 9px;
+
+	.avatar {
+	  .img-polaroid();
+
+	  display: block;
+	  float: right;
+	  padding: 2px;
+	  cursor: pointer;
+
+	  &:hover {
+		background: #ddd;
+	  }
+
+	  span {
+		font-weight: bold;
+		display: inline-block;
+		padding: 0px 3px;
+	  }
+	}
+
+	.dropdown-menu {
+	  left: auto;
+	  right: 0px;
+	}
+
+	.name {
+	  float: left;
+	  height: 44px;
+	  line-height: 44px;
+	  padding-right: 10px;
+	  font-weight: bold;
+	  font-size: 12pt;
+	}
+
+	img {
+	  height: 40px;
+	  width: 40px;
+	}
+  }
 }
 
 .now-playing {
@@ -52,6 +96,7 @@ header {
   padding: 0px;
   margin: 0px;
   font-size: 10pt;
+  position: relative;
 
   li {
 	margin: 0px;
@@ -126,6 +171,11 @@ header {
 	  &:hover {
 		text-decoration: none;
 	  }
+	}
+  }
+
+  li.uploader {
+	a {
 	}
   }
 }

@@ -10,7 +10,7 @@
 
 		@yield('styles')
 	</head>
-	<body ng-app="ponyfm" ng-controller="application" uploader>
+	<body ng-app="ponyfm" ng-controller="application">
 		@yield('content')
 		@yield('scripts')
 	</body>

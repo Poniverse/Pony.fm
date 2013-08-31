@@ -5,8 +5,8 @@ angular.module('ponyfm').factory('images', [
 		self =
 			images: []
 			isLoading: true
-			refresh: () ->
-				return def if def
+			refresh: (force) ->
+				return def if !force && def
 				def = new $.Deferred()
 
 				self.images = []

@@ -1,0 +1,25 @@
+<div class="uploader">
+	<div class="dropzone" uploader>
+		<p>Drop files here to begin your upload!</p>
+	</div>
+
+	<ul class="uploads">
+		<li ng-repeat="upload in data.queue" ng-class="{'has-error': upload.error != null, 'is-processing': upload.isUploading && upload.error == null && upload.progress >= 100}" ng-animate="'upload-queue'">
+			<p>
+				<span ng-show="!upload.success">
+					<strong ng-show="upload.isUploading && upload.error == null && upload.progress >= 100">Processing</strong>
+					<strong ng-hide="upload.isUploading && upload.error == null && upload.progress >= 100">Uploading</strong>
+					{{upload.name}}
+				</span>
+				<span ng-show="upload.success">
+					<a href="/account/tracks/edit/{{upload.trackId}}" class="btn btn-small btn-primary">
+						Publish
+					</a>
+					{{upload.name}}
+				</span>
+			</p>
+			<p ng-show="upload.error != null">{{upload.error}}</p>
+			<div class="bar" pfm-progress-bar="upload.progress"></div>
+		</li>
+	</ul>
+</div>
