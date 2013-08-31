@@ -9,6 +9,14 @@
 			return View::make('tracks.index');
 		}
 
+		public function getEmbed($id) {
+			$track = Track::find($id);
+			if (!$track || !$track->canView(Auth::user()))
+				App::abort(404);
+
+			return View::make('tracks.embed', ['track' => $track]);
+		}
+
 		public function getTrack($id, $slug) {
 			$track = Track::find($id);
 			if (!$track || !$track->canView(Auth::user()))

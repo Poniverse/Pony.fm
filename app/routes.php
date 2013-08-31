@@ -22,6 +22,7 @@
 
 	Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
 	Route::get('t{id}', 'TracksController@getShortlink' );
+	Route::get('t{id}/embed', 'TracksController@getEmbed' );
 	Route::get('t{id}/stream', 'TracksController@getStream' );
 	Route::get('t{id}/dl.{extension}', 'TracksController@getDownload' );
 

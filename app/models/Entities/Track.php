@@ -114,7 +114,7 @@
 
 			$returnValue['share'] = [
 				'url' => URL::to('/t' . $track->id),
-				'html' => '<iframe src="https://pony.fm/t' . $track->id . '/embed" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
+				'html' => '<iframe src="' . URL::to('t' . $track->id . '/embed') . '" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
 				'bbcode' => '[url=' . $track->url . '][img]' . $track->getCoverUrl() . '[/img][/url]',
 				'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $track->title . ' by ' . $track->user->display_name . ' on Pony.fm'
 			];

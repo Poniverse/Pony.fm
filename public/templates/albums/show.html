@@ -8,7 +8,7 @@
 				<li bindonce ng-repeat="format in album.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
 			</ul>
 		</li>
-		<li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share or Embed</a></li>
+		<li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
 		<li><pfm-favourite-button resource="album" type="album"></pfm-favourite-button></li>
 		<li bo-show="album.permissions.edit"><a class="btn btn-small" bo-href="'/account/albums/edit/' + album.id">Edit</a></li>
 	</ul>
