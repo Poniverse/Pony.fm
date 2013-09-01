@@ -36,8 +36,12 @@ angular.module('ponyfm').factory('playlists', [
 				return playlistDef if !force && playlistDef
 
 				playlistDef = new $.Deferred()
-				$http.get('/api/web/playlists/owned').success (playlists) ->
-					playlistDef.resolve playlists
+
+				if auth.data.isLogged
+					$http.get('/api/web/playlists/owned').success (playlists) ->
+						playlistDef.resolve playlists
+				else
+					playlistDef.resolve []
 
 				playlistDef
 
