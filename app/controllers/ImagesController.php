@@ -3,6 +3,7 @@
 	use Entities\Image;
 	use Entities\Track;
 	use Illuminate\Support\Facades\App;
+	use Illuminate\Support\Facades\Redirect;
 
 	class ImagesController extends Controller {
 		public function getImage($id, $type) {
@@ -17,6 +18,11 @@
 
 			$response = Response::make('', 200);
 			$filename = $image->getFile($coverType['id']);
+
+			if (!is_file($filename)) {
+				$redirect = URL::to('/images/icons/profile_' . Image::$ImageTypes[$coverType['id']]['name'] . '.png');
+				return Redirect::to($redirect);
+			}
 
 			if (Config::get('app.sendfile')) {
 				$response->header('X-Sendfile', $filename);

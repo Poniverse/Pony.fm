@@ -2,8 +2,8 @@
 	<ul class="artist-listing">
 		<li ng-repeat="artist in artists" bindonce>
 			<a href="{{artist.url}}">
-				<img class="image" bo-src="artist.avatars.small" />
-					<span class="info">
+				<img class="image" pfm-src-loader="{{artist.avatars.small}}" pfm-src-size="small" />
+				<span class="info">
 					<span class="title" bo-text="artist.name"></span>
 					<span class="published">
 						joined <span bo-text="artist.created_at.date | momentFromNow"></span>
