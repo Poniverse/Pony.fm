@@ -15,17 +15,18 @@
 			if (!$image)
 				App::abort(404);
 
+			$response = Response::make('', 200);
 			$filename = $image->getFile($coverType['id']);
-			$lastModified = filemtime($filename);
 
-			if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $lastModified == $_SERVER['HTTP_IF_MODIFIED_SINCE']) {
-				header('HTTP/1.0 304 Not Modified');
-				exit();
+			if (Config::get('app.sendfile')) {
+				$response->header('X-Sendfile', $filename);
+			} else {
+				$response->header('X-Accel-Redirect', $filename);
 			}
 
-			header('Last-Modified: ' . $lastModified);
-			header('Cache-Control: max-age=' . (60 * 60 * 24 * 7));
+			$response->header('Content-Disposition', 'filename="' . $filename . '"');
+			$response->header('Content-Type', 'image/png');
 
-			return File::inline($filename, $image->mime, $image->filename);
+			return $response;
 		}
 	}

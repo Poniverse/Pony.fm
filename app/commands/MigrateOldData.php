@@ -330,11 +330,11 @@
 					DB::table('followers')->insert([
 						'id' => $follower->id,
 						'user_id' => $follower->follower_id,
-						'artist_at' => $follower->user_at,
+						'artist_id' => $follower->user_id,
 						'created_at' => $follower->created_at,
 					]);
 				} catch (Exception $e) {
-					$this->error('Could not sync follower ' . $fav->id . ' because ' . $e->getMessage());
+					$this->error('Could not sync follower ' . $follower->id . ' because ' . $e->getMessage());
 				}
 			}
 		}
