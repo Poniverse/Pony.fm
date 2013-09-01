@@ -25,7 +25,7 @@
 			$validator = \Validator::make(['track' => $trackFile], [
 				'track' =>
 				'required|'
-				. 'audio_format:mp3,flac,pcm_s16le ([1][0][0][0] / 0x0001),pcm_s16be,adpcm_ms ([2][0][0][0] / 0x0002),pcm_s24le ([1][0][0][0] / 0x0001),pcm_s24be,pcm_f32le ([3][0][0][0] / 0x0003),pcm_f32be (fl32 / 0x32336C66)|'
+				. 'audio_format:flac,pcm_s16le ([1][0][0][0] / 0x0001),pcm_s16be,adpcm_ms ([2][0][0][0] / 0x0002),pcm_s24le ([1][0][0][0] / 0x0001),pcm_s24be,pcm_f32le ([3][0][0][0] / 0x0003),pcm_f32be (fl32 / 0x32336C66)|'
 				. 'audio_channels:1,2|'
 				. 'sample_rate:44100,48000,88200,96000,176400,192000|'
 				. 'min_duration:30'
