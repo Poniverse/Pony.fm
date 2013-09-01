@@ -119,7 +119,7 @@ class RefreshCache extends Command {
 			$resources[$type][$id] = $resource;
 		}
 
-		foreach (DB::table('followers') as $follower) {
+		foreach (DB::table('followers')->get() as $follower) {
 			$userResource = $this->getUserCacheItem($cacheItems, $follower->user_id, 'artist', $follower->artist_id);
 			$userResource['is_followed'] = true;
 			$cacheItems[$follower->user_id]['artist'][$follower->artist_id] = $userResource;
