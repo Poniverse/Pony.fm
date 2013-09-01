@@ -41,7 +41,7 @@
 		}
 
 		public static function scriptAssetCollection($area) {
-			$coffeeScript = new CoffeeScriptFilter(Config::get('app.coffee'));
+			$coffeeScript = new CoffeeScriptFilter(Config::get('app.coffee'), Config::get('app.node'));
 
 			if ($area == 'app') {
 				$collection = new AssetCollection([
