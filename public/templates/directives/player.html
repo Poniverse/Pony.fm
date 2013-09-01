@@ -4,14 +4,14 @@
 			<strong>{{player.currentTrack.progressSeconds | secondsDisplay}}</strong> /
 			<strong>{{player.currentTrack.duration | secondsDisplay}}</strong>
 		</li>
-		<li><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="icon-fast-backward"></i></a></li>
+		<li ng-class="{disabled: !player.canGoPrev}"><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="icon-fast-backward"></i></a></li>
 		<li>
 			<a pfm-eat-click ng-click="playPause()" class="play" href="#">
 				<i class="icon-pause" ng-show="player.currentTrack.isPlaying"></i>
 				<i class="icon-play" ng-hide="player.currentTrack.isPlaying"></i>
 			</a>
 		</li>
-		<li><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="icon-fast-forward"></i></a></li>
+		<li ng-class="{disabled: !player.canGoNext}"><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="icon-fast-forward"></i></a></li>
 		<li class="volume">
 			<a pfm-eat-click ng-click="" class="volume" href="#">
 				<i class="icon-volume-up"></i>
