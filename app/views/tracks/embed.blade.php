@@ -10,6 +10,7 @@
 	<meta property="og:image" content="https://pony.fm/favicon.ico" />
 	<meta property="og:site_name" content="Pony.fm" />
 	<meta property="fb:admins" content="1165335382" />
+	<base href="/" />
 
 	{{ Assets::styleIncludes('embed') }}
 </head>
