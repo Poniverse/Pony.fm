@@ -113,11 +113,12 @@
 
 			if (Config::get('app.sendfile')) {
 				$response->header('X-Sendfile', $track->getFileFor('MP3'));
+				$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
 			} else {
 				$response->header('X-Accel-Redirect', $track->getFileFor('MP3'));
+				$response->header('Content-Disposition', 'attachment; filename=' . $track->getDownloadFilenameFor($formatName));
 			}
 
-			$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
 			$response->header('Content-Type', $format['mime_type']);
 
 			return $response;
