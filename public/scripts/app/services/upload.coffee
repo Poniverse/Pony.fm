@@ -31,7 +31,7 @@ angular.module('ponyfm').factory('upload', [
 						if xhr.status != 200
 							error =
 								if xhr.getResponseHeader('content-type') == 'application/json'
-									$.parseJSON(xhr.responseText).message
+									$.parseJSON(xhr.responseText).errors.track.join ', '
 								else
 									'There was an unknown error!'
 

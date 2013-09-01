@@ -42,10 +42,14 @@
 			$bundle->ensureFilter(new UglifyCssFilter(Config::get('app.uglify-css'), Config::get('app.node')));
 			$bundle->setTargetPath('styles');
 		} else {
+			$node = Config::get('app.node');
+			if ($node == null)
+				$node = 'node';
+
 			$filePath = trim($_GET['file'], '/');
 			$lastModifiedCollection = new AssetCollection([new GlobAsset("styles/*.less")]);
 			$bundle = new AssetCollection([new FileAsset($filePath), new CacheBusterAsset($lastModifiedCollection->getLastModified())],
-				[new LessFilter(Config::get('app.node'), Config::get('app.node_paths'))]);
+				[new LessFilter($node, Config::get('app.node_paths'))]);
 			$bundle->setTargetPath($filePath);
 		}
 
