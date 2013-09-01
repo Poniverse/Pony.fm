@@ -4,7 +4,7 @@
 	</div>
 
 	<ul class="uploads">
-		<li ng-repeat="upload in data.queue" ng-class="{'has-error': upload.error != null, 'is-processing': upload.isUploading && upload.error == null && upload.progress >= 100}" ng-animate="'upload-queue'">
+		<li ng-repeat="upload in data.queue" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isUploading && upload.error == null && upload.progress >= 100}" ng-animate="'upload-queue'">
 			<p>
 				<span ng-show="!upload.success">
 					<strong ng-show="upload.isUploading && upload.error == null && upload.progress >= 100">Processing</strong>
