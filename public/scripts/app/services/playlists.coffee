@@ -1,6 +1,6 @@
 angular.module('ponyfm').factory('playlists', [
-	'$rootScope', '$state', '$http'
-	($rootScope, $state, $http) ->
+	'$rootScope', '$state', '$http', 'auth'
+	($rootScope, $state, $http, auth) ->
 		playlistDef = null
 		playlists = {}
 		playlistPages = []
@@ -49,10 +49,11 @@ angular.module('ponyfm').factory('playlists', [
 				def
 
 			refresh: () ->
-				$.getJSON('/api/web/playlists/pinned')
-					.done (playlists) -> $rootScope.$apply ->
-						self.pinnedPlaylists.length = 0
-						self.pinnedPlaylists.push playlist for playlist in playlists
+				if auth.data.isLogged
+					$.getJSON('/api/web/playlists/pinned')
+						.done (playlists) -> $rootScope.$apply ->
+							self.pinnedPlaylists.length = 0
+							self.pinnedPlaylists.push playlist for playlist in playlists
 
 			deletePlaylist: (playlist) ->
 				def = new $.Deferred()
