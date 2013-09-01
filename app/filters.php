@@ -40,6 +40,15 @@
 		});
 	}
 
+	App::error(function($exception) {
+		return Response::view('errors.404', array(), 404);
+	});
+
+	App::missing(function($exception) {
+		return Response::view('errors.404', array(), 404);
+	});
+
+
 	/*
 	|--------------------------------------------------------------------------
 	| Authentication Filters

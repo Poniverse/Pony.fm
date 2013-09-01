@@ -328,7 +328,7 @@
 			$destination = $this->getDirectory();
 
 			if (!is_dir($destination))
-				mkdir($destination, 755);
+				mkdir($destination, 777);
 		}
 
 		public function hasCover() {

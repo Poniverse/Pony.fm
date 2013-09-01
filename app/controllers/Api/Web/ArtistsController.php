@@ -14,6 +14,7 @@
 	use Entities\Image;
 	use Entities\Track;
 	use Entities\User;
+	use Illuminate\Support\Facades\App;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Input;
 	use Illuminate\Support\Facades\Response;

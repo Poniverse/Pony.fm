@@ -92,7 +92,6 @@
 @endsection
 
 @section('scripts')
-
 	<script>
 		window.pfm = {
 			token: "{{Session::token()}}",
@@ -112,7 +111,6 @@
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-29463256-1']);
 		_gaq.push(['_setDomainName', 'pony.fm']);
-		_gaq.push(['_trackPageview']);
 
 		(function() {
 			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
@@ -122,5 +120,7 @@
 	</script>
 
 	{{ Assets::scriptIncludes() }}
+
+	@yield('app_scripts')
 
 @endsection
