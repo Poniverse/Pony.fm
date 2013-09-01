@@ -16,9 +16,21 @@ class RefreshCache extends Command {
 		DB::connection()->disableQueryLog();
 
 		DB::table('tracks')->update(['comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.track_id = tracks.id AND deleted_at IS NULL)')]);
-		DB::table('albums')->update(['comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.album_id = albums.id AND deleted_at IS NULL)')]);
-		DB::table('playlists')->update(['comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.playlist_id = playlists.id AND deleted_at IS NULL)')]);
-		DB::table('users')->update(['comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.profile_id = users.id AND deleted_at IS NULL)')]);
+
+		DB::table('albums')->update([
+			'comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.album_id = albums.id AND deleted_at IS NULL)'),
+			'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = albums.id)')
+		]);
+
+		DB::table('playlists')->update([
+			'comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.playlist_id = playlists.id AND deleted_at IS NULL)'),
+			'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = playlists.id)')
+		]);
+
+		DB::table('users')->update([
+			'comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.profile_id = users.id AND deleted_at IS NULL)'),
+			'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = users.id)')
+		]);
 
 		$users = DB::table('users')->get();
 		$cacheItems = [];
