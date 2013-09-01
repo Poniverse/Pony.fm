@@ -1,5 +1,8 @@
 <?php
 
+	use Illuminate\Support\Facades\Config;
+	use Illuminate\Support\Facades\URL;
+
 	class Gravatar {
 		/**
 		 * Returns a Gravatar URL
@@ -14,7 +17,18 @@
 		public static function getUrl( $email, $s = 80, $d = 'mm', $r = 'g') {
 			$url = 'https://www.gravatar.com/avatar/';
 			$url .= md5( strtolower( trim( $email ) ) );
-			$url .= "?s=$s&d=$d&r=$r";
+			$url .= "?s=$s&r=$r";
+
+			if (!Config::get('app.debug')) {
+				$size = 'normal';
+				if ($s == 50)
+					$size = 'thumbnail';
+				else if ($s == 100)
+					$size = 'small';
+
+				$url .= "&d=" . urlencode(URL::to('/images/icons/profile_' . $size . '.png'));
+			}
+
 			return $url;
 		}
 	}
