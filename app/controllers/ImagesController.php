@@ -29,8 +29,8 @@
 
 			$lastModified = filemtime($filename);
 
-			header('Last-Modified: ' . $lastModified);
-			header('Cache-Control: max-age=' . (60 * 60 * 24 * 7));
+			$response->header('Last-Modified', $lastModified);
+			$response->header('Cache-Control', 'max-age=' . (60 * 60 * 24 * 7));
 
 			return $response;
 		}
