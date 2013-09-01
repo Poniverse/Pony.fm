@@ -12,7 +12,7 @@
 			<ul class="account-albums-listing stretch-to-bottom">
 				<li ng-repeat="album in albums" ng-class="{selected: album.id == data.selectedAlbum.id}">
 					<a href="/account/albums/edit/{{album.id}}">
-						<img pfm-src-loader="{{album.covers.normal}}" pfm-src-size="normal" class="image" />
+						<img pfm-src-loader="album.covers.normal" pfm-src-size="normal" class="image" />
 						<span class="title">{{album.title}}</span>
 						<span class="published">{{album.created_at | pfmdate:'MM/dd/yyyy'}}</span>
 					</a>

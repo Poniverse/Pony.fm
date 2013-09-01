@@ -2,7 +2,7 @@
 	<ul class="artist-listing">
 		<li ng-repeat="artist in artists" bindonce>
 			<a href="{{artist.url}}">
-				<img class="image" pfm-src-loader="{{artist.avatars.small}}" pfm-src-size="small" />
+				<img class="image" pfm-src-loader="artist.avatars.small" pfm-src-size="small" />
 				<span class="info">
 					<span class="title" bo-text="artist.name"></span>
 					<span class="published">

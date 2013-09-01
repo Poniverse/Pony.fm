@@ -1,7 +1,7 @@
 <ul class="playlists-listing {{class}}">
 	<li ng-repeat="playlist in playlists" bindonce>
 		<a href="{{playlist.url}}">
-			<img class="image" pfm-src-loader="{{playlist.covers.small}}" pfm-src-size="small" />
+			<img class="image" pfm-src-loader="playlist.covers.small" pfm-src-size="small" />
 			<span class="info">
 				<span class="title">{{playlist.title}}</span>
 				<span class="published">

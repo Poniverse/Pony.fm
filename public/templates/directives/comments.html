@@ -10,7 +10,7 @@
 			There are no comments yet!
 		</li>
 		<li bindonce ng-repeat="comment in resource.comments">
-			<img pfm-src-loader="{{comment.user.avatars.thumbnail}}" pfm-src-size="thumbnail" />
+			<img pfm-src-loader="comment.user.avatars.thumbnail" pfm-src-size="thumbnail" />
 			<div class="content">
 				<a bo-href="comment.user.url" bo-text="comment.user.name"></a>
 				<span bo-text="comment.content"></span>

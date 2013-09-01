@@ -8,6 +8,7 @@
 	use Helpers;
 	use Illuminate\Support\Facades\Auth;
 	use Illuminate\Support\Facades\Cache;
+	use Illuminate\Support\Facades\Config;
 	use Illuminate\Support\Facades\DB;
 	use Illuminate\Support\Facades\Log;
 	use Illuminate\Support\Facades\URL;
@@ -54,7 +55,7 @@
 		}
 
 		public static function popular($count, $allowExplicit = false) {
-			$trackIds = Cache::remember('popular_tracks-' . ($allowExplicit ? 'explicit' : 'safe'), 5, function() use ($allowExplicit) {
+			$trackIds = Cache::remember('popular_tracks' . $count . '-' . ($allowExplicit ? 'explicit' : 'safe'), 5, function() use ($allowExplicit, $count) {
 				$query = static
 					::published()
 					->join(DB::raw('
@@ -65,7 +66,7 @@
 							'tracks.id', '=', 'ranged_plays.track_id')
 					->groupBy('id')
 					->orderBy('plays', 'desc')
-					->take(20);
+					->take($count);
 
 				if (!$allowExplicit)
 					$query->whereIsExplicit(false);
@@ -197,7 +198,9 @@
 					'normal' => $track->getCoverUrl(Image::NORMAL)
 				],
 				'streams' => [
-					'mp3' => $track->getStreamUrl('MP3')
+					'mp3' => $track->getStreamUrl('MP3'),
+					'aac' => (!Config::get('app.debug') || is_file($track->getFileFor('AAC'))       ) ? $track->getStreamUrl('AAC') : null,
+					'ogg' => ( Config::get('app.debug') || is_file($track->getFileFor('OGG Vorbis'))) ? $track->getStreamUrl('OGG Vorbis') : null
 				],
 				'user_data' => $userData,
 				'permissions' => [
@@ -350,8 +353,8 @@
 			return $this->cover->getUrl($type);
 		}
 
-		public function getStreamUrl() {
-			return URL::to('/t' . $this->id . '/stream');
+		public function getStreamUrl($format = 'MP3') {
+			return URL::to('/t' . $this->id . '/stream.' . self::$Formats[$format]['extension']);
 		}
 
 		public function getDirectory() {

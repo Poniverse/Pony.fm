@@ -6,8 +6,18 @@ angular.module('ponyfm').factory('player', [
 		play = (track) ->
 			self.currentTrack = track
 			$rootScope.$broadcast 'player-starting-track', track
+
+			streams = []
+			streams.push track.streams.mp3
+			streams.push track.streams.ogg if track.streams.ogg
+			streams.push track.streams.aac if track.streams.aac
+
+			track.progress = 0
+			track.progressSeconds = 0
+			track.loadingProgress = 0
+
 			self.currentSound = soundManager.createSound
-				url: track.streams.mp3,
+				url: streams,
 				volume: self.volume
 
 				whileloading: () -> $rootScope.safeApply ->
@@ -83,7 +93,8 @@ angular.module('ponyfm').factory('player', [
 
 				self.currentSound.stop() if self.currentSound != null
 				self.playlistIndex--
-				if self.playlistIndex <= 0
+
+				if self.playlistIndex < 0
 					self.playlist.length = 0
 					self.currentTrack = null
 					self.currentSong = null

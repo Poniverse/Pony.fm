@@ -20,7 +20,7 @@
 				->explicitFilter()
 				->published()
 				->orderBy('published_at', 'desc')
-				->take(20);
+				->take(30);
 
 			$recentTracks = [];
 

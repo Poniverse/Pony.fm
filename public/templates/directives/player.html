@@ -22,7 +22,8 @@
 		</li>
 	</ul>
 	<div class="image">
-		<img pfm-src-loader="{{player.currentTrack.covers.thumbnail}}" pfm-src-size="thumbnail" />
+		<div class="loader" ng-class="{showing: player.currentTrack.loadingProgress == 0}"><i class="icon-spin icon-rotate-right"></i></div>
+		<img pfm-src-loader="player.currentTrack.covers.thumbnail" pfm-src-size="thumbnail" />
 	</div>
 	<div class="inner">
 		<div class="title">
