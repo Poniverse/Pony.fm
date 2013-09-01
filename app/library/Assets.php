@@ -60,6 +60,7 @@
 					new FileAsset('scripts/base/angular-ui-date.js'),
 					new FileAsset('scripts/base/angular-ui-router.js'),
 					new FileAsset('scripts/base/angularytics.js'),
+					new FileAsset('scripts/base/tumblr.js'),
 					new AssetCollection([
 						new GlobAsset('scripts/shared/*.coffee'),
 					], [

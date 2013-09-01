@@ -86,7 +86,7 @@
 @endsection
 
 @section('styles')
-	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Josefin+Sans" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans" />
 	<link rel="stylesheet" href="/styles/loader.css" />
 	{{ Assets::styleIncludes() }}
 @endsection
@@ -122,7 +122,5 @@
 	</script>
 
 	{{ Assets::scriptIncludes() }}
-
-	<script src="http://platform.tumblr.com/v1/share.js"></script>
 
 @endsection

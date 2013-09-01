@@ -12,7 +12,7 @@
 		 * @source http://gravatar.com/site/implement/images/php/
 		 */
 		public static function getUrl( $email, $s = 80, $d = 'mm', $r = 'g') {
-			$url = 'http://www.gravatar.com/avatar/';
+			$url = 'https://www.gravatar.com/avatar/';
 			$url .= md5( strtolower( trim( $email ) ) );
 			$url .= "?s=$s&d=$d&r=$r";
 			return $url;
