@@ -75,7 +75,13 @@
 			ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $format['index']);
 
 			$response = Response::make('', 200);
-			$response->header('X-Sendfile', $track->getFileFor('MP3'));
+
+			if (Config::get('app.sendfile')) {
+				$response->header('X-Sendfile', $track->getFileFor('MP3'));
+			} else {
+				$response->header('X-Accel-Redirect', $track->getFileFor('MP3'));
+			}
+
 			$response->header('Content-Disposition', 'filename="' . $track->getFilenameFor('MP3') . '"');
 			$response->header('Content-Type', $format['mime_type']);
 
@@ -104,7 +110,13 @@
 			ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $format['index']);
 
 			$response = Response::make('', 200);
-			$response->header('X-Sendfile', $track->getFileFor($formatName));
+
+			if (Config::get('app.sendfile')) {
+				$response->header('X-Sendfile', $track->getFileFor('MP3'));
+			} else {
+				$response->header('X-Accel-Redirect', $track->getFileFor('MP3'));
+			}
+
 			$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
 			$response->header('Content-Type', $format['mime_type']);
 

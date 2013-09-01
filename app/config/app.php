@@ -2,6 +2,8 @@
 
 return array(
 
+	'sendfile' => false,
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Debug Mode
