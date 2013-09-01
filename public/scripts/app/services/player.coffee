@@ -38,6 +38,10 @@ angular.module('ponyfm').factory('player', [
 			self.isPlaying = true
 			self.currentSound.play()
 
+		updateCanGo = () ->
+			self.canGoNext = self.playlistIndex < self.playlist.length - 1
+			self.canGoPrev = self.playlistIndex > 0
+
 		self =
 			ready: false
 			isPlaying: false
@@ -47,6 +51,8 @@ angular.module('ponyfm').factory('player', [
 			playlistIndex: 0
 			volume: 0
 			readyDef: readyDef.promise()
+			canGoPrev: false
+			canGoNext: false
 
 			playPause: () ->
 				return if !self.ready
@@ -58,6 +64,8 @@ angular.module('ponyfm').factory('player', [
 					self.currentSound.pause()
 
 			playNext: () ->
+				return if !self.canGoNext
+
 				self.currentSound.stop() if self.currentSound != null
 				self.playlistIndex++
 				if self.playlistIndex >= self.playlist.length
@@ -68,8 +76,11 @@ angular.module('ponyfm').factory('player', [
 					return
 
 				play self.playlist[self.playlistIndex]
+				updateCanGo()
 
 			playPrev: () ->
+				return if !self.canGoPrev
+
 				self.currentSound.stop() if self.currentSound != null
 				self.playlistIndex--
 				if self.playlistIndex <= 0
@@ -80,6 +91,7 @@ angular.module('ponyfm').factory('player', [
 					return
 
 				play self.playlist[self.playlistIndex]
+				updateCanGo()
 
 			seek: (progress) ->
 				return if !self.currentSound
@@ -108,6 +120,7 @@ angular.module('ponyfm').factory('player', [
 
 				$rootScope.$broadcast 'player-starting-playlist', tracks
 				play tracks[index]
+				updateCanGo()
 
 		pfm.soundManager.done () ->
 			self.ready = true

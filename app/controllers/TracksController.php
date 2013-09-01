@@ -75,14 +75,22 @@
 			ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $format['index']);
 
 			$response = Response::make('', 200);
+			$filename = $track->getFileFor('MP3');
 
 			if (Config::get('app.sendfile')) {
-				$response->header('X-Sendfile', $track->getFileFor('MP3'));
+				$response->header('X-Sendfile', $filename);
 			} else {
-				$response->header('X-Accel-Redirect', $track->getFileFor('MP3'));
+				$response->header('X-Accel-Redirect', $filename);
 			}
 
-			$response->header('Content-Disposition', 'filename="' . $track->getFilenameFor('MP3') . '"');
+			$time = gmdate(filemtime($filename));
+
+			if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $time == $_SERVER['HTTP_IF_MODIFIED_SINCE']) {
+				header('HTTP/1.0 304 Not Modified');
+				exit();
+			}
+
+			$response->header('Last-Modified', $time);
 			$response->header('Content-Type', $format['mime_type']);
 
 			return $response;
@@ -110,15 +118,24 @@
 			ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $format['index']);
 
 			$response = Response::make('', 200);
+			$filename = $track->getFileFor($format);
 
 			if (Config::get('app.sendfile')) {
-				$response->header('X-Sendfile', $track->getFileFor('MP3'));
+				$response->header('X-Sendfile', $filename);
 				$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
 			} else {
-				$response->header('X-Accel-Redirect', $track->getFileFor('MP3'));
+				$response->header('X-Accel-Redirect', $filename);
 				$response->header('Content-Disposition', 'attachment; filename=' . $track->getDownloadFilenameFor($formatName));
 			}
 
+			$time = gmdate(filemtime($filename));
+
+			if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $time == $_SERVER['HTTP_IF_MODIFIED_SINCE']) {
+				header('HTTP/1.0 304 Not Modified');
+				exit();
+			}
+
+			$response->header('Last-Modified', $time);
 			$response->header('Content-Type', $format['mime_type']);
 
 			return $response;
