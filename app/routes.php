@@ -34,8 +34,8 @@
 	Route::get('artists', 'ArtistsController@getIndex');
 	Route::get('playlists', 'PlaylistsController@getIndex');
 
-	Route::get('/login', function() { return View::make('auth.login'); });
-	Route::get('/register', function() { return View::make('auth.register'); });
+	Route::get('/login', 'AuthController@getLogin');
+	Route::get('/auth/oauth', 'AuthController@getOAuth');
 
 	Route::get('/about', function() { return View::make('pages.about'); });
 	Route::get('/faq', function() { return View::make('pages.faq'); });
@@ -114,7 +114,6 @@
 		});
 
 		Route::group(['before' => 'csrf'], function(){
-			Route::post('/auth/login', 'Api\Web\AuthController@postLogin');
 			Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
 		});
 	});

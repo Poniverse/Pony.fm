@@ -74,6 +74,8 @@
 				<li class="dropdown" ng-repeat="playlist in playlists" ng-cloak ng-class="{selected: stateIncludes('content.playlist') && $state.params.id == playlist.id}">
 					<a href="{{Helpers::angular('playlist.url')}}" ng-bind="playlist.title"></a>
 				</li>
+			@else
+			<li><a href="/login" target="_self">Login <i class="icon-user"></i></a></li>
 			@endif
 		</ul>
 		<ui-view class="site-content">
