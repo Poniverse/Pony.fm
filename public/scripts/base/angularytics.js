@@ -100,11 +100,10 @@
   ]).factory('AngularyticsGoogleUniversalHandler', function () {
     var service = {};
     service.trackPageView = function (url) {
-      ga('set', 'page', url);
-      ga('send', 'pageview', url);
+		window._gaq.push(['_trackPageview', url]);
     };
     service.trackEvent = function (category, action, opt_label, opt_value, opt_noninteraction) {
-      ga('send', 'event', category, action, opt_label, opt_value, { 'nonInteraction': opt_noninteraction });
+		window.ga('send', 'event', category, action, opt_label, opt_value, { 'nonInteraction': opt_noninteraction });
     };
     return service;
   });
