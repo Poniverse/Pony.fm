@@ -29,7 +29,7 @@
 			$bundle->setTargetPath('scripts');
 		} else {
 			$filePath = trim($_GET['file'], '/');
-			$bundle = new AssetCollection([new FileAsset($filePath)], [new CoffeeScriptFilter(Config::get('app.coffee'))]);
+			$bundle = new AssetCollection([new FileAsset($filePath)], [new CoffeeScriptFilter(Config::get('app.coffee'), Config::get('app.node'))]);
 			$bundle->setTargetPath($filePath);
 		}
 
