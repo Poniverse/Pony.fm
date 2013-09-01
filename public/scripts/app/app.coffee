@@ -9,8 +9,16 @@ module.run [
 ]
 
 module.config [
-	'$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider'
-	(location, state, $dialogProvider, analytics) ->
+	'$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider'
+	(location, state, $dialogProvider, analytics, $httpProvider) ->
+
+		$httpProvider.interceptors.push [
+			->
+				request: (config) ->
+					return config if !(/^\/?templates\//.test config.url)
+					config.url += '?' + Math.ceil(Math.random() * 1000000)
+					return config
+		]
 
 		analytics.setEventHandlers ['Google']
 
