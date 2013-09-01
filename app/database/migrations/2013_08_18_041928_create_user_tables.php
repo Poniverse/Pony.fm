@@ -27,7 +27,7 @@ class CreateUserTables extends Migration {
 			$table->foreign('album_id')->references('id')->on('albums')->on_delete('cascade');;
 			$table->foreign('playlist_id')->references('id')->on('playlists')->on_delete('cascade');;
 
-			$table->unique(['user_id', 'track_id', 'album_id', 'playlist_id', 'artist_id']);
+			$table->unique(['user_id', 'track_id', 'album_id', 'playlist_id', 'artist_id'], 'resource_unique');
 		});
 
 		Schema::create('resource_log_items', function($table){
