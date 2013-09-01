@@ -27,6 +27,11 @@
 			$response->header('Content-Disposition', 'filename="' . $filename . '"');
 			$response->header('Content-Type', 'image/png');
 
+			$lastModified = filemtime($filename);
+
+			header('Last-Modified: ' . $lastModified);
+			header('Cache-Control: max-age=' . (60 * 60 * 24 * 7));
+
 			return $response;
 		}
 	}
