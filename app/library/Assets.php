@@ -123,7 +123,7 @@
 					new FileAsset('styles/base/colorbox.css'),
 					new FileAsset('styles/app.less'),
 					new CacheBusterAsset($lastModifiedCollection->getLastModified())
-				], [new \Assetic\Filter\LessFilter('node')]);
+				], [new \Assetic\Filter\LessFilter('node', Config::get('app.node_paths'))]);
 
 				if (Config::get('app.debug')) {
 					$css->add(new FileAsset('styles/profiler.less'));
