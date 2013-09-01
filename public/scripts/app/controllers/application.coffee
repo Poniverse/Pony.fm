@@ -8,6 +8,9 @@ angular.module('ponyfm').controller "application", [
 		$loadingElement = null
 		loadingStateName = null
 
+		if window.pfm.error
+			$state.transitionTo 'errors-' + window.pfm.error
+
 		$rootScope.safeApply = (fn) ->
 			phase = $rootScope.$$phase
 			if (phase == '$apply' || phase == 'digest')
@@ -73,7 +76,10 @@ angular.module('ponyfm').controller "application", [
 
 			stateToInject = angular.copy newState
 			stateToInject.params = newParams
-			$injector.invoke(preloader, null, {$state: stateToInject}).then ->
-				statesPreloaded[newState] = true
+			try
+				$injector.invoke(preloader, null, {$state: stateToInject}).then ->
+					statesPreloaded[newState] = true
+					$state.transitionTo newState, newParams
+			catch error
 				$state.transitionTo newState, newParams
 ]

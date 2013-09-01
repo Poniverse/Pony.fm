@@ -25,8 +25,11 @@ angular.module('ponyfm').factory('artists', [
 				slug = 1 if !slug
 				return artists[slug] if !force && artists[slug]
 				artistsDef = new $.Deferred()
-				$http.get('/api/web/artists/' + slug).success (albums) ->
-					artistsDef.resolve albums
+				$http.get('/api/web/artists/' + slug)
+					.success (albums) ->
+						artistsDef.resolve albums
+					.catch () ->
+						artistsDef.reject()
 
 				artists[slug] = artistsDef.promise()
 
@@ -35,8 +38,11 @@ angular.module('ponyfm').factory('artists', [
 				slug = 1 if !slug
 				return artistContent[slug] if !force && artistContent[slug]
 				artistsDef = new $.Deferred()
-				$http.get('/api/web/artists/' + slug + '/content').success (albums) ->
-					artistsDef.resolve albums
+				$http.get('/api/web/artists/' + slug + '/content')
+					.success (albums) ->
+						artistsDef.resolve albums
+					.catch () ->
+						artistsDef.reject()
 
 				artistContent[slug] = artistsDef.promise()
 

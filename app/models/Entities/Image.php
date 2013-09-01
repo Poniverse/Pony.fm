@@ -94,6 +94,6 @@
 			$destination = $this->getDirectory();
 
 			if (!is_dir($destination))
-				mkdir($destination, 755, true);
+				mkdir($destination, 777, true);
 		}
 	}

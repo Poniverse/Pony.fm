@@ -7,6 +7,7 @@ window.pfm.preloaders['artist-content'] = [
 angular.module('ponyfm').controller "artist-content", [
 	'$scope', 'artists', '$state'
 	($scope, artists, $state) ->
-		artists.fetchContent($state.params.slug).done (artistResponse) ->
-			$scope.content = artistResponse
+		artists.fetchContent($state.params.slug)
+			.done (artistResponse) ->
+				$scope.content = artistResponse
 ]

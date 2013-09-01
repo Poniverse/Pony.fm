@@ -7,8 +7,9 @@ window.pfm.preloaders['artist'] = [
 angular.module('ponyfm').controller "artist", [
 	'$scope', 'artists', '$state', 'follow'
 	($scope, artists, $state, follow) ->
-		artists.fetch($state.params.slug).done (artistResponse) ->
-			$scope.artist = artistResponse.artist
+		artists.fetch($state.params.slug)
+			.done (artistResponse) ->
+				$scope.artist = artistResponse.artist
 
 		$scope.toggleFollow = () ->
 			follow.toggle('artist', $scope.artist.id).then (res) ->

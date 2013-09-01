@@ -22,6 +22,23 @@ module.config [
 
 		analytics.setEventHandlers ['Google']
 
+		# Errors
+		state.state 'errors-404',
+			url: '/errors/not-found'
+			templateUrl: '/templates/errors/404.html'
+
+		state.state 'errors-500',
+			url: '/errors/server'
+			templateUrl: '/templates/errors/500.html'
+
+		state.state 'errors-403',
+			url: '/errors/not-authorized'
+			templateUrl: '/templates/errors/403.html'
+
+		state.state 'errors-400',
+			url: '/errors/invalid'
+			templateUrl: '/templates/errors/400.html'
+
 		# Upload
 
 		state.state 'uploader',
