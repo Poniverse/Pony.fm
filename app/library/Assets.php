@@ -83,6 +83,22 @@
 				}
 
 				return $collection;
+			} else if ($area == 'embed') {
+				$collection = new AssetCollection([
+					new FileAsset('scripts/base/jquery-2.0.2.js'),
+					new FileAsset('scripts/base/jquery.viewport.js'),
+					new FileAsset('scripts/base/underscore.js'),
+					new FileAsset('scripts/base/moment.js'),
+					new FileAsset('scripts/base/jquery.timeago.js'),
+					new FileAsset('scripts/base/soundmanager2-nodebug.js'),
+					new AssetCollection([
+						new GlobAsset('scripts/embed/*.coffee'),
+					], [
+						new CoffeeScriptFilter(Config::get('app.coffee'))
+					])
+				]);
+
+				return $collection;
 			}
 
 			throw new Exception();
@@ -103,6 +119,12 @@
 					$css->add(new FileAsset('styles/profiler.less'));
 					$css->add(new FileAsset('styles/prettify.css'));
 				}
+
+				return $css;
+			} else if ($area == 'embed') {
+				$css = new AssetCollection([
+					new FileAsset('styles/embed.less'),
+				], [new \Assetic\Filter\LessFilter('node')]);
 
 				return $css;
 			}

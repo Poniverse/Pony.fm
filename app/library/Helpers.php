@@ -23,4 +23,20 @@
 
 			return round($bytes, $precision) . ' ' . $units[$pow];
 		}
+
+		/**
+		 * timeago-style timestamp generator macro.
+		 *
+		 * @param string $timestamp A timestamp in SQL DATETIME syntax
+		 * @return string
+		 */
+		public static function timestamp( $timestamp ) {
+			if(gettype($timestamp) !== 'string' && get_class($timestamp) === 'DateTime'){
+				$timestamp = $timestamp->format('c');
+			}
+
+			$title = date('c', strtotime($timestamp));
+			$content = date('F d, o \@ g:i:s a', strtotime($timestamp));
+			return '<abbr class="timeago" title="'.$title.'">'.$content.'</abbr>';
+		}
 	}

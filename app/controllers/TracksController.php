@@ -10,11 +10,41 @@
 		}
 
 		public function getEmbed($id) {
-			$track = Track::find($id);
+			$track = Track
+				::whereId($id)
+				->published()
+				->userDetails()
+				->with(
+					'user',
+					'user.avatar',
+					'genre'
+				)->first();
+
 			if (!$track || !$track->canView(Auth::user()))
 				App::abort(404);
 
-			return View::make('tracks.embed', ['track' => $track]);
+			$userData = [
+				'stats' => [
+					'views' => 0,
+					'plays' => 0,
+					'downloads' => 0
+				],
+				'is_favourited' => false
+			];
+
+			if ($track->users->count()) {
+				$userRow = $track->users[0];
+				$userData = [
+					'stats' => [
+						'views' => $userRow->view_count,
+						'plays' => $userRow->play_count,
+						'downloads' => $userRow->download_count,
+					],
+					'is_favourited' => $userRow->is_favourited
+				];
+			}
+
+			return View::make('tracks.embed', ['track' => $track, 'user' => $userData]);
 		}
 
 		public function getTrack($id, $slug) {
