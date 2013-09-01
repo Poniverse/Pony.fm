@@ -25,7 +25,7 @@
 
 		if (!isset($_GET['file']) || !Config::get('app.debug')) {
 			$bundle = Assets::scriptAssetCollection($_GET['area']);
-			$bundle->ensureFilter(new UglifyJs2Filter(Config::get('app.uglify-js')));
+			$bundle->ensureFilter(new UglifyJs2Filter(Config::get('app.uglify-js'), Config::get('app.node')));
 			$bundle->setTargetPath('scripts');
 		} else {
 			$filePath = trim($_GET['file'], '/');
@@ -39,7 +39,7 @@
 
 		if (!isset($_GET['file']) || !Config::get('app.debug')) {
 			$bundle = Assets::styleAssetCollection($_GET['area']);
-			$bundle->ensureFilter(new UglifyCssFilter(Config::get('app.uglify-css')));
+			$bundle->ensureFilter(new UglifyCssFilter(Config::get('app.uglify-css'), Config::get('app.node')));
 			$bundle->setTargetPath('styles');
 		} else {
 			$filePath = trim($_GET['file'], '/');
