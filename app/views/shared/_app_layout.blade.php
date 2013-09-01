@@ -86,7 +86,8 @@
 @endsection
 
 @section('styles')
-	<link rel="stylesheet" type="text/css" href="/styles/loader.css" />
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Josefin+Sans" />
+	<link rel="stylesheet" href="/styles/loader.css" />
 	{{ Assets::styleIncludes() }}
 @endsection
 

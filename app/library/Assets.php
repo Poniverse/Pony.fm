@@ -41,6 +41,8 @@
 		}
 
 		public static function scriptAssetCollection($area) {
+			$coffeeScript = new CoffeeScriptFilter(Config::get('app.coffee'));
+
 			if ($area == 'app') {
 				$collection = new AssetCollection([
 					new FileAsset('scripts/base/jquery-2.0.2.js'),
@@ -60,15 +62,23 @@
 					new FileAsset('scripts/base/angularytics.js'),
 					new AssetCollection([
 						new GlobAsset('scripts/shared/*.coffee'),
-						new GlobAsset('scripts/shared/*.js'),
+					], [
+						$coffeeScript
+					]),
+					new GlobAsset('scripts/shared/*.js'),
+					new AssetCollection([
 						new GlobAsset('scripts/app/*.coffee'),
 						new GlobAsset('scripts/app/services/*.coffee'),
 						new GlobAsset('scripts/app/filters/*.coffee'),
-						new GlobAsset('scripts/app/filters/*.js'),
+					], [
+						$coffeeScript
+					]),
+					new GlobAsset('scripts/app/filters/*.js'),
+					new AssetCollection([
 						new GlobAsset('scripts/app/directives/*.coffee'),
 						new GlobAsset('scripts/app/controllers/*.coffee'),
 					], [
-						new CoffeeScriptFilter(Config::get('app.coffee'))
+						$coffeeScript
 					])
 				]);
 
@@ -78,7 +88,7 @@
 					$collection->add(new AssetCollection([
 						new GlobAsset('scripts/debug/*.coffee'),
 					], [
-						new CoffeeScriptFilter(Config::get('app.coffee'))
+						$coffeeScript
 					]));
 				}
 
@@ -94,7 +104,7 @@
 					new AssetCollection([
 						new GlobAsset('scripts/embed/*.coffee'),
 					], [
-						new CoffeeScriptFilter(Config::get('app.coffee'))
+						$coffeeScript
 					])
 				]);
 
