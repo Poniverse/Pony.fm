@@ -71,7 +71,7 @@
 				'is_favourited' => false
 			];
 
-			if ($playlist->users->count()) {
+			if (Auth::check() && $playlist->users->count()) {
 				$userRow = $playlist->users[0];
 				$userData = [
 					'stats' => [

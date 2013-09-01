@@ -99,7 +99,7 @@
 				'is_favourited' => false
 			];
 
-			if ($album->users->count()) {
+			if (Auth::check() && $album->users->count()) {
 				$userRow = $album->users[0];
 				$userData = [
 					'stats' => [

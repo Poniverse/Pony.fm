@@ -136,7 +136,7 @@
 				'is_favourited' => false
 			];
 
-			if ($track->users->count()) {
+			if (Auth::check() && $track->users->count()) {
 				$userRow = $track->users[0];
 				$userData = [
 					'stats' => [

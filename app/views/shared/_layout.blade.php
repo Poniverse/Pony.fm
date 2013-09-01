@@ -10,7 +10,7 @@
 
 		@yield('styles')
 	</head>
-	<body ng-app="ponyfm" ng-controller="application">
+	<body ng-app="ponyfm" ng-controller="application" class="{{Auth::check() ? 'is-logged' : ''}}">
 		@yield('content')
 		@yield('scripts')
 	</body>
