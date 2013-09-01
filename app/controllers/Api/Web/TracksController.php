@@ -73,17 +73,7 @@
 		}
 
 		public function getOwned() {
-			$query = Track::summary()->where('user_id', \Auth::user()->id);
-
-			if (Input::has('published')) {
-				$published = \Input::get('published');
-				if ($published)
-					$query->whereNotNull('published_at');
-				else
-					$query->whereNull('published_at');
-			}
-
-			$this->applyFilters($query);
+			$query = Track::summary()->where('user_id', \Auth::user()->id)->orderBy('created_at', 'desc');
 
 			$tracks = [];
 			foreach ($query->get() as $track)
