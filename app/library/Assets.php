@@ -37,7 +37,7 @@
 				return $retVal;
 			}
 
-			return '<link rel="stylesheet" href="asset.php?area=' . $area . '&type=less&' . gmdate($css->getLastModified()) . '" />';
+			return '<script>document.write(\'<link rel="stylesheet" href="asset.php?area=' . $area . '&type=less&' . gmdate($css->getLastModified()) . '" />\');</script>';
 		}
 
 		public static function scriptAssetCollection($area) {

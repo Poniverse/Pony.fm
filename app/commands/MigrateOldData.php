@@ -322,6 +322,21 @@
 					$this->error('Could not sync favourite ' . $fav->id . ' because ' . $e->getMessage());
 				}
 			}
+
+			$this->info('Syncing Followers');
+			$oldFollowers = $oldDb->table('user_follower')->get();
+			foreach ($oldFollowers as $follower) {
+				try {
+					DB::table('followers')->insert([
+						'id' => $follower->id,
+						'user_id' => $follower->follower_id,
+						'artist_at' => $follower->user_at,
+						'created_at' => $follower->created_at,
+					]);
+				} catch (Exception $e) {
+					$this->error('Could not sync follower ' . $fav->id . ' because ' . $e->getMessage());
+				}
+			}
 		}
 
 		private function getIdDirectory($type, $id) {
