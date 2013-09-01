@@ -10,8 +10,6 @@ class CreateUsersTable extends Migration {
 			$table->string('display_name', 255);
 			$table->string('mlpforums_name')->nullable();
 			$table->boolean('sync_names')->default(true);
-			$table->string('password_hash', 32);
-			$table->string('password_salt', 5);
 			$table->string('email', 150)->indexed();
 			$table->string('gravatar')->nullable();
 			$table->string('slug');

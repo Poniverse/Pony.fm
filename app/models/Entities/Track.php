@@ -54,31 +54,43 @@
 		}
 
 		public static function popular($count, $allowExplicit = false) {
-			$tracks = Cache::remember('popular_tracks-' . ($allowExplicit ? 'explicit' : 'safe'), 5, function() use ($allowExplicit) {
+			$trackIds = Cache::remember('popular_tracks-' . ($allowExplicit ? 'explicit' : 'safe'), 5, function() use ($allowExplicit) {
 				$query = static
-					::with(['user', 'genre', 'cover', 'user.avatar'])
-					->published()
-					->whereIsExplicit($allowExplicit)
+					::published()
 					->join(DB::raw('
 						(	SELECT `track_id`, `created_at`
 							FROM `resource_log_items`
-							WHERE `created_at` > now() - INTERVAL 1 DAY
+							WHERE track_id IS NOT NULL AND log_type = 3 AND `created_at` > now() - INTERVAL 1 DAY
 						) AS ranged_plays'),
 							'tracks.id', '=', 'ranged_plays.track_id')
 					->groupBy('id')
 					->orderBy('plays', 'desc')
 					->take(20);
 
+				if (!$allowExplicit)
+					$query->whereIsExplicit(false);
+
 				$results = [];
 
 				foreach($query->get(['*', DB::raw('count(*) as plays')]) as $track) {
-					$results[] = self::mapPublicTrackSummary($track);
+					$results[] = $track->id;
 				}
 
 				return $results;
 			});
 
-			return $tracks;
+			$tracks = Track::summary()
+				->userDetails()
+				->explicitFilter()
+				->published()
+				->with('user', 'genre', 'cover', 'album', 'album.user')
+				->whereIn('id', $trackIds);
+
+			$processed = [];
+			foreach ($tracks->get() as $track)
+				$processed[] = Track::mapPublicTrackSummary($track);
+
+			return $processed;
 		}
 
 		public static function mapPublicTrackShow($track) {

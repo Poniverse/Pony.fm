@@ -67,13 +67,13 @@
 
 			$user = new User;
 
-			$user->username = $poniverseUser['username'];
+			$user->mlpforums_name = $poniverseUser['username'];
 			$user->display_name = $poniverseUser['display_name'];
 			$user->email = $poniverseUser['email'];
 			$user->created_at = gmdate("Y-m-d H:i:s", time());
+			$user->uses_gravatar = 1;
 
 			$user->save();
-			$user->roles()->attach(4);
 
 			//We need to insert a new token row :O
 

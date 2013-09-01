@@ -40,8 +40,6 @@
 					'created_at' => $user->created_at,
 					'updated_at' => $user->updated_at,
 					'slug' => $user->slug,
-					'password_hash' => $user->password_hash,
-					'password_salt' => $user->password_salt,
 					'bio' => $user->bio,
 					'sync_names' => $user->sync_names,
 					'can_see_explicit_content' => $user->can_see_explicit_content,

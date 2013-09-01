@@ -86,6 +86,7 @@
 @endsection
 
 @section('styles')
+	<link rel="stylesheet" type="text/css" href="/styles/loader.css" />
 	{{ Assets::styleIncludes() }}
 @endsection
 
