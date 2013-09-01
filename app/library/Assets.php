@@ -135,7 +135,7 @@
 			} else if ($area == 'embed') {
 				$css = new AssetCollection([
 					new FileAsset('styles/embed.less'),
-				], [new \Assetic\Filter\LessFilter('node')]);
+				], [new \Assetic\Filter\LessFilter('node', Config::get('app.node_paths'))]);
 
 				return $css;
 			}
