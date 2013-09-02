@@ -44,8 +44,9 @@ loaderDef.done ->
 			else
 				currentSound.play()
 		else
+
 			currentSound = soundManager.createSound
-				url: '/t' + trackId + '/stream',
+				url: ['/t' + trackId + '/stream.mp3', '/t' + trackId + '/stream.ogg', '/t' + trackId + '/stream.m4a'],
 				volume: 50
 
 				whileloading: ->
