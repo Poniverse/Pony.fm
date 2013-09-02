@@ -178,6 +178,10 @@ angular.module('ponyfm').filter('pfmdate', [
 				parts = [],
 				fn, match;
 
+			if (typeof(date) == 'object' && date.date) {
+				date = date.date;
+			}
+
 			format = format || 'mediumDate';
 			format = $locale.DATETIME_FORMATS[format] || format;
 			if (isString(date)) {
@@ -190,10 +194,6 @@ angular.module('ponyfm').filter('pfmdate', [
 
 			if (isNumber(date)) {
 				date = new Date(date);
-			}
-
-			if (typeof(date) == 'object' && date.date) {
-				date = new Date(date.date);
 			}
 
 			if (!isDate(date)) {
