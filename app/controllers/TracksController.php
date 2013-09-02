@@ -131,7 +131,7 @@
 			ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $format['index']);
 
 			$response = Response::make('', 200);
-			$filename = $track->getFileFor($format);
+			$filename = $track->getFileFor($formatName);
 
 			if (Config::get('app.sendfile')) {
 				$response->header('X-Sendfile', $filename);
