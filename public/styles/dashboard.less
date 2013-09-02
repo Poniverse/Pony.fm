@@ -1,13 +1,49 @@
 @import-once "base/bootstrap/bootstrap";
 
+.dashboard {
+  h1 {
+	background: @pfm-purple;
+	color: #fff;
+	font-size: 10pt;
+	padding: 5px;
+	margin: 0px;
+	margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 1300px) and (min-width: 720px) {
+  html .dashboard {
+	.recent-tracks {
+	  width: 50%;
+
+	  .tracks-listing > li:nth-child(1n+15) {
+		display: none;
+	  }
+	}
+
+	.popular-tracks {
+	  width: 50%;
+	  float: right;
+	}
+
+	.news {
+	  width: 50%;
+	  clear: left;
+	}
+  }
+}
+
 .recent-tracks {
   h1 {
 	a {
+	  color: #fff;
 	  display: block;
 	  float: right;
 	  font-size: 10pt;
-
-	  margin-top: 8px;
+	  background: darken(@pfm-purple, 20%);
+	  margin: -5px;
+	  margin-left: 0px;
+	  padding: 5px;
 	}
   }
 }
@@ -16,8 +52,19 @@
   section {
 	.box-sizing(border-box);
 
-	float: left;
-	width: 50%;
 	padding: 5px;
+	float: left;
+  }
+
+  .recent-tracks {
+	width: 37.5%;
+  }
+
+  .popular-tracks {
+	width: 37.5%;
+  }
+
+  .news {
+	width: 25%;
   }
 }

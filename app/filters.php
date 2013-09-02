@@ -40,7 +40,7 @@
 		});
 
 		App::error(function($exception) {
-			return Response::view('errors.500', array(), 404);
+		//	return Response::view('errors.500', array(), 404);
 		});
 	}
 

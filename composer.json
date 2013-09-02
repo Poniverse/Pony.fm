@@ -2,7 +2,8 @@
 	"require": {
 		"laravel/framework": "4.0.*",
 		"kriswallsmith/assetic": "1.2.*@dev",
-		"codescale/ffmpeg-php": "2.7.0"
+		"codescale/ffmpeg-php": "2.7.0",
+		"simplepie/simplepie": "1.3.1"
 	},
 	"autoload": {
 		"classmap": [

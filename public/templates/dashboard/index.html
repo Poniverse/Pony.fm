@@ -1,20 +1,28 @@
 <div class="dashboard stretch-to-bottom">
 	<section class="recent-tracks">
-		<div>
-			<h1>
-				<a href="/tracks"><i class="icon-music"></i> see more</a>
-				The Newest Tunes
-			</h1>
-			<pfm-tracks-list tracks="recentTracks" class="two-columns"></pfm-tracks-list>
-		</div>
+		<h1>
+			<a href="/tracks"><i class="icon-music"></i> see more</a>
+			The Newest Tunes
+		</h1>
+		<pfm-tracks-list tracks="recentTracks" class="two-columns"></pfm-tracks-list>
 	</section>
 
 	<section class="popular-tracks">
-		<div>
-			<h1>
-				What's Popular Today
-			</h1>
-			<pfm-tracks-list tracks="popularTracks" class="two-columns"></pfm-tracks-list>
-		</div>
+		<h1>
+			What's Popular Today
+		</h1>
+		<pfm-tracks-list tracks="popularTracks" class="two-columns"></pfm-tracks-list>
+	</section>
+
+	<section class="news">
+		<h1>Pony.fm News</h1>
+		<ul>
+			<li ng-repeat="post in news">
+				<a href="{{post.url}}">
+					{{post.title}}
+					<em>{{post.date}}</em>
+				</a>
+			</li>
+		</ul>
 	</section>
 </div>
