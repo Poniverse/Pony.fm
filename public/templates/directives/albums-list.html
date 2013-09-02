@@ -1,7 +1,7 @@
 <ul class="albums-listing {{class}}">
 	<li ng-repeat="album in albums" bindonce>
 		<a bo-href="album.url">
-			<img class="image" pfm-src-loader="{{album.covers.small}}" pfm-src-size="small" />
+			<img class="image" pfm-src-loader="album.covers.small" pfm-src-size="small" />
 			<span class="info">
 			<span class="title" bo-text="album.title"></span>
 			<span class="published">

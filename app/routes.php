@@ -23,7 +23,7 @@
 	Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
 	Route::get('t{id}', 'TracksController@getShortlink' );
 	Route::get('t{id}/embed', 'TracksController@getEmbed' );
-	Route::get('t{id}/stream', 'TracksController@getStream' );
+	Route::get('t{id}/stream.{extension}', 'TracksController@getStream' );
 	Route::get('t{id}/dl.{extension}', 'TracksController@getDownload' );
 
 	Route::get('albums', 'AlbumsController@getIndex');
@@ -92,6 +92,8 @@
 			Route::post('/favourites/toggle', 'Api\Web\FavouritesController@postToggle');
 
 			Route::post('/follow/toggle', 'Api\Web\FollowController@postToggle');
+
+			Route::post('/dashboard/read-news', 'Api\Web\DashboardController@postReadNews');
 		});
 
 		Route::group(['before' => 'auth'], function() {

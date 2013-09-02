@@ -1,33 +1,31 @@
-<div class="stretch-to-bottom">
-	<div class="welcome">
-		<h1>Welcome to Pony.fm</h1>
-		<p>The pony fan music site. By a brony, for bronies.</p>
-		<p>
-			We provide a comprehensive set of free tools to host, distribute, and catalogue your music, integrated with a rich community experience for artists and listeners alike.
-		</p>
-		<p>
-			Features include <strong>unlimited downloads</strong>, <strong>unlimited uploads</strong>, <strong>lossless uploads</strong> and much more! Click <a href="/about">here</a> to get all of our features!
-		</p>
-	</div>
+<div class="dashboard stretch-to-bottom">
+	<section class="recent-tracks">
+		<h1>
+			<a href="/tracks"><i class="icon-music"></i> see more</a>
+			The Newest Tunes
+		</h1>
+		<pfm-tracks-list tracks="recentTracks" class="two-columns"></pfm-tracks-list>
+	</section>
 
-	<div class="dashboard">
-		<section class="recent-tracks">
-			<div>
-				<h1>
-					<a href="/tracks"><i class="icon-music"></i> see more</a>
-					The Newest Tunes
-				</h1>
-				<pfm-tracks-list tracks="recentTracks" class="two-columns"></pfm-tracks-list>
-			</div>
-		</section>
+	<section class="popular-tracks">
+		<h1>
+			What's Popular Today
+		</h1>
+		<pfm-tracks-list tracks="popularTracks" class="two-columns"></pfm-tracks-list>
+	</section>
 
-		<section class="popular-tracks">
-			<div>
-				<h1>
-					What's Popular Today
-				</h1>
-				<pfm-tracks-list tracks="popularTracks" class="two-columns"></pfm-tracks-list>
-			</div>
-		</section>
-	</div>
+	<section class="news">
+		<h1>
+			<a href="http://mlpforums.com/blog/404-ponyfm-development-blog/" target="_blank">read all</a>
+			Pony.fm News
+		</h1>
+		<ul>
+			<li ng-repeat="post in news">
+				<a href="{{post.url}}" target="_blank">
+					<em>{{post.date}}</em>
+					{{post.title}}
+				</a>
+			</li>
+		</ul>
+	</section>
 </div>

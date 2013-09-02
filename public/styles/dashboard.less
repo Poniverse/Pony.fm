@@ -1,23 +1,116 @@
 @import-once "base/bootstrap/bootstrap";
 
-.recent-tracks {
+.dashboard {
   h1 {
-	a {
-	  display: block;
-	  float: right;
-	  font-size: 10pt;
+	background: @pfm-purple;
+	color: #fff;
+	font-size: 10pt;
+	padding: 5px;
+	margin: 0px;
+	margin-bottom: 5px;
+  }
+}
 
-	  margin-top: 8px;
+@media (max-width: 1300px) and (min-width: 720px) {
+  html .dashboard {
+	.recent-tracks {
+	  width: 50%;
+
+	  .tracks-listing > li:nth-child(1n+15) {
+		display: none;
+	  }
+	}
+
+	.popular-tracks {
+	  width: 50%;
+	  float: right;
+	}
+
+	.news {
+	  width: 50%;
+	  clear: left;
+	}
+  }
+}
+
+@media (max-width: 720px) {
+  html .dashboard {
+  	section {
+	  float: none !important;
+	  width: auto !important;
 	}
   }
 }
 
 .dashboard {
+  h1 {
+	a {
+	  color: #fff;
+	  display: block;
+	  float: right;
+	  font-size: 10pt;
+	  background: darken(@pfm-purple, 20%);
+	  margin: -5px;
+	  margin-left: 0px;
+	  padding: 5px;
+	}
+  }
+
   section {
 	.box-sizing(border-box);
 
-	float: left;
-	width: 50%;
 	padding: 5px;
+	float: left;
+  }
+
+  .recent-tracks {
+	width: 37.5%;
+  }
+
+  .popular-tracks {
+	width: 37.5%;
+  }
+
+  .news {
+	width: 25%;
+
+	ul {
+	  list-style: none;
+	  padding: 0px;
+	  margin: 0px;
+
+	  li {
+		margin: 0px;
+		padding: 0px;
+
+		&.read {
+		  a {
+			background: #eee;
+			border-left-color: #ddd;
+		  }
+		}
+
+		a {
+		  .ellipsis();
+
+		  color: #000;
+		  display: block;
+		  padding: 5px;
+		  font-size: 10pt;
+		  background: lighten(@pfm-purple, 30%);
+		  border-left: 5px solid @pfm-purple;
+		  margin: 5px 0px;
+		  overflow: hidden;
+
+		  em {
+			display: block;
+			color: #444;
+			float: right;
+			font-size: 8pt;
+			font-style: normal;
+		  }
+		}
+	  }
+	}
   }
 }

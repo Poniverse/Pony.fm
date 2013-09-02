@@ -38,11 +38,11 @@
 		Log::listen(function($level, $message, $context) use ($profiler) {
 			$profiler->log($level, $message, $context);
 		});
-	}
 
-	App::error(function($exception) {
-		return Response::view('errors.404', array(), 404);
-	});
+		App::error(function($exception) {
+		//	return Response::view('errors.500', array(), 404);
+		});
+	}
 
 	App::missing(function($exception) {
 		return Response::view('errors.404', array(), 404);
