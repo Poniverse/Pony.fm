@@ -67,7 +67,6 @@
           <root url="file://$MODULE_DIR$/vendor/psr/log" />
           <root url="file://$MODULE_DIR$/vendor/filp/whoops" />
           <root url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
-          <root url="file://$MODULE_DIR$/vendor/guzzle/parser" />
           <root url="file://$MODULE_DIR$/vendor/nesbot/carbon" />
           <root url="file://$MODULE_DIR$/vendor/predis/predis" />
           <root url="file://$MODULE_DIR$/vendor/laravel/framework" />
@@ -106,7 +105,6 @@
           <root url="file://$MODULE_DIR$/vendor/psr/log" />
           <root url="file://$MODULE_DIR$/vendor/filp/whoops" />
           <root url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
-          <root url="file://$MODULE_DIR$/vendor/guzzle/parser" />
           <root url="file://$MODULE_DIR$/vendor/nesbot/carbon" />
           <root url="file://$MODULE_DIR$/vendor/predis/predis" />
           <root url="file://$MODULE_DIR$/vendor/laravel/framework" />

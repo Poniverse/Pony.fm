@@ -34,4 +34,10 @@
 				'popular_tracks' => Track::popular(30, Auth::check() && Auth::user()->can_see_explicit_content),
 				'news' => News::getNews(0, 10)], 200);
 		}
+
+		public function postReadNews() {
+			News::markPostAsRead(Input::get('url'));
+			return Response::json([
+			]);
+		}
 	}

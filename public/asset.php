@@ -33,7 +33,7 @@
 			$bundle->setTargetPath($filePath);
 		}
 
-//		$bundle = new AssetCache($bundle, new FilesystemCache("$cacheDirectory/scripts"));
+		$bundle = new AssetCache($bundle, new FilesystemCache("$cacheDirectory/scripts"));
 	} else if ($_GET['type'] == 'less') {
 		header('Content-Type: text/css');
 

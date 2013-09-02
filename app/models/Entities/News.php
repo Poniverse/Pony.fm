@@ -20,7 +20,7 @@
 				$postHashes[] = self::calculateHash($post->get_permalink());
 			}
 
-			$seenRecords = self::where('user_id', '=', Auth::user()->id)->whereIn('post_hash', $postHashes)->get();
+			$seenRecords = Auth::check() ? self::where('user_id', '=', Auth::user()->id)->whereIn('post_hash', $postHashes)->get() : [];
 			$seenHashes = [];
 
 			foreach ($seenRecords as $record) {
@@ -36,11 +36,9 @@
 			foreach ($posts as $post) {
 				$autoRead = $post->get_date('U') < $readCutoffDate;
 				$postsReturn[] = [
-					'post' => [
-						'title' => $post->get_title(),
-						'date' => $post->get_date('j F Y g:i a'),
-						'url' => $post->get_permalink()
-					],
+					'title' => $post->get_title(),
+					'date' => $post->get_date('j F Y g:i a'),
+					'url' => $post->get_permalink(),
 					'read' => $autoRead || isset($seenHashes[self::calculateHash($post->get_permalink())])];
 			}
 
@@ -49,7 +47,9 @@
 
 		public static function markPostAsRead($postUrl) {
 			$postHash = self::calculateHash($postUrl);
-			$news = News::create(['user_id' => Auth::user()->id, 'post_hash' => $postHash]);
+			$news = new News();
+			$news->user_id = Auth::user()->id;
+			$news->post_hash = $postHash;
 			$news->save();
 		}
 

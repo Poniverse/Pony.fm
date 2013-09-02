@@ -33,7 +33,16 @@
   }
 }
 
-.recent-tracks {
+@media (max-width: 720px) {
+  html .dashboard {
+  	section {
+	  float: none !important;
+	  width: auto !important;
+	}
+  }
+}
+
+.dashboard {
   h1 {
 	a {
 	  color: #fff;
@@ -46,9 +55,7 @@
 	  padding: 5px;
 	}
   }
-}
 
-.dashboard {
   section {
 	.box-sizing(border-box);
 
@@ -66,5 +73,44 @@
 
   .news {
 	width: 25%;
+
+	ul {
+	  list-style: none;
+	  padding: 0px;
+	  margin: 0px;
+
+	  li {
+		margin: 0px;
+		padding: 0px;
+
+		&.read {
+		  a {
+			background: #eee;
+			border-left-color: #ddd;
+		  }
+		}
+
+		a {
+		  .ellipsis();
+
+		  color: #000;
+		  display: block;
+		  padding: 5px;
+		  font-size: 10pt;
+		  background: lighten(@pfm-purple, 30%);
+		  border-left: 5px solid @pfm-purple;
+		  margin: 5px 0px;
+		  overflow: hidden;
+
+		  em {
+			display: block;
+			color: #444;
+			float: right;
+			font-size: 8pt;
+			font-style: normal;
+		  }
+		}
+	  }
+	}
   }
 }

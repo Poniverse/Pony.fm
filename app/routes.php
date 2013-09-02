@@ -92,6 +92,8 @@
 			Route::post('/favourites/toggle', 'Api\Web\FavouritesController@postToggle');
 
 			Route::post('/follow/toggle', 'Api\Web\FollowController@postToggle');
+
+			Route::post('/dashboard/read-news', 'Api\Web\DashboardController@postReadNews');
 		});
 
 		Route::group(['before' => 'auth'], function() {
