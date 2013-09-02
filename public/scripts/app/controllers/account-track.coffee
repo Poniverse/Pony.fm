@@ -93,7 +93,7 @@ angular.module('ponyfm').controller "account-track", [
 					return if value == null
 					if typeof(value) == 'object'
 						formData.append name, value, value.name
-				else
+				else if value != null
 					formData.append name, value
 
 			if $scope.edit.track_type_id == 2
@@ -105,6 +105,7 @@ angular.module('ponyfm').controller "account-track", [
 			xhr.send formData
 
 		tracks.getEdit($state.params.track_id).done (track) ->
+			console.log (track.album_id);
 			$scope.edit =
 				id: track.id
 				title: track.title

@@ -52,7 +52,7 @@
 			if ($isVocal)
 				$rules['lyrics'] = 'required';
 
-			if ($this->_input['track_type_id'] == 2)
+			if (isset($this->_input['track_type_id']) && $this->_input['track_type_id'] == 2)
 				$rules['show_song_ids'] = 'required|exists:show_songs,id';
 
 			$validator = \Validator::make($this->_input, $rules);
@@ -63,8 +63,8 @@
 			$track = $this->_track;
 			$track->title = $this->_input['title'];
 			$track->released_at = $this->_input['released_at'] != "" ? strtotime($this->_input['released_at']) : null;
-			$track->description = $this->_input['description'];
-			$track->lyrics = $this->_input['lyrics'];
+			$track->description = isset($this->_input['description']) ? $this->_input['description'] : '';
+			$track->lyrics = isset($this->_input['lyrics']) ? $this->_input['lyrics'] : '';
 			$track->license_id = $this->_input['license_id'];
 			$track->genre_id = $this->_input['genre_id'];
 			$track->track_type_id = $this->_input['track_type_id'];
