@@ -19,7 +19,7 @@ header {
 	width: (@pfm-sidebar-size - 25);
 	height: 64px;
 	line-height: 52px;
-	background: @pfm-purple;
+	background: #84528A;
 	color: #fff;
 	font-size: 24pt;
 	padding-left: 25px;
@@ -29,7 +29,7 @@ header {
 	font-family: 'Josefin Sans', sans-serif;
 
 	&:hover {
-	  background: darken(@pfm-purple, 25%);
+	  background: darken(#84528A, 25%);
 	  color: #fff;
 	  text-decoration: none;
 	}
@@ -83,13 +83,14 @@ header {
 .now-playing {
   margin-left: @pfm-sidebar-size;
   height: 64px;
-  background: #eee;
+  background: #fff;
   position: relative;
   z-index: 500;
+  border-bottom: 1px solid #bcbcbc;
 }
 
 .sidebar {
-  background: @pfm-light-grey;
+  background: #515151;
   width: @pfm-sidebar-size;
   height: 100%;
   float: left;
@@ -119,7 +120,7 @@ header {
 	  margin: 0px;
 	  font-size: 10pt;
 	  color: #eee;
-	  background: darken(@pfm-light-grey, 10%);
+	  background: darken(#515151, 5%);
 	  line-height: normal;
 
 	  a {

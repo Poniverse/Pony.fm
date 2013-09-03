@@ -45,24 +45,24 @@
 	<div class="site-body">
 		<ul class="sidebar" ng-controller="sidebar">
 			@if (Auth::check())
-				<li ng-class="{selected: stateIncludes('home')}"><a href="/">Dashboard <i class="icon-home"></i></a></li>
+				<li ng-class="{selected: stateIncludes('home')}"><a href="/">Dashboard</a></li>
 			@else
-				<li ng-class="{selected: stateIncludes('home')}"><a href="/">Home <i class="icon-home"></i></a></li>
+				<li ng-class="{selected: stateIncludes('home')}"><a href="/">Home</a></li>
 			@endif
 			<li ng-class="{selected: (stateIncludes('content') && !isPinnedPlaylistSelected)}">
-				<a href="/tracks">Discover <i class="icon-music"></i></a>
+				<a href="/tracks">Discover</a>
 			</li>
 
 			@if (Auth::check())
-				<li ng-class="{selected: stateIncludes('favourites')}"><a href="/account/favourites/tracks">Favourites <i class="icon-star"></i></a></li>
-				<li ng-class="{selected: stateIncludes('account')}"><a href="/account/tracks">Account <i class="icon-user"></i></a></li>
+				<li ng-class="{selected: stateIncludes('favourites')}"><a href="/account/favourites/tracks">Favourites</a></li>
+				<li ng-class="{selected: stateIncludes('account')}"><a href="/account/tracks">Account</a></li>
 			@endif
 
-			<li ng-class="{selected: isActive('/about')}"><a href="/about">About <i class="icon-info"></i></a></li>
+			<li ng-class="{selected: isActive('/about')}"><a href="/about">About</a></li>
 
 			@if (Auth::check())
 				<li class="uploader" ng-class="{selected: stateIncludes('uploader')}">
-					<a href="/account/uploader">Upload Music <i class="icon-upload-alt"></i></a>
+					<a href="/account/uploader">Upload Music</a>
 				</li>
 				<li>
 					<h3>
@@ -75,7 +75,7 @@
 					<a href="{{Helpers::angular('playlist.url')}}" ng-bind="playlist.title"></a>
 				</li>
 			@else
-			<li><a href="/login" target="_self">Login <i class="icon-user"></i></a></li>
+			<li><a href="/login" target="_self">Login</a></li>
 			@endif
 		</ul>
 		<ui-view class="site-content">
