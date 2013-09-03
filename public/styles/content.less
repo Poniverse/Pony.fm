@@ -145,7 +145,16 @@
   }
 
   .share-buttons {
+	.transition(opacity 250ms ease-out);
 	margin-top: 5px;
+	opacity: 0;
+	overflow: hidden;
+	height: 28px;
+
+	&.loaded {
+	  opacity: 1;
+	  overflow: visible;
+	}
 
 	.facebook, .twitter {
 	  margin-top: 3px;

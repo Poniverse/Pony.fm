@@ -19,13 +19,13 @@ body.is-logged {
 	padding: 1px;
 
 	img {
-	  .img-polaroid();
 	  .box-shadow(none);
 
 	  display: block;
 	  width: 40px;
 	  height: 40px;
-	  padding: 1px;
+	  padding: 0px;
+	  border: 1px solid #bcbcbc;
 	}
 
 	.loader {
@@ -77,15 +77,17 @@ body.is-logged {
   }
 
   .transport {
+	.border-radius(4px);
+
 	background: #aaa;
-	height: 8px;
+	height: 5px;
 	position: relative;
 	cursor: pointer;
 	margin-top: 4px;
 
 	.bar {
 	  z-index: 500;
-	  background: @pfm-purple;
+	  background: #84528A;
 	}
 
 	.loader-bar {
@@ -94,6 +96,8 @@ body.is-logged {
 	}
 
 	.bar, .loader-bar {
+	  .border-radius(4px);
+
 	  position: absolute;
 	  top: 0px;
 	  left: 0px;
