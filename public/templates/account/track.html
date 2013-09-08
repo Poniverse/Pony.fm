@@ -29,6 +29,7 @@
 				<label for="is_vocal" class="strong"><input ng-disabled="isSaving" ng-change="touchModel(); updateIsVocal()" id="is_vocal" type="checkbox" ng-model="edit.is_vocal" /> Is Vocal</label>
 				<textarea ng-disabled="isSaving" ng-change="touchModel()" ng-show="edit.is_vocal" ng-animate="'fade'" placeholder="Lyrics (required)" id="lyrics" ng-model="edit.lyrics"></textarea>
 				<div class="error">{{errors.lyrics}}</div>
+				<div class="error">{{errors.lyrics}}</div>
 			</div>
 		</div>
 		<div class="row-fluid">
@@ -83,7 +84,7 @@
 				<label class="strong">Track Cover: </label>
 				<pfm-image-upload set-image="setCover" image="edit.cover" />
 			</div>
-			<div class="form-row span6">
+			<div class="form-row span6" ng-class="{'has-error': errors.released_at != null}">
 				<label for="released_at" class="strong">Release Date:</label>
 				<input ng-disabled="isSaving" type="text" id="released_at" ui-date ng-model="edit.released_at" ng-change="touchModel()" ui-date-format="yy-mm-dd" />
 				<div class="error">{{errors.released_at}}</div>
