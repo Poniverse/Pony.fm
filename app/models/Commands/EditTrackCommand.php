@@ -62,7 +62,7 @@
 
 			$track = $this->_track;
 			$track->title = $this->_input['title'];
-			$track->released_at = $this->_input['released_at'] != "" ? strtotime($this->_input['released_at']) : null;
+			$track->released_at = isset($this->_input['released_at']) && $this->_input['released_at'] != "" ? strtotime($this->_input['released_at']) : null;
 			$track->description = isset($this->_input['description']) ? $this->_input['description'] : '';
 			$track->lyrics = isset($this->_input['lyrics']) ? $this->_input['lyrics'] : '';
 			$track->license_id = $this->_input['license_id'];
