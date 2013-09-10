@@ -80,6 +80,9 @@
 				return $results;
 			});
 
+			if (!count($trackIds))
+				return [];
+
 			$tracks = Track::summary()
 				->userDetails()
 				->explicitFilter()

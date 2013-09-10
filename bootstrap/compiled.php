@@ -7249,7 +7249,7 @@ use Monolog\Formatter\LineFormatter;
 abstract class AbstractHandler implements HandlerInterface
 {
     protected $level = Logger::DEBUG;
-    protected $bubble = false;
+    protected $bubble = true;
     protected $formatter;
     protected $processors = array();
     public function __construct($level = Logger::DEBUG, $bubble = true)
