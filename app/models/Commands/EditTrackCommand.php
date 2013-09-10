@@ -101,6 +101,9 @@
 
 			if ($track->published_at == null) {
 				$track->published_at = new \DateTime();
+
+				DB::table('tracks')->whereUserId($track->user_id)->update(['is_latest' => false]);
+				$track->is_latest = true;
 			}
 
 			if (isset($this->_input['cover_id'])) {

@@ -17,6 +17,7 @@
 		public function getIndex() {
 			$recentQuery = Track::summary()
 				->with(['genre', 'user', 'cover', 'user.avatar'])
+				->whereIsLatest(true)
 				->userDetails()
 				->explicitFilter()
 				->published()
