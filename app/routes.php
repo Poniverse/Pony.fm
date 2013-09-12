@@ -34,6 +34,7 @@
 	Route::get('artists', 'ArtistsController@getIndex');
 	Route::get('playlists', 'PlaylistsController@getIndex');
 
+	Route::get('/register', 'AccountController@getRegister');
 	Route::get('/login', 'AuthController@getLogin');
 	Route::get('/auth/oauth', 'AuthController@getOAuth');
 
