@@ -75,7 +75,8 @@
 					<a href="{{Helpers::angular('playlist.url')}}" ng-bind="playlist.title"></a>
 				</li>
 			@else
-			<li><a href="/login" target="_self">Login</a></li>
+				<li><a href="/login" target="_self">Login</a></li>
+				<li><a href="/register" target="_self">Register</a></li>
 			@endif
 		</ul>
 		<ui-view class="site-content">
