@@ -48,6 +48,8 @@
 			return Response::json([
 				'id' => $track->id,
 				'title' => $track->title,
+				'description' => $track->description,
+				'lyrics' => $track->lyrics,
 				'user' => [
 					'id' => $track->user->id,
 					'name' => $track->user->display_name,
