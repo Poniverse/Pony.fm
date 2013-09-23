@@ -51,6 +51,7 @@
 
 	Route::group(['prefix' => 'api/v1'], function() {
 		Route::get('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
+		Route::post('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
 	});
 
 	Route::group(['prefix' => 'api/web'], function() {
