@@ -19,7 +19,9 @@
 	class Track extends \Eloquent {
 		protected $softDelete = true;
 
-		use SlugTrait;
+		use SlugTrait {
+			SlugTrait::setTitleAttribute as setTitleAttributeSlug;
+		}
 
 		public static $Formats = [
 			'FLAC' 		 => ['index' => 0, 'extension' => 'flac', 		'tag_format' => 'metaflac', 		'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/flac', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec flac -aq 8 -f flac {$target}'],
@@ -257,6 +259,10 @@
 			return $this->belongsTo('Entities\Genre');
 		}
 
+		public function trackType() {
+			return $this->belongsTo('Entities\TrackType', 'track_type_id');
+		}
+
 		public function comments(){
 			return $this->hasMany('Entities\Comment')->orderBy('created_at', 'desc');
 		}
@@ -287,6 +293,11 @@
 
 		public function getYear() {
 			return date('Y', strtotime($this->release_date));
+		}
+
+		public function setTitleAttribute($value) {
+			$this->setTitleAttributeSlug($value);;
+			$this->updateHash();
 		}
 
 		public function getFilesize($formatName) {
@@ -399,6 +410,10 @@
 
 			$format = self::$Formats[$format];
 			return URL::to('/t' . $this->id . '/dl.' . $format['extension']);
+		}
+
+		public function updateHash() {
+			$this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name) . '-' . Helpers::sanitizeInputForHashing($this->title));
 		}
 
 		public function updateTags() {
