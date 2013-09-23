@@ -1,6 +1,15 @@
 <?php
 
 	class Helpers {
+		/**
+		 * Removes whitespace and special characters from a string
+		 * and sets all characters to lower case.
+		 */
+		public static function sanitizeInputForHashing($value) {
+			$value = preg_replace('/[^A-Za-z0-9]/', '', $value);
+			return strtolower($value);
+		}
+
 		public static function template($template) {
 			echo file_get_contents('templates/' . $template);
 		}
