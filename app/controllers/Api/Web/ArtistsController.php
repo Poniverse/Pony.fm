@@ -57,7 +57,7 @@
 			if (!$user)
 				App::abort(404);
 
-			$query = Track::summary()->with('genre', 'cover', 'user')->userDetails()->whereUserId($user->id)->whereNotNull('published_at');
+			$query = Track::summary()->published()->listed()->explicitFilter()->with('genre', 'cover', 'user')->userDetails()->whereUserId($user->id)->whereNotNull('published_at');
 			$tracks = [];
 			$singles = [];
 
@@ -88,7 +88,7 @@
 			if (!$user)
 				App::abort(404);
 
-			$trackQuery = Track::summary()->with('genre', 'cover', 'user')->userDetails()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(20);
+			$trackQuery = Track::summary()->published()->explicitFilter()->listed()->with('genre', 'cover', 'user')->userDetails()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(20);
 			$latestTracks = [];
 
 			foreach ($trackQuery->get() as $track) {

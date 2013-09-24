@@ -70,6 +70,7 @@
 			$track->track_type_id = $this->_input['track_type_id'];
 			$track->is_explicit = $this->_input['is_explicit'] == 'true';
 			$track->is_downloadable = $this->_input['is_downloadable'] == 'true';
+			$track->is_listed = $this->_input['is_listed'] == 'true';
 			$track->is_vocal = $isVocal;
 
 			if (isset($this->_input['album_id']) && strlen(trim($this->_input['album_id']))) {

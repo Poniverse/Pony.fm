@@ -52,6 +52,7 @@
 
 			$query = Track::summary()
 				->userDetails()
+				->listed()
 				->explicitFilter()
 				->published()
 				->with('user', 'genre', 'cover', 'album', 'album.user');
