@@ -40,6 +40,7 @@
 				$track->user_id = $user->id;
 				$track->title = pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME);
 				$track->duration = $audio->getDuration();
+				$track->is_listed = true;
 
 				$track->save();
 

@@ -122,6 +122,7 @@ angular.module('ponyfm').controller "account-track", [
 				cover: track.cover_url
 				album_id: track.album_id
 				is_published: track.is_published
+				is_listed: track.is_listed
 
 			$scope.selectedAlbum = if track.album_id then albumsDb[track.album_id] else null
 			$scope.selectedSongs = {}

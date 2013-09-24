@@ -47,6 +47,10 @@
 			$query->whereNotNull('published_at');
 		}
 
+		public function scopeListed($query) {
+			$query->whereIsListed(true);
+		}
+
 		public function scopeExplicitFilter($query) {
 			if (!Auth::check() || !Auth::user()->can_see_explicit_content)
 				$query->whereIsExplicit(false);
@@ -60,6 +64,7 @@
 			$trackIds = Cache::remember('popular_tracks' . $count . '-' . ($allowExplicit ? 'explicit' : 'safe'), 5, function() use ($allowExplicit, $count) {
 				$query = static
 					::published()
+					->listed()
 					->join(DB::raw('
 						(	SELECT `track_id`, `created_at`
 							FROM `resource_log_items`
@@ -249,7 +254,8 @@
 				'duration' => $track->duration,
 				'genre_id' => $track->genre_id,
 				'track_type_id' => $track->track_type_id,
-				'cover_url' => $track->getCoverUrl(Image::SMALL)
+				'cover_url' => $track->getCoverUrl(Image::SMALL),
+				'is_listed' => !!$track->is_listed
 			];
 		}
 
