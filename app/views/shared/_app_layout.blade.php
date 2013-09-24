@@ -24,7 +24,7 @@
 	</script>
 
 	<header>
-		<a href="/">pony.fm</a>
+		<a href="/">pony.fm <small>(beta)</small></a>
 		<div class="now-playing">
 			@if (Auth::check())
 				<div class="user-details dropdown">
