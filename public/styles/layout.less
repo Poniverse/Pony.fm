@@ -18,7 +18,7 @@ header {
 	float: left;
 	width: (@pfm-sidebar-size - 25);
 	height: 64px;
-	line-height: 52px;
+	line-height: 42px;
 	background: #84528A;
 	color: #fff;
 	font-size: 24pt;
@@ -27,11 +27,21 @@ header {
 	position: relative;
 	z-index: 600;
 	font-family: 'Josefin Sans', sans-serif;
+	position: relative;
 
 	&:hover {
 	  background: darken(#84528A, 25%);
 	  color: #fff;
 	  text-decoration: none;
+	}
+
+	small {
+	  font-family: 'Arial';
+	  font-size: 8pt;
+	  color: #eee;
+	  position: absolute;
+	  top: 30px;
+	  left: 33px;
 	}
   }
 

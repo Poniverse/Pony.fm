@@ -3,6 +3,12 @@ window.handleResize = () ->
 	$siteBody = $ '.site-body'
 	$siteBody.height windowHeight - $('header').height()
 
+	$('.dropdown-menu').each () ->
+		$this = $ this
+		newMaxHeight = windowHeight - $this.parent().offset().top - $this.parent().height() - 5
+		$this.css
+			'max-height': newMaxHeight
+
 	$('.stretch-to-bottom').each () ->
 		$this = $ this
 		newHeight = windowHeight - $this.offset().top
