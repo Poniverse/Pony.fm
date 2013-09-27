@@ -349,6 +349,7 @@
 
 		public function ensureDirectoryExists() {
 			$destination = $this->getDirectory();
+			umask(0);
 
 			if (!is_dir($destination))
 				mkdir($destination, 777);
