@@ -91,11 +91,14 @@
 			</div>
 		</div>
 		<div class="row-fluid">
-			<div class="span6 form-row">
+			<div class="span4 form-row">
 				<label for="is_explicit"><input ng-disabled="isSaving" ng-change="touchModel()" id="is_explicit" type="checkbox" ng-model="edit.is_explicit" /> Contains Explicit Content</label>
 			</div>
-			<div class="span6 form-row">
+			<div class="span4 form-row">
 				<label for="is_downloadable"><input ng-disabled="isSaving" ng-change="touchModel()" id="is_downloadable" type="checkbox" ng-model="edit.is_downloadable" /> Is Downloadable</label>
+			</div>
+			<div class="span4 form-row">
+				<label for="is_listed"><input ng-disabled="isSaving" ng-change="touchModel()" id="is_listed" type="checkbox" ng-model="edit.is_listed" /> Is Listed</label>
 			</div>
 		</div>
 		<div class="form-row">

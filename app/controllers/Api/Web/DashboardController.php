@@ -18,6 +18,7 @@
 			$recentQuery = Track::summary()
 				->with(['genre', 'user', 'cover', 'user.avatar'])
 				->whereIsLatest(true)
+				->listed()
 				->userDetails()
 				->explicitFilter()
 				->published()

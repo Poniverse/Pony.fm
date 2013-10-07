@@ -49,6 +49,11 @@
 	Route::get('p{id}', 'PlaylistsController@getShortlink')->where('id', '\d+');
 	Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload' );
 
+	Route::group(['prefix' => 'api/v1'], function() {
+		Route::get('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
+		Route::post('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
+	});
+
 	Route::group(['prefix' => 'api/web'], function() {
 		Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
 

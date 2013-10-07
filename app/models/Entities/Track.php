@@ -19,7 +19,9 @@
 	class Track extends \Eloquent {
 		protected $softDelete = true;
 
-		use SlugTrait;
+		use SlugTrait {
+			SlugTrait::setTitleAttribute as setTitleAttributeSlug;
+		}
 
 		public static $Formats = [
 			'FLAC' 		 => ['index' => 0, 'extension' => 'flac', 		'tag_format' => 'metaflac', 		'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/flac', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec flac -aq 8 -f flac {$target}'],
@@ -45,6 +47,10 @@
 			$query->whereNotNull('published_at');
 		}
 
+		public function scopeListed($query) {
+			$query->whereIsListed(true);
+		}
+
 		public function scopeExplicitFilter($query) {
 			if (!Auth::check() || !Auth::user()->can_see_explicit_content)
 				$query->whereIsExplicit(false);
@@ -58,6 +64,7 @@
 			$trackIds = Cache::remember('popular_tracks' . $count . '-' . ($allowExplicit ? 'explicit' : 'safe'), 5, function() use ($allowExplicit, $count) {
 				$query = static
 					::published()
+					->listed()
 					->join(DB::raw('
 						(	SELECT `track_id`, `created_at`
 							FROM `resource_log_items`
@@ -247,7 +254,8 @@
 				'duration' => $track->duration,
 				'genre_id' => $track->genre_id,
 				'track_type_id' => $track->track_type_id,
-				'cover_url' => $track->getCoverUrl(Image::SMALL)
+				'cover_url' => $track->getCoverUrl(Image::SMALL),
+				'is_listed' => !!$track->is_listed
 			];
 		}
 
@@ -255,6 +263,10 @@
 
 		public function genre() {
 			return $this->belongsTo('Entities\Genre');
+		}
+
+		public function trackType() {
+			return $this->belongsTo('Entities\TrackType', 'track_type_id');
 		}
 
 		public function comments(){
@@ -287,6 +299,11 @@
 
 		public function getYear() {
 			return date('Y', strtotime($this->release_date));
+		}
+
+		public function setTitleAttribute($value) {
+			$this->setTitleAttributeSlug($value);;
+			$this->updateHash();
 		}
 
 		public function getFilesize($formatName) {
@@ -332,6 +349,7 @@
 
 		public function ensureDirectoryExists() {
 			$destination = $this->getDirectory();
+			umask(0);
 
 			if (!is_dir($destination))
 				mkdir($destination, 777);
@@ -399,6 +417,10 @@
 
 			$format = self::$Formats[$format];
 			return URL::to('/t' . $this->id . '/dl.' . $format['extension']);
+		}
+
+		public function updateHash() {
+			$this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name) . '-' . Helpers::sanitizeInputForHashing($this->title));
 		}
 
 		public function updateTags() {

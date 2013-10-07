@@ -52,6 +52,7 @@
 
 			$query = Track::summary()
 				->userDetails()
+				->listed()
 				->explicitFilter()
 				->published()
 				->with('user', 'genre', 'cover', 'album', 'album.user');
@@ -64,7 +65,7 @@
 			$tracks = [];
 			$ids = [];
 
-			foreach ($query->get() as $track) {
+			foreach ($query->get(['tracks.*']) as $track) {
 				$tracks[] = Track::mapPublicTrackSummary($track);
 				$ids[] = $track->id;
 			}
@@ -92,7 +93,6 @@
 
 			return Response::json(Track::mapPrivateTrackShow($track), 200);
 		}
-
 
 		private function applyFilters($query) {
 			if (Input::has('order')) {
@@ -127,7 +127,6 @@
 					$join->on('tracks.id', '=', 'show_song_track.track_id');
 				});
 				$query->whereIn('show_song_track.show_song_id', Input::get('songs'));
-				$query->select('tracks.*');
 			}
 
 			return $query;

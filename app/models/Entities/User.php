@@ -57,7 +57,7 @@
 			return $this->email;
 		}
 
-		public function setDisplayName($value) {
+		public function setDisplayNameAttribute($value) {
 			$this->attributes['display_name'] = $value;
 			$this->attributes['slug'] = Str::slug($value);
 		}
