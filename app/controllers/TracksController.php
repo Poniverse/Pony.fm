@@ -138,7 +138,7 @@
 				$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
 			} else {
 				$response->header('X-Accel-Redirect', $filename);
-				$response->header('Content-Disposition', 'attachment; filename=' . $track->getDownloadFilenameFor($formatName));
+				$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
 			}
 
 			$time = gmdate(filemtime($filename));
