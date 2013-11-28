@@ -7,6 +7,7 @@
 
 		public function __construct() {
 			$this->poniverse = new Poniverse(Config::get('poniverse.client_id'), Config::get('poniverse.secret'));
+			$this->poniverse->setRedirectUri(URL::to('/auth/oauth'));
 		}
 
 		public function getLogin() {

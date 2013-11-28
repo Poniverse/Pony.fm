@@ -152,3 +152,10 @@
 	Route::get('{slug}/favourites', 'ArtistsController@getProfile');
 
 	Route::get('/', 'HomeController@getIndex');
+
+Route::group(['domain' => 'api.pony.fm'], function() {
+    Route::get('tracks/latest', ['uses' => 'Api\Mobile\TracksController@latest']);
+    Route::get('tracks/popular', [ 'uses' => 'Api\Mobile\TracksController@popular']);
+/*    Route::get('tracks/id', [ 'uses' => 'Api\Mobile\TracksController@track']);
+    Route::get('user', ['uses' => 'Api\Mobile\UserController@user']);*/
+});
