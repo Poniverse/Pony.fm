@@ -20,6 +20,9 @@
 				$postHashes[] = self::calculateHash($post->get_permalink());
 			}
 
+			if (count($postHashes) == 0)
+				return [];
+
 			$seenRecords = Auth::check() ? self::where('user_id', '=', Auth::user()->id)->whereIn('post_hash', $postHashes)->get() : [];
 			$seenHashes = [];
 
