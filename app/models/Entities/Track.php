@@ -420,7 +420,7 @@
 		}
 
 		public function updateHash() {
-			$this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name) . '-' . Helpers::sanitizeInputForHashing($this->title));
+			$this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name) . ' - ' . Helpers::sanitizeInputForHashing($this->title));
 		}
 
 		public function updateTags() {
