@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Entities\Track;
 
 class UpdateTrackHash extends Migration {
 	public function up() {
