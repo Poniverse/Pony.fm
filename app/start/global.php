@@ -74,7 +74,7 @@ App::down(function()
 });
 
 Auth::extend('pfm', function() {
-	return new Guard(new PFMAuth(), App::make('session'));
+	return new Guard(new PFMAuth(), App::make('session.store'));
 });
 
 Validator::resolver(function($translator, $data, $rules, $messages)
