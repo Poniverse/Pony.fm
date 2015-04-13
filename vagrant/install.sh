@@ -15,5 +15,4 @@ bower install --allow-root
 cp -r /vagrant/vagrant/config/* "/vagrant/app/config/local"
 
 php artisan migrate
-php artisan migrate:refresh
 php artisan db:seed
