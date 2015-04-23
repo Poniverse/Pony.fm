@@ -38,6 +38,8 @@ intermediate
 publish
 .idea
 
+node_modules
+/public/build/
 /bootstrap/compiled.php
 /vendor
 /app/config/production

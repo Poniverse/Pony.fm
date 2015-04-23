@@ -7,6 +7,7 @@ window.pfm.preloaders['account-albums'] = [
 angular.module('ponyfm').controller "account-albums", [
 	'$scope', '$state', 'account-albums', 'account-tracks'
 	($scope, $state, albums, tracks) ->
+
 		$scope.albums = []
 		$scope.data =
 			isEditorOpen: false

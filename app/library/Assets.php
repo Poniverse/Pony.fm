@@ -6,138 +6,100 @@
 
 	class Assets {
 		public static function scriptIncludes($area = 'app') {
-			$js = self::scriptAssetCollection($area);
+			if (!Config::get("app.debug"))
+				return '<script src="/build/scripts/' . $area . '.js?' . filemtime("./build/scripts/" . $area . ".js") . '"></script>';
 
-			if (Config::get('app.debug')) {
-				$retVal = '';
+			$scripts = self::mergeGlobs(self::getScriptsForArea($area));
+			$retVal = "";
 
-				foreach ($js as $script) {
-					$retVal .= '<script src="/' . $script->getSourceRoot() . '/' . $script->getSourcePath() . '?' . gmdate($js->getLastModified()) . '"></script>';
-				}
-
-				return $retVal;
+			foreach ($scripts as $script) {
+				$filename = self::replaceExtensionWith($script, ".coffee", ".js");
+				$retVal .= "<script src='/build/$filename?" . filemtime('./build/' . $filename) . "'></script>";
 			}
 
-			return '<script src="/asset.php?area=' . $area . '&type=coffee&' . gmdate($js->getLastModified()) . '"></script>';
+			return $retVal;
 		}
 
 		public static function styleIncludes($area = 'app') {
-			$css = self::styleAssetCollection($area);
+			if (!Config::get("app.debug"))
+				return '<script>document.write(\'<link rel="stylesheet" href="build/styles/' . $area . '.css?' . filemtime("build/styles/" . $area . ".css") . ' />"\');</script>';
 
-			if (Config::get('app.debug')) {
-				$retVal = '';
+			$styles = self::mergeGlobs(self::getStylesForArea($area));
+			$retVal = "";
 
-				foreach ($css as $style) {
-					if ($style instanceof CacheBusterAsset)
-						continue;
-
-					$retVal .= '<link rel="stylesheet" href="/' . $style->getSourceRoot() . '/' . $style->getSourcePath() . '?' . gmdate($css->getLastModified()) . '" />';
-				}
-
-				return $retVal;
+			foreach ($styles as $style) {
+				$filename = self::replaceExtensionWith($style, ".less", ".css");
+				$retVal .= "<link rel='stylesheet' href='/build/$filename?" . filemtime('./build/' . $filename) . "' />";
 			}
 
-			return '<script>document.write(\'<link rel="stylesheet" href="asset.php?area=' . $area . '&type=less&' . gmdate($css->getLastModified()) . '" />\');</script>';
+			return $retVal;
 		}
 
-		public static function scriptAssetCollection($area) {
-			$coffeeScript = new CoffeeScriptFilter(Config::get('app.coffee'), Config::get('app.node'));
+		private static function replaceExtensionWith($filename, $fromExtension, $toExtension) {
+			$fromLength = strlen($fromExtension);
+			return substr($filename, -$fromLength) == $fromExtension
+				? substr($filename, 0, strlen($filename) - $fromLength) . $toExtension
+				: $filename;
+		}
 
-			if ($area == 'app') {
-				$collection = new AssetCollection([
-					new FileAsset('scripts/base/jquery-2.0.2.js'),
-					new FileAsset('scripts/base/jquery-ui.js'),
-					new FileAsset('scripts/base/jquery.cookie.js'),
-					new FileAsset('scripts/base/jquery.colorbox.js'),
-					new FileAsset('scripts/base/jquery.viewport.js'),
-					new FileAsset('scripts/base/underscore.js'),
-					new FileAsset('scripts/base/moment.js'),
-					new FileAsset('scripts/base/soundmanager2-nodebug.js'),
-					new FileAsset('scripts/base/angular.js'),
-					new FileAsset('scripts/base/bindonce.js'),
-					new FileAsset('scripts/base/ui-bootstrap-tpls-0.4.0.js'),
-					new FileAsset('scripts/base/angular-ui-sortable.js'),
-					new FileAsset('scripts/base/angular-ui-date.js'),
-					new FileAsset('scripts/base/angular-ui-router.js'),
-					new FileAsset('scripts/base/angularytics.js'),
-					new FileAsset('scripts/base/tumblr.js'),
-					new AssetCollection([
-						new GlobAsset('scripts/shared/*.coffee'),
-					], [
-						$coffeeScript
-					]),
-					new GlobAsset('scripts/shared/*.js'),
-					new AssetCollection([
-						new GlobAsset('scripts/app/*.coffee'),
-						new GlobAsset('scripts/app/services/*.coffee'),
-						new GlobAsset('scripts/app/filters/*.coffee'),
-					], [
-						$coffeeScript
-					]),
-					new GlobAsset('scripts/app/filters/*.js'),
-					new AssetCollection([
-						new GlobAsset('scripts/app/directives/*.coffee'),
-						new GlobAsset('scripts/app/controllers/*.coffee'),
-					], [
-						$coffeeScript
-					])
-				]);
+		/** Merges an array of paths that are passed into "glob" into a list of unique filenames.
+		 * Note that this method assumes the globs should be relative to the "app" folder of this project */
+		private static function mergeGlobs($globs) {
+			$files = [];
+			$filesFound = [];
+			foreach ($globs as $glob) {
+				foreach (glob("../app/" . $glob, GLOB_BRACE) as $file) {
+					if (isset($filesFound[$file]))
+						continue;
 
-				if (Config::get('app.debug')) {
-					$collection->add(new GlobAsset('scripts/debug/*.js'));
-
-					$collection->add(new AssetCollection([
-						new GlobAsset('scripts/debug/*.coffee'),
-					], [
-						$coffeeScript
-					]));
+					$filesFound[$file] = true;
+					$files[] = substr($file, 7); // chop off ../app/
 				}
+			}
 
-				return $collection;
+			return $files;
+		}
+
+		private static function getScriptsForArea($area) {
+			if ($area == 'app') {
+				return [
+					"scripts/base/jquery-2.0.2.js",
+					"scripts/base/angular.js",
+					"scripts/base/*.{coffee,js}",
+					"scripts/shared/*.{coffee,js}",
+					"scripts/app/*.{coffee,js}",
+					"scripts/app/services/*.{coffee,js}",
+					"scripts/app/filters/*.{coffee,js}",
+					"scripts/app/directives/*.{coffee,js}",
+					"scripts/app/controllers/*.{coffee,js}",
+					"scripts/**/*.{coffee,js}"
+				];
 			} else if ($area == 'embed') {
-				$collection = new AssetCollection([
-					new FileAsset('scripts/base/jquery-2.0.2.js'),
-					new FileAsset('scripts/base/jquery.viewport.js'),
-					new FileAsset('scripts/base/underscore.js'),
-					new FileAsset('scripts/base/moment.js'),
-					new FileAsset('scripts/base/jquery.timeago.js'),
-					new FileAsset('scripts/base/soundmanager2-nodebug.js'),
-					new AssetCollection([
-						new GlobAsset('scripts/embed/*.coffee'),
-					], [
-						$coffeeScript
-					])
-				]);
-
-				return $collection;
+				return [
+					"scripts/base/jquery-2.0.2.js",
+					"scripts/base/jquery.viewport.js",
+					"scripts/base/underscore.js",
+					"scripts/base/moment.js",
+					"scripts/base/jquery.timeago.js",
+					"scripts/base/soundmanager2-nodebug.js",
+					"scripts/embed/*.coffee"];
 			}
 
 			throw new Exception();
 		}
 
-		public static function styleAssetCollection($area) {
+		private static function getStylesForArea($area) {
 			if ($area == 'app') {
-				$lastModifiedCollection = new AssetCollection([new GlobAsset("styles/*.less")]);
-
-				$css = new AssetCollection([
-					new FileAsset('styles/base/jquery-ui.css'),
-					new FileAsset('styles/base/colorbox.css'),
-					new FileAsset('styles/app.less'),
-					new CacheBusterAsset($lastModifiedCollection->getLastModified())
-				], [new \Assetic\Filter\LessFilter('node', Config::get('app.node_paths'))]);
-
-				if (Config::get('app.debug')) {
-					$css->add(new FileAsset('styles/profiler.less'));
-					$css->add(new FileAsset('styles/prettify.css'));
-				}
-
-				return $css;
+				return [
+					"styles/base/jquery-ui.css",
+					"styles/base/colorbox.css",
+					"styles/app.less",
+					"styles/profiler.less"
+				];
 			} else if ($area == 'embed') {
-				$css = new AssetCollection([
-					new FileAsset('styles/embed.less'),
-				], [new \Assetic\Filter\LessFilter('node', Config::get('app.node_paths'))]);
-
-				return $css;
+				return [
+					"styles/embed.less"
+				];
 			}
 
 			throw new Exception();
