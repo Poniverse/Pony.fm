@@ -51,7 +51,7 @@ gulp.task("scripts-app", function() {
             ], {base: "."}))
             .pipe(gulpif(/\.coffee/, coffee()))
             .pipe(concat("app.js"))
-//            .pipe(uglify())
+            .pipe(uglify())
             .pipe(gulp.dest("public/build/scripts"))
         // Development/watch pipeline
         : gulp.src(paths, {base: "app/scripts"})
