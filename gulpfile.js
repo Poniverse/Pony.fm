@@ -1,19 +1,9 @@
 var gulp = require("gulp"),
-    coffee = require("gulp-coffee"),
-    concat = require("gulp-concat"),
-    sourcemaps = require("gulp-sourcemaps"),
-    cached = require("gulp-cached"),
-    plumber = require("gulp-plumber"),
-    notify = require("gulp-notify"),
-    order = require("gulp-order"),
-    argv = require("yargs").argv,
-    gulpif = require("gulp-if"),
-    uglify = require("gulp-uglify"),
-    less = require("gulp-less"),
-    minifyCss = require('gulp-minify-css');
+    plug = require("gulp-load-plugins")(),
+    argv = require("yargs").argv;
 
 var plumberOptions = {
-    errorHandler: notify.onError("Error: <%= error.message %>")
+    errorHandler: plug.notify.onError("Error: <%= error.message %>")
 };
 
 gulp.task("scripts-app", function() {
@@ -36,8 +26,8 @@ gulp.task("scripts-app", function() {
     return argv.production
         // Production pipeline
         ? gulp.src(paths, {base: "app/scripts"})
-            .pipe(plumber(plumberOptions))
-            .pipe(order([
+            .pipe(plug.plumber(plumberOptions))
+            .pipe(plug.order([
                 "app/scripts/base/jquery-2.0.2.js",
                 "app/scripts/base/angular.js",
                 "app/scripts/base/*.{coffee,js}",
@@ -49,17 +39,20 @@ gulp.task("scripts-app", function() {
                 "app/scripts/app/controllers/*.{coffee,js}",
                 "app/scripts/**/*.{coffee,js}"
             ], {base: "."}))
-            .pipe(gulpif(/\.coffee/, coffee()))
-            .pipe(concat("app.js"))
-            .pipe(uglify())
+            .pipe(plug.if(/\.coffee/, plug.coffee()))
+            .pipe(plug.concat("app.js"))
+            .pipe(plug.uglify())
             .pipe(gulp.dest("public/build/scripts"))
         // Development/watch pipeline
         : gulp.src(paths, {base: "app/scripts"})
-            .pipe(plumber(plumberOptions))
-            .pipe(cached('scripts'))
-            .pipe(sourcemaps.init())
-            .pipe(gulpif(/\.coffee/, coffee()))
-            .pipe(sourcemaps.write())
+            .pipe(plug.plumber(plumberOptions))
+            .pipe(plug.cached('scripts'))
+            .pipe(plug.sourcemaps.init())
+            .pipe(plug.if(/\.coffee/, plug.coffee()))
+            .pipe(plug.sourcemaps.write({
+                includeContent: false,
+                sourceRoot: "/dev-scripts/"
+            }))
             .pipe(gulp.dest("public/build/scripts"));
 });
 
@@ -79,11 +72,11 @@ gulp.task("scripts-embed", function() {
     ];
     
     return gulp.src(includedScripts, {base: "app/scripts"})
-        .pipe(plumber(plumberOptions))
-        .pipe(gulpif(/\.coffee/, coffee()))
-        .pipe(order(includedScripts, {base: "."}))
-        .pipe(concat("embed.js"))
-        .pipe(uglify())
+        .pipe(plug.plumber(plumberOptions))
+        .pipe(plug.if(/\.coffee/, plug.coffee()))
+        .pipe(plug.order(includedScripts, {base: "."}))
+        .pipe(plug.concat("embed.js"))
+        .pipe(plug.uglify())
         .pipe(gulp.dest("public/build/scripts"));
 });
 
@@ -103,23 +96,44 @@ gulp.task("styles-app", function() {
         // to leave this path out in production so that embed files are not bloating
         // the css file
         includedStyles.push("app/styles/embed.css");
+
+        // Remove app.less from the cache so that it gets recompiled
+        var styleCache = plug.cached.caches.styles;
+        for (var file in styleCache) {
+            if (!styleCache.hasOwnProperty(file))
+                continue;
+
+            if (!endsWith(file, "app.less"))
+                continue;
+
+            delete styleCache[file];
+        }
     }
+
+    // note that we're not doing autoprefixer on dev builds for now to shave off roughly 600-700 milliseconds per
+    // build. It's already taking forever to recompile the less
 
     return argv.production
         // Production pipeline
         ? gulp.src(includedStyles, {base: "app/styles"})
-            .pipe(plumber(plumberOptions))
-            .pipe(gulpif(/\.less/, less()))
-            .pipe(concat("app.css"))
-            .pipe(minifyCss())
+            .pipe(plug.plumber(plumberOptions))
+            .pipe(plug.if(/\.less/, plug.less()))
+            .pipe(plug.autoprefixer({browsers: ["last 2 versions"], cascade: false}))
+            .pipe(plug.concat("app.css"))
+            .pipe(plug.minifyCss())
             .pipe(gulp.dest("public/build/styles"))
         // Development pipeline
         : gulp.src(includedStyles, {base: "app/styles"})
-            .pipe(plumber(plumberOptions))
-            .pipe(sourcemaps.init())
-            .pipe(gulpif(/\.less/, less()))
-            .pipe(sourcemaps.write())
-            .pipe(gulp.dest("public/build/styles"));
+            .pipe(plug.plumber(plumberOptions))
+            .pipe(plug.cached("styles"))
+            .pipe(plug.sourcemaps.init())
+            .pipe(plug.if(/\.less/, plug.less()))
+            .pipe(plug.sourcemaps.write({
+                includeContent: false,
+                sourceRoot: "/dev-styles/"
+            }))
+            .pipe(gulp.dest("public/build/styles"))
+            .pipe(plug.livereload());
 });
 
 gulp.task("styles-embed", function() {
@@ -128,13 +142,19 @@ gulp.task("styles-embed", function() {
     // already
 
     return gulp.src(["app/styles/embed.less"], {base: "app/styles"})
-        .pipe(less())
-        .pipe(concat("embed.css"))
-        .pipe(minifyCss())
+        .pipe(plug.less())
+        .pipe(plug.autoprefixer({browsers: ["last 2 versions"], cascade: false}))
+        .pipe(plug.concat("embed.css"))
+        .pipe(plug.minifyCss())
         .pipe(gulp.dest("public/build/styles"));
 });
 
 gulp.task("watch", function() {
+    plug.livereload.listen();
     gulp.watch("app/scripts/**/*.{coffee,js}", ["scripts-app"]);
     gulp.watch("app/styles/**/*.{css,less}", ["styles-app"]);
 });
+
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
