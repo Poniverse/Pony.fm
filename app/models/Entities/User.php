@@ -87,7 +87,7 @@
 		 * @return string
 		 */
 		public function getRememberToken() {
-			// TODO: Implement getRememberToken() method.
+			return $this->remember_token;
 		}
 
 		/**
@@ -97,7 +97,7 @@
 		 * @return void
 		 */
 		public function setRememberToken($value) {
-			// TODO: Implement setRememberToken() method.
+			$this->remember_token = $value;
 		}
 
 		/**
@@ -106,9 +106,6 @@
 		 * @return string
 		 */
 		public function getRememberTokenName() {
-			return "nothing";
-		}
-
-		public function setNothingAttribute($nothing) {
+			return "remember_token";
 		}
 	}
