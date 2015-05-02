@@ -7,4 +7,5 @@ Vagrant.configure("2") do |config|
 	config.vm.provision "shell", path: "vagrant/install.sh"
 
 	config.vm.synced_folder "../pony.fm.files", "/vagrant-files"
+	config.bindfs.bind_folder "/vagrant", "/vagrant"
 end
