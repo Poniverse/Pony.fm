@@ -1,10 +1,12 @@
 # Starting a dev environment
-To begin development, you must do two things:
+To begin development, you must do three things:
 1. Ensure that you have the following hosts entries:
 > 192.168.33.11		pony.fm.local  
 > 192.168.33.11		api.pony.fm.local
 
-2. Run "vagrant up" from the folder in which you cloned the repository
+2. Install the "vagrant-bindfs" plugin: `vagrant plugin install vagrant-bindfs`
+
+3. Run `vagrant up` from the folder in which you cloned the repository
 
 Once everything is up and running, you'll be able to access the site at http://pony.fm.local. You can access the MySQL database by logging into **192.168.33.11:3306** with the username of **homestead** and the password of **secret**. The pony.fm database is named **homestead**.
 

@@ -1,7 +1,7 @@
 sudo add-apt-repository -y ppa:kirillshkrogalev/ffmpeg-next
 sudo apt-get update
 sudo apt-get install -y ffmpeg
-sudo apt-get install -y AtomicParsley
+sudo apt-get install -y AtomicParsley flac vorbis-tools
 sudo add-apt-repository -y --remove ppa:kirillshkrogalev/ffmpeg-next
 
 mkdir /vagrant/logs

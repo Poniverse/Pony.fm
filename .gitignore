@@ -21,6 +21,7 @@ Thumbs.db
 .tmproj
 *.esproj
 nbproject
+*.iml
 
 # Dreamweaver added files
 _notes
