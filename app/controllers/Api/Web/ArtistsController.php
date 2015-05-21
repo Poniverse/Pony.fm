@@ -84,13 +84,25 @@
 		}
 
 		public function getShow($slug) {
-			$user = User::whereSlug($slug)->userDetails()->with(['comments' => function ($query) { $query->with('user'); }])->first();
+			$user = User::whereSlug($slug)
+				->userDetails()
+				->with(['comments' => function ($query) { $query->with('user'); }])
+				->first();
 			if (!$user)
 				App::abort(404);
 
-			$trackQuery = Track::summary()->published()->explicitFilter()->listed()->with('genre', 'cover', 'user')->userDetails()->whereUserId($user->id)->whereNotNull('published_at')->orderBy('created_at', 'desc')->take(20);
-			$latestTracks = [];
+			$trackQuery = Track::summary()
+				->published()
+				->explicitFilter()
+				->listed()
+				->with('genre', 'cover', 'user')
+				->userDetails()
+				->whereUserId($user->id)
+				->whereNotNull('published_at')
+				->orderBy('created_at', 'desc')
+				->take(20);
 
+			$latestTracks = [];
 			foreach ($trackQuery->get() as $track) {
 				$latestTracks[] = Track::mapPublicTrackSummary($track);
 			}
@@ -116,6 +128,7 @@
 					'id' => $user->id,
 					'name' => $user->display_name,
 					'slug' => $user->slug,
+					'is_archived' => $user->is_archived,
 					'avatars' => [
 						'small' => $user->getAvatarUrl(Image::SMALL),
 						'normal' => $user->getAvatarUrl(Image::NORMAL)
@@ -153,6 +166,7 @@
 					'name' => $user->display_name,
 					'slug' => $user->slug,
 					'url' => $user->url,
+					'is_archived' => $user->is_archived,
 					'avatars' => [
 						'small' => $user->getAvatarUrl(Image::SMALL),
 						'normal' => $user->getAvatarUrl(Image::NORMAL)
