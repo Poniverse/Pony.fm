@@ -1,6 +1,9 @@
 Vagrant.configure("2") do |config|
 	config.vm.box = 'laravel/homestead'
-
+	config.vm.provider "virtualbox" do |v|
+		v.cpus = 4
+	end
+	
 	config.vm.network :private_network, ip: "192.168.33.11"
 	config.vm.synced_folder ".", "/vagrant", type: "nfs"
 	
