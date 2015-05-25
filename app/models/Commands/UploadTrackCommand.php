@@ -3,6 +3,7 @@
 	namespace Commands;
 
 	use Entities\Track;
+	use Entities\TrackFile;
 	use Illuminate\Support\Facades\Log;
 
 	class UploadTrackCommand extends CommandBase {
@@ -53,6 +54,11 @@
 				$processes = [];
 
 				foreach (Track::$Formats as $name => $format) {
+					$trackFile = new TrackFile();
+					$trackFile->is_master = $name === 'FLAC' ? true : false;
+					$trackFile->format = $name;
+					$track->trackFiles()->save($trackFile);
+
 					$target = $destination . '/' . $track->getFilenameFor($name);
 
 					$command = $format['command'];

@@ -297,6 +297,10 @@
 			return $this->belongsTo('Entities\Album');
 		}
 
+		public function trackFiles() {
+			return $this->hasMany('Entities\TrackFile');
+		}
+
 		public function getYear() {
 			return date('Y', strtotime($this->release_date));
 		}
@@ -424,6 +428,7 @@
 		}
 
 		public function updateTags() {
+			$this->trackFiles()->touch();
 			foreach (self::$Formats as $format => $data) {
 				$this->{$data['tag_method']}($format);
 			}
