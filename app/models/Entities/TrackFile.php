@@ -1,6 +1,8 @@
 <?php namespace Entities;
 
+use Entities\Track;
 use Helpers;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
 
@@ -8,6 +10,26 @@ use Illuminate\Support\Facades\Cache;
 class TrackFile extends \Eloquent {
 	public function track() {
 		return $this->belongsTo('Entities\Track');
+	}
+
+	public static function findOrFailByExtension($trackId, $extension) {
+		// find the extension's format
+		$requestedFormatName = null;
+		foreach (Track::$Formats as $name => $format) {
+			if ($extension === $format[ 'extension' ]) {
+				$requestedFormatName = $name;
+				break;
+			}
+		}
+		if ($requestedFormatName === null) {
+			App::abort(404);
+		}
+
+		return static::
+			with('track')
+			->where('track_id', $trackId)
+			->where('format', $requestedFormatName)
+			->first();
 	}
 
 	public function getFormatAttribute($value) {

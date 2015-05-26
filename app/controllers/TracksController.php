@@ -72,18 +72,7 @@
 			if (!$track || !$track->canView(Auth::user()))
 				App::abort(404);
 
-			$trackFile = null;
-
-			foreach ($track->trackFiles as $file) {
-				if ($file->extension === $extension) {
-					$trackFile = $file;
-					break;
-				}
-			}
-
-			if ($trackFile == null)
-				App::abort(404);
-
+			$trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
 			ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $trackFile->getFormat()['index']);
 
 			$response = Response::make('', 200);
@@ -113,18 +102,7 @@
 			if (!$track || !$track->canView(Auth::user()))
 				App::abort(404);
 
-			$trackFile = null;
-
-			foreach ($track->trackFiles as $file) {
-				if ($file->extension === $extension) {
-					$trackFile = $file;
-					break;
-				}
-			}
-
-			if ($trackFile == null)
-				App::abort(404);
-
+			$trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
 			ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $trackFile->getFormat()['index']);
 
 			$response = Response::make('', 200);
