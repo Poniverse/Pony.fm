@@ -12,6 +12,15 @@ class TrackFile extends \Eloquent {
 		return $this->belongsTo('Entities\Track');
 	}
 
+	/**
+	 * Look up and return a TrackFile by track ID and an extension.
+	 *
+	 * If the track does not have a TrackFile in the given extension's format, a 404 exception is thrown.
+	 *
+	 * @param int $trackId
+	 * @param string $extension
+	 * @return TrackFile
+	 */
 	public static function findOrFailByExtension($trackId, $extension) {
 		// find the extension's format
 		$requestedFormatName = null;
@@ -25,11 +34,17 @@ class TrackFile extends \Eloquent {
 			App::abort(404);
 		}
 
-		return static::
+		$trackFile = static::
 			with('track')
 			->where('track_id', $trackId)
 			->where('format', $requestedFormatName)
 			->first();
+
+		if ($trackFile === null) {
+			App::abort(404);
+		} else {
+			return $trackFile;
+		}
 	}
 
 	public function getFormatAttribute($value) {
