@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'sendfile' => true,
+    'sendfile' => false,
     'uglify-js' => 'uglifyjs',
     'uglify-css' => 'uglifycss',
     'coffee' => 'coffee',
