@@ -2,6 +2,7 @@
 
 	use Entities\ResourceLogItem;
 	use Entities\Track;
+	use Entities\TrackFile;
 	use Illuminate\Support\Facades\App;
 
 	class TracksController extends Controller {
@@ -71,24 +72,22 @@
 			if (!$track || !$track->canView(Auth::user()))
 				App::abort(404);
 
-			$format = null;
-			$formatName = null;
+			$trackFile = null;
 
-			foreach (Track::$Formats as $name => $item) {
-				if ($item['extension'] == $extension) {
-					$format = $item;
-					$formatName = $name;
+			foreach ($track->trackFiles as $file) {
+				if ($file->extension === $extension) {
+					$trackFile = $file;
 					break;
 				}
 			}
 
-			if ($format == null)
+			if ($trackFile == null)
 				App::abort(404);
 
-			ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $format['index']);
+			ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $trackFile->getFormat()['index']);
 
 			$response = Response::make('', 200);
-			$filename = $track->getFileFor($formatName);
+			$filename = $trackFile->getFile();
 
 			if (Config::get('app.sendfile')) {
 				$response->header('X-Sendfile', $filename);
@@ -104,7 +103,7 @@
 			}
 
 			$response->header('Last-Modified', $time);
-			$response->header('Content-Type', $format['mime_type']);
+			$response->header('Content-Type', $trackFile->getFormat()['mime_type']);
 
 			return $response;
 		}
@@ -114,31 +113,29 @@
 			if (!$track || !$track->canView(Auth::user()))
 				App::abort(404);
 
-			$format = null;
-			$formatName = null;
+			$trackFile = null;
 
-			foreach (Track::$Formats as $name => $item) {
-				if ($item['extension'] == $extension) {
-					$format = $item;
-					$formatName = $name;
+			foreach ($track->trackFiles as $file) {
+				if ($file->extension === $extension) {
+					$trackFile = $file;
 					break;
 				}
 			}
 
-			if ($format == null)
+			if ($trackFile == null)
 				App::abort(404);
 
-			ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $format['index']);
+			ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $trackFile->getFormat()['index']);
 
 			$response = Response::make('', 200);
-			$filename = $track->getFileFor($formatName);
+			$filename = $trackFile->getFile();
 
 			if (Config::get('app.sendfile')) {
 				$response->header('X-Sendfile', $filename);
-				$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
+				$response->header('Content-Disposition', 'attachment; filename="' . $trackFile->getDownloadFilename() . '"');
 			} else {
 				$response->header('X-Accel-Redirect', $filename);
-				$response->header('Content-Disposition', 'attachment; filename="' . $track->getDownloadFilenameFor($formatName) . '"');
+				$response->header('Content-Disposition', 'attachment; filename="' . $trackFile->getDownloadFilename() . '"');
 			}
 
 			$time = gmdate(filemtime($filename));
@@ -149,7 +146,7 @@
 			}
 
 			$response->header('Last-Modified', $time);
-			$response->header('Content-Type', $format['mime_type']);
+			$response->header('Content-Type', $trackFile->getFormat()['mime_type']);
 
 			return $response;
 		}

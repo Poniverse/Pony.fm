@@ -59,7 +59,7 @@
 					$trackFile->format = $name;
 					$track->trackFiles()->save($trackFile);
 
-					$target = $destination . '/' . $track->getFilenameFor($name);
+					$target = $destination . '/' . $trackFile->getFilename(); //$track->getFilenameFor($name);
 
 					$command = $format['command'];
 					$command = str_replace('{$source}', '"' . $source . '"', $command);

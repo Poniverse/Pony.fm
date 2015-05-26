@@ -126,12 +126,12 @@
 
 			$formats = [];
 
-			foreach (self::$Formats as $name => $format) {
+			foreach ($track->trackFiles as $trackFile) {
 				$formats[] = [
-					'name' => $name,
-					'extension' => $format['extension'],
-					'url' => $track->getUrlFor($name),
-					'size' => Helpers::formatBytes($track->getFilesize($name))
+					'name' => $trackFile->format,
+					'extension' => $trackFile->extension,
+					'url'   => $trackFile->url,
+					'size'  => $trackFile->size
 				];
 			}
 
