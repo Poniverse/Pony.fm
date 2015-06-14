@@ -149,6 +149,24 @@ gulp.task("styles-embed", function() {
         .pipe(gulp.dest("public/build/styles"));
 });
 
+gulp.task('copy:templates', function() {
+    gulp.src([
+        'public/templates/**/*.html'
+    ])
+            .pipe(plug.angularTemplatecache({
+            module: "ponyfm",
+            root: "/templates"
+        }))
+        .pipe(gulp.dest('public/build/scripts'));
+});
+
+gulp.task('build', [
+    'scripts-app',
+    'styles-app',
+    'scripts-embed',
+    'styles-embed',
+]);
+
 gulp.task("watch", function() {
     plug.livereload.listen();
     gulp.watch("app/scripts/**/*.{coffee,js}", ["scripts-app"]);

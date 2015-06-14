@@ -22,7 +22,7 @@
 
 		public static function styleIncludes($area = 'app') {
 			if (!Config::get("app.debug"))
-				return '<script>document.write(\'<link rel="stylesheet" href="build/styles/' . $area . '.css?' . filemtime("build/styles/" . $area . ".css") . ' />"\');</script>';
+				return '<script>document.write(\'<link rel="stylesheet" href="build/styles/' . $area . '.css?' . filemtime("build/styles/" . $area . ".css") . '" />\');</script>';
 
 			$styles = self::mergeGlobs(self::getStylesForArea($area));
 			$retVal = "";

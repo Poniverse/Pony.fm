@@ -122,6 +122,10 @@
 
 	{{ Assets::scriptIncludes() }}
 
+    @if (!Config::get("app.debug"))
+        <script src="/build/scripts/templates.js"></script>
+    @endif
+
 	@yield('app_scripts')
 
 @endsection
