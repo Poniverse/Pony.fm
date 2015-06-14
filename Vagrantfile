@@ -2,7 +2,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = 'laravel/homestead'
   config.vm.provider "virtualbox" do |v|
     v.cpus = 4
-    v.memory = 1024
+    v.memory = 2048
   end
 
   config.vm.network :private_network, ip: "192.168.33.11"

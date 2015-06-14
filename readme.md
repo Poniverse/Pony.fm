@@ -13,7 +13,7 @@ To begin development, you must do three things:
 Once everything is up and running, you'll be able to access the site at http://pony.fm.local. You can access the MySQL database by logging into **192.168.33.11:3306** with the username of **homestead** and the password of **secret**. The pony.fm database is named **homestead**.
 
 # Asset pipeline
-Pony.fm uses gulp to mange its asset piepline. **Important** due to everything being awful, you must run npm and gulp from your host machine and not the VM. You must first have it installed globally:
+Pony.fm uses gulp to mange its asset pipeline. **Important** due to everything being awful, you must run npm and gulp from your host machine and not the VM. You must first have it installed globally:
 > npm install -g gulp
 
 And then install all of the required local packages by invoking:
@@ -29,4 +29,4 @@ Pony.fm uses nginx, php-fpm, redis, and MySQL. You can modify the configuration 
 
 If you need to change any other configuration file on the VM - copy the entire file over into the vagrant folder, make your changes, and update the "copy-and-restart-config.sh" script to copy the modified config back into the proper folder. All potential configuration requirements should be represented in the vagrant folder **and never only on the VM itself** as changes will not be preserved.
 
-**NOTE:** currently, Redis's configuration is not reloaded by the "copy-and-restart-config.sh"
+**NOTE:** currently, Redis' configuration is not reloaded by the "copy-and-restart-config.sh"
