@@ -9,8 +9,8 @@ module.run [
 ]
 
 module.config [
-	'$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider'
-	(location, state, $dialogProvider, analytics, $httpProvider) ->
+	'$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider'
+	(location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider) ->
 
 		$httpProvider.interceptors.push [
 			->
@@ -18,6 +18,11 @@ module.config [
 					return config if !(/^\/?templates\//.test config.url)
 					config.url += '?' + Math.ceil(Math.random() * 1000000)
 					return config
+		]
+
+		$sceDelegateProvider.resourceUrlWhitelist [
+			'self',
+			'/templates/directives/*'
 		]
 
 		analytics.setEventHandlers ['Google']
