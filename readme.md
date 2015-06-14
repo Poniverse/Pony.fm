@@ -6,7 +6,9 @@ To begin development, you must do three things:
 
 2. Install the "vagrant-bindfs" plugin: `vagrant plugin install vagrant-bindfs`
 
-3. Run `vagrant up` from the folder in which you cloned the repository
+3. Create the directory ``pony.fm.files`` in the repository's parent directory
+
+4. Run `vagrant up` from the folder in which you cloned the repository
 
 Once everything is up and running, you'll be able to access the site at http://pony.fm.local. You can access the MySQL database by logging into **192.168.33.11:3306** with the username of **homestead** and the password of **secret**. The pony.fm database is named **homestead**.
 
