@@ -20,6 +20,7 @@ module.config [
 					return config
 		]
 
+		# This fixes resource loading on IE
 		$sceDelegateProvider.resourceUrlWhitelist [
 			'self',
 			'/templates/directives/*'
