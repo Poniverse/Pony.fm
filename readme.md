@@ -6,7 +6,7 @@ To begin development, you must do three things:
 
 2. Install the "vagrant-bindfs" plugin: `vagrant plugin install vagrant-bindfs`
 
-3. Create the directory ``pony.fm.files`` in the repository's parent directory
+3. Create the directory `pony.fm.files` in the repository's parent directory
 
 4. Run `vagrant up` from the folder in which you cloned the repository
 
@@ -18,6 +18,9 @@ Pony.fm uses gulp to mange its asset pipeline. **Important** due to everything b
 
 And then install all of the required local packages by invoking:
 > npm install
+
+Finally, build all of the scripts by executing:
+> gulp build
 
 During development, you should make a point to run "gulp watch". You can do this simply by executing:
 > gulp watch
