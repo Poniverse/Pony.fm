@@ -24,7 +24,10 @@
 	</script>
 
 	<header>
-		<a href="/">pony.fm <small>(beta)</small></a>
+		<a href="/">
+            <img src="/images/fm_logo_white.svg" class="logo">
+			<!-- <img src="https://poniverse.net/img/logos/fm_logo.svg" class="logo"> -->
+        </a>
 		<div class="now-playing">
 			@if (Auth::check())
 				<div class="user-details dropdown">
