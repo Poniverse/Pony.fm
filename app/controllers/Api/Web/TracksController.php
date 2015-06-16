@@ -40,7 +40,12 @@
 				$track->view_count++;
 			}
 
-			return Response::json(['track' => Track::mapPublicTrackShow($track)], 200);
+            $returned_track = Track::mapPublicTrackShow($track);
+            if ($returned_track['is_downloadable'] != 1) {
+                unset($returned_track['formats']);
+            }
+
+			return Response::json(['track' => $returned_track], 200);
 		}
 
 		public function getIndex() {

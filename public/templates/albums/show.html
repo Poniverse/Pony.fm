@@ -1,10 +1,10 @@
 <div class="resource-details album-details" bindonce="album">
 	<ul class="dropdowns">
 		<li class="dropdown">
-			<a href="#" class="btn btn-small btn-info dropdown-toggle">
+			<a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="album.is_downloadable == 0">
 				Downloads
 			</a>
-			<ul class="dropdown-menu">
+			<ul class="dropdown-menu" ng-show="album.is_downloadable == 1">
 				<li bindonce ng-repeat="format in album.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
 			</ul>
 		</li>

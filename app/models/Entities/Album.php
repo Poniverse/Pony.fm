@@ -76,11 +76,20 @@
 				$comments[] = Comment::mapPublic($comment);
 			}
 
+            $is_downloadable = 0;
+            foreach ($album->tracks as $track) {
+                if ($track->is_downloadable == 1) {
+                    $is_downloadable = 1;
+                    break;
+                }
+            }
+
 			$data = self::mapPublicAlbumSummary($album);
 			$data['tracks'] = $tracks;
 			$data['comments'] = $comments;
 			$data['formats'] = $formats;
 			$data['description'] = $album->description;
+            $data['is_downloadable'] = $is_downloadable;
 			$data['share'] = [
 				'url' => URL::to('/a' . $album->id),
 				'tumblrUrl' => 'http://www.tumblr.com/share/link?url=' . urlencode($album->url) . '&name=' . urlencode($album->title) . '&description=' . urlencode($album->description),
@@ -160,7 +169,10 @@
 			return Cache::remember($this->getCacheKey('filesize-' . $format), 1440, function() use ($tracks, $format) {
 				$size = 0;
 				foreach ($tracks as $track) {
-					$size += $track->getFilesize($format);
+                    // Ensure that only downloadable tracks are added onto the file size
+                    if ($track->is_downloadable == 1) {
+                        $size += $track->getFilesize($format);
+                    }
 				}
 
 				return $size;

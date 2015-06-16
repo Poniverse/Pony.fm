@@ -47,8 +47,13 @@
 				$album->view_count++;
 			}
 
+            $returned_album = Album::mapPublicAlbumShow($album);
+            if($returned_album['is_downloadable'] == 0) {
+                unset($returned_album['formats']);
+            }
+
 			return Response::json([
-				'album' => Album::mapPublicAlbumShow($album)
+				'album' => $returned_album
 			], 200);
 		}
 
