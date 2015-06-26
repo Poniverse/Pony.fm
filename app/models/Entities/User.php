@@ -37,6 +37,10 @@
 			return $this->hasMany('Entities\Comment', 'profile_id')->orderBy('created_at', 'desc');
 		}
 
+		public function getIsArchivedAttribute() {
+			return (bool) $this->attributes['is_archived'];
+		}
+
 		public function getUrlAttribute() {
 			return URL::to('/' . $this->slug);
 		}

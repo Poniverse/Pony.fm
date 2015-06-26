@@ -164,7 +164,7 @@ gulp.task('build', [
     'scripts-app',
     'styles-app',
     'scripts-embed',
-    'styles-embed',
+    'styles-embed'
 ]);
 
 gulp.task("watch", function() {
