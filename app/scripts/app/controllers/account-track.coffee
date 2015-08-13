@@ -96,7 +96,7 @@ angular.module('ponyfm').controller "account-track", [
 				else if value != null
 					formData.append name, value
 
-			if $scope.edit.track_type_id == 2
+			if parseInt($scope.edit.track_type_id) == 2
 				formData.append 'show_song_ids', _.map(_.values($scope.selectedSongs), (s) -> s.id).join()
 
 			xhr.open 'POST', '/api/web/tracks/edit/' + $scope.edit.id, true
@@ -116,7 +116,7 @@ angular.module('ponyfm').controller "account-track", [
 				is_vocal: track.is_vocal
 				license_id: track.license_id
 				genre_id: track.genre_id
-				track_type_id: parseInt(track.track_type_id)
+				track_type_id: track.track_type_id
 				released_at: if track.released_at then track.released_at.date else ''
 				remove_cover: false
 				cover: track.cover_url
