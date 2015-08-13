@@ -116,7 +116,7 @@ angular.module('ponyfm').controller "account-track", [
 				is_vocal: track.is_vocal
 				license_id: track.license_id
 				genre_id: track.genre_id
-				track_type_id: track.track_type_id
+				track_type_id: parseInt(track.track_type_id)
 				released_at: if track.released_at then track.released_at.date else ''
 				remove_cover: false
 				cover: track.cover_url
