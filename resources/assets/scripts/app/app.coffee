@@ -183,8 +183,20 @@ module.config [
 
         state.state 'content.track',
             url: '/tracks/{id:[^\-]+}-{slug}'
-            templateUrl: '/templates/tracks/show.html'
+            templateUrl: '/templates/tracks/frame.html'
             controller: 'track'
+            abstract: true
+
+        state.state 'content.track.show',
+            url: ''
+            templateUrl: '/templates/tracks/show.html'
+            controller: 'track-show'
+
+        state.state 'content.track.edit',
+            url: '/edit'
+            templateUrl: '/templates/tracks/edit.html'
+            controller: 'track-edit'
+
 
         # Albums
 
