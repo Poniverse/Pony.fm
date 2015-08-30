@@ -1,6 +1,5 @@
 <?php
 
-use Helpers;
 use Illuminate\Support\Facades\DB;
 
 class ProfileRequest

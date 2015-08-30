@@ -1,17 +1,16 @@
 <?php
 
-use Cover;
-use Gravatar;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Auth\UserInterface;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
-use Ratchet\Wamp\Exception;
 
-class User extends Model implements UserInterface, RemindableInterface
+class User extends Model
 {
+    use Authenticatable, CanResetPassword;
+
     protected $table = 'users';
     protected $hidden = ['password_hash', 'password_salt', 'bio'];
 
