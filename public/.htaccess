@@ -1,13 +1,16 @@
 <IfModule mod_rewrite.c>
-	Options -MultiViews
-	RewriteEngine On
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
 
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^ index.php [L]
-	RewriteRule ^(.*\.(?:coffee))$ /asset.php?type=coffee&file=/$1 [L,QSA,NC]
-	RewriteRule ^(.*\.(?:less))$ /asset.php?type=less&file=/$1 [L,QSA,NC]
-</IfModule>
+    RewriteEngine On
 
-<IfModule xsendfile_module>
-	XSendFile On
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
 </IfModule>

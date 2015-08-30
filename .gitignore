@@ -1,50 +1,5 @@
-.vagrant
-
-# Numerous always-ignore extensions
-*.diff
-*.err
-*.orig
-*.log
-*.rej
-*.swo
-*.swp
-*.vi
-*~
-*.sass-cache
-
-# OS or Editor folders
-.DS_Store
-Thumbs.db
-.cache
-.project
-.settings
-.tmproj
-*.esproj
-nbproject
-*.iml
-
-# Dreamweaver added files
-_notes
-dwsync.xml
-
-# Komodo
-*.komodoproject
-.komodotools
-
-# Folders to ignore
-.hg
-.svn
-.CVS
-intermediate
-publish
-.idea
-
-node_modules
-/public/build/
-/bootstrap/compiled.php
 /vendor
-/app/config/production
-composer.phar
-composer.lock
-atlassian-ide-plugin.xml
-_ide_helper.php
+/node_modules
+Homestead.yaml
+.env
+.vagrant
