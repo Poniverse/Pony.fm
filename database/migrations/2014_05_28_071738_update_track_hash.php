@@ -1,0 +1,16 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Entities\Track;
+
+class UpdateTrackHash extends Migration {
+	public function up() {
+		foreach (Track::with('user')->get() as $track) {
+			$track->updateHash();
+			$track->save();
+		}
+	}
+
+	public function down() {
+	}
+}
