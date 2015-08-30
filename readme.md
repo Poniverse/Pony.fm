@@ -1,35 +1,27 @@
-# Starting a dev environment
-To begin development, you must do three things:
-1. Ensure that you have the following hosts entries:
-> 192.168.33.11		pony.fm.local  
-> 192.168.33.11		api.pony.fm.local
+## Laravel PHP Framework
 
-2. Install the "vagrant-bindfs" plugin: `vagrant plugin install vagrant-bindfs`
+[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
+[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
+[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
+[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
+[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
 
-3. Create the directory `pony.fm.files` in the repository's parent directory
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
 
-4. Run `vagrant up` from the folder in which you cloned the repository
+Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
 
-Once everything is up and running, you'll be able to access the site at http://pony.fm.local. You can access the MySQL database by logging into **192.168.33.11:3306** with the username of **homestead** and the password of **secret**. The pony.fm database is named **homestead**.
+## Official Documentation
 
-# Asset pipeline
-Pony.fm uses gulp to mange its asset pipeline. **Important** due to everything being awful, you must run npm and gulp from your host machine and not the VM. You must first have it installed globally:
-> npm install -g gulp
+Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
 
-And then install all of the required local packages by invoking:
-> npm install
+## Contributing
 
-Finally, build all of the scripts by executing:
-> gulp build
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
 
-During development, you should make a point to run "gulp watch". You can do this simply by executing:
-> gulp watch
+## Security Vulnerabilities
 
-This will watch and compile the .less and .coffee files in real time.
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
 
-# Configuring the servers
-Pony.fm uses nginx, php-fpm, redis, and MySQL. You can modify the configuration of these services by locating the appropriate config file in the "vagrant" folder. Once modified, you must reload the configuration by running the appropriate shell script (**reload-config.sh**) or bat files (**reload-config.bat** and **reload-config.vmware.bat**). These scripts simply tell Vagrant to run "copy-and-restart-config.sh" on the VM.
+### License
 
-If you need to change any other configuration file on the VM - copy the entire file over into the vagrant folder, make your changes, and update the "copy-and-restart-config.sh" script to copy the modified config back into the proper folder. All potential configuration requirements should be represented in the vagrant folder **and never only on the VM itself** as changes will not be preserved.
-
-**NOTE:** currently, Redis' configuration is not reloaded by the "copy-and-restart-config.sh"
+The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
