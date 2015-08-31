@@ -1,0 +1,21 @@
+<div class="stretch-to-bottom">
+	<ul class="artist-listing">
+		<li class="artist" ng-class="{'x-archived': artist.is_archived}" ng-repeat="artist in artists" bindonce>
+			<a href="{{artist.url}}">
+				<img class="image" pfm-src-loader="artist.avatars.small" pfm-src-size="small" />
+				<span class="info">
+					<span class="title" bo-text="artist.name"></span>
+					<span ng-hide="artist.is_archived" class="published">
+						joined <span bo-text="artist.created_at.date | momentFromNow"></span>
+					</span>
+					<span ng-show="artist.is_archived" class="published">
+						archived artist
+					</span>
+				</span>
+			</a>
+		</li>
+		<li ng-show="!artists.length" class="empty">
+			No artists found...
+		</li>
+	</ul>
+</div>

@@ -1,0 +1,14 @@
+<div ng-show="content.albums.length">
+	<h2>Albums</h2>
+	<pfm-albums-list albums="content.albums"></pfm-albums-list>
+</div>
+
+<div ng-show="content.singles.length">
+	<h2>Singles</h2>
+	<pfm-tracks-list tracks="content.singles" class="four-columns no-artist"></pfm-tracks-list>
+</div>
+
+<div ng-show="content.albumTracks.length">
+	<h2>Part of an Album</h2>
+	<pfm-tracks-list tracks="content.albumTracks" class="four-columns no-artist"></pfm-tracks-list>
+</div>

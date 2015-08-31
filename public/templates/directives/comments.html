@@ -1,0 +1,22 @@
+<div class="comments" bindonce>
+	<h2>All Comments ({{resource.comments.length}})</h2>
+	<form class="pfm-form" ng-submit="addComment()" ng-show="auth.isLogged">
+		<div class="form-row">
+			<input type="text" ng-model="content" placeholder="Write a comment..." />
+		</div>
+	</form>
+	<ul>
+		<li ng-show="resource.comments.length == 0" class="empty">
+			There are no comments yet!
+		</li>
+		<li bindonce ng-repeat="comment in resource.comments">
+			<img pfm-src-loader="comment.user.avatars.thumbnail" pfm-src-size="thumbnail" />
+			<div class="content">
+				<a bo-href="comment.user.url" bo-text="comment.user.name"></a>
+				<span bo-text="comment.content"></span>
+				<div class="meta" bo-text="comment.created_at.date | momentFromNow">
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
