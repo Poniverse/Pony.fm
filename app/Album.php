@@ -1,5 +1,8 @@
 <?php
 
+namespace App;
+
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -36,32 +39,32 @@ class Album extends Model
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('App\User');
     }
 
     public function users()
     {
-        return $this->hasMany('ResourceUser');
+        return $this->hasMany('App\ResourceUser');
     }
 
     public function favourites()
     {
-        return $this->hasMany('Favourite');
+        return $this->hasMany('App\Favourite');
     }
 
     public function cover()
     {
-        return $this->belongsTo('Image');
+        return $this->belongsTo('App\Image');
     }
 
     public function tracks()
     {
-        return $this->hasMany('Track')->orderBy('track_number', 'asc');
+        return $this->hasMany('App\Track')->orderBy('track_number', 'asc');
     }
 
     public function comments()
     {
-        return $this->hasMany('Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('App\Comment')->orderBy('created_at', 'desc');
     }
 
     public static function mapPublicAlbumShow($album)

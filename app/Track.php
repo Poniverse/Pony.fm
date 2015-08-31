@@ -1,5 +1,11 @@
 <?php
 
+namespace App;
+
+use Exception;
+use External;
+use getid3_writetags;
+use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -321,52 +327,52 @@ class Track extends Model
 
     public function genre()
     {
-        return $this->belongsTo('Genre');
+        return $this->belongsTo('App\Genre');
     }
 
     public function trackType()
     {
-        return $this->belongsTo('TrackType', 'track_type_id');
+        return $this->belongsTo('App\TrackType', 'track_type_id');
     }
 
     public function comments()
     {
-        return $this->hasMany('Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('App\Comment')->orderBy('created_at', 'desc');
     }
 
     public function favourites()
     {
-        return $this->hasMany('Favourite');
+        return $this->hasMany('App\Favourite');
     }
 
     public function cover()
     {
-        return $this->belongsTo('Image');
+        return $this->belongsTo('App\Image');
     }
 
     public function showSongs()
     {
-        return $this->belongsToMany('ShowSong');
+        return $this->belongsToMany('App\ShowSong');
     }
 
     public function users()
     {
-        return $this->hasMany('ResourceUser');
+        return $this->hasMany('App\ResourceUser');
     }
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('App\User');
     }
 
     public function album()
     {
-        return $this->belongsTo('Album');
+        return $this->belongsTo('App\Album');
     }
 
     public function trackFiles()
     {
-        return $this->hasMany('TrackFile');
+        return $this->hasMany('App\TrackFile');
     }
 
     public function getYear()

@@ -1,5 +1,9 @@
 <?php
 
+namespace App;
+
+use Exception;
+use Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -31,17 +35,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function avatar()
     {
-        return $this->belongsTo('Image');
+        return $this->belongsTo('App\Image');
     }
 
     public function users()
     {
-        return $this->hasMany('ResourceUser', 'artist_id');
+        return $this->hasMany('App\ResourceUser', 'artist_id');
     }
 
     public function comments()
     {
-        return $this->hasMany('Comment', 'profile_id')->orderBy('created_at', 'desc');
+        return $this->hasMany('App\Comment', 'profile_id')->orderBy('created_at', 'desc');
     }
 
     public function getIsArchivedAttribute()

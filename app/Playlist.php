@@ -1,5 +1,8 @@
 <?php
 
+namespace App;
+
+use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -124,7 +127,7 @@ class Playlist extends Model
     public function tracks()
     {
         return $this
-            ->belongsToMany('Track')
+            ->belongsToMany('App\Track')
             ->withPivot('position')
             ->withTimestamps()
             ->orderBy('position', 'asc');
@@ -132,22 +135,22 @@ class Playlist extends Model
 
     public function users()
     {
-        return $this->hasMany('ResourceUser');
+        return $this->hasMany('App\ResourceUser');
     }
 
     public function comments()
     {
-        return $this->hasMany('Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('App\Comment')->orderBy('created_at', 'desc');
     }
 
     public function pins()
     {
-        return $this->hasMany('PinnedPlaylist');
+        return $this->hasMany('App\PinnedPlaylist');
     }
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('App\User');
     }
 
     public function hasPinFor($userId)

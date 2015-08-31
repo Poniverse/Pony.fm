@@ -2,13 +2,15 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLatestColumn extends Migration {
-	public function up() {
-		Schema::table('tracks', function($table) {
-			$table->boolean('is_latest')->notNullable()->indexed();
-		});
+class CreateLatestColumn extends Migration
+{
+    public function up()
+    {
+        Schema::table('tracks', function ($table) {
+            $table->boolean('is_latest')->notNullable()->indexed();
+        });
 
-		DB::update('
+        DB::update('
 			UPDATE
 				tracks
 			SET
@@ -27,11 +29,12 @@ class CreateLatestColumn extends Migration {
 				) = tracks.id
 			AND
 				published_at IS NOT NULL');
-	}
+    }
 
-	public function down() {
-		Schema::table('tracks', function($table) {
-			$table->dropColumn('is_latest');
-		});
-	}
+    public function down()
+    {
+        Schema::table('tracks', function ($table) {
+            $table->dropColumn('is_latest');
+        });
+    }
 }

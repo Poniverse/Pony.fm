@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Favourite extends Model
@@ -15,22 +17,22 @@ class Favourite extends Model
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('App\User');
     }
 
     public function track()
     {
-        return $this->belongsTo('Track');
+        return $this->belongsTo('App\Track');
     }
 
     public function album()
     {
-        return $this->belongsTo('Album');
+        return $this->belongsTo('App\Album');
     }
 
     public function playlist()
     {
-        return $this->belongsTo('Playlist');
+        return $this->belongsTo('App\Playlist');
     }
 
     /**

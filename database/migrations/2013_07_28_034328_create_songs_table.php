@@ -2,28 +2,30 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSongsTable extends Migration {
-	public function up() {
-		Schema::create('show_songs', function($table) {
-			$table->increments('id');
-			$table->string('title', 100);
-			$table->text('lyrics');
-			$table->string('slug', 200)->indexed();
-		});
+class CreateSongsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('show_songs', function ($table) {
+            $table->increments('id');
+            $table->string('title', 100);
+            $table->text('lyrics');
+            $table->string('slug', 200)->indexed();
+        });
 
-		Schema::create('show_song_track', function($table) {
-			$table->increments('id');
-			$table->integer('track_id')->unsigned();
-			$table->integer('show_song_id')->unsigned();
+        Schema::create('show_song_track', function ($table) {
+            $table->increments('id');
+            $table->integer('track_id')->unsigned();
+            $table->integer('show_song_id')->unsigned();
 
-			$table->foreign('track_id')->references('id')->on('tracks')->on_update('cascade');
-			$table->foreign('show_song_id')->references('id')->on('show_songs')->on_update('cascade');
-		});
+            $table->foreign('track_id')->references('id')->on('tracks')->on_update('cascade');
+            $table->foreign('show_song_id')->references('id')->on('show_songs')->on_update('cascade');
+        });
 
-		DB::table('show_songs')->insert([
-			'id' => 1,
-			'title' => "Equestria Girls",
-			'lyrics' => "[Pinkie Pie]
+        DB::table('show_songs')->insert([
+            'id' => 1,
+            'title' => "Equestria Girls",
+            'lyrics' => "[Pinkie Pie]
 Ooh! This is my jam!
 
 There is a place
@@ -97,12 +99,12 @@ Aoaoah oh, aoaoaoh!
 Break it down, DJ Pon-3
 These are the ponies I love the most
 I wish you could all be Equestria girls",
-			'slug' => "equestria-girls",
-		]);
-		DB::table('show_songs')->insert([
-			'id' => 2,
-			'title' => "My Little Pony Theme Song",
-			'lyrics' => "[Backup singer]
+            'slug' => "equestria-girls",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 2,
+            'title' => "My Little Pony Theme Song",
+            'lyrics' => "[Backup singer]
 My Little Pony, My Little Pony
 Ahh, ahh, ahh, ahhhâ€¦..
 
@@ -132,12 +134,12 @@ It's an easy feat
 And magic makes it all complete
 You have my little ponies
 Do you know you're all my very best friends?",
-			'slug' => "my-little-pony-theme-song",
-		]);
-		DB::table('show_songs')->insert([
-			'id' => 3,
-			'title' => "Laughter Song",
-			'lyrics' => "[Pinkie Pie]
+            'slug' => "my-little-pony-theme-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 3,
+            'title' => "Laughter Song",
+            'lyrics' => "[Pinkie Pie]
 When I was a little filly and the sun was going down...
 
 Twilight Sparkle: Tell me she's not...
@@ -176,12 +178,12 @@ Snortle at the spooky
 And tell that big dumb scary face to take a hike and leave you alone and if he thinks he can scare you then he's got another thing coming and the very idea of such a thing just makes you wanna... hahahaha... heh...
 
 Laaaaaaauuugh!",
-				'slug' => "laughter-song",
-			]);
-DB::table('show_songs')->insert([
-	'id' => 4,
-	'title' => "Pinkie's Gala Fantasy Song",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "laughter-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 4,
+            'title' => "Pinkie's Gala Fantasy Song",
+            'lyrics' => "[Pinkie Pie]
 Oh the Grand Galloping Gala is the best place for me
 Oh the Grand Galloping Gala is the best place for me
 Hip hip
@@ -197,12 +199,12 @@ Oh the Grand Galloping Gala is the best place for me
 'Cause it's the most galarrific superly-terrific gala ever
 In the whole galaxy
 Wheee!",
-	'slug' => "pinkies-gala-fantasy-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 5,
-	'title' => "The Ticket Song",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "pinkies-gala-fantasy-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 5,
+            'title' => "The Ticket Song",
+            'lyrics' => "[Pinkie Pie]
 Twilight is my bestest friend
 Whoopie, whoopie!
 
@@ -222,22 +224,22 @@ Twilight Sparkle: Pinkie!
 She'll give her extra ticket to the gala to me!
 
 Twilight Sparkle: PIIINKIIIE!!",
-	'slug' => "the-ticket-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 6,
-	'title' => "Junior Speedsters Chant",
-	'lyrics' => "[Rainbow Dash/Gilda]
+            'slug' => "the-ticket-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 6,
+            'title' => "Junior Speedsters Chant",
+            'lyrics' => "[Rainbow Dash/Gilda]
 Junior Speedsters are our lives,
 Sky-bound soars and daring dives
 Junior Speedsters, it's our quest,
 To some day be the very best!",
-	'slug' => "junior-speedsters-chant",
-]);
-DB::table('show_songs')->insert([
-	'id' => 7,
-	'title' => "Hop Skip and Jump song",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "junior-speedsters-chant",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 7,
+            'title' => "Hop Skip and Jump song",
+            'lyrics' => "[Pinkie Pie]
 It's not very far
 Just move your little rump
 You can make it if you try with a hop, skip and jump
@@ -252,12 +254,12 @@ A hop, skip and jump,
 A hop, skip and jump,
 A hop skip and jump,
 A hop skip and jump!",
-	'slug' => "hop-skip-and-jump-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 8,
-	'title' => "Evil Enchantress song",
-	'lyrics' => "[Pinkie Pie/Flutterguy]
+            'slug' => "hop-skip-and-jump-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 8,
+            'title' => "Evil Enchantress song",
+            'lyrics' => "[Pinkie Pie/Flutterguy]
 She's an evil enchantress
 She does evil dances
 And if you look deep in her eyes
@@ -267,12 +269,12 @@ She'll mix up an evil brew
 Then she'll gobble you up
 In a big tasty stew
 Soooo.... Watch out!",
-	'slug' => "evil-enchantress-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 9,
-	'title' => "Winter Wrap Up",
-	'lyrics' => "[Rainbow Dash]
+            'slug' => "evil-enchantress-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 9,
+            'title' => "Winter Wrap Up",
+            'lyrics' => "[Rainbow Dash]
 Three months of winter coolness
 And awesome holidays
 
@@ -407,12 +409,12 @@ Winter Wrap Up! Winter Wrap Up!
 'Cause tomorrow spring is here
 'Cause tomorrow spring is here
 'Cause tomorrow spring is here!",
-	'slug' => "winter-wrap-up",
-]);
-DB::table('show_songs')->insert([
-	'id' => 10,
-	'title' => "Cupcake Song",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "winter-wrap-up",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 10,
+            'title' => "Cupcake Song",
+            'lyrics' => "[Pinkie Pie]
 All you have to do is take a cup of flour!
 Add it to the mix!
 Now just take a little something sweet, not sour!
@@ -426,12 +428,12 @@ And you never get your fill of...
 Cupcakes! So sweet and tasty!
 Cupcakes! Don't be too hasty!
 Cupcakes! Cupcakes, cupcakes, CUPCAKES!",
-	'slug' => "cupcake-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 11,
-	'title' => "Art of the Dress",
-	'lyrics' => "[Rarity]
+            'slug' => "cupcake-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 11,
+            'title' => "Art of the Dress",
+            'lyrics' => "[Rarity]
 Thread by thread, stitching it together
 Twilight's dress, cutting out the pattern snip by snip
 Making sure the fabric folds nicely
@@ -467,12 +469,12 @@ Croup, dock, haunch, shoulders, hip
 Thread by thread, primmed and pressed
 Yard by yard, never stressed
 And that's the art of the dress!",
-	'slug' => "art-of-the-dress",
-]);
-DB::table('show_songs')->insert([
-	'id' => 12,
-	'title' => "Hush Now Lullaby",
-	'lyrics' => "[Fluttershy]
+            'slug' => "art-of-the-dress",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 12,
+            'title' => "Hush Now Lullaby",
+            'lyrics' => "[Fluttershy]
 Hush now, quiet now
 It's time to lay your sleepy head
 Hush now, quiet now
@@ -502,12 +504,12 @@ Said hush now! Quiet now!
 It's time to go to BED!
 
 OW!",
-	'slug' => "hush-now-lullaby",
-]);
-DB::table('show_songs')->insert([
-	'id' => 13,
-	'title' => "Cutie Mark Crusaders Song",
-	'lyrics' => "[Scootaloo]
+            'slug' => "hush-now-lullaby",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 13,
+            'title' => "Cutie Mark Crusaders Song",
+            'lyrics' => "[Scootaloo]
 Look, here, are three little ponies
 Ready to sing for this crowd
 Listen up, 'cause here's our story
@@ -556,12 +558,12 @@ We are the Cutie Mark Crusaders
 On a quest to find out who we are
 And we will never stop the journey
 Not until we have our cutie marks!",
-	'slug' => "cutie-mark-crusaders-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 14,
-	'title' => "You Got to Share, You Got to Care",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "cutie-mark-crusaders-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 14,
+            'title' => "You Got to Share, You Got to Care",
+            'lyrics' => "[Pinkie Pie]
 We may be divided
 But of you all, I beg
 To remember we're all hoofed
@@ -594,12 +596,12 @@ You gotta care
 It's the right thing to do
 And there'll always be a way
 Thro-o-o-o-ugh!",
-	'slug' => "you-got-to-share-you-got-to-care",
-]);
-DB::table('show_songs')->insert([
-	'id' => 15,
-	'title' => "So Many Wonders",
-	'lyrics' => "[Fluttershy]
+            'slug' => "you-got-to-share-you-got-to-care",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 15,
+            'title' => "So Many Wonders",
+            'lyrics' => "[Fluttershy]
 What is this place
 filled with so many wonders?
 Casting its spell
@@ -618,12 +620,12 @@ If I knew the ground had so much up its sleeve
 I'd have come here sooner, and never leave
 
 Yes, I love everythiiiiiiiiiiiing!",
-	'slug' => "so-many-wonders",
-]);
-DB::table('show_songs')->insert([
-	'id' => 16,
-	'title' => "Pinkie Pie's Singing Telegram",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "so-many-wonders",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 16,
+            'title' => "Pinkie Pie's Singing Telegram",
+            'lyrics' => "[Pinkie Pie]
 This is your singing telegram
 I hope it finds you well
 You're invited to a party
@@ -648,12 +650,12 @@ It won't be the same without you
 So we hope that you say yes
 So, please, oh please R.S.V.P
 And come, and be our guest!",
-	'slug' => "pinkie-pies-singing-telegram",
-]);
-DB::table('show_songs')->insert([
-	'id' => 17,
-	'title' => "At the Gala",
-	'lyrics' => "Twilight Sparkle: I can't believe we're finally here. With all that we've imagined, the reality of this night is sure to make this... The Best Night Ever!
+            'slug' => "pinkie-pies-singing-telegram",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 17,
+            'title' => "At the Gala",
+            'lyrics' => "Twilight Sparkle: I can't believe we're finally here. With all that we've imagined, the reality of this night is sure to make this... The Best Night Ever!
 
 At the Gala
 
@@ -763,12 +765,12 @@ Twilight Sparkle: To talk!
 Into the Gala, into the Gala!
 And we'll have the best night ever!
 At the Gala!",
-	'slug' => "at-the-gala",
-]);
-DB::table('show_songs')->insert([
-	'id' => 18,
-	'title' => "I'm at the Grand Galloping Gala",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "at-the-gala",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 18,
+            'title' => "I'm at the Grand Galloping Gala",
+            'lyrics' => "[Pinkie Pie]
 I'm at the Grand Galloping Gala,
 I'm at the Grand Galloping Gala,
 I'm at the Grand Galloping Gala,
@@ -780,12 +782,12 @@ I'm at the Grand Galloping GalaaaaaaaaaaAAAAAAAAAAAA!
 [pause]
 
 It's all I ever... dreamed?",
-	'slug' => "im-at-the-grand-galloping-gala",
-]);
-DB::table('show_songs')->insert([
-	'id' => 19,
-	'title' => "Pony Pokey",
-	'lyrics' => "[Pinkie]
+            'slug' => "im-at-the-grand-galloping-gala",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 19,
+            'title' => "Pony Pokey",
+            'lyrics' => "[Pinkie]
 You reach your right hoof in
 You reach your right hoof out
 You reach your right hoof in
@@ -830,12 +832,12 @@ You do the Pony Pokey
 And that's what it's all about
 
 Yeah!",
-	'slug' => "pony-pokey",
-]);
-DB::table('show_songs')->insert([
-	'id' => 20,
-	'title' => "Find A Pet Song",
-	'lyrics' => "[Fluttershy]
+            'slug' => "pony-pokey",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 20,
+            'title' => "Find A Pet Song",
+            'lyrics' => "[Fluttershy]
 Now, Rainbow, my dear, I cannot express my delight
 It's abundantly clear
 That somewhere out here
@@ -969,12 +971,12 @@ May the games
 Begin
 
 Rainbow Dash: And may the best pet win!",
-	'slug' => "find-a-pet-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 21,
-	'title' => "Becoming Popular (The Pony Everypony Should Know)",
-	'lyrics' => "[Rarity]
+            'slug' => "find-a-pet-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 21,
+            'title' => "Becoming Popular (The Pony Everypony Should Know)",
+            'lyrics' => "[Rarity]
 I'll be the toast of the town, the girl on the go
 I'm the type of pony everypony, everypony should know
 
@@ -998,44 +1000,44 @@ I'm the type of pony everypony, everypony should know
 Because I'm the type of pony
 Yes, I'm the type of pony
 Yes, I'm the type of pony everypony should know",
-	'slug' => "becoming-popular-the-pony-everypony-should-know",
-]);
-DB::table('show_songs')->insert([
-	'id' => 22,
-	'title' => "The Heart Carol",
-	'lyrics' => "[Choir]
+            'slug' => "becoming-popular-the-pony-everypony-should-know",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 22,
+            'title' => "The Heart Carol",
+            'lyrics' => "[Choir]
 The fire of friendship lives in our hearts
 As long as it burns we cannot drift apart
 Though quarrels arise, their numbers are few
 Laughter and singing will see us through (will see us through)
 We are a circle of pony friends
 A circle of friends we'll be to the very end",
-	'slug' => "the-heart-carol",
-]);
-DB::table('show_songs')->insert([
-	'id' => 23,
-	'title' => "Happy Monthiversary",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "the-heart-carol",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 23,
+            'title' => "Happy Monthiversary",
+            'lyrics' => "[Pinkie Pie]
 Happy monthiversary to you and you today
 [very quickly] I can't believe you're already a month old time sure flies doesn't it well it seems like only yesterday you were born.
 But now you're a month old today, hey!",
-	'slug' => "happy-monthiversary",
-]);
-DB::table('show_songs')->insert([
-	'id' => 24,
-	'title' => "Piggy Dance",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "happy-monthiversary",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 24,
+            'title' => "Piggy Dance",
+            'lyrics' => "[Pinkie Pie]
 First you jiggle your tail! Oink oink oink!
 Then you wriggle your snout! Oink oink oink!
 Then you wiggle your rump! Oink oink oink!
 Then shout it out! Oink oink oink!
 [repeat verse two more times]",
-	'slug' => "piggy-dance",
-]);
-DB::table('show_songs')->insert([
-	'id' => 25,
-	'title' => "The Flim Flam Brothers",
-	'lyrics' => "[Flim]
+            'slug' => "piggy-dance",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 25,
+            'title' => "The Flim Flam Brothers",
+            'lyrics' => "[Flim]
 Well, lookie what we got here, brother of mine, it's the same in every town
 Ponies with thirsty throats, dry tongues, and not a drop of cider to be found
 Maybe they're not aware that there's really no need for this teary despair
@@ -1195,12 +1197,12 @@ Traveling salesponies nonpareil
 
 [Flim and Flam]
 Yeah!",
-	'slug' => "the-flim-flam-brothers",
-]);
-DB::table('show_songs')->insert([
-	'id' => 26,
-	'title' => "The Perfect Stallion",
-	'lyrics' => "[Sweetie Belle]
+            'slug' => "the-flim-flam-brothers",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 26,
+            'title' => "The Perfect Stallion",
+            'lyrics' => "[Sweetie Belle]
 Cheerilee is sweet and kind.
 She's the best teacher we could hope for.
 The perfect stallion you and I must find.
@@ -1278,12 +1280,12 @@ We did it girls. We've found the one.
 Who will send our teacher's heart aflutter.
 
 Apple Bloom: Wait a minute. Let me get this straight. Are you talking about my brother?",
-	'slug' => "the-perfect-stallion",
-]);
-DB::table('show_songs')->insert([
-	'id' => 27,
-	'title' => "Smile Song",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "the-perfect-stallion",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 27,
+            'title' => "Smile Song",
+            'lyrics' => "[Pinkie Pie]
 My name is Pinkie Pie (Hello!)
 And I am here to say (How ya doin'?)
 I'm gonna make you smile, and I will brighten up your day-aaay!
@@ -1354,21 +1356,21 @@ Smile, smile, smile, smile, smile!
 [Pinkie Pie]
 Come on and smile
 Come on and smile!",
-	'slug' => "smile-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 28,
-	'title' => "Cranky Doodle Donkey",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "smile-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 28,
+            'title' => "Cranky Doodle Donkey",
+            'lyrics' => "[Pinkie Pie]
 You're a Cranky Doodle Donkey guy.
 A Cranky Doodle Donkey.
 I never met you but you're my new friend and I'm your best friend Pinkie Pie!",
-	'slug' => "cranky-doodle-donkey",
-]);
-DB::table('show_songs')->insert([
-	'id' => 29,
-	'title' => "Welcome Song",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "cranky-doodle-donkey",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 29,
+            'title' => "Welcome Song",
+            'lyrics' => "[Pinkie Pie]
 Welcome welcome welcome
 A fine welcome to you
 Welcome welcome welcome
@@ -1379,12 +1381,12 @@ Welcome welcome welcome
 To Ponyville today
 
 Pinkie Pie: Wait for it!",
-	'slug' => "welcome-song",
-]);
-DB::table('show_songs')->insert([
-	'id' => 30,
-	'title' => "Cranky Doodle Joy",
-	'lyrics' => "[Pinkie Pie]
+            'slug' => "welcome-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 30,
+            'title' => "Cranky Doodle Joy",
+            'lyrics' => "[Pinkie Pie]
 He had a Cranky Doodle sweetheart
 She's his cranky doodle joy
 I helped the Cranky Doodle boy, yeah!
@@ -1392,12 +1394,12 @@ I helped the Cranky Doodle boy!
 
 Cranky Doodle Donkey and Matilda: Pinkie!
 Pinkie Pie: Whoops, privacy. Sorry.",
-	'slug' => "cranky-doodle-joy",
-]);
-DB::table('show_songs')->insert([
-	'id' => 31,
-	'title' => "Big Brother Best Friend Forever (B.B.B.F.F.)",
-	'lyrics' => "[Twilight Sparkle]
+            'slug' => "cranky-doodle-joy",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 31,
+            'title' => "Big Brother Best Friend Forever (B.B.B.F.F.)",
+            'lyrics' => "[Twilight Sparkle]
 When I was just a filly, I found it rather silly
 To see how many other ponies I could meet
 I had my books to read, didn't know that I would ever need
@@ -1424,12 +1426,12 @@ I hoped that he would stay
 My big brother best friend
 Forever...
 Forever...",
-	'slug' => "big-brother-best-friend-forever-bbbff",
-]);
-DB::table('show_songs')->insert([
-	'id' => 32,
-	'title' => "This Day Aria",
-	'lyrics' => "[Queen Chrysalis]
+            'slug' => "big-brother-best-friend-forever-bbbff",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 32,
+            'title' => "This Day Aria",
+            'lyrics' => "[Queen Chrysalis]
 This day is going to be perfect
 The kind of day of which I've dreamed since I was small
 Everypony will gather 'round
@@ -1475,12 +1477,12 @@ He'll end up marrying a fake
 Shining Armor will be
 
 [Queen Chrysalis]: ...mine, all mine. [evil laugh]",
-				'slug' => "this-day-aria",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 33,
-				'title' => "Love Is In Bloom",
-				'lyrics' => "[Twilight Sparkle]
+            'slug' => "this-day-aria",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 33,
+            'title' => "Love Is In Bloom",
+            'lyrics' => "[Twilight Sparkle]
 Love is in bloom
 A beautiful bride, a handsome groom,
 Two hearts becoming one
@@ -1502,12 +1504,12 @@ A beautiful bride, a handsome groom
 I said love is in bloom
 You're starting a life and making room
 For us, (For us... For us...Aah...)",
-				'slug' => "love-is-in-bloom",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 34,
-				'title' => "The Failure Song",
-				'lyrics' => "[Twilight Sparkle]
+            'slug' => "love-is-in-bloom",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 34,
+            'title' => "The Failure Song",
+            'lyrics' => "[Twilight Sparkle]
 I was prepared to do my best
 Thought I could handle any test
 For I can do so many tricks
@@ -1554,12 +1556,12 @@ No I wasn't
 
 [Twilight Sparkle and Spike]
 Prepared... for this!",
-				'slug' => "the-failure-song",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 35,
-				'title' => "The Ballad of the Crystal Empire",
-				'lyrics' => "[Twilight Sparkle]
+            'slug' => "the-failure-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 35,
+            'title' => "The Ballad of the Crystal Empire",
+            'lyrics' => "[Twilight Sparkle]
 Princess Cadence needs our help
 Her magic will not last forever
 I think we can do it
@@ -1597,12 +1599,12 @@ Can you learn it in a day?
 Oh, we have to get this right
 Yes we have to make them see
 We can save the Crystal Ponies... with their history!",
-				'slug' => "the-ballad-of-the-crystal-empire",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 36,
-				'title' => "The Success Song",
-				'lyrics' => "[Rarity]
+            'slug' => "the-ballad-of-the-crystal-empire",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 36,
+            'title' => "The Success Song",
+            'lyrics' => "[Rarity]
 You were prepared to do your best
 Had what it takes to pass the test
 All those doubts you can dismiss
@@ -1644,12 +1646,12 @@ Turns out you were
 
 [Spike, Applejack, Rainbow Dash, Rarity, Pinkie Pie, Fluttershy, and Twilight Sparkle]
 Prepared... for this!",
-				'slug' => "the-success-song",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 37,
-				'title' => "Babs Seed",
-				'lyrics' => "[Cutie Mark Crusaders]
+            'slug' => "the-success-song",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 37,
+            'title' => "Babs Seed",
+            'lyrics' => "[Cutie Mark Crusaders]
 Yeah, yeah, yeah
 Yeah, yeah, yeah
 Yeah, yeah, yeah, yeah, yeah
@@ -1708,12 +1710,12 @@ Babs Seed, Babs Seed-
 
 [Scootaloo]
 She's just a bad, bad seed",
-				'slug' => "babs-seed",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 38,
-				'title' => "Raise This Barn",
-				'lyrics' => "[Applejack]
+            'slug' => "babs-seed",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 38,
+            'title' => "Raise This Barn",
+            'lyrics' => "[Applejack]
 Yee-hoo!
 
 		Raise this barn, raise this barn
@@ -1803,12 +1805,12 @@ All we need to strive to be
 Is part of the Apple family
 
 Apple Bloom: Yeah!",
-				'slug' => "raise-this-barn",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 39,
-				'title' => "Morning in Ponyville",
-				'lyrics' => "[Twilight Sparkle]
+            'slug' => "raise-this-barn",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 39,
+            'title' => "Morning in Ponyville",
+            'lyrics' => "[Twilight Sparkle]
 Morning in Ponyville shimmers
 Morning in Ponyville shines
 And I know for absolute certain
@@ -1828,12 +1830,12 @@ Morning in Ponyville shimmers
 Morning in Ponyville shines
 		And I know for absolute certain
 					   That everything is certainly...",
-				'slug' => "morning-in-ponyville",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 40,
-				'title' => "What My Cutie Mark Is Telling Me",
-				'lyrics' => "[Rainbow Dash]
+            'slug' => "morning-in-ponyville",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 40,
+            'title' => "What My Cutie Mark Is Telling Me",
+            'lyrics' => "[Rainbow Dash]
 These animals don't listen, no, not one little bit
 They run around out of control and throw their hissy fits
 It's up to me to stop them, 'cause plainly you can see
@@ -1880,12 +1882,12 @@ It's what my cutie mark
 
 [All]
 Yes, it's what my cutie mark is telling me!",
-				'slug' => "what-my-cutie-mark-is-telling-me",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 41,
-				'title' => "I've Got to Find a Way",
-				'lyrics' => "[Twilight Sparkle]
+            'slug' => "what-my-cutie-mark-is-telling-me",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 41,
+            'title' => "I've Got to Find a Way",
+            'lyrics' => "[Twilight Sparkle]
 I have to find a way
 To make this all okay
 I can't believe this small mistake
@@ -1899,12 +1901,12 @@ I don't know what to do
 I fear I won't get through to you
 
 Oh why, oh why",
-				'slug' => "ive-got-to-find-a-way",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 42,
-				'title' => "A True, True Friend",
-				'lyrics' => "[Twilight Sparkle]
+            'slug' => "ive-got-to-find-a-way",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 42,
+            'title' => "A True, True Friend",
+            'lyrics' => "[Twilight Sparkle]
 A true, true friend helps a friend in need
 
 A friend will be there to help them see
@@ -1982,12 +1984,12 @@ A true, true friend helps a friend in need
 To see the light (to see the light)
 That shines (that shines)
 From a true, true friend!",
-				'slug' => "a-true-true-friend",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 43,
-				'title' => "Celestia's Ballad",
-				'lyrics' => "[Princess Celestia]
+            'slug' => "a-true-true-friend",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 43,
+            'title' => "Celestia's Ballad",
+            'lyrics' => "[Princess Celestia]
 You've come such a long, long way
 And I've watched you from that very first day
 To see how you might grow
@@ -2001,12 +2003,12 @@ To go where you will go
 To see what you will see
 To find what you will be
 For it's time for you to fulfill your destiny",
-				'slug' => "celestias-ballad",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 44,
-				'title' => "Behold, Princess Twilight Sparkle",
-				'lyrics' => "[Choir]
+            'slug' => "celestias-ballad",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 44,
+            'title' => "Behold, Princess Twilight Sparkle",
+            'lyrics' => "[Choir]
 Thou Princess Twilight cometh
 Behold, behold
 A Princess here before us
@@ -2017,12 +2019,12 @@ The Princess Twilight cometh
 Behold, behold (behold, behold)
 The Princess is
 The Princess is here",
-				'slug' => "behold-princess-twilight-sparkle",
-			]);
-DB::table('show_songs')->insert([
-				'id' => 45,
-				'title' => "Life in Equestria",
-				'lyrics' => "[Twilight Sparkle]
+            'slug' => "behold-princess-twilight-sparkle",
+        ]);
+        DB::table('show_songs')->insert([
+            'id' => 45,
+            'title' => "Life in Equestria",
+            'lyrics' => "[Twilight Sparkle]
 Life in Equestria shimmers
 Life in Equestria shines
 And I know for absolute certain
@@ -2034,17 +2036,18 @@ Yes, everything is certainly fine
 Itâ€™s fine
 
 Twilight Sparkle: Yes! Everythingâ€™s going to be just fine!",
-				'slug' => "life-in-equestria",
-			]);
-	}
+            'slug' => "life-in-equestria",
+        ]);
+    }
 
-	public function down() {
-		Schema::table('show_song_track', function($table){
-			$table->dropForeign('show_song_track_track_id_foreign');
-			$table->dropForeign('show_song_track_show_song_id_foreign');
-		});
+    public function down()
+    {
+        Schema::table('show_song_track', function ($table) {
+            $table->dropForeign('show_song_track_track_id_foreign');
+            $table->dropForeign('show_song_track_show_song_id_foreign');
+        });
 
-		Schema::drop('show_song_track');
-		Schema::drop('show_songs');
-	}
+        Schema::drop('show_song_track');
+        Schema::drop('show_songs');
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 use Illuminate\Database\Eloquent\Model;
 use Traits\SlugTrait;
 

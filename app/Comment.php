@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,27 +16,27 @@ class Comment extends Model
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('App\User');
     }
 
     public function track()
     {
-        return $this->belongsTo('Track');
+        return $this->belongsTo('App\Track');
     }
 
     public function album()
     {
-        return $this->belongsTo('Album');
+        return $this->belongsTo('App\Album');
     }
 
     public function playlist()
     {
-        return $this->belongsTo('Playlist');
+        return $this->belongsTo('App\Playlist');
     }
 
     public function profile()
     {
-        return $this->belongsTo('User', 'profile_id');
+        return $this->belongsTo('App\User', 'profile_id');
     }
 
     public static function mapPublic($comment)

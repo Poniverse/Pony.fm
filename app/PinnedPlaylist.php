@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 use Illuminate\Database\Eloquent\Model;
 
 class PinnedPlaylist extends Model
@@ -8,11 +10,11 @@ class PinnedPlaylist extends Model
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('App\User');
     }
 
     public function playlist()
     {
-        return $this->belongsTo('Playlist');
+        return $this->belongsTo('App\Playlist');
     }
 }

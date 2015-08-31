@@ -1,5 +1,6 @@
 <?php
 
+use App\Track;
 use Illuminate\Database\Migrations\Migration;
 
 
