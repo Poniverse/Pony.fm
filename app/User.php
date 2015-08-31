@@ -2,17 +2,19 @@
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
-class User extends Model
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
     use Authenticatable, CanResetPassword;
 
     protected $table = 'users';
-    protected $hidden = ['password_hash', 'password_salt', 'bio'];
+    protected $hidden1 = ['password_hash', 'password_salt', 'bio'];
 
     public function scopeUserDetails($query)
     {
