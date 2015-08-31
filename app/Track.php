@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\SlugTrait;
 use Exception;
 use External;
 use getid3_writetags;
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
-use Traits\SlugTrait;
 
 class Track extends Model
 {
