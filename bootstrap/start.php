@@ -27,7 +27,8 @@ $app->redirectIfTrailingSlash();
 */
 
 $env = $app->detectEnvironment([
-	'local' => ['pony.fm.local', 'api.pony.fm.local', 'homestead']
+	'local' => ['pony.fm.local', 'api.pony.fm.local', 'homestead'],
+	'stage' => ['stage.pony.fm'],
 ]);
 
 /*
