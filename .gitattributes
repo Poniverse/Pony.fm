@@ -1,1 +1,4 @@
 * text=auto
+app/config/production/* filter=git-crypt diff=git-crypt
+app/config/stage/* filter=git-crypt diff=git-crypt
+
