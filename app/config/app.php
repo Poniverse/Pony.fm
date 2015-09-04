@@ -117,7 +117,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		
 		'Intouch\LaravelNewrelic\LaravelNewrelicServiceProvider',
-
+		'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 	),
 
 	/*
@@ -184,7 +184,6 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 		
 		'Newrelic'        => 'Intouch\LaravelNewrelic\Facades\Newrelic',
-		
 	),
 
 );

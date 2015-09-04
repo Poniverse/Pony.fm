@@ -5,6 +5,7 @@
 	use External;
 	use Illuminate\Support\Facades\Config;
 	use Illuminate\Support\Facades\URL;
+	use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 	class Image extends \Eloquent {
 		const NORMAL = 1;
@@ -30,7 +31,7 @@
 			return null;
 		}
 
-		public static function upload($file, $user) {
+		public static function upload(UploadedFile $file, $user) {
 			$userId = $user;
 			if ($user instanceof User)
 				$userId = $user->id;
