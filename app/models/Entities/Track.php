@@ -462,8 +462,8 @@
 
 		/** @noinspection PhpUnusedPrivateMethodInspection */
 		private function updateTagsWithGetId3($format) {
-			require_once(app_path() . '/library/getid3/getid3.php');
-			require_once(app_path() . '/library/getid3/write.php');
+			require_once(app_path() . '/library/getid3/getid3/getid3.php');
+			require_once(app_path() . '/library/getid3/getid3/write.php');
 			$tagWriter = new getid3_writetags;
 
 			$tagWriter->overwrite_tags = true;
