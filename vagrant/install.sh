@@ -1,10 +1,13 @@
-sudo apt-get update
+#!/usr/bin/env bash
 
-echo "Installing tagging tools"
-sudo apt-get install -y AtomicParsley flac vorbis-tools
+echo "Running apt-get update..."
+sudo apt-get -qq update
 
-echo "Installing ffmpeg dependencies"
-sudo apt-get install -y pkg-config yasm libfaac-dev libmp3lame-dev libvorbis-dev
+echo "Installing tagging tools..."
+sudo apt-get -qq install -y AtomicParsley flac vorbis-tools imagemagick
+
+echo "Installing ffmpeg dependencies.."
+sudo apt-get -qq install -y pkg-config yasm libfaac-dev libmp3lame-dev libvorbis-dev
 
 
 if type ffmpeg &>/dev/null; then
