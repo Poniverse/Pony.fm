@@ -301,7 +301,7 @@
 			return $this->hasMany('Entities\TrackFile');
 		}
 
-		public function getYear() {
+		public function getYearAttribute() {
 			return date('Y', strtotime($this->release_date));
 		}
 
@@ -341,12 +341,13 @@
 			return $this->user->display_name;
 		}
 
-		public function getReleaseDate() {
+		public function getReleaseDateAttribute() {
 			if($this->attributes['released_at'] !== NULL)
 				return $this->attributes['released_at'];
 
-			if ($this->attributes['published_at'] !== NULL)
-				return Str::limit($this->$this->attributes['published_at'], 10, '');
+			if ($this->attributes['published_at'] !== NULL) {
+				return Str::limit($this->attributes['published_at'], 10, '');
+			}
 
 			return Str::limit($this->attributes['created_at'], 10, '');
 		}
@@ -440,7 +441,7 @@
 			$command .= '--title ' . escapeshellarg($this->title) . ' ';
 			$command .= '--artist ' . escapeshellarg($this->user->display_name) . ' ';
 			$command .= '--year "' . $this->year . '" ';
-			$command .= '--genre ' . escapeshellarg($this->genre != null ? $this->genre->title : '') . ' ';
+			$command .= '--genre ' . escapeshellarg($this->genre != null ? $this->genre->name : '') . ' ';
 			$command .= '--copyright ' . escapeshellarg('© '.$this->year.' '.$this->user->display_name).' ';
 			$command .= '--comment "' . 'Downloaded from: https://pony.fm/' . '" ';
 			$command .= '--encodingTool "' . 'Pony.fm' . '" ';
@@ -474,7 +475,7 @@
 				'title'   				=> [$this->title],
 				'artist'  				=> [$this->user->display_name],
 				'year'    				=> ['' . $this->year],
-				'genre'   				=> [$this->genre != null ? $this->genre->title : ''],
+				'genre'   				=> [$this->genre != null ? $this->genre->name : ''],
 				'comment' 				=> ['Downloaded from: https://pony.fm/'],
 				'copyright'				=> ['© ' . $this->year . ' ' . $this->user->display_name],
 				'publisher'  			=> ['Pony.fm - https://pony.fm/'],
