@@ -629,16 +629,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.1.10",
+            "version": "v5.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d47ccc8de10ccb6f328cc90f901ca5e47e077c93"
+                "reference": "76a9816f37a58383f6ba093ccf08f253e5488555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d47ccc8de10ccb6f328cc90f901ca5e47e077c93",
-                "reference": "d47ccc8de10ccb6f328cc90f901ca5e47e077c93",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/76a9816f37a58383f6ba093ccf08f253e5488555",
+                "reference": "76a9816f37a58383f6ba093ccf08f253e5488555",
                 "shasum": ""
             },
             "require": {
@@ -753,7 +753,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-08-12 18:16:08"
+            "time": "2015-08-30 23:25:48"
         },
         {
             "name": "league/flysystem",
@@ -838,16 +838,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.17.0",
+            "version": "1.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "877ae631713cc961952df713ae785735b90df682"
+                "reference": "0524c87587ab85bc4c2d6f5b41253ccb930a5422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/877ae631713cc961952df713ae785735b90df682",
-                "reference": "877ae631713cc961952df713ae785735b90df682",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/0524c87587ab85bc4c2d6f5b41253ccb930a5422",
+                "reference": "0524c87587ab85bc4c2d6f5b41253ccb930a5422",
                 "shasum": ""
             },
             "require": {
@@ -910,7 +910,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-08-30 11:40:25"
+            "time": "2015-08-31 09:17:37"
         },
         {
             "name": "mtdowling/cron-expression",
