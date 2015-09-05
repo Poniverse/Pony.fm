@@ -302,7 +302,7 @@
 		}
 
 		public function getYearAttribute() {
-			return date('Y', strtotime($this->release_date));
+			return date('Y', strtotime($this->getReleaseDate()));
 		}
 
 		public function setTitleAttribute($value) {
@@ -341,12 +341,12 @@
 			return $this->user->display_name;
 		}
 
-		public function getReleaseDateAttribute() {
-			if($this->attributes['released_at'] !== NULL)
-				return $this->attributes['released_at'];
+		public function getReleaseDate() {
+			if($this->released_at !== NULL)
+				return $this->released_at;
 
-			if ($this->attributes['published_at'] !== NULL) {
-				return Str::limit($this->attributes['published_at'], 10, '');
+			if ($this->published_at !== NULL) {
+				return Str::limit($this->published_at, 10, '');
 			}
 
 			return Str::limit($this->attributes['created_at'], 10, '');
