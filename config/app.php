@@ -144,7 +144,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-//        Intouch\LaravelNewrelic\LaravelNewrelicServiceProvider::class,
+        Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
     ],
@@ -195,7 +195,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
-//        'Newrelic'  => Intouch\LaravelNewrelic\Facades\Newrelic::class,
+        'Newrelic'  => Intouch\LaravelNewrelic\Facades\Newrelic::class,
 
     ],
 
