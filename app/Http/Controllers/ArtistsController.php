@@ -1,7 +1,10 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
+use App;
 use App\User;
+use Illuminate\Contracts\View\View;
 
 class ArtistsController extends Controller
 {

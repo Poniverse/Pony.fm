@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
-use Traits\SlugTrait;
+use App\Traits\SlugTrait;
 
 class Playlist extends Model
 {

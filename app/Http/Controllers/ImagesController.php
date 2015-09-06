@@ -1,9 +1,13 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
 use App\Image;
+use Config;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
+use Response;
+use URL;
 
 class ImagesController extends Controller
 {

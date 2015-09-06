@@ -12,7 +12,7 @@
 	<meta property="fb:admins" content="1165335382" />
 	<base href="/" />
 
-	{{ Assets::styleIncludes('embed') }}
+	{!! Assets::styleIncludes('embed') !!}
 </head>
 <body>
 	@if($track->explicit && !(Auth::check() && Auth::user()->can_see_explicit_content))
@@ -50,7 +50,7 @@
 		var pfm = {token: '{{ Session::token() }}'}
 	</script>
 
-	{{ Assets::scriptIncludes('embed') }}
+	{!! Assets::scriptIncludes('embed') !!}
 
 	<script type="text/javascript">
 		var _gaq = _gaq || [];

@@ -52,16 +52,15 @@ class Assets
         $files = [];
         $filesFound = [];
         foreach ($globs as $glob) {
-            foreach (glob("../app/" . $glob, GLOB_BRACE) as $file) {
+            foreach (glob("../resources/assets/" . $glob, GLOB_BRACE) as $file) {
                 if (isset($filesFound[$file])) {
                     continue;
                 }
 
                 $filesFound[$file] = true;
-                $files[] = substr($file, 7); // chop off ../app/
+                $files[] = substr($file, 20); // chop off ../app/
             }
         }
-
         return $files;
     }
 

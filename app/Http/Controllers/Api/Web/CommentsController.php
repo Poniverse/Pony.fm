@@ -1,14 +1,15 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use App;
 use App\Commands\CreateCommentCommand;
 use App\Comment;
+use App\Http\Controllers\ApiControllerBase;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class CommentsController extends \ApiControllerBase
+class CommentsController extends ApiControllerBase
 {
     public function postCreate($type, $id)
     {

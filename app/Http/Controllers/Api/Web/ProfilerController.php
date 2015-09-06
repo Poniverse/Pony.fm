@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\Controller;
 use App\ProfileRequest;

@@ -1,12 +1,13 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
+use App\Http\Controllers\ApiControllerBase;
 use App\Image;
 use Cover;
 use Illuminate\Support\Facades\Response;
 
-class ImagesController extends \ApiControllerBase
+class ImagesController extends ApiControllerBase
 {
     public function getOwned()
     {

@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
+use App\User;
+use File;
 use Illuminate\Support\Facades\App;
 
 class UsersController extends Controller

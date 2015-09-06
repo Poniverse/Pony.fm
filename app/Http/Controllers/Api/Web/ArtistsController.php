@@ -1,10 +1,11 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use App\Album;
 use App\Comment;
 use App\Favourite;
+use App\Http\Controllers\ApiControllerBase;
 use App\Image;
 use App\Track;
 use App\User;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class ArtistsController extends \ApiControllerBase
+class ArtistsController extends ApiControllerBase
 {
     public function getFavourites($slug)
     {

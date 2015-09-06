@@ -1,14 +1,15 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
+use App\Http\Controllers\ApiControllerBase;
 use App\Commands\SaveAccountSettingsCommand;
 use Cover;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class AccountController extends \ApiControllerBase
+class AccountController extends ApiControllerBase
 {
     public function getSettings()
     {

@@ -1,7 +1,15 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
 use App\User;
+use Auth;
+use Config;
+use DB;
+use Input;
+use Poniverse;
+use Redirect;
+use URL;
 
 class AuthController extends Controller
 {

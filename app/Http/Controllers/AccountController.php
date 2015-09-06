@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
+use View;
 
 class AccountController extends Controller
 {

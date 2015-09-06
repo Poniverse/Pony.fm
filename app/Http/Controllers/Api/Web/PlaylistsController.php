@@ -1,11 +1,12 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use App\Commands\AddTrackToPlaylistCommand;
 use App\Commands\CreatePlaylistCommand;
 use App\Commands\DeletePlaylistCommand;
 use App\Commands\EditPlaylistCommand;
+use App\Http\Controllers\ApiControllerBase;
 use App\Image;
 use App\Playlist;
 use App\ResourceLogItem;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class PlaylistsController extends \ApiControllerBase
+class PlaylistsController extends ApiControllerBase
 {
     public function postCreate()
     {

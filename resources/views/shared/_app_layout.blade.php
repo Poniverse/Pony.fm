@@ -92,7 +92,7 @@
 @section('styles')
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans" />
 	<link rel="stylesheet" href="/styles/loader.css" />
-	{{ Assets::styleIncludes() }}
+	{!! Assets::styleIncludes() !!}
 @endsection
 
 @section('scripts')
@@ -123,7 +123,7 @@
 		})();
 	</script>
 
-	{{ Assets::scriptIncludes() }}
+	{!! Assets::scriptIncludes() !!}
 
     @if (!Config::get("app.debug"))
         <script src="/build/scripts/templates.js"></script>

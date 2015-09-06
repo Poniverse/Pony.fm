@@ -1,10 +1,14 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
+use App;
 use App\Playlist;
 use App\ResourceLogItem;
 use App\Track;
+use Auth;
 use Illuminate\Support\Facades\Redirect;
+use View;
 
 class PlaylistsController extends Controller
 {

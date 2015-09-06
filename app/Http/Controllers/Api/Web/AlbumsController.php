@@ -1,18 +1,19 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use App\Album;
 use App\Commands\CreateAlbumCommand;
 use App\Commands\DeleteAlbumCommand;
 use App\Commands\EditAlbumCommand;
+use App\Http\Controllers\ApiControllerBase;
 use App\Image;
 use App\ResourceLogItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class AlbumsController extends \ApiControllerBase
+class AlbumsController extends ApiControllerBase
 {
     public function postCreate()
     {

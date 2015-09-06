@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Image;
 use App\Track;

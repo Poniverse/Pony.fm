@@ -1,14 +1,15 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use App\Genre;
+use App\Http\Controllers\ApiControllerBase;
 use App\License;
 use App\ShowSong;
 use App\TrackType;
 use Illuminate\Support\Facades\DB;
 
-class TaxonomiesController extends \ApiControllerBase
+class TaxonomiesController extends ApiControllerBase
 {
     public function getAll()
     {

@@ -1,7 +1,8 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
+use App\Http\Controllers\ApiControllerBase;
 use App\News;
 use App\Track;
 use Cover;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class DashboardController extends \ApiControllerBase
+class DashboardController extends ApiControllerBase
 {
     public function getIndex()
     {

@@ -1,10 +1,16 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
 use App\ResourceLogItem;
 use App\Track;
 use App\TrackFile;
+use Auth;
+use Config;
 use Illuminate\Support\Facades\App;
+use Redirect;
+use Response;
+use View;
 
 class TracksController extends Controller
 {

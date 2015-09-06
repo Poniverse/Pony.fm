@@ -1,17 +1,18 @@
 <?php
 
-namespace Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use App\Album;
 use App\Commands\ToggleFavouriteCommand;
 use App\Favourite;
+use App\Http\Controllers\ApiControllerBase;
 use App\Playlist;
 use App\Track;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-class FavouritesController extends \ApiControllerBase
+class FavouritesController extends ApiControllerBase
 {
     public function postToggle()
     {

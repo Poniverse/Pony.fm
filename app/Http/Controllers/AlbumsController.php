@@ -1,9 +1,14 @@
 <?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
+use AlbumDownloader;
+use App;
 use App\Album;
 use App\ResourceLogItem;
 use App\Track;
+use Illuminate\Support\Facades\Redirect;
+use View;
 
 class AlbumsController extends Controller
 {
