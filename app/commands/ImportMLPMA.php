@@ -8,6 +8,7 @@ use Entities\Album;
 use Entities\Image;
 use Entities\User;
 use Entities\ShowSong;
+use Entities\Track;
 use Entities\TrackType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Carbon\Carbon;
@@ -110,22 +111,22 @@ class ImportMLPMA extends Command {
 			$this->info('Tagged year: '.$taggedYear);
 
 			if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
-				$released_at = $modifiedDate;
+				$releasedAt = $modifiedDate;
 
 			} else if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
 				$this->error('Release years don\'t match! Using the tagged year...');
-				$released_at = Carbon::create($taggedYear);
+				$releasedAt = Carbon::create($taggedYear);
 
 			} else {
 				// $taggedYear is null
 				$this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
-				$released_at = $modifiedDate;
+				$releasedAt = $modifiedDate;
 			}
 
 			//==========================================================================================================
 			// Does this track have vocals?
 			//==========================================================================================================
-			$is_vocal = $parsedTags['lyrics'] !== null;
+			$isVocal = $parsedTags['lyrics'] !== null;
 
 
 			//==========================================================================================================
@@ -161,7 +162,7 @@ class ImportMLPMA extends Command {
 			//==========================================================================================================
 			// Extract the cover art, if any exists.
 			//==========================================================================================================
-			$cover_id = null;
+			$coverId = null;
 			if (array_key_exists('comments', $tags) && array_key_exists('picture', $tags['comments'])) {
 				$image = $tags['comments']['picture'][0];
 
@@ -187,6 +188,7 @@ class ImportMLPMA extends Command {
 				$imageFile = new UploadedFile($imageFilePath, $imageFilename, $image['image_mime']);
 
 				$cover = Image::upload($imageFile, $artist);
+				$coverId = $cover->id;
 
 			} else {
 				$this->error('No cover art found!');
@@ -196,37 +198,40 @@ class ImportMLPMA extends Command {
 			//==========================================================================================================
 			// Is this part of an album?
 			//==========================================================================================================
+			// Find the album if it exists and create it if it doesn't.
+			$albumId = null;
+			$albumName = $parsedTags['album'];
 
-			// TODO: find/create the album
-			$album_name = $parsedTags['album'];
-
-			if ($album_name !== null) {
+			if ($albumName !== null) {
 				$album = Album::where('user_id', '=', $artist->id)
-					->where('title', '=', $album_name)
+					->where('title', '=', $albumName)
 					->first();
 
 				if (!$album) {
 					$album = new Album;
 
-					$album->title = $album_name;
+					$album->title = $albumName;
 					$album->user_id = $artist->id;
-					$album->cover_id = $cover->id;
+					$album->cover_id = $coverId;
 
 					$album->save();
 				}
+
+				$albumId = $album->id;
 			}
 
 			//==========================================================================================================
 			// Original, show song remix, fan song remix, show audio remix, or ponified song?
 			//==========================================================================================================
-			$track_type = TrackType::ORIGINAL_TRACK;
+			$trackType = TrackType::ORIGINAL_TRACK;
+			$linkedSongIds = [];
 
-			$sanitized_track_title = $parsedTags['title'];
-			$sanitized_track_title = str_replace(' - ', ' ', $sanitized_track_title);
-			$sanitized_track_title = str_replace('ft. ', '', $sanitized_track_title);
-			$sanitized_track_title = str_replace('*', '', $sanitized_track_title);
+			$sanitizedTrackTitle = $parsedTags['title'];
+			$sanitizedTrackTitle = str_replace(' - ', ' ', $sanitizedTrackTitle);
+			$sanitizedTrackTitle = str_replace('ft. ', '', $sanitizedTrackTitle);
+			$sanitizedTrackTitle = str_replace('*', '', $sanitizedTrackTitle);
 
-			$queriedTitle = DB::connection()->getPdo()->quote($sanitized_track_title);
+			$queriedTitle = DB::connection()->getPdo()->quote($sanitizedTrackTitle);
 			$officialSongs = ShowSong::select(['id', 'title'])
 			->whereRaw("
 				MATCH (title)
@@ -235,87 +240,131 @@ class ImportMLPMA extends Command {
 				->get();
 
 
-			// It it has "Ingram" in the name, it's definitely an official song remix.
+			// If it has "Ingram" in the name, it's definitely an official song remix.
 			if (Str::contains(Str::lower($file->getFilename()), 'ingram')) {
-				$track_type = TrackType::OFFICIAL_TRACK_REMIX;
 				$this->comment('This is an official song remix!');
 
-				foreach($officialSongs as $song) {
-					$this->comment('=> Matched official song: ['.$song->id.'] '.$song->title);
-				}
-
-				if (sizeof($officialSongs) === 1) {
-					$linkedSongIds = [$officialSongs[0]->id];
-				} else {
-					list($track_type, $linkedSongIds) = $this->classifyTrack($officialSongs);
-
-				}
+				list($trackType, $linkedSongIds) = $this->classifyTrack($file, $officialSongs, true);
 
 
 			// If it has "remix" in the name, it's definitely a remix.
-			} else if (Str::contains(Str::lower($sanitized_track_title), 'remix')) {
+			} else if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
 				$this->comment('This is some kind of remix!');
 
-				foreach($officialSongs as $song) {
-					$this->comment('=> Matched official song: [' . $song->id . '] ' . $song->title);
-				}
+				list($trackType, $linkedSongIds) = $this->classifyTrack($file, $officialSongs);
 			}
 
 
 			//==========================================================================================================
 			// Save this track.
 			//==========================================================================================================
+			$title = $parsedTags['title'];
 
-			// TODO: use these variables
-			$cover;
-			$album;
-			$cover_id;
-			$released_at;
-			$is_vocal;
-			$track_type;
+			// Has this track already been imported?
+			$track = Track::where('user_id', '=', $artist->id)
+				->where('title', '=', $title)
+				->first();
 
-			// TODO: mark imported tracks as needing QA
+			if (!$track) {
+				$track = new Track;
 
-			echo PHP_EOL;
+				$track->user_id = $artist->id;
+				$track->title = $parsedTags['title'];
+				$track->cover_id = $coverId;
+				$track->album_id = $albumId;
+				$track->released_at = $releasedAt;
+				$track->is_vocal = $isVocal;
+				$track->track_type_id = $trackType;
+
+				$track->save();
+
+				if (sizeof($linkedSongIds) > 0) {
+					$track->showSongs()->attach($linkedSongIds);
+				}
+
+				// TODO: mark imported tracks as needing QA
+			} else {
+				$this->comment('This track has already been imported!');
+			}
+
+
+
+			echo PHP_EOL.PHP_EOL;
 		}
 	}
 
-	protected function classifyTrack()
+	protected function classifyTrack($file, $officialSongs, $isRemixOfOfficialTrack = false)
 	{
 		$trackTypeId = null;
 		$linkedSongIds = [];
 
-		$this->question('Multiple official songs matched! Please enter the ID of the correct one.');
-		$this->question('If this is a medley, multiple song ID\'s can be separated by commas.');
-		$this->question('  Other options:');
-		$this->question('    a = show audio remix');
-		$this->question('    f = fan track remix');
-		$this->question('    p = ponified track');
-		$this->question('    o = original track');
-		$input = $this->ask('[#/a/f/p/o]: ');
 
-		switch($input) {
-			case 'a':
-				$trackTypeId = TrackType::OFFICIAL_AUDIO_REMIX;
-				break;
-
-			case 'f':
-				$trackTypeId = TrackType::FAN_TRACK_REMIX;
-				break;
-
-			case 'p':
-				$trackTypeId = TrackType::PONIFIED_TRACK;
-				break;
-
-			case 'o':
-				$trackTypeId = TrackType::ORIGINAL_TRACK;
-				break;
-
-			default:
-				$trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
-				$linkedSongIds = explode(',', $input);
-				$linkedSongIds = array_map(function($item){ return (int) $item;	}, $linkedSongIds);
+		foreach ($officialSongs as $song) {
+			$this->comment('=> Matched official song: [' . $song->id . '] ' . $song->title);
 		}
+
+		if ($isRemixOfOfficialTrack && sizeof($officialSongs) === 1) {
+			$linkedSongIds = [$officialSongs[0]->id];
+
+		} else {
+			if ($isRemixOfOfficialTrack) {
+				$this->question('Multiple official songs matched! Please enter the ID of the correct one.');
+
+			} else if (sizeof($officialSongs) > 0) {
+				$this->question('This looks like a remix of an official song!');
+				$this->question('Press "r" if the match above is right!');
+
+			} else {
+				$this->question('Exactly what kind of track is this?');
+
+			}
+			$this->question('If this is a medley, multiple song ID\'s can be separated by commas. ');
+			$this->question('                                                                    ');
+			$this->question('  '.$file->getFilename().'  ');
+			$this->question('                                                                    ');
+			$this->question('    r = official song remix (accept all "guessed" matches)          ');
+			$this->question('    # = official song remix (enter the ID(s) of the show song(s))   ');
+			$this->question('    a = show audio remix                                            ');
+			$this->question('    f = fan track remix                                             ');
+			$this->question('    p = ponified track                                              ');
+			$this->question('    o = original track                                              ');
+			$this->question('                                                                    ');
+			$input = $this->ask('[r/#/a/f/p/o]: ');
+
+			switch ($input) {
+				case 'r':
+					$trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
+					foreach ($officialSongs as $officialSong) {
+						$linkedSongIds[] = (int) $officialSong->id;
+					}
+					break;
+
+				case 'a':
+					$trackTypeId = TrackType::OFFICIAL_AUDIO_REMIX;
+					break;
+
+				case 'f':
+					$trackTypeId = TrackType::FAN_TRACK_REMIX;
+					break;
+
+				case 'p':
+					$trackTypeId = TrackType::PONIFIED_TRACK;
+					break;
+
+				case 'o':
+					$trackTypeId = TrackType::ORIGINAL_TRACK;
+					break;
+
+				default:
+					$trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
+					$linkedSongIds = explode(',', $input);
+					$linkedSongIds = array_map(function ($item) {
+						return (int) $item;
+					}, $linkedSongIds);
+			}
+		}
+
+		return [$trackTypeId, $linkedSongIds];
 	}
 
 	/**
@@ -364,20 +413,25 @@ class ImportMLPMA extends Command {
 	 * @return array
 	 */
 	protected function getAtomTags($rawTags) {
-		// TODO: finish this
-		print_r($rawTags['tags']['quicktime']);
-		print_r($rawTags['quicktime']['comments']);
+		$tags = $rawTags['tags']['quicktime'];
+
+		$trackNumber = null;
+		if (isset($tags['track_number'])) {
+			$trackNumberComponents = explode('/', $tags['track_number'][0]);
+			$trackNumber = $trackNumberComponents[0];
+		}
 
 		return [
-			'title' => null,
-			'artist' => null,
-			'band' => null,
-			'genre' => null,
-			'track_number' => null,
-			'album' => null,
-			'year' => null,
-			'comments' => null,
-			'lyrics' => null,
+			'title' => $tags['title'][0],
+			'artist' => $tags['artist'][0],
+			'band' => isset($tags['band']) ? $tags['band'][0] : null,
+			'album_artist' => isset($tags['album_artist']) ? $tags['album_artist'][0] : null,
+			'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
+			'track_number' => $trackNumber,
+			'album' => isset($tags['album']) ? $tags['album'][0] : null,
+			'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
+			'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
+			'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
 		];
 	}
 
