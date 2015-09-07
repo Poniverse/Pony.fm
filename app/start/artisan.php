@@ -13,5 +13,6 @@
 
 	Artisan::add(new MigrateOldData);
 	Artisan::add(new RefreshCache);
+	Artisan::add(new RebuildTags);
 	Artisan::add(new ImportMLPMA);
 	Artisan::add(new ClassifyMLPMA);

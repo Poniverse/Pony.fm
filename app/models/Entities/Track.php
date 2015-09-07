@@ -456,7 +456,7 @@
 			}
 
 			if ($this->cover !== NULL) {
-				$command .= '--artwork ' . $this->getCoverUrl() . ' ';
+				$command .= '--artwork ' . $this->cover->getFile() . ' ';
 			}
 
 			$command .= '--overWrite';
@@ -494,9 +494,9 @@
 				$tagWriter->tag_data['track']	= [$this->track_number];
 			}
 
-			if ($format == 'MP3' && $this->cover_id != NULL && is_file($this->cover->file)) {
+			if ($format == 'MP3' && $this->cover_id != NULL && is_file($this->cover->getFile())) {
 				$tagWriter->tag_data['attached_picture'][0] = [
-					'data'			=>	file_get_contents($this->cover->file),
+					'data'			=>	file_get_contents($this->cover->getFile()),
 					'picturetypeid'	=>	2,
 					'description'	=>	'cover',
 					'mime'			=>	'image/png'
@@ -508,10 +508,10 @@
 
 			if ($tagWriter->WriteTags()) {
 				if (!empty($tagWriter->warnings)) {
-					Log::warning('There were some warnings:<br />' . implode('<br /><br />', $tagWriter->warnings));
+					Log::warning('Track #'.$this->id.': There were some warnings:<br />' . implode('<br /><br />', $tagWriter->warnings));
 				}
 			} else {
-				Log::error('Failed to write tags!<br />' . implode('<br /><br />', $tagWriter->errors));
+				Log::error('Track #' . $this->id . ': Failed to write tags!<br />' . implode('<br /><br />', $tagWriter->errors));
 			}
 		}
 
