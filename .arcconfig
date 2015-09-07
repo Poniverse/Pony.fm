@@ -1,3 +1,4 @@
 {
-  "phabricator.uri" : "https://phabricator.poniverse.net/"
+  "phabricator.uri" : "https://phabricator.poniverse.net/",
+  "history.immutable" : true
 }

@@ -4,9 +4,28 @@
 
 	use Entities\Track;
 	use Entities\TrackFile;
+	use Illuminate\Support\Facades\File;
 	use Illuminate\Support\Facades\Log;
+	use AudioCache;
+	use Illuminate\Support\Str;
 
 	class UploadTrackCommand extends CommandBase {
+		private $_allowLossy;
+		private $_losslessFormats = [
+			'flac',
+			'pcm_s16le ([1][0][0][0] / 0x0001)',
+			'pcm_s16be',
+			'adpcm_ms ([2][0][0][0] / 0x0002)',
+			'pcm_s24le ([1][0][0][0] / 0x0001)',
+			'pcm_s24be',
+			'pcm_f32le ([3][0][0][0] / 0x0003)',
+			'pcm_f32be (fl32 / 0x32336C66)'
+		];
+
+		public function __construct($allowLossy = false) {
+			$this->_allowLossy = $allowLossy;
+		}
+
 		/**
 		 * @return bool
 		 */
@@ -26,7 +45,7 @@
 			$validator = \Validator::make(['track' => $trackFile], [
 				'track' =>
 				'required|'
-				. 'audio_format:flac,pcm_s16le ([1][0][0][0] / 0x0001),pcm_s16be,adpcm_ms ([2][0][0][0] / 0x0002),pcm_s24le ([1][0][0][0] / 0x0001),pcm_s24be,pcm_f32le ([3][0][0][0] / 0x0003),pcm_f32be (fl32 / 0x32336C66)|'
+				. ($this->_allowLossy ? '' : 'audio_format:'. implode(',', $this->_losslessFormats).'|')
 				. 'audio_channels:1,2|'
 				. 'sample_rate:44100,48000,88200,96000,176400,192000|'
 				. 'min_duration:30'
@@ -53,7 +72,40 @@
 
 				$processes = [];
 
+				// Lossy uploads need to be identified and set as the master file
+				// without being re-encoded.
+				$audioObject = AudioCache::get($source);
+				$isLossyUpload = !in_array($audioObject->getAudioCodec(), $this->_losslessFormats);
+
+				if ($isLossyUpload) {
+					if ($audioObject->getAudioCodec() === 'mp3') {
+						$masterFormat = 'MP3';
+
+					} else if (Str::startsWith($audioObject->getAudioCodec(), 'aac')) {
+						$masterFormat = 'AAC';
+
+					} else {
+						$validator->messages()->add('track', 'The track does not contain audio in a known lossy format.');
+						return CommandResponse::fail($validator);
+					}
+
+					$trackFile = new TrackFile();
+					$trackFile->is_master = true;
+					$trackFile->format = $masterFormat;
+					$trackFile->track_id = $track->id;
+					$trackFile->save();
+
+					// Lossy masters are copied into the datastore - no re-encoding involved.
+					File::copy($source, $trackFile->getFile());
+				}
+
 				foreach (Track::$Formats as $name => $format) {
+					// Don't bother with lossless transcodes of lossy uploads, and
+					// don't re-encode the lossy master.
+					if ($isLossyUpload && ($format['is_lossless'] || $name === $masterFormat)) {
+						continue;
+					}
+
 					$trackFile = new TrackFile();
 					$trackFile->is_master = $name === 'FLAC' ? true : false;
 					$trackFile->format = $name;
