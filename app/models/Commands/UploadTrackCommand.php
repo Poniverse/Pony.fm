@@ -45,7 +45,7 @@
 			$validator = \Validator::make(['track' => $trackFile], [
 				'track' =>
 				'required|'
-				. $this->_allowLossy ? '' : 'audio_format:'.implode(',', $this->_losslessFormats).'|'
+				. ($this->_allowLossy ? '' : 'audio_format:'. implode(',', $this->_losslessFormats).'|')
 				. 'audio_channels:1,2|'
 				. 'sample_rate:44100,48000,88200,96000,176400,192000|'
 				. 'min_duration:30'

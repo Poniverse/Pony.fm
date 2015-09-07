@@ -25,7 +25,6 @@
 			// value is the file array itself
 			// parameters is a list of formats the file can be, verified via ffmpeg
 			$file = AudioCache::get($value->getPathname());
-			var_dump($file->getAudioCodec());
 			return in_array($file->getAudioCodec(), $parameters);
 		}
 
