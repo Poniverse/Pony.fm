@@ -44,6 +44,5 @@ node_modules
 /bootstrap/compiled.php
 /vendor
 composer.phar
-composer.lock
 atlassian-ide-plugin.xml
 _ide_helper.php
