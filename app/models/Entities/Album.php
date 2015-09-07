@@ -112,24 +112,24 @@
 				$userRow = $album->users[0];
 				$userData = [
 					'stats' => [
-						'views' => $userRow->view_count,
-						'downloads' => $userRow->download_count,
+						'views' => (int) $userRow->view_count,
+						'downloads' => (int) $userRow->download_count,
 					],
-					'is_favourited' => $userRow->is_favourited
+					'is_favourited' => (bool) $userRow->is_favourited
 				];
 			}
 
 			return [
-				'id' => $album->id,
-				'track_count' => $album->track_count,
+				'id' => (int) $album->id,
+				'track_count' => (int) $album->track_count,
 				'title' => $album->title,
 				'slug' => $album->slug,
 				'created_at' => $album->created_at,
 				'stats' => [
-					'views' => $album->view_count,
-					'downloads' => $album->download_count,
-					'comments' => $album->comment_count,
-					'favourites' => $album->favourite_count
+					'views' => (int) $album->view_count,
+					'downloads' => (int) $album->download_count,
+					'comments' => (int) $album->comment_count,
+					'favourites' => (int) $album->favourite_count
 				],
 				'covers' => [
 					'small' => $album->getCoverUrl(Image::SMALL),
@@ -137,7 +137,7 @@
 				],
 				'url' => $album->url,
 				'user' => [
-					'id' => $album->user->id,
+					'id' => (int) $album->user->id,
 					'name' => $album->user->display_name,
 					'url' => $album->user->url,
 				],

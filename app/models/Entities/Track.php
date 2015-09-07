@@ -163,41 +163,41 @@
 				$userRow = $track->users[0];
 				$userData = [
 					'stats' => [
-						'views' => $userRow->view_count,
-						'plays' => $userRow->play_count,
+						'views' => (int) $userRow->view_count,
+						'plays' => (int) $userRow->play_count,
 						'downloads' => $userRow->download_count,
 					],
-					'is_favourited' => $userRow->is_favourited
+					'is_favourited' => (bool) $userRow->is_favourited
 				];
 			}
 
 			return [
-				'id' => $track->id,
+				'id' => (int) $track->id,
 				'title' => $track->title,
 				'user' => [
-					'id' => $track->user->id,
+					'id' => (int) $track->user->id,
 					'name' => $track->user->display_name,
 					'url' => $track->user->url
 				],
 				'stats' => [
-					'views' => $track->view_count,
-					'plays' => $track->play_count,
-					'downloads' => $track->download_count,
-					'comments' => $track->comment_count,
-					'favourites' => $track->favourite_count
+					'views' => (int) $track->view_count,
+					'plays' => (int) $track->play_count,
+					'downloads' => (int) $track->download_count,
+					'comments' => (int) $track->comment_count,
+					'favourites' => (int) $track->favourite_count
 				],
 				'url' => $track->url,
 				'slug' => $track->slug,
-				'is_vocal' => $track->is_vocal,
-				'is_explicit' => $track->is_explicit,
-				'is_downloadable' => $track->is_downloadable,
-				'is_published' => $track->isPublished(),
+				'is_vocal' => (bool) $track->is_vocal,
+				'is_explicit' => (bool) $track->is_explicit,
+				'is_downloadable' => (bool) $track->is_downloadable,
+				'is_published' => (bool) $track->isPublished(),
 				'published_at' => $track->published_at,
 				'duration' => $track->duration,
 				'genre' => $track->genre != null
 					?
 					[
-						'id' => $track->genre->id,
+						'id' => (int) $track->genre->id,
 						'slug' => $track->genre->slug,
 						'name' => $track->genre->name
 					] : null,
