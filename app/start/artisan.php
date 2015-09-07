@@ -14,3 +14,4 @@
 	Artisan::add(new MigrateOldData);
 	Artisan::add(new RefreshCache);
 	Artisan::add(new ImportMLPMA);
+	Artisan::add(new ClassifyMLPMA);

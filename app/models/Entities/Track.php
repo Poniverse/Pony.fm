@@ -24,11 +24,11 @@
 		}
 
 		public static $Formats = [
-			'FLAC' 		 => ['index' => 0, 'extension' => 'flac', 		'tag_format' => 'metaflac', 		'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/flac', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec flac -aq 8 -f flac {$target}'],
-			'MP3' 		 => ['index' => 1, 'extension' => 'mp3', 		'tag_format' => 'id3v2.3', 			'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/mpeg', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libmp3lame -ab 320k -f mp3 {$target}'],
-			'OGG Vorbis' => ['index' => 2, 'extension' => 'ogg', 		'tag_format' => 'vorbiscomment',	'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/ogg',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libvorbis -aq 7 -f ogg {$target}'],
-			'AAC'  		 => ['index' => 3, 'extension' => 'm4a', 		'tag_format' => 'AtomicParsley', 	'tag_method' => 'updateTagsWithAtomicParsley', 'mime_type' => 'audio/mp4',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libfaac -ab 256k -f mp4 {$target}'],
-			'ALAC' 		 => ['index' => 4, 'extension' => 'alac.m4a', 	'tag_format' => 'AtomicParsley', 	'tag_method' => 'updateTagsWithAtomicParsley', 'mime_type' => 'audio/mp4',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec alac {$target}'],
+			'FLAC' 		 => ['index' => 0, 'is_lossless' => true,   'extension' => 'flac', 		'tag_format' => 'metaflac', 		'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/flac', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec flac -aq 8 -f flac {$target}'],
+			'MP3' 		 => ['index' => 1, 'is_lossless' => false,  'extension' => 'mp3', 		'tag_format' => 'id3v2.3', 			'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/mpeg', 'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libmp3lame -ab 320k -f mp3 {$target}'],
+			'OGG Vorbis' => ['index' => 2, 'is_lossless' => false,  'extension' => 'ogg', 		'tag_format' => 'vorbiscomment',	'tag_method' => 'updateTagsWithGetId3', 'mime_type' => 'audio/ogg',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libvorbis -aq 7 -f ogg {$target}'],
+			'AAC'  		 => ['index' => 3, 'is_lossless' => false,  'extension' => 'm4a', 		'tag_format' => 'AtomicParsley', 	'tag_method' => 'updateTagsWithAtomicParsley', 'mime_type' => 'audio/mp4',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libfaac -ab 256k -f mp4 {$target}'],
+			'ALAC' 		 => ['index' => 4, 'is_lossless' => true,   'extension' => 'alac.m4a', 	'tag_format' => 'AtomicParsley', 	'tag_method' => 'updateTagsWithAtomicParsley', 'mime_type' => 'audio/mp4',  'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec alac {$target}'],
 		];
 
 		public static function summary() {
@@ -430,7 +430,11 @@
 
 		public function updateTags() {
 			$this->trackFiles()->touch();
-			foreach (self::$Formats as $format => $data) {
+
+			foreach ($this->trackFiles as $trackFile) {
+				$format = $trackFile->format;
+				$data = self::$Formats[$format];
+
 				$this->{$data['tag_method']}($format);
 			}
 		}

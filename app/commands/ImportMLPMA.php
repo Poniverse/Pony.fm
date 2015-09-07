@@ -10,6 +10,7 @@ use Entities\User;
 use Entities\ShowSong;
 use Entities\Track;
 use Entities\TrackType;
+use Commands\UploadTrackCommand;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Carbon\Carbon;
 
@@ -23,7 +24,7 @@ class ImportMLPMA extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'import-mlpma';
+	protected $name = 'mlpma:import';
 
 	/**
 	 * The console command description.
@@ -86,18 +87,36 @@ class ImportMLPMA extends Command {
 			}
 
 
+			// Has this track already been imported?
+			$importedTrack = DB::table('mlpma_tracks')
+			                   ->where('filename', '=', $file->getFilename())
+			                   ->first();
+
+			if ($importedTrack) {
+				$this->comment('This track has already been imported! Skipping...' . PHP_EOL);
+				continue;
+			}
+
+
 			//==========================================================================================================
 			// Extract the original tags.
 			//==========================================================================================================
 			$getId3 = new getID3;
-			$tags = $getId3->analyze($file->getPathname());
 
+			// all tags read by getID3, including the cover art
+			$allTags = $getId3->analyze($file->getPathname());
+
+			// tags specific to a file format (ID3 or Atom), pre-normalization but with cover art removed
+			$rawTags = [];
+
+			// normalized tags used by Pony.fm
 			$parsedTags = [];
+
 			if ($file->getExtension() === 'mp3') {
-				$parsedTags = $this->getId3Tags($tags);
+				list($parsedTags, $rawTags) = $this->getId3Tags($allTags);
 
 			} else if ($file->getExtension() === 'm4a') {
-				$parsedTags = $this->getAtomTags($tags);
+				list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
 			}
 
 
@@ -122,6 +141,9 @@ class ImportMLPMA extends Command {
 				$this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
 				$releasedAt = $modifiedDate;
 			}
+
+			// This is later used by the classification/publishing script to determine the publication date.
+			$parsedTags['released_at'] = $releasedAt;
 
 			//==========================================================================================================
 			// Does this track have vocals?
@@ -163,8 +185,8 @@ class ImportMLPMA extends Command {
 			// Extract the cover art, if any exists.
 			//==========================================================================================================
 			$coverId = null;
-			if (array_key_exists('comments', $tags) && array_key_exists('picture', $tags['comments'])) {
-				$image = $tags['comments']['picture'][0];
+			if (array_key_exists('comments', $allTags) && array_key_exists('picture', $allTags['comments'])) {
+				$image = $allTags['comments']['picture'][0];
 
 				if ($image['image_mime'] === 'image/png') {
 					$extension = 'png';
@@ -220,151 +242,56 @@ class ImportMLPMA extends Command {
 				$albumId = $album->id;
 			}
 
-			//==========================================================================================================
-			// Original, show song remix, fan song remix, show audio remix, or ponified song?
-			//==========================================================================================================
-			$trackType = TrackType::ORIGINAL_TRACK;
-			$linkedSongIds = [];
-
-			$sanitizedTrackTitle = $parsedTags['title'];
-			$sanitizedTrackTitle = str_replace(' - ', ' ', $sanitizedTrackTitle);
-			$sanitizedTrackTitle = str_replace('ft. ', '', $sanitizedTrackTitle);
-			$sanitizedTrackTitle = str_replace('*', '', $sanitizedTrackTitle);
-
-			$queriedTitle = DB::connection()->getPdo()->quote($sanitizedTrackTitle);
-			$officialSongs = ShowSong::select(['id', 'title'])
-			->whereRaw("
-				MATCH (title)
-                AGAINST ($queriedTitle IN BOOLEAN MODE)
-                ")
-				->get();
-
-
-			// If it has "Ingram" in the name, it's definitely an official song remix.
-			if (Str::contains(Str::lower($file->getFilename()), 'ingram')) {
-				$this->comment('This is an official song remix!');
-
-				list($trackType, $linkedSongIds) = $this->classifyTrack($file, $officialSongs, true);
-
-
-			// If it has "remix" in the name, it's definitely a remix.
-			} else if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
-				$this->comment('This is some kind of remix!');
-
-				list($trackType, $linkedSongIds) = $this->classifyTrack($file, $officialSongs);
-			}
-
 
 			//==========================================================================================================
 			// Save this track.
 			//==========================================================================================================
 			$title = $parsedTags['title'];
+//
+//			$track = Track::where('user_id', '=', $artist->id)
+//				->where('title', '=', $title)
+//				->first();
 
-			// Has this track already been imported?
-			$track = Track::where('user_id', '=', $artist->id)
-				->where('title', '=', $title)
-				->first();
+			// "upload" the track to Pony.fm
+			Auth::loginUsingId($artist->id);
 
-			if (!$track) {
-				$track = new Track;
+			$trackFile = new UploadedFile($file->getPathname(), $file->getFilename(), $allTags['mime_type']);
+			Input::instance()->files->add(['track' => $trackFile]);
 
-				$track->user_id = $artist->id;
+			$upload = new UploadTrackCommand(true);
+			$result = $upload->execute();
+
+//			var_dump(null);
+
+			if ($result->didFail()) {
+				$this->error(json_encode($result->getValidator()->messages()->getMessages(), JSON_PRETTY_PRINT));
+			} else {
+				DB::table('mlpma_tracks')
+					->insert([
+						'track_id' => $result['id'],
+					    'path' => $file->getRelativePath(),
+					    'filename' => $file->getFilename(),
+					    'extension' => $file->getExtension(),
+					    'imported_at' => Carbon::now(),
+					    'parsed_tags' => json_encode($parsedTags),
+					    'raw_tags' => json_encode($rawTags),
+					]);
+
+				$track = Track::find($result['id']);
+				var_dump($track);
+
 				$track->title = $parsedTags['title'];
 				$track->cover_id = $coverId;
 				$track->album_id = $albumId;
+				$track->track_number = $parsedTags['track_number'];
 				$track->released_at = $releasedAt;
 				$track->is_vocal = $isVocal;
-				$track->track_type_id = $trackType;
-
 				$track->save();
-
-				if (sizeof($linkedSongIds) > 0) {
-					$track->showSongs()->attach($linkedSongIds);
-				}
-
-				// TODO: mark imported tracks as needing QA
-			} else {
-				$this->comment('This track has already been imported!');
 			}
-
 
 
 			echo PHP_EOL.PHP_EOL;
 		}
-	}
-
-	protected function classifyTrack($file, $officialSongs, $isRemixOfOfficialTrack = false)
-	{
-		$trackTypeId = null;
-		$linkedSongIds = [];
-
-
-		foreach ($officialSongs as $song) {
-			$this->comment('=> Matched official song: [' . $song->id . '] ' . $song->title);
-		}
-
-		if ($isRemixOfOfficialTrack && sizeof($officialSongs) === 1) {
-			$linkedSongIds = [$officialSongs[0]->id];
-
-		} else {
-			if ($isRemixOfOfficialTrack) {
-				$this->question('Multiple official songs matched! Please enter the ID of the correct one.');
-
-			} else if (sizeof($officialSongs) > 0) {
-				$this->question('This looks like a remix of an official song!');
-				$this->question('Press "r" if the match above is right!');
-
-			} else {
-				$this->question('Exactly what kind of track is this?');
-
-			}
-			$this->question('If this is a medley, multiple song ID\'s can be separated by commas. ');
-			$this->question('                                                                    ');
-			$this->question('  '.$file->getFilename().'  ');
-			$this->question('                                                                    ');
-			$this->question('    r = official song remix (accept all "guessed" matches)          ');
-			$this->question('    # = official song remix (enter the ID(s) of the show song(s))   ');
-			$this->question('    a = show audio remix                                            ');
-			$this->question('    f = fan track remix                                             ');
-			$this->question('    p = ponified track                                              ');
-			$this->question('    o = original track                                              ');
-			$this->question('                                                                    ');
-			$input = $this->ask('[r/#/a/f/p/o]: ');
-
-			switch ($input) {
-				case 'r':
-					$trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
-					foreach ($officialSongs as $officialSong) {
-						$linkedSongIds[] = (int) $officialSong->id;
-					}
-					break;
-
-				case 'a':
-					$trackTypeId = TrackType::OFFICIAL_AUDIO_REMIX;
-					break;
-
-				case 'f':
-					$trackTypeId = TrackType::FAN_TRACK_REMIX;
-					break;
-
-				case 'p':
-					$trackTypeId = TrackType::PONIFIED_TRACK;
-					break;
-
-				case 'o':
-					$trackTypeId = TrackType::ORIGINAL_TRACK;
-					break;
-
-				default:
-					$trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
-					$linkedSongIds = explode(',', $input);
-					$linkedSongIds = array_map(function ($item) {
-						return (int) $item;
-					}, $linkedSongIds);
-			}
-		}
-
-		return [$trackTypeId, $linkedSongIds];
 	}
 
 	/**
@@ -394,18 +321,34 @@ class ImportMLPMA extends Command {
 	 */
 	protected function getId3Tags($rawTags) {
 		$tags = $rawTags['tags']['id3v2'];
+		$comment = null;
+
+		if (isset($tags['comment'])) {
+			// The "comment" tag comes in with a badly encoded string index
+			// so its array key has to be used implicitly.
+			$key = array_keys($tags['comment'])[0];
+
+			// The comment may have a null byte at the end. trim() removes it.
+			$comment = trim($tags['comment'][$key]);
+
+			// Replace the malformed comment with the "fixed" one.
+			unset($tags['comment'][$key]);
+			$tags['comment'][0] = $comment;
+		}
 
 		return [
-			'title' => $tags['title'][0],
-			'artist' => $tags['artist'][0],
-			'band'  => isset($tags['band']) ? $tags['band'][0] : null,
-			'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
-			'track_number' => isset($tags['track_number']) ? $tags['track_number'][0] : null,
-			'album' => isset($tags['album']) ? $tags['album'][0] : null,
-			'year'  => isset($tags['year']) ? (int) $tags['year'][0] : null,
-			'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
-			'lyrics' => isset($tags['unsynchronised_lyric']) ? $tags['unsynchronised_lyric'][0] : null,
-		];
+			[
+				'title' => $tags['title'][0],
+				'artist' => $tags['artist'][0],
+				'band'  => isset($tags['band']) ? $tags['band'][0] : null,
+				'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
+				'track_number' => isset($tags['track_number']) ? $tags['track_number'][0] : null,
+				'album' => isset($tags['album']) ? $tags['album'][0] : null,
+				'year'  => isset($tags['year']) ? (int) $tags['year'][0] : null,
+				'comments' => $comment,
+				'lyrics' => isset($tags['unsynchronised_lyric']) ? $tags['unsynchronised_lyric'][0] : null,
+			],
+			$tags];
 	}
 
 	/**
@@ -422,17 +365,19 @@ class ImportMLPMA extends Command {
 		}
 
 		return [
-			'title' => $tags['title'][0],
-			'artist' => $tags['artist'][0],
-			'band' => isset($tags['band']) ? $tags['band'][0] : null,
-			'album_artist' => isset($tags['album_artist']) ? $tags['album_artist'][0] : null,
-			'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
-			'track_number' => $trackNumber,
-			'album' => isset($tags['album']) ? $tags['album'][0] : null,
-			'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
-			'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
-			'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
-		];
+			[
+				'title' => $tags['title'][0],
+				'artist' => $tags['artist'][0],
+				'band' => isset($tags['band']) ? $tags['band'][0] : null,
+				'album_artist' => isset($tags['album_artist']) ? $tags['album_artist'][0] : null,
+				'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
+				'track_number' => $trackNumber,
+				'album' => isset($tags['album']) ? $tags['album'][0] : null,
+				'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
+				'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
+				'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
+			],
+			$tags];
 	}
 
 }
