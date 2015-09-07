@@ -78,7 +78,6 @@
 				$isLossyUpload = !in_array($audioObject->getAudioCodec(), $this->_losslessFormats);
 
 				if ($isLossyUpload) {
-
 					if ($audioObject->getAudioCodec() === 'mp3') {
 						$masterFormat = 'MP3';
 
@@ -93,10 +92,11 @@
 					$trackFile = new TrackFile();
 					$trackFile->is_master = true;
 					$trackFile->format = $masterFormat;
+					$trackFile->track_id = $track->id;
+					$trackFile->save();
 
 					// Lossy masters are copied into the datastore - no re-encoding involved.
-					File::copy($source, $trackFile->getFilename());
-					$track->trackFiles()->save($trackFile);
+					File::copy($source, $trackFile->getFile());
 				}
 
 				foreach (Track::$Formats as $name => $format) {

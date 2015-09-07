@@ -448,8 +448,7 @@
 			$command .= '--genre ' . escapeshellarg($this->genre != null ? $this->genre->name : '') . ' ';
 			$command .= '--copyright ' . escapeshellarg('© '.$this->year.' '.$this->user->display_name).' ';
 			$command .= '--comment "' . 'Downloaded from: https://pony.fm/' . '" ';
-			$command .= '--encodingTool "' . 'Pony.fm' . '" ';
-			$command .= '--encodedBy "' . 'Pony.fm - https://pony.fm/' . '" ';
+			$command .= '--encodingTool "' . 'Pony.fm - https://pony.fm/' . '" ';
 
 			if ($this->album_id !== NULL) {
 				$command .= '--album ' . escapeshellarg($this->album->title) . ' ';

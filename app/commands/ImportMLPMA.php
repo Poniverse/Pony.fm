@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\File;
 use Entities\Album;
 use Entities\Image;
 use Entities\User;
-use Entities\ShowSong;
 use Entities\Track;
-use Entities\TrackType;
 use Commands\UploadTrackCommand;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Carbon\Carbon;
@@ -41,6 +39,20 @@ class ImportMLPMA extends Command {
 	protected $ignoredExtensions = ['db', 'jpg', 'png'];
 
 	/**
+	 * Used to stop the import process when a SIGINT is received.
+	 *
+	 * @var bool
+	 */
+	protected $isInterrupted = false;
+
+	/**
+	 * A counter for the number of processed tracks.
+	 *
+	 * @var int
+	 */
+	protected $currentFile;
+
+	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
@@ -50,6 +62,12 @@ class ImportMLPMA extends Command {
 		parent::__construct();
 	}
 
+	public function handleInterrupt($signo) {
+		$this->error('Import aborted!');
+		$this->error('Resume it from here using: --startAt='.$this->currentFile);
+		$this->isInterrupted = true;
+	}
+
 	/**
 	 * Execute the console command.
 	 *
@@ -57,6 +75,8 @@ class ImportMLPMA extends Command {
 	 */
 	public function fire()
 	{
+		pcntl_signal(SIGINT, [$this, 'handleInterrupt']);
+
 		$mlpmaPath = Config::get('app.files_directory').'mlpma';
 		$tmpPath = Config::get('app.files_directory').'tmp';
 
@@ -72,14 +92,25 @@ class ImportMLPMA extends Command {
 		$artists = File::directories($mlpmaPath);
 		$this->info(sizeof($artists).' artists found!');
 
-		$this->comment('Importing tracks...'.PHP_EOL);
+		$this->comment('Importing tracks...');
 
 		$totalFiles = sizeof($files);
-		$currentFile = 0;
+
+		$fileToStartAt = (int) $this->option('startAt') - 1;
+		$this->comment("Skipping $fileToStartAt files...".PHP_EOL);
+
+		$files = array_slice($files, $fileToStartAt);
+		$this->currentFile = $fileToStartAt;
 
 		foreach($files as $file) {
-			$currentFile++;
-			$this->comment('['.$currentFile.'/'.$totalFiles.'] Importing track ['. $file->getFilename() .']...');
+			$this->currentFile++;
+
+			pcntl_signal_dispatch();
+			if ($this->isInterrupted) {
+				break;
+			}
+
+			$this->comment('['.$this->currentFile.'/'.$totalFiles.'] Importing track ['. $file->getFilename() .']...');
 
 			if (in_array($file->getExtension(), $this->ignoredExtensions)) {
 				$this->comment('This is not an audio file! Skipping...'.PHP_EOL);
@@ -143,7 +174,7 @@ class ImportMLPMA extends Command {
 			}
 
 			// This is later used by the classification/publishing script to determine the publication date.
-			$parsedTags['released_at'] = $releasedAt;
+			$parsedTags['released_at'] = $releasedAt->toDateTimeString();
 
 			//==========================================================================================================
 			// Does this track have vocals?
@@ -178,12 +209,14 @@ class ImportMLPMA extends Command {
 					$artist->slug = $artist->slug.'-'.Str::random(4);
 				}
 
-				$artist = $artist->save();
+				$artist->save();
 			}
 
 			//==========================================================================================================
 			// Extract the cover art, if any exists.
 			//==========================================================================================================
+
+			$this->comment('Extracting cover art!');
 			$coverId = null;
 			if (array_key_exists('comments', $allTags) && array_key_exists('picture', $allTags['comments'])) {
 				$image = $allTags['comments']['picture'][0];
@@ -213,7 +246,7 @@ class ImportMLPMA extends Command {
 				$coverId = $cover->id;
 
 			} else {
-				$this->error('No cover art found!');
+				$this->comment('No cover art found!');
 			}
 
 
@@ -246,13 +279,9 @@ class ImportMLPMA extends Command {
 			//==========================================================================================================
 			// Save this track.
 			//==========================================================================================================
-			$title = $parsedTags['title'];
-//
-//			$track = Track::where('user_id', '=', $artist->id)
-//				->where('title', '=', $title)
-//				->first();
 
-			// "upload" the track to Pony.fm
+			// "Upload" the track to Pony.fm
+			$this->comment('Transcoding the track!');
 			Auth::loginUsingId($artist->id);
 
 			$trackFile = new UploadedFile($file->getPathname(), $file->getFilename(), $allTags['mime_type']);
@@ -261,14 +290,29 @@ class ImportMLPMA extends Command {
 			$upload = new UploadTrackCommand(true);
 			$result = $upload->execute();
 
-//			var_dump(null);
-
 			if ($result->didFail()) {
 				$this->error(json_encode($result->getValidator()->messages()->getMessages(), JSON_PRETTY_PRINT));
+
 			} else {
+				// Save metadata.
+				$track = Track::find($result->getResponse()['id']);
+
+				$track->title = $parsedTags['title'];
+				$track->cover_id = $coverId;
+				$track->album_id = $albumId;
+				$track->track_number = $parsedTags['track_number'];
+				$track->released_at = $releasedAt;
+				$track->description = $parsedTags['comments'];
+				$track->is_downloadable = true;
+				$track->lyrics = $parsedTags['lyrics'];
+				$track->is_vocal = $isVocal;
+				$track->license_id = 2;
+				$track->save();
+
+				// If we made it to here, the track is intact! Log the import.
 				DB::table('mlpma_tracks')
 					->insert([
-						'track_id' => $result['id'],
+						'track_id' => $result->getResponse()['id'],
 					    'path' => $file->getRelativePath(),
 					    'filename' => $file->getFilename(),
 					    'extension' => $file->getExtension(),
@@ -276,19 +320,7 @@ class ImportMLPMA extends Command {
 					    'parsed_tags' => json_encode($parsedTags),
 					    'raw_tags' => json_encode($rawTags),
 					]);
-
-				$track = Track::find($result['id']);
-				var_dump($track);
-
-				$track->title = $parsedTags['title'];
-				$track->cover_id = $coverId;
-				$track->album_id = $albumId;
-				$track->track_number = $parsedTags['track_number'];
-				$track->released_at = $releasedAt;
-				$track->is_vocal = $isVocal;
-				$track->save();
 			}
-
 
 			echo PHP_EOL.PHP_EOL;
 		}
@@ -311,7 +343,9 @@ class ImportMLPMA extends Command {
 	 */
 	protected function getOptions()
 	{
-		return array();
+		return array(
+			array('startAt', null, InputOption::VALUE_OPTIONAL, 'Track to start importing from. Useful for resuming an interrupted import.', 1),
+		);
 	}
 
 

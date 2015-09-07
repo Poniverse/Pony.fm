@@ -21,7 +21,14 @@ class ClassifyMLPMA extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Add Pony.fm-specific metadata to imported MLPMA tracks.';
+	protected $description = 'Adds Pony.fm-specific metadata to imported MLPMA tracks.';
+
+	/**
+	 * A counter for the number of processed tracks.
+	 *
+	 * @var int
+	 */
+	protected $currentTrack = 0;
 
 	/**
 	 * Create a new command instance.
@@ -42,11 +49,26 @@ class ClassifyMLPMA extends Command {
 	{
 		// Get the list of tracks that need classification
 		$tracks = DB::table('mlpma_tracks')
-			->orderBy('id')
+			->orderBy('mlpma_tracks.id')
+			->join('tracks', 'tracks.id', '=', 'mlpma_tracks.track_id')
+			->whereNull('tracks.published_at')
 			->get();
 
+		$this->comment('Importing tracks...');
+
+		$totalTracks = sizeof($tracks);
+
+		$fileToStartAt = (int) $this->option('startAt') - 1;
+		$this->comment("Skipping $fileToStartAt files..." . PHP_EOL);
+
+		$tracks = array_slice($tracks, $fileToStartAt);
+		$this->currentTrack = $fileToStartAt;
+
 		foreach ($tracks as $track) {
-			$parsedTags = json_decode($track->parsed_tags);
+			$this->currentTrack++;
+			$this->comment('[' . $this->currentTrack . '/' . $totalTracks . '] Classifying track [' . $track->filename . ']...');
+
+			$parsedTags = json_decode($track->parsed_tags, true);
 
 
 			//==========================================================================================================
@@ -69,14 +91,14 @@ class ClassifyMLPMA extends Command {
 
 			// If it has "Ingram" in the name, it's definitely an official song remix.
 			if (Str::contains(Str::lower($track->filename), 'ingram')) {
-				$this->comment('This is an official song remix!');
+				$this->info('This is an official song remix!');
 
 				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, true);
 
 
 				// If it has "remix" in the name, it's definitely a remix.
 			} else if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
-				$this->comment('This is some kind of remix!');
+				$this->info('This is some kind of remix!');
 
 				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs);
 			}
@@ -96,6 +118,7 @@ class ClassifyMLPMA extends Command {
 				$track->showSongs()->attach($linkedSongIds);
 			}
 
+			echo PHP_EOL;
 		}
 
 	}
@@ -107,9 +130,7 @@ class ClassifyMLPMA extends Command {
 	 */
 	protected function getArguments()
 	{
-		return array(
-			array('example', InputArgument::REQUIRED, 'An example argument.'),
-		);
+		return array();
 	}
 
 	/**
@@ -120,7 +141,7 @@ class ClassifyMLPMA extends Command {
 	protected function getOptions()
 	{
 		return array(
-			array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+			array('startAt', null, InputOption::VALUE_OPTIONAL, 'Track to start importing from. Useful for resuming an interrupted import.', 1),
 		);
 	}
 
@@ -143,11 +164,12 @@ class ClassifyMLPMA extends Command {
 			$this->comment('=> Matched official song: [' . $song->id . '] ' . $song->title);
 		}
 
+
 		if ($isRemixOfOfficialTrack && sizeof($officialSongs) === 1) {
 			$linkedSongIds = [$officialSongs[0]->id];
 
 		} else {
-			if ($isRemixOfOfficialTrack) {
+			if ($isRemixOfOfficialTrack && sizeof($officialSongs) > 1) {
 				$this->question('Multiple official songs matched! Please enter the ID of the correct one.');
 
 			} else if (sizeof($officialSongs) > 0) {
