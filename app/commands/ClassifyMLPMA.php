@@ -49,9 +49,7 @@ class ClassifyMLPMA extends Command {
 	{
 		// Get the list of tracks that need classification
 		$tracks = DB::table('mlpma_tracks')
-			->orderBy('mlpma_tracks.id')
-			->join('tracks', 'tracks.id', '=', 'mlpma_tracks.track_id')
-			->whereNull('tracks.published_at')
+			->orderBy('id')
 			->get();
 
 		$this->comment('Importing tracks...');
@@ -74,9 +72,6 @@ class ClassifyMLPMA extends Command {
 			//==========================================================================================================
 			// Original, show song remix, fan song remix, show audio remix, or ponified song?
 			//==========================================================================================================
-			$trackType = TrackType::ORIGINAL_TRACK;
-			$linkedSongIds = [];
-
 			$sanitizedTrackTitle = $parsedTags['title'];
 			$sanitizedTrackTitle = str_replace([' - ', 'ft.', '*'], ' ', $sanitizedTrackTitle);
 
@@ -96,10 +91,14 @@ class ClassifyMLPMA extends Command {
 				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, true);
 
 
-				// If it has "remix" in the name, it's definitely a remix.
+			// If it has "remix" in the name, it's definitely a remix.
 			} else if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
 				$this->info('This is some kind of remix!');
 
+				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs);
+
+			// No idea what this is. Have the pony at the terminal figure it out!
+			} else {
 				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs);
 			}
 
