@@ -5,6 +5,8 @@
 
 	class Genre extends \Eloquent {
 		protected $table = 'genres';
+		protected $fillable = ['name', 'slug'];
+		public $timestamps = false;
 
 		use SlugTrait;
 	}

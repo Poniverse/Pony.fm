@@ -19,7 +19,7 @@ class RebuildTags extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description.';
+	protected $description = 'Rewrites tags in track files, ensuring they\'re up to date.';
 
 	/**
 	 * Create a new command instance.

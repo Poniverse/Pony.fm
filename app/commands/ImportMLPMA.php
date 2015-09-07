@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Facades\File;
 use Entities\Album;
 use Entities\Image;
+use Entities\Genre;
 use Entities\User;
 use Entities\Track;
 use Commands\UploadTrackCommand;
@@ -83,6 +84,11 @@ class ImportMLPMA extends Command {
 		if (!File::exists($tmpPath)) {
 			File::makeDirectory($tmpPath);
 		}
+
+		$UNKNOWN_GENRE = Genre::firstOrCreate([
+			'name' => 'Unknown',
+			'slug' => 'unknown'
+		]);
 
 		$this->comment('Enumerating MLP Music Archive source files...');
 		$files = File::allFiles($mlpmaPath);
@@ -183,6 +189,31 @@ class ImportMLPMA extends Command {
 
 
 			//==========================================================================================================
+			// Determine the genre
+			//==========================================================================================================
+			$genreName = $parsedTags['genre'];
+			$this->info('Genre: '.$genreName);
+
+			if ($genreName) {
+				$genre = Genre::where('name', '=', $genreName)->first();
+				if ($genre) {
+					$genreId = $genre->id;
+
+				} else {
+					$genre = new Genre();
+					$genre->name = $genreName;
+					$genre->slug = Str::slug($genreName);
+					$genre->save();
+					$genreId = $genre->id;
+					$this->comment('Created a new genre!');
+				}
+
+			} else {
+				$genreId = $UNKNOWN_GENRE->id; // "Unknown" genre ID
+			}
+
+
+			//==========================================================================================================
 			// Determine which artist account this file belongs to using the containing directory.
 			//==========================================================================================================
 			$this->info('Path to file: '.$file->getRelativePath());
@@ -215,7 +246,6 @@ class ImportMLPMA extends Command {
 			//==========================================================================================================
 			// Extract the cover art, if any exists.
 			//==========================================================================================================
-
 			$this->comment('Extracting cover art!');
 			$coverId = null;
 			if (array_key_exists('comments', $allTags) && array_key_exists('picture', $allTags['comments'])) {
@@ -253,7 +283,6 @@ class ImportMLPMA extends Command {
 			//==========================================================================================================
 			// Is this part of an album?
 			//==========================================================================================================
-			// Find the album if it exists and create it if it doesn't.
 			$albumId = null;
 			$albumName = $parsedTags['album'];
 
@@ -279,7 +308,6 @@ class ImportMLPMA extends Command {
 			//==========================================================================================================
 			// Save this track.
 			//==========================================================================================================
-
 			// "Upload" the track to Pony.fm
 			$this->comment('Transcoding the track!');
 			Auth::loginUsingId($artist->id);
@@ -300,6 +328,7 @@ class ImportMLPMA extends Command {
 				$track->title = $parsedTags['title'];
 				$track->cover_id = $coverId;
 				$track->album_id = $albumId;
+				$track->genre_id = $genreId;
 				$track->track_number = $parsedTags['track_number'];
 				$track->released_at = $releasedAt;
 				$track->description = $parsedTags['comments'];
