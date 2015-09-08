@@ -357,7 +357,7 @@
 			umask(0);
 
 			if (!is_dir($destination))
-				mkdir($destination, 777, true);
+				mkdir($destination, 0777, true);
 		}
 
 		public function hasCover() {
