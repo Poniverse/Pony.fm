@@ -92,6 +92,15 @@ return [
         ],
     ],
 
+    "audio"       		=> "The :attribute must be an audio file.",
+    "audio_channels"	=> "The :attribute contains an invalid number of channels.",
+    "audio_format"  	=> "The :attribute does not contain audio in a valid format.",
+    "required_when"		=> "The :attribute field cannot be left blank.",
+    "sample_rate"		=> "The :attribute has an invalid sample rate.",
+    "min_width"			=> "The :attribute is not wide enough.",
+    "min_height"		=> "The :attribute is not tall enough.",
+    "textarea_length"   => "The :attribute must be less than 250 characters long.", // @TODO: Figure out how to retrieve the parameter from the validation rule
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
