@@ -114,7 +114,7 @@ class ClassifyMLPMA extends Command {
 			$track->save();
 
 			if (sizeof($linkedSongIds) > 0) {
-				$track->showSongs()->attach($linkedSongIds);
+				$track->showSongs()->sync($linkedSongIds);
 			}
 
 			echo PHP_EOL;
