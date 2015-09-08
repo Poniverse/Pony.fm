@@ -200,9 +200,10 @@ class ImportMLPMA extends Command {
 			// Determine the genre.
 			//==========================================================================================================
 			$genreName = $parsedTags['genre'];
+			$genreSlug = Str::slug($genreName);
 			$this->info('Genre: '.$genreName);
 
-			if ($genreName) {
+			if ($genreName && $genreSlug !== '') {
 				$genre = Genre::where('name', '=', $genreName)->first();
 				if ($genre) {
 					$genreId = $genre->id;
@@ -210,7 +211,7 @@ class ImportMLPMA extends Command {
 				} else {
 					$genre = new Genre();
 					$genre->name = $genreName;
-					$genre->slug = Str::slug($genreName);
+					$genre->slug = $genreSlug;
 					$genre->save();
 					$genreId = $genre->id;
 					$this->comment('Created a new genre!');
