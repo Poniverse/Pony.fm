@@ -189,7 +189,15 @@ class ImportMLPMA extends Command {
 
 
 			//==========================================================================================================
-			// Determine the genre
+			// Fill in the title tag if it's missing.
+			//==========================================================================================================
+			if (!$parsedTags['title']) {
+				$parsedTags['title'] = $file->getBasename($file->getExtension());
+			}
+
+
+			//==========================================================================================================
+			// Determine the genre.
 			//==========================================================================================================
 			$genreName = $parsedTags['genre'];
 			$this->info('Genre: '.$genreName);
@@ -401,8 +409,8 @@ class ImportMLPMA extends Command {
 
 		return [
 			[
-				'title' => $tags['title'][0],
-				'artist' => $tags['artist'][0],
+				'title' => isset($tags['title']) ? $tags['title'][0] : null,
+				'artist' => isset($tags['artist']) ? $tags['artist'][0] : null,
 				'band'  => isset($tags['band']) ? $tags['band'][0] : null,
 				'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
 				'track_number' => isset($tags['track_number']) ? $tags['track_number'][0] : null,
@@ -429,8 +437,8 @@ class ImportMLPMA extends Command {
 
 		return [
 			[
-				'title' => $tags['title'][0],
-				'artist' => $tags['artist'][0],
+				'title' => isset($tags['title']) ? $tags['title'][0] : null,
+				'artist' => isset($tags['artist']) ? $tags['artist'][0] : null,
 				'band' => isset($tags['band']) ? $tags['band'][0] : null,
 				'album_artist' => isset($tags['album_artist']) ? $tags['album_artist'][0] : null,
 				'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
