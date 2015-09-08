@@ -180,7 +180,7 @@ angular.module('ponyfm').factory('tracks', [
 					type: 'single'
 					name: 'sort'
 					values: [
-						{title: 'Latest', query: '', isDefault: true, filter: 'order=created_at,desc'},
+						{title: 'Latest', query: '', isDefault: true, filter: 'order=published_at,desc'},
 						{title: 'Most Played', query: 'plays', isDefault: false, filter: 'order=play_count,desc'},
 						{title: 'Most Downloaded', query: 'downloads', isDefault: false, filter: 'order=download_count,desc'},
 						{title: 'Most Favourited', query: 'favourites', isDefault: false, filter: 'order=favourite_count,desc'}
