@@ -88,18 +88,18 @@ class ClassifyMLPMA extends Command {
 			if (Str::contains(Str::lower($track->filename), 'ingram')) {
 				$this->info('This is an official song remix!');
 
-				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, true);
+				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, true, $parsedTags);
 
 
 			// If it has "remix" in the name, it's definitely a remix.
 			} else if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
 				$this->info('This is some kind of remix!');
 
-				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs);
+				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, false, $parsedTags);
 
 			// No idea what this is. Have the pony at the terminal figure it out!
 			} else {
-				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs);
+				list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, false, $parsedTags);
 			}
 
 
@@ -154,7 +154,7 @@ class ClassifyMLPMA extends Command {
 	 * @param bool|false $isRemixOfOfficialTrack
 	 * @return array
 	 */
-	protected function classifyTrack($filename, $officialSongs, $isRemixOfOfficialTrack = false) {
+	protected function classifyTrack($filename, $officialSongs, $isRemixOfOfficialTrack = false, $tags) {
 		$trackTypeId = null;
 		$linkedSongIds = [];
 
@@ -181,7 +181,11 @@ class ClassifyMLPMA extends Command {
 			}
 			$this->question('If this is a medley, multiple song ID\'s can be separated by commas. ');
 			$this->question('                                                                    ');
-			$this->question('  ' . $filename . '  ');
+			$this->question('  ' . $filename . '    ');
+			$this->question('                                                                    ');
+			$this->question('    Title:  '.$tags['title'].'    ');
+			$this->question('    Album:  '.$tags['album'].'    ');
+			$this->question('    Artist: '.$tags['artist'].'    ');
 			$this->question('                                                                    ');
 			$this->question('    r = official song remix (accept all "guessed" matches)          ');
 			$this->question('    # = official song remix (enter the ID(s) of the show song(s))   ');

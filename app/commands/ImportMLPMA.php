@@ -391,7 +391,16 @@ class ImportMLPMA extends Command {
 	 * @return array
 	 */
 	protected function getId3Tags($rawTags) {
-		$tags = $rawTags['tags']['id3v2'];
+		if (array_key_exists('id3v2', $rawTags['tags'])) {
+			$tags = $rawTags['tags']['id3v2'];
+
+		} else if (array_key_exists('id3v1', $rawTags['tags'])) {
+			$tags = $rawTags['tags']['id3v1'];
+
+		} else {
+			$tags = [];
+		}
+
 		$comment = null;
 
 		if (isset($tags['comment'])) {
