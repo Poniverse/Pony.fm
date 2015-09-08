@@ -192,7 +192,7 @@ class ImportMLPMA extends Command {
 			// Fill in the title tag if it's missing.
 			//==========================================================================================================
 			if (!$parsedTags['title']) {
-				$parsedTags['title'] = $file->getBasename($file->getExtension());
+				$parsedTags['title'] = $file->getBasename('.'.$file->getExtension());
 			}
 
 
@@ -323,7 +323,7 @@ class ImportMLPMA extends Command {
 			$trackFile = new UploadedFile($file->getPathname(), $file->getFilename(), $allTags['mime_type']);
 			Input::instance()->files->add(['track' => $trackFile]);
 
-			$upload = new UploadTrackCommand(true);
+			$upload = new UploadTrackCommand(true, true);
 			$result = $upload->execute();
 
 			if ($result->didFail()) {

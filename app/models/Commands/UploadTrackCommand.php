@@ -11,6 +11,7 @@
 
 	class UploadTrackCommand extends CommandBase {
 		private $_allowLossy;
+		private $_allowShortTrack;
 		private $_losslessFormats = [
 			'flac',
 			'pcm_s16le ([1][0][0][0] / 0x0001)',
@@ -22,8 +23,9 @@
 			'pcm_f32be (fl32 / 0x32336C66)'
 		];
 
-		public function __construct($allowLossy = false) {
+		public function __construct($allowLossy = false, $allowShortTrack = false) {
 			$this->_allowLossy = $allowLossy;
+			$this->_allowShortTrack = $allowShortTrack;
 		}
 
 		/**
@@ -46,9 +48,9 @@
 				'track' =>
 				'required|'
 				. ($this->_allowLossy ? '' : 'audio_format:'. implode(',', $this->_losslessFormats).'|')
+				. ($this->_allowShortTrack ? '' : 'min_duration:30|')
 				. 'audio_channels:1,2|'
-				. 'sample_rate:44100,48000,88200,96000,176400,192000|'
-				. 'min_duration:30'
+				. 'sample_rate:44100,48000,88200,96000,176400,192000'
 			]);
 
 			if ($validator->fails())
