@@ -149,10 +149,10 @@ class ImportMLPMA extends Command {
 			// normalized tags used by Pony.fm
 			$parsedTags = [];
 
-			if ($file->getExtension() === 'mp3') {
+			if (Str::lower($file->getExtension()) === 'mp3') {
 				list($parsedTags, $rawTags) = $this->getId3Tags($allTags);
 
-			} else if ($file->getExtension() === 'm4a') {
+			} else if (Str::lower($file->getExtension()) === 'm4a') {
 				list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
 			}
 
