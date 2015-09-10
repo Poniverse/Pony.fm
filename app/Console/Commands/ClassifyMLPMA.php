@@ -58,7 +58,7 @@ class ClassifyMLPMA extends Command
 
         $totalTracks = sizeof($tracks);
 
-        $fileToStartAt = (int) $this->option('startAt') - 1;
+        $fileToStartAt = (int)$this->option('startAt') - 1;
         $this->comment("Skipping $fileToStartAt files..." . PHP_EOL);
 
         $tracks = array_slice($tracks, $fileToStartAt);
@@ -90,18 +90,23 @@ class ClassifyMLPMA extends Command
             if (Str::contains(Str::lower($track->filename), 'ingram')) {
                 $this->info('This is an official song remix!');
 
-                list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, true);
+                list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, true,
+                    $parsedTags);
 
 
                 // If it has "remix" in the name, it's definitely a remix.
-            } else if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
-                $this->info('This is some kind of remix!');
-
-                list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs);
-
-                // No idea what this is. Have the pony at the terminal figure it out!
             } else {
-                list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs);
+                if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
+                    $this->info('This is some kind of remix!');
+
+                    list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, false,
+                        $parsedTags);
+
+                    // No idea what this is. Have the pony at the terminal figure it out!
+                } else {
+                    list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, false,
+                        $parsedTags);
+                }
             }
 
 
@@ -133,7 +138,8 @@ class ClassifyMLPMA extends Command
      * @param bool|false $isRemixOfOfficialTrack
      * @return array
      */
-    protected function classifyTrack($filename, $officialSongs, $isRemixOfOfficialTrack = false) {
+    protected function classifyTrack($filename, $officialSongs, $isRemixOfOfficialTrack = false, $tags)
+    {
         $trackTypeId = null;
         $linkedSongIds = [];
 
@@ -150,17 +156,23 @@ class ClassifyMLPMA extends Command
             if ($isRemixOfOfficialTrack && sizeof($officialSongs) > 1) {
                 $this->question('Multiple official songs matched! Please enter the ID of the correct one.');
 
-            } else if (sizeof($officialSongs) > 0) {
-                $this->question('This looks like a remix of an official song!');
-                $this->question('Press "r" if the match above is right!');
-
             } else {
-                $this->question('Exactly what kind of track is this?');
+                if (sizeof($officialSongs) > 0) {
+                    $this->question('This looks like a remix of an official song!');
+                    $this->question('Press "r" if the match above is right!');
 
+                } else {
+                    $this->question('Exactly what kind of track is this?');
+
+                }
             }
             $this->question('If this is a medley, multiple song ID\'s can be separated by commas. ');
             $this->question('                                                                    ');
-            $this->question('  ' . $filename . '  ');
+            $this->question('  ' . $filename . '    ');
+            $this->question('                                                                    ');
+            $this->question('    Title:  ' . $tags['title'] . '    ');
+            $this->question('    Album:  ' . $tags['album'] . '    ');
+            $this->question('    Artist: ' . $tags['artist'] . '    ');
             $this->question('                                                                    ');
             $this->question('    r = official song remix (accept all "guessed" matches)          ');
             $this->question('    # = official song remix (enter the ID(s) of the show song(s))   ');
@@ -175,7 +187,7 @@ class ClassifyMLPMA extends Command
                 case 'r':
                     $trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
                     foreach ($officialSongs as $officialSong) {
-                        $linkedSongIds[] = (int) $officialSong->id;
+                        $linkedSongIds[] = (int)$officialSong->id;
                     }
                     break;
 
@@ -199,7 +211,7 @@ class ClassifyMLPMA extends Command
                     $trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
                     $linkedSongIds = explode(',', $input);
                     $linkedSongIds = array_map(function ($item) {
-                        return (int) $item;
+                        return (int)$item;
                     }, $linkedSongIds);
             }
         }
