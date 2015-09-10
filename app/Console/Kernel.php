@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\MigrateOldData::class,
         \App\Console\Commands\RefreshCache::class,
+        \App\Console\Commands\ImportMLPMA::class,
+        \App\Console\Commands\ClassifyMLPMA::class,
     ];
 
     /**

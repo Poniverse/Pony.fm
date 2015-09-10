@@ -30,6 +30,7 @@ class Track extends Model
     public static $Formats = [
         'FLAC' => [
             'index' => 0,
+            'is_lossless' => true,
             'extension' => 'flac',
             'tag_format' => 'metaflac',
             'tag_method' => 'updateTagsWithGetId3',
@@ -38,6 +39,7 @@ class Track extends Model
         ],
         'MP3' => [
             'index' => 1,
+            'is_lossless' => false,
             'extension' => 'mp3',
             'tag_format' => 'id3v2.3',
             'tag_method' => 'updateTagsWithGetId3',
@@ -46,6 +48,7 @@ class Track extends Model
         ],
         'OGG Vorbis' => [
             'index' => 2,
+            'is_lossless' => false,
             'extension' => 'ogg',
             'tag_format' => 'vorbiscomment',
             'tag_method' => 'updateTagsWithGetId3',
@@ -54,6 +57,7 @@ class Track extends Model
         ],
         'AAC' => [
             'index' => 3,
+            'is_lossless' => false,
             'extension' => 'm4a',
             'tag_format' => 'AtomicParsley',
             'tag_method' => 'updateTagsWithAtomicParsley',
@@ -62,6 +66,7 @@ class Track extends Model
         ],
         'ALAC' => [
             'index' => 4,
+            'is_lossless' => true,
             'extension' => 'alac.m4a',
             'tag_format' => 'AtomicParsley',
             'tag_method' => 'updateTagsWithAtomicParsley',
@@ -538,7 +543,11 @@ class Track extends Model
     public function updateTags()
     {
         $this->trackFiles()->touch();
-        foreach (self::$Formats as $format => $data) {
+
+        foreach ($this->trackFiles as $trackFile) {
+            $format = $trackFile->format;
+            $data = self::$Formats[$format];
+
             $this->{$data['tag_method']}($format);
         }
     }
@@ -553,8 +562,7 @@ class Track extends Model
         $command .= '--genre ' . escapeshellarg($this->genre != null ? $this->genre->name : '') . ' ';
         $command .= '--copyright ' . escapeshellarg('© ' . $this->year . ' ' . $this->user->display_name) . ' ';
         $command .= '--comment "' . 'Downloaded from: https://pony.fm/' . '" ';
-        $command .= '--encodingTool "' . 'Pony.fm' . '" ';
-        $command .= '--encodedBy "' . 'Pony.fm - https://pony.fm/' . '" ';
+        $command .= '--encodingTool "' . 'Pony.fm - https://pony.fm/' . '" ';
 
         if ($this->album_id !== null) {
             $command .= '--album ' . escapeshellarg($this->album->title) . ' ';
