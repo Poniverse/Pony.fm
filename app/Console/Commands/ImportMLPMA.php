@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Commands\UploadTrackCommand;
 use App\Genre;
 use App\Image;
 use App\Track;
@@ -199,7 +200,7 @@ class ImportMLPMA extends Command
             // Fill in the title tag if it's missing.
             //==========================================================================================================
             if (!$parsedTags['title']) {
-                $parsedTags['title'] = $file->getBasename($file->getExtension());
+                $parsedTags['title'] = $file->getBasename('.' . $file->getExtension());
             }
 
 
@@ -329,7 +330,6 @@ class ImportMLPMA extends Command
             //==========================================================================================================
             // Save this track.
             //==========================================================================================================
-
             // "Upload" the track to Pony.fm
             $this->comment('Transcoding the track!');
             Auth::loginUsingId($artist->id);
@@ -337,7 +337,7 @@ class ImportMLPMA extends Command
             $trackFile = new UploadedFile($file->getPathname(), $file->getFilename(), $allTags['mime_type']);
             Input::instance()->files->add(['track' => $trackFile]);
 
-            $upload = new UploadTrackCommand(true);
+            $upload = new UploadTrackCommand(true, true);
             $result = $upload->execute();
 
             if ($result->didFail()) {
