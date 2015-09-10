@@ -86,6 +86,9 @@
 					} else if (Str::startsWith($audioObject->getAudioCodec(), 'aac')) {
 						$masterFormat = 'AAC';
 
+					} else if ($audioObject->getAudioCodec() === 'vorbis') {
+						$masterFormat = 'OGG Vorbis';
+
 					} else {
 						$validator->messages()->add('track', 'The track does not contain audio in a known lossy format.');
 						return CommandResponse::fail($validator);
