@@ -158,6 +158,11 @@ class ImportMLPMA extends Command
 
             } elseif (Str::lower($file->getExtension()) === 'm4a') {
                 list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
+
+            } else {
+                if (Str::lower($file->getExtension()) === 'ogg') {
+                    list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
+                }
             }
 
 
@@ -382,11 +387,16 @@ class ImportMLPMA extends Command
      */
     protected function getId3Tags($rawTags)
     {
-        if (array_key_exists('id3v2', $rawTags['tags'])) {
+        if (array_key_exists('tags', $rawTags) &&
+            array_key_exists('id3v2', $rawTags['tags'])
+        ) {
             $tags = $rawTags['tags']['id3v2'];
 
         } else {
-            if (array_key_exists('id3v1', $rawTags['tags'])) {
+            if (
+                array_key_exists('tags', $rawTags) &&
+                array_key_exists('id3v1', $rawTags['tags'])
+            ) {
                 $tags = $rawTags['tags']['id3v1'];
 
             } else {
@@ -455,4 +465,36 @@ class ImportMLPMA extends Command
             $tags
         ];
     }
+
+    /**
+     * @param array $rawTags
+     * @return array
+     */
+    protected function getVorbisTags($rawTags)
+    {
+        $tags = $rawTags['tags']['vorbiscomment'];
+
+        $trackNumber = null;
+        if (isset($tags['track_number'])) {
+            $trackNumberComponents = explode('/', $tags['track_number'][0]);
+            $trackNumber = $trackNumberComponents[0];
+        }
+
+        return [
+            [
+                'title' => isset($tags['title']) ? $tags['title'][0] : null,
+                'artist' => isset($tags['artist']) ? $tags['artist'][0] : null,
+                'band' => isset($tags['band']) ? $tags['band'][0] : null,
+                'album_artist' => isset($tags['album_artist']) ? $tags['album_artist'][0] : null,
+                'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
+                'track_number' => $trackNumber,
+                'album' => isset($tags['album']) ? $tags['album'][0] : null,
+                'year' => isset($tags['year']) ? (int)$tags['year'][0] : null,
+                'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
+                'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
+            ],
+            $tags
+        ];
+    }
+
 }
