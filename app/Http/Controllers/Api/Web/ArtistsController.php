@@ -133,16 +133,16 @@ class ArtistsController extends ApiControllerBase
         if ($user->users->count()) {
             $userRow = $user->users[0];
             $userData = [
-                'is_following' => $userRow->is_followed
+                'is_following' => (bool)$userRow->is_followed
             ];
         }
 
         return Response::json([
             'artist' => [
-                'id' => $user->id,
+                'id' => (int)$user->id,
                 'name' => $user->display_name,
                 'slug' => $user->slug,
-                'is_archived' => $user->is_archived,
+                'is_archived' => (bool)$user->is_archived,
                 'avatars' => [
                     'small' => $user->getAvatarUrl(Image::SMALL),
                     'normal' => $user->getAvatarUrl(Image::NORMAL)

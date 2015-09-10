@@ -86,25 +86,25 @@ class Playlist extends Model
             $userRow = $playlist->users[0];
             $userData = [
                 'stats' => [
-                    'views' => $userRow->view_count,
-                    'downloads' => $userRow->download_count,
+                    'views' => (int) $userRow->view_count,
+                    'downloads' => (int) $userRow->download_count,
                 ],
-                'is_favourited' => $userRow->is_favourited
+                'is_favourited' => (bool) $userRow->is_favourited
             ];
         }
 
         return [
-            'id' => $playlist->id,
+            'id' => (int) $playlist->id,
             'track_count' => $playlist->track_count,
             'title' => $playlist->title,
             'slug' => $playlist->slug,
             'created_at' => $playlist->created_at,
-            'is_public' => $playlist->is_public,
+            'is_public' => (bool) $playlist->is_public,
             'stats' => [
-                'views' => $playlist->view_count,
-                'downloads' => $playlist->download_count,
-                'comments' => $playlist->comment_count,
-                'favourites' => $playlist->favourite_count
+                'views' => (int) $playlist->view_count,
+                'downloads' => (int) $playlist->download_count,
+                'comments' => (int) $playlist->comment_count,
+                'favourites' => (int) $playlist->favourite_count
             ],
             'covers' => [
                 'small' => $playlist->getCoverUrl(Image::SMALL),
@@ -112,7 +112,7 @@ class Playlist extends Model
             ],
             'url' => $playlist->url,
             'user' => [
-                'id' => $playlist->user->id,
+                'id' => (int) $playlist->user->id,
                 'name' => $playlist->user->display_name,
                 'url' => $playlist->user->url,
             ],
