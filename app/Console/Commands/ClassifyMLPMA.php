@@ -75,7 +75,7 @@ class ClassifyMLPMA extends Command
             // Original, show song remix, fan song remix, show audio remix, or ponified song?
             //==========================================================================================================
             $sanitizedTrackTitle = $parsedTags['title'];
-            $sanitizedTrackTitle = str_replace(['-', '+', '~', 'ft.', '*'], ' ', $sanitizedTrackTitle);
+            $sanitizedTrackTitle = str_replace(['-', '+', '~', 'ft.', '*', '(', ')', '.'], ' ', $sanitizedTrackTitle);
 
             $queriedTitle = DB::connection()->getPdo()->quote($sanitizedTrackTitle);
             $officialSongs = ShowSong::select(['id', 'title'])
