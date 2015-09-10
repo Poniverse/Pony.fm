@@ -377,7 +377,7 @@ class Track extends Model
 
     public function getYearAttribute()
     {
-        return date('Y', strtotime($this->release_date));
+        return date('Y', strtotime($this->getReleaseDate()));
     }
 
     public function setTitleAttribute($value)
@@ -423,14 +423,14 @@ class Track extends Model
         return $this->user->display_name;
     }
 
-    public function getReleaseDateAttribute()
+    public function getReleaseDate()
     {
-        if ($this->attributes['released_at'] !== null) {
-            return $this->attributes['released_at'];
+        if ($this->released_at !== null) {
+            return $this->released_at;
         }
 
-        if ($this->attributes['published_at'] !== null) {
-            return Str::limit($this->attributes['published_at'], 10, '');
+        if ($this->published_at !== null) {
+            return Str::limit($this->published_at, 10, '');
         }
 
         return Str::limit($this->attributes['created_at'], 10, '');
