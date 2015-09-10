@@ -41,7 +41,7 @@ class ImportMLPMA extends Command
      *
      * @var array
      */
-    protected $ignoredExtensions = ['db', 'jpg', 'png'];
+    protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt'];
 
     /**
      * Used to stop the import process when a SIGINT is received.
