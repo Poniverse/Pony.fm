@@ -481,8 +481,6 @@ class ImportMLPMA extends Command {
 			$trackNumber = $trackNumberComponents[0];
 		}
 
-		var_dump($tags);
-
 		return [
 			[
 				'title' => isset($tags['title']) ? $tags['title'][0] : null,
