@@ -7,7 +7,7 @@ echo "Installing tagging tools..."
 sudo apt-get -qq install -y AtomicParsley flac vorbis-tools imagemagick
 
 echo "Installing ffmpeg dependencies.."
-sudo apt-get -qq install -y pkg-config yasm libfaac-dev libmp3lame-dev libvorbis-dev
+sudo apt-get -qq install -y pkg-config yasm libfaac-dev libmp3lame-dev libvorbis-dev libtheora-dev
 
 
 if type ffmpeg &>/dev/null; then
@@ -18,7 +18,7 @@ else
 	wget "https://ffmpeg.org/releases/ffmpeg-2.6.3.tar.bz2"
 	tar -xjf "ffmpeg-2.6.3.tar.bz2"
 	cd "ffmpeg-2.6.3"
-	./configure --enable-gpl --enable-encoder=flac --enable-encoder=alac --enable-libmp3lame --enable-libvorbis --enable-libfaac --enable-nonfree
+	./configure --enable-gpl --enable-encoder=flac --enable-encoder=alac --enable-libmp3lame --enable-libvorbis --enable-libtheora --enable-libfaac --enable-nonfree
 	make -j4
 	sudo make install
 fi
