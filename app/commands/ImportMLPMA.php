@@ -37,7 +37,7 @@ class ImportMLPMA extends Command {
 	 *
 	 * @var array
 	 */
-	protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt', 'rtf'];
+	protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt', 'rtf', 'wma'];
 
 	/**
 	 * Used to stop the import process when a SIGINT is received.
@@ -156,6 +156,9 @@ class ImportMLPMA extends Command {
 				list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
 
 			} else if (Str::lower($file->getExtension()) === 'ogg') {
+				list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
+
+			} else if (Str::lower($file->getExtension()) === 'flac') {
 				list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
 
 			}
