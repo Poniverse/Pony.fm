@@ -1,6 +1,7 @@
 /vendor
 /node_modules
 /public/build
+/logs
 Homestead.yaml
 .env
 .vagrant
