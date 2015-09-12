@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 sudo cp /vagrant/vagrant/pony.fm.nginx.config /etc/nginx/nginx.conf
 sudo cp /vagrant/vagrant/pony.fm.nginx.site.config /etc/nginx/sites-enabled/pony.fm
 

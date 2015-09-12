@@ -1,4 +1,7 @@
 * text=auto
-app/config/production/* filter=git-crypt diff=git-crypt
-app/config/stage/* filter=git-crypt diff=git-crypt
 
+resources/environments/.env.stage filter=git-crypt diff=git-crypt
+resources/environments/.env.production filter=git-crypt diff=git-crypt
+
+*.css linguist-vendored
+*.less linguist-vendored
