@@ -31,7 +31,7 @@ cd /vagrant
 /usr/local/bin/composer self-update
 composer install
 
-cp "/vagrant/vagrant/.env.local" "/vagrant/.env"
+cp "/vagrant/resources/environments/.env.local" "/vagrant/.env"
 
 php artisan migrate
 php artisan db:seed
