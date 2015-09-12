@@ -179,21 +179,17 @@ class ImportMLPMA extends Command
 
             if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
                 $releasedAt = $modifiedDate;
-            } else {
-                if ($taggedYear !== null && (string)$taggedYear !== 4) {
-                    $this->error('This track\'s tagged year makes no sense! Using the track\'s last modified date...');
-                    $releasedAt = $modifiedDate;
-                } else {
-                    if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
-                        $this->error('Release years don\'t match! Using the tagged year...');
-                        $releasedAt = Carbon::create($taggedYear);
+            } elseif ($taggedYear !== null && (string)Str::length($taggedYear) !== 4) {
+                $this->error('This track\'s tagged year makes no sense! Using the track\'s last modified date...');
+                $releasedAt = $modifiedDate;
+            } elseif ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
+                $this->error('Release years don\'t match! Using the tagged year...');
+                $releasedAt = Carbon::create($taggedYear);
 
-                    } else {
-                        // $taggedYear is null
-                        $this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
-                        $releasedAt = $modifiedDate;
-                    }
-                }
+            } else {
+                // $taggedYear is null
+                $this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
+                $releasedAt = $modifiedDate;
             }
 
             // This is later used by the classification/publishing script to determine the publication date.
@@ -281,18 +277,14 @@ class ImportMLPMA extends Command
                 if ($image['image_mime'] === 'image/png') {
                     $extension = 'png';
 
+                } elseif ($image['image_mime'] === 'image/jpeg') {
+                    $extension = 'jpg';
+
+                } elseif ($image['image_mime'] === 'image/gif') {
+                    $extension = 'gif';
+
                 } else {
-                    if ($image['image_mime'] === 'image/jpeg') {
-                        $extension = 'jpg';
-
-                    } else {
-                        if ($image['image_mime'] === 'image/gif') {
-                            $extension = 'gif';
-
-                        } else {
-                            $this->error('Unknown cover art format!');
-                        }
-                    }
+                    $this->error('Unknown cover art format!');
                 }
 
                 // write temporary image file
@@ -393,22 +385,14 @@ class ImportMLPMA extends Command
      */
     protected function getId3Tags($rawTags)
     {
-        if (array_key_exists('tags', $rawTags) &&
-            array_key_exists('id3v2', $rawTags['tags'])
-        ) {
+        if (array_key_exists('tags', $rawTags) && array_key_exists('id3v2', $rawTags['tags'])) {
             $tags = $rawTags['tags']['id3v2'];
-
+        } elseif (array_key_exists('tags', $rawTags) && array_key_exists('id3v1', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['id3v1'];
         } else {
-            if (
-                array_key_exists('tags', $rawTags) &&
-                array_key_exists('id3v1', $rawTags['tags'])
-            ) {
-                $tags = $rawTags['tags']['id3v1'];
-
-            } else {
-                $tags = [];
-            }
+            $tags = [];
         }
+
 
         $comment = null;
 
