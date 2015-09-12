@@ -179,7 +179,7 @@ class ImportMLPMA extends Command
 
             if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
                 $releasedAt = $modifiedDate;
-            } elseif ($taggedYear !== null && Str::length((string) $taggedYear) !== 4) {
+            } elseif ($taggedYear !== null && Str::length((string)$taggedYear) !== 4) {
                 $this->error('This track\'s tagged year makes no sense! Using the track\'s last modified date...');
                 $releasedAt = $modifiedDate;
             } elseif ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
@@ -431,7 +431,11 @@ class ImportMLPMA extends Command
      */
     protected function getAtomTags($rawTags)
     {
-        $tags = $rawTags['tags']['quicktime'];
+        if (array_key_exists('tags', $rawTags) && array_key_exists('quicktime', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['quicktime'];
+        } else {
+            $tags = [];
+        }
 
         $trackNumber = null;
         if (isset($tags['track_number'])) {
@@ -462,7 +466,11 @@ class ImportMLPMA extends Command
      */
     protected function getVorbisTags($rawTags)
     {
-        $tags = $rawTags['tags']['vorbiscomment'];
+        if (array_key_exists('tags', $rawTags) && array_key_exists('vorbiscomment', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['vorbiscomment'];
+        } else {
+            $tags = [];
+        }
 
         $trackNumber = null;
         if (isset($tags['track_number'])) {
