@@ -179,7 +179,7 @@ class ImportMLPMA extends Command
 
             if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
                 $releasedAt = $modifiedDate;
-            } elseif ($taggedYear !== null && (string)Str::length($taggedYear) !== 4) {
+            } elseif ($taggedYear !== null && Str::length((string) $taggedYear) !== 4) {
                 $this->error('This track\'s tagged year makes no sense! Using the track\'s last modified date...');
                 $releasedAt = $modifiedDate;
             } elseif ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
