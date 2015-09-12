@@ -177,16 +177,20 @@ class ImportMLPMA extends Command
 
             if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
                 $releasedAt = $modifiedDate;
-
             } else {
-                if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
-                    $this->error('Release years don\'t match! Using the tagged year...');
-                    $releasedAt = Carbon::create($taggedYear);
-
-                } else {
-                    // $taggedYear is null
-                    $this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
+                if ($taggedYear !== null && (string)$taggedYear !== 4) {
+                    $this->error('This track\'s tagged year makes no sense! Using the track\'s last modified date...');
                     $releasedAt = $modifiedDate;
+                } else {
+                    if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
+                        $this->error('Release years don\'t match! Using the tagged year...');
+                        $releasedAt = Carbon::create($taggedYear);
+
+                    } else {
+                        // $taggedYear is null
+                        $this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
+                        $releasedAt = $modifiedDate;
+                    }
                 }
             }
 
