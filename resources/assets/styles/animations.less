@@ -1,0 +1,114 @@
+@import 'base/bootstrap/bootstrap';
+@import 'mixins';
+
+.fade-hide, .fade-show {
+  .transition(all cubic-bezier(0.250, 0.460, 0.450, 0.940) 350ms);
+}
+
+.fade-hide {
+  opacity:1;
+}
+
+.fade-hide.fade-hide-active {
+  opacity:0;
+}
+
+.fade-show {
+  opacity:0;
+}
+
+.fade-show.fade-show-active {
+  opacity:1;
+}
+
+.slide-down-enter, .slide-down-leave,
+.slide-up-enter, .slide-up-leave,
+.slide-right-enter, .slide-right-leave {
+  position: absolute;
+}
+
+// ---------------------------------------
+// Down
+// ---------------------------------------
+.slide-down-enter {
+  .transition(all 400ms ease-out);
+  .transform(translate(0, -100%));
+}
+
+.slide-down-enter.slide-down-enter-active {
+  .transform(translate(0, 0));
+}
+
+.slide-down-leave {
+  .transition(all 400ms ease-out);
+  .transform(translate(0, 0));
+}
+
+.slide-down-leave.slide-down-leave-active {
+  .transform(translate(0, 100%));
+}
+
+// ---------------------------------------
+// Up
+// ---------------------------------------
+.slide-up-enter {
+  .transition(all 400ms ease-out);
+  .transform(translate(0, 100%));
+}
+
+.slide-up-enter.slide-up-enter-active {
+  .transform(translate(0, 0));
+}
+
+.slide-up-leave {
+  .transition(all 400ms ease-out);
+  .transform(translate(0, 0));
+}
+
+.slide-up-leave.slide-up-leave-active {
+  .transform(translate(0, -100%));
+}
+
+// ---------------------------------------
+// Right
+// ---------------------------------------
+
+.slide-right-enter {
+  .transition(all 400ms ease-out);
+  .transform(translate(-100%, 0));
+}
+
+.slide-right-enter.slide-right-enter-active {
+  .transform(translate(0, 0));
+}
+
+.slide-right-leave {
+  .transition(all 400ms ease-out);
+  .transform(translate(0, 0));
+}
+
+.slide-right-leave.slide-right-leave-active {
+  .transform(translate(100%, 0));
+}
+
+// ---------------------------------------
+// Left
+// ---------------------------------------
+
+.slide-left-enter {
+  .transition(all 400ms ease-out);
+  .transform(translate(100%, 0));
+}
+
+.slide-left-enter.slide-left-enter-active {
+  .transform(translate(0, 0));
+}
+
+.slide-left-leave {
+  .transition(all 400ms ease-out);
+  .transform(translate(0, 0));
+}
+
+.slide-left-leave.slide-left-leave-active {
+  .transform(translate(-100%, 0));
+}
