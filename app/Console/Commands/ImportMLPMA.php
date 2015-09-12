@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Album;
 use App\Commands\UploadTrackCommand;
 use App\Genre;
 use App\Image;
@@ -41,7 +42,7 @@ class ImportMLPMA extends Command
      *
      * @var array
      */
-    protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt', 'rtf'];
+    protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt', 'rtf', 'wma'];
 
     /**
      * Used to stop the import process when a SIGINT is received.
@@ -159,12 +160,13 @@ class ImportMLPMA extends Command
             } elseif (Str::lower($file->getExtension()) === 'm4a') {
                 list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
 
-            } else {
-                if (Str::lower($file->getExtension()) === 'ogg') {
-                    list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
-                }
-            }
+            } elseif (Str::lower($file->getExtension()) === 'ogg') {
+                list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
 
+            } elseif (Str::lower($file->getExtension()) === 'flac') {
+                list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
+
+            }
 
             //==========================================================================================================
             // Determine the release date.
