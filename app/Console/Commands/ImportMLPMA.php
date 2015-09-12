@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Album;
 use App\Commands\UploadTrackCommand;
 use App\Genre;
 use App\Image;
@@ -41,7 +42,7 @@ class ImportMLPMA extends Command
      *
      * @var array
      */
-    protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt'];
+    protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt', 'rtf', 'wma'];
 
     /**
      * Used to stop the import process when a SIGINT is received.
@@ -159,12 +160,13 @@ class ImportMLPMA extends Command
             } elseif (Str::lower($file->getExtension()) === 'm4a') {
                 list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
 
-            } else {
-                if (Str::lower($file->getExtension()) === 'ogg') {
-                    list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
-                }
-            }
+            } elseif (Str::lower($file->getExtension()) === 'ogg') {
+                list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
 
+            } elseif (Str::lower($file->getExtension()) === 'flac') {
+                list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
+
+            }
 
             //==========================================================================================================
             // Determine the release date.
@@ -177,17 +179,17 @@ class ImportMLPMA extends Command
 
             if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
                 $releasedAt = $modifiedDate;
+            } elseif ($taggedYear !== null && Str::length((string)$taggedYear) !== 4) {
+                $this->error('This track\'s tagged year makes no sense! Using the track\'s last modified date...');
+                $releasedAt = $modifiedDate;
+            } elseif ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
+                $this->error('Release years don\'t match! Using the tagged year...');
+                $releasedAt = Carbon::create($taggedYear);
 
             } else {
-                if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
-                    $this->error('Release years don\'t match! Using the tagged year...');
-                    $releasedAt = Carbon::create($taggedYear);
-
-                } else {
-                    // $taggedYear is null
-                    $this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
-                    $releasedAt = $modifiedDate;
-                }
+                // $taggedYear is null
+                $this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
+                $releasedAt = $modifiedDate;
             }
 
             // This is later used by the classification/publishing script to determine the publication date.
@@ -275,18 +277,14 @@ class ImportMLPMA extends Command
                 if ($image['image_mime'] === 'image/png') {
                     $extension = 'png';
 
+                } elseif ($image['image_mime'] === 'image/jpeg') {
+                    $extension = 'jpg';
+
+                } elseif ($image['image_mime'] === 'image/gif') {
+                    $extension = 'gif';
+
                 } else {
-                    if ($image['image_mime'] === 'image/jpeg') {
-                        $extension = 'jpg';
-
-                    } else {
-                        if ($image['image_mime'] === 'image/gif') {
-                            $extension = 'gif';
-
-                        } else {
-                            $this->error('Unknown cover art format!');
-                        }
-                    }
+                    $this->error('Unknown cover art format!');
                 }
 
                 // write temporary image file
@@ -387,22 +385,14 @@ class ImportMLPMA extends Command
      */
     protected function getId3Tags($rawTags)
     {
-        if (array_key_exists('tags', $rawTags) &&
-            array_key_exists('id3v2', $rawTags['tags'])
-        ) {
+        if (array_key_exists('tags', $rawTags) && array_key_exists('id3v2', $rawTags['tags'])) {
             $tags = $rawTags['tags']['id3v2'];
-
+        } elseif (array_key_exists('tags', $rawTags) && array_key_exists('id3v1', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['id3v1'];
         } else {
-            if (
-                array_key_exists('tags', $rawTags) &&
-                array_key_exists('id3v1', $rawTags['tags'])
-            ) {
-                $tags = $rawTags['tags']['id3v1'];
-
-            } else {
-                $tags = [];
-            }
+            $tags = [];
         }
+
 
         $comment = null;
 
@@ -441,7 +431,11 @@ class ImportMLPMA extends Command
      */
     protected function getAtomTags($rawTags)
     {
-        $tags = $rawTags['tags']['quicktime'];
+        if (array_key_exists('tags', $rawTags) && array_key_exists('quicktime', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['quicktime'];
+        } else {
+            $tags = [];
+        }
 
         $trackNumber = null;
         if (isset($tags['track_number'])) {
@@ -472,7 +466,11 @@ class ImportMLPMA extends Command
      */
     protected function getVorbisTags($rawTags)
     {
-        $tags = $rawTags['tags']['vorbiscomment'];
+        if (array_key_exists('tags', $rawTags) && array_key_exists('vorbiscomment', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['vorbiscomment'];
+        } else {
+            $tags = [];
+        }
 
         $trackNumber = null;
         if (isset($tags['track_number'])) {
