@@ -98,11 +98,11 @@
 @section('scripts')
 	<script>
 		window.pfm = {
-			token: "{{Session::token()}}",
+			token: "{!! csrf_token() !!}",
 			auth: {
 				@if (Auth::check())
 					isLogged: true,
-					user: {{Auth::user()->toJson()}}
+					user: {!! Auth::user()->toJson() !!}
 				@else
 					isLogged: false
 				@endif

@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'url' => 'http://pony.fm',
+    'url' => env('APP_URL', 'https://pony.fm'),
 
     /*
     |--------------------------------------------------------------------------
@@ -78,9 +78,9 @@ return [
     |
     */
 
-    'key' => env('APP_KEY', 'AQUSDTDK5xA04yb9eO9iwlm72NpC8e90'),
+    'key' => env('APP_KEY'),
 
-    'cipher' => 'AES-256-CBC',
+    'cipher' => MCRYPT_RIJNDAEL_256,
 
     /*
     |--------------------------------------------------------------------------

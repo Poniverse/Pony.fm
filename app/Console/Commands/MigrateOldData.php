@@ -376,7 +376,7 @@ class MigrateOldData extends Command
     {
         $dir = (string)(floor($id / 100) * 100);
 
-        return \Config::get('app.files_directory') . '/' . $type . '/' . $dir;
+        return \Config::get('ponyfm.files_directory') . '/' . $type . '/' . $dir;
     }
 
 }

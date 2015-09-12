@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 use Input;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-//require_once(app_path() . '/Library/getid3/getid3/getid3.php');
+require_once(app_path() . '/Library/getid3/getid3/getid3.php');
 
 class ImportMLPMA extends Command
 {
@@ -82,8 +82,8 @@ class ImportMLPMA extends Command
     {
         pcntl_signal(SIGINT, [$this, 'handleInterrupt']);
 
-        $mlpmaPath = Config::get('app.files_directory') . 'mlpma';
-        $tmpPath = Config::get('app.files_directory') . 'tmp';
+        $mlpmaPath = Config::get('ponyfm.files_directory') . 'mlpma';
+        $tmpPath = Config::get('ponyfm.files_directory') . 'tmp';
 
         if (!File::exists($tmpPath)) {
             File::makeDirectory($tmpPath);

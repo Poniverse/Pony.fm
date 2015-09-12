@@ -483,7 +483,7 @@ class Track extends Model
     {
         $dir = (string)(floor($this->id / 100) * 100);
 
-        return \Config::get('app.files_directory') . '/tracks/' . $dir;
+        return \Config::get('ponyfm.files_directory') . '/tracks/' . $dir;
     }
 
     public function getDates()
