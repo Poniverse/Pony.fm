@@ -42,7 +42,7 @@ class ImportMLPMA extends Command
      *
      * @var array
      */
-    protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt', 'rtf', 'wma'];
+    protected $ignoredExtensions = ['db', 'jpg', 'png', 'txt', 'rtf', 'wma', 'wmv'];
 
     /**
      * Used to stop the import process when a SIGINT is received.
@@ -83,8 +83,8 @@ class ImportMLPMA extends Command
     {
         pcntl_signal(SIGINT, [$this, 'handleInterrupt']);
 
-        $mlpmaPath = Config::get('ponyfm.files_directory') . 'mlpma';
-        $tmpPath = Config::get('ponyfm.files_directory') . 'tmp';
+        $mlpmaPath = Config::get('ponyfm.files_directory') . '/mlpma';
+        $tmpPath = Config::get('ponyfm.files_directory') . '/tmp';
 
         if (!File::exists($tmpPath)) {
             File::makeDirectory($tmpPath);
@@ -166,9 +166,13 @@ class ImportMLPMA extends Command
             } elseif (Str::lower($file->getExtension()) === 'flac') {
                 list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
 
+            } elseif (Str::lower($file->getExtension()) === 'wav') {
+	            list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
+
             }
 
-            //==========================================================================================================
+
+		    //==========================================================================================================
             // Determine the release date.
             //==========================================================================================================
             $modifiedDate = Carbon::createFromTimeStampUTC(File::lastModified($file->getPathname()));
