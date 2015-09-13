@@ -92,7 +92,7 @@ angular.module('ponyfm').controller "account-albums-edit", [
 			formData.append 'track_ids', _.map($scope.tracks, (t) -> t.id).join()
 
 			xhr.open 'POST', url, true
-			xhr.setRequestHeader 'X-Token', pfm.token
+			xhr.setRequestHeader 'X-CSRF-Token', pfm.token
 			$scope.isSaving = true
 			xhr.send formData
 

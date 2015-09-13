@@ -46,6 +46,6 @@ angular.module('ponyfm').factory('upload', [
 					formData.append('track', file);
 
 					xhr.open 'POST', '/api/web/tracks/upload', true
-					xhr.setRequestHeader 'X-Token', pfm.token
+					xhr.setRequestHeader 'X-CSRF-Token', pfm.token
 					xhr.send formData
 ])

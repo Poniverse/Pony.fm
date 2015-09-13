@@ -100,7 +100,7 @@ angular.module('ponyfm').controller "account-track", [
 				formData.append 'show_song_ids', _.map(_.values($scope.selectedSongs), (s) -> s.id).join()
 
 			xhr.open 'POST', '/api/web/tracks/edit/' + $scope.edit.id, true
-			xhr.setRequestHeader 'X-Token', pfm.token
+			xhr.setRequestHeader 'X-CSRF-Token', pfm.token
 			$scope.isSaving = true
 			xhr.send formData
 

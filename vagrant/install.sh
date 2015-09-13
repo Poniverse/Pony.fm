@@ -23,7 +23,7 @@ else
 	sudo make install
 fi
 
-mkdir /vagrant/storage/logs/system
+mkdir -p /vagrant/storage/logs/system
 /vagrant/vagrant/copy-and-restart-configs.sh
 
 cd /vagrant
