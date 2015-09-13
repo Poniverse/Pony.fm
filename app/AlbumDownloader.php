@@ -1,5 +1,9 @@
 <?php
 
+namespace App;
+
+use ZipStream;
+
 class AlbumDownloader
 {
     private $_album;

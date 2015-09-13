@@ -6,6 +6,7 @@ use App;
 use App\Playlist;
 use App\ResourceLogItem;
 use App\Track;
+use App\PlaylistDownloader;
 use Auth;
 use Illuminate\Support\Facades\Redirect;
 use View;

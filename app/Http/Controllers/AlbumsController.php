@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use AlbumDownloader;
+use App\AlbumDownloader;
 use App;
 use App\Album;
 use App\ResourceLogItem;

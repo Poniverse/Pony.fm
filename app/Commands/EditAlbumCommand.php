@@ -70,7 +70,7 @@ class EditAlbumCommand extends CommandBase
         $this->_album->syncTrackIds($trackIds);
         $this->_album->save();
 
-        Album::whereId($this->_album->id)->update([
+        Album::where('id', $this->_album->id)->update([
             'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = ' . $this->_album->id . ')')
         ]);
 

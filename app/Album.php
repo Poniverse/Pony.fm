@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
 use App\Traits\SlugTrait;
+use Helpers;
 
 class Album extends Model
 {

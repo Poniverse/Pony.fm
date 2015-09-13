@@ -2,8 +2,11 @@
 
 namespace App\Commands;
 
+use App\Album;
 use App\Comment;
+use App\Playlist;
 use App\Track;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -74,13 +77,26 @@ class CreateCommentCommand extends CommandBase
 
         $comment->$column = $this->_id;
         $comment->save();
-	    
+
 	    // Recount the track's comments, if this is a track comment
-	    if ($this->_type == 'track') {
-		    $track = Track::find($this->_id);
-		    $track->comment_count = Comment::where('track_id', $this->_id)->count();
-		    $track->save();
+	    if ($this->_type === 'track') {
+		    $entity = Track::find($this->_id);
+
+	    } elseif ($this->_type === 'album') {
+		    $entity = Album::find($this->_id);
+
+	    } elseif ($this->_type === 'playlist') {
+		    $entity = Playlist::find($this->_id);
+
+	    } elseif ($this->_type === 'user') {
+		    $entity = User::find($this->_id);
+
+	    } else {
+		    App::abort(400, 'This comment is being added to an invalid entity!');
 	    }
+
+	    $entity->comment_count = Comment::where($column, $this->_id)->count();
+	    $entity->save();
 
         return CommandResponse::succeed(Comment::mapPublic($comment));
     }
