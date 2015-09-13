@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use App\Comment;
+use App\Track;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -73,6 +74,13 @@ class CreateCommentCommand extends CommandBase
 
         $comment->$column = $this->_id;
         $comment->save();
+	    
+	    // Recount the track's comments, if this is a track comment
+	    if ($this->_type == 'track') {
+		    $track = Track::find($this->_id);
+		    $track->comment_count = Comment::where('track_id', $this->_id)->count();
+		    $track->save();
+	    }
 
         return CommandResponse::succeed(Comment::mapPublic($comment));
     }
