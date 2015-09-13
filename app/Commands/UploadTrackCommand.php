@@ -53,8 +53,7 @@ class UploadTrackCommand extends CommandBase
                 'required|'
                 . ($this->_allowLossy ? '' : 'audio_format:'. implode(',', $this->_losslessFormats).'|')
                 . ($this->_allowShortTrack ? '' : 'min_duration:30|')
-                . 'audio_channels:1,2|'
-                . 'sample_rate:44100,48000,88200,96000,176400,192000'
+                . 'audio_channels:1,2'
         ]);
 
         if ($validator->fails()) {
