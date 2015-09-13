@@ -17,7 +17,7 @@
 <body>
 	@if($track->explicit && !(Auth::check() && Auth::user()->can_see_explicit_content))
 		<div class="explicit alert alert-danger">
-			<em>Enable explicit content in {{ HTML::link(URL::to('/account/settings'), 'your account', ['target' => '_blank']) }} to play this track.</em>
+			<em>Enable explicit content in <a href="{{ URL::to('/account/settings') }}" target="_blank">your account</a> to play this track.</em>
 			<div class="stats">
 				<span>Hosted by <a href="{{URL::to('/')}}" target="_blank">Pony.fm</a></span>
 			</div>
@@ -26,7 +26,7 @@
 		<div class="player loading {{Auth::check() ? 'can-favourite' : ''}} {{$user['is_favourited'] ? 'favourited' : ''}}" data-track-id="{{ $track->id }}" data-duration="{{ $track->duration * 1000 }}">
 			<div class="play" disabled="disabled">
 				<div class="button"><i class="icon-play"></i></div>
-				{{ HTML::image($track->getCoverUrl(\App\Image::SMALL)) }}
+				<img src="{{ $track->getCoverUrl(\App\Image::SMALL) }}" />
 			</div>
 			<div class="meta">
 				@if (Auth::check())
@@ -36,8 +36,8 @@
 					<div class="loader"></div>
 					<div class="seeker"></div>
 				</div>
-				<span class="title">{{ HTML::link( $track->url, $track->title, ['target' => '_blank'] ) }}</span>
-				<span>by: <strong>{{ HTML::link($track->user->url, $track->user->display_name, ['target' => '_blank']) }}</strong> / {{$track->genre->name}} / {{Helpers::timestamp($track->published_at)}}</span>
+				<span class="title"><a href="{{ $track->url }}" target="_blank">{{ $track->title }}</a></span>
+				<span>by: <strong><a href="{{ $track->user->url }}" target="_blank">{{ $track->user->display_name }}</a></strong> / {{$track->genre->name}} / {!! Helpers::timestamp($track->published_at) !!}</span>
 			</div>
 			<div class="stats">
 				Views: <strong>{{ $track->view_count }}</strong> / Plays: <strong>{{ $track->play_count }}</strong> / Downloads: <strong>{{ $track->download_count }}</strong> /
