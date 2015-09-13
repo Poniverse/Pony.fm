@@ -77,7 +77,7 @@ class Track extends Model
 
     public static function summary()
     {
-        return self::select('id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at',
+        return self::select('tracks.id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at',
             'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id', 'comment_count',
             'download_count', 'view_count', 'play_count', 'favourite_count');
     }
