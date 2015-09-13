@@ -1,11 +1,20 @@
 Vagrant.configure("2") do |config|
+
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+
   config.vm.box = 'laravel/homestead'
   config.vm.provider "virtualbox" do |v|
     v.cpus = 4
     v.memory = 2048
   end
 
-  config.vm.network :private_network, ip: "192.168.33.11"
+  config.vm.define 'default' do |node|
+    node.vm.hostname = 'pony.fm.local'
+    node.vm.network :private_network, ip: "192.168.33.11"
+    node.hostmanager.aliases = %w(api.pony.fm.local)
+  end
+
   config.vm.synced_folder ".", "/vagrant", type: "nfs"
 
   config.vm.provision "shell", path: "vagrant/install.sh"
