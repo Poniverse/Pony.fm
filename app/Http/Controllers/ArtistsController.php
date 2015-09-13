@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App;
 use App\User;
-use Illuminate\Contracts\View\View;
+use View;
+use Redirect;
 
 class ArtistsController extends Controller
 {
