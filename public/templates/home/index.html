@@ -2,14 +2,14 @@
 	<section class="recent-tracks">
 		<h1>
 			<a href="/tracks"><i class="icon-music"></i> see more</a>
-			The Newest Tunes
+			The newest tunes
 		</h1>
 		<pfm-tracks-list tracks="recentTracks" class="two-columns"></pfm-tracks-list>
 	</section>
 
 	<section class="popular-tracks">
 		<h1>
-			What's Popular Today
+			What's popular today
 		</h1>
 		<pfm-tracks-list tracks="popularTracks" class="two-columns"></pfm-tracks-list>
 	</section>
@@ -26,15 +26,18 @@
 
 		<h1>
 			<a href="http://mlpforums.com/blog/404-ponyfm-development-blog/" target="_blank">read all</a>
-			Pony.fm News
+			Pony.fm news
 		</h1>
-		<ul>
-			<li ng-repeat="post in news">
-				<a href="{{post.url}}" target="_blank">
-					<em>{{post.date}}</em>
-					{{post.title}}
-				</a>
-			</li>
-		</ul>
+    <a class="twitter-timeline" href="https://twitter.com/ponyfm" data-widget-id="644195953956798464">Tweets by
+      @ponyfm</a>
+    <script>!function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+      if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + "://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }
+    }(document, "script", "twitter-wjs");</script>
 	</section>
 </div>

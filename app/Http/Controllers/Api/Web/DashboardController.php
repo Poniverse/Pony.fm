@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\ApiControllerBase;
-use App\News;
 use App\Track;
-use Cover;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
@@ -32,16 +30,7 @@ class DashboardController extends ApiControllerBase
 
         return Response::json([
             'recent_tracks' => $recentTracks,
-            'popular_tracks' => Track::popular(30, Auth::check() && Auth::user()->can_see_explicit_content),
-            'news' => News::getNews(0, 10)
+            'popular_tracks' => Track::popular(30, Auth::check() && Auth::user()->can_see_explicit_content)
         ], 200);
-    }
-
-    public function postReadNews()
-    {
-        News::markPostAsRead(Input::get('url'));
-
-        return Response::json([
-        ]);
     }
 }
