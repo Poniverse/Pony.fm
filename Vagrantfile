@@ -10,9 +10,9 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define 'default' do |node|
-    node.vm.hostname = 'pony.fm.local'
+    node.vm.hostname = 'ponyfm-dev.poni'
     node.vm.network :private_network, ip: "192.168.33.11"
-    node.hostmanager.aliases = %w(api.pony.fm.local)
+    node.hostmanager.aliases = %w(api.ponyfm-dev.poni)
   end
 
   config.vm.synced_folder ".", "/vagrant", type: "nfs"
