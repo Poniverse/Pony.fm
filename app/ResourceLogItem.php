@@ -3,14 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
+use Carbon\Carbon;
+use Auth;
+use DB;
+use Request;
 
 class ResourceLogItem extends Model
 {
     protected $table = 'resource_log_items';
     public $timestamps = false;
+    protected $dates = ['created_at'];
 
     const VIEW = 1;
     const DOWNLOAD = 2;
@@ -22,7 +24,7 @@ class ResourceLogItem extends Model
 
         $logItem = new ResourceLogItem();
         $logItem->{$resourceIdColumn} = $resourceId;
-        $logItem->created_at = time();
+        $logItem->created_at = Carbon::now();
         $logItem->log_type = $logType;
         $logItem->track_format_id = $formatId;
         $logItem->ip_address = Request::getClientIp();

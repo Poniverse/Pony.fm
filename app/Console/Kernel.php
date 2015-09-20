@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ImportMLPMA::class,
         \App\Console\Commands\ClassifyMLPMA::class,
         \App\Console\Commands\RebuildTags::class,
+        \App\Console\Commands\FixYearZeroLogs::class,
     ];
 
     /**
