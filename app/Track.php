@@ -9,12 +9,12 @@ use getid3_writetags;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\URL;
+use Auth;
+use Cache;
+use Config;
+use DB;
+use Log;
+use URL;
 use Illuminate\Support\Str;
 
 class Track extends Model

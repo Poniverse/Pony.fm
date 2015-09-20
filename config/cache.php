@@ -74,6 +74,6 @@ return [
     |
     */
 
-    'prefix' => 'ponyfm',
+    'prefix' => 'ponyfm_',
 
 ];
