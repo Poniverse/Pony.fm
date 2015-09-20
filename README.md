@@ -9,7 +9,7 @@ To begin development, you must do three things:
 
 4. Run `vagrant up` from the folder in which you cloned the repository
 
-Once everything is up and running, you'll be able to access the site at http://pony.fm.local. You can access the MySQL database by logging into **192.168.33.11:3306** with the username of **homestead** and the password of **secret**. The pony.fm database is named **homestead**.
+Once everything is up and running, you'll be able to access the site at http://ponyfm-dev.poni/. You can access the MySQL database by logging into **192.168.33.11:3306** with the username of **homestead** and the password of **secret**. The pony.fm database is named **homestead**.
 
 # Asset pipeline
 Pony.fm uses gulp to mange its asset pipeline. **Important** due to everything being awful, you must run npm and gulp from your host machine and not the VM. You must first have it installed globally:
