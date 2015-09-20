@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\DB;
+use DB;
 
 class ProfileRequest
 {
@@ -17,6 +17,9 @@ class ProfileRequest
         return $req;
     }
 
+    /**
+     * @return ProfileRequest
+     */
     public static function create()
     {
         $req = new ProfileRequest();
@@ -45,9 +48,10 @@ class ProfileRequest
         return $this->_id;
     }
 
-    public function after($request, $response)
+    public function recordQueries()
     {
         $this->_data['queries'] = [];
+
         foreach (DB::getQueryLog() as $query) {
             if (starts_with($query['query'], 'select * from `cache` where')) {
                 continue;

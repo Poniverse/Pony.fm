@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\Controller;
 use App\ProfileRequest;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Response;
+use Cache;
+use Config;
+use Response;
 
 class ProfilerController extends Controller
 {
