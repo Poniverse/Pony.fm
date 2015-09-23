@@ -81,6 +81,12 @@
 				<li><a href="/login" target="_self">Login</a></li>
 				<li><a href="/register" target="_self">Register</a></li>
 			@endif
+            <li class="x-poniverseCredit">
+                <a href="https://poniverse.net/" title="Poniverse: The Pony Supercommunity">
+                    <span>A community project by</span>
+                    <img src="/images/poniverse.svg" alt="Poniverse logo"/>
+                </a>
+            </li>
 		</ul>
 		<ui-view class="site-content">
 			@yield('app_content')
