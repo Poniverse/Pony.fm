@@ -41,13 +41,21 @@ class RebuildTags extends Command
         if ($this->argument('trackId')) {
             $track = Track::findOrFail($this->argument('trackId'));
             $tracks = [$track];
+
         } else {
-            $tracks = Track::whereNotNull('published_at')->get();
+            $tracks = Track::whereNotNull('published_at')->orderBy('id', 'asc')->get();
         }
+
+        $bar = $this->output->createProgressBar(sizeof($tracks));
 
         foreach($tracks as $track) {
             $this->comment('Rewriting tags for track #'.$track->id.'...');
             $track->updateTags();
+            $bar->advance();
+            $this->line('');
         }
+
+        $bar->finish();
+        $this->line('');
     }
 }
