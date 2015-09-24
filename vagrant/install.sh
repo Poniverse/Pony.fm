@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Running apt-get update..."
-sudo apt-get -qq update
+#sudo apt-get -qq update
 
 echo "Installing tagging tools..."
 sudo apt-get -qq install -y AtomicParsley flac vorbis-tools imagemagick
@@ -35,3 +35,6 @@ cp "/vagrant/resources/environments/.env.local" "/vagrant/.env"
 
 php artisan migrate
 php artisan db:seed
+
+echo "Now - if you haven't already, SSH into the VM and run \`php artisan poni:setup\`!"
+echo "See the README for more details."

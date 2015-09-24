@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Console\Commands;
+
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Console\Command;
+use GuzzleHttp\Client;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+
+class PoniverseApiSetup extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'poni:api-setup';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Calls upon Pixel Wavelength for a Poniverse API key.';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $this->output->getFormatter()->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));
+
+	    $this->comment('Sign in with your Poniverse account! Your password won\'t be stored locally.');
+	    $this->line('');
+	    $this->comment('This sets up your Poniverse API credentials, which are necessary for Pony.fm\'s integration with Poniverse to work.');
+	    $this->line('');
+	    $this->comment('If you don\'t have a Poniverse account, create one at: <bold>https://poniverse.net/register</bold>');
+        $username = $this->ask('Your Poniverse username');
+        $password = $this->secret('Your Poniverse password');
+
+	    // log in
+        $client = new Client(['base_uri' => 'https://api.poniverse.net/v1/dev/']);
+
+        try {
+            $response = $client->post('api-credentials', [
+                'headers' => ['accept' => 'application/json'],
+                'auth' => [$username, $password],
+                'query' => ['app' => 'Pony.fm']
+            ]);
+
+        } catch (ClientException $e) {
+            if ($e->getResponse()->getStatusCode() === 401) {
+                $this->error('Incorrect username or password! Please try again.');
+                exit();
+
+            } else {
+                var_dump($e->getResponse()->getBody());
+                throw $e;
+            }
+        }
+
+        $json = json_decode($response->getBody());
+        $clientId = $json->id;
+        $clientSecret = $json->secret;
+
+	    // save new key to .env
+        $this->setEnvironmentVariable('PONI_CLIENT_ID', $this->laravel['config']['poniverse.client_id'], $clientId);
+        $this->setEnvironmentVariable('PONI_CLIENT_SECRET', $this->laravel['config']['poniverse.secret'], $clientSecret);
+
+        $this->info('Client ID and secret set!');
+    }
+
+
+    protected function setEnvironmentVariable($key, $oldValue, $newValue) {
+        $path = base_path('.env');
+
+        if (file_exists($path)) {
+            file_put_contents($path, str_replace(
+                "$key=" . $oldValue, "$key=" . $newValue, file_get_contents($path)
+            ));
+        } else {
+            $this->error('Please run `vagrant up`!');
+        }
+    }
+}

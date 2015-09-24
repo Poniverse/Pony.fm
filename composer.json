@@ -10,7 +10,8 @@
         "codescale/ffmpeg-php": "2.7.0",
         "kriswallsmith/assetic": "1.2.*@dev",
         "intouch/laravel-newrelic": "*",
-        "barryvdh/laravel-ide-helper": "^2.1"
+        "barryvdh/laravel-ide-helper": "^2.1",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
