@@ -82,7 +82,7 @@
 				<li><a href="/register" target="_self">Register</a></li>
 			@endif
             <li class="x-poniverseCredit">
-                <a href="https://poniverse.net/" title="Poniverse: The Pony Supercommunity">
+                <a href="https://poniverse.net/" title="Poniverse: The Pony Supercommunity" target="_blank">
                     <span>A community project by</span>
                     <img src="/images/poniverse.svg" alt="Poniverse logo"/>
                 </a>
