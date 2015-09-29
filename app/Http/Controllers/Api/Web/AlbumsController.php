@@ -75,7 +75,7 @@ class AlbumsController extends ApiControllerBase
         $query = Album::summary()
             ->with('user', 'user.avatar', 'cover')
             ->userDetails()
-            ->orderBy('created_at', 'desc')
+            ->orderBy('title', 'asc')
             ->where('track_count', '>', 0);
 
         $count = $query->count();

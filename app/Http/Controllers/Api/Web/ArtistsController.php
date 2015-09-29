@@ -167,7 +167,7 @@ class ArtistsController extends ApiControllerBase
             $page = Input::get('page');
         }
 
-        $query = User::orderBy('created_at', 'desc')
+        $query = User::orderBy('display_name', 'asc')
             ->where('track_count', '>', 0);
 
         $count = $query->count();

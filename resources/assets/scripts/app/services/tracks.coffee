@@ -184,6 +184,7 @@ angular.module('ponyfm').factory('tracks', [
 						{title: 'Most Played', query: 'plays', isDefault: false, filter: 'order=play_count,desc'},
 						{title: 'Most Downloaded', query: 'downloads', isDefault: false, filter: 'order=download_count,desc'},
 						{title: 'Most Favourited', query: 'favourites', isDefault: false, filter: 'order=favourite_count,desc'}
+						{title: 'Alphabetical', query: 'alphabetical', isDefault: false, filter: 'order=title,asc'},
 					]
 
 				self.filters.genres =
