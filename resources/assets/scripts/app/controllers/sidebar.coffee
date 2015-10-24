@@ -38,4 +38,13 @@ angular.module('ponyfm').controller "sidebar", [
 			]).open().then (res) ->
 				return if res == 'cancel'
 				playlists.deletePlaylist playlist
+
+
+		$scope.showCredits = () ->
+			dialog = $dialog.dialog
+				templateUrl: '/templates/partials/credits-dialog.html'
+				controller: 'credits'
+
+			dialog.open()
+
 ]
