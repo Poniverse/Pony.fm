@@ -28,4 +28,16 @@ return [
 
     'sendfile' => env('USE_SENDFILE', true),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google Analytics ID
+    |--------------------------------------------------------------------------
+    |
+    | If provided, Pony.fm will track activity in the given Google Analytics
+    | profile.
+    |
+    */
+
+    'google_analytics_id' => env('GOOGLE_ANALYTICS_ID', null),
+
 ];

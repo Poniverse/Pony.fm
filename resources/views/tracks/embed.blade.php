@@ -26,7 +26,7 @@
 		<div class="player loading {{Auth::check() ? 'can-favourite' : ''}} {{$user['is_favourited'] ? 'favourited' : ''}}" data-track-id="{{ $track->id }}" data-duration="{{ $track->duration * 1000 }}">
 			<div class="play" disabled="disabled">
 				<div class="button"><i class="icon-play"></i></div>
-				<img src="{{ $track->getCoverUrl(\App\Image::SMALL) }}" />
+				<img src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Image::SMALL) }}" />
 			</div>
 			<div class="meta">
 				@if (Auth::check())
@@ -52,17 +52,19 @@
 
 	{!! Assets::scriptIncludes('embed') !!}
 
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-29463256-1']);
-		_gaq.push(['_setDomainName', 'pony.fm']);
-		_gaq.push(['_trackPageview']);
+    @if(config('ponyfm.google_analytics_id'))
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', '{{ config('ponyfm.google_analytics_id') }}']);
+            _gaq.push(['_setDomainName', 'pony.fm']);
+            _gaq.push(['_trackPageview']);
 
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    @endif
 </body>
 </html>

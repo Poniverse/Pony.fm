@@ -2,11 +2,12 @@ window.pfm.preloaders = {}
 
 module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'pasvaz.bindonce', 'angularytics']
 
-module.run [
-	'Angularytics',
-	(analyitcs) ->
-		analyitcs.init()
-]
+if window.pfm.environment == 'production'
+	module.run [
+		'Angularytics',
+		(analytics) ->
+			analytics.init()
+	]
 
 module.config [
 	'$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider'
@@ -26,7 +27,8 @@ module.config [
 			'/templates/directives/*'
 		]
 
-		analytics.setEventHandlers ['Google']
+		if window.pfm.environment == 'production'
+			analytics.setEventHandlers ['Google']
 
 		# Errors
 		state.state 'errors-404',

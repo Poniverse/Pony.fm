@@ -1,6 +1,6 @@
 <?php
 
-use App\Track;
+use Poniverse\Ponyfm\Track;
 use Illuminate\Database\Migrations\Migration;
 
 class UpdateTrackHash extends Migration

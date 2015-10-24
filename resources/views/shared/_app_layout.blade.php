@@ -32,7 +32,7 @@
 			@if (Auth::check())
 				<div class="user-details dropdown">
 					<a class="avatar dropdown-toggle" href="#">
-						<img src="{{Auth::user()->getAvatarUrl(\App\Image::THUMBNAIL)}}" />
+						<img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Image::THUMBNAIL)}}" />
 						<span><i class="icon-chevron-down"></i></span>
 					</a>
 					<ul class="dropdown-menu">
@@ -112,22 +112,25 @@
 				@else
 					isLogged: false
 				@endif
-			}
+			},
+            environment: "{{ App::environment() }}"
 		};
 	</script>
 
-	<script>
-		{{-- Google Analytics --}}
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-29463256-1']);
-		_gaq.push(['_setDomainName', 'pony.fm']);
+    @if(config('ponyfm.google_analytics_id'))
+        <script>
+            {{-- Google Analytics --}}
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', '{{ config('ponyfm.google_analytics_id') }}']);
+            _gaq.push(['_setDomainName', 'pony.fm']);
 
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    @endif
 
 	{!! Assets::scriptIncludes() !!}
 
