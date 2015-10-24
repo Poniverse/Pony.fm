@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Running apt-get update..."
-#sudo apt-get -qq update
+sudo apt-get -qq update
 
 echo "Installing tagging tools..."
 sudo apt-get -qq install -y AtomicParsley flac vorbis-tools imagemagick
