@@ -105,7 +105,6 @@ angular.module('ponyfm').controller "account-track", [
 			xhr.send formData
 
 		tracks.getEdit($state.params.track_id).done (track) ->
-			console.log (track.album_id);
 			$scope.edit =
 				id: track.id
 				title: track.title
