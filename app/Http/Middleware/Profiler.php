@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Poniverse\Ponyfm\Http\Middleware;
 
 use App;
 use Closure;
@@ -8,7 +8,7 @@ use Cache;
 use Config;
 use DB;
 use Log;
-use App\ProfileRequest;
+use Poniverse\Ponyfm\ProfileRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class Profiler

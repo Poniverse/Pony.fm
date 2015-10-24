@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
 use Illuminate\Database\Eloquent\Model;
 

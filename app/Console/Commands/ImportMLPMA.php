@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Poniverse\Ponyfm\Console\Commands;
 
-use App\Album;
-use App\Commands\UploadTrackCommand;
-use App\Genre;
-use App\Image;
-use App\Track;
-use App\User;
+use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Commands\UploadTrackCommand;
+use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\User;
 use Auth;
 use Carbon\Carbon;
 use Config;

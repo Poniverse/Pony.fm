@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Poniverse\Ponyfm\Console\Commands;
 
-use App\Track;
+use Poniverse\Ponyfm\Track;
 use Illuminate\Console\Command;
 
 class RebuildTags extends Command

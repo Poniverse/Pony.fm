@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\Album;
+use Poniverse\Ponyfm\Album;
 use Illuminate\Support\Facades\Auth;
 
 class DeleteAlbumCommand extends CommandBase

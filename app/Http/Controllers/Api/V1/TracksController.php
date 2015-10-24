@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\V1;
 
-use App\Image;
-use App\Track;
+use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Track;
 use Cover;
 use Illuminate\Support\Facades\Response;
 

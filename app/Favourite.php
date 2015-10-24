@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,22 +17,22 @@ class Favourite extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Poniverse\Ponyfm\User');
     }
 
     public function track()
     {
-        return $this->belongsTo('App\Track');
+        return $this->belongsTo('Poniverse\Ponyfm\Track');
     }
 
     public function album()
     {
-        return $this->belongsTo('App\Album');
+        return $this->belongsTo('Poniverse\Ponyfm\Album');
     }
 
     public function playlist()
     {
-        return $this->belongsTo('App\Playlist');
+        return $this->belongsTo('Poniverse\Ponyfm\Playlist');
     }
 
     /**

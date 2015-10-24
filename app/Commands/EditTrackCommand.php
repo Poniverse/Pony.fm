@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\Album;
-use App\Image;
-use App\Track;
-use App\User;
+use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\Web;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use App\Http\Controllers\Controller;
-use App\ProfileRequest;
+use Poniverse\Ponyfm\Http\Controllers\Controller;
+use Poniverse\Ponyfm\ProfileRequest;
 use Cache;
 use Config;
 use Response;

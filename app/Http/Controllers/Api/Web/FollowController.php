@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\Web;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use App\Commands\ToggleFollowingCommand;
-use App\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Commands\ToggleFollowingCommand;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Illuminate\Support\Facades\Input;
 
 class FollowController extends ApiControllerBase

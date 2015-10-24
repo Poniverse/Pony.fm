@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace Poniverse\Ponyfm\Events;
 
 abstract class Event
 {

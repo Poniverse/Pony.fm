@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\Web;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use App\Album;
-use App\Commands\ToggleFavouriteCommand;
-use App\Favourite;
-use App\Http\Controllers\ApiControllerBase;
-use App\Playlist;
-use App\Track;
+use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Commands\ToggleFavouriteCommand;
+use Poniverse\Ponyfm\Favourite;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Playlist;
+use Poniverse\Ponyfm\Track;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;

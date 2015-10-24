@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http;
+namespace Poniverse\Ponyfm\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -13,12 +13,12 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \App\Http\Middleware\EncryptCookies::class,
+        \Poniverse\Ponyfm\Http\Middleware\EncryptCookies::class,
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \App\Http\Middleware\VerifyCsrfToken::class,
-        \App\Http\Middleware\Profiler::class,
+        \Poniverse\Ponyfm\Http\Middleware\VerifyCsrfToken::class,
+        \Poniverse\Ponyfm\Http\Middleware\Profiler::class,
     ];
 
     /**
@@ -27,9 +27,9 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth' => \Poniverse\Ponyfm\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'csrf' => \App\Http\Middleware\VerifyCsrfHeader::class,
+        'guest' => \Poniverse\Ponyfm\Http\Middleware\RedirectIfAuthenticated::class,
+        'csrf' => \Poniverse\Ponyfm\Http\Middleware\VerifyCsrfHeader::class,
     ];
 }

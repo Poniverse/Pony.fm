@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Poniverse\Ponyfm\Console\Commands;
 
-use App\Image;
-use App\ResourceLogItem;
+use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\ResourceLogItem;
 use DB;
 use Exception;
 use Illuminate\Console\Command;

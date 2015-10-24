@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console;
+namespace Poniverse\Ponyfm\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -13,14 +13,14 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\MigrateOldData::class,
-        \App\Console\Commands\RefreshCache::class,
-        \App\Console\Commands\ImportMLPMA::class,
-        \App\Console\Commands\ClassifyMLPMA::class,
-        \App\Console\Commands\RebuildTags::class,
-        \App\Console\Commands\FixYearZeroLogs::class,
-        \App\Console\Commands\BootstrapLocalEnvironment::class,
-        \App\Console\Commands\PoniverseApiSetup::class,
+        \Poniverse\Ponyfm\Console\Commands\MigrateOldData::class,
+        \Poniverse\Ponyfm\Console\Commands\RefreshCache::class,
+        \Poniverse\Ponyfm\Console\Commands\ImportMLPMA::class,
+        \Poniverse\Ponyfm\Console\Commands\ClassifyMLPMA::class,
+        \Poniverse\Ponyfm\Console\Commands\RebuildTags::class,
+        \Poniverse\Ponyfm\Console\Commands\FixYearZeroLogs::class,
+        \Poniverse\Ponyfm\Console\Commands\BootstrapLocalEnvironment::class,
+        \Poniverse\Ponyfm\Console\Commands\PoniverseApiSetup::class,
     ];
 
     /**

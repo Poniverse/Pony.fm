@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\Playlist;
-use App\Track;
+use Poniverse\Ponyfm\Playlist;
+use Poniverse\Ponyfm\Track;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

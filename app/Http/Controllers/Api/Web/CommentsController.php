@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\Web;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use App;
-use App\Commands\CreateCommentCommand;
-use App\Comment;
-use App\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Commands\CreateCommentCommand;
+use Poniverse\Ponyfm\Comment;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 

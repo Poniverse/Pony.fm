@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions;
+namespace Poniverse\Ponyfm\Exceptions;
 
 use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;

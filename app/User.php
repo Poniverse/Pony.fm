@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
 use Exception;
 use Gravatar;
@@ -35,17 +35,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function avatar()
     {
-        return $this->belongsTo('App\Image');
+        return $this->belongsTo('Poniverse\Ponyfm\Image');
     }
 
     public function users()
     {
-        return $this->hasMany('App\ResourceUser', 'artist_id');
+        return $this->hasMany('Poniverse\Ponyfm\ResourceUser', 'artist_id');
     }
 
     public function comments()
     {
-        return $this->hasMany('App\Comment', 'profile_id')->orderBy('created_at', 'desc');
+        return $this->hasMany('Poniverse\Ponyfm\Comment', 'profile_id')->orderBy('created_at', 'desc');
     }
 
     public function getIsArchivedAttribute()

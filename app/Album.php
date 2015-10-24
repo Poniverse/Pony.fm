@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
-use App\Traits\SlugTrait;
+use Poniverse\Ponyfm\Traits\SlugTrait;
 use Helpers;
 
 class Album extends Model
@@ -40,32 +40,32 @@ class Album extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Poniverse\Ponyfm\User');
     }
 
     public function users()
     {
-        return $this->hasMany('App\ResourceUser');
+        return $this->hasMany('Poniverse\Ponyfm\ResourceUser');
     }
 
     public function favourites()
     {
-        return $this->hasMany('App\Favourite');
+        return $this->hasMany('Poniverse\Ponyfm\Favourite');
     }
 
     public function cover()
     {
-        return $this->belongsTo('App\Image');
+        return $this->belongsTo('Poniverse\Ponyfm\Image');
     }
 
     public function tracks()
     {
-        return $this->hasMany('App\Track')->orderBy('track_number', 'asc');
+        return $this->hasMany('Poniverse\Ponyfm\Track')->orderBy('track_number', 'asc');
     }
 
     public function comments()
     {
-        return $this->hasMany('App\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('Poniverse\Ponyfm\Comment')->orderBy('created_at', 'desc');
     }
 
     public static function mapPublicAlbumShow($album)

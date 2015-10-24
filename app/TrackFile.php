@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +12,7 @@ class TrackFile extends Model
 {
     public function track()
     {
-        return $this->belongsTo('App\Track');
+        return $this->belongsTo('Poniverse\Ponyfm\Track');
     }
 
     /**

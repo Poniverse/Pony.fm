@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Poniverse\Ponyfm\Console\Commands;
 
 use Illuminate\Console\Command;
 

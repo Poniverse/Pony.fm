@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\Track;
+use Poniverse\Ponyfm\Track;
 
 class DeleteTrackCommand extends CommandBase
 {

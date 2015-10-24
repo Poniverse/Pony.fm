@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\Mobile;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Mobile;
 
-use App\Http\Controllers\Controller;
-use App\Track;
+use Poniverse\Ponyfm\Http\Controllers\Controller;
+use Poniverse\Ponyfm\Track;
 use Response;
 
 class TracksController extends Controller

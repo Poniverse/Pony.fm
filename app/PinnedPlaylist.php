@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +10,11 @@ class PinnedPlaylist extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Poniverse\Ponyfm\User');
     }
 
     public function playlist()
     {
-        return $this->belongsTo('App\Playlist');
+        return $this->belongsTo('Poniverse\Ponyfm\Playlist');
     }
 }

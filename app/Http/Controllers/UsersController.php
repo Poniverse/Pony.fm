@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Poniverse\Ponyfm\Http\Controllers;
 
-use App\User;
+use Poniverse\Ponyfm\User;
 use File;
 use Illuminate\Support\Facades\App;
 

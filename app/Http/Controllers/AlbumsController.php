@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Poniverse\Ponyfm\Http\Controllers;
 
-use App\AlbumDownloader;
+use Poniverse\Ponyfm\AlbumDownloader;
 use App;
-use App\Album;
-use App\ResourceLogItem;
-use App\Track;
+use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\ResourceLogItem;
+use Poniverse\Ponyfm\Track;
 use Illuminate\Support\Facades\Redirect;
 use View;
 

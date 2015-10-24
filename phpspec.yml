@@ -1,5 +1,5 @@
 suites:
     main:
-        namespace: App
-        psr4_prefix: App
+        namespace: Poniverse\Ponyfm
+        psr4_prefix: Poniverse\Ponyfm
         src_path: app

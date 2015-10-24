@@ -140,9 +140,9 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        Poniverse\Ponyfm\Providers\AppServiceProvider::class,
+        Poniverse\Ponyfm\Providers\EventServiceProvider::class,
+        Poniverse\Ponyfm\Providers\RouteServiceProvider::class,
 
         Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,

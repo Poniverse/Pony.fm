@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Poniverse\Ponyfm\Console\Commands;
 
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Console\Command;

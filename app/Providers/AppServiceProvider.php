@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Poniverse\Ponyfm\Providers;
 
 use App;
 use Auth;

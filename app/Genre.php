@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
-use App\Traits\SlugTrait;
+use Poniverse\Ponyfm\Traits\SlugTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Genre extends Model

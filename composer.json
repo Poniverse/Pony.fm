@@ -25,7 +25,7 @@
             "app/Library"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "Poniverse\\Ponyfm\\": "app/"
         }
     },
     "autoload-dev": {

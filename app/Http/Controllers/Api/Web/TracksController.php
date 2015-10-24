@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\Web;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use App\Commands\DeleteTrackCommand;
-use App\Commands\EditTrackCommand;
-use App\Commands\UploadTrackCommand;
-use App\Http\Controllers\ApiControllerBase;
-use App\ResourceLogItem;
-use App\Track;
+use Poniverse\Ponyfm\Commands\DeleteTrackCommand;
+use Poniverse\Ponyfm\Commands\EditTrackCommand;
+use Poniverse\Ponyfm\Commands\UploadTrackCommand;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\ResourceLogItem;
+use Poniverse\Ponyfm\Track;
 use Cover;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;

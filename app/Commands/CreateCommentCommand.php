@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\Album;
-use App\Comment;
-use App\Playlist;
-use App\Track;
-use App\User;
+use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Comment;
+use Poniverse\Ponyfm\Playlist;
+use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Poniverse\Ponyfm\Http\Controllers;
 
-use App\ResourceLogItem;
-use App\Track;
-use App\TrackFile;
+use Poniverse\Ponyfm\ResourceLogItem;
+use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\TrackFile;
 use Auth;
 use Config;
 use Illuminate\Support\Facades\App;

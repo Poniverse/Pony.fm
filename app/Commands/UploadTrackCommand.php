@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\Track;
-use App\TrackFile;
+use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\TrackFile;
 use AudioCache;
 use File;
 use Illuminate\Support\Facades\Log;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
-use App\Traits\SlugTrait;
+use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
 use getid3_writetags;
@@ -332,52 +332,52 @@ class Track extends Model
 
     public function genre()
     {
-        return $this->belongsTo('App\Genre');
+        return $this->belongsTo('Poniverse\Ponyfm\Genre');
     }
 
     public function trackType()
     {
-        return $this->belongsTo('App\TrackType', 'track_type_id');
+        return $this->belongsTo('Poniverse\Ponyfm\TrackType', 'track_type_id');
     }
 
     public function comments()
     {
-        return $this->hasMany('App\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('Poniverse\Ponyfm\Comment')->orderBy('created_at', 'desc');
     }
 
     public function favourites()
     {
-        return $this->hasMany('App\Favourite');
+        return $this->hasMany('Poniverse\Ponyfm\Favourite');
     }
 
     public function cover()
     {
-        return $this->belongsTo('App\Image');
+        return $this->belongsTo('Poniverse\Ponyfm\Image');
     }
 
     public function showSongs()
     {
-        return $this->belongsToMany('App\ShowSong');
+        return $this->belongsToMany('Poniverse\Ponyfm\ShowSong');
     }
 
     public function users()
     {
-        return $this->hasMany('App\ResourceUser');
+        return $this->hasMany('Poniverse\Ponyfm\ResourceUser');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Poniverse\Ponyfm\User');
     }
 
     public function album()
     {
-        return $this->belongsTo('App\Album');
+        return $this->belongsTo('Poniverse\Ponyfm\Album');
     }
 
     public function trackFiles()
     {
-        return $this->hasMany('App\TrackFile');
+        return $this->hasMany('Poniverse\Ponyfm\TrackFile');
     }
 
     public function getYearAttribute()

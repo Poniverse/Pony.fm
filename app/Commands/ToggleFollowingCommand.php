@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\Follower;
-use App\ResourceUser;
+use Poniverse\Ponyfm\Follower;
+use Poniverse\Ponyfm\ResourceUser;
 use Illuminate\Support\Facades\Auth;
 
 class ToggleFollowingCommand extends CommandBase

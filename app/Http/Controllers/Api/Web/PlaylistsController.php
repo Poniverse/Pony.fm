@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api\Web;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use App\Commands\AddTrackToPlaylistCommand;
-use App\Commands\CreatePlaylistCommand;
-use App\Commands\DeletePlaylistCommand;
-use App\Commands\EditPlaylistCommand;
-use App\Http\Controllers\ApiControllerBase;
-use App\Image;
-use App\Playlist;
-use App\ResourceLogItem;
+use Poniverse\Ponyfm\Commands\AddTrackToPlaylistCommand;
+use Poniverse\Ponyfm\Commands\CreatePlaylistCommand;
+use Poniverse\Ponyfm\Commands\DeletePlaylistCommand;
+use Poniverse\Ponyfm\Commands\EditPlaylistCommand;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Playlist;
+use Poniverse\Ponyfm\ResourceLogItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;

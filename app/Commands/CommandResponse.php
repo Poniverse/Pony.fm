@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
 use Illuminate\Validation\Validator;
 

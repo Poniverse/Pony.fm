@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace Poniverse\Ponyfm\Traits;
 
 use Illuminate\Support\Str;
 

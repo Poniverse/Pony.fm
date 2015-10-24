@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\PinnedPlaylist;
-use App\Playlist;
+use Poniverse\Ponyfm\PinnedPlaylist;
+use Poniverse\Ponyfm\Playlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 

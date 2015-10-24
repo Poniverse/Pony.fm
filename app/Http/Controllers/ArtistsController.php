@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Poniverse\Ponyfm\Http\Controllers;
 
 use App;
-use App\User;
+use Poniverse\Ponyfm\User;
 use View;
 use Redirect;
 

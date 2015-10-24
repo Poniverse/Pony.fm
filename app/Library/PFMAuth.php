@@ -21,6 +21,6 @@ class PFMAuth extends EloquentUserProvider
 {
     function __construct()
     {
-        parent::__construct(new NullHasher(), 'App\User');
+        parent::__construct(new NullHasher(), 'Poniverse\Ponyfm\User');
     }
 }

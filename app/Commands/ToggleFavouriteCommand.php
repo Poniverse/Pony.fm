@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Commands;
+namespace Poniverse\Ponyfm\Commands;
 
-use App\Favourite;
-use App\ResourceUser;
+use Poniverse\Ponyfm\Favourite;
+use Poniverse\Ponyfm\ResourceUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

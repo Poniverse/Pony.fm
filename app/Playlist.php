@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Poniverse\Ponyfm;
 
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
-use App\Traits\SlugTrait;
+use Poniverse\Ponyfm\Traits\SlugTrait;
 
 class Playlist extends Model
 {
@@ -127,7 +127,7 @@ class Playlist extends Model
     public function tracks()
     {
         return $this
-            ->belongsToMany('App\Track')
+            ->belongsToMany('Poniverse\Ponyfm\Track')
             ->withPivot('position')
             ->withTimestamps()
             ->orderBy('position', 'asc');
@@ -135,22 +135,22 @@ class Playlist extends Model
 
     public function users()
     {
-        return $this->hasMany('App\ResourceUser');
+        return $this->hasMany('Poniverse\Ponyfm\ResourceUser');
     }
 
     public function comments()
     {
-        return $this->hasMany('App\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('Poniverse\Ponyfm\Comment')->orderBy('created_at', 'desc');
     }
 
     public function pins()
     {
-        return $this->hasMany('App\PinnedPlaylist');
+        return $this->hasMany('Poniverse\Ponyfm\PinnedPlaylist');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Poniverse\Ponyfm\User');
     }
 
     public function hasPinFor($userId)

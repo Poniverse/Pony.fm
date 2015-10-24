@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\Web;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use App\Genre;
-use App\Http\Controllers\ApiControllerBase;
-use App\License;
-use App\ShowSong;
-use App\TrackType;
+use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\License;
+use Poniverse\Ponyfm\ShowSong;
+use Poniverse\Ponyfm\TrackType;
 use Illuminate\Support\Facades\DB;
 
 class TaxonomiesController extends ApiControllerBase

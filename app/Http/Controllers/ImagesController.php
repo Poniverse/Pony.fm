@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Poniverse\Ponyfm\Http\Controllers;
 
-use App\Image;
+use Poniverse\Ponyfm\Image;
 use Config;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;

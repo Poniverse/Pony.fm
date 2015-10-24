@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\Web;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use App\Album;
-use App\Commands\CreateAlbumCommand;
-use App\Commands\DeleteAlbumCommand;
-use App\Commands\EditAlbumCommand;
-use App\Http\Controllers\ApiControllerBase;
-use App\Image;
-use App\ResourceLogItem;
+use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Commands\CreateAlbumCommand;
+use Poniverse\Ponyfm\Commands\DeleteAlbumCommand;
+use Poniverse\Ponyfm\Commands\EditAlbumCommand;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\ResourceLogItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;

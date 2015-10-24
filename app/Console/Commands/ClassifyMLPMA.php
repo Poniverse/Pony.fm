@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Poniverse\Ponyfm\Console\Commands;
 
-use App\ShowSong;
-use App\Track;
-use App\TrackType;
+use Poniverse\Ponyfm\ShowSong;
+use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\TrackType;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;

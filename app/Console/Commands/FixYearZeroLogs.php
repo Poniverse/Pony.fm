@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Poniverse\Ponyfm\Console\Commands;
 
 use Carbon\Carbon;
-use App\ResourceLogItem;
+use Poniverse\Ponyfm\ResourceLogItem;
 use Illuminate\Console\Command;
 
 class FixYearZeroLogs extends Command
