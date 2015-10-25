@@ -1,3 +1,27 @@
+Pony.fm
+=======
+
+The community for pony fan music.
+
+For artists, Pony.fm features unlimited uploads and downloads, automatic
+transcoding to a number of audio formats, and synchronized tags in all
+downloads.
+
+For listeners, Pony.fm offers unlimited streaming and downloading, user-generated
+playlists, favourite lists, and a way of discovering new music with pony-based
+taxonomies.
+
+
+Contributing
+------------
+If you've run across a bug or have a feature request, open a GitHub issue for it.
+
+For quick fixes, go ahead and submit a pull request!
+
+For larger features, it's best to open a ticket before sinking a ton of work
+into building them, to coordinate with Pony.fm's maintainers.
+
+
 # Starting a dev environment
 
 To begin development, you must do three things:

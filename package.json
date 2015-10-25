@@ -6,7 +6,9 @@
     "url": "ssh://git@phabricator.poniverse.net/diffusion/PF/pony-fm.git"
   },
   "packages": {},
-  "dependencies": {},
+  "dependencies": {
+    "gulp-header": "^1.7.1"
+  },
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.6.0",

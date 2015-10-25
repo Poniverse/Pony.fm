@@ -1,3 +1,21 @@
+{{--
+    Pony.fm - A community for pony fan music.
+    Copyright (C) 2015 Peter Deltchev
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--}}
+
 @extends('shared._layout')
 
 @section('content')
@@ -26,7 +44,6 @@
     <header>
         <a href="/">
             <img src="/images/fm_logo_white.svg" class="logo">
-            <!-- <img src="https://poniverse.net/img/logos/fm_logo.svg" class="logo"> -->
         </a>
         <div class="now-playing">
             @if (Auth::check())
@@ -85,10 +102,12 @@
                 <a ng-click="showCredits()" href="#" title="Pony.fm project credits">
                     @if(config('ponyfm.use_powered_by_footer'))
                         <span>Powered by</span>
-                        <img src="/images/fm_logo_white.svg" alt="Pony.fm logo"/>
+                        <img src="/images/fm_logo_white.svg" alt="Pony.fm logo" title="Pony.fm"/>
+                        <span>We&#39;re open-source!</span>
                     @else
-                        <span>A community project by</span>
-                        <img src="/images/poniverse.svg" alt="Poniverse logo"/>
+                        <span>A community by</span>
+                        <img src="/images/poniverse.svg" alt="Poniverse logo" title="Poniverse"/>
+                        <span>Now 20% more <span class="x-caps">FOSS</span>!</span>
                     @endif
                 </a>
             </li>

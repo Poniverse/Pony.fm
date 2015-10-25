@@ -1,10 +1,51 @@
+/**
+ * Pony.fm - A community for pony fan music.
+ * Copyright (C) 2015 Peter Deltchev
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 var gulp = require("gulp"),
     plug = require("gulp-load-plugins")(),
-    argv = require("yargs").argv;
+    argv = require("yargs").argv,
+    header = require("gulp-header");
 
 var plumberOptions = {
     errorHandler: plug.notify.onError("Error: <%= error.message %>")
 };
+
+var licenseHeader = [
+    "/**",
+    "* Pony.fm - A community for pony fan music.",
+    "* Copyright (C) 2015 Peter Deltchev and others",
+    "*",
+    "* This program is free software: you can redistribute it and/or modify",
+    "* it under the terms of the GNU Affero General Public License as published by",
+    "* the Free Software Foundation, either version 3 of the License, or",
+    "* (at your option) any later version.",
+    "*",
+    "* This program is distributed in the hope that it will be useful,",
+    "* but WITHOUT ANY WARRANTY; without even the implied warranty of",
+    "* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
+    "* GNU Affero General Public License for more details.",
+    "*",
+    "* You should have received a copy of the GNU Affero General Public License",
+    "* along with this program.  If not, see <http://www.gnu.org/licenses/>.",
+    "*/",
+    "",
+    ""
+].join('\n')
 
 gulp.task("scripts-app", function () {
     var paths = [
@@ -42,6 +83,7 @@ gulp.task("scripts-app", function () {
         .pipe(plug.if(/\.coffee/, plug.coffee()))
         .pipe(plug.concat("app.js"))
         .pipe(plug.uglify())
+        .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/scripts"))
         // Development/watch pipeline
         : gulp.src(paths, {base: "resources/assets/scripts"})
@@ -53,6 +95,7 @@ gulp.task("scripts-app", function () {
             includeContent: false,
             sourceRoot: "/dev-scripts/"
         }))
+        .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/scripts"));
 });
 
@@ -77,6 +120,7 @@ gulp.task("scripts-embed", function () {
         .pipe(plug.order(includedScripts, {base: "."}))
         .pipe(plug.concat("embed.js"))
         .pipe(plug.uglify())
+        .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/scripts"));
 });
 
@@ -124,6 +168,7 @@ gulp.task("styles-app", function () {
         }))
         .pipe(plug.concat("app.css"))
         .pipe(plug.minifyCss())
+        .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/styles"))
         // Development pipeline
         : gulp.src(includedStyles, {base: "resources/assets/styles"})
@@ -135,6 +180,7 @@ gulp.task("styles-app", function () {
             includeContent: false,
             sourceRoot: "/dev-styles/"
         }))
+        .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/styles"))
         .pipe(plug.livereload());
 });
@@ -152,6 +198,7 @@ gulp.task("styles-embed", function () {
         }))
         .pipe(plug.concat("embed.css"))
         .pipe(plug.minifyCss())
+        .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/styles"));
 });
 
@@ -163,6 +210,7 @@ gulp.task('copy:templates', function () {
             module: "ponyfm",
             root: "/templates"
         }))
+        .pipe(header(licenseHeader))
         .pipe(gulp.dest('public/build/scripts'));
 });
 
@@ -170,7 +218,7 @@ gulp.task('build', [
     'scripts-app',
     'styles-app',
     'scripts-embed',
-    'styles-embed',
+    'styles-embed'
 ]);
 
 gulp.task("watch", function () {

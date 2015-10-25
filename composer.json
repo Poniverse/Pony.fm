@@ -1,8 +1,8 @@
 {
     "name": "poniverse/pony.fm",
-    "description": "The pony music hosting site.",
+    "description": "A community for pony fan music.",
     "keywords": ["music", "pony", "php", "laravel"],
-    "license": "Proprietary",
+    "license": "AGPL",
     "type": "project",
     "require": {
         "php": ">=5.5.9",
