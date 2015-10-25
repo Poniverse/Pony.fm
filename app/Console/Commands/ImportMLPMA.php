@@ -167,12 +167,12 @@ class ImportMLPMA extends Command
                 list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
 
             } elseif (Str::lower($file->getExtension()) === 'wav') {
-	            list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
+                list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
 
             }
 
 
-		    //==========================================================================================================
+            //==========================================================================================================
             // Determine the release date.
             //==========================================================================================================
             $modifiedDate = Carbon::createFromTimeStampUTC(File::lastModified($file->getPathname()));

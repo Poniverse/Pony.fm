@@ -10,58 +10,58 @@ ul.playlists {
   margin-top: 10px;
 
   li {
-	overflow: hidden;
-	margin: 0px;
-	padding: 0px;
-	height: 40px;
-	border-bottom: 1px solid #ddd;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    height: 40px;
+    border-bottom: 1px solid #ddd;
 
-	img {
-	  border-right: 1px solid #ddd;
-	  padding: 0px;
-	  display: block;
-	  height: 40px;
-	  width: 40px;
-	  float: left;
-	}
+    img {
+      border-right: 1px solid #ddd;
+      padding: 0px;
+      display: block;
+      height: 40px;
+      width: 40px;
+      float: left;
+    }
 
-	.btn-group {
-	  float: right;
-	  display: block;
-	  margin-top: 7px;
-	  margin-right: 7px;
+    .btn-group {
+      float: right;
+      display: block;
+      margin-top: 7px;
+      margin-right: 7px;
 
-	  .btn {
-		.border-radius(0px);
-	  }
-	}
+      .btn {
+        .border-radius(0px);
+      }
+    }
 
-	a.main {
-	  display: block;
-	  text-decoration: none;
-	  color: #444;
+    a.main {
+      display: block;
+      text-decoration: none;
+      color: #444;
 
-	  .is-public {
-		display: block;
-		float: right;
-		font-weight: bold;
-		margin-top: 10px;
-		margin-right: 10px;
-		font-size: 8pt;
-	  }
+      .is-public {
+        display: block;
+        float: right;
+        font-weight: bold;
+        margin-top: 10px;
+        margin-right: 10px;
+        font-size: 8pt;
+      }
 
-	  .title {
-		.ellipsis();
-		margin-left: 50px;
-		line-height: 40px;
-		height: 40px;
-		display: block;
-	  }
+      .title {
+        .ellipsis();
+        margin-left: 50px;
+        line-height: 40px;
+        height: 40px;
+        display: block;
+      }
 
-	  &:hover {
-		background: #eee;
-	  }
-	}
+      &:hover {
+        background: #eee;
+      }
+    }
   }
 }
 
@@ -71,65 +71,65 @@ ul.playlists {
   overflow-y: auto;
 
   ul {
-	list-style: none;
-	padding: 0px;
-	margin: 0px;
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
 
-	li {
-	  margin: 0px;
-	  float: left;
-	  width: 20%;
-	  cursor: pointer;
+    li {
+      margin: 0px;
+      float: left;
+      width: 20%;
+      cursor: pointer;
 
-	  img {
-		.transition(all 400ms);
-		display: block;
-		width: 100px;
-		height: 100px;
-	  }
+      img {
+        .transition(all 400ms);
+        display: block;
+        width: 100px;
+        height: 100px;
+      }
 
-	  &:hover {
-		img {
-		  opacity: .8;
-		}
-	  }
-	}
+      &:hover {
+        img {
+          opacity: .8;
+        }
+      }
+    }
   }
 }
 
 html {
   .two-pane-view.closed {
-	.account-albums-listing {
-	  li {
-		.box-sizing(border-box);
-		width: 20%;
+    .account-albums-listing {
+      li {
+        .box-sizing(border-box);
+        width: 20%;
 
-		a {
-		  padding: 15px;
+        a {
+          padding: 15px;
 
-		  .image {
-			.img-polaroid();
-			position: relative;
-			left: -5px;
-			width: 100%;
-			height: auto;
-			float: none;
-		  }
+          .image {
+            .img-polaroid();
+            position: relative;
+            left: -5px;
+            width: 100%;
+            height: auto;
+            float: none;
+          }
 
-		  .title {
-			margin: 0px;
-			font-size: 12pt;
-			padding: 0px;
-			margin-top: 5px;
-		  }
+          .title {
+            margin: 0px;
+            font-size: 12pt;
+            padding: 0px;
+            margin-top: 5px;
+          }
 
-		  .published {
-			margin: 0px;
-			padding: 0px;
-		  }
-		}
-	  }
-	}
+          .published {
+            margin: 0px;
+            padding: 0px;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -140,222 +140,222 @@ html {
   list-style: none;
 
   li {
-	.box-sizing(border-box);
+    .box-sizing(border-box);
 
-	padding: 0px;
-	margin: 0px;
-	line-height: normal;
+    padding: 0px;
+    margin: 0px;
+    line-height: normal;
 
-	&.empty {
-	  .alert();
-	  float: none !important;
-	  width: auto !important;
-	  display: block;
-	  padding: 5px;
-	  font-size: 9pt;
-	}
+    &.empty {
+      .alert();
+      float: none !important;
+      width: auto !important;
+      display: block;
+      padding: 5px;
+      font-size: 9pt;
+    }
 
-	&.is-not-published a {
-	  background: fadeout(@yellow, 90%);
-	}
+    &.is-not-published a {
+      background: fadeout(@yellow, 90%);
+    }
 
-	&.selected, &.selected:hover {
-	  a {
-		background: @pfm-purple;
-		cursor: default;
-		color: #fff;
+    &.selected, &.selected:hover {
+      a {
+        background: @pfm-purple;
+        cursor: default;
+        color: #fff;
 
-		.published {
-		  color: #eee;
-		}
-	  }
-	}
+        .published {
+          color: #eee;
+        }
+      }
+    }
 
-	a {
-	  .transition(350px ease-out all);
+    a {
+      .transition(350px ease-out all);
 
-	  display: block;
-	  margin: 0px;
-	  padding: 5px;
-	  font-size: 9pt;
-	  font-weight: normal;
-	  overflow: hidden;
+      display: block;
+      margin: 0px;
+      padding: 5px;
+      font-size: 9pt;
+      font-weight: normal;
+      overflow: hidden;
 
-	  .image {
-		width: 32px;
-		height: 32px;
-		float: left;
-		display: block;
-	  }
+      .image {
+        width: 32px;
+        height: 32px;
+        float: left;
+        display: block;
+      }
 
-	  .title {
-		.ellipsis();
-		display: block;
-		margin-left: 37px;
-	  }
+      .title {
+        .ellipsis();
+        display: block;
+        margin-left: 37px;
+      }
 
-	  .published {
-		display: block;
-		color: #777;
-		margin-left: 37px;
-		font-size: 8pt;
-	  }
+      .published {
+        display: block;
+        color: #777;
+        margin-left: 37px;
+        font-size: 8pt;
+      }
 
-	  &:hover {
-		background: #ddd;
-		text-decoration: none;
-	  }
-	}
+      &:hover {
+        background: #ddd;
+        text-decoration: none;
+      }
+    }
   }
 }
 
 .two-pane-view {
   .list {
-	.dropdowns {
-	  margin-top: 0px;
-	}
+    .dropdowns {
+      margin-top: 0px;
+    }
   }
 
   .editor {
-	display: none;
+    display: none;
 
-	.album-track-listing {
-	  padding: 0px;
-	  clear: both;
-	  margin: 0px;
-	  margin-top: 10px;
-	  list-style: none;
+    .album-track-listing {
+      padding: 0px;
+      clear: both;
+      margin: 0px;
+      margin-top: 10px;
+      list-style: none;
 
-	  li {
-		overflow: hidden;
-		line-height: normal;
-		padding: 0px;
-		margin: 0px;
-		font-size: 8pt;
-		border-bottom: 1px dashed #ddd;
+      li {
+        overflow: hidden;
+        line-height: normal;
+        padding: 0px;
+        margin: 0px;
+        font-size: 8pt;
+        border-bottom: 1px dashed #ddd;
 
-		div {
-		  padding: 2px;
-		}
+        div {
+          padding: 2px;
+        }
 
-		span {
-		  display: block;
-		  float: left;
-		  margin-left: 5px;
-		  margin-top: 2px;
-		}
+        span {
+          display: block;
+          float: left;
+          margin-left: 5px;
+          margin-top: 2px;
+        }
 
-		.btn {
-		  line-height: normal;
-		  padding: 2px 5px;
-		  margin: 0px;
-		}
+        .btn {
+          line-height: normal;
+          padding: 2px 5px;
+          margin: 0px;
+        }
 
-		&.ui-sortable-helper {
-		  #gradient>.vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
-		  border: none;
-		  color: #fff;
-		}
+        &.ui-sortable-helper {
+          #gradient>.vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
+          border: none;
+          color: #fff;
+        }
 
-		&.ui-sortable-placeholder {
-		  background: @yellow;
-		}
-	  }
-	}
+        &.ui-sortable-placeholder {
+          background: @yellow;
+        }
+      }
+    }
 
-	.show-songs, .album {
-	  .btn {
-		display: block;
-		float: none;
-	  }
-	}
+    .show-songs, .album {
+      .btn {
+        display: block;
+        float: none;
+      }
+    }
 
-	.show-songs, .album, .track-selector {
-	  .btn {
-		.border-radius(0px);
-		padding: 3px 10px;
-		font-size: 8pt;
-		text-align: left;
-	  }
+    .show-songs, .album, .track-selector {
+      .btn {
+        .border-radius(0px);
+        padding: 3px 10px;
+        font-size: 8pt;
+        text-align: left;
+      }
 
-	  .error {
-		margin-top: 10px;
-	  }
+      .error {
+        margin-top: 10px;
+      }
 
-	  .pfm-popup {
-		width: 300px;
+      .pfm-popup {
+        width: 300px;
 
-		ul {
-		  margin: 0px;
-		  padding: 0px;
-		  list-style: none;
+        ul {
+          margin: 0px;
+          padding: 0px;
+          list-style: none;
 
-		  li {
-			margin: 0px;
-			padding: 0px;
+          li {
+            margin: 0px;
+            padding: 0px;
 
-			a {
-			  .ellipsis();
-			  display: block;
-			  padding: 3px 10px;
-			  font-size: 8pt;
-			  color: #333333;
+            a {
+              .ellipsis();
+              display: block;
+              padding: 3px 10px;
+              font-size: 8pt;
+              color: #333333;
 
-			  &:hover {
-				#gradient>.vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
-				text-decoration: none;
-				color: @dropdownLinkColorHover;
-			  }
-			}
+              &:hover {
+                #gradient>.vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
+                text-decoration: none;
+                color: @dropdownLinkColorHover;
+              }
+            }
 
-			&.selected {
-			  a {
-				#gradient>.vertical(@green, darken(@green, 5%));
-				color: #fff;
-				font-weight: bold;
+            &.selected {
+              a {
+                #gradient>.vertical(@green, darken(@green, 5%));
+                color: #fff;
+                font-weight: bold;
 
-				&:hover {
-				  #gradient>.vertical(fadeout(@green, 20%), fadeout(darken(@green, 5%), 20%));
-				}
-			  }
-			}
-		  }
-		}
-	  }
-	}
+                &:hover {
+                  #gradient>.vertical(fadeout(@green, 20%), fadeout(darken(@green, 5%), 20%));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   &.closed {
-	.account-tracks-listing, .account-albums-listing {
-	  .clearfix();
+    .account-tracks-listing, .account-albums-listing {
+      .clearfix();
 
-	  li {
-		float: left;
-		width: 25%;
+      li {
+        float: left;
+        width: 25%;
 
-		&.empty {
-		}
-	  }
-	}
+        &.empty {
+        }
+      }
+    }
   }
 
   &.open {
-	.list {
-	  border-right: 2px solid #ddd;
+    .list {
+      border-right: 2px solid #ddd;
 
-	  width: 250px;
-	  float: left;
-	}
+      width: 250px;
+      float: left;
+    }
 
-	.editor {
-	  margin-left: 260px;
-	  margin-right: 10px;
-	  display: block;
+    .editor {
+      margin-left: 260px;
+      margin-right: 10px;
+      display: block;
 
-	  .stretch-to-bottom {
-		padding-right: 10px;
-	  }
-	}
+      .stretch-to-bottom {
+        padding-right: 10px;
+      }
+    }
   }
 }
 
@@ -366,53 +366,53 @@ html {
   list-style: none;
 
   li {
-	float: left;
-	width: 25%;
+    float: left;
+    width: 25%;
 
-	> div {
-	  margin: 0px 5px;
-	  border: 1px solid #ddd;
-	  padding: 10px;
-	  cursor: pointer;
+    > div {
+      margin: 0px 5px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      cursor: pointer;
 
-	  strong {
-		font-size: 9pt;
-		display: block;
-		margin: 0px;
-		margin-bottom: 5px;
-		padding: 0px;
-		line-height: normal;
-	  }
-	}
+      strong {
+        font-size: 9pt;
+        display: block;
+        margin: 0px;
+        margin-bottom: 5px;
+        padding: 0px;
+        line-height: normal;
+      }
+    }
 
-	p {
-	  min-height: 120px;
-	  font-size: 9pt;
-	}
+    p {
+      min-height: 120px;
+      font-size: 9pt;
+    }
 
-	a {
-	  .border-radius(0px);
-	  display: block;
-	  width: auto;
-	}
+    a {
+      .border-radius(0px);
+      display: block;
+      width: auto;
+    }
 
-	&.selected {
-	  > div {
-		cursor: default;
-		border-color: @blue;
-	  }
-	}
+    &.selected {
+      > div {
+        cursor: default;
+        border-color: @blue;
+      }
+    }
 
-	&:hover > div {
-	  border: 1px solid #3366CC;
-	}
+    &:hover > div {
+      border: 1px solid #3366CC;
+    }
 
-	&:first-child > div {
-	  margin-left: 0px;
-	}
+    &:first-child > div {
+      margin-left: 0px;
+    }
 
-	&:last-child > div {
-	  margin-right: 0px;
-	}
+    &:last-child > div {
+      margin-right: 0px;
+    }
   }
 }

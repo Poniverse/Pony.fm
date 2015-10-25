@@ -78,25 +78,25 @@ class CreateCommentCommand extends CommandBase
         $comment->$column = $this->_id;
         $comment->save();
 
-	    // Recount the track's comments, if this is a track comment
-	    if ($this->_type === 'track') {
-		    $entity = Track::find($this->_id);
+        // Recount the track's comments, if this is a track comment
+        if ($this->_type === 'track') {
+            $entity = Track::find($this->_id);
 
-	    } elseif ($this->_type === 'album') {
-		    $entity = Album::find($this->_id);
+        } elseif ($this->_type === 'album') {
+            $entity = Album::find($this->_id);
 
-	    } elseif ($this->_type === 'playlist') {
-		    $entity = Playlist::find($this->_id);
+        } elseif ($this->_type === 'playlist') {
+            $entity = Playlist::find($this->_id);
 
-	    } elseif ($this->_type === 'user') {
-		    $entity = User::find($this->_id);
+        } elseif ($this->_type === 'user') {
+            $entity = User::find($this->_id);
 
-	    } else {
-		    App::abort(400, 'This comment is being added to an invalid entity!');
-	    }
+        } else {
+            App::abort(400, 'This comment is being added to an invalid entity!');
+        }
 
-	    $entity->comment_count = Comment::where($column, $this->_id)->count();
-	    $entity->save();
+        $entity->comment_count = Comment::where($column, $this->_id)->count();
+        $entity->save();
 
         return CommandResponse::succeed(Comment::mapPublic($comment));
     }

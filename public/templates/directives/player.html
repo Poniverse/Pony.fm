@@ -1,38 +1,38 @@
 <div class="track-player" ng-show="player.isPlaying">
-	<ul class="buttons">
-		<li class="status">
-			<strong>{{player.currentTrack.progressSeconds | secondsDisplay}}</strong> /
-			<strong>{{player.currentTrack.duration | secondsDisplay}}</strong>
-		</li>
-		<li ng-class="{disabled: !player.canGoPrev}"><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="icon-fast-backward"></i></a></li>
-		<li>
-			<a pfm-eat-click ng-click="playPause()" class="play" href="#">
-				<i class="icon-pause" ng-show="player.currentTrack.isPlaying"></i>
-				<i class="icon-play" ng-hide="player.currentTrack.isPlaying"></i>
-			</a>
-		</li>
-		<li ng-class="{disabled: !player.canGoNext}"><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="icon-fast-forward"></i></a></li>
-		<li class="volume">
-			<a pfm-eat-click ng-click="" class="volume" href="#">
-				<i class="icon-volume-up"></i>
-			</a>
-			<div class="volume-slider">
-				<div class="bar"><a href="#" class="knob">&nbsp;</a></div>
-			</div>
-		</li>
-	</ul>
-	<div class="image">
-		<div class="loader" ng-class="{showing: player.currentTrack.loadingProgress == 0}"><i class="icon-spin icon-rotate-right"></i></div>
-		<img pfm-src-loader="player.currentTrack.covers.thumbnail" pfm-src-size="thumbnail" />
-	</div>
-	<div class="inner">
-		<div class="title">
-			<span class="song"><a href="{{player.currentTrack.url}}">{{player.currentTrack.title}}</a></span>
-			<span class="artist"><a href="{{player.currentTrack.user.url}}">{{player.currentTrack.user.name}}</a></span>
-		</div>
-		<div class="transport" ng-click="seek($event)">
-			<div class="bar" pfm-progress-bar="player.currentTrack.progress"></div>
-			<div class="loader-bar" pfm-progress-bar="player.currentTrack.loadingProgress"></div>
-		</div>
-	</div>
+    <ul class="buttons">
+        <li class="status">
+            <strong>{{player.currentTrack.progressSeconds | secondsDisplay}}</strong> /
+            <strong>{{player.currentTrack.duration | secondsDisplay}}</strong>
+        </li>
+        <li ng-class="{disabled: !player.canGoPrev}"><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="icon-fast-backward"></i></a></li>
+        <li>
+            <a pfm-eat-click ng-click="playPause()" class="play" href="#">
+                <i class="icon-pause" ng-show="player.currentTrack.isPlaying"></i>
+                <i class="icon-play" ng-hide="player.currentTrack.isPlaying"></i>
+            </a>
+        </li>
+        <li ng-class="{disabled: !player.canGoNext}"><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="icon-fast-forward"></i></a></li>
+        <li class="volume">
+            <a pfm-eat-click ng-click="" class="volume" href="#">
+                <i class="icon-volume-up"></i>
+            </a>
+            <div class="volume-slider">
+                <div class="bar"><a href="#" class="knob">&nbsp;</a></div>
+            </div>
+        </li>
+    </ul>
+    <div class="image">
+        <div class="loader" ng-class="{showing: player.currentTrack.loadingProgress == 0}"><i class="icon-spin icon-rotate-right"></i></div>
+        <img pfm-src-loader="player.currentTrack.covers.thumbnail" pfm-src-size="thumbnail" />
+    </div>
+    <div class="inner">
+        <div class="title">
+            <span class="song"><a href="{{player.currentTrack.url}}">{{player.currentTrack.title}}</a></span>
+            <span class="artist"><a href="{{player.currentTrack.user.url}}">{{player.currentTrack.user.name}}</a></span>
+        </div>
+        <div class="transport" ng-click="seek($event)">
+            <div class="bar" pfm-progress-bar="player.currentTrack.progress"></div>
+            <div class="loader-bar" pfm-progress-bar="player.currentTrack.loadingProgress"></div>
+        </div>
+    </div>
 </div>

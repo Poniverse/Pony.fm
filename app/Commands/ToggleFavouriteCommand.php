@@ -62,11 +62,11 @@ class ToggleFavouriteCommand extends CommandBase
         DB::table($resourceTable)->whereId($this->_resourceId)->update([
             'favourite_count' =>
                 DB::raw('(
-					SELECT
-						COUNT(id)
-					FROM
-						favourites
-					WHERE ' .
+                    SELECT
+                        COUNT(id)
+                    FROM
+                        favourites
+                    WHERE ' .
                     $typeId . ' = ' . $this->_resourceId . ')')
         ]);
 

@@ -11,7 +11,7 @@ class Poniverse {
     protected $clientSecret;
     protected $accessToken;
     protected $redirectUri;
-	protected $urls;
+    protected $urls;
 
     /**
      * @var OAuth2\Client
@@ -27,7 +27,7 @@ class Poniverse {
      */
     public function __construct($clientId, $clientSecret, $accessToken = '')
     {
-		$this->urls = Config::get('poniverse.urls');
+        $this->urls = Config::get('poniverse.urls');
 
         $this->clientId     = $clientId;
         $this->clientSecret = $clientSecret;

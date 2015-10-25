@@ -14,78 +14,78 @@
   margin-bottom: 10px;
 
   > li {
-	float: left;
-	margin: 0px;
-	padding: 0px;
-	margin-right: 10px;
-	line-height: normal;
+    float: left;
+    margin: 0px;
+    padding: 0px;
+    margin-right: 10px;
+    line-height: normal;
 
-	> .btn {
-	  float: left;
-	  display: block;
-	}
+    > .btn {
+      float: left;
+      display: block;
+    }
 
-	> .btn + .btn {
-	  .transition(background 300ms ease-out);
+    > .btn + .btn {
+      .transition(background 300ms ease-out);
 
-	  display: none;
-	  margin: 0px;
-	}
+      display: none;
+      margin: 0px;
+    }
 
-	&.has-filter {
-	  > .btn {
-		background: @pfm-purple;
-		color: #fff;
-	  }
+    &.has-filter {
+      > .btn {
+        background: @pfm-purple;
+        color: #fff;
+      }
 
-	  > .btn + .btn {
-		display: block;
-		background: darken(@pfm-purple, 20%);
+      > .btn + .btn {
+        display: block;
+        background: darken(@pfm-purple, 20%);
 
-		&:hover {
-		  background: darken(@pfm-purple, 40%);
-		}
-	  }
-	}
+        &:hover {
+          background: darken(@pfm-purple, 40%);
+        }
+      }
+    }
 
-	&.open {
-	  > .btn {
-		background: @pfm-purple;
-		color: #fff;
-	  }
+    &.open {
+      > .btn {
+        background: @pfm-purple;
+        color: #fff;
+      }
 
-	  .dropdown-menu {
-		.box-shadow(none);
+      .dropdown-menu {
+        .box-shadow(none);
 
-		margin: 0px;
-		border: 2px solid @pfm-purple;
+        margin: 0px;
+        border: 2px solid @pfm-purple;
 
-		li.selected {
-		  a {
-			background: @pfm-purple;
-			color: #fff;
-		  }
-		}
+        li.selected {
+          a {
+            background: @pfm-purple;
+            color: #fff;
+          }
+        }
 
-		li {
-		  a:hover {
-			background: lighten(@pfm-purple, 5%);
-		  }
-		}
-	  }
-	}
+        li {
+          a:hover {
+            background: lighten(@pfm-purple, 5%);
+          }
+        }
+      }
+    }
 
-	> .btn {
-	  border: none;
-	  background: #eee;
-	  font-size: 8pt;
-	  padding: 3px 7px;
-	  text-shadow: none;
+    > .btn {
+      border: none;
+      background: #eee;
+      font-size: 8pt;
+      padding: 3px 7px;
+      text-shadow: none;
 
-	  &.btn-info {
-		background: @pfm-purple;
-	  }
-	}
+      &.btn-info {
+        background: @pfm-purple;
+      }
+    }
   }
 }
 
@@ -100,30 +100,30 @@
   font-size: 15px;
 
   li {
-	margin: 0px;
-	float: left;
-	line-height: normal;
+    margin: 0px;
+    float: left;
+    line-height: normal;
 
-	a {
-	  padding: 5px 13px;
-	  display: block;
-	  color: #555;
+    a {
+      padding: 5px 13px;
+      display: block;
+      color: #555;
 
-	  &:hover {
-		text-decoration: none;
-		background: #eee;
-	  }
-	}
+      &:hover {
+        text-decoration: none;
+        background: #eee;
+      }
+    }
 
-	&.active {
-	  a {
-		cursor: default;
-		background: #eee;
-		color: #000;
-		border-bottom: 4px solid #C1889E;
-		margin-bottom: -4px;
-	  }
-	}
+    &.active {
+      a {
+        cursor: default;
+        background: #eee;
+        color: #000;
+        border-bottom: 4px solid #C1889E;
+        margin-bottom: -4px;
+      }
+    }
   }
 }
 
@@ -131,29 +131,29 @@ ui-view {
   display: block;
 
   &:before {
-	.transition(opacity 250ms);
+    .transition(opacity 250ms);
 
-	opacity: 0;
-	background: #fff;
-	content: ' ';
-	top: 0px;
-	left: 0px;
-	z-index: 999;
-	width: 0px;
-	height: 0px;
-	position: absolute;
-	display: block;
-	overflow: hidden;
+    opacity: 0;
+    background: #fff;
+    content: ' ';
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    display: block;
+    overflow: hidden;
   }
 
   &.loading {
-	position: relative;
+    position: relative;
 
-	&:before {
-	  opacity: .8;
-	  width: 100%;
-	  height: 100%;
-	}
+    &:before {
+      opacity: .8;
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -166,51 +166,51 @@ ui-view {
   overflow: hidden;
 
   li {
-	float: left;
+    float: left;
 
-	a, button {
-	  .border-radius(0px);
-	  font-size: 9pt;
-	}
+    a, button {
+      .border-radius(0px);
+      font-size: 9pt;
+    }
 
-	&.delete {
-	  float: right;
-	}
+    &.delete {
+      float: right;
+    }
   }
 }
 
 html body {
   .btn {
-	.border-radius(0px);
+    .border-radius(0px);
   }
 
   .btn.btn-primary, .add-btn, .btn-success {
-	background: @pfm-purple;
-	color: #fff;
+    background: @pfm-purple;
+    color: #fff;
   }
 
   .btn-success.disabled {
-	background: @pfm-purple;
-	color: #eee;
+    background: @pfm-purple;
+    color: #eee;
   }
 
   .ui-datepicker {
-	.border-radius(0px);
+    .border-radius(0px);
 
-	font-size: 9pt;
-	padding: 3px;
+    font-size: 9pt;
+    padding: 3px;
 
-	.ui-datepicker-header {
-	  .border-radius(0px);
-	  border: none;
-	  border-bottom: 1px solid #777;
-	  margin: -3px;
-	}
+    .ui-datepicker-header {
+      .border-radius(0px);
+      border: none;
+      border-bottom: 1px solid #777;
+      margin: -3px;
+    }
   }
 
   .alert {
-	.border-radius(0px);
-	margin-bottom: 10px;
+    .border-radius(0px);
+    margin-bottom: 10px;
   }
 }
 
@@ -220,31 +220,31 @@ html .dropdown-menu {
   overflow-y: auto;
 
   > li {
-	margin: 0px;
+    margin: 0px;
 
-	> a {
-	  padding: 3px 10px;
-	  font-size: 8pt;
-	}
+    > a {
+      padding: 3px 10px;
+      font-size: 8pt;
+    }
 
-	> .dont-close {
-	  float: right;
-	  display: block;
-	  width: 24px;
-	  text-align: center;
-	  padding: 3px 3px;
-	}
+    > .dont-close {
+      float: right;
+      display: block;
+      width: 24px;
+      text-align: center;
+      padding: 3px 3px;
+    }
 
-	> .dont-close + a {
-	  margin-right: 30px;
-	  clear: none;
-	}
+    > .dont-close + a {
+      margin-right: 30px;
+      clear: none;
+    }
 
-	&.selected {
-	  > .dont-close i:before {
-		content: "\f068";
-	  }
-	}
+    &.selected {
+      > .dont-close i:before {
+        content: "\f068";
+      }
+    }
   }
 }
 
@@ -258,7 +258,7 @@ html .dropdown-menu {
   overflow-y: auto;
 
   &.open {
-	display: block;
+    display: block;
   }
 }
 
@@ -266,128 +266,128 @@ html .dropdown-menu {
   overflow: hidden;
 
   .error {
-	clear: left;
-	margin-top: 14px;
+    clear: left;
+    margin-top: 14px;
   }
 
   input[type=file] {
-	display: none;
+    display: none;
   }
 
   .btn {
-	.border-radius(0px) !important;
+    .border-radius(0px) !important;
   }
 
   .preview {
-	.img-polaroid();
-	overflow: hidden;
-	width: 46px;
-	height: 46px;
-	float: left;
+    .img-polaroid();
+    overflow: hidden;
+    width: 46px;
+    height: 46px;
+    float: left;
 
-	img {
-	  position: relative;
-	  display: block;
-	  width: 100%;
-	}
+    img {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
 
-	&.canOpen {
-	  cursor: pointer;
+    &.canOpen {
+      cursor: pointer;
 
-	  &:hover {
-		border-color: @blue;
-		border-style: solid;
-	  }
-	}
+      &:hover {
+        border-color: @blue;
+        border-style: solid;
+      }
+    }
   }
 
   p, .btn-group {
-	color: #555;
-	margin-left: 60px;
-	display: block;
-	margin-bottom: 1px;
+    color: #555;
+    margin-left: 60px;
+    display: block;
+    margin-bottom: 1px;
   }
 
   p {
-	font-size: 9pt;
+    font-size: 9pt;
   }
 }
 
 .modal {
   form {
-	margin: 0px;
+    margin: 0px;
   }
 }
 
 html {
   .modal-backdrop {
-	background: #fff;
+    background: #fff;
   }
 
   .modal {
-	.border-radius(0px);
+    .border-radius(0px);
 
-	border: 2px solid @pfm-purple;
+    border: 2px solid @pfm-purple;
 
-	h2 {
-	  font-size: 12pt;
-	  color: #C2889C;
-	  line-height: normal;
-	  margin-bottom: 5px;
+    h2 {
+      font-size: 12pt;
+      color: #C2889C;
+      line-height: normal;
+      margin-bottom: 5px;
 
-	  small {
-		font-size: 10pt;
-	  }
-	}
+      small {
+        font-size: 10pt;
+      }
+    }
   }
 
   .breadcrumb {
-	.border-radius(0px);
-	background: #eee;
-	margin-bottom: 10px;
-	font-size: 10pt;
+    .border-radius(0px);
+    background: #eee;
+    margin-bottom: 10px;
+    font-size: 10pt;
   }
 
   .pagination {
-	border: none;
-	background: #eee;
-	margin: 0px;
-	margin-bottom: 10px;
-	padding: 0px;
-	overflow: hidden;
+    border: none;
+    background: #eee;
+    margin: 0px;
+    margin-bottom: 10px;
+    padding: 0px;
+    overflow: hidden;
 
-	ul {
-	  .border-radius(0px);
-	  margin: 5px;
-	  display: block;
-	  overflow: hidden;
+    ul {
+      .border-radius(0px);
+      margin: 5px;
+      display: block;
+      overflow: hidden;
 
-	  > li:first-child > a, > li:last-child > a {
-		.border-radius(0px);
-	  }
+      > li:first-child > a, > li:last-child > a {
+        .border-radius(0px);
+      }
 
-	  li {
-		display: block;
-		float: left;
+      li {
+        display: block;
+        float: left;
 
-		a {
-		  .border-radius(0px);
-		  border: none;
-		  padding: 1px 10px;
-		  display: block;
-		  float: left;
-		  color: @pfm-purple;
-		}
-	  }
+        a {
+          .border-radius(0px);
+          border: none;
+          padding: 1px 10px;
+          display: block;
+          float: left;
+          color: @pfm-purple;
+        }
+      }
 
-	  li.active a {
-		background: #C1889E;
-		color: #fff;
-	  }
-	}
+      li.active a {
+        background: #C1889E;
+        color: #fff;
+      }
+    }
 
-	&.pagination-right {
-	  float: right;
-	}
+    &.pagination-right {
+      float: right;
+    }
   }
 }

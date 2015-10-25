@@ -80,7 +80,7 @@ class ClassifyMLPMA extends Command
             $queriedTitle = DB::connection()->getPdo()->quote($sanitizedTrackTitle);
             $officialSongs = ShowSong::select(['id', 'title'])
                 ->whereRaw("
-				MATCH (title)
+                MATCH (title)
                 AGAINST ($queriedTitle IN BOOLEAN MODE)
                 ")
                 ->get();

@@ -127,10 +127,10 @@ class Track extends Model
                     ::published()
                     ->listed()
                     ->join(DB::raw('
-						(	SELECT `track_id`, `created_at`
-							FROM `resource_log_items`
-							WHERE track_id IS NOT NULL AND log_type = 3 AND `created_at` > now() - INTERVAL 1 DAY
-						) AS ranged_plays'),
+                        (    SELECT `track_id`, `created_at`
+                            FROM `resource_log_items`
+                            WHERE track_id IS NOT NULL AND log_type = 3 AND `created_at` > now() - INTERVAL 1 DAY
+                        ) AS ranged_plays'),
                         'tracks.id', '=', 'ranged_plays.track_id')
                     ->groupBy('id')
                     ->orderBy('plays', 'desc')
@@ -598,9 +598,9 @@ class Track extends Model
             'copyright' => ['© ' . $this->year . ' ' . $this->user->display_name],
             'publisher' => ['Pony.fm - https://pony.fm/'],
             'encoded_by' => ['https://pony.fm/'],
-//				'url_artist'			=> [$this->user->url],
-//				'url_source'			=> [$this->url],
-//				'url_file'				=> [$this->url],
+//                'url_artist'            => [$this->user->url],
+//                'url_source'            => [$this->url],
+//                'url_file'                => [$this->url],
             'url_publisher' => ['https://pony.fm/']
         ];
 

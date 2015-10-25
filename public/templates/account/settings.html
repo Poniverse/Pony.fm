@@ -1,36 +1,36 @@
 <form ng-submit="updateAccount()" class="pfm-form account-settings-form">
-	<ul class="toolbar">
-		<li>
-			<button type="submit" class="btn" ng-class="{disabled: !isDirty || isSaving, 'btn-primary': isDirty}">
-				Save Changes
-				<i ng-show="isSaving" class="icon-cog icon-spin icon-large"></i>
-			</button>
-		</li>
-	</ul>
-	<div class="stretch-to-bottom">
-		<div class="form-row" ng-class="{'has-error': errors.display_name != null}">
-			<label for="sync_names" class="strong"><input ng-disabled="isSaving" ng-change="touchModel();" id="sync_names" type="checkbox" ng-model="settings.sync_names" /> Sync my MLP Forums display name with Pony.fm</label>
-			<input type="text" ng-disabled="isSaving" ng-change="touchModel()" ng-show="!settings.sync_names" placeholder="Display Name" id="display_name" ng-model="settings.display_name" />
-			<div ng-show="settings.sync_names" class="alert alert-info">Your current MLP Forums display name is <strong>{{settings.mlpforums_name}}</strong></div>
-			<div class="error">{{errors.display_name}}</div>
-		</div>
-		<div class="form-row">
-			<label for="can_see_explicit_content" class="strong"><input ng-change="touchModel()" ng-disabled="isLoading" id="can_see_explicit_content" type="checkbox" ng-model="settings.can_see_explicit_content" /> Can See Explicit Content</label>
-		</div>
-		<div class="form-row" ng-class="{'has-error': errors.bio != null}">
-			<label class="strong" for="bio">Bio</label>
-			<textarea id="bio" placeholder="bio (optional)" ng-model="settings.bio" ng-disabled="isLoading" ng-change="touchModel()"></textarea>
-			<div class="error">{{errors.description}}</div>
-		</div>
-		<div class="form-row" ng-class="{'has-error': errors.avatar != null || errors.gravatar != null}">
-			<label for="uses_gravatar" class="strong">
-				<input ng-change="touchModel()" ng-disabled="isLoading" id="uses_gravatar" type="checkbox" ng-model="settings.uses_gravatar" /> Use Gravatar
-			</label>
-			<div ng-show="!settings.uses_gravatar">
-				<pfm-image-upload set-image="setAvatar" image="settings.avatar_url" />
-			</div>
-			<input type="text" ng-disabled="isSaving" ng-change="touchModel()" ng-show="settings.uses_gravatar" placeholder="Gravatar Email" ng-model="settings.gravatar" />
-			<div class="error" ng-show="errors.avatar != null">{{errors.avatar}}</div>
-			<div class="error" ng-show="errors.gravatar != null">{{errors.gravatar}}</div>
-		</div>
+    <ul class="toolbar">
+        <li>
+            <button type="submit" class="btn" ng-class="{disabled: !isDirty || isSaving, 'btn-primary': isDirty}">
+                Save Changes
+                <i ng-show="isSaving" class="icon-cog icon-spin icon-large"></i>
+            </button>
+        </li>
+    </ul>
+    <div class="stretch-to-bottom">
+        <div class="form-row" ng-class="{'has-error': errors.display_name != null}">
+            <label for="sync_names" class="strong"><input ng-disabled="isSaving" ng-change="touchModel();" id="sync_names" type="checkbox" ng-model="settings.sync_names" /> Sync my MLP Forums display name with Pony.fm</label>
+            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" ng-show="!settings.sync_names" placeholder="Display Name" id="display_name" ng-model="settings.display_name" />
+            <div ng-show="settings.sync_names" class="alert alert-info">Your current MLP Forums display name is <strong>{{settings.mlpforums_name}}</strong></div>
+            <div class="error">{{errors.display_name}}</div>
+        </div>
+        <div class="form-row">
+            <label for="can_see_explicit_content" class="strong"><input ng-change="touchModel()" ng-disabled="isLoading" id="can_see_explicit_content" type="checkbox" ng-model="settings.can_see_explicit_content" /> Can See Explicit Content</label>
+        </div>
+        <div class="form-row" ng-class="{'has-error': errors.bio != null}">
+            <label class="strong" for="bio">Bio</label>
+            <textarea id="bio" placeholder="bio (optional)" ng-model="settings.bio" ng-disabled="isLoading" ng-change="touchModel()"></textarea>
+            <div class="error">{{errors.description}}</div>
+        </div>
+        <div class="form-row" ng-class="{'has-error': errors.avatar != null || errors.gravatar != null}">
+            <label for="uses_gravatar" class="strong">
+                <input ng-change="touchModel()" ng-disabled="isLoading" id="uses_gravatar" type="checkbox" ng-model="settings.uses_gravatar" /> Use Gravatar
+            </label>
+            <div ng-show="!settings.uses_gravatar">
+                <pfm-image-upload set-image="setAvatar" image="settings.avatar_url" />
+            </div>
+            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" ng-show="settings.uses_gravatar" placeholder="Gravatar Email" ng-model="settings.gravatar" />
+            <div class="error" ng-show="errors.avatar != null">{{errors.avatar}}</div>
+            <div class="error" ng-show="errors.gravatar != null">{{errors.gravatar}}</div>
+        </div>
 </form>

@@ -42,15 +42,15 @@ class PoniverseApiSetup extends Command
     {
         $this->output->getFormatter()->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));
 
-	    $this->comment('Sign in with your Poniverse account! Your password won\'t be stored locally.');
-	    $this->line('');
-	    $this->comment('This sets up your Poniverse API credentials, which are necessary for Pony.fm\'s integration with Poniverse to work.');
-	    $this->line('');
-	    $this->comment('If you don\'t have a Poniverse account, create one at: <bold>https://poniverse.net/register</bold>');
+        $this->comment('Sign in with your Poniverse account! Your password won\'t be stored locally.');
+        $this->line('');
+        $this->comment('This sets up your Poniverse API credentials, which are necessary for Pony.fm\'s integration with Poniverse to work.');
+        $this->line('');
+        $this->comment('If you don\'t have a Poniverse account, create one at: <bold>https://poniverse.net/register</bold>');
         $username = $this->ask('Your Poniverse username');
         $password = $this->secret('Your Poniverse password');
 
-	    // log in
+        // log in
         $client = new Client(['base_uri' => 'https://api.poniverse.net/v1/dev/']);
 
         try {
@@ -75,7 +75,7 @@ class PoniverseApiSetup extends Command
         $clientId = $json->id;
         $clientSecret = $json->secret;
 
-	    // save new key to .env
+        // save new key to .env
         $this->setEnvironmentVariable('PONI_CLIENT_ID', $this->laravel['config']['poniverse.client_id'], $clientId);
         $this->setEnvironmentVariable('PONI_CLIENT_SECRET', $this->laravel['config']['poniverse.secret'], $clientSecret);
 

@@ -1,53 +1,53 @@
 <div class="resource-details album-details" bindonce="album">
-	<ul class="dropdowns">
-		<li class="dropdown">
-			<a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="album.is_downloadable == 0">
-				Downloads
-			</a>
-			<ul class="dropdown-menu" ng-show="album.is_downloadable == 1">
-				<li bindonce ng-repeat="format in album.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
-			</ul>
-		</li>
-		<li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
-		<li><pfm-favourite-button resource="album" type="album"></pfm-favourite-button></li>
-		<li bo-show="album.permissions.edit"><a class="btn btn-small" bo-href="'/account/albums/edit/' + album.id">Edit</a></li>
-	</ul>
+    <ul class="dropdowns">
+        <li class="dropdown">
+            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="album.is_downloadable == 0">
+                Downloads
+            </a>
+            <ul class="dropdown-menu" ng-show="album.is_downloadable == 1">
+                <li bindonce ng-repeat="format in album.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
+            </ul>
+        </li>
+        <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
+        <li><pfm-favourite-button resource="album" type="album"></pfm-favourite-button></li>
+        <li bo-show="album.permissions.edit"><a class="btn btn-small" bo-href="'/account/albums/edit/' + album.id">Edit</a></li>
+    </ul>
 
-	<header>
-		<h1 bo-text="album.title"></h1>
-		<h2>
-			by: <a bo-href="album.user.url" bo-text="album.user.name"></a>
-		</h2>
-	</header>
+    <header>
+        <h1 bo-text="album.title"></h1>
+        <h2>
+            by: <a bo-href="album.user.url" bo-text="album.user.name"></a>
+        </h2>
+    </header>
 
-	<div class="stretch-to-bottom details-columns">
-		<div class="right">
-			<img class="cover" pfm-src-loader="album.covers.normal" pfm-src-size="normal" />
+    <div class="stretch-to-bottom details-columns">
+        <div class="right">
+            <img class="cover" pfm-src-loader="album.covers.normal" pfm-src-size="normal" />
 
-			<div class="share-buttons" pfm-share-buttons>
-				<a class="tumblr" bo-href="album.share.tumblrUrl" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
-				<div class="facebook fb-like" data-href="{{album.url}}" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>
-				<iframe class="twitter" allowtransparency="true" frameborder="0" scrolling="no" bo-src="album.share.twitterUrl" style="width:130px; height:20px;"></iframe>
-			</div>
+            <div class="share-buttons" pfm-share-buttons>
+                <a class="tumblr" bo-href="album.share.tumblrUrl" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
+                <div class="facebook fb-like" data-href="{{album.url}}" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>
+                <iframe class="twitter" allowtransparency="true" frameborder="0" scrolling="no" bo-src="album.share.twitterUrl" style="width:130px; height:20px;"></iframe>
+            </div>
 
-			<ul class="stats">
-				<li>Published: <strong bo-text="album.created_at | pfmdate:'medium'"></strong></li>
-				<li>Views: <strong bo-text="album.stats.views"></strong></li>
-				<li>Downloads: <strong bo-text="album.stats.downloads"></strong></li>
-				<li>Favourites: <strong bo-text="album.stats.favourites"></strong></li>
-			</ul>
-		</div>
+            <ul class="stats">
+                <li>Published: <strong bo-text="album.created_at | pfmdate:'medium'"></strong></li>
+                <li>Views: <strong bo-text="album.stats.views"></strong></li>
+                <li>Downloads: <strong bo-text="album.stats.downloads"></strong></li>
+                <li>Favourites: <strong bo-text="album.stats.favourites"></strong></li>
+            </ul>
+        </div>
 
-		<div class="left">
-			<div class="description" bo-show="album.description.length">
-				<h2>Description</h2>
-				<p bo-html="album.description | noHTML | newlines"></p>
-			</div>
+        <div class="left">
+            <div class="description" bo-show="album.description.length">
+                <h2>Description</h2>
+                <p bo-html="album.description | noHTML | newlines"></p>
+            </div>
 
-			<h2>Tracks</h2>
-			<pfm-tracks-list tracks="album.tracks" class="condensed no-artist"></pfm-tracks-list>
+            <h2>Tracks</h2>
+            <pfm-tracks-list tracks="album.tracks" class="condensed no-artist"></pfm-tracks-list>
 
-			<pfm-comments type="album" resource="album"></pfm-comments>
-		</div>
-	</div>
+            <pfm-comments type="album" resource="album"></pfm-comments>
+        </div>
+    </div>
 </div>

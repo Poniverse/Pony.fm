@@ -14,77 +14,77 @@ html body {
 
 header {
   > a {
-	display: block;
-	float: left;
-	width: (@pfm-sidebar-size);
-	height: 64px;
-	line-height: 42px;
-	background: #84528A;
-	color: #fff;
-	font-size: 24pt;
-	font-weight: lighter;
-	position: relative;
-	z-index: 600;
-	font-family: 'Josefin Sans', sans-serif;
-	position: relative;
+    display: block;
+    float: left;
+    width: (@pfm-sidebar-size);
+    height: 64px;
+    line-height: 42px;
+    background: #84528A;
+    color: #fff;
+    font-size: 24pt;
+    font-weight: lighter;
+    position: relative;
+    z-index: 600;
+    font-family: 'Josefin Sans', sans-serif;
+    position: relative;
 
-	&:hover {
-	  background: darken(#84528A, 25%);
-	  color: #fff;
-	  text-decoration: none;
-	}
+    &:hover {
+      background: darken(#84528A, 25%);
+      color: #fff;
+      text-decoration: none;
+    }
 
-	img.logo {
-	  padding-left: 6px;
+    img.logo {
+      padding-left: 6px;
       width: 100%;
-	  max-width: 90%;
-	  padding-top: 13px;
-	  max-height: 45%
-	}
+      max-width: 90%;
+      padding-top: 13px;
+      max-height: 45%
+    }
   }
 
   .user-details {
-	float: right;
-	margin-right: 10px;
-	margin-top: 9px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 9px;
 
-	.avatar {
-	  .img-polaroid();
+    .avatar {
+      .img-polaroid();
 
-	  display: block;
-	  float: right;
-	  padding: 2px;
-	  cursor: pointer;
+      display: block;
+      float: right;
+      padding: 2px;
+      cursor: pointer;
 
-	  &:hover {
-		background: #ddd;
-	  }
+      &:hover {
+        background: #ddd;
+      }
 
-	  span {
-		font-weight: bold;
-		display: inline-block;
-		padding: 0px 3px;
-	  }
-	}
+      span {
+        font-weight: bold;
+        display: inline-block;
+        padding: 0px 3px;
+      }
+    }
 
-	.dropdown-menu {
-	  left: auto;
-	  right: 0px;
-	}
+    .dropdown-menu {
+      left: auto;
+      right: 0px;
+    }
 
-	.name {
-	  float: left;
-	  height: 44px;
-	  line-height: 44px;
-	  padding-right: 10px;
-	  font-weight: bold;
-	  font-size: 12pt;
-	}
+    .name {
+      float: left;
+      height: 44px;
+      line-height: 44px;
+      padding-right: 10px;
+      font-weight: bold;
+      font-size: 12pt;
+    }
 
-	img {
-	  height: 40px;
-	  width: 40px;
-	}
+    img {
+      height: 40px;
+      width: 40px;
+    }
   }
 }
 
@@ -109,18 +109,18 @@ header {
   position: relative;
 
   li {
-	margin: 0px;
-	padding: 0px;
-	line-height: normal;
+    margin: 0px;
+    padding: 0px;
+    line-height: normal;
 
-	&.selected {
-	  background: #fff;
+    &.selected {
+      background: #fff;
 
-	  > a, > a:hover {
-		cursor: default;
-		color: #000;
-	  }
-	}
+      > a, > a:hover {
+        cursor: default;
+        color: #000;
+      }
+    }
 
     &.x-attribution {
       position: absolute;
@@ -142,75 +142,75 @@ header {
       }
     }
 
-	h3 {
-	  padding: 10px 25px;
-	  padding-right: 10px;
-	  margin: 0px;
-	  font-size: 10pt;
-	  color: #eee;
-	  background: darken(#515151, 5%);
-	  line-height: normal;
+    h3 {
+      padding: 10px 25px;
+      padding-right: 10px;
+      margin: 0px;
+      font-size: 10pt;
+      color: #eee;
+      background: darken(#515151, 5%);
+      line-height: normal;
 
-	  a {
-		display: block;
-		float: right;
-		width: 20px;
-		text-align: center;
-		color: #fff;
+      a {
+        display: block;
+        float: right;
+        width: 20px;
+        text-align: center;
+        color: #fff;
 
-		&:hover {
-		  text-decoration: none;
-		  color: #000;
-		}
-	  }
-	}
+        &:hover {
+          text-decoration: none;
+          color: #000;
+        }
+      }
+    }
 
-	.dropdown-menu a {
-	  color: #000;
-	}
+    .dropdown-menu a {
+      color: #000;
+    }
 
-	&:hover > a.dropdown-toggle {
-	  display: block;
-	}
+    &:hover > a.dropdown-toggle {
+      display: block;
+    }
 
-	> a.dropdown-toggle {
-	  float: right;
-	  padding: 10px 0px;
-	  display: none;
-	}
+    > a.dropdown-toggle {
+      float: right;
+      padding: 10px 0px;
+      display: none;
+    }
 
-	> a {
-	  display: block;
-	  padding: 10px 25px;
-	  padding-right: 0px;
-	  overflow: hidden;
-	  color: fadeout(#fff, 20%);
+    > a {
+      display: block;
+      padding: 10px 25px;
+      padding-right: 0px;
+      overflow: hidden;
+      color: fadeout(#fff, 20%);
 
-	  &:hover {
-		color: #fff;
-	  }
+      &:hover {
+        color: #fff;
+      }
 
-	  > i {
-		display: block;
-		float: right;
-		width: 20px;
-		text-align: center;
-		margin-right: 10px;
-	  }
+      > i {
+        display: block;
+        float: right;
+        width: 20px;
+        text-align: center;
+        margin-right: 10px;
+      }
 
-	  &:hover {
-		text-decoration: none;
-	  }
-	}
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 
   li.none {
-	span {
-	  display: block;
-	  padding: 5px 25px;
-	  color: #555;
-	  font-style: italic;
-	}
+    span {
+      display: block;
+      padding: 5px 25px;
+      color: #555;
+      font-style: italic;
+    }
   }
 }
 

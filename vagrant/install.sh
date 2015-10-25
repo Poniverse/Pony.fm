@@ -11,16 +11,16 @@ sudo apt-get -qq install -y pkg-config yasm libfaac-dev libmp3lame-dev libvorbis
 
 
 if type ffmpeg &>/dev/null; then
-	echo "ffmpeg is installed!"
+    echo "ffmpeg is installed!"
 else
-	echo "ffmpeg is not installed; compiling..."
-	cd /tmp
-	wget "https://ffmpeg.org/releases/ffmpeg-2.6.3.tar.bz2"
-	tar -xjf "ffmpeg-2.6.3.tar.bz2"
-	cd "ffmpeg-2.6.3"
-	./configure --enable-gpl --enable-encoder=flac --enable-encoder=alac --enable-libmp3lame --enable-libvorbis --enable-libtheora --enable-libfaac --enable-nonfree
-	make -j4
-	sudo make install
+    echo "ffmpeg is not installed; compiling..."
+    cd /tmp
+    wget "https://ffmpeg.org/releases/ffmpeg-2.6.3.tar.bz2"
+    tar -xjf "ffmpeg-2.6.3.tar.bz2"
+    cd "ffmpeg-2.6.3"
+    ./configure --enable-gpl --enable-encoder=flac --enable-encoder=alac --enable-libmp3lame --enable-libvorbis --enable-libtheora --enable-libfaac --enable-nonfree
+    make -j4
+    sudo make install
 fi
 
 mkdir -p /vagrant/storage/logs/system

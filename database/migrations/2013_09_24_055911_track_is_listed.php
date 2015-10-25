@@ -11,10 +11,10 @@ class TrackIsListed extends Migration
         });
 
         DB::update('
-			UPDATE
-				tracks
-			SET
-				is_listed = true');
+            UPDATE
+                tracks
+            SET
+                is_listed = true');
     }
 
     public function down()

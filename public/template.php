@@ -1,3 +1,3 @@
 <?php
 
-	echo 'template!';
+    echo 'template!';

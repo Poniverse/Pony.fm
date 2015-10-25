@@ -57,13 +57,13 @@ class ResourceLogItem extends Model
         DB::table($resourceTable)->whereId($resourceId)->update([
             $countColumn =>
                 DB::raw('(SELECT
-					COUNT(id)
-				FROM
-					resource_log_items
-				WHERE ' .
+                    COUNT(id)
+                FROM
+                    resource_log_items
+                WHERE ' .
                     $resourceIdColumn . ' = ' . $resourceId . '
-				AND
-					log_type = ' . $logType . ')')
+                AND
+                    log_type = ' . $logType . ')')
         ]);
 
         if (Auth::check()) {
@@ -71,15 +71,15 @@ class ResourceLogItem extends Model
             DB::table('resource_users')->whereId($resourceUserId)->update([
                 $countColumn =>
                     DB::raw('(SELECT
-						COUNT(id)
-					FROM
-						resource_log_items
-					WHERE
-						user_id = ' . Auth::user()->id . '
-					AND ' .
+                        COUNT(id)
+                    FROM
+                        resource_log_items
+                    WHERE
+                        user_id = ' . Auth::user()->id . '
+                    AND ' .
                         $resourceIdColumn . ' = ' . $resourceId . '
-					AND
-						log_type = ' . $logType . ')')
+                    AND
+                        log_type = ' . $logType . ')')
             ]);
         }
     }

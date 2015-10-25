@@ -1,38 +1,38 @@
 html {
   .profiler-open {
-	header, .site-body {
-	  margin-right: 403px;
-	}
+    header, .site-body {
+      margin-right: 403px;
+    }
 
-	.profiler {
-	  width: 400px;
-	  height: 100%;
-	  background: rgba(0, 0, 0, .85);
-	  border-left: 3px solid #111;
+    .profiler {
+      width: 400px;
+      height: 100%;
+      background: rgba(0, 0, 0, .85);
+      border-left: 3px solid #111;
 
-	  .buttons {
-		padding: 5px;
-		background: #222;
+      .buttons {
+        padding: 5px;
+        background: #222;
 
-		.clear-button {
-		  display: block;
-		}
+        .clear-button {
+          display: block;
+        }
 
-		.open-button {
-		  font-size: inherit;
-		  padding: 2px 10px;
-		  text-indent: 0px;
+        .open-button {
+          font-size: inherit;
+          padding: 2px 10px;
+          text-indent: 0px;
 
-		  i:before {
-			content: "\f077";
-		  }
-		}
-	  }
+          i:before {
+            content: "\f077";
+          }
+        }
+      }
 
-	  .requests {
-		display: block;
-	  }
-	}
+      .requests {
+        display: block;
+      }
+    }
   }
 }
 
@@ -47,123 +47,123 @@ html {
   color: #fff;
 
   .buttons {
-	overflow: hidden;
+    overflow: hidden;
 
-	> a {
-	  float: right;
-	  padding: 2px 10px;
-	  background: #e67e22;
-	  color: #fff;
+    > a {
+      float: right;
+      padding: 2px 10px;
+      background: #e67e22;
+      color: #fff;
 
-	  &:hover {
-		text-decoration: none;
-	  }
-	}
+      &:hover {
+        text-decoration: none;
+      }
+    }
 
-	.clear-button {
-	  margin-right: 5px;
-	  display: none;
-	}
+    .clear-button {
+      margin-right: 5px;
+      display: none;
+    }
 
-	.open-button {
-	  font-size: 1pt;
-	  padding: 2px;
-	  text-indent: -1000px;
-	  overflow: hidden;
-	}
+    .open-button {
+      font-size: 1pt;
+      padding: 2px;
+      text-indent: -1000px;
+      overflow: hidden;
+    }
   }
 
   ul {
-	list-style: none;
-	padding: 0px;
-	margin: 0px;
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
 
-	li {
-	  margin: 0px;
-	  padding: 0px;
-	  line-height: normal;
-	}
+    li {
+      margin: 0px;
+      padding: 0px;
+      line-height: normal;
+    }
   }
 
   .requests {
-	display: none;
-	position: absolute;
-	top: 33px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	overflow-y: auto;
+    display: none;
+    position: absolute;
+    top: 33px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow-y: auto;
 
-	> li {
+    > li {
 
-	  h3, h4 {
-		padding: 5px;
-		margin: 0px;
-		line-height: normal;
-		font-size: 8pt;
-		font-weight: normal;
-	  }
+      h3, h4 {
+        padding: 5px;
+        margin: 0px;
+        line-height: normal;
+        font-size: 8pt;
+        font-weight: normal;
+      }
 
-	  h3 {
-		background: #34495e;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
+      h3 {
+        background: #34495e;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
 
-		.method {
-		  display: block;
-		  float: right;
-		  background: #95a5a6;
-		  padding: 5px;
-		  margin: -5px;
-		  min-width: 50px;
-		}
-	  }
+        .method {
+          display: block;
+          float: right;
+          background: #95a5a6;
+          padding: 5px;
+          margin: -5px;
+          min-width: 50px;
+        }
+      }
 
-	  h4 {
-		padding: 5px;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		cursor: pointer;
+      h4 {
+        padding: 5px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        cursor: pointer;
 
-		&.open {
-		  white-space: pre-wrap;
-		  text-overflow: clip;
-		  overflow: visible;
-		  background: #111;
-		}
+        &.open {
+          white-space: pre-wrap;
+          text-overflow: clip;
+          overflow: visible;
+          background: #111;
+        }
 
-		&.log-info {
-		  background: #7f8c8d;
-		}
+        &.log-info {
+          background: #7f8c8d;
+        }
 
-		&.log-warning {
-		  background: #d35400;
-		}
+        &.log-warning {
+          background: #d35400;
+        }
 
-		&.log-error {
-		  background: #c0392b;
-		}
-	  }
+        &.log-error {
+          background: #c0392b;
+        }
+      }
 
-	  .time {
-		float: right;
-		padding: 5px;
-		background: #2c3e50;
-		display: block;
-		margin-left: 5px;
-	  }
+      .time {
+        float: right;
+        padding: 5px;
+        background: #2c3e50;
+        display: block;
+        margin-left: 5px;
+      }
 
-	  li {
-		position: relative;
-		font-family: 'Consolas';
+      li {
+        position: relative;
+        font-family: 'Consolas';
 
-		.clear {
-		  clear: both;
-		}
-	  }
-	}
+        .clear {
+          clear: both;
+        }
+      }
+    }
   }
 }
