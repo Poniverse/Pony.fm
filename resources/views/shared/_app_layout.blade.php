@@ -43,7 +43,7 @@
 
     <header>
         <a href="/">
-            <img src="/images/fm_logo_white.svg" class="logo">
+            <img src="/images/ponyfm-logo-white.svg" class="logo">
         </a>
         <div class="now-playing">
             @if (Auth::check())
@@ -102,7 +102,7 @@
                 <a ng-click="showCredits()" href="#" title="Pony.fm project credits">
                     @if(config('ponyfm.use_powered_by_footer'))
                         <span>Powered by</span>
-                        <img src="/images/fm_logo_white.svg" alt="Pony.fm logo" title="Pony.fm"/>
+                        <img src="/images/ponyfm-logo-white.svg" alt="Pony.fm logo" title="Pony.fm"/>
                         <span>We&#39;re open-source!</span>
                     @else
                         <span>A community by</span>

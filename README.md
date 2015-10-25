@@ -1,5 +1,4 @@
-Pony.fm
-=======
+[![Pony.fm Logo](https://pony.fm/images/ponyfm-logo.svg)](https://pony.fm/)
 
 The community for pony fan music.
 
