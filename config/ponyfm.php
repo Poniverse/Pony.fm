@@ -40,4 +40,18 @@ return [
 
     'google_analytics_id' => env('GOOGLE_ANALYTICS_ID', null),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Show "Powered by Pony.fm" footer?
+    |--------------------------------------------------------------------------
+    |
+    | If true, a "Powered by Pony.fm" footer is used to comply with the
+    | license's attribution requirement. This should only be disabled on
+    | the official Pony.fm website, since that already shares its name with
+    | the open-source project.
+    |
+    */
+
+    'use_powered_by_footer' => env('USE_POWERED_BY_FOOTER', true),
+
 ];

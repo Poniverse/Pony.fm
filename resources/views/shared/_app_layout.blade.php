@@ -81,10 +81,15 @@
 				<li><a href="/login" target="_self">Login</a></li>
 				<li><a href="/register" target="_self">Register</a></li>
 			@endif
-            <li class="x-poniverseCredit">
-                <a ng-click="showCredits()" href="#" title="Poniverse: The Pony Supercommunity">
-                    <span>A community project by</span>
-                    <img src="/images/poniverse.svg" alt="Poniverse logo"/>
+            <li class="x-attribution">
+                <a ng-click="showCredits()" href="#" title="Pony.fm project credits">
+                    @if(config('ponyfm.use_powered_by_footer'))
+                        <span>Powered by</span>
+                        <img src="/images/fm_logo_white.svg" alt="Pony.fm logo"/>
+                    @else
+                        <span>A community project by</span>
+                        <img src="/images/poniverse.svg" alt="Poniverse logo"/>
+                    @endif
                 </a>
             </li>
 		</ul>
