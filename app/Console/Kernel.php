@@ -39,6 +39,8 @@ class Kernel extends ConsoleKernel
         \Poniverse\Ponyfm\Console\Commands\FixYearZeroLogs::class,
         \Poniverse\Ponyfm\Console\Commands\BootstrapLocalEnvironment::class,
         \Poniverse\Ponyfm\Console\Commands\PoniverseApiSetup::class,
+        \Poniverse\Ponyfm\Console\Commands\ClearTrackCache::class,
+        \Poniverse\Ponyfm\Console\Commands\RebuildTrackCache::class,
     ];
 
     /**
