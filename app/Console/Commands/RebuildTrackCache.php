@@ -32,7 +32,8 @@ class RebuildTrackCache extends Command
      *
      * @var string
      */
-    protected $signature = 'track-cache:rebuild';
+    protected $signature = 'track-cache:rebuild
+                            [--force : Skip all prompts.]';
 
     /**
      * The console command description.
