@@ -93,6 +93,27 @@ class Track extends Model
         ],
     ];
 
+    public static $CacheableFormats = [
+        'OGG Vorbis' => [
+            'index' => 2,
+            'is_lossless' => false,
+            'extension' => 'ogg',
+            'tag_format' => 'vorbiscomment',
+            'tag_method' => 'updateTagsWithGetId3',
+            'mime_type' => 'audio/ogg',
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libvorbis -aq 7 -f ogg {$target}'
+        ],
+        'ALAC' => [
+            'index' => 4,
+            'is_lossless' => true,
+            'extension' => 'alac.m4a',
+            'tag_format' => 'AtomicParsley',
+            'tag_method' => 'updateTagsWithAtomicParsley',
+            'mime_type' => 'audio/mp4',
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec alac {$target}'
+        ],
+    ];
+
     public static function summary()
     {
         return self::select('tracks.id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at',
