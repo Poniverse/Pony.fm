@@ -75,8 +75,8 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
             ->getFile();
 
         // Assign the target
-        $destination = $this->trackFile->track()->getDirectory();
-        $this->trackFile->track()->ensureDirectoryExists();
+        $destination = $this->trackFile->track->getDirectory();
+        $this->trackFile->track->ensureDirectoryExists();
         $target = $destination . '/' . $this->trackFile->getFilename();
 
         // Prepare the command
@@ -100,7 +100,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         }
 
         // Update the tags of the track
-        $this->trackFile->track()->updateTags();
+        $this->trackFile->track->updateTags();
 
         // Insert the expiration time for cached tracks
         if ($this->isExpirable) {
