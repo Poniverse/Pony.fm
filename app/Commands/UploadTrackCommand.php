@@ -26,6 +26,8 @@ use AudioCache;
 use File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class UploadTrackCommand extends CommandBase
 {
@@ -94,8 +96,6 @@ class UploadTrackCommand extends CommandBase
             $source = $trackFile->getPathname();
             $index = 0;
 
-            $processes = [];
-
             // Lossy uploads need to be identified and set as the master file
             // without being re-encoded.
             $audioObject = AudioCache::get($source);
@@ -136,29 +136,31 @@ class UploadTrackCommand extends CommandBase
                 $trackFile = new TrackFile();
                 $trackFile->is_master = $name === 'FLAC' ? true : false;
                 $trackFile->format = $name;
+                if (array_key_exists($name, Track::$CacheableFormats) && $trackFile->is_master == false) {
+                    $trackFile->is_cacheable = true;
+                } else {
+                    $trackFile->is_cacheable = false;
+                }
                 $track->trackFiles()->save($trackFile);
 
-                $target = $destination . '/' . $trackFile->getFilename(); //$track->getFilenameFor($name);
+                if ($trackFile->is_cacheable == false) {
+                    $target = $destination . '/' . $trackFile->getFilename();
 
-                $command = $format['command'];
-                $command = str_replace('{$source}', '"' . $source . '"', $command);
-                $command = str_replace('{$target}', '"' . $target . '"', $command);
+                    $command = $format['command'];
+                    $command = str_replace('{$source}', '"' . $source . '"', $command);
+                    $command = str_replace('{$target}', '"' . $target . '"', $command);
 
-                Log::info('Encoding ' . $track->id . ' into ' . $target);
-                $this->notify('Encoding ' . $name, $index / count(Track::$Formats) * 100);
+                    Log::info('Encoding ' . $track->id . ' into ' . $target);
+                    $this->notify('Encoding ' . $name, $index / count(Track::$Formats) * 100);
 
-                $pipes = [];
-                $proc = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'a']], $pipes);
-                $processes[] = $proc;
-            }
-
-            foreach ($processes as $proc) {
-                proc_close($proc);
+                    $process = new Process($command);
+                    $process->mustRun();
+                }
             }
 
             $track->updateTags();
 
-        } catch (\Exception $e) {
+        } catch (ProcessFailedException $e) {
             $track->delete();
             throw $e;
         }
