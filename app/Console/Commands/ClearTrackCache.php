@@ -34,8 +34,8 @@ class ClearTrackCache extends Command
      * @var string
      */
     protected $signature = 'track-cache:clear
-                            [--tracks=expired : Clear only [expired] (default) or [all] cached tracks.]
-                            [--force : Skip all prompts.]';
+                            {--tracks=expired : Clear only [expired] (default) or [all] cached tracks.}
+                            {--force : Skip all prompts.}';
 
     /**
      * The console command description.

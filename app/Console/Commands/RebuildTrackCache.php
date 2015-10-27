@@ -20,20 +20,25 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
+use File;
 use Illuminate\Console\Command;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Track;
 use Poniverse\Ponyfm\TrackFile;
-use Symfony\Component\HttpFoundation\File\File;
 
 class RebuildTrackCache extends Command
 {
+
+    use DispatchesJobs;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
     protected $signature = 'track-cache:rebuild
-                            [--force : Skip all prompts.]';
+                            {--force : Skip all prompts.}';
 
     /**
      * The console command description.
@@ -186,18 +191,19 @@ class RebuildTrackCache extends Command
             $trackFiles = TrackFile::where('is_cacheable', false)->get();
 
             // Record the above files which do not exist (i.e., have not been encoded yet)
-            $trackFileIds = [];
+            $emptyTrackFiles = [];
             $count = 0;
             foreach ($trackFiles as $trackFile) {
                 if (!File::exists($trackFile->getFile())) {
                     $count++;
-                    $trackFileIds[] = $trackFile->id;
+                    $emptyTrackFiles[] = $trackFile;
                 }
             }
 
             // Encode recorded files
-            $encodeTrackFileCommand = new EncodeTrackFileCommand($trackFileIds);
-            $encodeTrackFileCommand->execute();
+            foreach($emptyTrackFiles as $emptyTrackFile) {
+                $this->dispatch(new EncodeTrackFile($emptyTrackFile, false));
+            }
 
             $this->info($count . ' tracks encoded.');
 
