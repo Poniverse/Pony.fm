@@ -160,7 +160,7 @@ class UploadTrackCommand extends CommandBase
 
             $track->updateTags();
 
-        } catch (ProcessFailedException $e) {
+        } catch (\Exception $e) {
             $track->delete();
             throw $e;
         }
