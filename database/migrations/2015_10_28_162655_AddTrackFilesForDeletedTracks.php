@@ -20,8 +20,9 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Poniverse\Ponyfm\Track;
 
-class AddTrackSourceColumn extends Migration
+class AddTrackFilesForDeletedTracks extends Migration
 {
     /**
      * Run the migrations.
@@ -30,17 +31,29 @@ class AddTrackSourceColumn extends Migration
      */
     public function up()
     {
-        Schema::table('tracks', function(Blueprint $table){
-            $table->string('source', 40)->default('direct_upload');
-        });
+        // 2015_05_25_011121_create_track_files_table.php only created
+        // track_files records for non-deleted tracks. This migration
+        // adds them for deleted tracks, too.
 
-        // Mark MLPMA tracks retroactively
-        // --> The default value in the database, set above, will
-        //     be used automatically for all non-MLPMA tracks.
-        $tracks = DB::table('tracks')
-            ->join('mlpma_tracks', 'mlpma_tracks.track_id', '=', 'tracks.id');
+        $tracks = Track::with('trackFiles')
+            ->onlyTrashed()
+            ->get();
 
-        $tracks->whereNotNull('mlpma_tracks.id')->update(['source' => 'mlpma']);
+        foreach ($tracks as $track) {
+            if ($track->trackFiles->count() === 0 && $track->source !== 'mlpma') {
+                foreach (Track::$Formats as $name => $item) {
+                    DB::table('track_files')->insert(
+                        [
+                            'track_id' => $track->id,
+                            'is_master' => $name === 'FLAC' ? true : false,
+                            'format' => $name,
+                            'created_at' => $track->created_at,
+                            'updated_at' => Carbon\Carbon::now()
+                        ]
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -50,8 +63,6 @@ class AddTrackSourceColumn extends Migration
      */
     public function down()
     {
-        Schema::table('tracks', function(Blueprint $table){
-            $table->dropColumn('source');
-        });
+        // There's no need to undo this one!
     }
 }
