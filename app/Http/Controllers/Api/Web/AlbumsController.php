@@ -20,16 +20,19 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Poniverse\Ponyfm\Album;
 use Poniverse\Ponyfm\Commands\CreateAlbumCommand;
 use Poniverse\Ponyfm\Commands\DeleteAlbumCommand;
 use Poniverse\Ponyfm\Commands\EditAlbumCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\ResourceLogItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
+use Poniverse\Ponyfm\Track;
 
 class AlbumsController extends ApiControllerBase
 {
@@ -81,6 +84,53 @@ class AlbumsController extends ApiControllerBase
         return Response::json([
             'album' => $returned_album
         ], 200);
+    }
+
+    public function getCachedAlbum($id, $format)
+    {
+        // Validation
+        try {
+            $album = Album::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound('Album not found!');
+        }
+
+        if (!array_key_exists($format, Track::$CacheableFormats)) {
+            return $this->notFound('Format not found!');
+        }
+
+        $tracks = $album->tracks;
+
+        $trackCount = 0;
+        $cachedCount = 0;
+
+        foreach($tracks as $track) {
+            if ($track->is_downloadable == false) {
+                continue;
+            } else {
+                $trackCount++;
+            }
+
+            try {
+                $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
+            } catch (ModelNotFoundException $e) {
+                return $this->notFound('Track file for track ID ' . $track->id . ' not found!');
+            }
+
+            if ($trackFile->expiration != null) {
+                $cachedCount++;
+            } elseif ($trackFile->in_progress != true) {
+                $this->dispatch(new EncodeTrackFile($trackFile, true));
+            }
+        }
+
+        if ($trackCount === $cachedCount) {
+            $url = $album->getDownloadUrl($format);
+        } else {
+            $url = null;
+        }
+
+        return Response::json(['url' => $url], 200);
     }
 
     public function getIndex()

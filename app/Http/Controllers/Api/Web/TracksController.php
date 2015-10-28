@@ -20,10 +20,13 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\File;
 use Poniverse\Ponyfm\Commands\DeleteTrackCommand;
 use Poniverse\Ponyfm\Commands\EditTrackCommand;
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\ResourceLogItem;
 use Poniverse\Ponyfm\Track;
 use Cover;
@@ -68,6 +71,40 @@ class TracksController extends ApiControllerBase
         }
 
         return Response::json(['track' => $returned_track], 200);
+    }
+
+    public function getCachedTrack($id, $format)
+    {
+        // Validation
+        try {
+            $track = Track::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound('Track not found!');
+        }
+
+        if (!$track->canView(Auth::user()))
+            return $this->notFound('Track not found!');
+
+        if (!in_array($format, array_keys(Track::$CacheableFormats))) {
+            return $this->notFound('Format not found!');
+        }
+
+        try {
+            $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound('Track file not found!');
+        }
+
+        // Return URL or begin encoding
+        if ($trackFile->expiration != null && File::exists($trackFile->getFile())) {
+            $url = $track->getUrlFor($format);
+        } elseif ($trackFile->in_progress === true) {
+            $url = null;
+        } else {
+            $this->dispatch(new EncodeTrackFile($trackFile, true));
+            $url = null;
+        }
+
     }
 
     public function getIndex()
