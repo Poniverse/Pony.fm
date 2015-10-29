@@ -143,18 +143,25 @@ class UploadTrackCommand extends CommandBase
                 }
                 $track->trackFiles()->save($trackFile);
 
-                if ($trackFile->is_cacheable == false) {
-                    $target = $destination . '/' . $trackFile->getFilename();
+                // Encode track file
+                $target = $destination . '/' . $trackFile->getFilename();
 
-                    $command = $format['command'];
-                    $command = str_replace('{$source}', '"' . $source . '"', $command);
-                    $command = str_replace('{$target}', '"' . $target . '"', $command);
+                $command = $format['command'];
+                $command = str_replace('{$source}', '"' . $source . '"', $command);
+                $command = str_replace('{$target}', '"' . $target . '"', $command);
 
-                    Log::info('Encoding ' . $track->id . ' into ' . $target);
-                    $this->notify('Encoding ' . $name, $index / count(Track::$Formats) * 100);
+                Log::info('Encoding ' . $track->id . ' into ' . $target);
+                $this->notify('Encoding ' . $name, $index / count(Track::$Formats) * 100);
 
-                    $process = new Process($command);
-                    $process->mustRun();
+                $process = new Process($command);
+                $process->mustRun();
+
+                // Update file size for track file
+                $trackFile->updateFilesize();
+
+                // Delete track file if it is cacheable
+                if ($trackFile->is_cacheable == true) {
+                    \Illuminate\Support\Facades\File::delete($trackFile->getFile());
                 }
             }
 
