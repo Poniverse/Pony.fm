@@ -105,6 +105,7 @@ class TracksController extends ApiControllerBase
             $url = null;
         }
 
+        return Response::json(['url' => $url], 200);
     }
 
     public function getIndex()
