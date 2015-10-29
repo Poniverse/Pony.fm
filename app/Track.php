@@ -235,7 +235,8 @@ class Track extends Model
                 'name' => $trackFile->format,
                 'extension' => $trackFile->extension,
                 'url' => $trackFile->url,
-                'size' => $trackFile->size
+                'size' => $trackFile->size,
+                'isCacheable' => $trackFile->is_cacheable
             ];
         }
 

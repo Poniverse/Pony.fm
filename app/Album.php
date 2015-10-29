@@ -99,7 +99,8 @@ class Album extends Model
                 'name' => $name,
                 'extension' => $format['extension'],
                 'url' => $album->getDownloadUrl($name),
-                'size' => Helpers::formatBytes($album->getFilesize($name))
+                'size' => Helpers::formatBytes($album->getFilesize($name)),
+                'isCacheable' => (in_array($name, array_keys(Track::$CacheableFormats)) ? true : false)
             ];
         }
 
