@@ -433,16 +433,7 @@ class Track extends Model
 
     public function getFilesize($formatName)
     {
-        return Cache::remember($this->getCacheKey('filesize-' . $formatName), 1440, function () use ($formatName) {
-            $file = $this->getFileFor($formatName);
-            $size = 0;
-
-            if (is_file($file)) {
-                $size = filesize($file);
-            }
-
-            return $size;
-        });
+        return $this->trackFiles()->where('format', $formatName)->first()->filesize;
     }
 
     public function canView($user)

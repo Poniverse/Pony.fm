@@ -24,6 +24,7 @@ use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 
 class TrackFile extends Model
@@ -96,16 +97,7 @@ class TrackFile extends Model
 
     protected function getFilesize()
     {
-        return Cache::remember($this->getCacheKey('filesize'), 1440, function () {
-            $file = $this->getFile();
-            $size = 0;
-
-            if (is_file($file)) {
-                $size = filesize($file);
-            }
-
-            return $size;
-        });
+        return $this->filesize;
     }
 
     public function getDirectory()
@@ -133,5 +125,19 @@ class TrackFile extends Model
     private function getCacheKey($key)
     {
         return 'track_file-' . $this->id . '-' . $key;
+    }
+
+    public function updateFilesize()
+    {
+        $file = $this->getFile();
+
+        if (File::exists($file)) {
+            $size = File::size($file);
+        } else {
+            $size = null;
+        }
+
+        $this->filesize = $size;
+        $this->update();
     }
 }
