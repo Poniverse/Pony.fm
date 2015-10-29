@@ -112,6 +112,9 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         $this->trackFile->in_progress = false;
         $this->trackFile->update();
 
+        // Update file size
+        $this->trackFile->updateFilesize();
+
     }
 
     /**
