@@ -41,6 +41,7 @@ class Kernel extends ConsoleKernel
         \Poniverse\Ponyfm\Console\Commands\PoniverseApiSetup::class,
         \Poniverse\Ponyfm\Console\Commands\ClearTrackCache::class,
         \Poniverse\Ponyfm\Console\Commands\RebuildTrackCache::class,
+        \Poniverse\Ponyfm\Console\Commands\RebuildFilesize::class,
     ];
 
     /**

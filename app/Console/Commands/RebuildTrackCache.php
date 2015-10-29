@@ -64,6 +64,9 @@ class RebuildTrackCache extends Command
     public function handle()
     {
         $this->info('This will run \'php artisan down\' if you proceed and \'php artisan up\' when complete.');
+        $this->info('***');
+        $this->info('If this is your first time running this command, it is *highly* recommended that you run `php artisan filesize:rebuild` to cache file sizes for all files before they are deleted.');
+        $this->info('***');
 
         if ($this->option('force') || $this->confirm('Are you sure you want to delete all to-be-cached files and encode missing non-cached files? [y|N]',
                 false)
@@ -201,7 +204,7 @@ class RebuildTrackCache extends Command
             }
 
             // Encode recorded files
-            foreach($emptyTrackFiles as $emptyTrackFile) {
+            foreach ($emptyTrackFiles as $emptyTrackFile) {
                 $this->dispatch(new EncodeTrackFile($emptyTrackFile, false));
             }
 
