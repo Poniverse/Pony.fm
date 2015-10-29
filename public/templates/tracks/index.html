@@ -66,6 +66,12 @@
             <a href="#" ng-click="gotoPage(page);" pfm-eat-click>{{page}}</a>
         </li>
         <li ng-class="{disabled: !nextPage}"><a href="#" ng-click="gotoPage(nextPage);" pfm-eat-click>Next</a></li>
+        <li class="pagination-jump">
+            <a href="#" ng-click="showPageSelector();" ng-hide="pageSelectorShown" pfm-eat-click>Jump&hellip;</a>
+            <form ng-submit="jumpToPage()" ng-show="pageSelectorShown">
+                <input type="number" id="pagination-jump-destination" ng-model="inputPageNumber" ng-blur="hidePageSelector()">
+            </form>
+        </li>
     </ul>
 </div>
 
