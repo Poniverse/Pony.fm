@@ -24,14 +24,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Poniverse\Ponyfm\TrackFile;
 
-class RebuildFilesize extends Command
+class RebuildFilesizes extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'filesize:rebuild
+    protected $signature = 'rebuild:filesizes
                             {--force : Skip all prompts.}';
 
     /**
