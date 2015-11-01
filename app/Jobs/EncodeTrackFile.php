@@ -65,10 +65,10 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
     public function handle()
     {
         // Start the job
-        $this->trackFile->in_progress = true;
+        $this->trackFile->is_in_progress = true;
         $this->trackFile->update();
 
-        // Assign the source to the track's master file
+        // Use the track's master file as the source
         $source = TrackFile::where('track_id', $this->trackFile->track_id)
             ->where('is_master', true)
             ->first()
@@ -77,7 +77,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         // Assign the target
         $destination = $this->trackFile->track->getDirectory();
         $this->trackFile->track->ensureDirectoryExists();
-        $target = $destination . '/' . $this->trackFile->getFilename();
+        $target = $this->trackFile->getFile();
 
         // Prepare the command
         $format = Track::$Formats[$this->trackFile->format];
@@ -100,21 +100,20 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         }
 
         // Update the tags of the track
-        $this->trackFile->track->updateTags();
+        $this->trackFile->track->updateTags($this->trackFile->format);
 
         // Insert the expiration time for cached tracks
         if ($this->isExpirable) {
-            $this->trackFile->expiration = Carbon::now()->addMinutes(Config::get('ponyfm.cache_duration'));
+            $this->trackFile->expires_at = Carbon::now()->addMinutes(Config::get('ponyfm.track_file_cache_duration'));
             $this->trackFile->update();
         }
-
-        // Complete the job
-        $this->trackFile->in_progress = false;
-        $this->trackFile->update();
 
         // Update file size
         $this->trackFile->updateFilesize();
 
+        // Complete the job
+        $this->trackFile->is_in_progress = false;
+        $this->trackFile->update();
     }
 
     /**
@@ -124,8 +123,8 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      */
     public function failed()
     {
-        $this->trackFile->in_progress = false;
-        $this->trackFile->expiration = null;
+        $this->trackFile->is_in_progress = false;
+        $this->trackFile->expires_at = null;
         $this->trackFile->update();
     }
 }

@@ -42,16 +42,15 @@ angular.module('ponyfm').controller "album", [
                 $scope.playlists.push list for list in lists
 
         $scope.getCachedAlbum = (id, format) ->
-            $scope.isEncoding = true
+            $scope.isInProgress = true
 
             cachedAlbum.download('albums', id, format).then (response) ->
-                albumUrl = response
-                $scope.albumUrl = albumUrl
-                if albumUrl == 'error'
-                    $scope.isEncoding = false
-                else if albumUrl == 'pending'
+                $scope.albumUrl = response
+                if $scope.albumUrl == 'error'
+                    $scope.isInProgress = false
+                else if $scope.albumUrl == 'pending'
                     $timeout $scope.getCachedAlbum(id, format), 5000
                 else
-                    $scope.isEncoding = false
-                    $window.open albumUrl, '_blank'
+                    $scope.isInProgress = false
+                    $window.open $scope.albumUrl, '_blank'
 ]

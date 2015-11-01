@@ -20,20 +20,20 @@
 
 namespace Poniverse\Ponyfm;
 
-use Poniverse\Ponyfm\Traits\SlugTrait;
+use Auth;
+use Cache;
+use Config;
+use DB;
 use Exception;
 use External;
 use getid3_writetags;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Auth;
-use Cache;
-use Config;
-use DB;
-use Log;
-use URL;
 use Illuminate\Support\Str;
+use Log;
+use Poniverse\Ponyfm\Traits\SlugTrait;
+use URL;
 
 class Track extends Model
 {
@@ -94,29 +94,14 @@ class Track extends Model
     ];
 
     public static $CacheableFormats = [
-        'OGG Vorbis' => [
-            'index' => 2,
-            'is_lossless' => false,
-            'extension' => 'ogg',
-            'tag_format' => 'vorbiscomment',
-            'tag_method' => 'updateTagsWithGetId3',
-            'mime_type' => 'audio/ogg',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libvorbis -aq 7 -f ogg {$target}'
-        ],
-        'ALAC' => [
-            'index' => 4,
-            'is_lossless' => true,
-            'extension' => 'alac.m4a',
-            'tag_format' => 'AtomicParsley',
-            'tag_method' => 'updateTagsWithAtomicParsley',
-            'mime_type' => 'audio/mp4',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec alac {$target}'
-        ],
+        'OGG Vorbis',
+        'ALAC',
     ];
 
     public static function summary()
     {
-        return self::select('tracks.id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at',
+        return self::select('tracks.id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at',
+            'published_at',
             'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id', 'comment_count',
             'download_count', 'view_count', 'play_count', 'favourite_count');
     }
@@ -269,41 +254,41 @@ class Track extends Model
             $userRow = $track->users[0];
             $userData = [
                 'stats' => [
-                    'views' => (int) $userRow->view_count,
-                    'plays' => (int) $userRow->play_count,
+                    'views' => (int)$userRow->view_count,
+                    'plays' => (int)$userRow->play_count,
                     'downloads' => $userRow->download_count,
                 ],
-                'is_favourited' => (bool) $userRow->is_favourited
+                'is_favourited' => (bool)$userRow->is_favourited
             ];
         }
 
         return [
-            'id' => (int) $track->id,
+            'id' => (int)$track->id,
             'title' => $track->title,
             'user' => [
-                'id' => (int) $track->user->id,
+                'id' => (int)$track->user->id,
                 'name' => $track->user->display_name,
                 'url' => $track->user->url
             ],
             'stats' => [
-                'views' => (int) $track->view_count,
-                'plays' => (int) $track->play_count,
-                'downloads' => (int) $track->download_count,
-                'comments' => (int) $track->comment_count,
-                'favourites' => (int) $track->favourite_count
+                'views' => (int)$track->view_count,
+                'plays' => (int)$track->play_count,
+                'downloads' => (int)$track->download_count,
+                'comments' => (int)$track->comment_count,
+                'favourites' => (int)$track->favourite_count
             ],
             'url' => $track->url,
             'slug' => $track->slug,
-            'is_vocal' => (bool) $track->is_vocal,
-            'is_explicit' => (bool) $track->is_explicit,
-            'is_downloadable' => (bool) $track->is_downloadable,
-            'is_published' => (bool) $track->isPublished(),
+            'is_vocal' => (bool)$track->is_vocal,
+            'is_explicit' => (bool)$track->is_explicit,
+            'is_downloadable' => (bool)$track->is_downloadable,
+            'is_published' => (bool)$track->isPublished(),
             'published_at' => $track->published_at,
             'duration' => $track->duration,
             'genre' => $track->genre != null
                 ?
                 [
-                    'id' => (int) $track->genre->id,
+                    'id' => (int)$track->genre->id,
                     'slug' => $track->genre->slug,
                     'name' => $track->genre->name
                 ] : null,
@@ -571,11 +556,22 @@ class Track extends Model
         $this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name) . ' - ' . Helpers::sanitizeInputForHashing($this->title));
     }
 
-    public function updateTags()
+    public function updateTags($trackFileFormat = 'all')
     {
-        $this->trackFiles()->touch();
+        if ($trackFileFormat === 'all') {
+            foreach ($this->trackFiles as $trackFile) {
+                $this->updateTagsForTrackFile($trackFile);
+            }
+        } else {
+            $trackFile = $this->trackFiles()->where('format', $trackFileFormat)->firstOrFail();
+            $this->updateTagsForTrackFile($trackFile);
+        }
+    }
 
-        foreach ($this->trackFiles as $trackFile) {
+    private function updateTagsForTrackFile($trackFile) {
+        $trackFile->touch();
+
+        if (\File::exists($trackFile->getFile())) {
             $format = $trackFile->format;
             $data = self::$Formats[$format];
 
@@ -654,10 +650,12 @@ class Track extends Model
 
         if ($tagWriter->WriteTags()) {
             if (!empty($tagWriter->warnings)) {
-                Log::warning('Track #'.$this->id.': There were some warnings:<br />' . implode('<br /><br />', $tagWriter->warnings));
+                Log::warning('Track #' . $this->id . ': There were some warnings:<br />' . implode('<br /><br />',
+                        $tagWriter->warnings));
             }
         } else {
-            Log::error('Track #' . $this->id . ': Failed to write tags!<br />' . implode('<br /><br />', $tagWriter->errors));
+            Log::error('Track #' . $this->id . ': Failed to write tags!<br />' . implode('<br /><br />',
+                    $tagWriter->errors));
         }
     }
 

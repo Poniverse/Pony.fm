@@ -59,10 +59,10 @@ return [
     | Cache Duration
     |--------------------------------------------------------------------------
     |
-    | Duration in minutes for tracks to be stored in cache.
+    | Duration in minutes for track files to be stored in cache.
     |
     */
 
-    'cache_duration' => 1440,
+    'track_file_cache_duration' => 1440,
 
 ];

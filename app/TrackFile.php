@@ -139,5 +139,7 @@ class TrackFile extends Model
 
         $this->filesize = $size;
         $this->update();
+
+        return $size;
     }
 }

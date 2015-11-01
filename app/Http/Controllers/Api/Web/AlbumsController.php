@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\File;
 use Poniverse\Ponyfm\Album;
 use Poniverse\Ponyfm\Commands\CreateAlbumCommand;
 use Poniverse\Ponyfm\Commands\DeleteAlbumCommand;
@@ -90,43 +91,26 @@ class AlbumsController extends ApiControllerBase
     {
         // Validation
         try {
-            $album = Album::findOrFail($id);
+            $album = Album::with('tracks.trackFiles')->findOrFail($id);
         } catch (ModelNotFoundException $e) {
             return $this->notFound('Album not found!');
         }
 
-        if (!array_key_exists($format, Track::$CacheableFormats)) {
+        if (!in_array($format, Track::$CacheableFormats)) {
             return $this->notFound('Format not found!');
         }
 
-        $tracks = $album->tracks;
-
-        $trackCount = 0;
-        $cachedCount = 0;
-
-        foreach($tracks as $track) {
-            if ($track->is_downloadable == false) {
-                continue;
-            } else {
-                $trackCount++;
-            }
-
-            try {
-                $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
-            } catch (ModelNotFoundException $e) {
-                return $this->notFound('Track file for track ID ' . $track->id . ' not found!');
-            }
-
-            if ($trackFile->expiration != null) {
-                $cachedCount++;
-            } elseif ($trackFile->in_progress != true) {
-                $this->dispatch(new EncodeTrackFile($trackFile, true));
-            }
+        $trackCount = $album->countDownloadableTracks();
+        try {
+            $cachedCount = $album->countCacheableTrackFiles($format);
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound('Track file in album not found!');
         }
 
         if ($trackCount === $cachedCount) {
             $url = $album->getDownloadUrl($format);
         } else {
+            $album->encodeCacheableTrackFiles($format);
             $url = null;
         }
 

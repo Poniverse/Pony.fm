@@ -85,7 +85,10 @@ class TracksController extends ApiControllerBase
         if (!$track->canView(Auth::user()))
             return $this->notFound('Track not found!');
 
-        if (!in_array($format, array_keys(Track::$CacheableFormats))) {
+        if ($track->is_downloadable == false)
+            return $this->notFound('Track not found!');
+
+        if (!in_array($format, Track::$CacheableFormats)) {
             return $this->notFound('Format not found!');
         }
 
@@ -96,9 +99,9 @@ class TracksController extends ApiControllerBase
         }
 
         // Return URL or begin encoding
-        if ($trackFile->expiration != null && File::exists($trackFile->getFile())) {
+        if ($trackFile->expires_at != null && File::exists($trackFile->getFile())) {
             $url = $track->getUrlFor($format);
-        } elseif ($trackFile->in_progress === true) {
+        } elseif ($trackFile->is_in_progress === true) {
             $url = null;
         } else {
             $this->dispatch(new EncodeTrackFile($trackFile, true));

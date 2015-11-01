@@ -60,44 +60,44 @@ class ClearTrackCache extends Command
      */
     public function handle()
     {
-        if ($this->option('tracks') == 'all') {
-            // Get all cacheable tracks
-            $trackFiles = TrackFile::where('is_cacheable', true)->get();
-        } else {
-            // Get all expired tracks
+        if ($this->option('tracks') === 'all') {
+            // Get all cacheable track files
             $trackFiles = TrackFile::where('is_cacheable', true)
-                ->where('expiration', '<=', Carbon::now())
+                ->with('track.album')
                 ->get();
-
+        } else {
+            // Get all expired track files
+            $trackFiles = TrackFile::where('is_cacheable', true)
+                ->where('expires_at', '<=', Carbon::now())
+                ->with('track.album')
+                ->get();
         }
 
-        // Delete above tracks
+        // Delete above track files
         if (count($trackFiles) === 0) {
             $this->info('No tracks found. Exiting.');
         } else {
 
-            if ($this->option('force') || $this->confirm(count($trackFiles) . ' tracks found. Proceed to delete? [y|N]', false)) {
+            if ($this->option('force') || $this->confirm(count($trackFiles) . ' cacheable track files found. Proceed to delete their files if they exist? [y|N]', false)) {
 
                 $count = 0;
 
                 foreach ($trackFiles as $trackFile) {
 
                     // Set expiration to null (so can be re-cached upon request)
-                    $trackFile->expiration = null;
+                    $trackFile->expires_at = null;
                     $trackFile->update();
 
-                    // Delete files if exists
+                    // Delete file if exists
                     if (File::exists($trackFile->getFile())) {
                         $count++;
                         File::delete($trackFile->getFile());
 
-                        // Remove the cached file sizes for main, trackfile and format
-                        Cache::forget($trackFile->getCacheKey('filesize'));
-                        Cache::forget($trackFile->track()->getCacheKey('filesize-' . $trackFile->format));
-                        Cache::forget($trackFile->track()->album()->getCacheKey('filesize-' . $trackFile->format));
-
                         $this->info('Deleted ' . $trackFile->getFile());
                     }
+
+                    // Remove the cached file size for the album
+                    Cache::forget($trackFile->track->album->getCacheKey('filesize-' . $trackFile->format));
 
                 }
                 $this->info($count . ' files deleted. Deletion complete. Exiting.');

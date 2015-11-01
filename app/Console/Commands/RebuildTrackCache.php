@@ -63,154 +63,192 @@ class RebuildTrackCache extends Command
      */
     public function handle()
     {
-        $this->info('This will run \'php artisan down\' if you proceed and \'php artisan up\' when complete.');
         $this->info('***');
-        $this->info('If this is your first time running this command, it is *highly* recommended that you run `php artisan filesize:rebuild` to cache file sizes for all files before they are deleted.');
+        $this->info('If this is your first time running this command, it is *highly* recommended that you ensure the file sizes for all track files have been populated.');
         $this->info('***');
 
-        if ($this->option('force') || $this->confirm('Are you sure you want to delete all to-be-cached files and encode missing non-cached files? [y|N]',
+        if ($this->option('force') || $this->confirm('Are you sure you want to delete all to-be-cached track files and encode missing non-cached track files?',
                 false)
         ) {
 
-            $this->call('down');
-
             //==========================================================================================================
-            // Delete previously cached tracks
+            // Delete previously cached track files
             //==========================================================================================================
 
-            // Find files which are cacheable and NOT master
-            $trackFiles = TrackFile::where('is_cacheable', true)
+            $this->output->newLine(1);
+            $this->info('========== Step 1/4 - Deleting previously cached track files. ==========');
+
+            $count = 0;
+
+            // Chunk track files which are cacheable and NOT master
+            TrackFile::where('is_cacheable', true)
                 ->where('is_master', false)
-                ->get();
+                ->chunk(200, function ($trackFiles) use (&$count) {
+                    // Delete chunked track files
+                    foreach ($trackFiles as $trackFile) {
+                        // Clear expiration so will be re-cached on next request
+                        $trackFile->expires_at = null;
+                        $trackFile->update();
 
-            // Delete above files
-            if (count($trackFiles) == 0) {
-                $this->info('No tracks found. Continuing.');
-            } else {
-                $this->info(count($trackFiles) . ' tracks found.');
-                $count = 0;
-
-                foreach ($trackFiles as $trackFile) {
-                    // Clear expiration so will be re-cached on next request
-                    $trackFile->expiration = null;
-                    $trackFile->update();
-
-                    // Delete files
-                    if (File::exists($trackFile->getFile())) {
-                        $count++;
-                        File::delete($trackFile->getFile());
-                        $this->info('Deleted ' . $trackFile->getFile());
+                        // Delete files
+                        if (File::exists($trackFile->getFile())) {
+                            $count++;
+                            File::delete($trackFile->getFile());
+                            $this->info('Deleted ' . $trackFile->getFile());
+                        }
                     }
-                }
 
-                $this->info($count . ' files deleted. Deletion complete. Continuing.');
-            }
+                    $this->info($count . ' track files deleted. Deletion complete. Continuing.');
+                });
 
             //==========================================================================================================
-            // Update the database entries for cacheable files - non-cacheable to cacheable
+            // Update the database entries for cacheable track files - non-cacheable to cacheable
             //==========================================================================================================
 
-            $this->info('--- Step 2/4 - Updating is_cacheable entries in database. ---');
+            $this->output->newLine(3);
+            $this->info('========== Step 2/4 - Updating is_cacheable entries in database. ==========');
 
-            // Find files which are meant to be cacheable and NOT master, but currently not cacheable
-            $trackFiles = TrackFile::where('is_cacheable', false)
-                ->whereIn('format', array_keys(Track::$CacheableFormats))
-                ->where('is_master', false)
-                ->get();
-
+            $trackFileCount = 0;
             $formats = [];
 
-            // Set above files to cacheable in the database
-            foreach ($trackFiles as $trackFile) {
-                // Let user know which formats, previously not cached, were made cacheable
-                $formats[] = $trackFile->format;
+            // Find track files which are meant to be cacheable and NOT master, but currently not cacheable
+            TrackFile::where('is_cacheable', false)
+                ->whereIn('format', Track::$CacheableFormats)
+                ->where('is_master', false)
+                ->chunk(200, function ($trackFiles) use (&$trackFileCount, &$formats) {
+                    $this->output->newLine(1);
+                    $this->info('---------- Start Chunk ----------');
 
-                $trackFile->expiration = null;
-                $trackFile->is_cacheable = true;
-                $trackFile->update();
-            }
+                    // Set above files to cacheable in the database
+                    foreach ($trackFiles as $trackFile) {
+                        $trackFileCount++;
+
+                        // Let user know which formats, previously not cached, were made cacheable
+                        $formats[] = $trackFile->format;
+
+                        $trackFile->expires_at = null;
+                        $trackFile->is_cacheable = true;
+                        $trackFile->update();
+                    }
+
+                    $this->info('----------- End Chunk -----------');
+                    $this->output->newLine(1);
+                });
 
             $this->info('Format(s) set from non-cacheable to cacheable: ' . implode(' ', array_unique($formats)));
-            $this->info(count($trackFiles) . ' non-cacheable tracks set to cacheable.');
+            $this->info($trackFileCount . ' non-cacheable track files set to cacheable.');
+
+            $this->output->newLine(2);
 
             //==========================================================================================================
-            // Update the database entries for cacheable files - cacheable to non-cacheable
+            // Update the database entries for cacheable track files - cacheable to non-cacheable
             //==========================================================================================================
 
-            // Find files which are NOT meant to be cacheable, but currently cacheable
-            $trackFiles = TrackFile::where('is_cacheable', true)
-                ->whereNotIn('format', array_keys(Track::$CacheableFormats))
-                ->get();
-
+            $trackFileCount = 0;
             $formats = [];
 
-            // Set above files to non-cacheable in the database
-            foreach ($trackFiles as $trackFile) {
-                // Let user know which formats, previously not cached, were made cacheable
-                $formats[] = $trackFile->format;
+            // Chunk track files which are NOT meant to be cacheable, but currently cacheable
+            TrackFile::where('is_cacheable', true)
+                ->whereNotIn('format', Track::$CacheableFormats)
+                ->chunk(200, function ($trackFiles) use (&$trackFileCount, &$formats) {
+                    $this->output->newLine(1);
+                    $this->info('---------- Start Chunk ----------');
 
-                $trackFile->expiration = null;
-                $trackFile->is_cacheable = false;
-                $trackFile->update();
-            }
+                    // Set chunked track files to non-cacheable in the database
+                    foreach ($trackFiles as $trackFile) {
+                        $trackFileCount++;
+
+                        // Let user know which formats, previously not cached, were made cacheable
+                        $formats[] = $trackFile->format;
+
+                        $trackFile->expires_at = null;
+                        $trackFile->is_cacheable = false;
+                        $trackFile->update();
+                    }
+
+                    $this->info('----------- End Chunk -----------');
+                    $this->output->newLine(1);
+                    $this->output->newLine(1);
+                });
+
 
             $this->info('Format(s) set from cacheable to non-cacheable: ' . implode(' ', array_unique($formats)));
-            $this->info(count($trackFiles) . ' cacheable tracks set to non-cacheable.');
+            $this->info($trackFileCount . ' cacheable track files set to non-cacheable.');
 
             //==========================================================================================================
-            // Delete files which have now been marked as cacheable
+            // Delete track files which have now been marked as cacheable
             //==========================================================================================================
 
-            $this->info('--- Step 3/4 - Deleting now-cacheable files. ---');
+            $this->output->newLine(3);
+            $this->info('========== Step 3/4 - Deleting now-cacheable track files. ==========');
 
-            // Find files which are cacheable and NOT master
-            $trackFiles = TrackFile::whereIn('format', array_keys(Track::$CacheableFormats))
+            $count = 0;
+            $trackFileCount = 0;
+
+            // Find track files which are cacheable and NOT master
+            TrackFile::whereIn('format', Track::$CacheableFormats)
                 ->where('is_master', false)
-                ->get();
+                ->chunk(200, function ($trackFiles) use (&$count, &$trackFileCount) {
+                    $this->output->newLine(1);
+                    $this->info('---------- Start Chunk ----------');
 
-            // Delete above files
-            if (count($trackFiles) == 0) {
-                $this->info('No tracks to delete found. Continuing.');
-            } else {
-                $count = 0;
+                    foreach ($trackFiles as $trackFile) {
+                        $trackFileCount++;
+
+                        // Delete track files if track files exist; double-check that they are NOT master files
+                        if (File::exists($trackFile->getFile()) && $trackFile->is_master == false) {
+                            $count++;
+
+                            File::delete($trackFile->getFile());
+                            $this->info('Deleted ' . $trackFile->getFile());
+                        }
+                    }
+
+                    $this->info('----------- End Chunk -----------');
+                    $this->output->newLine(1);
+                });
+
+
+            $this->info(sprintf('%d track files deleted out of %d track files. Continuing.', $count, $trackFileCount));
+
+            //==========================================================================================================
+            // Encode missing (i.e., now non-cacheable) track files
+            //==========================================================================================================
+
+            $this->output->newLine(3);
+            $this->info('========== Step 4/4 - Encoding missing track files. ==========');
+
+            $count = 0;
+
+            // Chunk non-cacheable track files
+            TrackFile::where('is_cacheable', false)->chunk(200, function ($trackFiles) use (&$count) {
+                $this->output->newLine(1);
+                $this->info('---------- Start Chunk ----------');
+
+                // Record the track files which do not exist (i.e., have not been encoded yet)
+                $emptyTrackFiles = [];
+
                 foreach ($trackFiles as $trackFile) {
-                    // Delete files if files exist; double-check that they are NOT master files
-                    if (File::exists($trackFile->getFile()) && $trackFile->is_master == false) {
+                    if (!File::exists($trackFile->getFile())) {
                         $count++;
-                        File::delete($trackFile->getFile());
-                        $this->info('Deleted ' . $trackFile->getFile());
+                        $emptyTrackFiles[] = $trackFile;
                     }
                 }
-                $this->info(sprintf('%d files deleted out of %d tracks. Continuing.', $count, count($trackFiles)));
-            }
 
-            //==========================================================================================================
-            // Encode missing (i.e., now non-cacheable) files
-            //==========================================================================================================
-
-            $this->info('--- Step 4/4 - Encoding missing files. ---');
-
-            // Get non-cacheable files
-            $trackFiles = TrackFile::where('is_cacheable', false)->get();
-
-            // Record the above files which do not exist (i.e., have not been encoded yet)
-            $emptyTrackFiles = [];
-            $count = 0;
-            foreach ($trackFiles as $trackFile) {
-                if (!File::exists($trackFile->getFile())) {
-                    $count++;
-                    $emptyTrackFiles[] = $trackFile;
+                // Encode recorded track files
+                foreach ($emptyTrackFiles as $emptyTrackFile) {
+                    $this->info("Started encoding track file ID {$emptyTrackFile->id}");
+                    $this->dispatch(new EncodeTrackFile($emptyTrackFile, false));
                 }
-            }
 
-            // Encode recorded files
-            foreach ($emptyTrackFiles as $emptyTrackFile) {
-                $this->dispatch(new EncodeTrackFile($emptyTrackFile, false));
-            }
+                $this->info('----------- End Chunk -----------');
+                $this->output->newLine(1);
+            });
 
-            $this->info($count . ' tracks encoded.');
 
-            $this->call('up');
+            $this->info($count . ' track files encoded.');
+            $this->output->newLine(1);
+
             $this->info('Rebuild complete. Exiting.');
 
         } else {

@@ -18,8 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Artisan;
 
 class UpdateTrackFilesWithFilesize extends Migration
 {
@@ -33,6 +34,11 @@ class UpdateTrackFilesWithFilesize extends Migration
         Schema::table('track_files', function (Blueprint $table) {
             $table->integer('filesize')->nullable()->unsigned();
         });
+
+        // Populate file sizes
+        Artisan::call('rebuild:filesizes', [
+            '--force' => true,
+        ]);
     }
 
     /**

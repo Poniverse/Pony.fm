@@ -18,7 +18,7 @@ angular.module('ponyfm').factory('download-cached', [
   '$rootScope', '$http', '$log'
   ($rootScope, $http, $log) ->
     download = (type, id, format) ->
-      url = '/api/web/' + type + '/cached/' + id + '/' + format
+      url = "/api/web/#{type}/cached/#{id}/#{format}"
 
       encodingComplete = (response) ->
         if response.data.url == null

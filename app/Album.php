@@ -21,17 +21,21 @@
 namespace Poniverse\Ponyfm;
 
 use Exception;
+use Helpers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
+use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Traits\SlugTrait;
-use Helpers;
 
 class Album extends Model
 {
-    use SoftDeletes, SlugTrait;
+    use SoftDeletes, SlugTrait, DispatchesJobs;
 
     protected $dates = ['deleted_at'];
 
@@ -100,7 +104,7 @@ class Album extends Model
                 'extension' => $format['extension'],
                 'url' => $album->getDownloadUrl($name),
                 'size' => Helpers::formatBytes($album->getFilesize($name)),
-                'isCacheable' => (in_array($name, array_keys(Track::$CacheableFormats)) ? true : false)
+                'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false)
             ];
         }
 
@@ -146,24 +150,24 @@ class Album extends Model
             $userRow = $album->users[0];
             $userData = [
                 'stats' => [
-                    'views' => (int) $userRow->view_count,
-                    'downloads' => (int) $userRow->download_count,
+                    'views' => (int)$userRow->view_count,
+                    'downloads' => (int)$userRow->download_count,
                 ],
-                'is_favourited' => (bool) $userRow->is_favourited
+                'is_favourited' => (bool)$userRow->is_favourited
             ];
         }
 
         return [
-            'id' => (int) $album->id,
-            'track_count' => (int) $album->track_count,
+            'id' => (int)$album->id,
+            'track_count' => (int)$album->track_count,
             'title' => $album->title,
             'slug' => $album->slug,
             'created_at' => $album->created_at,
             'stats' => [
-                'views' => (int) $album->view_count,
-                'downloads' => (int) $album->download_count,
-                'comments' => (int) $album->comment_count,
-                'favourites' => (int) $album->favourite_count
+                'views' => (int)$album->view_count,
+                'downloads' => (int)$album->download_count,
+                'comments' => (int)$album->comment_count,
+                'favourites' => (int)$album->favourite_count
             ],
             'covers' => [
                 'small' => $album->getCoverUrl(Image::SMALL),
@@ -171,7 +175,7 @@ class Album extends Model
             ],
             'url' => $album->url,
             'user' => [
-                'id' => (int) $album->user->id,
+                'id' => (int)$album->user->id,
                 'name' => $album->user->display_name,
                 'url' => $album->user->url,
             ],
@@ -263,6 +267,63 @@ class Album extends Model
         }
     }
 
+    public function countDownloadableTracks()
+    {
+        $trackCount = 0;
+
+        foreach ($this->tracks as $track) {
+            if ($track->is_downloadable == true) {
+                $trackCount++;
+            } else {
+                continue;
+            }
+        }
+
+        return $trackCount;
+    }
+
+    public function countCacheableTrackFiles($format)
+    {
+        $cachedCount = 0;
+
+        foreach ($this->tracks as $track) {
+            if ($track->is_downloadable == false) {
+                continue;
+            }
+
+            try {
+                $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
+            } catch (ModelNotFoundException $e) {
+                throw $e;
+            }
+
+            if ($trackFile->expires_at != null && File::exists($trackFile->getFile())) {
+                $cachedCount++;
+            }
+        }
+
+        return $cachedCount;
+    }
+
+    public function encodeCacheableTrackFiles($format)
+    {
+        foreach ($this->tracks as $track) {
+            if ($track->is_downloadable == false) {
+                continue;
+            }
+
+            try {
+                $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
+            } catch (ModelNotFoundException $e) {
+                throw $e;
+            }
+
+            if (!File::exists($trackFile->getFile()) && $trackFile->is_in_progress != true) {
+                $this->dispatch(new EncodeTrackFile($trackFile, true));
+            }
+        }
+    }
+
     public function syncTrackIds($trackIds)
     {
         $trackIdsInAlbum = [];
@@ -332,7 +393,7 @@ class Album extends Model
         }
     }
 
-    private function getCacheKey($key)
+    public function getCacheKey($key)
     {
         return 'album-' . $this->id . '-' . $key;
     }

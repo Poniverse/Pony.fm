@@ -136,7 +136,7 @@ class UploadTrackCommand extends CommandBase
                 $trackFile = new TrackFile();
                 $trackFile->is_master = $name === 'FLAC' ? true : false;
                 $trackFile->format = $name;
-                if (array_key_exists($name, Track::$CacheableFormats) && $trackFile->is_master == false) {
+                if (in_array($name, Track::$CacheableFormats) && $trackFile->is_master == false) {
                     $trackFile->is_cacheable = true;
                 } else {
                     $trackFile->is_cacheable = false;
@@ -144,7 +144,7 @@ class UploadTrackCommand extends CommandBase
                 $track->trackFiles()->save($trackFile);
 
                 // Encode track file
-                $target = $destination . '/' . $trackFile->getFilename();
+                $target = $trackFile->getFile();
 
                 $command = $format['command'];
                 $command = str_replace('{$source}', '"' . $source . '"', $command);
@@ -161,7 +161,7 @@ class UploadTrackCommand extends CommandBase
 
                 // Delete track file if it is cacheable
                 if ($trackFile->is_cacheable == true) {
-                    \Illuminate\Support\Facades\File::delete($trackFile->getFile());
+                    File::delete($trackFile->getFile());
                 }
             }
 
