@@ -93,9 +93,21 @@ class Track extends Model
         ],
     ];
 
+    /**
+     * `TrackFiles` in these formats, with the exception of any master files, will
+     * be generated upon user request and kept around temporarily.
+     *
+     * After updating this array, run `php artisan rebuild:track-cache` to bring
+     * the track store into a consistent state.
+     *
+     * The strings in this array must match keys in the `Track::$Formats` array.
+     *
+     * @var array
+     */
     public static $CacheableFormats = [
         'OGG Vorbis',
         'ALAC',
+        'AAC'
     ];
 
     public static function summary()
