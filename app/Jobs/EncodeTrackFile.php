@@ -75,7 +75,6 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
             ->getFile();
 
         // Assign the target
-        $destination = $this->trackFile->track->getDirectory();
         $this->trackFile->track->ensureDirectoryExists();
         $target = $this->trackFile->getFile();
 

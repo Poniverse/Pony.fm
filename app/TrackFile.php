@@ -31,7 +31,7 @@ class TrackFile extends Model
 {
     public function track()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Track');
+        return $this->belongsTo('Poniverse\Ponyfm\Track')->withTrashed();
     }
 
     /**
