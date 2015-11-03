@@ -52,5 +52,5 @@ angular.module('ponyfm').controller "album", [
                     $timeout $scope.getCachedAlbum(id, format), 5000
                 else
                     $scope.isInProgress = false
-                    $window.open $scope.albumUrl, '_blank'
+                    $window.open $scope.albumUrl
 ]

@@ -74,15 +74,15 @@ angular.module('ponyfm').controller "track", [
                 playlist.message = res.message
 
         $scope.getCachedTrack = (id, format) ->
-          $scope.isInProgress = true
+            $scope.isInProgress = true
 
-          cachedTrack.download('tracks', id, format).then (response) ->
-            $scope.trackUrl = response
-            if $scope.trackUrl == 'error'
-              $scope.isInProgress = false
-            else if $scope.trackUrl == 'pending'
-              $timeout $scope.getCachedTrack(id, format), 5000
-            else
-              $scope.isInProgress = false
-              $window.open $scope.trackUrl, '_blank'
+            cachedTrack.download('tracks', id, format).then (response) ->
+                $scope.trackUrl = response
+                if $scope.trackUrl == 'error'
+                    $scope.isInProgress = false
+                else if $scope.trackUrl == 'pending'
+                    $timeout $scope.getCachedTrack(id, format), 5000
+                else
+                    $scope.isInProgress = false
+                    $window.location = $scope.trackUrl#, '_blank'
 ]

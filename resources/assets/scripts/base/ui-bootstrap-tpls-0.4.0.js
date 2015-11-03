@@ -1269,10 +1269,29 @@ angular.module('ui.bootstrap.dropdownToggle', []).directive('dropdownToggle', ['
           element.parent().addClass('open');
           openElement = element;
           closeMenu = function (event) {
+
+            // Dropdowns with with the `auto-close="outsideClick"` attribute are handled differently.
+            // They will only close if the user clicks somewhere outside of the dropdown menu.
+            //
+            // => Partially backported from: https://github.com/angular-ui/bootstrap/pull/3045/files
+            if ('autoClose' in attrs && attrs.autoClose === 'outsideClick') {
+              if (typeof event !== 'undefined' && !element.parent()[0].contains(event.target)) {
+                // Only close the menu if we detect a click outside the element.
+                $document.unbind('click', closeMenu);
+                element.parent().removeClass('open');
+                closeMenu = angular.noop;
+                openElement = null;
+              }
+
+              return;
+            }
+
+            // If this isn't an "outside click", handle it as usual.
             if (event) {
               event.preventDefault();
               event.stopPropagation();
             }
+
             $document.unbind('click', closeMenu);
             element.parent().removeClass('open');
             closeMenu = angular.noop;

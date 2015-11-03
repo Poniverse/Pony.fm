@@ -1,7 +1,7 @@
 <div class="resource-details track-details" bindonce="track">
     <ul class="dropdowns">
         <li class="dropdown">
-            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="track.is_downloadable == 0">
+            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="track.is_downloadable == 0" auto-close="outsideClick">
                 Downloads
             </a>
             <ul class="dropdown-menu" ng-show="track.is_downloadable == 1">
