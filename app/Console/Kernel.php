@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel
         \Poniverse\Ponyfm\Console\Commands\RefreshCache::class,
         \Poniverse\Ponyfm\Console\Commands\ImportMLPMA::class,
         \Poniverse\Ponyfm\Console\Commands\ClassifyMLPMA::class,
+        \Poniverse\Ponyfm\Console\Commands\PublishUnclassifiedMlpmaTracks::class,
         \Poniverse\Ponyfm\Console\Commands\RebuildTags::class,
         \Poniverse\Ponyfm\Console\Commands\FixYearZeroLogs::class,
         \Poniverse\Ponyfm\Console\Commands\BootstrapLocalEnvironment::class,

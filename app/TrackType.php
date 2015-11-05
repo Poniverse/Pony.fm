@@ -31,4 +31,5 @@ class TrackType extends Model
     const FAN_TRACK_REMIX = 3;
     const PONIFIED_TRACK = 4;
     const OFFICIAL_AUDIO_REMIX = 5;
+    const UNCLASSIFIED_TRACK = 6;
 }

@@ -23,6 +23,7 @@ namespace Poniverse\Ponyfm\Commands;
 use Poniverse\Ponyfm\Album;
 use Poniverse\Ponyfm\Image;
 use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\TrackType;
 use Poniverse\Ponyfm\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -65,7 +66,7 @@ class EditTrackCommand extends CommandBase
             'license_id' => 'required|exists:licenses,id',
             'genre_id' => 'required|exists:genres,id',
             'cover' => 'image|mimes:png|min_width:350|min_height:350',
-            'track_type_id' => 'required|exists:track_types,id',
+            'track_type_id' => 'required|exists:track_types,id|not_in:'.TrackType::UNCLASSIFIED_TRACK,
             'songs' => 'required_when:track_type,2|exists:songs,id',
             'cover_id' => 'exists:images,id',
             'album_id' => 'exists:albums,id'
@@ -121,7 +122,7 @@ class EditTrackCommand extends CommandBase
             $track->album_id = null;
         }
 
-        if ($track->track_type_id == 2) {
+        if ($track->track_type_id == TrackType::OFFICIAL_TRACK_REMIX) {
             $track->showSongs()->sync(explode(',', $this->_input['show_song_ids']));
         } else {
             $track->showSongs()->sync([]);
