@@ -99,7 +99,7 @@
                 <li><a href="/register" target="_self">Register</a></li>
             @endif
             <li class="x-attribution">
-                <a ng-click="showCredits()" href="#" title="Pony.fm project credits">
+                <a ng-click="showCredits()" title="Pony.fm project credits">
                     @if(config('ponyfm.use_powered_by_footer'))
                         <span>Powered by</span>
                         <img src="/images/ponyfm-logo-white.svg" alt="Pony.fm logo" title="Pony.fm"/>

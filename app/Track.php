@@ -24,6 +24,7 @@ use Auth;
 use Cache;
 use Config;
 use DB;
+use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
 use getid3_writetags;
@@ -32,7 +33,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Log;
-use Poniverse\Ponyfm\Traits\SlugTrait;
 use URL;
 
 class Track extends Model
@@ -153,6 +153,16 @@ class Track extends Model
                 $query->with('user');
             }
         ]);
+    }
+
+    /**
+     * Limits results to MLP Music Archive tracks.
+     *
+     * @param $query
+     */
+    public function scopeMlpma($query)
+    {
+        $query->join('mlpma_tracks', 'tracks.id', '=', 'mlpma_tracks.track_id');
     }
 
     public static function popular($count, $allowExplicit = false)
