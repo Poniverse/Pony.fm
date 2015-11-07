@@ -18,18 +18,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-use Illuminate\Database\Eloquent\Model;
-
-class TrackType extends Model
+class AddUnclassifiedTrackType extends Migration
 {
-    protected $table = 'track_types';
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        DB::table('track_types')->insert([
+            'id' => 6,
+            'title' => 'Unclassified',
+            'editor_title' => 'an unclassified track'
+        ]);
+    }
 
-    const ORIGINAL_TRACK = 1;
-    const OFFICIAL_TRACK_REMIX = 2;
-    const FAN_TRACK_REMIX = 3;
-    const PONIFIED_TRACK = 4;
-    const OFFICIAL_AUDIO_REMIX = 5;
-    const UNCLASSIFIED_TRACK = 6;
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        DB::table('track_types')->where('id', 6)->delete();
+    }
 }

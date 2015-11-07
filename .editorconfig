@@ -9,10 +9,13 @@ end_of_line = lf
 insert_final_newline = true
 
 # 4 space indentation and default charset
-[*.{php,coffee,js,less,css,html}]
+[*.{php,coffee,js,html}]
 charset = utf-8
 indent_style = space
 indent_size = 4
+
+[*.{less,css}]
+indent_size = 2
 
 # One-offs
 

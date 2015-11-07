@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm;
 
+use Illuminate\Database\Query\Builder;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
@@ -135,6 +136,16 @@ class Track extends Model
                 $query->with('user');
             }
         ]);
+    }
+
+    /**
+     * Limits results to MLP Music Archive tracks.
+     *
+     * @param $query
+     */
+    public function scopeMlpma($query)
+    {
+        $query->join('mlpma_tracks', 'tracks.id', '=', 'mlpma_tracks.track_id');
     }
 
     public static function popular($count, $allowExplicit = false)

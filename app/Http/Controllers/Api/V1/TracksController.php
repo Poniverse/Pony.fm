@@ -100,7 +100,11 @@ class TracksController extends \ApiControllerBase
                 'small' => $track->getCoverUrl(Image::SMALL),
                 'normal' => $track->getCoverUrl(Image::NORMAL)
             ],
-            'comments' => $comments
+            'comments' => $comments,
+
+            // As of 2015-10-28, this should be expected to produce either
+            // "direct_upload" or "mlpma" for all tracks.
+            'source' => $track->source
         ], 200);
     }
 }

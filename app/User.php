@@ -66,6 +66,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('Poniverse\Ponyfm\Comment', 'profile_id')->orderBy('created_at', 'desc');
     }
 
+    public function tracks()
+    {
+        return $this->hasMany('Poniverse\Ponyfm\Track', 'user_id');
+    }
+
     public function getIsArchivedAttribute()
     {
         return (bool)$this->attributes['is_archived'];
