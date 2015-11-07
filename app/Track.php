@@ -243,7 +243,7 @@ class Track extends Model
                 'extension' => $trackFile->extension,
                 'url' => $trackFile->url,
                 'size' => $trackFile->size,
-                'isCacheable' => $trackFile->is_cacheable
+                'isCacheable' => (bool) $trackFile->is_cacheable
             ];
         }
 
