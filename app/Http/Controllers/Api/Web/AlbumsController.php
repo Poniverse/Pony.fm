@@ -102,7 +102,7 @@ class AlbumsController extends ApiControllerBase
 
         $trackCount = $album->countDownloadableTracks();
         try {
-            $cachedCount = $album->countCacheableTrackFiles($format);
+            $cachedCount = $album->countCachedTrackFiles($format);
         } catch (ModelNotFoundException $e) {
             return $this->notFound('Track file in album not found!');
         }

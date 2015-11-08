@@ -21,8 +21,8 @@ window.pfm.preloaders['playlist'] = [
 ]
 
 angular.module('ponyfm').controller 'playlist', [
-    '$scope', '$state', 'playlists', '$dialog'
-    ($scope, $state, playlists, $dialog) ->
+    '$scope', '$state', 'playlists', '$dialog', 'download-cached', '$window', '$timeout'
+    ($scope, $state, playlists, $dialog, cachedPlaylist, $window, $timeout) ->
         playlist = null
 
         playlists.fetch($state.params.id).done (playlistResponse) ->
@@ -34,4 +34,18 @@ angular.module('ponyfm').controller 'playlist', [
                 templateUrl: '/templates/partials/playlist-share-dialog.html',
                 controller: ['$scope', ($scope) -> $scope.playlist = playlist; $scope.close = () -> dialog.close()]
             dialog.open()
+
+        $scope.getCachedPlaylist = (id, format) ->
+            $scope.isInProgress = true
+
+            cachedPlaylist.download('playlists', id, format).then (response) ->
+                $scope.playlistUrl = response
+                if $scope.playlistUrl == 'error'
+                    $scope.isInProgress = false
+                else if $scope.playlistUrl == 'pending'
+                    $timeout $scope.getCachedPlaylist(id, format), 5000
+                else
+                    $scope.isInProgress = false
+                    $window.open $scope.playlistUrl
 ]
+

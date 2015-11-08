@@ -282,7 +282,7 @@ class Album extends Model
         return $trackCount;
     }
 
-    public function countCacheableTrackFiles($format)
+    public function countCachedTrackFiles($format)
     {
         $cachedCount = 0;
 
