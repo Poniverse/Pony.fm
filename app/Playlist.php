@@ -226,11 +226,7 @@ class Playlist extends Model
                 continue;
             }
 
-            try {
-                $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
-            } catch (ModelNotFoundException $e) {
-                throw $e;
-            }
+            $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
 
             if ($trackFile->expires_at != null && File::exists($trackFile->getFile())) {
                 $cachedCount++;
