@@ -21,19 +21,19 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\File;
+use File;
+use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
 use Poniverse\Ponyfm\Commands\DeleteTrackCommand;
 use Poniverse\Ponyfm\Commands\EditTrackCommand;
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\ResourceLogItem;
-use Poniverse\Ponyfm\Track;
-use Cover;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
 use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Track;
+use Auth;
+use Input;
+use Response;
 
 class TracksController extends ApiControllerBase
 {
@@ -44,16 +44,15 @@ class TracksController extends ApiControllerBase
         try {
             return $this->execute(new UploadTrackCommand());
 
-        } catch (\InvalidEncodeOptions $e) {
+        } catch (InvalidEncodeOptionsException $e) {
 
         }
     }
 
     public function getUploadStatus($trackId)
     {
-        // TODO: authorize this
-
         $track = Track::findOrFail($trackId);
+        $this->authorize('edit', $track);
 
         if ($track->status === Track::STATUS_PROCESSING){
             return Response::json(['message' => 'Processing...'], 202);
@@ -65,7 +64,6 @@ class TracksController extends ApiControllerBase
             // something went wrong
             return Response::json(['error' => 'Processing failed!'], 500);
         }
-
     }
 
     public function postDelete($id)

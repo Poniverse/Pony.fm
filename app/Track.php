@@ -39,7 +39,20 @@ class Track extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'published_at', 'released_at'];
+    protected $casts = [
+        'id'                => 'integer',
+        'user_id'           => 'integer',
+        'license_id'        => 'integer',
+        'genre_id'          => 'integer',
+        'track_type_id'     => 'integer',
+        'is_vocal'          => 'boolean',
+        'is_explicit'       => 'boolean',
+        'cover_id'          => 'integer',
+        'is_downloadable'   => 'boolean',
+        'is_latest'         => 'boolean',
+        'is_listed'         => 'boolean',
+    ];
 
     use SlugTrait {
         SlugTrait::setTitleAttribute as setTitleAttributeSlug;

@@ -18,38 +18,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Providers;
+namespace Poniverse\Ponyfm\Http\Middleware;
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\ServiceProvider;
-use PfmValidator;
-use Poniverse;
-use Validator;
+use Closure;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class AppServiceProvider extends ServiceProvider
+/**
+ * Class JsonExceptions
+ * @package Poniverse\Ponyfm\Http\Middleware
+ *
+ * This middleware turns any HTTP exceptions thrown during the request
+ * into a JSON response. To be used when implementing the API!
+ */
+class JsonExceptions
 {
     /**
-     * Bootstrap any application services.
+     * Handle an incoming request.
      *
-     * @return void
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
      */
-    public function boot()
+    public function handle($request, Closure $next)
     {
-        Validator::resolver(function($translator, $data, $rules, $messages)
-        {
-            return new PfmValidator($translator, $data, $rules, $messages);
-        });
-    }
+        try {
+            $response = $next($request);
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->bind(Poniverse::class, function(Application $app) {
-            return new Poniverse($app['config']->get('poniverse.client_id'), $app['config']->get('poniverse.secret'));
-        });
+        } catch (HttpException $e) {
+            return \Response::json([
+                'message' => $e->getMessage()
+            ], $e->getStatusCode());
+        }
+
+        return $response;
     }
 }

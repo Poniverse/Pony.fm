@@ -20,13 +20,56 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\V1;
 
+use Poniverse\Ponyfm\Commands\UploadTrackCommand;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Image;
 use Poniverse\Ponyfm\Track;
-use Cover;
-use Illuminate\Support\Facades\Response;
+use Response;
 
-class TracksController extends \ApiControllerBase
+class TracksController extends ApiControllerBase
 {
+    public function postUploadTrack() {
+        session_write_close();
+
+        $response = $this->execute(new UploadTrackCommand());
+        $commandData = $response->getData(true);
+
+        if (200 !== $response->getStatusCode()) {
+            return $response;
+        }
+
+        $data = [
+            'id'            => $commandData['id'],
+            'status_url'    => action('Api\V1\TracksController@getUploadStatus', ['id' => $commandData['id']]),
+            'message'       => "This track has been accepted for processing! Poll the status_url to know when it's ready to publish.",
+        ];
+
+        $response->setData($data);
+        $response->setStatusCode(202);
+        return $response;
+    }
+
+
+    public function getUploadStatus($trackId) {
+        $track = Track::findOrFail($trackId);
+        $this->authorize('edit', $track);
+
+        if ($track->status === Track::STATUS_PROCESSING) {
+            return Response::json(['message' => 'Processing...'], 202);
+
+        } elseif ($track->status === Track::STATUS_COMPLETE) {
+            return Response::json([
+                'message' => 'Processing complete! The artist must publish the track by visiting its edit_url.',
+                'edit_url' => action('ContentController@getTracks', ['id' => $trackId])
+            ], 201);
+
+        } else {
+            // something went wrong
+            return Response::json(['error' => 'Processing failed!'], 500);
+        }
+    }
+
+
     public function getTrackRadioDetails($hash)
     {
         $track = Track

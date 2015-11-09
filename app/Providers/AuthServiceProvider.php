@@ -24,6 +24,8 @@ use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Poniverse\Ponyfm\Genre;
 use Poniverse\Ponyfm\Policies\GenrePolicy;
+use Poniverse\Ponyfm\Policies\TrackPolicy;
+use Poniverse\Ponyfm\Track;
 use Poniverse\Ponyfm\User;
 
 class AuthServiceProvider extends ServiceProvider
@@ -34,7 +36,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Genre::class => GenrePolicy::class
+        Genre::class => GenrePolicy::class,
+        Track::class => TrackPolicy::class,
     ];
 
     /**

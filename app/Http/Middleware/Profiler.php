@@ -50,8 +50,9 @@ class Profiler
             } catch (\Exception $e) {
                 $response = \Response::make([
                     'message' => $e->getMessage(),
+                    'lineNumber' => $e->getLine(),
                     'exception' => $e->getTrace()
-                ], 500);
+                ], method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500);
                 $profiler->log('error', $e->__toString(), []);
             }
 

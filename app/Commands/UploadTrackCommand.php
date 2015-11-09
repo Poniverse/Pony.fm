@@ -70,7 +70,12 @@ class UploadTrackCommand extends CommandBase
     public function execute()
     {
         $user = \Auth::user();
-        $trackFile = \Input::file('track');
+        $trackFile = \Input::file('track', null);
+
+        if (null === $trackFile) {
+            return CommandResponse::fail(['track' => ['You must upload an audio file!']]);
+        }
+
         $audio = \AudioCache::get($trackFile->getPathname());
 
 

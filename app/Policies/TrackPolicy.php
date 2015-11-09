@@ -18,18 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Middleware;
+namespace Poniverse\Ponyfm\Policies;
 
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
+use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\User;
 
-class VerifyCsrfToken extends BaseVerifier
+class TrackPolicy
 {
-    /**
-     * The URIs that should be excluded from CSRF verification.
-     *
-     * @var array
-     */
-    protected $except = [
-        'api/*'
-    ];
+    public function edit(User $user, Track $track) {
+        return $user->id === $track->user_id || $user->hasRole('admin');
+    }
+
+    public function delete(User $user, Track $track) {
+        return $user->id === $track->user_id || $user->hasRole('admin');
+    }
 }

@@ -96,25 +96,13 @@ class AuthController extends Controller
         }
 
         // Check by login name to see if they already have an account
-        $localMember = User::where('username', '=', $poniverseUser['username'])
-            ->where('is_archived', false)
-            ->first();
+        $user = User::findOrCreate($poniverseUser['username'], $poniverseUser['display_name'], $poniverseUser['email']);
 
-        if ($localMember) {
-            return $this->loginRedirect($localMember);
+        if ($user->wasRecentlyCreated) {
+            return $this->loginRedirect($user);
         }
 
-        $user = new User;
-
-        $user->username = $poniverseUser['username'];
-        $user->display_name = $poniverseUser['display_name'];
-        $user->email = $poniverseUser['email'];
-        $user->created_at = gmdate("Y-m-d H:i:s", time());
-        $user->uses_gravatar = 1;
-
-        $user->save();
-
-        //We need to insert a new token row :O
+        // We need to insert a new token row :O
 
         $setData['user_id'] = $user->id;
         $setData['external_user_id'] = $poniverseUser['id'];

@@ -66,10 +66,18 @@ Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
 Route::get('p{id}', 'PlaylistsController@getShortlink')->where('id', '\d+');
 Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload' );
 
-Route::group(['prefix' => 'api/v1'], function() {
+
+
+Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function() {
     Route::get('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
     Route::post('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
+
+    Route::group(['middleware' => 'auth.oauth:ponyfm-upload-track'], function() {
+        Route::post('tracks', 'Api\V1\TracksController@postUploadTrack');
+        Route::get('/tracks/{id}/upload-status', 'Api\V1\TracksController@getUploadStatus');
+    });
 });
+
 
 Route::group(['prefix' => 'api/web'], function() {
     Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');

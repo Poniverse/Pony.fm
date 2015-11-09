@@ -38,7 +38,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait;
 
     protected $table = 'users';
-    protected $hidden1 = ['password_hash', 'password_salt', 'bio'];
+    protected $casts = [
+        'id'                        => 'integer',
+        'sync_names'                => 'boolean',
+        'uses_gravatar'             => 'boolean',
+        'can_see_explicit_content'  => 'boolean',
+        'track_count'               => 'integer',
+        'comment_count'             => 'integer',
+        'avatar_id'                 => 'integer',
+        'is_archived'               => 'boolean',
+    ];
 
     public function scopeUserDetails($query)
     {
@@ -51,6 +60,33 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         return !$query;
+    }
+
+    /**
+     * @param string $username
+     * @param string $displayName
+     * @param string $email
+     * @return User
+     */
+    public static function findOrCreate(string $username, string $displayName, string $email) {
+        $user = static::where('username', $username)
+            ->where('is_archived', false)
+            ->first();
+
+        if (null !== $user) {
+            return $user;
+
+        } else {
+            $user = new User;
+
+            $user->username = $username;
+            $user->display_name = $displayName;
+            $user->email = $email;
+            $user->uses_gravatar = true;
+            $user->save();
+
+            return $user;
+        }
     }
 
     public function avatar()

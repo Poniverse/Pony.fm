@@ -25,6 +25,13 @@ use Response;
 
 abstract class ApiControllerBase extends Controller
 {
+    /**
+     * NOTE: This function is used by the v1 API. If the response JSON format
+     * it returns changes, don't break the API!
+     *
+     * @param CommandBase $command
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function execute(CommandBase $command)
     {
         if (!$command->authorize()) {

@@ -18,6 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use OAuth2\Client;
+use Poniverse\Ponyfm\Exceptions\InvalidAccessTokenException;
+
 /**
  * Class Poniverse
  *
@@ -110,5 +113,49 @@ class Poniverse {
         $result = $data->addHeader('Accept', 'application/json')->send();
 
         return json_decode($result, true);
+    }
+
+    /**
+     * Gets information about the given access token.
+     *
+     * @link https://tools.ietf.org/html/draft-richer-oauth-introspection-06
+     *
+     * @param $accessTokenToIntrospect
+     * @return \Poniverse\AccessTokenInfo
+     * @throws \Poniverse\Ponyfm\InvalidAccessTokenException
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+     */
+    public function getAccessTokenInfo($accessTokenToIntrospect)
+    {
+        $token = $this->client->getAccessToken(
+            Config::get('poniverse.urls.token'),
+            Client::GRANT_TYPE_CLIENT_CREDENTIALS,
+            []
+        )['result']['access_token'];
+
+
+        $request = \Httpful\Request::post($this->urls['api']. 'meta/introspect?token='.$accessTokenToIntrospect);
+
+        /** @var Httpful\Response $result */
+        $result = $request
+            ->addHeader('Accept', 'application/json')
+            ->addHeader('Authorization', 'Bearer '.$token)
+            ->send();
+        $data = json_decode($result, true);
+
+        if (404 === $result->code) {
+            throw new InvalidAccessTokenException('This access token is expired or invalid!');
+        }
+
+        if (200 !== $result->code) {
+            throw new \Symfony\Component\HttpKernel\Exception\HttpException(500, 'An unknown error occurred while contacting the Poniverse API.');
+        }
+
+        $tokenInfo = new \Poniverse\AccessTokenInfo($accessTokenToIntrospect);
+        $tokenInfo
+            ->setIsActive($data['active'])
+            ->setScopes($data['scope']);
+
+        return $tokenInfo;
     }
 }

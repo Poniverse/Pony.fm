@@ -18,18 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Middleware;
+namespace Poniverse\Ponyfm\Exceptions;
 
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class VerifyCsrfToken extends BaseVerifier
-{
-    /**
-     * The URIs that should be excluded from CSRF verification.
-     *
-     * @var array
-     */
-    protected $except = [
-        'api/*'
-    ];
-}
+/**
+ * Class TrackFileNotFoundException
+ * @package Poniverse\Ponyfm
+ *
+ * This exception is used to indicate that the requested `TrackFile` object
+ * does not exist. This is useful when dealing with albums or playlists that
+ * contain tracks for which no lossless master is available (and thus, lossless
+ * `TrackFiles` don't exist for).
+ */
+class TrackFileNotFoundException extends ModelNotFoundException {}

@@ -18,18 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Middleware;
+namespace Poniverse\Ponyfm\Exceptions;
 
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class VerifyCsrfToken extends BaseVerifier
-{
-    /**
-     * The URIs that should be excluded from CSRF verification.
-     *
-     * @var array
-     */
-    protected $except = [
-        'api/*'
-    ];
-}
+/**
+ * Class InvalidAccessTokenException
+ * @package Poniverse\Ponyfm
+ *
+ * This exception indicates that an access token we attempted to introspect
+ * through the Poniverse API is expired or otherwise unusable.
+ */
+class InvalidAccessTokenException extends AccessDeniedHttpException {};
