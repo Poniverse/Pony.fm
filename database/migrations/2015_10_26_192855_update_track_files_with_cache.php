@@ -31,10 +31,9 @@ class UpdateTrackFilesWithCache extends Migration
     public function up()
     {
         Schema::table('track_files', function (Blueprint $table) {
-            $table->boolean('is_cacheable')->default(false);
-            $table->index('is_cacheable');
+            $table->boolean('is_cacheable')->default(false)->index();
             $table->boolean('is_in_progress')->default(false);
-            $table->dateTime('expires_at')->nullable();
+            $table->dateTime('expires_at')->nullable()->index();
         });
     }
 
