@@ -221,7 +221,9 @@ class RebuildTrackCache extends Command
             $count = 0;
 
             // Chunk non-cacheable track files
-            TrackFile::where('is_cacheable', false)->chunk(200, function ($trackFiles) use (&$count) {
+            TrackFile::where('is_cacheable', false)
+                ->where('is_master', false)
+                ->chunk(200, function ($trackFiles) use (&$count) {
                 $this->output->newLine(1);
                 $this->info('---------- Start Chunk ----------');
 
