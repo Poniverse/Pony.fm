@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
+use File;
 use Illuminate\Console\Command;
 use Poniverse\Ponyfm\TrackFile;
 
@@ -67,8 +68,10 @@ class RebuildFilesizes extends Command
                 $this->info('========== Start Chunk ==========');
 
                 foreach ($trackFiles as $trackFile) {
-                    $size = $trackFile->updateFilesize();
-                    if ($size !== null) {
+                    /** @var TrackFile $trackFile */
+
+                    if (File::exists($trackFile->getFile())) {
+                        $size = $trackFile->updateFilesize();
                         $this->info('ID ' . $trackFile->id . ' processed - ' . $size . ' bytes');
                     } else {
                         $this->info('ID ' . $trackFile->id . ' skipped');

@@ -126,19 +126,22 @@ class TrackFile extends Model
         return 'track_file-' . $this->id . '-' . $key;
     }
 
+    /**
+     * If this file exists, update its estimated filesize in the database.
+     *
+     * @return int $size
+     */
     public function updateFilesize()
     {
         $file = $this->getFile();
 
         if (File::exists($file)) {
             $size = File::size($file);
-        } else {
-            $size = null;
+
+            $this->filesize = $size;
+            $this->update();
         }
 
-        $this->filesize = $size;
-        $this->update();
-
-        return $size;
+        return $this->filesize;
     }
 }
