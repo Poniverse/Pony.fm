@@ -26,9 +26,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\URL;
+use Auth;
+use Cache;
+use URL;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 
@@ -59,10 +59,12 @@ class Playlist extends Model
         return !$query;
     }
 
-    public static function mapPublicPlaylistShow($playlist)
+    public static function mapPublicPlaylistShow(Playlist $playlist)
     {
         $tracks = [];
         foreach ($playlist->tracks as $track) {
+            /** @var $track Track */
+
             $tracks[] = Track::mapPublicTrackSummary($track);
         }
 
@@ -95,7 +97,7 @@ class Playlist extends Model
         return $data;
     }
 
-    public static function mapPublicPlaylistSummary($playlist)
+    public static function mapPublicPlaylistSummary(Playlist $playlist)
     {
         $userData = [
             'stats' => [
@@ -222,6 +224,8 @@ class Playlist extends Model
         $cachedCount = 0;
 
         foreach ($this->tracks as $track) {
+            /** @var $track Track */
+
             if ($track->is_downloadable == false) {
                 continue;
             }
@@ -239,6 +243,8 @@ class Playlist extends Model
     public function encodeCacheableTrackFiles($format)
     {
         foreach ($this->tracks as $track) {
+            /** @var $track Track */
+
             if ($track->is_downloadable == false) {
                 continue;
             }
@@ -265,9 +271,16 @@ class Playlist extends Model
         return Cache::remember($this->getCacheKey('filesize-' . $format), 1440, function () use ($tracks, $format) {
             $size = 0;
             foreach ($tracks as $track) {
+                /** @var $track Track */
+
                 // Ensure that only downloadable tracks are added onto the file size
                 if ($track->is_downloadable == 1) {
-                    $size += $track->getFilesize($format);
+                    try {
+                        $size += $track->getFilesize($format);
+
+                    } catch (TrackFileNotFoundException $e) {
+                        // do nothing - this track won't be included in the download
+                    }
                 }
             }
 

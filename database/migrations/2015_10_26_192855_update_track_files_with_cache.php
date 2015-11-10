@@ -46,8 +46,8 @@ class UpdateTrackFilesWithCache extends Migration
     {
         Schema::table('track_files', function (Blueprint $table) {
             $table->dropColumn('is_cacheable');
-            $table->dropColumn('expiration');
-            $table->dropColumn('in_progress');
+            $table->dropColumn('expires_at');
+            $table->dropColumn('is_in_progress');
         });
     }
 }

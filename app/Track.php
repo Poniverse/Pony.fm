@@ -24,6 +24,7 @@ use Auth;
 use Cache;
 use Config;
 use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
@@ -214,7 +215,7 @@ class Track extends Model
         return $processed;
     }
 
-    public static function mapPublicTrackShow($track)
+    public static function mapPublicTrackShow(Track $track)
     {
         $returnValue = self::mapPublicTrackSummary($track);
         $returnValue['description'] = $track->description;
@@ -261,7 +262,7 @@ class Track extends Model
         return $returnValue;
     }
 
-    public static function mapPublicTrackSummary($track)
+    public static function mapPublicTrackSummary(Track $track)
     {
         $userData = [
             'stats' => [
@@ -333,7 +334,7 @@ class Track extends Model
         ];
     }
 
-    public static function mapPrivateTrackShow($track)
+    public static function mapPrivateTrackShow(Track $track)
     {
         $showSongs = [];
         foreach ($track->showSongs as $showSong) {
@@ -354,7 +355,7 @@ class Track extends Model
         return $returnValue;
     }
 
-    public static function mapPrivateTrackSummary($track)
+    public static function mapPrivateTrackSummary(Track $track)
     {
         return [
             'id' => $track->id,
@@ -438,9 +439,22 @@ class Track extends Model
         $this->updateHash();
     }
 
+    /**
+     * Returns the size of this track's file in the given format.
+     *
+     * @param $formatName
+     * @return int filesize in bytes
+     * @throws TrackFileNotFoundException
+     */
     public function getFilesize($formatName)
     {
-        return $this->trackFiles()->where('format', $formatName)->first()->filesize;
+        $trackFile = $this->trackFiles()->where('format', $formatName)->first();
+
+        if ($trackFile) {
+            return (int) $trackFile->filesize;
+        } else {
+            throw new TrackFileNotFoundException();
+        }
     }
 
     public function canView($user)

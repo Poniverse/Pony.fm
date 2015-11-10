@@ -26,10 +26,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\URL;
+use Auth;
+use Cache;
+use File;
+use URL;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 
@@ -90,7 +90,7 @@ class Album extends Model
         return $this->hasMany('Poniverse\Ponyfm\Comment')->orderBy('created_at', 'desc');
     }
 
-    public static function mapPublicAlbumShow($album)
+    public static function mapPublicAlbumShow(Album $album)
     {
         $tracks = [];
         foreach ($album->tracks as $track) {
@@ -136,7 +136,7 @@ class Album extends Model
         return $data;
     }
 
-    public static function mapPublicAlbumSummary($album)
+    public static function mapPublicAlbumSummary(Album $album)
     {
         $userData = [
             'stats' => [
@@ -211,10 +211,18 @@ class Album extends Model
 
         return Cache::remember($this->getCacheKey('filesize-' . $format), 1440, function () use ($tracks, $format) {
             $size = 0;
+
             foreach ($tracks as $track) {
+                /** @var $track Track */
+
                 // Ensure that only downloadable tracks are added onto the file size
                 if ($track->is_downloadable == 1) {
-                    $size += $track->getFilesize($format);
+                    try {
+                        $size += $track->getFilesize($format);
+
+                    } catch (TrackFileNotFoundException $e) {
+                        // do nothing - this track won't be included in the download
+                    }
                 }
             }
 
@@ -260,6 +268,8 @@ class Album extends Model
         $index = 1;
 
         foreach ($tracks as $track) {
+            /** @var $track Track */
+
             $track->track_number = $index;
             $index++;
             $track->updateTags();
@@ -287,6 +297,9 @@ class Album extends Model
         $cachedCount = 0;
 
         foreach ($this->tracks as $track) {
+            /** @var $track Track */
+
+
             if ($track->is_downloadable == false) {
                 continue;
             }
@@ -308,6 +321,8 @@ class Album extends Model
     public function encodeCacheableTrackFiles($format)
     {
         foreach ($this->tracks as $track) {
+            /** @var $track Track */
+
             if ($track->is_downloadable == false) {
                 continue;
             }
@@ -363,7 +378,9 @@ class Album extends Model
                 continue;
             }
 
+            /** @var $track Track */
             $track = Track::find($trackId);
+
             if ($track->album_id != null && $track->album_id != $this->id) {
                 $albumsToFix[] = $track->album;
             }
@@ -378,6 +395,8 @@ class Album extends Model
         }
 
         foreach ($tracksToRemove as $track) {
+            /** @var $track Track */
+
             $track->album_id = null;
             $track->track_number = null;
             $track->updateTags();
@@ -385,6 +404,8 @@ class Album extends Model
         }
 
         foreach ($albumsToFix as $album) {
+            /** @var $album Album */
+
             $album->updateTrackNumbers();
         }
 

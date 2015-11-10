@@ -22,10 +22,9 @@ namespace Poniverse\Ponyfm;
 
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\URL;
+use App;
+use File;
+use URL;
 
 class TrackFile extends Model
 {
@@ -85,9 +84,9 @@ class TrackFile extends Model
         return URL::to('/t' . $this->track_id . '/dl.' . $this->extension);
     }
 
-    public function getSizeAttribute($value)
+    public function getSizeAttribute()
     {
-        return Helpers::formatBytes($this->getFilesize($this->getFile()));
+        return Helpers::formatBytes($this->getFilesize());
     }
 
     public function getFormat()
