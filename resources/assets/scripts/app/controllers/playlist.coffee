@@ -43,7 +43,11 @@ angular.module('ponyfm').controller 'playlist', [
                 if $scope.playlistUrl == 'error'
                     $scope.isInProgress = false
                 else if $scope.playlistUrl == 'pending'
-                    $timeout $scope.getCachedPlaylist(id, format), 5000
+                    # $timeout takes a callback function
+                    # https://stackoverflow.com/a/23391203/3225811
+                    $timeout(
+                        () ->$scope.getCachedPlaylist(id, format)
+                    , 5000)
                 else
                     $scope.isInProgress = false
                     $window.open $scope.playlistUrl

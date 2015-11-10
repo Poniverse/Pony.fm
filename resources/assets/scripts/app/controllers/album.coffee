@@ -49,7 +49,11 @@ angular.module('ponyfm').controller "album", [
                 if $scope.albumUrl == 'error'
                     $scope.isInProgress = false
                 else if $scope.albumUrl == 'pending'
-                    $timeout $scope.getCachedAlbum(id, format), 5000
+                    # $timeout takes a callback function
+                    # https://stackoverflow.com/a/23391203/3225811
+                    $timeout(
+                        $scope.getCachedAlbum(id, format)
+                    , 5000)
                 else
                     $scope.isInProgress = false
                     $window.open $scope.albumUrl

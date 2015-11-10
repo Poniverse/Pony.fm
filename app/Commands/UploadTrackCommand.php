@@ -136,6 +136,7 @@ class UploadTrackCommand extends CommandBase
                 $trackFile = new TrackFile();
                 $trackFile->is_master = $name === 'FLAC' ? true : false;
                 $trackFile->format = $name;
+
                 if (in_array($name, Track::$CacheableFormats) && $trackFile->is_master == false) {
                     $trackFile->is_cacheable = true;
                 } else {
