@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Poniverse\Ponyfm\Commands\AddTrackToPlaylistCommand;
 use Poniverse\Ponyfm\Commands\CreatePlaylistCommand;
 use Poniverse\Ponyfm\Commands\DeletePlaylistCommand;
@@ -31,6 +32,7 @@ use Poniverse\Ponyfm\ResourceLogItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
+use Poniverse\Ponyfm\Track;
 
 class PlaylistsController extends ApiControllerBase
 {
@@ -108,6 +110,37 @@ class PlaylistsController extends ApiControllerBase
         }
 
         return Response::json(Playlist::mapPublicPlaylistShow($playlist), 200);
+    }
+
+    public function getCachedPlaylist($id, $format)
+    {
+        // Validation
+        try {
+            /** @var $playlist Playlist */
+            $playlist = Playlist::with('tracks.trackFiles')->findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound('Playlist not found!');
+        }
+
+        if ((!$playlist->is_public && !Auth::check()) || (!$playlist->is_public && ($playlist->user_id !== Auth::user()->id))) {
+            return $this->notFound('Playlist not found!');
+        }
+
+        if (!in_array($format, Track::$CacheableFormats)) {
+            return $this->notFound('Format not found!');
+        }
+
+        $trackCount = $playlist->countDownloadableTracks($format);
+        $availableFilesCount = $playlist->countAvailableTrackFiles($format);
+
+        if ($trackCount === $availableFilesCount) {
+            $url = $playlist->getDownloadUrl($format);
+        } else {
+            $playlist->encodeCacheableTrackFiles($format);
+            $url = null;
+        }
+
+        return Response::json(['url' => $url], 200);
     }
 
     public function getPinned()

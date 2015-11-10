@@ -54,4 +54,15 @@ return [
 
     'use_powered_by_footer' => env('USE_POWERED_BY_FOOTER', true),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Duration
+    |--------------------------------------------------------------------------
+    |
+    | Duration in minutes for track files to be stored in cache.
+    |
+    */
+
+    'track_file_cache_duration' => 1440,
+
 ];

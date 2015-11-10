@@ -26,6 +26,8 @@ use AudioCache;
 use File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class UploadTrackCommand extends CommandBase
 {
@@ -94,8 +96,6 @@ class UploadTrackCommand extends CommandBase
             $source = $trackFile->getPathname();
             $index = 0;
 
-            $processes = [];
-
             // Lossy uploads need to be identified and set as the master file
             // without being re-encoded.
             $audioObject = AudioCache::get($source);
@@ -136,9 +136,16 @@ class UploadTrackCommand extends CommandBase
                 $trackFile = new TrackFile();
                 $trackFile->is_master = $name === 'FLAC' ? true : false;
                 $trackFile->format = $name;
+
+                if (in_array($name, Track::$CacheableFormats) && $trackFile->is_master == false) {
+                    $trackFile->is_cacheable = true;
+                } else {
+                    $trackFile->is_cacheable = false;
+                }
                 $track->trackFiles()->save($trackFile);
 
-                $target = $destination . '/' . $trackFile->getFilename(); //$track->getFilenameFor($name);
+                // Encode track file
+                $target = $trackFile->getFile();
 
                 $command = $format['command'];
                 $command = str_replace('{$source}', '"' . $source . '"', $command);
@@ -147,13 +154,16 @@ class UploadTrackCommand extends CommandBase
                 Log::info('Encoding ' . $track->id . ' into ' . $target);
                 $this->notify('Encoding ' . $name, $index / count(Track::$Formats) * 100);
 
-                $pipes = [];
-                $proc = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'a']], $pipes);
-                $processes[] = $proc;
-            }
+                $process = new Process($command);
+                $process->mustRun();
 
-            foreach ($processes as $proc) {
-                proc_close($proc);
+                // Update file size for track file
+                $trackFile->updateFilesize();
+
+                // Delete track file if it is cacheable
+                if ($trackFile->is_cacheable == true) {
+                    File::delete($trackFile->getFile());
+                }
             }
 
             $track->updateTags();

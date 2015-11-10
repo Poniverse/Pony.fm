@@ -20,16 +20,20 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\File;
 use Poniverse\Ponyfm\Album;
 use Poniverse\Ponyfm\Commands\CreateAlbumCommand;
 use Poniverse\Ponyfm\Commands\DeleteAlbumCommand;
 use Poniverse\Ponyfm\Commands\EditAlbumCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\ResourceLogItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
+use Poniverse\Ponyfm\Track;
 
 class AlbumsController extends ApiControllerBase
 {
@@ -81,6 +85,34 @@ class AlbumsController extends ApiControllerBase
         return Response::json([
             'album' => $returned_album
         ], 200);
+    }
+
+    public function getCachedAlbum($id, $format)
+    {
+        // Validation
+        try {
+            /** @var Album $album */
+            $album = Album::with('tracks.trackFiles')->findOrFail($id);
+
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound('Album not found!');
+        }
+
+        if (!in_array($format, Track::$CacheableFormats)) {
+            return $this->notFound('Format not found!');
+        }
+
+        $trackCount = $album->countDownloadableTracks($format);
+        $availableFilesCount = $album->countAvailableTrackFiles($format);
+
+        if ($trackCount === $availableFilesCount) {
+            $url = $album->getDownloadUrl($format);
+        } else {
+            $album->encodeCacheableTrackFiles($format);
+            $url = null;
+        }
+
+        return Response::json(['url' => $url], 200);
     }
 
     public function getIndex()

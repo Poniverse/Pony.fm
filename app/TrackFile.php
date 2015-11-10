@@ -22,15 +22,15 @@ namespace Poniverse\Ponyfm;
 
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\URL;
+use App;
+use File;
+use URL;
 
 class TrackFile extends Model
 {
     public function track()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Track');
+        return $this->belongsTo('Poniverse\Ponyfm\Track')->withTrashed();
     }
 
     /**
@@ -84,9 +84,9 @@ class TrackFile extends Model
         return URL::to('/t' . $this->track_id . '/dl.' . $this->extension);
     }
 
-    public function getSizeAttribute($value)
+    public function getSizeAttribute()
     {
-        return Helpers::formatBytes($this->getFilesize($this->getFile()));
+        return Helpers::formatBytes($this->getFilesize());
     }
 
     public function getFormat()
@@ -96,16 +96,7 @@ class TrackFile extends Model
 
     protected function getFilesize()
     {
-        return Cache::remember($this->getCacheKey('filesize'), 1440, function () {
-            $file = $this->getFile();
-            $size = 0;
-
-            if (is_file($file)) {
-                $size = filesize($file);
-            }
-
-            return $size;
-        });
+        return $this->filesize;
     }
 
     public function getDirectory()
@@ -133,5 +124,24 @@ class TrackFile extends Model
     private function getCacheKey($key)
     {
         return 'track_file-' . $this->id . '-' . $key;
+    }
+
+    /**
+     * If this file exists, update its estimated filesize in the database.
+     *
+     * @return int $size
+     */
+    public function updateFilesize()
+    {
+        $file = $this->getFile();
+
+        if (File::exists($file)) {
+            $size = File::size($file);
+
+            $this->filesize = $size;
+            $this->update();
+        }
+
+        return $this->filesize;
     }
 }

@@ -1,11 +1,22 @@
 <div class="resource-details album-details" bindonce="album">
     <ul class="dropdowns">
         <li class="dropdown">
-            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="album.is_downloadable == 0">
+            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="album.is_downloadable == 0" auto-close="outsideClick">
                 Downloads
             </a>
             <ul class="dropdown-menu" ng-show="album.is_downloadable == 1">
-                <li bindonce ng-repeat="format in album.formats"><a target="_blank" bo-href="format.url"><span bo-text="format.name"></span> <small bo-text="'(' + format.size + ')'"></small></a></li>
+                <li bindonce ng-repeat="format in album.formats" ng-hide="isInProgress">
+                    <a target="_blank" ng-if="!format.isCacheable" bo-href="format.url">
+                        <span bo-text="format.name"></span>
+                        <small bo-text="'(' + format.size + ')'"></small>
+                    </a>
+                    <a ng-if="format.isCacheable" ng-click="getCachedAlbum(album.id, format.name);" href="">
+                        <span bo-text="format.name"></span>
+                        <small bo-text="'(' + format.size + ')'"></small>
+                    </a>
+                </li>
+                <li ng-show="isInProgress" class="cache-loading"><img src="/images/loading.gif" /></li>
+                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take up to a few minutes.</small></li>
             </ul>
         </li>
         <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>

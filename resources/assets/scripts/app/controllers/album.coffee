@@ -21,8 +21,8 @@ window.pfm.preloaders['album'] = [
 ]
 
 angular.module('ponyfm').controller "album", [
-    '$scope', 'albums', '$state', 'playlists', 'auth', '$dialog'
-    ($scope, albums, $state, playlists, auth, $dialog) ->
+    '$scope', 'albums', '$state', 'playlists', 'auth', '$dialog', 'download-cached', '$window', '$timeout'
+    ($scope, albums, $state, playlists, auth, $dialog, cachedAlbum, $window, $timeout) ->
         album = null
 
         albums.fetch($state.params.id).done (albumResponse) ->
@@ -40,4 +40,21 @@ angular.module('ponyfm').controller "album", [
         if auth.data.isLogged
             playlists.refreshOwned().done (lists) ->
                 $scope.playlists.push list for list in lists
+
+        $scope.getCachedAlbum = (id, format) ->
+            $scope.isInProgress = true
+
+            cachedAlbum.download('albums', id, format).then (response) ->
+                $scope.albumUrl = response
+                if $scope.albumUrl == 'error'
+                    $scope.isInProgress = false
+                else if $scope.albumUrl == 'pending'
+                    # $timeout takes a callback function
+                    # https://stackoverflow.com/a/23391203/3225811
+                    $timeout(
+                        $scope.getCachedAlbum(id, format)
+                    , 5000)
+                else
+                    $scope.isInProgress = false
+                    $window.open $scope.albumUrl
 ]

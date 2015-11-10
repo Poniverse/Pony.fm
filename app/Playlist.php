@@ -23,16 +23,18 @@ namespace Poniverse\Ponyfm;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Auth;
+use Cache;
+use Poniverse\Ponyfm\Traits\TrackCollection;
+use URL;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 
 class Playlist extends Model
 {
-    protected $table = 'playlists';
+    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection;
 
-    use SoftDeletes, SlugTrait;
+    protected $table = 'playlists';
 
     protected $dates = ['deleted_at'];
 
@@ -55,10 +57,12 @@ class Playlist extends Model
         return !$query;
     }
 
-    public static function mapPublicPlaylistShow($playlist)
+    public static function mapPublicPlaylistShow(Playlist $playlist)
     {
         $tracks = [];
         foreach ($playlist->tracks as $track) {
+            /** @var $track Track */
+
             $tracks[] = Track::mapPublicTrackSummary($track);
         }
 
@@ -68,7 +72,8 @@ class Playlist extends Model
                 'name' => $name,
                 'extension' => $format['extension'],
                 'url' => $playlist->getDownloadUrl($name),
-                'size' => Helpers::formatBytes($playlist->getFilesize($name))
+                'size' => Helpers::formatBytes($playlist->getFilesize($name)),
+                'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false)
             ];
         }
 
@@ -90,7 +95,7 @@ class Playlist extends Model
         return $data;
     }
 
-    public static function mapPublicPlaylistSummary($playlist)
+    public static function mapPublicPlaylistSummary(Playlist $playlist)
     {
         $userData = [
             'stats' => [
@@ -104,25 +109,25 @@ class Playlist extends Model
             $userRow = $playlist->users[0];
             $userData = [
                 'stats' => [
-                    'views' => (int) $userRow->view_count,
-                    'downloads' => (int) $userRow->download_count,
+                    'views' => (int)$userRow->view_count,
+                    'downloads' => (int)$userRow->download_count,
                 ],
-                'is_favourited' => (bool) $userRow->is_favourited
+                'is_favourited' => (bool)$userRow->is_favourited
             ];
         }
 
         return [
-            'id' => (int) $playlist->id,
+            'id' => (int)$playlist->id,
             'track_count' => $playlist->track_count,
             'title' => $playlist->title,
             'slug' => $playlist->slug,
             'created_at' => $playlist->created_at,
-            'is_public' => (bool) $playlist->is_public,
+            'is_public' => (bool)$playlist->is_public,
             'stats' => [
-                'views' => (int) $playlist->view_count,
-                'downloads' => (int) $playlist->download_count,
-                'comments' => (int) $playlist->comment_count,
-                'favourites' => (int) $playlist->favourite_count
+                'views' => (int)$playlist->view_count,
+                'downloads' => (int)$playlist->download_count,
+                'comments' => (int)$playlist->comment_count,
+                'favourites' => (int)$playlist->favourite_count
             ],
             'covers' => [
                 'small' => $playlist->getCoverUrl(Image::SMALL),
@@ -130,7 +135,7 @@ class Playlist extends Model
             ],
             'url' => $playlist->url,
             'user' => [
-                'id' => (int) $playlist->user->id,
+                'id' => (int)$playlist->user->id,
                 'name' => $playlist->user->display_name,
                 'url' => $playlist->user->url,
             ],
@@ -149,6 +154,12 @@ class Playlist extends Model
             ->withPivot('position')
             ->withTimestamps()
             ->orderBy('position', 'asc');
+    }
+
+    public function trackFiles()
+    {
+        $trackIds = $this->tracks->lists('id');
+        return TrackFile::whereIn('track_id', $trackIds);
     }
 
     public function users()
@@ -207,7 +218,17 @@ class Playlist extends Model
         return Cache::remember($this->getCacheKey('filesize-' . $format), 1440, function () use ($tracks, $format) {
             $size = 0;
             foreach ($tracks as $track) {
-                $size += $track->getFilesize($format);
+                /** @var $track Track */
+
+                // Ensure that only downloadable tracks are added onto the file size
+                if ($track->is_downloadable == 1) {
+                    try {
+                        $size += $track->getFilesize($format);
+
+                    } catch (TrackFileNotFoundException $e) {
+                        // do nothing - this track won't be included in the download
+                    }
+                }
             }
 
             return $size;

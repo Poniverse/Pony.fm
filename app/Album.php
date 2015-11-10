@@ -21,17 +21,19 @@
 namespace Poniverse\Ponyfm;
 
 use Exception;
+use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Auth;
+use Cache;
+use Poniverse\Ponyfm\Traits\TrackCollection;
+use URL;
 use Poniverse\Ponyfm\Traits\SlugTrait;
-use Helpers;
 
 class Album extends Model
 {
-    use SoftDeletes, SlugTrait;
+    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection;
 
     protected $dates = ['deleted_at'];
 
@@ -81,12 +83,16 @@ class Album extends Model
         return $this->hasMany('Poniverse\Ponyfm\Track')->orderBy('track_number', 'asc');
     }
 
+    public function trackFiles() {
+        return $this->hasManyThrough(TrackFile::class, Track::class, 'album_id', 'track_id');
+    }
+
     public function comments()
     {
         return $this->hasMany('Poniverse\Ponyfm\Comment')->orderBy('created_at', 'desc');
     }
 
-    public static function mapPublicAlbumShow($album)
+    public static function mapPublicAlbumShow(Album $album)
     {
         $tracks = [];
         foreach ($album->tracks as $track) {
@@ -99,7 +105,8 @@ class Album extends Model
                 'name' => $name,
                 'extension' => $format['extension'],
                 'url' => $album->getDownloadUrl($name),
-                'size' => Helpers::formatBytes($album->getFilesize($name))
+                'size' => Helpers::formatBytes($album->getFilesize($name)),
+                'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false)
             ];
         }
 
@@ -131,7 +138,7 @@ class Album extends Model
         return $data;
     }
 
-    public static function mapPublicAlbumSummary($album)
+    public static function mapPublicAlbumSummary(Album $album)
     {
         $userData = [
             'stats' => [
@@ -145,24 +152,24 @@ class Album extends Model
             $userRow = $album->users[0];
             $userData = [
                 'stats' => [
-                    'views' => (int) $userRow->view_count,
-                    'downloads' => (int) $userRow->download_count,
+                    'views' => (int)$userRow->view_count,
+                    'downloads' => (int)$userRow->download_count,
                 ],
-                'is_favourited' => (bool) $userRow->is_favourited
+                'is_favourited' => (bool)$userRow->is_favourited
             ];
         }
 
         return [
-            'id' => (int) $album->id,
-            'track_count' => (int) $album->track_count,
+            'id' => (int)$album->id,
+            'track_count' => (int)$album->track_count,
             'title' => $album->title,
             'slug' => $album->slug,
             'created_at' => $album->created_at,
             'stats' => [
-                'views' => (int) $album->view_count,
-                'downloads' => (int) $album->download_count,
-                'comments' => (int) $album->comment_count,
-                'favourites' => (int) $album->favourite_count
+                'views' => (int)$album->view_count,
+                'downloads' => (int)$album->download_count,
+                'comments' => (int)$album->comment_count,
+                'favourites' => (int)$album->favourite_count
             ],
             'covers' => [
                 'small' => $album->getCoverUrl(Image::SMALL),
@@ -170,7 +177,7 @@ class Album extends Model
             ],
             'url' => $album->url,
             'user' => [
-                'id' => (int) $album->user->id,
+                'id' => (int)$album->user->id,
                 'name' => $album->user->display_name,
                 'url' => $album->user->url,
             ],
@@ -206,10 +213,18 @@ class Album extends Model
 
         return Cache::remember($this->getCacheKey('filesize-' . $format), 1440, function () use ($tracks, $format) {
             $size = 0;
+
             foreach ($tracks as $track) {
+                /** @var $track Track */
+
                 // Ensure that only downloadable tracks are added onto the file size
                 if ($track->is_downloadable == 1) {
-                    $size += $track->getFilesize($format);
+                    try {
+                        $size += $track->getFilesize($format);
+
+                    } catch (TrackFileNotFoundException $e) {
+                        // do nothing - this track won't be included in the download
+                    }
                 }
             }
 
@@ -255,6 +270,8 @@ class Album extends Model
         $index = 1;
 
         foreach ($tracks as $track) {
+            /** @var $track Track */
+
             $track->track_number = $index;
             $index++;
             $track->updateTags();
@@ -301,7 +318,9 @@ class Album extends Model
                 continue;
             }
 
+            /** @var $track Track */
             $track = Track::find($trackId);
+
             if ($track->album_id != null && $track->album_id != $this->id) {
                 $albumsToFix[] = $track->album;
             }
@@ -316,6 +335,8 @@ class Album extends Model
         }
 
         foreach ($tracksToRemove as $track) {
+            /** @var $track Track */
+
             $track->album_id = null;
             $track->track_number = null;
             $track->updateTags();
@@ -323,6 +344,8 @@ class Album extends Model
         }
 
         foreach ($albumsToFix as $album) {
+            /** @var $album Album */
+
             $album->updateTrackNumbers();
         }
 
@@ -331,7 +354,7 @@ class Album extends Model
         }
     }
 
-    private function getCacheKey($key)
+    public function getCacheKey($key)
     {
         return 'album-' . $this->id . '-' . $key;
     }

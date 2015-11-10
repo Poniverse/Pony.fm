@@ -20,7 +20,11 @@
 
 namespace Poniverse\Ponyfm;
 
-use Illuminate\Database\Query\Builder;
+use Auth;
+use Cache;
+use Config;
+use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
@@ -28,13 +32,9 @@ use getid3_writetags;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Auth;
-use Cache;
-use Config;
-use DB;
+use Illuminate\Support\Str;
 use Log;
 use URL;
-use Illuminate\Support\Str;
 
 class Track extends Model
 {
@@ -94,9 +94,27 @@ class Track extends Model
         ],
     ];
 
+    /**
+     * `TrackFiles` in these formats, with the exception of any master files, will
+     * be generated upon user request and kept around temporarily.
+     *
+     * After updating this array, run `php artisan rebuild:track-cache` to bring
+     * the track store into a consistent state.
+     *
+     * The strings in this array must match keys in the `Track::$Formats` array.
+     *
+     * @var array
+     */
+    public static $CacheableFormats = [
+        'OGG Vorbis',
+        'ALAC',
+        'AAC'
+    ];
+
     public static function summary()
     {
-        return self::select('tracks.id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at', 'published_at',
+        return self::select('tracks.id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at',
+            'published_at',
             'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id', 'comment_count',
             'download_count', 'view_count', 'play_count', 'favourite_count');
     }
@@ -197,7 +215,7 @@ class Track extends Model
         return $processed;
     }
 
-    public static function mapPublicTrackShow($track)
+    public static function mapPublicTrackShow(Track $track)
     {
         $returnValue = self::mapPublicTrackSummary($track);
         $returnValue['description'] = $track->description;
@@ -225,7 +243,8 @@ class Track extends Model
                 'name' => $trackFile->format,
                 'extension' => $trackFile->extension,
                 'url' => $trackFile->url,
-                'size' => $trackFile->size
+                'size' => $trackFile->size,
+                'isCacheable' => (bool) $trackFile->is_cacheable
             ];
         }
 
@@ -243,7 +262,7 @@ class Track extends Model
         return $returnValue;
     }
 
-    public static function mapPublicTrackSummary($track)
+    public static function mapPublicTrackSummary(Track $track)
     {
         $userData = [
             'stats' => [
@@ -258,41 +277,41 @@ class Track extends Model
             $userRow = $track->users[0];
             $userData = [
                 'stats' => [
-                    'views' => (int) $userRow->view_count,
-                    'plays' => (int) $userRow->play_count,
+                    'views' => (int)$userRow->view_count,
+                    'plays' => (int)$userRow->play_count,
                     'downloads' => $userRow->download_count,
                 ],
-                'is_favourited' => (bool) $userRow->is_favourited
+                'is_favourited' => (bool)$userRow->is_favourited
             ];
         }
 
         return [
-            'id' => (int) $track->id,
+            'id' => (int)$track->id,
             'title' => $track->title,
             'user' => [
-                'id' => (int) $track->user->id,
+                'id' => (int)$track->user->id,
                 'name' => $track->user->display_name,
                 'url' => $track->user->url
             ],
             'stats' => [
-                'views' => (int) $track->view_count,
-                'plays' => (int) $track->play_count,
-                'downloads' => (int) $track->download_count,
-                'comments' => (int) $track->comment_count,
-                'favourites' => (int) $track->favourite_count
+                'views' => (int)$track->view_count,
+                'plays' => (int)$track->play_count,
+                'downloads' => (int)$track->download_count,
+                'comments' => (int)$track->comment_count,
+                'favourites' => (int)$track->favourite_count
             ],
             'url' => $track->url,
             'slug' => $track->slug,
-            'is_vocal' => (bool) $track->is_vocal,
-            'is_explicit' => (bool) $track->is_explicit,
-            'is_downloadable' => (bool) $track->is_downloadable,
-            'is_published' => (bool) $track->isPublished(),
+            'is_vocal' => (bool)$track->is_vocal,
+            'is_explicit' => (bool)$track->is_explicit,
+            'is_downloadable' => (bool)$track->is_downloadable,
+            'is_published' => (bool)$track->isPublished(),
             'published_at' => $track->published_at,
             'duration' => $track->duration,
             'genre' => $track->genre != null
                 ?
                 [
-                    'id' => (int) $track->genre->id,
+                    'id' => (int)$track->genre->id,
                     'slug' => $track->genre->slug,
                     'name' => $track->genre->name
                 ] : null,
@@ -315,7 +334,7 @@ class Track extends Model
         ];
     }
 
-    public static function mapPrivateTrackShow($track)
+    public static function mapPrivateTrackShow(Track $track)
     {
         $showSongs = [];
         foreach ($track->showSongs as $showSong) {
@@ -336,7 +355,7 @@ class Track extends Model
         return $returnValue;
     }
 
-    public static function mapPrivateTrackSummary($track)
+    public static function mapPrivateTrackSummary(Track $track)
     {
         return [
             'id' => $track->id,
@@ -420,18 +439,22 @@ class Track extends Model
         $this->updateHash();
     }
 
+    /**
+     * Returns the size of this track's file in the given format.
+     *
+     * @param $formatName
+     * @return int filesize in bytes
+     * @throws TrackFileNotFoundException
+     */
     public function getFilesize($formatName)
     {
-        return Cache::remember($this->getCacheKey('filesize-' . $formatName), 1440, function () use ($formatName) {
-            $file = $this->getFileFor($formatName);
-            $size = 0;
+        $trackFile = $this->trackFiles()->where('format', $formatName)->first();
 
-            if (is_file($file)) {
-                $size = filesize($file);
-            }
-
-            return $size;
-        });
+        if ($trackFile) {
+            return (int) $trackFile->filesize;
+        } else {
+            throw new TrackFileNotFoundException();
+        }
     }
 
     public function canView($user)
@@ -569,11 +592,22 @@ class Track extends Model
         $this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name) . ' - ' . Helpers::sanitizeInputForHashing($this->title));
     }
 
-    public function updateTags()
+    public function updateTags($trackFileFormat = 'all')
     {
-        $this->trackFiles()->touch();
+        if ($trackFileFormat === 'all') {
+            foreach ($this->trackFiles as $trackFile) {
+                $this->updateTagsForTrackFile($trackFile);
+            }
+        } else {
+            $trackFile = $this->trackFiles()->where('format', $trackFileFormat)->firstOrFail();
+            $this->updateTagsForTrackFile($trackFile);
+        }
+    }
 
-        foreach ($this->trackFiles as $trackFile) {
+    private function updateTagsForTrackFile($trackFile) {
+        $trackFile->touch();
+
+        if (\File::exists($trackFile->getFile())) {
             $format = $trackFile->format;
             $data = self::$Formats[$format];
 
@@ -652,10 +686,12 @@ class Track extends Model
 
         if ($tagWriter->WriteTags()) {
             if (!empty($tagWriter->warnings)) {
-                Log::warning('Track #'.$this->id.': There were some warnings:<br />' . implode('<br /><br />', $tagWriter->warnings));
+                Log::warning('Track #' . $this->id . ': There were some warnings:<br />' . implode('<br /><br />',
+                        $tagWriter->warnings));
             }
         } else {
-            Log::error('Track #' . $this->id . ': Failed to write tags!<br />' . implode('<br /><br />', $tagWriter->errors));
+            Log::error('Track #' . $this->id . ': Failed to write tags!<br />' . implode('<br /><br />',
+                    $tagWriter->errors));
         }
     }
 

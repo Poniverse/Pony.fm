@@ -79,12 +79,15 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::get('/tracks', 'Api\Web\TracksController@getIndex');
     Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');
+    Route::get('/tracks/cached/{id}/{format}', 'Api\Web\TracksController@getCachedTrack')->where(['id' => '\d+', 'format' => '.+']);
 
     Route::get('/albums', 'Api\Web\AlbumsController@getIndex');
     Route::get('/albums/{id}', 'Api\Web\AlbumsController@getShow')->where('id', '\d+');
+    Route::get('/albums/cached/{id}/{format}', 'Api\Web\AlbumsController@getCachedAlbum')->where(['id' => '\d+', 'format' => '.+']);
 
     Route::get('/playlists', 'Api\Web\PlaylistsController@getIndex');
     Route::get('/playlists/{id}', 'Api\Web\PlaylistsController@getShow')->where('id', '\d+');
+    Route::get('/playlists/cached/{id}/{format}', 'Api\Web\PlaylistsController@getCachedPlaylist')->where(['id' => '\d+', 'format' => '.+']);
 
     Route::get('/comments/{type}/{id}', 'Api\Web\CommentsController@getIndex')->where('id', '\d+');
 

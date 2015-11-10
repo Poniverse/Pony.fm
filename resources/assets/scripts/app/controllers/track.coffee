@@ -21,8 +21,8 @@ window.pfm.preloaders['track'] = [
 ]
 
 angular.module('ponyfm').controller "track", [
-    '$scope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog'
-    ($scope, tracks, $state, playlists, auth, favourites, $dialog) ->
+    '$scope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
+    ($scope, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
         track = null
 
         tracks.fetch($state.params.id).done (trackResponse) ->
@@ -72,4 +72,21 @@ angular.module('ponyfm').controller "track", [
 
             playlists.addTrackToPlaylist(playlist.id, $scope.track.id).done (res) ->
                 playlist.message = res.message
+
+        $scope.getCachedTrack = (id, format) ->
+            $scope.isInProgress = true
+
+            cachedTrack.download('tracks', id, format).then (response) ->
+                $scope.trackUrl = response
+                if $scope.trackUrl == 'error'
+                    $scope.isInProgress = false
+                else if $scope.trackUrl == 'pending'
+                    # $timeout takes a callback function
+                    # https://stackoverflow.com/a/23391203/3225811
+                    $timeout(
+                        ()-> $scope.getCachedTrack(id, format)
+                    , 5000)
+                else
+                    $scope.isInProgress = false
+                    $window.location = $scope.trackUrl
 ]
