@@ -91,7 +91,9 @@ class AlbumsController extends ApiControllerBase
     {
         // Validation
         try {
+            /** @var Album $album */
             $album = Album::with('tracks.trackFiles')->findOrFail($id);
+
         } catch (ModelNotFoundException $e) {
             return $this->notFound('Album not found!');
         }
@@ -100,14 +102,10 @@ class AlbumsController extends ApiControllerBase
             return $this->notFound('Format not found!');
         }
 
-        $trackCount = $album->countDownloadableTracks();
-        try {
-            $cachedCount = $album->countCachedTrackFiles($format);
-        } catch (ModelNotFoundException $e) {
-            return $this->notFound('Track file in album not found!');
-        }
+        $trackCount = $album->countDownloadableTracks($format);
+        $availableFilesCount = $album->countAvailableTrackFiles($format);
 
-        if ($trackCount === $cachedCount) {
+        if ($trackCount === $availableFilesCount) {
             $url = $album->getDownloadUrl($format);
         } else {
             $album->encodeCacheableTrackFiles($format);

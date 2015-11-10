@@ -23,19 +23,17 @@ namespace Poniverse\Ponyfm;
 use Exception;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
-use File;
+use Poniverse\Ponyfm\Traits\TrackCollection;
 use URL;
-use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 
 class Album extends Model
 {
-    use SoftDeletes, SlugTrait, DispatchesJobs;
+    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection;
 
     protected $dates = ['deleted_at'];
 
@@ -83,6 +81,10 @@ class Album extends Model
     public function tracks()
     {
         return $this->hasMany('Poniverse\Ponyfm\Track')->orderBy('track_number', 'asc');
+    }
+
+    public function trackFiles() {
+        return $this->hasManyThrough(TrackFile::class, Track::class, 'album_id', 'track_id');
     }
 
     public function comments()
@@ -274,68 +276,6 @@ class Album extends Model
             $index++;
             $track->updateTags();
             $track->save();
-        }
-    }
-
-    public function countDownloadableTracks()
-    {
-        $trackCount = 0;
-
-        foreach ($this->tracks as $track) {
-            if ($track->is_downloadable == true) {
-                $trackCount++;
-            } else {
-                continue;
-            }
-        }
-
-        return $trackCount;
-    }
-
-    public function countCachedTrackFiles($format)
-    {
-        $cachedCount = 0;
-
-        foreach ($this->tracks as $track) {
-            /** @var $track Track */
-
-
-            if ($track->is_downloadable == false) {
-                continue;
-            }
-
-            try {
-                $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
-            } catch (ModelNotFoundException $e) {
-                throw $e;
-            }
-
-            if ($trackFile->expires_at != null && File::exists($trackFile->getFile())) {
-                $cachedCount++;
-            }
-        }
-
-        return $cachedCount;
-    }
-
-    public function encodeCacheableTrackFiles($format)
-    {
-        foreach ($this->tracks as $track) {
-            /** @var $track Track */
-
-            if ($track->is_downloadable == false) {
-                continue;
-            }
-
-            try {
-                $trackFile = $track->trackFiles()->where('format', $format)->firstOrFail();
-            } catch (ModelNotFoundException $e) {
-                throw $e;
-            }
-
-            if (!File::exists($trackFile->getFile()) && $trackFile->is_in_progress != true) {
-                $this->dispatch(new EncodeTrackFile($trackFile, true));
-            }
         }
     }
 

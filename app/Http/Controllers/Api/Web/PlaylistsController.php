@@ -116,6 +116,7 @@ class PlaylistsController extends ApiControllerBase
     {
         // Validation
         try {
+            /** @var $playlist Playlist */
             $playlist = Playlist::with('tracks.trackFiles')->findOrFail($id);
         } catch (ModelNotFoundException $e) {
             return $this->notFound('Playlist not found!');
@@ -129,14 +130,10 @@ class PlaylistsController extends ApiControllerBase
             return $this->notFound('Format not found!');
         }
 
-        $trackCount = $playlist->countDownloadableTracks();
-        try {
-            $cachedCount = $playlist->countCachedTrackFiles($format);
-        } catch (ModelNotFoundException $e) {
-            return $this->notFound('Track file in playlist not found!');
-        }
+        $trackCount = $playlist->countDownloadableTracks($format);
+        $availableFilesCount = $playlist->countAvailableTrackFiles($format);
 
-        if ($trackCount === $cachedCount) {
+        if ($trackCount === $availableFilesCount) {
             $url = $playlist->getDownloadUrl($format);
         } else {
             $playlist->encodeCacheableTrackFiles($format);
