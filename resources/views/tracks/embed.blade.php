@@ -62,10 +62,6 @@
         </div>
     @endif
 
-    <script>
-        var pfm = {token: '{{ Session::token() }}'}
-    </script>
-
     {!! Assets::scriptIncludes('embed') !!}
 
     @if(config('ponyfm.google_analytics_id'))

@@ -24,7 +24,7 @@ angular.module('ponyfm').factory('comments', [
 
             addComment: (resourceType, resourceId, content) ->
                 commentDef = new $.Deferred()
-                $http.post('/api/web/comments/' + resourceType + '/' + resourceId, {content: content, _token: pfm.token}).success (comment) ->
+                $http.post('/api/web/comments/' + resourceType + '/' + resourceId, {content: content}).success (comment) ->
                     commentDef.resolve comment
 
                 commentDef.promise()

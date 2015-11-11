@@ -128,7 +128,6 @@
 @section('scripts')
     <script>
         window.pfm = {
-            token: "{!! csrf_token() !!}",
             auth: {
                 @if (Auth::check())
                     isLogged: true,

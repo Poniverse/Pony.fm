@@ -106,11 +106,13 @@ gulp.task("scripts-embed", function () {
 
     var includedScripts = [
         "resources/assets/scripts/base/jquery-2.0.2.js",
+        "resources/assets/scripts/base/jquery.cookie.js",
         "resources/assets/scripts/base/jquery.viewport.js",
         "resources/assets/scripts/base/underscore.js",
         "resources/assets/scripts/base/moment.js",
         "resources/assets/scripts/base/jquery.timeago.js",
         "resources/assets/scripts/base/soundmanager2-nodebug.js",
+        "resources/assets/scripts/shared/jquery-extensions.js",
         "resources/assets/scripts/embed/*.coffee"
     ];
 

@@ -101,11 +101,13 @@ class Assets
             if ($area == 'embed') {
                 return [
                     "scripts/base/jquery-2.0.2.js",
+                    "scripts/base/jquery.cookie.js",
                     "scripts/base/jquery.viewport.js",
                     "scripts/base/underscore.js",
                     "scripts/base/moment.js",
                     "scripts/base/jquery.timeago.js",
                     "scripts/base/soundmanager2-nodebug.js",
+                    "scripts/shared/jquery-extensions.js",
                     "scripts/embed/*.coffee"
                 ];
             }

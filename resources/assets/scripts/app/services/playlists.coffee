@@ -63,7 +63,7 @@ angular.module('ponyfm').factory('playlists', [
 
             addTrackToPlaylist: (playlistId, trackId) ->
                 def = new $.Deferred()
-                $http.post('/api/web/playlists/' + playlistId + '/add-track', {track_id: trackId, _token: pfm.token}).success (res) ->
+                $http.post('/api/web/playlists/' + playlistId + '/add-track', {track_id: trackId}).success (res) ->
                     def.resolve(res)
 
                 def
@@ -77,7 +77,7 @@ angular.module('ponyfm').factory('playlists', [
 
             deletePlaylist: (playlist) ->
                 def = new $.Deferred()
-                $.post('/api/web/playlists/delete/' + playlist.id, {_token: window.pfm.token})
+                $.post('/api/web/playlists/delete/' + playlist.id)
                     .then -> $rootScope.$apply ->
                         if _.some(self.pinnedPlaylists, (p) -> p.id == playlist.id)
                             currentIndex = _.indexOf(self.pinnedPlaylists, (t) -> t.id == playlist.id)
@@ -92,7 +92,6 @@ angular.module('ponyfm').factory('playlists', [
 
             editPlaylist: (playlist) ->
                 def = new $.Deferred()
-                playlist._token = pfm.token
                 $.post('/api/web/playlists/edit/' + playlist.id, playlist)
                     .done (res) ->
                         $rootScope.$apply ->
@@ -125,7 +124,6 @@ angular.module('ponyfm').factory('playlists', [
 
             createPlaylist: (playlist) ->
                 def = new $.Deferred()
-                playlist._token = pfm.token
                 $.post('/api/web/playlists/create', playlist)
                     .done (res) ->
                         $rootScope.$apply ->

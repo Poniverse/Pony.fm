@@ -21,7 +21,7 @@ trackId = $player.data 'track-id'
 $favourite.click (e) ->
 	e.preventDefault()
 
-	$.post('/api/web/favourites/toggle', {type: 'track', id: trackId, _token: pfm.token}).done (res) ->
+	$.post('/api/web/favourites/toggle', {type: 'track', id: trackId}).done (res) ->
 		if res.is_favourited
 			$player.addClass 'favourited'
 		else

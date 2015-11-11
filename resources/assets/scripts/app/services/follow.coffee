@@ -20,7 +20,7 @@ angular.module('ponyfm').factory('follow', [
         self =
             toggle: (type, id) ->
                 def = new $.Deferred()
-                $http.post('/api/web/follow/toggle', {type: type, id: id, _token: pfm.token}).success (res) ->
+                $http.post('/api/web/follow/toggle', {type: type, id: id}).success (res) ->
                     def.resolve res
 
                 def.promise()

@@ -116,7 +116,7 @@ angular.module('ponyfm').controller "account-track", [
                 formData.append 'show_song_ids', _.map(_.values($scope.selectedSongs), (s) -> s.id).join()
 
             xhr.open 'POST', '/api/web/tracks/edit/' + $scope.edit.id, true
-            xhr.setRequestHeader 'X-CSRF-Token', pfm.token
+            xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')
             $scope.isSaving = true
             xhr.send formData
 
@@ -151,7 +151,7 @@ angular.module('ponyfm').controller "account-track", [
                 {result: 'ok', label: 'Yes', cssClass: 'btn-danger'}, {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
             ]).open().then (res) ->
                 return if res == 'cancel'
-                $.post('/api/web/tracks/delete/' + track.id, {_token: window.pfm.token})
+                $.post('/api/web/tracks/delete/' + track.id)
                     .then -> $scope.$apply ->
                         $scope.$emit 'track-deleted'
                         $state.transitionTo 'account.tracks'

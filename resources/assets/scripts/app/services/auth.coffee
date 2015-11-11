@@ -20,7 +20,7 @@ angular.module('ponyfm').factory('auth', [
         data: {isLogged: window.pfm.auth.isLogged, user: window.pfm.auth.user}
         login: (email, password, remember) ->
             def = new $.Deferred()
-            $.post('/api/web/auth/login', {email: email, password: password, remember: remember, _token: pfm.token})
+            $.post('/api/web/auth/login', {email: email, password: password, remember: remember})
                 .done ->
                     $rootScope.$apply -> def.resolve()
 
@@ -29,6 +29,5 @@ angular.module('ponyfm').factory('auth', [
 
             def.promise()
 
-        logout: -> $.post('/api/web/auth/logout', {_token: pfm.token})
+        logout: -> $.post('/api/web/auth/logout')
 ])
-

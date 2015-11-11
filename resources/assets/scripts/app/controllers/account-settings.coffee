@@ -67,7 +67,7 @@ angular.module('ponyfm').controller "account-settings", [
                     formData.append name, value
 
             xhr.open 'POST', '/api/web/account/settings/save', true
-            xhr.setRequestHeader 'X-CSRF-Token', pfm.token
+            xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')
             $scope.isSaving = true
             xhr.send formData
 

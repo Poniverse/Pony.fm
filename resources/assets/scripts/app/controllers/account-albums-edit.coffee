@@ -108,7 +108,7 @@ angular.module('ponyfm').controller "account-albums-edit", [
             formData.append 'track_ids', _.map($scope.tracks, (t) -> t.id).join()
 
             xhr.open 'POST', url, true
-            xhr.setRequestHeader 'X-CSRF-Token', pfm.token
+            xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')
             $scope.isSaving = true
             xhr.send formData
 
@@ -117,7 +117,7 @@ angular.module('ponyfm').controller "account-albums-edit", [
                 {result: 'ok', label: 'Yes', cssClass: 'btn-danger'}, {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
             ]).open().then (res) ->
                 return if res == 'cancel'
-                $.post('/api/web/albums/delete/' + $scope.album.id, {_token: window.pfm.token})
+                $.post('/api/web/albums/delete/' + $scope.album.id)
                     .then -> $scope.$apply ->
                         $scope.$emit 'album-deleted'
                         $state.transitionTo 'account.albums'
