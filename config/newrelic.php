@@ -31,7 +31,7 @@ return array(
      *          "GET /world" with pattern 'hello {path} you really {method} me' would return:
      *          'hello /world you really GET me'
      */
-    'name_provider' => '{uri} {route}',
+    'name_provider' => '{route}',
 
     /*
      * Will cause an exception to be thrown if the NewRelic
