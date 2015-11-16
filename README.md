@@ -13,15 +13,25 @@ taxonomies.
 
 Contributing
 ------------
-If you've run across a bug or have a feature request, open a GitHub issue for it.
+If you've run across a bug or have a feature request,
+[open an issue](https://github.com/Poniverse/Pony.fm/issues/new)
+for it.
+
+For general questions and discussions about the site, stop by at
+the [Pony.fm forum](https://mlpforums.com/forum/62-ponyfm/).
 
 For quick fixes, go ahead and submit a pull request!
 
-For larger features, it's best to open a ticket before sinking a ton of work
+For larger features, it's best to open an issue before sinking a ton of work
 into building them, to coordinate with Pony.fm's maintainers.
 
+**Protip:** Looking for a place to jump in and start coding? Try a
+[quickwin issue](https://github.com/Poniverse/Pony.fm/labels/quickwin%21) -
+these are smaller in scope and easier to tackle if you're unfamiliar with the codebase!
 
-# Starting a dev environment
+
+Starting a dev environment
+==========================
 
 To begin development, you must do three things:
 
@@ -37,9 +47,10 @@ To begin development, you must do three things:
 
 6. Follow the instructions in the "Asset pipeline" section below to set that up.
 
-Once everything is up and running, you'll be able to access the site at [http://ponyfm-dev.poni/](http://ponyfm-dev.poni/). You can access the MySQL database by logging into **192.168.33.11:3306** with the username **homestead** and the password **secret**. Pony.fm's database is named **homestead**.
+Once everything is up and running, you'll be able to access the site at [http://ponyfm-dev.poni/](http://ponyfm-dev.poni/). You can access the MySQL database by logging into **ponyfm-dev.poni:3306** with the username **homestead** and the password **secret**. Pony.fm's database is named **homestead**.
 
-# Asset pipeline
+Asset pipeline
+--------------
 
 Pony.fm uses [gulp](http://gulpjs.com/) to mange its asset pipeline.
 
@@ -61,7 +72,8 @@ During development, you should make a point to run "gulp watch". You can do this
 
 This will watch and compile the `.less` and `.coffee` files in real time.
 
-# Configuring the servers
+Configuring the servers
+-----------------------
 
 Pony.fm uses nginx, php-fpm, redis, and MySQL. You can modify the configuration of these services by locating the appropriate config file in the `vagrant` folder. Once modified, you must reload the configuration by running the appropriate shell script (`reload-config.sh`) or bat files (`reload-config.bat` and `reload-config.vmware.bat`). These scripts simply tell Vagrant to run `copy-and-restart-config.sh` on the VM.
 
