@@ -79,6 +79,7 @@
             @endif
 
             <li ng-class="{selected: isActive('/about')}"><a href="/about">About</a></li>
+            <li><a href="https://mlpforums.com/forum/62-ponyfm/" title="Pony.fm Forum" target="_blank">Forum</a></li>
 
             @if (Auth::check())
                 <li class="uploader" ng-class="{selected: stateIncludes('uploader')}">
@@ -99,7 +100,7 @@
                 <li><a href="/register" target="_self">Register</a></li>
             @endif
             <li class="x-attribution">
-                <a ng-click="showCredits()" title="Pony.fm project credits">
+                <a href="#" ng-click="showCredits()" pfm-eat-click title="Pony.fm project credits">
                     @if(config('ponyfm.use_powered_by_footer'))
                         <span>Powered by</span>
                         <img src="/images/ponyfm-logo-white.svg" alt="Pony.fm logo" title="Pony.fm"/>
