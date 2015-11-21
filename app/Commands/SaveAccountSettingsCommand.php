@@ -55,7 +55,7 @@ class SaveAccountSettingsCommand extends CommandBase
         ];
 
         if ($this->_input['sync_names'] == 'true') {
-            $this->_input['display_name'] = $user->mlpforums_name;
+            $this->_input['display_name'] = $user->username;
         }
 
         if ($this->_input['uses_gravatar'] == 'true') {

@@ -38,7 +38,7 @@ class AccountController extends ApiControllerBase
             'can_see_explicit_content' => $user->can_see_explicit_content == 1,
             'display_name' => $user->display_name,
             'sync_names' => $user->sync_names == 1,
-            'mlpforums_name' => $user->mlpforums_name,
+            'username' => $user->username,
             'gravatar' => $user->gravatar ? $user->gravatar : $user->email,
             'avatar_url' => !$user->uses_gravatar ? $user->getAvatarUrl() : null,
             'uses_gravatar' => $user->uses_gravatar == 1

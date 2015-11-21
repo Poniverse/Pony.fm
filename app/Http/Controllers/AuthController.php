@@ -96,8 +96,10 @@ class AuthController extends Controller
             return $this->loginRedirect(User::find($token->user_id));
         }
 
-        //Check by email to see if they already have an account
-        $localMember = User::where('email', '=', $poniverseUser['email'])->first();
+        // Check by login name to see if they already have an account
+        $localMember = User::where('username', '=', $poniverseUser['username'])
+            ->where('is_archived', false)
+            ->first();
 
         if ($localMember) {
             return $this->loginRedirect($localMember);
@@ -105,7 +107,7 @@ class AuthController extends Controller
 
         $user = new User;
 
-        $user->mlpforums_name = $poniverseUser['username'];
+        $user->username = $poniverseUser['username'];
         $user->display_name = $poniverseUser['display_name'];
         $user->email = $poniverseUser['email'];
         $user->created_at = gmdate("Y-m-d H:i:s", time());

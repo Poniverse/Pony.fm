@@ -74,7 +74,7 @@ class MigrateOldData extends Command
             }
 
             if (!$displayName) {
-                $displayName = $user->mlpforums_name;
+                $displayName = $user->username;
             }
 
             if (!$displayName) {
@@ -91,7 +91,7 @@ class MigrateOldData extends Command
                 'bio' => $user->bio,
                 'sync_names' => $user->sync_names,
                 'can_see_explicit_content' => $user->can_see_explicit_content,
-                'mlpforums_name' => $user->mlpforums_name,
+                'username' => $user->username,
                 'uses_gravatar' => $user->uses_gravatar,
                 'gravatar' => $user->gravatar,
                 'avatar_id' => null

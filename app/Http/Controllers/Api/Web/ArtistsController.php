@@ -171,7 +171,7 @@ class ArtistsController extends ApiControllerBase
                 'latest_tracks' => $latestTracks,
                 'comments' => $comments,
                 'bio' => $user->bio,
-                'mlpforums_username' => $user->mlpforums_name,
+                'mlpforums_username' => $user->username,
                 'message_url' => $user->message_url,
                 'user_data' => $userData
             ]

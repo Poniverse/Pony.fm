@@ -11,7 +11,8 @@
         "kriswallsmith/assetic": "1.2.*@dev",
         "intouch/laravel-newrelic": "*",
         "barryvdh/laravel-ide-helper": "^2.1",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
