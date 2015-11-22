@@ -57,7 +57,7 @@ class ImagesController extends Controller
             $response->header('X-Accel-Redirect', $filename);
         }
 
-        $response->header('Content-Disposition', 'filename="' . $filename . '"');
+        $response->header('Content-Disposition', "filename=\"ponyfm-i${id}-${type}.png\"");
         $response->header('Content-Type', 'image/png');
 
         $lastModified = filemtime($filename);
