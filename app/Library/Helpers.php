@@ -71,7 +71,7 @@ class Helpers
         }
 
         $title = date('c', strtotime($timestamp));
-        $content = date('F d, o \@ g:i:s a', strtotime($timestamp));
+        $content = date('F j, Y \@ g:i:s a', strtotime($timestamp));
 
         return '<abbr class="timeago" title="' . $title . '">' . $content . '</abbr>';
     }
