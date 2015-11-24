@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call(GenreTableSeeder::class);
+        $this->call(ShowSongTableSeeder::class);
 
         Model::reguard();
     }

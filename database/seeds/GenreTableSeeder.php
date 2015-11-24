@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pony.fm - A community for pony fan music.
  * Copyright (C) 2015 Peter Deltchev
