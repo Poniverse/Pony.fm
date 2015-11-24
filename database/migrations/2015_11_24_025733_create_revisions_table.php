@@ -9,7 +9,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRevisionsTable extends Migration
+class CreateCustomizedRevisionsTable extends Migration
 {
     /**
      * Run the migrations.
