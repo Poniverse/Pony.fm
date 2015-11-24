@@ -34,7 +34,7 @@ if (Config::get('app.debug')) {
 }
 
 Route::get('/dashboard', 'TracksController@getIndex');
-Route::get('/tracks', 'TracksController@getIndex');
+Route::get('/tracks', ['as' => 'tracks.discover', 'uses' => 'TracksController@getIndex']);
 Route::get('/tracks/popular', 'TracksController@getIndex');
 Route::get('/tracks/random', 'TracksController@getIndex');
 

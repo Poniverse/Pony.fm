@@ -24,13 +24,14 @@ use DB;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Illuminate\Database\Eloquent\Model;
+use URL;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class Genre extends Model
 {
     protected $table = 'genres';
     protected $fillable = ['name', 'slug'];
-    protected $appends = ['track_count'];
+    protected $appends = ['track_count', 'url'];
     protected $hidden = ['trackCountRelation'];
 
     public $timestamps = false;
@@ -62,5 +63,12 @@ class Genre extends Model
      */
     public function getTrackCountAttribute() {
         return $this->trackCountRelation()->count();
+    }
+
+    /**
+     * @return string relative, Angular-friendly URL to this genre
+     */
+    public function getUrlAttribute() {
+        return URL::route('tracks.discover', ['filter' => "genres-{$this->id}"], false);
     }
 }

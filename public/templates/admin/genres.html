@@ -22,7 +22,7 @@
                 </div>
             </td>
             <td><i ng-show="genre.isSaving" class="icon-cog icon-spin icon-large"></i></td>
-            <td>{{ genre.track_count }}</td>
+            <td><a ng-href="{{ genre.url }}">{{ genre.track_count }}</a></td>
             <td>
                 <button class="btn btn-warning" disabled>Merge&hellip;</button>
             </td>
