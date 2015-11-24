@@ -98,7 +98,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 
-    Route::group(['middleware' => 'auth|csrf'], function() {
+    Route::group(['middleware' => 'auth'], function() {
         Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
         Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
         Route::post('/tracks/edit/{id}', 'Api\Web\TracksController@postEdit');
@@ -142,9 +142,7 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/favourites/playlists', 'Api\Web\FavouritesController@getPlaylists');
     });
 
-    Route::group(['middleware' => 'csrf'], function(){
-        Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
-    });
+    Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
 });
 
 Route::group(['prefix' => 'account', 'middleware' => 'auth'], function() {
