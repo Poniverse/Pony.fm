@@ -166,6 +166,11 @@ Route::group(['prefix' => 'account'], function() {
     });
 });
 
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
+    Route::get('/genres', 'AdminController@getGenres');
+    Route::get('/', 'AdminController@getIndex');
+});
+
 Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('{slug}', 'ArtistsController@getProfile');

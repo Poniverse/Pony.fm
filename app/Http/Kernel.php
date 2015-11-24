@@ -47,6 +47,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \Poniverse\Ponyfm\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'can' => \Poniverse\Ponyfm\Http\Middleware\Authorize::class,
         'guest' => \Poniverse\Ponyfm\Http\Middleware\RedirectIfAuthenticated::class,
         'csrf' => \Poniverse\Ponyfm\Http\Middleware\VerifyCsrfHeader::class,
     ];

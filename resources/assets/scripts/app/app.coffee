@@ -224,7 +224,18 @@ module.config [
             url: '/register'
             templateUrl: '/templates/auth/register.html'
 
-        # Hompage
+        # Admin
+
+        state.state 'admin',
+            abstract: true
+            url: '/admin'
+            templateUrl: '/templates/admin/_layout.html'
+
+        state.state 'admin.genres',
+            url: '/genres',
+            templateUrl: '/templates/admin/genres.html'
+
+        # Homepage
 
         if window.pfm.auth.isLogged
             state.state 'home',

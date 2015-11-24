@@ -27,13 +27,14 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable
 {
-    use Authenticatable, CanResetPassword;
+    use Authenticatable, CanResetPassword, Authorizable;
 
     protected $table = 'users';
     protected $hidden1 = ['password_hash', 'password_salt', 'bio'];
@@ -59,6 +60,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function users()
     {
         return $this->hasMany('Poniverse\Ponyfm\ResourceUser', 'artist_id');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user');
     }
 
     public function comments()
@@ -166,5 +172,22 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getRememberTokenName()
     {
         return "remember_token";
+    }
+
+    /**
+     * Returns true if this user has the given role.
+     *
+     * @param $roleName
+     * @return bool
+     */
+    public function hasRole($roleName)
+    {
+        foreach ($this->roles as $role) {
+            if ($role->name === $roleName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

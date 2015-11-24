@@ -85,6 +85,13 @@
                 <li class="uploader" ng-class="{selected: stateIncludes('uploader')}">
                     <a href="/account/uploader">Upload Music</a>
                 </li>
+
+                @can('access-admin-area')
+                    <li ng-class="{selected: stateIncludes('admin')}">
+                        <a href="/admin/genres">Admin Area</a>
+                    </li>
+                @endcan
+
                 <li>
                     <h3>
                         <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="icon-plus"></i></a>

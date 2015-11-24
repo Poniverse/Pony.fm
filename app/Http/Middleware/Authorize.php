@@ -18,14 +18,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+namespace Poniverse\Ponyfm\Http\Middleware;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Closure;
+use Gate;
+use Illuminate\Contracts\Auth\Guard;
 
-abstract class Controller extends BaseController
+class Authorize
 {
-    use DispatchesJobs, ValidatesRequests, AuthorizesRequests;
+    /**
+     * The Guard implementation.
+     *
+     * @var Guard
+     */
+    protected $auth;
+
+    /**
+     * Create a new filter instance.
+     *
+     * @param  Guard $auth
+     */
+    public function __construct(Guard $auth)
+    {
+        $this->auth = $auth;
+    }
+
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
+     * @param  string
+     * @return mixed
+     */
+    public function handle($request, Closure $next, $ability)
+    {
+        if (Gate::denies($ability)) {
+            abort(403);
+        }
+
+        return $next($request);
+    }
 }

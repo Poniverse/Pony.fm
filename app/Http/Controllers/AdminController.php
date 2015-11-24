@@ -20,12 +20,18 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Redirect;
+use View;
 
-abstract class Controller extends BaseController
+class AdminController extends Controller
 {
-    use DispatchesJobs, ValidatesRequests, AuthorizesRequests;
+    public function getIndex()
+    {
+        return Redirect::to('AdminController@getGenres');
+    }
+
+    public function getGenres()
+    {
+        return View::make('shared.null');
+    }
 }
