@@ -18,14 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Policies;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Input;
+use Poniverse\Ponyfm\Commands\RenameGenreCommand;
 use Poniverse\Ponyfm\Genre;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Response;
 
-class GenrePolicy
+
+class GenresController extends ApiControllerBase
 {
-    public function rename(User $user, Genre $genre) {
-        return $user->hasRole('admin');
+    public function getIndex()
+    {
+        $this->authorize('access-admin-area');
+
+        $genres = Genre::with(['trackCountRelation' => function($query) {
+            $query->withTrashed();
+        }])->get();
+
+        return Response::json([
+            'genres' => $genres->toArray()
+        ], 200);
+    }
+
+
+    public function putRename($genreId)
+    {
+        $command = new RenameGenreCommand($genreId, Input::get('name'));
+        return $this->execute($command);
     }
 }

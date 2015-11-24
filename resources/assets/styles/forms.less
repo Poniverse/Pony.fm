@@ -68,6 +68,20 @@ input[type="text"], input[type="password"], input[type="date"], input[type="numb
   &:focus {
     .box-shadow(none);
   }
+
+  &.x-large {
+    font-size: 12pt;
+    padding: 0.5em;
+    height: 2em;
+  }
+
+  &.x-saving {
+    background: @pfm-light-grey;
+  }
+
+  &.x-error {
+    background: @btnDangerBackground;
+  }
 }
 
 select {

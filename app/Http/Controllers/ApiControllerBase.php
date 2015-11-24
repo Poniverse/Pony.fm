@@ -20,11 +20,12 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
+use Poniverse\Ponyfm\Commands\CommandBase;
 use Response;
 
 abstract class ApiControllerBase extends Controller
 {
-    protected function execute($command)
+    protected function execute(CommandBase $command)
     {
         if (!$command->authorize()) {
             return $this->notAuthorized();

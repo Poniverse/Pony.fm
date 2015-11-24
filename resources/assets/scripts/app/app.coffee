@@ -232,7 +232,8 @@ module.config [
             templateUrl: '/templates/admin/_layout.html'
 
         state.state 'admin.genres',
-            url: '/genres',
+            url: '/genres'
+            controller: 'admin-genres'
             templateUrl: '/templates/admin/genres.html'
 
         # Homepage

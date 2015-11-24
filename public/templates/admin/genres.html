@@ -1,3 +1,31 @@
 <h1>Genre Editor</h1>
 
-<p>This is a stub page!</p>
+<section class="genre-list stretch-to-bottom">
+    <table class="table">
+        <thead>
+            <th>Genre</th>
+            <th class="-status"></th>
+            <th># of tracks (including deleted)</th>
+            <th>Actions</th>
+        </thead>
+        <tr ng-repeat="genre in genres">
+            <td>
+                <input
+                type="text"
+                class="x-large"
+                ng-class="{'x-saving': genre.isSaving, 'x-error': genre.isError}"
+                ng-model="genre.name"
+                pfm-on-enter="renameGenre(genre)"
+                />
+                <div class="alert alert-error" ng-show="genre.isError">
+                    {{ genre.errorMessage }}
+                </div>
+            </td>
+            <td><i ng-show="genre.isSaving" class="icon-cog icon-spin icon-large"></i></td>
+            <td>{{ genre.track_count }}</td>
+            <td>
+                <button class="btn btn-warning" disabled>Merge&hellip;</button>
+            </td>
+        </tr>
+    </table>
+</section>

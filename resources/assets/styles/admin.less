@@ -1,5 +1,3 @@
-<?php
-
 /**
  * Pony.fm - A community for pony fan music.
  * Copyright (C) 2015 Peter Deltchev
@@ -18,14 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Policies;
+@import 'base/bootstrap/bootstrap';
+@import 'mixins';
 
-use Poniverse\Ponyfm\Genre;
-use Poniverse\Ponyfm\User;
 
-class GenrePolicy
-{
-    public function rename(User $user, Genre $genre) {
-        return $user->hasRole('admin');
-    }
+.genre-list {
+  .-status {
+    width: 30px;
+  }
 }

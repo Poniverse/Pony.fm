@@ -142,6 +142,11 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/favourites/playlists', 'Api\Web\FavouritesController@getPlaylists');
     });
 
+    Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
+        Route::get('/genres', 'Api\Web\GenresController@getIndex');
+        Route::put('/genres/{id}', 'Api\Web\GenresController@putRename')->where('id', '\d+');
+    });
+
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
 });
 

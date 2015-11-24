@@ -20,6 +20,8 @@
 
 namespace Poniverse\Ponyfm;
 
+use DB;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,7 +29,37 @@ class Genre extends Model
 {
     protected $table = 'genres';
     protected $fillable = ['name', 'slug'];
+    protected $appends = ['track_count'];
+    protected $hidden = ['trackCountRelation'];
+
     public $timestamps = false;
 
     use SlugTrait;
+
+    public function tracks(){
+        return $this->hasMany(Track::class, 'genre_id');
+    }
+
+    /**
+     * "Dummy" relation to facilitate eager-loading of a genre's track count.
+     * This relationship should not be used directly.
+     *
+     * Inspired by: http://laravel.io/forum/05-03-2014-eloquent-get-count-relation?page=1#reply-6226
+     *
+     * @return Relation
+     */
+    public function trackCountRelation() {
+        return $this->hasOne(Track::class)
+            ->select(['genre_id', DB::raw('count(*) as track_count')])
+            ->groupBy('genre_id');
+    }
+
+    /**
+     * Returns the number of tracks in this genre.
+     *
+     * @return int
+     */
+    public function getTrackCountAttribute() {
+        return $this->trackCountRelation()->count();
+    }
 }
