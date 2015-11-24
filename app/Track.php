@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Log;
 use URL;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class Track extends Model
 {
@@ -45,6 +46,8 @@ class Track extends Model
     use SlugTrait {
         SlugTrait::setTitleAttribute as setTitleAttributeSlug;
     }
+
+    use RevisionableTrait;
 
     public static $Formats = [
         'FLAC' => [

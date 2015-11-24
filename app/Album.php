@@ -30,10 +30,11 @@ use Cache;
 use Poniverse\Ponyfm\Traits\TrackCollection;
 use URL;
 use Poniverse\Ponyfm\Traits\SlugTrait;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class Album extends Model
 {
-    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection;
+    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait;
 
     protected $dates = ['deleted_at'];
 

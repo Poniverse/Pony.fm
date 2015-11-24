@@ -18,13 +18,13 @@ angular.module('ponyfm').controller 'admin-genres', [
     '$scope', '$state', 'admin-genres'
     ($scope, $state, genres) ->
 
-        $scope.genres = {}
+        $scope.genres = []
 
         setGenres = (genres) ->
             for genre in genres
                 genre.isSaving = false
                 genre.isError = false
-                $scope.genres[genre.id] = genre
+                $scope.genres.push(genre)
 
         genres.fetch().done setGenres
 

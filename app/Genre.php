@@ -24,6 +24,7 @@ use DB;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Illuminate\Database\Eloquent\Model;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class Genre extends Model
 {
@@ -34,7 +35,7 @@ class Genre extends Model
 
     public $timestamps = false;
 
-    use SlugTrait;
+    use SlugTrait, RevisionableTrait;
 
     public function tracks(){
         return $this->hasMany(Track::class, 'genre_id');

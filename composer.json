@@ -12,7 +12,8 @@
         "intouch/laravel-newrelic": "*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "guzzlehttp/guzzle": "~6.0",
-        "doctrine/dbal": "^2.5"
+        "doctrine/dbal": "^2.5",
+        "venturecraft/revisionable": "^1.23"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

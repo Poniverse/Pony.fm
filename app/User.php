@@ -31,10 +31,11 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable
 {
-    use Authenticatable, CanResetPassword, Authorizable;
+    use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait;
 
     protected $table = 'users';
     protected $hidden1 = ['password_hash', 'password_salt', 'bio'];
