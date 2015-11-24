@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call(UserTableSeeder::class);
+        $this->call(GenreTableSeeder::class);
 
         Model::reguard();
     }
