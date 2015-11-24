@@ -46,7 +46,7 @@ class Genre extends Model
      * "Dummy" relation to facilitate eager-loading of a genre's track count.
      * This relationship should not be used directly.
      *
-     * Inspired by: http://laravel.io/forum/05-03-2014-eloquent-get-count-relation?page=1#reply-6226
+     * Inspired by {@link http://softonsofa.com/tweaking-eloquent-relations-how-to-get-hasmany-relation-count-efficiently/}
      *
      * @return Relation
      */
@@ -62,7 +62,11 @@ class Genre extends Model
      * @return int
      */
     public function getTrackCountAttribute() {
-        return $this->trackCountRelation()->count();
+        if (!$this->relationLoaded('trackCountRelation')) {
+            $this->load('trackCountRelation');
+        }
+
+        return $this->trackCountRelation ? $this->trackCountRelation->track_count : 0;
     }
 
     /**
