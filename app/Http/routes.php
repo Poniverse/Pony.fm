@@ -98,7 +98,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 
-    Route::group(['before' => 'auth|csrf'], function() {
+    Route::group(['middleware' => 'auth|csrf'], function() {
         Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
         Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
         Route::post('/tracks/edit/{id}', 'Api\Web\TracksController@postEdit');
@@ -123,7 +123,7 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::post('/dashboard/read-news', 'Api\Web\DashboardController@postReadNews');
     });
 
-    Route::group(['before' => 'auth'], function() {
+    Route::group(['middleware' => 'auth'], function() {
         Route::get('/account/settings', 'Api\Web\AccountController@getSettings');
 
         Route::get('/images/owned', 'Api\Web\ImagesController@getOwned');
@@ -142,28 +142,26 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/favourites/playlists', 'Api\Web\FavouritesController@getPlaylists');
     });
 
-    Route::group(['before' => 'csrf'], function(){
+    Route::group(['middleware' => 'csrf'], function(){
         Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
     });
 });
 
-Route::group(['prefix' => 'account'], function() {
-    Route::group(['before' => 'auth'], function(){
-        Route::get('/favourites/tracks', 'FavouritesController@getTracks');
-        Route::get('/favourites/albums', 'FavouritesController@getAlbums');
-        Route::get('/favourites/playlists', 'FavouritesController@getPlaylists');
+Route::group(['prefix' => 'account', 'middleware' => 'auth'], function() {
+    Route::get('/favourites/tracks', 'FavouritesController@getTracks');
+    Route::get('/favourites/albums', 'FavouritesController@getAlbums');
+    Route::get('/favourites/playlists', 'FavouritesController@getPlaylists');
 
-        Route::get('/tracks', 'ContentController@getTracks');
-        Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
-        Route::get('/albums', 'ContentController@getAlbums');
-        Route::get('/albums/edit/{id}', 'ContentController@getAlbums');
-        Route::get('/albums/create', 'ContentController@getAlbums');
-        Route::get('/playlists', 'ContentController@getPlaylists');
+    Route::get('/tracks', 'ContentController@getTracks');
+    Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
+    Route::get('/albums', 'ContentController@getAlbums');
+    Route::get('/albums/edit/{id}', 'ContentController@getAlbums');
+    Route::get('/albums/create', 'ContentController@getAlbums');
+    Route::get('/playlists', 'ContentController@getPlaylists');
 
-        Route::get('/uploader', 'UploaderController@getIndex');
+    Route::get('/uploader', 'UploaderController@getIndex');
 
-        Route::get('/', 'AccountController@getIndex');
-    });
+    Route::get('/', 'AccountController@getIndex');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
