@@ -33,7 +33,11 @@ class TracksController extends Controller
             ->listed()
             ->explicitFilter()
             ->published()
-            ->with('user', 'genre', 'cover', 'album', 'album.user')->take(10);
+            ->with('user', 'genre', 'cover', 'album', 'album.user')->take(10)->get();
+
+        $tracks = $tracks->map(function(Track $track) {
+            return Track::mapPublicTrackSummary($track);
+        });
 
         $json = [
             'total_tracks' => $tracks->count(),
@@ -45,12 +49,7 @@ class TracksController extends Controller
 
     public function popular()
     {
-        $tracks = Track::popular(10)
-            ->userDetails()
-            ->listed()
-            ->explicitFilter()
-            ->published()
-            ->with('user', 'genre', 'cover', 'album', 'album.user')->take(10);
+        $tracks = collect(Track::popular(10));
 
         $json = [
             'total_tracks' => $tracks->count(),
