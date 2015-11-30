@@ -47,9 +47,11 @@ class Profiler
 
             try {
                 $response = $next($request);
-
             } catch (\Exception $e) {
-                $response = \Response::make(['exception' => $e->getTrace()], 500);
+                $response = \Response::make([
+                    'message' => $e->getMessage(),
+                    'exception' => $e->getTrace()
+                ], 500);
                 $profiler->log('error', $e->__toString(), []);
             }
 
