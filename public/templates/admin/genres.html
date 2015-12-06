@@ -6,7 +6,7 @@
             <th>Genre</th>
             <th class="-status"></th>
             <th># of tracks (including deleted)</th>
-            <th>Actions</th>
+            <th class="-actions">Actions</th>
         </thead>
         <tr ng-repeat="genre in genres">
             <td>
@@ -23,8 +23,10 @@
             </td>
             <td><i ng-show="genre.isSaving" class="icon-cog icon-spin icon-large"></i></td>
             <td><a ng-href="{{ genre.url }}">{{ genre.track_count }}</a></td>
-            <td>
-                <button class="btn btn-warning" disabled>Merge&hellip;</button>
+            <td class="-actions">
+                <button class="btn btn-warning" ng-hide="mergeInProgress" ng-click="startMerge(genre)">Merge&hellip;</button>
+                <button class="btn btn-danger" ng-show="mergeInProgress && genreToDelete.id != genre.id" ng-click="finishMerge(genre)">Merge in <em>{{ genreToDelete.name }}</em>&hellip;</button>
+                <button class="btn btn-warning" ng-show="mergeInProgress && genreToDelete.id == genre.id" ng-click="cancelMerge()">Cancel merge</button>
             </td>
         </tr>
     </table>

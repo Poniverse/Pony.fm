@@ -41,5 +41,17 @@ angular.module('ponyfm').factory('admin-genres', [
 
                 def.promise()
 
+            merge: (genre_id_to_delete, destination_genre_id) ->
+                url = "/api/web/admin/genres/#{genre_id_to_delete}"
+                def = new $.Deferred()
+
+                $http.delete(url, {params: {destination_genre_id: destination_genre_id}})
+                    .success (response)->
+                        def.resolve(response)
+
+                    .error (response)->
+                        def.reject(response)
+                        
+                def.promise()
         self
 ])

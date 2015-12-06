@@ -24,7 +24,6 @@ use Auth;
 use Cache;
 use Config;
 use DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;

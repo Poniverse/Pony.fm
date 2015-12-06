@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Input;
+use Poniverse\Ponyfm\Commands\DeleteGenreCommand;
 use Poniverse\Ponyfm\Commands\RenameGenreCommand;
 use Poniverse\Ponyfm\Genre;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
@@ -48,6 +49,13 @@ class GenresController extends ApiControllerBase
     public function putRename($genreId)
     {
         $command = new RenameGenreCommand($genreId, Input::get('name'));
+        return $this->execute($command);
+    }
+
+
+    public function deleteGenre($genreId)
+    {
+        $command = new DeleteGenreCommand($genreId, Input::get('destination_genre_id'));
         return $this->execute($command);
     }
 }

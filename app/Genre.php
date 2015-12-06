@@ -22,6 +22,7 @@ namespace Poniverse\Ponyfm;
 
 use DB;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Illuminate\Database\Eloquent\Model;
 use URL;
@@ -30,13 +31,14 @@ use Venturecraft\Revisionable\RevisionableTrait;
 class Genre extends Model
 {
     protected $table = 'genres';
+
     protected $fillable = ['name', 'slug'];
     protected $appends = ['track_count', 'url'];
     protected $hidden = ['trackCountRelation'];
 
     public $timestamps = false;
 
-    use SlugTrait, RevisionableTrait;
+    use SlugTrait, SoftDeletes, RevisionableTrait;
 
     public function tracks(){
         return $this->hasMany(Track::class, 'genre_id');

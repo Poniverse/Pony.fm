@@ -145,6 +145,7 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
         Route::get('/genres', 'Api\Web\GenresController@getIndex');
         Route::put('/genres/{id}', 'Api\Web\GenresController@putRename')->where('id', '\d+');
+        Route::delete('/genres/{id}', 'Api\Web\GenresController@deleteGenre')->where('id', '\d+');
     });
 
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');

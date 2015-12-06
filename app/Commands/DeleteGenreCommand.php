@@ -21,46 +21,47 @@
 namespace Poniverse\Ponyfm\Commands;
 
 use Gate;
-use Illuminate\Support\Str;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Jobs\DeleteGenre;
 use Validator;
 
-class RenameGenreCommand extends CommandBase
+class DeleteGenreCommand extends CommandBase
 {
-    /** @var Genre */
-    private $_genre;
-    private $_newName;
+    use DispatchesJobs;
 
-    public function __construct($genreId, $newName)
-    {
-        $this->_genre = Genre::find($genreId);
-        $this->_newName = $newName;
+
+    /** @var Genre */
+    private $_genreToDelete;
+    private $_destinationGenre;
+
+    public function __construct($genreId, $destinationGenreId) {
+        $this->_genreToDelete = Genre::find($genreId);
+        $this->_destinationGenre = Genre::find($destinationGenreId);
     }
 
     /**
      * @return bool
      */
-    public function authorize()
-    {
-        return Gate::allows('rename', $this->_genre);
+    public function authorize() {
+        return Gate::allows('delete', $this->_genreToDelete);
     }
 
     /**
      * @throws \Exception
      * @return CommandResponse
      */
-    public function execute()
-    {
-        $slug = Str::slug($this->_newName);
-
+    public function execute() {
         $rules = [
-            'name'      => 'required|unique:genres,name,'.$this->_genre->id.'|max:50',
-            'slug'      => 'required|unique:genres,slug,'.$this->_genre->id
+            'genre_to_delete'    => 'required',
+            'destination_genre'  => 'required',
         ];
 
+        // The validation will fail if the genres don't exist
+        // because they'll be null.
         $validator = Validator::make([
-            'name' => $this->_newName,
-            'slug' => $slug
+            'genre_to_delete' => $this->_genreToDelete,
+            'destination_genre' => $this->_destinationGenre,
         ], $rules);
 
 
@@ -68,10 +69,8 @@ class RenameGenreCommand extends CommandBase
             return CommandResponse::fail($validator);
         }
 
-        $this->_genre->name = $this->_newName;
-        $this->_genre->slug = $slug;
-        $this->_genre->save();
+        $this->dispatch(new DeleteGenre($this->_genreToDelete, $this->_destinationGenre));
 
-        return CommandResponse::succeed(['message' => 'Genre renamed!']);
+        return CommandResponse::succeed(['message' => 'Genre deleted!']);
     }
 }

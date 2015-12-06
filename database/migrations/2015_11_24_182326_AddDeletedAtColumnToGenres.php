@@ -18,18 +18,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Policies;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-use Poniverse\Ponyfm\Genre;
-use Poniverse\Ponyfm\User;
-
-class GenrePolicy
+class AddDeletedAtColumnToGenres extends Migration
 {
-    public function rename(User $user, Genre $genre) {
-        return $user->hasRole('admin');
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('genres', function(Blueprint $table) {
+            $table->softDeletes()->index();
+        });
     }
 
-    public function delete(User $user, Genre $genre) {
-        return $user->hasRole('admin');
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('genres', function(Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 }

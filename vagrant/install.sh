@@ -36,5 +36,9 @@ cp -n "/vagrant/resources/environments/.env.local" "/vagrant/.env"
 php artisan migrate
 php artisan db:seed
 
-echo "Now - if you haven't already, SSH into the VM and run \`php artisan poni:setup\`!"
-echo "See the README for more details."
+echo ""
+echo "+-----------------------------------------------+"
+echo "| Now - if you haven't already, SSH into the VM |"
+echo "| and run \`php artisan poni:setup\`!             |"
+echo "| See the README for more details.              |"
+echo "+-----------------------------------------------+"
