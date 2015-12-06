@@ -205,13 +205,20 @@ module.config [
 
         # Pages
 
-        state.state 'faq',
+        state.state 'pages',
+            templateUrl: '/templates/pages/_layout.html'
+
+        state.state 'pages.about',
+            url: '/about'
+            templateUrl: '/templates/pages/about.html'
+
+        state.state 'pages.faq',
             url: '/faq'
             templateUrl: '/templates/pages/faq.html'
 
-        state.state 'about',
-            url: '/about'
-            templateUrl: '/templates/pages/about.html'
+        state.state 'pages.mlpforums-advertising-program',
+            url: '/mlpforums-advertising-program'
+            templateUrl: '/templates/pages/mlpforums-advertising-program.html'
 
         # Auth
 

@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --}}
 
-@extends('shared._app_layout')
+@extends('pages._layout')
 
-@section('app_content')
+@section('static_page')
     {{Helpers::template('pages/about.html')}}
 @endsection

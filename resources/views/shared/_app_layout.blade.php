@@ -78,7 +78,7 @@
                 <li ng-class="{selected: stateIncludes('account')}"><a href="/account/tracks">Account</a></li>
             @endif
 
-            <li ng-class="{selected: isActive('/about')}"><a href="/about">About</a></li>
+            <li ng-class="{selected: stateIncludes('pages')}"><a href="/about">About / FAQ</a></li>
             <li><a href="https://mlpforums.com/forum/62-ponyfm/" title="Pony.fm Forum" target="_blank">Forum</a></li>
 
             @if (Auth::check())

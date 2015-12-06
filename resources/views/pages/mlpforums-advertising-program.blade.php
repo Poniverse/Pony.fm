@@ -19,5 +19,5 @@
 @extends('pages._layout')
 
 @section('static_page')
-    {{Helpers::template('pages/faq.html')}}
+    {{Helpers::template('pages/mlpforums-advertising-program.html')}}
 @endsection

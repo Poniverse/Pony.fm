@@ -58,6 +58,7 @@ Route::get('/auth/oauth', 'AuthController@getOAuth');
 
 Route::get('/about', function() { return View::make('pages.about'); });
 Route::get('/faq', function() { return View::make('pages.faq'); });
+Route::get('/mlpforums-advertising-program', function() { return View::make('pages.mlpforums-advertising-program'); });
 
 Route::get('i{id}/{type}.png', 'ImagesController@getImage')->where('id', '\d+');
 

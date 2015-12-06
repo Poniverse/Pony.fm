@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --}}
 
-@extends('pages._layout')
+@extends('shared._app_layout')
 
-@section('static_page')
-    {{Helpers::template('pages/faq.html')}}
+@section('app_content')
+    <div class="static-page">@yield('static_page')</div>
 @endsection
