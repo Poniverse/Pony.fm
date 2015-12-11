@@ -54,8 +54,8 @@ class RenameGenreCommand extends CommandBase
         $slug = Str::slug($this->_newName);
 
         $rules = [
-            'name'      => 'required|unique:genres,name,'.$this->_genre->id.'|max:50',
-            'slug'      => 'required|unique:genres,slug,'.$this->_genre->id
+            'name'      => 'required|unique:genres,name,'.$this->_genre->id.',id,deleted_at,NULL|max:50',
+            'slug'      => 'required|unique:genres,slug,'.$this->_genre->id.',id,deleted_at,NULL'
         ];
 
         $validator = Validator::make([
