@@ -8,7 +8,7 @@
             <th># of tracks (including deleted)</th>
             <th class="-actions">Actions</th>
         </thead>
-        <tr ng-repeat="genre in genres">
+        <tr ng-repeat="genre in genres track by genre.id">
             <td>
                 <input
                 type="text"
