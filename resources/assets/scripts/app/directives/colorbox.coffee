@@ -20,7 +20,7 @@ angular.module('ponyfm').directive 'colorbox', ->
   {
     restrict: 'AC'
     link: (scope, element, attrs) ->
-      $(element).colorbox attrs.colorbox
+      $(element).colorbox({maxWidth:'90%', maxHeight:'90%'})
       return
 
   }
