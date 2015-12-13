@@ -1,5 +1,5 @@
 # Pony.fm - A community for pony fan music.
-# Copyright (C) 2015 Peter Deltchev
+# Copyright (C) 2015 Zeusking19
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -14,11 +14,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-`angular.module('ponyfm').directive('colorbox', function() {
-  return {   
-    restrict: 'AC',    
-    link: function (scope, element, attrs) {        
-      $(element).colorbox(attrs.colorbox);     
-    }
-  };  
-});` 
+# Based on http://stackoverflow.com/questions/14641791/how-to-use-colorbox-with-angular-js
+
+angular.module('ponyfm').directive 'colorbox', ->
+  {
+    restrict: 'AC'
+    link: (scope, element, attrs) ->
+      $(element).colorbox attrs.colorbox
+      return
+
+  }
