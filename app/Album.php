@@ -174,7 +174,8 @@ class Album extends Model
             ],
             'covers' => [
                 'small' => $album->getCoverUrl(Image::SMALL),
-                'normal' => $album->getCoverUrl(Image::NORMAL)
+                'normal' => $album->getCoverUrl(Image::NORMAL),
+                'original' => $album->getCoverUrl(Image::ORIGINAL)
             ],
             'url' => $album->url,
             'user' => [

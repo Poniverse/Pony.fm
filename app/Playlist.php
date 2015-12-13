@@ -132,7 +132,8 @@ class Playlist extends Model
             ],
             'covers' => [
                 'small' => $playlist->getCoverUrl(Image::SMALL),
-                'normal' => $playlist->getCoverUrl(Image::NORMAL)
+                'normal' => $playlist->getCoverUrl(Image::NORMAL),
+                'original' => $playlist->getCoverUrl(Image::ORIGINAL)
             ],
             'url' => $playlist->url,
             'user' => [

@@ -321,7 +321,8 @@ class Track extends Model
             'covers' => [
                 'thumbnail' => $track->getCoverUrl(Image::THUMBNAIL),
                 'small' => $track->getCoverUrl(Image::SMALL),
-                'normal' => $track->getCoverUrl(Image::NORMAL)
+                'normal' => $track->getCoverUrl(Image::NORMAL),
+                'original' => $track->getCoverUrl(Image::ORIGINAL)
             ],
             'streams' => [
                 'mp3' => $track->getStreamUrl('MP3'),
