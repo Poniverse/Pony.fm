@@ -29,13 +29,14 @@ module.config [
     '$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider'
     (location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider) ->
 
-        $httpProvider.interceptors.push [
-            ->
-                request: (config) ->
-                    return config if !(/^\/?templates\//.test config.url)
-                    config.url += '?' + Math.ceil(Math.random() * 1000000)
-                    return config
-        ]
+        if window.pfm.environment == 'local'
+            $httpProvider.interceptors.push [
+                ->
+                    request: (config) ->
+                        return config if !(/^\/?templates\//.test config.url)
+                        config.url += '?' + Math.ceil(Math.random() * 1000000)
+                        return config
+            ]
 
         # This fixes resource loading on IE
         $sceDelegateProvider.resourceUrlWhitelist [
