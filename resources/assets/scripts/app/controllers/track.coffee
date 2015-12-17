@@ -21,13 +21,14 @@ window.pfm.preloaders['track'] = [
 ]
 
 angular.module('ponyfm').controller "track", [
-    '$scope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
-    ($scope, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
+    '$scope', '$rootScope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
+    ($scope, $rootScope, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
         track = null
 
         tracks.fetch($state.params.id).done (trackResponse) ->
             $scope.track = trackResponse.track
             track = trackResponse.track
+            $rootScope.description = "Listen to #{track.title} by #{track.user.name} on the largest pony music site"
 
         $scope.playlists = []
 

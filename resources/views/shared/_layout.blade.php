@@ -15,18 +15,18 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --}}<!DOCTYPE html>
-<html>
+<html ng-app="ponyfm">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <title>Pony.fm</title>
-        <meta name="description" content="" />
+        <meta name="description" content="@{{ description }}" />
         <meta name="viewport" content="width=device-width" />
         <base href="/" />
 
         @yield('styles')
     </head>
-    <body ng-app="ponyfm" ng-controller="application" class="{{Auth::check() ? 'is-logged' : ''}}">
+    <body ng-controller="application" class="{{Auth::check() ? 'is-logged' : ''}}">
         @yield('content')
         @yield('scripts')
     </body>
