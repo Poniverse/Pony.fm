@@ -28,7 +28,7 @@ angular.module('ponyfm').controller 'playlist', [
         playlists.fetch($state.params.id).done (playlistResponse) ->
             $scope.playlist = playlistResponse
             playlist = playlistResponse
-            #$rootScope.description = "Listen to #{track.title} by #{track.user.name} on the largest pony music site"
+            $rootScope.description = "Listen to #{playlist.title} by #{playlist.user.name} on the largest pony music site"
 
         $scope.share = () ->
             dialog = $dialog.dialog
