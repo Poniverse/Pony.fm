@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm;
 
+use Config;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use App;
@@ -28,6 +29,12 @@ use URL;
 
 class TrackFile extends Model
 {
+    // used for the "status" property
+    const STATUS_NOT_BEING_PROCESSED = 0;
+    const STATUS_PROCESSING = 1;
+    const STATUS_PROCESSING_ERROR = 2;
+
+
     public function track()
     {
         return $this->belongsTo('Poniverse\Ponyfm\Track')->withTrashed();

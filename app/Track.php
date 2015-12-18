@@ -48,6 +48,12 @@ class Track extends Model
 
     use RevisionableTrait;
 
+    // Used for the track's upload status.
+    const STATUS_COMPLETE = 0;
+    const STATUS_PROCESSING = 1;
+    const STATUS_ERROR = 2;
+
+
     public static $Formats = [
         'FLAC' => [
             'index' => 0,
@@ -579,6 +585,18 @@ class Track extends Model
         return "{$this->getDirectory()}/{$this->id}.{$format['extension']}";
     }
 
+    /**
+     * Returns the path to the "temporary" master file uploaded by the user.
+     * This file is used during the upload process to generate the actual master
+     * file stored by Pony.fm.
+     *
+     * @return string
+     */
+    public function getTemporarySourceFile() {
+        return Config::get('ponyfm.files_directory') . '/queued-tracks/' . $this->id;
+    }
+
+
     public function getUrlFor($format)
     {
         if (!isset(self::$Formats[$format])) {
@@ -589,6 +607,33 @@ class Track extends Model
 
         return URL::to('/t' . $this->id . '/dl.' . $format['extension']);
     }
+
+
+    /**
+     * @return string one of the Track::STATUS_* values, indicating whether this track is currently being processed
+     */
+    public function getStatusAttribute(){
+        return $this->trackFiles->reduce(function($carry, $trackFile){
+            if($trackFile->status === TrackFile::STATUS_PROCESSING_ERROR) {
+                return static::STATUS_ERROR;
+
+            } elseif (
+                $carry !== static::STATUS_ERROR &&
+                $trackFile->status === TrackFile::STATUS_PROCESSING) {
+                return static::STATUS_PROCESSING;
+
+            } elseif (
+                !in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING]) &&
+                $trackFile->status === TrackFile::STATUS_NOT_BEING_PROCESSED
+            ) {
+                return static::STATUS_COMPLETE;
+
+            } else {
+                return $carry;
+            }
+        }, static::STATUS_COMPLETE);
+    }
+
 
     public function updateHash()
     {

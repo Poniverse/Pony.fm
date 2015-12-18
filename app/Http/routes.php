@@ -101,6 +101,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::group(['middleware' => 'auth'], function() {
         Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
+        Route::get('/tracks/{id}/upload-status', 'Api\Web\TracksController@getUploadStatus');
         Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
         Route::post('/tracks/edit/{id}', 'Api\Web\TracksController@postEdit');
 

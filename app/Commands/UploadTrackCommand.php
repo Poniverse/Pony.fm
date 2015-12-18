@@ -20,17 +20,22 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Config;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
+use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Track;
 use Poniverse\Ponyfm\TrackFile;
 use AudioCache;
 use File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
+use Storage;
 
 class UploadTrackCommand extends CommandBase
 {
+    use DispatchesJobs;
+
+
     private $_allowLossy;
     private $_allowShortTrack;
     private $_losslessFormats = [
@@ -68,6 +73,21 @@ class UploadTrackCommand extends CommandBase
         $trackFile = \Input::file('track');
         $audio = \AudioCache::get($trackFile->getPathname());
 
+
+        $track = new Track();
+        $track->user_id = $user->id;
+        $track->title = pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $track->duration = $audio->getDuration();
+        $track->is_listed = true;
+
+        $track->save();
+        $track->ensureDirectoryExists();
+
+        Storage::makeDirectory(Config::get('ponyfm.files_directory') . '/queued-tracks', 0755, false, true);
+        $trackFile = $trackFile->move(Config::get('ponyfm.files_directory').'/queued-tracks', $track->id);
+
+
+
         $validator = \Validator::make(['track' => $trackFile], [
             'track' =>
                 'required|'
@@ -77,24 +97,13 @@ class UploadTrackCommand extends CommandBase
         ]);
 
         if ($validator->fails()) {
+            $track->delete();
             return CommandResponse::fail($validator);
         }
 
-        $track = new Track();
 
         try {
-            $track->user_id = $user->id;
-            $track->title = pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $track->duration = $audio->getDuration();
-            $track->is_listed = true;
-
-            $track->save();
-
-            $destination = $track->getDirectory();
-            $track->ensureDirectoryExists();
-
             $source = $trackFile->getPathname();
-            $index = 0;
 
             // Lossy uploads need to be identified and set as the master file
             // without being re-encoded.
@@ -113,6 +122,7 @@ class UploadTrackCommand extends CommandBase
 
                 } else {
                     $validator->messages()->add('track', 'The track does not contain audio in a known lossy format.');
+                    $track->delete();
                     return CommandResponse::fail($validator);
                 }
 
@@ -126,6 +136,9 @@ class UploadTrackCommand extends CommandBase
                 File::copy($source, $trackFile->getFile());
             }
 
+
+            $trackFiles = [];
+
             foreach (Track::$Formats as $name => $format) {
                 // Don't bother with lossless transcodes of lossy uploads, and
                 // don't re-encode the lossy master.
@@ -136,6 +149,7 @@ class UploadTrackCommand extends CommandBase
                 $trackFile = new TrackFile();
                 $trackFile->is_master = $name === 'FLAC' ? true : false;
                 $trackFile->format = $name;
+                $trackFile->status = TrackFile::STATUS_PROCESSING;
 
                 if (in_array($name, Track::$CacheableFormats) && $trackFile->is_master == false) {
                     $trackFile->is_cacheable = true;
@@ -144,29 +158,21 @@ class UploadTrackCommand extends CommandBase
                 }
                 $track->trackFiles()->save($trackFile);
 
-                // Encode track file
-                $target = $trackFile->getFile();
-
-                $command = $format['command'];
-                $command = str_replace('{$source}', '"' . $source . '"', $command);
-                $command = str_replace('{$target}', '"' . $target . '"', $command);
-
-                Log::info('Encoding ' . $track->id . ' into ' . $target);
-                $this->notify('Encoding ' . $name, $index / count(Track::$Formats) * 100);
-
-                $process = new Process($command);
-                $process->mustRun();
-
-                // Update file size for track file
-                $trackFile->updateFilesize();
-
-                // Delete track file if it is cacheable
-                if ($trackFile->is_cacheable == true) {
-                    File::delete($trackFile->getFile());
-                }
+                // All TrackFile records we need are synchronously created
+                // before kicking off the encode jobs in order to avoid a race
+                // condition with the "temporary" source file getting deleted.
+                $trackFiles[] = $trackFile;
             }
 
-            $track->updateTags();
+            try {
+                foreach($trackFiles as $trackFile)  {
+                    $this->dispatch(new EncodeTrackFile($trackFile, false, true));
+                }
+
+            } catch (InvalidEncodeOptionsException $e) {
+                $track->delete();
+                return CommandResponse::fail(['track' => [$e->getMessage()]]);
+            }
 
         } catch (\Exception $e) {
             $track->delete();

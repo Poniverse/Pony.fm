@@ -3,7 +3,6 @@
 /**
  * Pony.fm - A community for pony fan music.
  * Copyright (C) 2015 Peter Deltchev
- * Copyright (C) 2015 Kelvin Zhang
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +21,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateTrackFilesWithCache extends Migration
+class ConvertTrackFileInProgressToStatus extends Migration
 {
     /**
      * Run the migrations.
@@ -31,10 +30,9 @@ class UpdateTrackFilesWithCache extends Migration
      */
     public function up()
     {
-        Schema::table('track_files', function (Blueprint $table) {
-            $table->boolean('is_cacheable')->default(false)->index();
-            $table->tinyInteger('is_in_progress')->default(false);
-            $table->dateTime('expires_at')->nullable()->index();
+        //
+        Schema::table('track_files', function(Blueprint $table) {
+            $table->renameColumn('is_in_progress', 'status');
         });
     }
 
@@ -45,10 +43,9 @@ class UpdateTrackFilesWithCache extends Migration
      */
     public function down()
     {
+        //
         Schema::table('track_files', function (Blueprint $table) {
-            $table->dropColumn('is_cacheable');
-            $table->dropColumn('expires_at');
-            $table->dropColumn('is_in_progress');
+            $table->renameColumn('status', 'is_in_progress');
         });
     }
 }
