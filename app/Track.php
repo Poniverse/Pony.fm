@@ -614,17 +614,17 @@ class Track extends Model
      */
     public function getStatusAttribute(){
         return $this->trackFiles->reduce(function($carry, $trackFile){
-            if($trackFile->status === TrackFile::STATUS_PROCESSING_ERROR) {
+            if((int) $trackFile->status === TrackFile::STATUS_PROCESSING_ERROR) {
                 return static::STATUS_ERROR;
 
             } elseif (
                 $carry !== static::STATUS_ERROR &&
-                $trackFile->status === TrackFile::STATUS_PROCESSING) {
+                (int) $trackFile->status === TrackFile::STATUS_PROCESSING) {
                 return static::STATUS_PROCESSING;
 
             } elseif (
                 !in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING]) &&
-                $trackFile->status === TrackFile::STATUS_NOT_BEING_PROCESSED
+                (int) $trackFile->status === TrackFile::STATUS_NOT_BEING_PROCESSED
             ) {
                 return static::STATUS_COMPLETE;
 
