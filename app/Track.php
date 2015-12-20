@@ -33,7 +33,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Log;
-use URL;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class Track extends Model
@@ -257,8 +256,8 @@ class Track extends Model
         }
 
         $returnValue['share'] = [
-            'url' => URL::to('/t' . $track->id),
-            'html' => '<iframe src="' . URL::to('t' . $track->id . '/embed') . '" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
+            'url' => action('TracksController@getShortlink', ['id' => $track->id]),
+            'html' => '<iframe src="' . action('TracksController@getEmbed', ['id' => $track->id]) . '" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
             'bbcode' => '[url=' . $track->url . '][img]' . $track->getCoverUrl() . '[/img][/url]',
             'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $track->title . ' by ' . $track->user->display_name . ' on Pony.fm'
         ];
@@ -477,7 +476,7 @@ class Track extends Model
 
     public function getUrlAttribute()
     {
-        return URL::to('/tracks/' . $this->id . '-' . $this->slug);
+        return action('TracksController@getTrack', ['id' => $this->id, 'slug' => $this->slug]);
     }
 
     public function getDownloadDirectoryAttribute()
@@ -537,7 +536,7 @@ class Track extends Model
 
     public function getStreamUrl($format = 'MP3')
     {
-        return URL::to('/t' . $this->id . '/stream.' . self::$Formats[$format]['extension']);
+        return action('TracksController@getStream', ['id' => $this->id, 'extension' => self::$Formats[$format]['extension']]);
     }
 
     public function getDirectory()
@@ -605,7 +604,7 @@ class Track extends Model
 
         $format = self::$Formats[$format];
 
-        return URL::to('/t' . $this->id . '/dl.' . $format['extension']);
+        return action('TracksController@getDownload', ['id' => $this->id, 'extension' => $format['extension']]);
     }
 
 

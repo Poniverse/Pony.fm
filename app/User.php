@@ -85,7 +85,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getUrlAttribute()
     {
-        return URL::to('/' . $this->slug);
+        return action('ArtistsController@getProfile', $this->slug);
     }
 
     public function getMessageUrlAttribute()
@@ -131,17 +131,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         return Gravatar::getUrl($email, Image::$ImageTypes[$type]['width']);
-    }
-
-    public function getAvatarFile($type = Image::NORMAL)
-    {
-        if ($this->uses_gravatar) {
-            throw new Exception('Cannot get avatar file if this user is configured to use Gravatar!');
-        }
-
-        $imageType = Image::$ImageTypes[$type];
-
-        return URL::to('t' . $this->id . '/cover_' . $imageType['name'] . '.png?' . $this->cover_id);
     }
 
     /**

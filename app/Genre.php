@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Illuminate\Database\Eloquent\Model;
-use URL;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class Genre extends Model
@@ -75,6 +74,6 @@ class Genre extends Model
      * @return string relative, Angular-friendly URL to this genre
      */
     public function getUrlAttribute() {
-        return URL::route('tracks.discover', ['filter' => "genres-{$this->id}"], false);
+        return route('tracks.discover', ['filter' => "genres-{$this->id}"], false);
     }
 }

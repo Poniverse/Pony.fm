@@ -25,7 +25,6 @@ use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use App;
 use File;
-use URL;
 
 class TrackFile extends Model
 {
@@ -88,7 +87,7 @@ class TrackFile extends Model
 
     public function getUrlAttribute()
     {
-        return URL::to('/t' . $this->track_id . '/dl.' . $this->extension);
+        return action('TracksController@getDownload', ['id' => $this->track_id, 'extension' => $this->extension]);
     }
 
     public function getSizeAttribute()

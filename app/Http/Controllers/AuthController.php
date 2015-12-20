@@ -27,7 +27,6 @@ use DB;
 use Input;
 use Poniverse;
 use Redirect;
-use URL;
 
 class AuthController extends Controller
 {
@@ -36,7 +35,7 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->poniverse = new Poniverse(Config::get('poniverse.client_id'), Config::get('poniverse.secret'));
-        $this->poniverse->setRedirectUri(URL::to('/auth/oauth'));
+        $this->poniverse->setRedirectUri(action('AuthController@getOAuth'));
     }
 
     public function getLogin()
@@ -62,7 +61,7 @@ class AuthController extends Controller
             'authorization_code',
             [
                 'code' => Input::query('code'),
-                'redirect_uri' => URL::to('/auth/oauth')
+                'redirect_uri' => action('AuthController@getOAuth')
             ]);
 
         if ($code['code'] != 200) {
