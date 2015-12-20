@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
+
 sudo cp /vagrant/vagrant/pony.fm.nginx.config /etc/nginx/nginx.conf
 sudo cp /vagrant/vagrant/pony.fm.nginx.site.config /etc/nginx/sites-enabled/pony.fm
 
-sudo cp /vagrant/vagrant/php.ini /etc/php5/fpm/php.ini
-
-sudo cp /vagrant/vagrant/pony.fm.mysql.config /etc/mysql/my.cnf
+sudo cp /vagrant/vagrant/php-overrides.ini /etc/php/7.0/fpm/99-overrides.ini
 
 sudo cp /vagrant/vagrant/pony.fm.redis.config /etc/redis/redis.conf
 
 sudo service nginx restart
-sudo service php5-fpm restart
-
-sudo service mysql restart
+sudo service php7.0-fpm restart
 
 # todo: figure out how to restart redis

@@ -3,8 +3,8 @@ Vagrant.configure("2") do |config|
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
 
-  config.vm.box = 'laravel/homestead'
-  config.vm.box_version = '0.3.0'
+  config.vm.box = 'laravel/homestead-7'
+  config.vm.box_version = '0.2.0'
   config.vm.provider "virtualbox" do |v|
     v.cpus = 4
     v.memory = 2048
