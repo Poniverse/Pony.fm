@@ -2,6 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
+ * Copyright (C) 2015 Peter Deltchev
  * Copyright (C) 2015 Kelvin Zhang
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,9 +22,11 @@
 namespace Poniverse\Ponyfm\Jobs;
 
 use Carbon\Carbon;
+use File;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use OAuth2\Exception;
+use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
 use Poniverse\Ponyfm\Jobs\Job;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -45,16 +48,29 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      * @var
      */
     private $isExpirable;
+    /**
+     * @var bool
+     */
+    private $isForUpload;
 
     /**
      * Create a new job instance.
      * @param TrackFile $trackFile
-     * @param $isExpirable
+     * @param bool $isExpirable
+     * @param bool $isForUpload indicates whether this encode job is for an upload
      */
-    public function __construct(TrackFile $trackFile, $isExpirable)
+    public function __construct(TrackFile $trackFile, $isExpirable, $isForUpload = false)
     {
+        if(
+            (!$isForUpload && $trackFile->is_master) ||
+            ($isForUpload && $trackFile->is_master && !$trackFile->getFormat()['is_lossless'])
+        ) {
+            throw new InvalidEncodeOptionsException("Master files cannot be encoded unless we're generating a lossless master file during the upload process.");
+        }
+
         $this->trackFile = $trackFile;
         $this->isExpirable = $isExpirable;
+        $this->isForUpload = $isForUpload;
     }
 
     /**
@@ -65,14 +81,19 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
     public function handle()
     {
         // Start the job
-        $this->trackFile->is_in_progress = true;
+        $this->trackFile->status = TrackFile::STATUS_PROCESSING;
         $this->trackFile->update();
 
         // Use the track's master file as the source
-        $source = TrackFile::where('track_id', $this->trackFile->track_id)
-            ->where('is_master', true)
-            ->first()
-            ->getFile();
+        if ($this->isForUpload) {
+            $source = $this->trackFile->track->getTemporarySourceFile();
+
+        } else {
+            $source = TrackFile::where('track_id', $this->trackFile->track_id)
+                ->where('is_master', true)
+                ->first()
+                ->getFile();
+        }
 
         // Assign the target
         $this->trackFile->track->ensureDirectoryExists();
@@ -111,8 +132,18 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         $this->trackFile->updateFilesize();
 
         // Complete the job
-        $this->trackFile->is_in_progress = false;
+        $this->trackFile->status = TrackFile::STATUS_NOT_BEING_PROCESSED;
         $this->trackFile->update();
+
+        if ($this->isForUpload) {
+            if (!$this->trackFile->is_master && $this->trackFile->is_cacheable) {
+                File::delete($this->trackFile->getFile());
+            }
+
+            if ($this->trackFile->track->status === Track::STATUS_COMPLETE) {
+                File::delete($this->trackFile->track->getTemporarySourceFile());
+            }
+        }
     }
 
     /**
@@ -122,7 +153,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      */
     public function failed()
     {
-        $this->trackFile->is_in_progress = false;
+        $this->trackFile->status = TrackFile::STATUS_PROCESSING_ERROR;
         $this->trackFile->expires_at = null;
         $this->trackFile->update();
     }

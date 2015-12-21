@@ -22,8 +22,7 @@ namespace Poniverse\Ponyfm;
 
 use External;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\URL;
+use Config;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Image extends Model
@@ -101,7 +100,7 @@ class Image extends Model
     {
         $type = self::$ImageTypes[$type];
 
-        return URL::to('i' . $this->id . '/' . $type['name'] . '.png');
+        return action('ImagesController@getImage', ['id' => $this->id, 'type' => $type['name']]);
     }
 
     public function getFile($type = self::NORMAL)

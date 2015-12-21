@@ -10,15 +10,17 @@
     <p>Please note that you need to publish your tracks after uploading them before they will become available to the public.</p>
 
     <ul class="uploads">
-        <li ng-repeat="upload in data.queue" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isUploading && upload.error == null && upload.progress >= 100}" ng-animate="'upload-queue'">
+        <li ng-repeat="upload in data.queue" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isProcessing || upload.progress >= 100}" ng-animate="'upload-queue'">
             <p>
+
                 <span ng-show="!upload.success">
-                    <strong ng-show="upload.isUploading && upload.error == null && upload.progress >= 100">Processing</strong>
-                    <strong ng-show="upload.isUploading && upload.error == null && upload.progress < 100">Uploading</strong>
+                    <strong ng-show="upload.isUploading && upload.error == null && upload.progress < 100">Uploading&hellip;</strong>
+                    <strong ng-show="upload.isProcessing || (upload.isUploading && upload.progress >= 100)">Processing&hellip;</strong>
                     <strong ng-show="upload.error != null">Error</strong>
                     {{upload.name}} -
                     <strong ng-show="upload.error != null">{{upload.error}}</strong>
                 </span>
+
                 <span ng-show="upload.success">
                     <a href="/account/tracks/edit/{{upload.trackId}}" class="btn btn-small btn-primary">
                         Publish

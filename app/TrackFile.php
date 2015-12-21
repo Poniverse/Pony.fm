@@ -20,14 +20,20 @@
 
 namespace Poniverse\Ponyfm;
 
+use Config;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use App;
 use File;
-use URL;
 
 class TrackFile extends Model
 {
+    // used for the "status" property
+    const STATUS_NOT_BEING_PROCESSED = 0;
+    const STATUS_PROCESSING = 1;
+    const STATUS_PROCESSING_ERROR = 2;
+
+
     public function track()
     {
         return $this->belongsTo('Poniverse\Ponyfm\Track')->withTrashed();
@@ -81,7 +87,7 @@ class TrackFile extends Model
 
     public function getUrlAttribute()
     {
-        return URL::to('/t' . $this->track_id . '/dl.' . $this->extension);
+        return action('TracksController@getDownload', ['id' => $this->track_id, 'extension' => $this->extension]);
     }
 
     public function getSizeAttribute()

@@ -103,7 +103,7 @@ trait TrackCollection
         foreach ($trackFiles as $trackFile) {
             /** @var TrackFile $trackFile */
 
-            if (!File::exists($trackFile->getFile()) && $trackFile->is_in_progress != true) {
+            if (!File::exists($trackFile->getFile()) && $trackFile->status == TrackFile::STATUS_NOT_BEING_PROCESSED) {
                 $this->dispatch(new EncodeTrackFile($trackFile, true));
             }
         }

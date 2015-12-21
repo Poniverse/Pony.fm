@@ -29,24 +29,20 @@ class CreateLatestColumn extends Migration
         });
 
         DB::update('
-            UPDATE
-                tracks
-            SET
-                is_latest = true
-            WHERE
-                (
-                    SELECT
-                        t2.id
-                    FROM
-                        (SELECT id, user_id FROM tracks WHERE published_at IS NOT NULL AND deleted_at IS NULL) AS t2
-                    WHERE
-                        t2.user_id = tracks.user_id
-                    ORDER BY
-                        created_at DESC
-                    LIMIT 1
-                ) = tracks.id
-            AND
-                published_at IS NOT NULL');
+            UPDATE tracks t1
+            INNER JOIN (
+                SELECT id, user_id
+                FROM tracks
+                WHERE published_at IS NOT NULL
+                AND deleted_at IS NULL
+                ORDER BY created_at DESC
+                LIMIT 1
+            ) t2
+            ON t2.id = t1.id
+            SET is_latest = true
+            WHERE t2.user_id = t1.user_id
+            AND published_at IS NOT NULL
+        ');
     }
 
     public function down()

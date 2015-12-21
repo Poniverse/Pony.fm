@@ -27,7 +27,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
 use Poniverse\Ponyfm\Traits\TrackCollection;
-use URL;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
@@ -88,7 +87,7 @@ class Playlist extends Model
         $data['comments'] = $comments;
         $data['formats'] = $formats;
         $data['share'] = [
-            'url' => URL::to('/p' . $playlist->id),
+            'url' => action('PlaylistsController@getShortlink', ['id' => $playlist->id]),
             'tumblrUrl' => 'http://www.tumblr.com/share/link?url=' . urlencode($playlist->url) . '&name=' . urlencode($playlist->title) . '&description=' . urlencode($playlist->description),
             'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $playlist->title . ' by ' . $playlist->user->display_name . ' on Pony.fm'
         ];
@@ -202,12 +201,12 @@ class Playlist extends Model
 
     public function getUrlAttribute()
     {
-        return URL::to('/playlist/' . $this->id . '-' . $this->slug);
+        return action('PlaylistsController@getPlaylist', ['id' => $this->id, 'slug' => $this->slug]);
     }
 
     public function getDownloadUrl($format)
     {
-        return URL::to('p' . $this->id . '/dl.' . Track::$Formats[$format]['extension']);
+        return action('PlaylistsController@getDownload', ['id' => $this->id]);
     }
 
     public function getFilesize($format)

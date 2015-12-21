@@ -23,7 +23,7 @@
 if (!defined('GETID3_INCLUDEPATH')) {
 	throw new Exception('getid3.php MUST be included before calling getid3_writetags');
 }
-if (!include_once(GETID3_INCLUDEPATH . 'getid3.lib.php')) {
+if (!include_once(GETID3_INCLUDEPATH.'getid3.lib.php')) {
 	throw new Exception('write.php depends on getid3.lib.php, which is missing.');
 }
 
@@ -64,7 +64,7 @@ class getid3_writetags
 	// private
 	private $ThisFileInfo; // analysis of file before writing
 
-	public function getid3_writetags() {
+	public function __construct() {
 		return true;
 	}
 

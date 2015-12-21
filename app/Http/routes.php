@@ -62,8 +62,6 @@ Route::get('/mlpforums-advertising-program', function() { return View::make('pag
 
 Route::get('i{id}/{type}.png', 'ImagesController@getImage')->where('id', '\d+');
 
-Route::get('u{id}/avatar_{type}.png', 'UsersController@getAvatar')->where('id', '\d+');
-
 Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
 Route::get('p{id}', 'PlaylistsController@getShortlink')->where('id', '\d+');
 Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload' );
@@ -101,6 +99,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::group(['middleware' => 'auth'], function() {
         Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
+        Route::get('/tracks/{id}/upload-status', 'Api\Web\TracksController@getUploadStatus');
         Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
         Route::post('/tracks/edit/{id}', 'Api\Web\TracksController@postEdit');
 

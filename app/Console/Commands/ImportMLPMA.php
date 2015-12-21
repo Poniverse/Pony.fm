@@ -365,7 +365,7 @@ class ImportMLPMA extends Command
             $result = $upload->execute();
 
             if ($result->didFail()) {
-                $this->error(json_encode($result->getValidator()->messages()->getMessages(), JSON_PRETTY_PRINT));
+                $this->error(json_encode($result->getMessages(), JSON_PRETTY_PRINT));
 
             } else {
                 // Save metadata.

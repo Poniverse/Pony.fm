@@ -33,7 +33,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Log;
-use URL;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 class Track extends Model
@@ -47,6 +46,12 @@ class Track extends Model
     }
 
     use RevisionableTrait;
+
+    // Used for the track's upload status.
+    const STATUS_COMPLETE = 0;
+    const STATUS_PROCESSING = 1;
+    const STATUS_ERROR = 2;
+
 
     public static $Formats = [
         'FLAC' => [
@@ -251,8 +256,8 @@ class Track extends Model
         }
 
         $returnValue['share'] = [
-            'url' => URL::to('/t' . $track->id),
-            'html' => '<iframe src="' . URL::to('t' . $track->id . '/embed') . '" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
+            'url' => action('TracksController@getShortlink', ['id' => $track->id]),
+            'html' => '<iframe src="' . action('TracksController@getEmbed', ['id' => $track->id]) . '" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
             'bbcode' => '[url=' . $track->url . '][img]' . $track->getCoverUrl() . '[/img][/url]',
             'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $track->title . ' by ' . $track->user->display_name . ' on Pony.fm'
         ];
@@ -471,7 +476,7 @@ class Track extends Model
 
     public function getUrlAttribute()
     {
-        return URL::to('/tracks/' . $this->id . '-' . $this->slug);
+        return action('TracksController@getTrack', ['id' => $this->id, 'slug' => $this->slug]);
     }
 
     public function getDownloadDirectoryAttribute()
@@ -531,7 +536,7 @@ class Track extends Model
 
     public function getStreamUrl($format = 'MP3')
     {
-        return URL::to('/t' . $this->id . '/stream.' . self::$Formats[$format]['extension']);
+        return action('TracksController@getStream', ['id' => $this->id, 'extension' => self::$Formats[$format]['extension']]);
     }
 
     public function getDirectory()
@@ -579,6 +584,18 @@ class Track extends Model
         return "{$this->getDirectory()}/{$this->id}.{$format['extension']}";
     }
 
+    /**
+     * Returns the path to the "temporary" master file uploaded by the user.
+     * This file is used during the upload process to generate the actual master
+     * file stored by Pony.fm.
+     *
+     * @return string
+     */
+    public function getTemporarySourceFile() {
+        return Config::get('ponyfm.files_directory') . '/queued-tracks/' . $this->id;
+    }
+
+
     public function getUrlFor($format)
     {
         if (!isset(self::$Formats[$format])) {
@@ -587,8 +604,35 @@ class Track extends Model
 
         $format = self::$Formats[$format];
 
-        return URL::to('/t' . $this->id . '/dl.' . $format['extension']);
+        return action('TracksController@getDownload', ['id' => $this->id, 'extension' => $format['extension']]);
     }
+
+
+    /**
+     * @return string one of the Track::STATUS_* values, indicating whether this track is currently being processed
+     */
+    public function getStatusAttribute(){
+        return $this->trackFiles->reduce(function($carry, $trackFile){
+            if((int) $trackFile->status === TrackFile::STATUS_PROCESSING_ERROR) {
+                return static::STATUS_ERROR;
+
+            } elseif (
+                $carry !== static::STATUS_ERROR &&
+                (int) $trackFile->status === TrackFile::STATUS_PROCESSING) {
+                return static::STATUS_PROCESSING;
+
+            } elseif (
+                !in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING]) &&
+                (int) $trackFile->status === TrackFile::STATUS_NOT_BEING_PROCESSED
+            ) {
+                return static::STATUS_COMPLETE;
+
+            } else {
+                return $carry;
+            }
+        }, static::STATUS_COMPLETE);
+    }
+
 
     public function updateHash()
     {

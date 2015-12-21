@@ -33,6 +33,7 @@ use Cover;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
+use Poniverse\Ponyfm\TrackFile;
 
 class TracksController extends ApiControllerBase
 {
@@ -40,7 +41,31 @@ class TracksController extends ApiControllerBase
     {
         session_write_close();
 
-        return $this->execute(new UploadTrackCommand());
+        try {
+            return $this->execute(new UploadTrackCommand());
+
+        } catch (\InvalidEncodeOptions $e) {
+
+        }
+    }
+
+    public function getUploadStatus($trackId)
+    {
+        // TODO: authorize this
+
+        $track = Track::findOrFail($trackId);
+
+        if ($track->status === Track::STATUS_PROCESSING){
+            return Response::json(['message' => 'Processing...'], 202);
+
+        } elseif ($track->status === Track::STATUS_COMPLETE) {
+            return Response::json(['message' => 'Processing complete!'], 201);
+
+        } else {
+            // something went wrong
+            return Response::json(['error' => 'Processing failed!'], 500);
+        }
+
     }
 
     public function postDelete($id)
@@ -101,7 +126,7 @@ class TracksController extends ApiControllerBase
         // Return URL or begin encoding
         if ($trackFile->expires_at != null && File::exists($trackFile->getFile())) {
             $url = $track->getUrlFor($format);
-        } elseif ($trackFile->is_in_progress === true) {
+        } elseif ($trackFile->status === TrackFile::STATUS_PROCESSING) {
             $url = null;
         } else {
             $this->dispatch(new EncodeTrackFile($trackFile, true));

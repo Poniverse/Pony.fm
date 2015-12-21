@@ -25,6 +25,13 @@ if window.pfm.environment == 'production'
             analytics.init()
     ]
 
+module.run [
+    '$rootScope',
+    ($rootScope) ->
+        $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
+            $rootScope.description = ''
+]
+
 module.config [
     '$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider'
     (location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider) ->
@@ -283,4 +290,5 @@ module.config [
         $dialogProvider.options
             dialogFade: true
             backdropClick: false
+
 ]

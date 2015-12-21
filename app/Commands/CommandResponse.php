@@ -24,11 +24,25 @@ use Illuminate\Validation\Validator;
 
 class CommandResponse
 {
-    public static function fail($validator)
+    /**
+     * @var Validator
+     */
+    private $_validator;
+    private $_response;
+    private $_didFail;
+
+    public static function fail($validatorOrMessages)
     {
         $response = new CommandResponse();
         $response->_didFail = true;
-        $response->_validator = $validator;
+
+        if (is_array($validatorOrMessages)) {
+            $response->_messages = $validatorOrMessages;
+            $response->_validator = null;
+
+        } else {
+            $response->_validator = $validatorOrMessages;
+        }
 
         return $response;
     }
@@ -41,10 +55,6 @@ class CommandResponse
 
         return $cmdResponse;
     }
-
-    private $_validator;
-    private $_response;
-    private $_didFail;
 
     private function __construct()
     {
@@ -72,5 +82,15 @@ class CommandResponse
     public function getValidator()
     {
         return $this->_validator;
+    }
+
+    public function getMessages()
+    {
+        if ($this->_validator !== null) {
+            return $this->_validator->messages()->getMessages();
+
+        } else {
+            return $this->_messages;
+        }
     }
 }

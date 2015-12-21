@@ -28,7 +28,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
 use Poniverse\Ponyfm\Traits\TrackCollection;
-use URL;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
@@ -131,7 +130,7 @@ class Album extends Model
         $data['description'] = $album->description;
         $data['is_downloadable'] = $is_downloadable;
         $data['share'] = [
-            'url' => URL::to('/a' . $album->id),
+            'url' => action('AlbumsController@getShortlink', ['id' => $album->id]),
             'tumblrUrl' => 'http://www.tumblr.com/share/link?url=' . urlencode($album->url) . '&name=' . urlencode($album->title) . '&description=' . urlencode($album->description),
             'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $album->title . ' by ' . $album->user->display_name . ' on Pony.fm'
         ];
@@ -198,12 +197,12 @@ class Album extends Model
 
     public function getUrlAttribute()
     {
-        return URL::to('albums/' . $this->id . '-' . $this->slug);
+        return action('AlbumsController@getShow', ['id' => $this->id, 'slug' => $this->slug]);
     }
 
     public function getDownloadUrl($format)
     {
-        return URL::to('a' . $this->id . '/dl.' . Track::$Formats[$format]['extension']);
+        return action('AlbumsController@getDownload', ['id' => $this->id, 'extension' => Track::$Formats[$format]['extension']]);
     }
 
     public function getFilesize($format)

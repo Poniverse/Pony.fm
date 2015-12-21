@@ -21,13 +21,14 @@ window.pfm.preloaders['playlist'] = [
 ]
 
 angular.module('ponyfm').controller 'playlist', [
-    '$scope', '$state', 'playlists', '$dialog', 'download-cached', '$window', '$timeout'
-    ($scope, $state, playlists, $dialog, cachedPlaylist, $window, $timeout) ->
+    '$scope', '$rootScope', '$state', 'playlists', '$dialog', 'download-cached', '$window', '$timeout'
+    ($scope, $rootScope, $state, playlists, $dialog, cachedPlaylist, $window, $timeout) ->
         playlist = null
 
         playlists.fetch($state.params.id).done (playlistResponse) ->
             $scope.playlist = playlistResponse
             playlist = playlistResponse
+            $rootScope.description = "Listen to #{playlist.title} by #{playlist.user.name} on the largest pony music site"
 
         $scope.share = () ->
             dialog = $dialog.dialog
