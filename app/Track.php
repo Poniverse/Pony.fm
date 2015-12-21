@@ -313,7 +313,7 @@ class Track extends Model
             'is_explicit' => (bool)$track->is_explicit,
             'is_downloadable' => (bool)$track->is_downloadable,
             'is_published' => (bool)$track->isPublished(),
-            'published_at' => $track->published_at,
+            'published_at' => $track->published_at->toW3cString(),
             'duration' => $track->duration,
             'genre' => $track->genre != null
                 ?
@@ -374,8 +374,8 @@ class Track extends Model
             'is_explicit' => $track->is_explicit,
             'is_downloadable' => $track->is_downloadable,
             'is_published' => $track->isPublished(),
-            'created_at' => $track->created_at,
-            'published_at' => $track->published_at,
+            'created_at' => $track->created_at->format('c'),
+            'published_at' => $track->published_at->format('c'),
             'duration' => $track->duration,
             'genre_id' => $track->genre_id,
             'track_type_id' => $track->track_type_id,

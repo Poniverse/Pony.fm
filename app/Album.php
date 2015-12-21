@@ -164,7 +164,7 @@ class Album extends Model
             'track_count' => (int)$album->track_count,
             'title' => $album->title,
             'slug' => $album->slug,
-            'created_at' => $album->created_at,
+            'created_at' => $album->created_at->toW3cString(),
             'stats' => [
                 'views' => (int)$album->view_count,
                 'downloads' => (int)$album->download_count,
