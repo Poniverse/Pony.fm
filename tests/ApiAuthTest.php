@@ -35,7 +35,7 @@ class ApiAuthTest extends TestCase {
         $user = factory(User::class)->make();
         $accessTokenInfo = new \Poniverse\AccessTokenInfo('nonsense-token');
         $accessTokenInfo->setIsActive(true);
-        $accessTokenInfo->setScopes(['basic', 'ponyfm-upload-track']);
+        $accessTokenInfo->setScopes(['basic', 'ponyfm:tracks:upload']);
 
 
         $poniverse = Mockery::mock('overload:Poniverse');

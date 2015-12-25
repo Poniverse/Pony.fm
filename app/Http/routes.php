@@ -72,7 +72,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function
     Route::get('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
     Route::post('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
 
-    Route::group(['middleware' => 'auth.oauth:ponyfm-upload-track'], function() {
+    Route::group(['middleware' => 'auth.oauth:ponyfm:tracks:upload'], function() {
         Route::post('tracks', 'Api\V1\TracksController@postUploadTrack');
         Route::get('/tracks/{id}/upload-status', 'Api\V1\TracksController@getUploadStatus');
     });
