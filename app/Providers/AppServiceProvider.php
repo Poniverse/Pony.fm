@@ -20,6 +20,8 @@
 
 namespace Poniverse\Ponyfm\Providers;
 
+use DB;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use PfmValidator;

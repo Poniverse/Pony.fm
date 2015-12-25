@@ -26,13 +26,18 @@ class CreateTrackHashes extends Migration
     public function up()
     {
         Schema::table('tracks', function ($table) {
-            $table->string('hash', 32)->notNullable()->indexed();
+            $table->string('hash', 32)->nullable()->indexed();
         });
 
         foreach (Track::with('user')->get() as $track) {
             $track->updateHash();
             $track->save();
         }
+
+        Schema::table('tracks', function ($table) {
+            $table->string('hash', 32)->notNullable()->change();
+        });
+
     }
 
     public function down()

@@ -19,12 +19,13 @@
  */
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateAlbums extends Migration
 {
     public function up()
     {
-        Schema::create('albums', function ($table) {
+        Schema::create('albums', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('title')->index();
@@ -55,9 +56,16 @@ class CreateAlbums extends Migration
 
     public function down()
     {
-        Schema::table('tracks', function ($table) {
+        // These are separated to prevent weirdness with SQLite.
+        Schema::table('tracks', function (Blueprint $table) {
             $table->dropForeign('tracks_album_id_foreign');
+        });
+
+        Schema::table('tracks', function (Blueprint $table) {
             $table->dropColumn('album_id');
+        });
+
+        Schema::table('tracks', function (Blueprint $table) {
             $table->dropColumn('track_number');
         });
 

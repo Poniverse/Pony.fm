@@ -30,7 +30,9 @@ class AddNewIndices extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE `show_songs` ADD FULLTEXT show_songs_title_fulltext (title)');
+        if ('sqlite' !== DB::getDriverName()) {
+            DB::statement('ALTER TABLE `show_songs` ADD FULLTEXT show_songs_title_fulltext (title)');
+        }
 
         Schema::table('images', function ($table) {
             $table->index('hash');
@@ -49,7 +51,9 @@ class AddNewIndices extends Migration
      */
     public function down()
     {
-        DB::statement('ALTER TABLE `show_songs` DROP INDEX show_songs_title_fulltext');
+        if ('sqlite' !== DB::getDriverName()) {
+            DB::statement('ALTER TABLE `show_songs` DROP INDEX show_songs_title_fulltext');
+        }
 
         Schema::table('images', function ($table) {
             $table->dropIndex('images_hash_index');

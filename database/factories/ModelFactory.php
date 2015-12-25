@@ -31,9 +31,13 @@
 
 $factory->define(Poniverse\Ponyfm\User::class, function ($faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->email,
-        'password' => str_random(10),
-        'remember_token' => str_random(10),
+        'username'      => $faker->userName,
+        'display_name'  => $faker->userName,
+        'slug'          => $faker->slug,
+        'email'         => $faker->email,
+        'can_see_explicit_content' => true,
+        'bio'           => $faker->paragraph,
+        'track_count'   => 0,
+        'comment_count' => 0,
     ];
 });

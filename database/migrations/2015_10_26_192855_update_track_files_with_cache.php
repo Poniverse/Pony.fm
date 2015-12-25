@@ -45,9 +45,16 @@ class UpdateTrackFilesWithCache extends Migration
      */
     public function down()
     {
+        // These are separated to avoid a weird "no such index" error with SQLite.
         Schema::table('track_files', function (Blueprint $table) {
             $table->dropColumn('is_cacheable');
+        });
+
+        Schema::table('track_files', function (Blueprint $table) {
             $table->dropColumn('expires_at');
+        });
+
+        Schema::table('track_files', function (Blueprint $table) {
             $table->dropColumn('is_in_progress');
         });
     }

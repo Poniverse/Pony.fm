@@ -24,5 +24,8 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="APP_URL" value="http://ponyfm-dev.poni"/>
+        <env name="DB_CONNECTION" value="memory"/>
+        <env name="PONYFM_DATASTORE" value="/vagrant/storage/app/testing-datastore"/>
     </php>
 </phpunit>

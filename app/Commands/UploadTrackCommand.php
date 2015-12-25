@@ -88,9 +88,10 @@ class UploadTrackCommand extends CommandBase
         $track->save();
         $track->ensureDirectoryExists();
 
-        Storage::makeDirectory(Config::get('ponyfm.files_directory') . '/queued-tracks', 0755, false, true);
+        if (!is_dir(Config::get('ponyfm.files_directory') . '/queued-tracks')) {
+            mkdir(Config::get('ponyfm.files_directory') . '/queued-tracks', 0755, true);
+        }
         $trackFile = $trackFile->move(Config::get('ponyfm.files_directory').'/queued-tracks', $track->id);
-
 
 
         $validator = \Validator::make(['track' => $trackFile], [

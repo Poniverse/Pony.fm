@@ -37,10 +37,9 @@ class AddTrackSourceColumn extends Migration
         // Mark MLPMA tracks retroactively
         // --> The default value in the database, set above, will
         //     be used automatically for all non-MLPMA tracks.
-        $tracks = DB::table('tracks')
-            ->join('mlpma_tracks', 'mlpma_tracks.track_id', '=', 'tracks.id');
-
-        $tracks->whereNotNull('mlpma_tracks.id')->update(['source' => 'mlpma']);
+        DB::table('tracks')
+            ->where(DB::raw('id IN (SELECT `id` FROM `mlpma_tracks`)'))
+            ->update(['source' => 'mlpma']);
     }
 
     /**

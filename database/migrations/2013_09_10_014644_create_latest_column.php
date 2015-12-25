@@ -25,24 +25,26 @@ class CreateLatestColumn extends Migration
     public function up()
     {
         Schema::table('tracks', function ($table) {
-            $table->boolean('is_latest')->notNullable()->indexed();
+            $table->boolean('is_latest')->notNullable()->default(false)->indexed();
         });
 
-        DB::update('
-            UPDATE tracks t1
-            INNER JOIN (
-                SELECT id, user_id
-                FROM tracks
-                WHERE published_at IS NOT NULL
-                AND deleted_at IS NULL
-                ORDER BY created_at DESC
-                LIMIT 1
-            ) t2
-            ON t2.id = t1.id
-            SET is_latest = true
-            WHERE t2.user_id = t1.user_id
-            AND published_at IS NOT NULL
-        ');
+        if ('sqlite' !== DB::getDriverName()) {
+            DB::update('
+                UPDATE tracks t1
+                INNER JOIN (
+                    SELECT id, user_id
+                    FROM tracks
+                    WHERE published_at IS NOT NULL
+                    AND deleted_at IS NULL
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                ) t2
+                ON t2.id = t1.id
+                SET is_latest = true
+                WHERE t2.user_id = t1.user_id
+                AND published_at IS NOT NULL
+            ');
+        }
     }
 
     public function down()

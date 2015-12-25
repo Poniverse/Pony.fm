@@ -20,7 +20,6 @@
 
 namespace Poniverse\Ponyfm;
 
-use Exception;
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -28,8 +27,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
+use Auth;
 use Illuminate\Support\Str;
 use Venturecraft\Revisionable\RevisionableTrait;
 

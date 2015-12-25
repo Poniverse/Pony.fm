@@ -21,7 +21,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class MakeEmailNullable extends Migration
+class AddSensibleDefaults extends Migration
 {
     /**
      * Run the migrations.
@@ -30,8 +30,24 @@ class MakeEmailNullable extends Migration
      */
     public function up()
     {
+        Schema::table('tracks', function(Blueprint $table){
+            $table->boolean('is_listed')->default(true)->change();
+            $table->boolean('is_explicit')->default(false)->change();
+            $table->boolean('is_vocal')->default(false)->change();
+            $table->boolean('is_downloadable')->default(false)->change();
+
+            $table->unsignedInteger('play_count')->default(0)->change();
+            $table->unsignedInteger('view_count')->default(0)->change();
+            $table->unsignedInteger('download_count')->default(0)->change();
+            $table->unsignedInteger('favourite_count')->default(0)->change();
+            $table->unsignedInteger('comment_count')->default(0)->change();
+        });
+
         Schema::table('users', function(Blueprint $table){
-            $table->string('email', 150)->nullable()->change();
+            $table->boolean('can_see_explicit_content')->default(false)->change();
+            $table->text('bio')->default('')->change();
+            $table->unsignedInteger('track_count')->default(0)->change();
+            $table->unsignedInteger('comment_count')->default(0)->change();
         });
     }
 
@@ -42,8 +58,6 @@ class MakeEmailNullable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('email', 150)->notNullable()->default('')->change();
-        });
+        // This migration is not reversible.
     }
 }

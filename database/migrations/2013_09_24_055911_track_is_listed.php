@@ -25,14 +25,8 @@ class TrackIsListed extends Migration
     public function up()
     {
         Schema::table('tracks', function ($table) {
-            $table->boolean('is_listed')->notNullable()->indexed();
+            $table->boolean('is_listed')->notNullable()->default(true)->indexed();
         });
-
-        DB::update('
-            UPDATE
-                tracks
-            SET
-                is_listed = true');
     }
 
     public function down()
