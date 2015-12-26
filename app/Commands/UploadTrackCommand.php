@@ -20,16 +20,20 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Carbon\Carbon;
 use Config;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Input;
+use Poniverse\Ponyfm\Album;
 use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
+use Poniverse\Ponyfm\Genre;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Track;
 use Poniverse\Ponyfm\TrackFile;
 use AudioCache;
 use File;
 use Illuminate\Support\Str;
-use Storage;
+use Poniverse\Ponyfm\TrackType;
 
 class UploadTrackCommand extends CommandBase
 {
@@ -38,6 +42,9 @@ class UploadTrackCommand extends CommandBase
 
     private $_allowLossy;
     private $_allowShortTrack;
+    private $_customTrackSource;
+    private $_autoPublishByDefault;
+
     private $_losslessFormats = [
         'flac',
         'pcm_s16le ([1][0][0][0] / 0x0001)',
@@ -49,10 +56,12 @@ class UploadTrackCommand extends CommandBase
         'pcm_f32be (fl32 / 0x32336C66)'
     ];
 
-    public function __construct($allowLossy = false, $allowShortTrack = false)
+    public function __construct($allowLossy = false, $allowShortTrack = false, $customTrackSource = null, $autoPublishByDefault = false)
     {
         $this->_allowLossy = $allowLossy;
         $this->_allowShortTrack = $allowShortTrack;
+        $this->_customTrackSource = $customTrackSource;
+        $this->_autoPublishByDefault = $autoPublishByDefault;
     }
 
     /**
@@ -61,6 +70,30 @@ class UploadTrackCommand extends CommandBase
     public function authorize()
     {
         return \Auth::user() != null;
+    }
+
+    protected function getGenreId(string $genreName) {
+        return Genre::firstOrCreate(['name' => $genreName, 'slug' => Str::slug($genreName)])->id;
+    }
+
+    protected function getAlbumId(int $artistId, $albumName) {
+        if (null !== $albumName) {
+            $album = Album::firstOrNew([
+                'user_id' => $artistId,
+                'title' => $albumName
+            ]);
+
+            if (null === $album->id) {
+                $album->description = '';
+                $album->track_count = 0;
+                $album->save();
+                return $album->id;
+            } else {
+                return $album->id;
+            }
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -81,9 +114,9 @@ class UploadTrackCommand extends CommandBase
 
         $track = new Track();
         $track->user_id = $user->id;
-        $track->title = pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $track->title = Input::get('title', pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME));
         $track->duration = $audio->getDuration();
-        $track->is_listed = true;
+
 
         $track->save();
         $track->ensureDirectoryExists();
@@ -93,19 +126,62 @@ class UploadTrackCommand extends CommandBase
         }
         $trackFile = $trackFile->move(Config::get('ponyfm.files_directory').'/queued-tracks', $track->id);
 
+        $input = Input::all();
+        $input['track'] = $trackFile;
 
-        $validator = \Validator::make(['track' => $trackFile], [
+        $validator = \Validator::make($input, [
             'track' =>
                 'required|'
                 . ($this->_allowLossy ? '' : 'audio_format:'. implode(',', $this->_losslessFormats).'|')
                 . ($this->_allowShortTrack ? '' : 'min_duration:30|')
-                . 'audio_channels:1,2'
+                . 'audio_channels:1,2',
+
+            'auto_publish'      => 'boolean',
+            'title'             => 'string',
+            'track_type_id'     => 'exists:track_types,id',
+            'genre'             => 'string',
+            'album'             => 'string',
+            'track_number'      => 'integer',
+            'released_at'       => 'date_format:'.Carbon::ISO8601,
+            'description'       => 'string',
+            'lyrics'            => 'string',
+            'is_vocal'          => 'boolean',
+            'is_explicit'       => 'boolean',
+            'is_downloadable'   => 'boolean',
+            'is_listed'         => 'boolean',
+            'metadata'          => 'json',
         ]);
 
         if ($validator->fails()) {
             $track->delete();
             return CommandResponse::fail($validator);
         }
+
+
+        // Process optional track fields
+        $autoPublish = (bool) Input::get('auto_publish', $this->_autoPublishByDefault);
+
+        $track->title = Input::get('title', $track->title);
+        $track->track_type_id = Input::get('track_type_id', TrackType::UNCLASSIFIED_TRACK);
+        $track->genre_id = $this->getGenreId(Input::get('genre', 'Unknown'));
+        $track->album_id = $this->getAlbumId($user->id, Input::get('album', null));
+        $track->track_number = $track->album_id !== null ? (int) Input::get('track_number', null) : null;
+        $track->released_at = Input::has('released_at') ? Carbon::createFromFormat(Carbon::ISO8601, Input::get('released_at')) : null;
+        $track->description = Input::get('description', '');
+        $track->lyrics = Input::get('lyrics', '');
+        $track->is_vocal = (bool) Input::get('is_vocal');
+        $track->is_explicit = (bool) Input::get('is_explicit');
+        $track->is_downloadable = (bool) Input::get('is_downloadable');
+        $track->is_listed = (bool) Input::get('is_listed', true);
+
+        $track->source = $this->_customTrackSource ?? 'direct_upload';
+
+        // If json_decode() isn't called here, Laravel will surround the JSON
+        // string with quotes when storing it in the database, which breaks things.
+        $track->metadata = json_decode(Input::get('metadata', null));
+
+        $track->save();
+
 
 
         try {
@@ -172,7 +248,7 @@ class UploadTrackCommand extends CommandBase
 
             try {
                 foreach($trackFiles as $trackFile)  {
-                    $this->dispatch(new EncodeTrackFile($trackFile, false, true));
+                    $this->dispatch(new EncodeTrackFile($trackFile, false, true, $autoPublish));
                 }
 
             } catch (InvalidEncodeOptionsException $e) {
@@ -187,7 +263,10 @@ class UploadTrackCommand extends CommandBase
 
         return CommandResponse::succeed([
             'id' => $track->id,
-            'name' => $track->name
+            'name' => $track->name,
+            'title' => $track->title,
+            'slug' => $track->slug,
+            'autoPublish' => $autoPublish,
         ]);
     }
 }

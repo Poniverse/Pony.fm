@@ -41,6 +41,7 @@ class Track extends Model
     use SoftDeletes;
 
     protected $dates = ['deleted_at', 'published_at', 'released_at'];
+    protected $hidden = ['original_tags', 'metadata'];
     protected $casts = [
         'id'                => 'integer',
         'user_id'           => 'integer',
@@ -53,6 +54,8 @@ class Track extends Model
         'is_downloadable'   => 'boolean',
         'is_latest'         => 'boolean',
         'is_listed'         => 'boolean',
+        'original_tags'     => 'array',
+        'metadata'          => 'array',
     ];
 
     use SlugTrait {

@@ -41,12 +41,7 @@ class TracksController extends ApiControllerBase
     {
         session_write_close();
 
-        try {
-            return $this->execute(new UploadTrackCommand());
-
-        } catch (InvalidEncodeOptionsException $e) {
-
-        }
+        return $this->execute(new UploadTrackCommand());
     }
 
     public function getUploadStatus($trackId)

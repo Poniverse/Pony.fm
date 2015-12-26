@@ -1,4 +1,5 @@
 <?php
+use Poniverse\Ponyfm\User;
 
 /**
  * Pony.fm - A community for pony fan music.
@@ -114,5 +115,22 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         Storage::disk('local')->copy("test-files/${filename}", "testing-datastore/tmp/${filename}");
 
         return new \Symfony\Component\HttpFoundation\File\UploadedFile(storage_path("app/testing-datastore/tmp/${filename}"), $filename, null, null, null, true);
+    }
+
+    /**
+     * Helper function for testing file uploads to the API.
+     *
+     * @param array $parameters
+     */
+    protected function callUploadWithParameters(array $parameters) {
+        $this->expectsJobs(Poniverse\Ponyfm\Jobs\EncodeTrackFile::class);
+        $user = factory(User::class)->create();
+
+        $file = $this->getTestFileForUpload('ponyfm-test.flac');
+
+        $this->actingAs($user)
+             ->call('POST', '/api/v1/tracks', $parameters, [], ['track' => $file]);
+
+        $this->assertResponseStatus(202);
     }
 }

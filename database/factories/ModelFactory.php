@@ -29,15 +29,39 @@
 |
 */
 
-$factory->define(Poniverse\Ponyfm\User::class, function ($faker) {
+use Poniverse\Ponyfm\User;
+
+$factory->define(Poniverse\Ponyfm\User::class, function (\Faker\Generator $faker) {
     return [
         'username'      => $faker->userName,
         'display_name'  => $faker->userName,
         'slug'          => $faker->slug,
         'email'         => $faker->email,
         'can_see_explicit_content' => true,
+        'uses_gravatar' => true,
         'bio'           => $faker->paragraph,
         'track_count'   => 0,
         'comment_count' => 0,
+    ];
+});
+
+$factory->define(\Poniverse\Ponyfm\Track::class, function(\Faker\Generator $faker) {
+    $user = factory(User::class)->create();
+
+    return [
+        'user_id'           => $user->id,
+        'hash'              => $faker->md5,
+        'title'             => $faker->sentence(5),
+        'track_type_id'     => \Poniverse\Ponyfm\TrackType::UNCLASSIFIED_TRACK,
+        'genre'             => $faker->word,
+        'album'             => $faker->sentence(5),
+        'track_number'      => null,
+        'description'       => $faker->paragraph(5),
+        'lyrics'            => $faker->paragraph(5),
+        'is_vocal'          => true,
+        'is_explicit'       => false,
+        'is_downloadable'   => true,
+        'is_listed'         => true,
+        'metadata'          => '{"this":{"is":["very","random","metadata"]}}'
     ];
 });

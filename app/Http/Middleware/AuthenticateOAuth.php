@@ -65,6 +65,8 @@ class AuthenticateOAuth
 
         // Log in as the given user, creating the account if necessary.
         $this->poniverse->setAccessToken($accessToken);
+        session()->put('api_client_id', $accessTokenInfo->getClientId());
+
         $poniverseUser = $this->poniverse->getUser();
 
         $user = User::findOrCreate($poniverseUser['username'], $poniverseUser['display_name'], $poniverseUser['email']);

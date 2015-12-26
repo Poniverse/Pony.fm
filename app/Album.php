@@ -37,6 +37,7 @@ class Album extends Model
     use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait;
 
     protected $dates = ['deleted_at'];
+    protected $fillable = ['user_id', 'title', 'slug'];
 
     public static function summary()
     {

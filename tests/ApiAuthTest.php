@@ -37,7 +37,6 @@ class ApiAuthTest extends TestCase {
         $accessTokenInfo->setIsActive(true);
         $accessTokenInfo->setScopes(['basic', 'ponyfm:tracks:upload']);
 
-
         $poniverse = Mockery::mock('overload:Poniverse');
         $poniverse->shouldReceive('getUser')
             ->andReturn([
@@ -55,5 +54,31 @@ class ApiAuthTest extends TestCase {
         $this->dontSeeInDatabase('users', ['username' => $user->username]);
         $this->post('/api/v1/tracks', ['access_token' => 'nonsense-token']);
         $this->seeInDatabase('users', ['username' => $user->username]);
+    }
+
+    public function testApiClientIdIsRecordedWhenUploadingTrack() {
+        $user = factory(User::class)->make();
+        $accessTokenInfo = new \Poniverse\AccessTokenInfo('nonsense-token');
+        $accessTokenInfo->setIsActive(true);
+        $accessTokenInfo->setClientId('Unicorns and rainbows');
+        $accessTokenInfo->setScopes(['basic', 'ponyfm:tracks:upload']);
+
+        $poniverse = Mockery::mock('overload:Poniverse');
+        $poniverse->shouldReceive('getUser')
+                  ->andReturn([
+                      'username' => $user->username,
+                      'display_name' => $user->display_name,
+                      'email' => $user->email,
+                  ]);
+
+        $poniverse->shouldReceive('setAccessToken');
+
+        $poniverse
+            ->shouldReceive('getAccessTokenInfo')
+            ->andReturn($accessTokenInfo);
+
+        $this->callUploadWithParameters(['access_token' => $accessTokenInfo->getToken()]);
+        $this->assertSessionHas('api_client_id', $accessTokenInfo->getClientId());
+        $this->seeInDatabase('tracks', ['source' => $accessTokenInfo->getClientId()]);
     }
 }

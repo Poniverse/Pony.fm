@@ -31,7 +31,7 @@ class TracksController extends ApiControllerBase
     public function postUploadTrack() {
         session_write_close();
 
-        $response = $this->execute(new UploadTrackCommand());
+        $response = $this->execute(new UploadTrackCommand(true, true, session('api_client_id'), true));
         $commandData = $response->getData(true);
 
         if (200 !== $response->getStatusCode()) {
@@ -39,9 +39,12 @@ class TracksController extends ApiControllerBase
         }
 
         $data = [
-            'id'            => $commandData['id'],
+            'id'            => (string) $commandData['id'],
             'status_url'    => action('Api\V1\TracksController@getUploadStatus', ['id' => $commandData['id']]),
-            'message'       => "This track has been accepted for processing! Poll the status_url to know when it's ready to publish.",
+            'track_url'     => action('TracksController@getTrack', ['id' => $commandData['id'], 'slug' => $commandData['slug']]),
+            'message'       => $commandData['autoPublish']
+                ? "This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url."
+                : "This track has been accepted for processing! Poll the status_url to know when it's ready to publish. It will be published at the track_url.",
         ];
 
         $response->setData($data);
@@ -59,13 +62,16 @@ class TracksController extends ApiControllerBase
 
         } elseif ($track->status === Track::STATUS_COMPLETE) {
             return Response::json([
-                'message' => 'Processing complete! The artist must publish the track by visiting its edit_url.',
-                'edit_url' => action('ContentController@getTracks', ['id' => $trackId])
+                'message' => $track->published_at
+                    ? 'Processing complete! The track is live at the track_url. The artist can edit the track by visiting its edit_url.'
+                    : 'Processing complete! The artist must publish the track by visiting its edit_url.',
+                'edit_url' => action('ContentController@getTracks', ['id' => $trackId]),
+                'track_url' => $track->url
             ], 201);
 
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed!'], 500);
+            return Response::json(['error' => 'Processing failed! Please contact feld0@poniverse.net to figure out what went wrong.'], 500);
         }
     }
 

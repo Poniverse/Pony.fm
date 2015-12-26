@@ -20,6 +20,7 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Poniverse\Ponyfm\Track;
 use Poniverse\Ponyfm\User;
 
 class ApiTest extends TestCase {
@@ -40,20 +41,70 @@ class ApiTest extends TestCase {
         $this->assertResponseStatus(400);
     }
 
-    public function testUploadWithFile() {
-        $this->expectsJobs(Poniverse\Ponyfm\Jobs\EncodeTrackFile::class);
+    public function testUploadWithFileWithoutAutoPublish() {
+        $this->callUploadWithParameters([
+            'auto_publish' => false
+        ]);
 
-        $user = factory(User::class)->create();
-
-        $file = $this->getTestFileForUpload('ponyfm-test.flac');
-        $this->actingAs($user)
-            ->call('POST', '/api/v1/tracks', [], [], ['track' => $file]);
-
-        $this->assertResponseStatus(202);
         $this->seeJsonEquals([
-                'message'       => "This track has been accepted for processing! Poll the status_url to know when it's ready to publish.",
-                'id'            => 1,
-                'status_url'    => "http://ponyfm-testing.poni/api/v1/tracks/1/upload-status"
+                'message'       => "This track has been accepted for processing! Poll the status_url to know when it's ready to publish. It will be published at the track_url.",
+                'id'            => "1",
+                'status_url'    => "http://ponyfm-testing.poni/api/v1/tracks/1/upload-status",
+                'track_url'     => "http://ponyfm-testing.poni/tracks/1-ponyfm-test",
             ]);
+    }
+
+    public function testUploadWithFileWithAutoPublish() {
+        $this->callUploadWithParameters([]);
+
+        $this->seeJsonEquals([
+                'message'       => "This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url.",
+                'id'            => "1",
+                'status_url'    => "http://ponyfm-testing.poni/api/v1/tracks/1/upload-status",
+                'track_url'     => "http://ponyfm-testing.poni/tracks/1-ponyfm-test",
+            ]);
+
+        $this->visit('/tracks/1-ponyfm-test');
+        $this->assertResponseStatus(200);
+    }
+
+    public function testUploadWithOptionalData() {
+        $track = factory(Track::class)->make();
+
+        $this->callUploadWithParameters([
+            'title'             => $track->title,
+            'track_type_id'     => $track->track_type_id,
+            'genre'             => $track->genre,
+            'album'             => $track->album,
+            'released_at'       => \Carbon\Carbon::create(2015, 1, 1, 1, 1, 1)->toIso8601String(),
+            'description'       => $track->description,
+            'lyrics'            => $track->lyrics,
+            'is_vocal'          => true,
+            'is_explicit'       => true,
+            'is_downloadable'   => false,
+            'is_listed'         => false,
+            'metadata'          => $track->metadata
+        ]);
+
+        $this->seeInDatabase('genres', [
+            'name' => $track->genre
+        ]);
+
+        $this->seeInDatabase('albums', [
+            'title' => $track->album
+        ]);
+
+        $this->seeInDatabase('tracks', [
+            'title'             => $track->title,
+            'track_type_id'     => $track->track_type_id,
+            'released_at'       => "2015-01-01 01:01:01",
+            'description'       => $track->description,
+            'lyrics'            => $track->lyrics,
+            'is_vocal'          => true,
+            'is_explicit'       => true,
+            'is_downloadable'   => false,
+            'is_listed'         => false,
+            'metadata'          => $track->metadata
+        ]);
     }
 }

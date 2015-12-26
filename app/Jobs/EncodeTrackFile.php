@@ -22,6 +22,7 @@
 namespace Poniverse\Ponyfm\Jobs;
 
 use Carbon\Carbon;
+use DB;
 use File;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
@@ -52,14 +53,19 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      * @var bool
      */
     private $isForUpload;
+    /**
+     * @var bool
+     */
+    private $autoPublishWhenComplete;
 
     /**
      * Create a new job instance.
      * @param TrackFile $trackFile
      * @param bool $isExpirable
      * @param bool $isForUpload indicates whether this encode job is for an upload
+     * @param bool $autoPublish
      */
-    public function __construct(TrackFile $trackFile, $isExpirable, $isForUpload = false)
+    public function __construct(TrackFile $trackFile, $isExpirable, $isForUpload = false, $autoPublish = false)
     {
         if(
             (!$isForUpload && $trackFile->is_master) ||
@@ -71,6 +77,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         $this->trackFile = $trackFile;
         $this->isExpirable = $isExpirable;
         $this->isForUpload = $isForUpload;
+        $this->autoPublishWhenComplete = $autoPublish;
     }
 
     /**
@@ -140,7 +147,16 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
                 File::delete($this->trackFile->getFile());
             }
 
+            // This was the final TrackFile for this track!
             if ($this->trackFile->track->status === Track::STATUS_COMPLETE) {
+                if ($this->autoPublishWhenComplete) {
+                    $this->trackFile->track->published_at = Carbon::now();
+                    DB::table('tracks')->whereUserId($this->trackFile->track->user_id)->update(['is_latest' => false]);
+
+                    $this->trackFile->track->is_latest = true;
+                    $this->trackFile->track->save();
+                }
+
                 File::delete($this->trackFile->track->getTemporarySourceFile());
             }
         }

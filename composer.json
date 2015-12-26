@@ -5,7 +5,7 @@
     "license": "AGPL",
     "type": "project",
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.0.1",
         "laravel/framework": "5.1.*",
         "codescale/ffmpeg-php": "2.7.0",
         "kriswallsmith/assetic": "1.2.*@dev",

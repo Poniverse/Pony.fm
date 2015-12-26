@@ -122,7 +122,7 @@ class Poniverse {
      *
      * @param $accessTokenToIntrospect
      * @return \Poniverse\AccessTokenInfo
-     * @throws \Poniverse\Ponyfm\InvalidAccessTokenException
+     * @throws InvalidAccessTokenException
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      */
     public function getAccessTokenInfo($accessTokenToIntrospect)
@@ -154,7 +154,8 @@ class Poniverse {
         $tokenInfo = new \Poniverse\AccessTokenInfo($accessTokenToIntrospect);
         $tokenInfo
             ->setIsActive($data['active'])
-            ->setScopes($data['scope']);
+            ->setScopes($data['scope'])
+            ->setClientId($data['client_id']);
 
         return $tokenInfo;
     }
