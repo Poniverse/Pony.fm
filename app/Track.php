@@ -24,6 +24,7 @@ use Auth;
 use Cache;
 use Config;
 use DB;
+use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
