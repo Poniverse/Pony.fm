@@ -122,7 +122,7 @@ class Playlist extends Model
             'track_count' => $playlist->track_count,
             'title' => $playlist->title,
             'slug' => $playlist->slug,
-            'created_at' => $playlist->created_at,
+            'created_at' => $playlist->created_at->format('c'),
             'is_public' => (bool)$playlist->is_public,
             'stats' => [
                 'views' => (int)$playlist->view_count,
