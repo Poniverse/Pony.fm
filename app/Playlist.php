@@ -207,7 +207,7 @@ class Playlist extends Model
 
     public function getDownloadUrl($format)
     {
-        return action('PlaylistsController@getDownload', ['id' => $this->id]);
+        return action('PlaylistsController@getDownload', ['id' => $this->id, 'format' => Track::$Formats[$format]['extension']]);
     }
 
     public function getFilesize($format)
