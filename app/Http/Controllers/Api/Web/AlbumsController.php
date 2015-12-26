@@ -151,7 +151,7 @@ class AlbumsController extends ApiControllerBase
                 'id' => $album->id,
                 'title' => $album->title,
                 'slug' => $album->slug,
-                'created_at' => $album->created_at,
+                'created_at' => $album->created_at->format('c'),
                 'covers' => [
                     'small' => $album->getCoverUrl(Image::SMALL),
                     'normal' => $album->getCoverUrl(Image::NORMAL)

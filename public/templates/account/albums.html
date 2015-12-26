@@ -14,7 +14,7 @@
                     <a href="/account/albums/edit/{{album.id}}">
                         <img pfm-src-loader="album.covers.normal" pfm-src-size="normal" class="image" />
                         <span class="title">{{album.title}}</span>
-                        <span class="published">{{album.created_at | pfmdate:'MM/dd/yyyy'}}</span>
+                        <span class="published">{{album.created_at | date:'MM/dd/yyyy'}}</span>
                     </a>
                 </li>
                 <li ng-show="!albums.length" class="empty">
