@@ -104,6 +104,10 @@ class PoniverseApiSetup extends Command
     protected function setEnvironmentVariable($key, $oldValue, $newValue) {
         $path = base_path('.env');
 
+        // Detect the specific "null" value.
+        if ($oldValue === null)
+            $oldValue = 'null';
+
         if (file_exists($path)) {
             file_put_contents($path, str_replace(
                 "$key=" . $oldValue, "$key=" . $newValue, file_get_contents($path)
