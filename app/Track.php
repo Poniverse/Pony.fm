@@ -392,7 +392,7 @@ class Track extends Model
             'is_downloadable' => $track->is_downloadable,
             'is_published' => $track->isPublished(),
             'created_at' => $track->created_at->format('c'),
-            'published_at' => $track->published_at->format('c'),
+            'published_at' => $track->published_at ? $track->published_at->format('c') : null,
             'duration' => $track->duration,
             'genre_id' => $track->genre_id,
             'track_type_id' => $track->track_type_id,
