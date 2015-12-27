@@ -64,11 +64,18 @@ module.config [
 
         markedProvider.setRenderer
             link: (href, title, text) ->
-                '<a href="' + href + '" target="_blank">' + href + '</a>'
+                '<a href="' + href + '" target="_blank" rel="nofollow">' + href + '</a>'
             heading: (text, level) ->
                 text
             image: (url) ->
                 url
+            codespan: (code) ->
+                code
+            code: (code, language) ->
+                code
+            del: (text) ->
+                text
+
 
         # Errors
         state.state 'errors-404',
