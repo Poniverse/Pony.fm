@@ -1,3 +1,5 @@
+# Based on https://gist.github.com/kensnyder/49136af39457445e5982
+
 angular.module('ponyfm').filter 'nl2br', [
   '$sanitize'
   ($sanitize) ->
