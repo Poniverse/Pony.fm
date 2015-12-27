@@ -37,7 +37,6 @@ use File;
 use Illuminate\Support\Str;
 use Poniverse\Ponyfm\TrackType;
 use Poniverse\Ponyfm\User;
-use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -170,7 +169,7 @@ class UploadTrackCommand extends CommandBase
 
         $track->released_at = isset($input['released_at'])
             ? Carbon::createFromFormat(Carbon::ISO8601, $input['released_at'])
-            : $parsedTags['released_at'];
+            : $parsedTags['release_date'];
 
         $track->description     = $input['description'] ?? $parsedTags['comments'];
         $track->lyrics          = $input['lyrics'] ?? $parsedTags['lyrics'];
@@ -369,27 +368,9 @@ class UploadTrackCommand extends CommandBase
         //==========================================================================================================
         // Determine the release date.
         //==========================================================================================================
-        $modifiedDate = Carbon::createFromTimeStampUTC(File::lastModified($file->getPathname()));
-        $taggedYear = $parsedTags['year'];
-
-        if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
-            $releasedAt = $modifiedDate;
-
-        } elseif ($taggedYear !== null && Str::length((string) $taggedYear) !== 4) {
-            // This tagged year makes no sense. Using the track's last-modified date...
-            $releasedAt = $modifiedDate;
-
-        } elseif ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
-            // Release years don't match! Using the tagged year...
-            $releasedAt = Carbon::create($taggedYear);
-
-        } else {
-            // $taggedYear is null
-            $releasedAt = $modifiedDate;
+        if ($parsedTags['release_date'] === null && $parsedTags['year'] !== null) {
+            $parsedTags['release_date'] = Carbon::create($parsedTags['year'], 1, 1);
         }
-
-        // This is later used by the classification/publishing script to determine the publication date.
-        $parsedTags['released_at'] = $releasedAt;
 
         //==========================================================================================================
         // Does this track have vocals?
@@ -501,6 +482,7 @@ class UploadTrackCommand extends CommandBase
                 'track_number' => isset($tags['track_number']) ? $tags['track_number'][0] : null,
                 'album' => isset($tags['album']) ? $tags['album'][0] : null,
                 'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
+                'release_date' => isset($tags['release_date']) ? $this->parseDateString($tags['release_date'][0]) : null,
                 'comments' => $comment,
                 'lyrics' => isset($tags['unsynchronised_lyric']) ? $tags['unsynchronised_lyric'][0] : null,
             ],
@@ -535,6 +517,7 @@ class UploadTrackCommand extends CommandBase
                 'track_number' => $trackNumber,
                 'album' => isset($tags['album']) ? $tags['album'][0] : null,
                 'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
+                'release_date' => isset($tags['release_date']) ? $this->parseDateString($tags['release_date'][0]) : null,
                 'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
                 'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
             ],
@@ -569,10 +552,54 @@ class UploadTrackCommand extends CommandBase
                 'track_number' => $trackNumber,
                 'album' => isset($tags['album']) ? $tags['album'][0] : null,
                 'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
+                'release_date' => isset($tags['date']) ? $this->parseDateString($tags['date'][0]) : null,
                 'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
                 'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
             ],
             $tags
         ];
+    }
+
+    /**
+     * Parses a potentially-partial date string into a proper date object.
+     *
+     * The tagging formats we deal with base their date format on ISO 8601, but
+     * the timestamp may be incomplete.
+     *
+     * @link https://code.google.com/p/mp4v2/wiki/iTunesMetadata
+     * @link https://wiki.xiph.org/VorbisComment#Date_and_time
+     * @link http://id3.org/id3v2.4.0-frames
+     *
+     * @param string $dateString
+     * @return null|Carbon
+     */
+    protected function parseDateString(string $dateString) {
+        switch (Str::length($dateString)) {
+            // YYYY
+            case 4:
+                return Carbon::createFromFormat('Y', $dateString)
+                    ->month(1)
+                    ->day(1);
+
+            // YYYY-MM
+            case 7:
+                return Carbon::createFromFormat('Y-m', $dateString)
+                    ->day(1);
+
+            // YYYY-MM-DD
+            case 10:
+                return Carbon::createFromFormat('Y-m-d', $dateString);
+                break;
+
+            default:
+                // We might have an ISO-8601 string in our hooves.
+                // If not, give up.
+                try {
+                    return Carbon::createFromFormat(Carbon::ISO8601, $dateString);
+
+                } catch (\InvalidArgumentException $e) {
+                    return null;
+                }
+        }
     }
 }
