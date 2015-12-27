@@ -88,6 +88,7 @@ class Assets
             return [
                 "scripts/base/jquery-2.0.2.js",
                 "scripts/base/angular.js",
+                "scripts/base/marked.js",
                 "scripts/base/*.{coffee,js}",
                 "scripts/shared/*.{coffee,js}",
                 "scripts/app/*.{coffee,js}",

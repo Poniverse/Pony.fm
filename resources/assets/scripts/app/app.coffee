@@ -16,7 +16,7 @@
 
 window.pfm.preloaders = {}
 
-module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'pasvaz.bindonce', 'angularytics', 'ngSanitize']
+module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'pasvaz.bindonce', 'angularytics', 'ngSanitize', 'hc.marked']
 
 if window.pfm.environment == 'production'
     module.run [
@@ -33,8 +33,8 @@ module.run [
 ]
 
 module.config [
-    '$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider'
-    (location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider) ->
+    '$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider'
+    (location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider, markedProvider) ->
 
         if window.pfm.environment == 'local'
             $httpProvider.interceptors.push [
@@ -53,6 +53,16 @@ module.config [
 
         if window.pfm.environment == 'production'
             analytics.setEventHandlers ['Google']
+
+        markedProvider.setOptions
+            gfm: true
+            tables: true
+            sanitize: true
+            smartLists: true
+            smartypants: true
+
+        markedProvider.setRenderer link: (href, title, text) ->
+            '<a href="' + href + '"' + (if title then ' title="' + title + '"' else '') + ' target="_blank">' + text + '</a>'
 
         # Errors
         state.state 'errors-404',

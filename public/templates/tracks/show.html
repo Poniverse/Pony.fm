@@ -71,7 +71,7 @@
         <div class="left">
             <div class="description" bo-show="track.description.length">
                 <h2>Description</h2>
-                <p bo-html="track.description | linky:'_blank':{rel: 'nofollow'} | newlines"></p>
+                <p marked="track.description"></p>
             </div>
 
             <div bo-show="track.is_vocal && track.lyrics.length" class="lyrics-panel">
@@ -80,7 +80,7 @@
                     <div class="reveal">
                         <a href="#">Click to reveal full lyrics...</a>
                     </div>
-                    <p class="content" bo-html="track.lyrics | noHTML | newlines"></p>
+                    <p class="content" bo-html="track.lyrics | noHTML | nl2br"></p>
                 </div>
             </div>
 
