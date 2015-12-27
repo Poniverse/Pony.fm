@@ -3,7 +3,7 @@
         <div bo-show="artist.bio.trim().length">
             <h2>Bio</h2>
             <div class="description">
-                <p bo-html="artist.bio | linky:'_blank':{rel: 'nofollow'} | newlines"></p>
+                <p marked="artist.bio"></p>
             </div>
         </div>
 
