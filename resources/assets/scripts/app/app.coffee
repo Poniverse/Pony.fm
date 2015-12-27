@@ -56,13 +56,19 @@ module.config [
 
         markedProvider.setOptions
             gfm: true
-            tables: true
+            tables: false
             sanitize: true
             smartLists: true
             smartypants: true
 
-        markedProvider.setRenderer link: (href, title, text) ->
-            '<a href="' + href + '"' + (if title then ' title="' + title + '"' else '') + ' target="_blank">' + text + '</a>'
+
+        markedProvider.setRenderer
+            link: (href, title, text) ->
+                '<a href="' + href + '" target="_blank">' + href + '</a>'
+            heading: (text, level) ->
+                text
+            image: (url) ->
+                url
 
         # Errors
         state.state 'errors-404',
