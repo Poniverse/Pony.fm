@@ -60,6 +60,7 @@ module.config [
             sanitize: true
             smartLists: true
             smartypants: true
+            breaks: true
 
 
         markedProvider.setRenderer
