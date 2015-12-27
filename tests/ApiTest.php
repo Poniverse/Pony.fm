@@ -84,6 +84,8 @@ class ApiTest extends TestCase {
             'is_downloadable'   => false,
             'is_listed'         => false,
             'metadata'          => $track->metadata
+        ], [
+            'cover'             => $this->getTestFileForUpload('ponyfm-transparent-cover-art.png')
         ]);
 
         $this->seeInDatabase('genres', [
@@ -94,8 +96,14 @@ class ApiTest extends TestCase {
             'title' => $track->album
         ]);
 
+        $this->seeInDatabase('images', [
+            'id' => 1,
+            'uploaded_by' => $this->user->id
+        ]);
+
         $this->seeInDatabase('tracks', [
             'title'             => $track->title,
+            'user_id'           => $this->user->id,
             'track_type_id'     => $track->track_type_id,
             'released_at'       => "2015-01-01 01:01:01",
             'description'       => $track->description,
@@ -104,6 +112,7 @@ class ApiTest extends TestCase {
             'is_explicit'       => true,
             'is_downloadable'   => false,
             'is_listed'         => false,
+            'cover_id'          => 1,
             'metadata'          => $track->metadata
         ]);
     }

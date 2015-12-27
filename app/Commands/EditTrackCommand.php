@@ -25,8 +25,8 @@ use Poniverse\Ponyfm\Image;
 use Poniverse\Ponyfm\Track;
 use Poniverse\Ponyfm\TrackType;
 use Poniverse\Ponyfm\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Auth;
+use DB;
 
 class EditTrackCommand extends CommandBase
 {

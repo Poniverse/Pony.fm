@@ -28,6 +28,13 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     protected $baseUrl = 'http://ponyfm-testing.poni';
 
+    /**
+     * The Pony.fm user used in tests.
+     *
+     * @var User
+     */
+    protected $user = null;
+
     protected static $initializedFiles = false;
 
     /**
@@ -57,7 +64,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
             // and add them here with their last-modified date as a Unix
             // timestamp.
             $files = [
-                'ponyfm-test.flac' => 1450965707
+                'ponyfm-test.flac' => 1450965707,
+                'ponyfm-transparent-cover-art.png' => 1451211579
             ];
 
             foreach ($files as $filename => $lastModifiedTimestamp) {
@@ -121,15 +129,16 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      * Helper function for testing file uploads to the API.
      *
      * @param array $parameters
+     * @param array $files
      */
-    protected function callUploadWithParameters(array $parameters) {
+    protected function callUploadWithParameters(array $parameters, array $files = []) {
         $this->expectsJobs(Poniverse\Ponyfm\Jobs\EncodeTrackFile::class);
-        $user = factory(User::class)->create();
+        $this->user = factory(User::class)->create();
 
         $file = $this->getTestFileForUpload('ponyfm-test.flac');
 
-        $this->actingAs($user)
-             ->call('POST', '/api/v1/tracks', $parameters, [], ['track' => $file]);
+        $this->actingAs($this->user)
+             ->call('POST', '/api/v1/tracks', $parameters, [], array_merge(['track' => $file], $files));
 
         $this->assertResponseStatus(202);
     }

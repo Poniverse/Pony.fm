@@ -27,6 +27,7 @@ use Input;
 use Poniverse\Ponyfm\Album;
 use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
 use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Image;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Track;
 use Poniverse\Ponyfm\TrackFile;
@@ -149,6 +150,7 @@ class UploadTrackCommand extends CommandBase
             'is_explicit'       => 'boolean',
             'is_downloadable'   => 'boolean',
             'is_listed'         => 'boolean',
+            'cover'             => 'image|mimes:png,jpeg|min_width:350|min_height:350',
             'metadata'          => 'json',
         ]);
 
@@ -175,6 +177,10 @@ class UploadTrackCommand extends CommandBase
         $track->is_listed = (bool) Input::get('is_listed', true);
 
         $track->source = $this->_customTrackSource ?? 'direct_upload';
+
+        if (Input::hasFile('cover')) {
+            $track->cover_id = Image::upload(Input::file('cover'), $track->user_id)->id;
+        }
 
         // If json_decode() isn't called here, Laravel will surround the JSON
         // string with quotes when storing it in the database, which breaks things.
