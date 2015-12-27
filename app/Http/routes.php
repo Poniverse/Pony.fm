@@ -60,7 +60,7 @@ Route::get('/about', function() { return View::make('pages.about'); });
 Route::get('/faq', function() { return View::make('pages.faq'); });
 Route::get('/mlpforums-advertising-program', function() { return View::make('pages.mlpforums-advertising-program'); });
 
-Route::get('i{id}/{type}.png', 'ImagesController@getImage')->where('id', '\d+');
+Route::get('i{id}/{type}.{extension}', 'ImagesController@getImage')->where('id', '\d+');
 
 Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
 Route::get('p{id}', 'PlaylistsController@getShortlink')->where('id', '\d+');

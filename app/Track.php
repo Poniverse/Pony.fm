@@ -741,7 +741,7 @@ class Track extends Model
                 'data' => file_get_contents($this->cover->getFile()),
                 'picturetypeid' => 2,
                 'description' => 'cover',
-                'mime' => 'image/png'
+                'mime' => $this->cover->mime
             ];
         }
 

@@ -84,8 +84,8 @@ angular.module('ponyfm').directive 'pfmImageUpload', () ->
                     $scope.imageObject = null
                     $scope.imageFile = file
 
-                    if file.type != 'image/png'
-                        $scope.error = 'Image must be a png!'
+                    if file.type not in ['image/png', 'image/jpeg']
+                        $scope.error = 'Image must be a PNG or JPEG!'
                         $scope.isImageLoaded = false
                         $scope.imageObject = $scope.imageFile = $scope.imageUrl = null
                         return

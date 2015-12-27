@@ -78,12 +78,27 @@ class Image extends Model
 
             $image->ensureDirectoryExists();
             foreach (self::$ImageTypes as $coverType) {
-                $command = 'convert 2>&1 "' . $file->getPathname() . '" -background transparent -flatten +matte -strip -quality 95 -format png ';
-                if (isset($coverType['width']) && isset($coverType['height'])) {
-                    $command .= '-thumbnail ' . $coverType['width'] . 'x' . $coverType['height'] . '^ -gravity center -extent ' . $coverType['width'] . 'x' . $coverType['height'] . ' ';
+                if ($coverType['id'] === self::ORIGINAL && $image->mime === 'image/jpeg') {
+                    $command = 'cp '.$file->getPathname().' '.$image->getFile($coverType['id']);
+
+                } else {
+                    // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
+                    $command = 'convert 2>&1 "' . $file->getPathname() . '" -background white -alpha remove -alpha off -strip';
+
+                    if ($image->mime === 'image/jpeg') {
+                        $command .= ' -quality 100 -format jpeg';
+
+                    } else {
+                        $command .= ' -quality 95 -format png';
+                    }
+
+                    if (isset($coverType['width']) && isset($coverType['height'])) {
+                        $command .= " -thumbnail ${coverType['width']}x${coverType['height']}^ -gravity center -extent ${coverType['width']}x${coverType['height']}";
+                    }
+
+                    $command .= ' "' . $image->getFile($coverType['id']) . '"';
                 }
 
-                $command .= '"' . $image->getFile($coverType['id']) . '"';
                 External::execute($command);
             }
 
@@ -100,7 +115,7 @@ class Image extends Model
     {
         $type = self::$ImageTypes[$type];
 
-        return action('ImagesController@getImage', ['id' => $this->id, 'type' => $type['name']]);
+        return action('ImagesController@getImage', ['id' => $this->id, 'type' => $type['name'], 'extension' => $this->extension]);
     }
 
     public function getFile($type = self::NORMAL)
@@ -112,7 +127,7 @@ class Image extends Model
     {
         $typeInfo = self::$ImageTypes[$type];
 
-        return $this->id . '_' . $typeInfo['name'] . '.png';
+        return $this->id . '_' . $typeInfo['name'] . '.'.$this->extension;
     }
 
     public function getDirectory()

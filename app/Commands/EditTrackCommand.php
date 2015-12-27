@@ -65,7 +65,7 @@ class EditTrackCommand extends CommandBase
                     time() + (86400 * 2))) . (isset($this->_input['released_at']) && $this->_input['released_at'] != "" ? '|date' : ''),
             'license_id' => 'required|exists:licenses,id',
             'genre_id' => 'required|exists:genres,id',
-            'cover' => 'image|mimes:png|min_width:350|min_height:350',
+            'cover' => 'image|mimes:png,jpeg|min_width:350|min_height:350',
             'track_type_id' => 'required|exists:track_types,id|not_in:'.TrackType::UNCLASSIFIED_TRACK,
             'songs' => 'required_when:track_type,2|exists:songs,id',
             'cover_id' => 'exists:images,id',

@@ -516,5 +516,4 @@ class ImportMLPMA extends Command
             $tags
         ];
     }
-
 }

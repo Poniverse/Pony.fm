@@ -28,7 +28,7 @@ use Response;
 
 class ImagesController extends Controller
 {
-    public function getImage($id, $type)
+    public function getImage($id, $type, $extension)
     {
         $coverType = Image::getImageTypeFromName($type);
 
@@ -56,8 +56,8 @@ class ImagesController extends Controller
             $response->header('X-Accel-Redirect', $filename);
         }
 
-        $response->header('Content-Disposition', "filename=\"ponyfm-i${id}-${type}.png\"");
-        $response->header('Content-Type', 'image/png');
+        $response->header('Content-Disposition', "filename=\"ponyfm-i${id}-${type}.{$image->extension}\"");
+        $response->header('Content-Type', $image->mime);
 
         $lastModified = filemtime($filename);
 

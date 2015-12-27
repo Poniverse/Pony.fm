@@ -1,7 +1,7 @@
 <div class="image-upload" ng-class="{'has-error': error != null}">
     <div class="preview" ng-class="{canOpen: isImageLoaded}" ng-click="previewImage()"><img ng-show="isImageLoaded" /></div>
     <p>
-        Image must be a PNG that is at least 350x350. <br />
+        Image must be a PNG or JPEG that is at least 350x350. <br />
         <input type="file" onchange="angular.element(this).scope().setImageFile(this)" />
     </p>
     <div class="btn-group">
