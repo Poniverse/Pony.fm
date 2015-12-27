@@ -22,6 +22,7 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Carbon\Carbon;
 use Config;
+use getID3;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Input;
 use Poniverse\Ponyfm\Album;
@@ -35,6 +36,10 @@ use AudioCache;
 use File;
 use Illuminate\Support\Str;
 use Poniverse\Ponyfm\TrackType;
+use Poniverse\Ponyfm\User;
+use Storage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UploadTrackCommand extends CommandBase
 {
@@ -73,30 +78,6 @@ class UploadTrackCommand extends CommandBase
         return \Auth::user() != null;
     }
 
-    protected function getGenreId(string $genreName) {
-        return Genre::firstOrCreate(['name' => $genreName, 'slug' => Str::slug($genreName)])->id;
-    }
-
-    protected function getAlbumId(int $artistId, $albumName) {
-        if (null !== $albumName) {
-            $album = Album::firstOrNew([
-                'user_id' => $artistId,
-                'title' => $albumName
-            ]);
-
-            if (null === $album->id) {
-                $album->description = '';
-                $album->track_count = 0;
-                $album->save();
-                return $album->id;
-            } else {
-                return $album->id;
-            }
-        } else {
-            return null;
-        }
-    }
-
     /**
      * @throws \Exception
      * @return CommandResponse
@@ -111,11 +92,12 @@ class UploadTrackCommand extends CommandBase
         }
 
         $audio = \AudioCache::get($trackFile->getPathname());
+        list($parsedTags, $rawTags) = $this->parseOriginalTags($trackFile, $user, $audio->getAudioCodec());
 
 
         $track = new Track();
         $track->user_id = $user->id;
-        $track->title = Input::get('title', pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME));
+        $track->title = Input::get('title', $parsedTags['title']);
         $track->duration = $audio->getDuration();
 
 
@@ -161,33 +143,50 @@ class UploadTrackCommand extends CommandBase
 
 
         // Process optional track fields
-        $autoPublish = (bool) Input::get('auto_publish', $this->_autoPublishByDefault);
-
-        $track->title = Input::get('title', $track->title);
-        $track->track_type_id = Input::get('track_type_id', TrackType::UNCLASSIFIED_TRACK);
-        $track->genre_id = $this->getGenreId(Input::get('genre', 'Unknown'));
-        $track->album_id = $this->getAlbumId($user->id, Input::get('album', null));
-        $track->track_number = $track->album_id !== null ? (int) Input::get('track_number', null) : null;
-        $track->released_at = Input::has('released_at') ? Carbon::createFromFormat(Carbon::ISO8601, Input::get('released_at')) : null;
-        $track->description = Input::get('description', '');
-        $track->lyrics = Input::get('lyrics', '');
-        $track->is_vocal = (bool) Input::get('is_vocal');
-        $track->is_explicit = (bool) Input::get('is_explicit');
-        $track->is_downloadable = (bool) Input::get('is_downloadable');
-        $track->is_listed = (bool) Input::get('is_listed', true);
-
-        $track->source = $this->_customTrackSource ?? 'direct_upload';
+        $autoPublish = (bool) ($input['auto_publish'] ?? $this->_autoPublishByDefault);
 
         if (Input::hasFile('cover')) {
             $track->cover_id = Image::upload(Input::file('cover'), $track->user_id)->id;
+        } else {
+            $track->cover_id = $parsedTags['cover_id'];
         }
+
+        $track->title           = $input['title'] ?? $parsedTags['title'] ?? $track->title;
+        $track->track_type_id   = $input['track_type_id'] ?? TrackType::UNCLASSIFIED_TRACK;
+
+        $track->genre_id = isset($input['genre'])
+            ? $this->getGenreId($input['genre'])
+            : $parsedTags['genre_id'];
+
+        $track->album_id = isset($input['album'])
+            ? $this->getAlbumId($user->id, $input['album'])
+            : $parsedTags['album_id'];
+
+        if ($track->album_id === null) {
+            $track->track_number = null;
+        } else {
+            $track->track_number = $input['track_number'] ?? $parsedTags['track_number'];
+        }
+
+        $track->released_at = isset($input['released_at'])
+            ? Carbon::createFromFormat(Carbon::ISO8601, $input['released_at'])
+            : $parsedTags['released_at'];
+
+        $track->description     = $input['description'] ?? $parsedTags['comments'];
+        $track->lyrics          = $input['lyrics'] ?? $parsedTags['lyrics'];
+
+        $track->is_vocal        = $input['is_vocal'] ?? $parsedTags['is_vocal'];
+        $track->is_explicit     = $input['is_explicit'] ?? false;
+        $track->is_downloadable = $input['is_downloadable'] ?? true;
+        $track->is_listed       = $input['is_listed'] ?? true;
+        $track->source          = $this->_customTrackSource ?? 'direct_upload';
 
         // If json_decode() isn't called here, Laravel will surround the JSON
         // string with quotes when storing it in the database, which breaks things.
         $track->metadata = json_decode(Input::get('metadata', null));
+        $track->original_tags = ['parsed_tags' => $parsedTags, 'raw_tags' => $rawTags];
 
         $track->save();
-
 
 
         try {
@@ -274,5 +273,306 @@ class UploadTrackCommand extends CommandBase
             'slug' => $track->slug,
             'autoPublish' => $autoPublish,
         ]);
+    }
+
+    /**
+     * Returns the ID of the given genre, creating it if necessary.
+     *
+     * @param string $genreName
+     * @return int
+     */
+    protected function getGenreId(string $genreName) {
+        return Genre::firstOrCreate([
+            'name' => $genreName,
+            'slug' => Str::slug($genreName)
+        ])->id;
+    }
+
+    /**
+     * Returns the ID of the given album, creating it if necessary.
+     * The cover ID is only used if a new album is created - it will not be
+     * written to an existing album.
+     *
+     * @param int $artistId
+     * @param string|null $albumName
+     * @param null $coverId
+     * @return int|null
+     */
+    protected function getAlbumId(int $artistId, $albumName, $coverId = null) {
+        if (null !== $albumName) {
+            $album = Album::firstOrNew([
+                'user_id' => $artistId,
+                'title' => $albumName
+            ]);
+
+            if (null === $album->id) {
+                $album->description = '';
+                $album->track_count = 0;
+                $album->cover_id = $coverId;
+                $album->save();
+            }
+
+            return $album->id;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Extracts a file's tags.
+     *
+     * @param UploadedFile $file
+     * @param User $artist
+     * @param string $audioCodec
+     * @return array the "processed" and raw tags extracted from the file
+     * @throws \Exception
+     */
+    protected function parseOriginalTags(UploadedFile $file, User $artist, string $audioCodec) {
+        //==========================================================================================================
+        // Extract the original tags.
+        //==========================================================================================================
+        $getId3 = new getID3;
+
+        // all tags read by getID3, including the cover art
+        $allTags = $getId3->analyze($file->getPathname());
+
+        // tags specific to a file format (ID3 or Atom), pre-normalization but with cover art removed
+        $rawTags = [];
+
+        // normalized tags used by Pony.fm
+        $parsedTags = [];
+
+        if ($audioCodec === 'mp3') {
+            list($parsedTags, $rawTags) = $this->getId3Tags($allTags);
+
+        } elseif (Str::startsWith($audioCodec, 'aac')) {
+            list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
+
+        } elseif ($audioCodec === 'vorbis') {
+            list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
+
+        } elseif ($audioCodec === 'flac') {
+            list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
+
+        } elseif (Str::startsWith($audioCodec, ['pcm', 'adpcm'])) {
+            list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
+
+        }
+
+
+        //==========================================================================================================
+        // Fill in the title tag if it's missing
+        //==========================================================================================================
+        $parsedTags['title'] = $parsedTags['title'] ?? pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+
+        //==========================================================================================================
+        // Determine the release date.
+        //==========================================================================================================
+        $modifiedDate = Carbon::createFromTimeStampUTC(File::lastModified($file->getPathname()));
+        $taggedYear = $parsedTags['year'];
+
+        if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
+            $releasedAt = $modifiedDate;
+
+        } elseif ($taggedYear !== null && Str::length((string) $taggedYear) !== 4) {
+            // This tagged year makes no sense. Using the track's last-modified date...
+            $releasedAt = $modifiedDate;
+
+        } elseif ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
+            // Release years don't match! Using the tagged year...
+            $releasedAt = Carbon::create($taggedYear);
+
+        } else {
+            // $taggedYear is null
+            $releasedAt = $modifiedDate;
+        }
+
+        // This is later used by the classification/publishing script to determine the publication date.
+        $parsedTags['released_at'] = $releasedAt;
+
+        //==========================================================================================================
+        // Does this track have vocals?
+        //==========================================================================================================
+        $parsedTags['is_vocal'] = $parsedTags['lyrics'] !== null;
+
+
+        //==========================================================================================================
+        // Determine the genre.
+        //==========================================================================================================
+        $genreName = $parsedTags['genre'];
+
+        if ($genreName) {
+            $parsedTags['genre_id'] = $this->getGenreId($genreName);
+
+        } else {
+            $parsedTags['genre_id'] = $this->getGenreId('Unknown');
+        }
+
+        //==========================================================================================================
+        // Extract the cover art, if any exists.
+        //==========================================================================================================
+
+        $coverId = null;
+        if (array_key_exists('comments', $allTags) && array_key_exists('picture', $allTags['comments'])) {
+            $image = $allTags['comments']['picture'][0];
+
+            if ($image['image_mime'] === 'image/png') {
+                $extension = 'png';
+
+            } elseif ($image['image_mime'] === 'image/jpeg') {
+                $extension = 'jpg';
+
+            } else {
+                throw new BadRequestHttpException('Unknown cover format embedded in the track file!');
+            }
+
+            // write temporary image file
+            $tmpPath = Config::get('ponyfm.files_directory') . '/tmp';
+
+            $filename = $file->getFilename() . ".cover.${extension}";
+            $imageFilePath = "${tmpPath}/${filename}";
+
+            File::put($imageFilePath, $image['data']);
+            $imageFile = new UploadedFile($imageFilePath, $filename, $image['image_mime']);
+
+            $cover = Image::upload($imageFile, $artist);
+            $coverId = $cover->id;
+
+        } else {
+            // no cover art was found - carry on
+        }
+
+        $parsedTags['cover_id'] = $coverId;
+
+
+        //==========================================================================================================
+        // Is this part of an album?
+        //==========================================================================================================
+        $albumId = null;
+        $albumName = $parsedTags['album'];
+
+        if ($albumName !== null) {
+            $albumId = $this->getAlbumId($artist->id, $albumName, $coverId);
+        }
+
+        $parsedTags['album_id'] = $albumId;
+
+
+        return [$parsedTags, $rawTags];
+    }
+
+
+    /**
+     * @param array $rawTags
+     * @return array
+     */
+    protected function getId3Tags($rawTags) {
+        if (array_key_exists('tags', $rawTags) && array_key_exists('id3v2', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['id3v2'];
+        } elseif (array_key_exists('tags', $rawTags) && array_key_exists('id3v1', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['id3v1'];
+        } else {
+            $tags = [];
+        }
+
+
+        $comment = null;
+
+        if (isset($tags['comment'])) {
+            // The "comment" tag comes in with a badly encoded string index
+            // so its array key has to be used implicitly.
+            $key = array_keys($tags['comment'])[0];
+
+            // The comment may have a null byte at the end. trim() removes it.
+            $comment = trim($tags['comment'][$key]);
+
+            // Replace the malformed comment with the "fixed" one.
+            unset($tags['comment'][$key]);
+            $tags['comment'][0] = $comment;
+        }
+
+        return [
+            [
+                'title' => isset($tags['title']) ? $tags['title'][0] : null,
+                'artist' => isset($tags['artist']) ? $tags['artist'][0] : null,
+                'band' => isset($tags['band']) ? $tags['band'][0] : null,
+                'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
+                'track_number' => isset($tags['track_number']) ? $tags['track_number'][0] : null,
+                'album' => isset($tags['album']) ? $tags['album'][0] : null,
+                'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
+                'comments' => $comment,
+                'lyrics' => isset($tags['unsynchronised_lyric']) ? $tags['unsynchronised_lyric'][0] : null,
+            ],
+            $tags
+        ];
+    }
+
+    /**
+     * @param array $rawTags
+     * @return array
+     */
+    protected function getAtomTags($rawTags) {
+        if (array_key_exists('tags', $rawTags) && array_key_exists('quicktime', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['quicktime'];
+        } else {
+            $tags = [];
+        }
+
+        $trackNumber = null;
+        if (isset($tags['track_number'])) {
+            $trackNumberComponents = explode('/', $tags['track_number'][0]);
+            $trackNumber = $trackNumberComponents[0];
+        }
+
+        return [
+            [
+                'title' => isset($tags['title']) ? $tags['title'][0] : null,
+                'artist' => isset($tags['artist']) ? $tags['artist'][0] : null,
+                'band' => isset($tags['band']) ? $tags['band'][0] : null,
+                'album_artist' => isset($tags['album_artist']) ? $tags['album_artist'][0] : null,
+                'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
+                'track_number' => $trackNumber,
+                'album' => isset($tags['album']) ? $tags['album'][0] : null,
+                'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
+                'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
+                'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
+            ],
+            $tags
+        ];
+    }
+
+    /**
+     * @param array $rawTags
+     * @return array
+     */
+    protected function getVorbisTags($rawTags) {
+        if (array_key_exists('tags', $rawTags) && array_key_exists('vorbiscomment', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['vorbiscomment'];
+        } else {
+            $tags = [];
+        }
+
+        $trackNumber = null;
+        if (isset($tags['track_number'])) {
+            $trackNumberComponents = explode('/', $tags['track_number'][0]);
+            $trackNumber = $trackNumberComponents[0];
+        }
+
+        return [
+            [
+                'title' => isset($tags['title']) ? $tags['title'][0] : null,
+                'artist' => isset($tags['artist']) ? $tags['artist'][0] : null,
+                'band' => isset($tags['band']) ? $tags['band'][0] : null,
+                'album_artist' => isset($tags['album_artist']) ? $tags['album_artist'][0] : null,
+                'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
+                'track_number' => $trackNumber,
+                'album' => isset($tags['album']) ? $tags['album'][0] : null,
+                'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
+                'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
+                'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
+            ],
+            $tags
+        ];
     }
 }

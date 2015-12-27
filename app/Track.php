@@ -46,6 +46,8 @@ class Track extends Model
         'id'                => 'integer',
         'user_id'           => 'integer',
         'license_id'        => 'integer',
+        'album_id'          => 'integer',
+        'track_number'      => 'integer',
         'genre_id'          => 'integer',
         'track_type_id'     => 'integer',
         'is_vocal'          => 'boolean',
@@ -78,7 +80,7 @@ class Track extends Model
             'tag_format' => 'metaflac',
             'tag_method' => 'updateTagsWithGetId3',
             'mime_type' => 'audio/flac',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec flac -aq 8 -f flac {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a flac -aq 8 -f flac {$target}'
         ],
         'MP3' => [
             'index' => 1,
@@ -87,7 +89,7 @@ class Track extends Model
             'tag_format' => 'id3v2.3',
             'tag_method' => 'updateTagsWithGetId3',
             'mime_type' => 'audio/mpeg',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libmp3lame -ab 320k -f mp3 {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libmp3lame -ab 320k -f mp3 {$target}'
         ],
         'OGG Vorbis' => [
             'index' => 2,
@@ -96,7 +98,7 @@ class Track extends Model
             'tag_format' => 'vorbiscomment',
             'tag_method' => 'updateTagsWithGetId3',
             'mime_type' => 'audio/ogg',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libvorbis -aq 7 -f ogg {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libvorbis -aq 7 -f ogg {$target}'
         ],
         'AAC' => [
             'index' => 3,
@@ -105,7 +107,7 @@ class Track extends Model
             'tag_format' => 'AtomicParsley',
             'tag_method' => 'updateTagsWithAtomicParsley',
             'mime_type' => 'audio/mp4',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec libfaac -ab 256k -f mp4 {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libfaac -ab 256k -f mp4 {$target}'
         ],
         'ALAC' => [
             'index' => 4,
@@ -114,7 +116,7 @@ class Track extends Model
             'tag_format' => 'AtomicParsley',
             'tag_method' => 'updateTagsWithAtomicParsley',
             'mime_type' => 'audio/mp4',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -acodec alac {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a alac {$target}'
         ],
     ];
 

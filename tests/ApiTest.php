@@ -50,7 +50,7 @@ class ApiTest extends TestCase {
                 'message'       => "This track has been accepted for processing! Poll the status_url to know when it's ready to publish. It will be published at the track_url.",
                 'id'            => "1",
                 'status_url'    => "http://ponyfm-testing.poni/api/v1/tracks/1/upload-status",
-                'track_url'     => "http://ponyfm-testing.poni/tracks/1-ponyfm-test",
+                'track_url'     => "http://ponyfm-testing.poni/tracks/1-ponyfm-test-file",
             ]);
     }
 
@@ -61,7 +61,7 @@ class ApiTest extends TestCase {
                 'message'       => "This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url.",
                 'id'            => "1",
                 'status_url'    => "http://ponyfm-testing.poni/api/v1/tracks/1/upload-status",
-                'track_url'     => "http://ponyfm-testing.poni/tracks/1-ponyfm-test",
+                'track_url'     => "http://ponyfm-testing.poni/tracks/1-ponyfm-test-file",
             ]);
 
         $this->visit('/tracks/1-ponyfm-test');
