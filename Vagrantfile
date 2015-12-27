@@ -24,4 +24,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder "../pony.fm.files", "/vagrant-files", type: "nfs"
   config.bindfs.bind_folder "/vagrant", "/vagrant"
+  
+  config.vm.provision "shell", path: "vagrant/copy-and-restart-configs.sh", run: "always"
 end
