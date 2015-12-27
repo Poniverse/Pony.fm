@@ -52,7 +52,7 @@
         <div class="left">
             <div class="description" bo-show="album.description.length">
                 <h2>Description</h2>
-                <p bo-html="album.description | linky | newlines"></p>
+                <p bo-html="album.description | linky:'_blank':{rel: 'nofollow'} | newlines"></p>
             </div>
 
             <h2>Tracks</h2>

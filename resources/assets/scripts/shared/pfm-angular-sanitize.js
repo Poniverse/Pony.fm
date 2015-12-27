@@ -1,4 +1,6 @@
 /**
+ * This is a customized version of ngSanitize for Pony.fm. The linky filter has been updated to the version found in Angular 1.5.0
+ *
  * @license AngularJS v1.2.0
  * (c) 2010-2012 Google, Inc. http://angularjs.org
  * License: MIT
@@ -537,41 +539,73 @@ angular.module('ngSanitize', []).value('$sanitize', $sanitize);
      </doc:scenario>
    </doc:example>
  */
-angular.module('ngSanitize').filter('linky', function() {
+function sanitizeText(chars) {
+  var buf = [];
+  var writer = htmlSanitizeWriter(buf, angular.noop);
+  writer.chars(chars);
+  return buf.join('');
+}
+ 
+angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
   var LINKY_URL_REGEXP =
-        /((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>]/,
-      MAILTO_REGEXP = /^mailto:/;
+        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"\u201d\u2019]/i,
+      MAILTO_REGEXP = /^mailto:/i;
 
-  return function(text, target) {
+  return function(text, target, attributes) {
     if (!text) return text;
     var match;
     var raw = text;
     var html = [];
-    // TODO(vojta): use $sanitize instead
-    var writer = htmlSanitizeWriter(html);
     var url;
     var i;
-    var properties = {};
-    if (angular.isDefined(target)) {
-      properties.target = target;
-    }
     while ((match = raw.match(LINKY_URL_REGEXP))) {
       // We can not end in these as they are sometimes found at the end of the sentence
       url = match[0];
-      // if we did not match ftp/http/mailto then assume mailto
-      if (match[2] == match[3]) url = 'mailto:' + url;
+      // if we did not match ftp/http/www/mailto then assume mailto
+      if (!match[2] && !match[4]) {
+        url = (match[3] ? 'http://' : 'mailto:') + url;
+      }
       i = match.index;
-      writer.chars(raw.substr(0, i));
-      properties.href = url;
-      writer.start('a', properties);
-      writer.chars(match[0].replace(MAILTO_REGEXP, ''));
-      writer.end('a');
+      addText(raw.substr(0, i));
+      addLink(url, match[0].replace(MAILTO_REGEXP, ''));
       raw = raw.substring(i + match[0].length);
     }
-    writer.chars(raw);
-    return html.join('');
+    addText(raw);
+    return $sanitize(html.join(''));
+
+    function addText(text) {
+      if (!text) {
+        return;
+      }
+      html.push(sanitizeText(text));
+    }
+
+    function addLink(url, text) {
+      var key;
+      html.push('<a ');
+      if (angular.isFunction(attributes)) {
+        attributes = attributes(url);
+      }
+      if (angular.isObject(attributes)) {
+        for (key in attributes) {
+          html.push(key + '="' + attributes[key] + '" ');
+        }
+      } else {
+        attributes = {};
+      }
+      if (angular.isDefined(target) && !('target' in attributes)) {
+        html.push('target="',
+                  target,
+                  '" ');
+      }
+      html.push('href="',
+                url.replace(/"/g, '&quot;'),
+                '">');
+      addText(text);
+      html.push('</a>');
+    }
   };
-});
+}]);
 
 
 })(window, window.angular);
