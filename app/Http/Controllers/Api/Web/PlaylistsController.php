@@ -25,6 +25,7 @@ use Poniverse\Ponyfm\Commands\AddTrackToPlaylistCommand;
 use Poniverse\Ponyfm\Commands\CreatePlaylistCommand;
 use Poniverse\Ponyfm\Commands\DeletePlaylistCommand;
 use Poniverse\Ponyfm\Commands\EditPlaylistCommand;
+use Poniverse\Ponyfm\Commands\RemoveTrackFromPlaylistCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Image;
 use Poniverse\Ponyfm\Playlist;
@@ -54,6 +55,11 @@ class PlaylistsController extends ApiControllerBase
     public function postAddTrack($id)
     {
         return $this->execute(new AddTrackToPlaylistCommand($id, Input::get('track_id')));
+    }
+
+    public function postRemoveTrack($id)
+    {
+        return $this->execute(new RemoveTrackFromPlaylistCommand($id, Input::get('track_id')));
     }
 
     public function getIndex()

@@ -119,6 +119,7 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::post('/playlists/delete/{id}', 'Api\Web\PlaylistsController@postDelete');
         Route::post('/playlists/edit/{id}', 'Api\Web\PlaylistsController@postEdit');
         Route::post('/playlists/{id}/add-track', 'Api\Web\PlaylistsController@postAddTrack');
+        Route::post('/playlists/{id}/remove-track', 'Api\Web\PlaylistsController@postRemoveTrack');
 
         Route::post('/comments/{type}/{id}', 'Api\Web\CommentsController@postCreate')->where('id', '\d+');
 
