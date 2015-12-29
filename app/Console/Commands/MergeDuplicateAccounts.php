@@ -73,6 +73,7 @@ class MergeDuplicateAccounts extends Command
         $usernames = DB::table('users')
             ->select(['username', DB::raw('COUNT(*) as count')])
             ->whereNull('disabled_at')
+            ->whereNotNull('username')
             ->groupBy(DB::raw('LOWER(username)'))
             ->having('count', '>=', 2)
             ->lists('username');
