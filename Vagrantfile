@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_version = '0.2.1'
   config.vm.provider "virtualbox" do |v|
     v.cpus = 4
-    v.memory = 2048
+    v.memory = 1024
   end
 
   config.vm.define 'default' do |node|
