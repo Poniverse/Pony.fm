@@ -53,11 +53,15 @@ class DisabledAccountCheck
      */
     public function handle($request, Closure $next)
     {
+        // TODO:    don't automatically log the user out some time after
+        //          issue #29 is fixed or when disabled_at starts being used for
+        //          something other than merged accounts.
         if ($this->auth->check()
             && $this->auth->user()->disabled_at !== null
             && !($request->getMethod() === 'POST' && $request->getRequestUri() == '/auth/logout')
         ){
-            return Response::view('home.account-disabled', ['username' => $this->auth->user()->username], 403);
+            $this->auth->logout();
+//            return Response::view('home.account-disabled', ['username' => $this->auth->user()->username], 403);
         }
 
         return $next($request);
