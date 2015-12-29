@@ -112,6 +112,7 @@ class ArtistsController extends ApiControllerBase
     public function getShow($slug)
     {
         $user = User::whereSlug($slug)
+            ->whereNull('disabled_at')
             ->userDetails()
             ->with([
                 'comments' => function ($query) {

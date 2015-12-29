@@ -36,6 +36,7 @@ class Kernel extends HttpKernel
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \Poniverse\Ponyfm\Http\Middleware\VerifyCsrfToken::class,
+        \Poniverse\Ponyfm\Http\Middleware\DisabledAccountCheck::class,
         \Poniverse\Ponyfm\Http\Middleware\Profiler::class,
     ];
 

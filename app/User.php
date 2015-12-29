@@ -46,6 +46,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'avatar_id'                 => 'integer',
         'is_archived'               => 'boolean',
     ];
+    protected $dates = ['created_at', 'updated_at', 'disabled_at'];
+    protected $hidden = ['disabled_at'];
 
     public function scopeUserDetails($query)
     {

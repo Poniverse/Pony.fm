@@ -18,37 +18,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-use App;
-use Poniverse\Ponyfm\User;
-use View;
-use Redirect;
-
-class ArtistsController extends Controller
+class AddAccountDisabledColumn extends Migration
 {
-    public function getIndex()
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
     {
-        return View::make('artists.index');
+        Schema::table('users', function(Blueprint $table){
+            $table->dateTime('disabled_at')->nullable()->index();
+        });
     }
 
-    public function getProfile($slug)
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
     {
-        $user = User::whereSlug($slug)->whereNull('disabled_at')->first();
-        if (!$user) {
-            App::abort('404');
-        }
-
-        return View::make('artists.profile');
-    }
-
-    public function getShortlink($id)
-    {
-        $user = User::find($id);
-        if (!$user || $user->disabled_at !== NULL) {
-            App::abort('404');
-        }
-
-        return Redirect::action('ArtistsController@getProfile', [$user->slug]);
+        Schema::table('users', function(Blueprint $table){
+            $table->dropColumn('disabled_at');
+        });
     }
 }
