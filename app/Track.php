@@ -238,6 +238,10 @@ class Track extends Model
             $processed[] = Track::mapPublicTrackSummary($track);
         }
 
+        // Songs that get played more should drop down
+        // in the list so they don't hog the top spots.
+        array_reverse($processed);
+
         return $processed;
     }
 
