@@ -70,7 +70,7 @@ class AuthenticateOAuth
         $poniverseUser = $this->poniverse->getUser();
 
         $user = User::findOrCreate($poniverseUser['username'], $poniverseUser['display_name'], $poniverseUser['email']);
-        Auth::login($user);
+        Auth::onceUsingId($user);
 
         return $next($request);
     }
