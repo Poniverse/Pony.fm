@@ -185,8 +185,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-ar
 Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('{slug}', 'ArtistsController@getProfile');
-Route::get('{slug}/content', 'ArtistsController@getProfile');
-Route::get('{slug}/favourites', 'ArtistsController@getProfile');
+Route::get('{slug}/content', 'ArtistsController@getContent');
+Route::get('{slug}/favourites', 'ArtistsController@getFavourites');
 
 Route::get('/', 'HomeController@getIndex');
 

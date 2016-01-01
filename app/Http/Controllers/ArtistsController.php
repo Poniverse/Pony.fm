@@ -32,6 +32,14 @@ class ArtistsController extends Controller
         return View::make('artists.index');
     }
 
+    public function getFavourites($slug) {
+        return $this->getProfile($slug);
+    }
+
+    public function getContent($slug) {
+        return $this->getProfile($slug);
+    }
+
     public function getProfile($slug)
     {
         $user = User::whereSlug($slug)->whereNull('disabled_at')->first();
