@@ -20,8 +20,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", path: "vagrant/install.sh"
 
-  config.vm.network "forwarded_port", guest: 3306, host: 33060
-
   config.vm.synced_folder "../pony.fm.files", "/vagrant-files", type: "nfs"
   config.bindfs.bind_folder "/vagrant", "/vagrant"
   
