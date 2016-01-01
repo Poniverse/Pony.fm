@@ -8,7 +8,6 @@
         "php": ">=7.0.1",
         "laravel/framework": "5.1.*",
         "codescale/ffmpeg-php": "2.7.0",
-        "kriswallsmith/assetic": "1.2.*@dev",
         "intouch/laravel-newrelic": "*",
         "barryvdh/laravel-ide-helper": "^2.1",
         "guzzlehttp/guzzle": "~6.0",
