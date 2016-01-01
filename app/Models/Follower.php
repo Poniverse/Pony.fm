@@ -18,18 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TrackType extends Model
+class Follower extends Model
 {
-    protected $table = 'track_types';
+    protected $table = 'followers';
 
-    const ORIGINAL_TRACK = 1;
-    const OFFICIAL_TRACK_REMIX = 2;
-    const FAN_TRACK_REMIX = 3;
-    const PONIFIED_TRACK = 4;
-    const OFFICIAL_AUDIO_REMIX = 5;
-    const UNCLASSIFIED_TRACK = 6;
+    public $timestamps = false;
 }

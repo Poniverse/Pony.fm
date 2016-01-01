@@ -23,7 +23,7 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 use Input;
 use Poniverse\Ponyfm\Commands\DeleteGenreCommand;
 use Poniverse\Ponyfm\Commands\RenameGenreCommand;
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Response;
 

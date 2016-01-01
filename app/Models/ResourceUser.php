@@ -18,17 +18,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class ResourceUser extends Model
 {
-    protected $table = 'roles';
+    protected $table = 'resource_users';
     public $timestamps = false;
 
-    public function users()
+    public static function get($userId, $resourceType, $resourceId)
     {
-        return $this->belongsToMany(User::class, 'role_user');
+        $resourceIdColumn = $resourceType . '_id';
+        $existing = self::where($resourceIdColumn, '=', $resourceId)->where('user_id', '=', $userId)->first();
+        if ($existing) {
+            return $existing;
+        }
+
+        $item = new ResourceUser();
+        $item->{$resourceIdColumn} = $resourceId;
+        $item->user_id = $userId;
+
+        return $item;
+    }
+
+    public static function getId($userId, $resourceType, $resourceId)
+    {
+        $item = self::get($userId, $resourceType, $resourceId);
+        if ($item->exists) {
+            return $item->id;
+        }
+
+        $item->save();
+
+        return $item->id;
     }
 }

@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Playlist;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\Track;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Models\Album;
 use Illuminate\Support\Facades\Auth;
 
 class DeleteAlbumCommand extends CommandBase

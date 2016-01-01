@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 use Auth;
 use Config;
 use DB;

@@ -20,12 +20,12 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
-use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
-use Poniverse\Ponyfm\Genre;
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\Genre;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Config;

@@ -24,7 +24,7 @@ use Carbon\Carbon;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\TrackFile;
 
 class ClearTrackCache extends Command
 {

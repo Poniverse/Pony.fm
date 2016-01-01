@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Auth;
 use Cache;
@@ -411,52 +411,52 @@ class Track extends Model
 
     public function genre()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Genre');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Genre');
     }
 
     public function trackType()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\TrackType', 'track_type_id');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\TrackType', 'track_type_id');
     }
 
     public function comments()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
     }
 
     public function favourites()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Favourite');
+        return $this->hasMany('Poniverse\Ponyfm\Models\Favourite');
     }
 
     public function cover()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Image');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Image');
     }
 
     public function showSongs()
     {
-        return $this->belongsToMany('Poniverse\Ponyfm\ShowSong');
+        return $this->belongsToMany('Poniverse\Ponyfm\Models\ShowSong');
     }
 
     public function users()
     {
-        return $this->hasMany('Poniverse\Ponyfm\ResourceUser');
+        return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser');
     }
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\User');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
     }
 
     public function album()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Album');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Album');
     }
 
     public function trackFiles()
     {
-        return $this->hasMany('Poniverse\Ponyfm\TrackFile');
+        return $this->hasMany('Poniverse\Ponyfm\Models\TrackFile');
     }
 
     public function getYearAttribute()

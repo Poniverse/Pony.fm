@@ -18,32 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Poniverse\Ponyfm\Models\Track;
-use Illuminate\Database\Migrations\Migration;
+namespace Poniverse\Ponyfm\Models;
 
-class CreateTrackHashes extends Migration
+use Illuminate\Database\Eloquent\Model;
+
+class License extends Model
 {
-    public function up()
-    {
-        Schema::table('tracks', function ($table) {
-            $table->string('hash', 32)->nullable()->indexed();
-        });
-
-        foreach (Track::with('user')->get() as $track) {
-            $track->updateHash();
-            $track->save();
-        }
-
-        Schema::table('tracks', function ($table) {
-            $table->string('hash', 32)->notNullable()->change();
-        });
-
-    }
-
-    public function down()
-    {
-        Schema::table('tracks', function ($table) {
-            $table->dropColumn('hash');
-        });
-    }
+    protected $table = 'licenses';
 }

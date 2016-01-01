@@ -22,11 +22,11 @@ namespace Poniverse\Ponyfm\Providers;
 
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Policies\GenrePolicy;
 use Poniverse\Ponyfm\Policies\TrackPolicy;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
 
 class AuthServiceProvider extends ServiceProvider
 {

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
@@ -152,7 +152,7 @@ class Playlist extends Model
     public function tracks()
     {
         return $this
-            ->belongsToMany('Poniverse\Ponyfm\Track')
+            ->belongsToMany('Poniverse\Ponyfm\Models\Track')
             ->withPivot('position')
             ->withTimestamps()
             ->orderBy('position', 'asc');
@@ -166,22 +166,22 @@ class Playlist extends Model
 
     public function users()
     {
-        return $this->hasMany('Poniverse\Ponyfm\ResourceUser');
+        return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser');
     }
 
     public function comments()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
     }
 
     public function pins()
     {
-        return $this->hasMany('Poniverse\Ponyfm\PinnedPlaylist');
+        return $this->hasMany('Poniverse\Ponyfm\Models\PinnedPlaylist');
     }
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\User');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
     }
 
     public function hasPinFor($userId)

@@ -24,7 +24,7 @@ use Auth;
 use Closure;
 use GuzzleHttp;
 use Poniverse;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class AuthenticateOAuth

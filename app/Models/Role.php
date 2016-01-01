@@ -18,11 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ShowSong extends Model
+class Role extends Model
 {
-    protected $table = 'show_songs';
+    protected $table = 'roles';
+    public $timestamps = false;
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'role_user');
+    }
 }

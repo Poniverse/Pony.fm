@@ -42,7 +42,7 @@
         <div class="player loading {{Auth::check() ? 'can-favourite' : ''}} {{$user['is_favourited'] ? 'favourited' : ''}}" data-track-id="{{ $track->id }}" data-duration="{{ $track->duration * 1000 }}">
             <div class="play" disabled="disabled">
                 <div class="button"><i class="icon-play"></i></div>
-                <img src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Image::SMALL) }}" />
+                <img src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::SMALL) }}" />
             </div>
             <div class="meta">
                 @if (Auth::check())

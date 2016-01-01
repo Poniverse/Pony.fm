@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Playlist;
+use Poniverse\Ponyfm\Models\Playlist;
 use Illuminate\Support\Facades\Auth;
 
 class DeletePlaylistCommand extends CommandBase

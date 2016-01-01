@@ -20,9 +20,9 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
-use Poniverse\Ponyfm\ShowSong;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\TrackType;
+use Poniverse\Ponyfm\Models\ShowSong;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackType;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;

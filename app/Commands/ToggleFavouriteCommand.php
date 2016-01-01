@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Favourite;
-use Poniverse\Ponyfm\ResourceUser;
+use Poniverse\Ponyfm\Models\Favourite;
+use Poniverse\Ponyfm\Models\ResourceUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

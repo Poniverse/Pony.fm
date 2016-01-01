@@ -20,11 +20,11 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\License;
-use Poniverse\Ponyfm\ShowSong;
-use Poniverse\Ponyfm\TrackType;
+use Poniverse\Ponyfm\Models\License;
+use Poniverse\Ponyfm\Models\ShowSong;
+use Poniverse\Ponyfm\Models\TrackType;
 use Illuminate\Support\Facades\DB;
 
 class TaxonomiesController extends ApiControllerBase

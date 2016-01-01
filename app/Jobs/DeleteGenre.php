@@ -21,11 +21,11 @@
 namespace Poniverse\Ponyfm\Jobs;
 
 use Auth;
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Models\Genre;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
 
 class DeleteGenre extends Job implements SelfHandling, ShouldQueue

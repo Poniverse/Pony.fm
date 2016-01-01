@@ -1,5 +1,5 @@
 <?php
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 
 /**
  * Pony.fm - A community for pony fan music.

@@ -30,7 +30,7 @@ return [
     ],
 
     'stripe' => [
-        'model'  => Poniverse\Ponyfm\User::class,
+        'model'  => Poniverse\Ponyfm\Models\User::class,
         'key'    => '',
         'secret' => '',
     ],

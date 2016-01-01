@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\ResourceLogItem;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
 use DB;
 use Exception;
 use Illuminate\Console\Command;

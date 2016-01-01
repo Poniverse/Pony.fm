@@ -49,7 +49,7 @@
             @if (Auth::check())
                 <div class="user-details dropdown">
                     <a class="avatar dropdown-toggle" href="#">
-                        <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Image::THUMBNAIL)}}" />
+                        <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
                         <span><i class="icon-chevron-down"></i></span>
                     </a>
                     <ul class="dropdown-menu">

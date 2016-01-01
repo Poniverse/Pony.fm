@@ -18,32 +18,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Poniverse\Ponyfm\Models\Track;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTrackHashes extends Migration
+class UpdateModelNamespacesInRevisions extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
-        Schema::table('tracks', function ($table) {
-            $table->string('hash', 32)->nullable()->indexed();
-        });
-
-        foreach (Track::with('user')->get() as $track) {
-            $track->updateHash();
-            $track->save();
-        }
-
-        Schema::table('tracks', function ($table) {
-            $table->string('hash', 32)->notNullable()->change();
-        });
-
+        DB::table('revisions')
+            ->update(['revisionable_type' => DB::raw("replace(revisionable_type, 'Poniverse\\\\Ponyfm', 'Poniverse\\\\Ponyfm\\\\Models')")]);
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
-        Schema::table('tracks', function ($table) {
-            $table->dropColumn('hash');
-        });
+        DB::table('revisions')
+          ->update(['revisionable_type' => DB::raw("replace(revisionable_type, 'Poniverse\\\\Ponyfm\\\\Models', 'Poniverse\\\\Ponyfm')")]);
     }
 }

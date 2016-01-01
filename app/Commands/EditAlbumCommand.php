@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Album;
-use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Image;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;

@@ -33,8 +33,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackFile;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
@@ -91,12 +91,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function avatar()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Image');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Image');
     }
 
     public function users()
     {
-        return $this->hasMany('Poniverse\Ponyfm\ResourceUser', 'artist_id');
+        return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser', 'artist_id');
     }
 
     public function roles()
@@ -106,12 +106,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function comments()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Comment', 'profile_id')->orderBy('created_at', 'desc');
+        return $this->hasMany('Poniverse\Ponyfm\Models\Comment', 'profile_id')->orderBy('created_at', 'desc');
     }
 
     public function tracks()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Track', 'user_id');
+        return $this->hasMany('Poniverse\Ponyfm\Models\Track', 'user_id');
     }
 
     public function getIsArchivedAttribute()

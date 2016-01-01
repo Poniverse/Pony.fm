@@ -18,21 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PinnedPlaylist extends Model
+class TrackType extends Model
 {
-    protected $table = 'pinned_playlists';
+    protected $table = 'track_types';
 
-    public function user()
-    {
-        return $this->belongsTo('Poniverse\Ponyfm\User');
-    }
-
-    public function playlist()
-    {
-        return $this->belongsTo('Poniverse\Ponyfm\Playlist');
-    }
+    const ORIGINAL_TRACK = 1;
+    const OFFICIAL_TRACK_REMIX = 2;
+    const FAN_TRACK_REMIX = 3;
+    const PONIFIED_TRACK = 4;
+    const OFFICIAL_AUDIO_REMIX = 5;
+    const UNCLASSIFIED_TRACK = 6;
 }

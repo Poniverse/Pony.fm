@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -34,27 +34,27 @@ class Comment extends Model
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\User');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
     }
 
     public function track()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Track');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Track');
     }
 
     public function album()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Album');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Album');
     }
 
     public function playlist()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Playlist');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Playlist');
     }
 
     public function profile()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\User', 'profile_id');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\User', 'profile_id');
     }
 
     public static function mapPublic($comment)

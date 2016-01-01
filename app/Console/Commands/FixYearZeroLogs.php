@@ -21,7 +21,7 @@
 namespace Poniverse\Ponyfm\Console\Commands;
 
 use Carbon\Carbon;
-use Poniverse\Ponyfm\ResourceLogItem;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Illuminate\Console\Command;
 
 class FixYearZeroLogs extends Command

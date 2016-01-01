@@ -21,7 +21,7 @@
 namespace Poniverse\Ponyfm\Console\Commands;
 
 use Illuminate\Console\Command;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 
 class RebuildArtists extends Command
 {

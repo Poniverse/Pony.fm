@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class License extends Model
+class ShowSong extends Model
 {
-    protected $table = 'licenses';
+    protected $table = 'show_songs';
 }

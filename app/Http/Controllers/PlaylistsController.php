@@ -21,9 +21,9 @@
 namespace Poniverse\Ponyfm\Http\Controllers;
 
 use App;
-use Poniverse\Ponyfm\Playlist;
-use Poniverse\Ponyfm\ResourceLogItem;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
+use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\PlaylistDownloader;
 use Auth;
 use Illuminate\Support\Facades\Redirect;

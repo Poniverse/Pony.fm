@@ -20,11 +20,11 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Album;
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\TrackType;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackType;
+use Poniverse\Ponyfm\Models\User;
 use Auth;
 use DB;
 

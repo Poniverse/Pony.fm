@@ -24,8 +24,8 @@ use File;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackFile;
 
 class RebuildTrackCache extends Command
 {

@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Jobs\DeleteGenre;
 use Validator;
 

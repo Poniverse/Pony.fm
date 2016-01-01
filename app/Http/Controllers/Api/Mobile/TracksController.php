@@ -21,7 +21,7 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Mobile;
 
 use Poniverse\Ponyfm\Http\Controllers\Controller;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Track;
 use Response;
 
 class TracksController extends Controller

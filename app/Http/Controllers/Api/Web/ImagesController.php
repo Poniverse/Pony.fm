@@ -21,7 +21,7 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Models\Image;
 use Cover;
 use Illuminate\Support\Facades\Response;
 

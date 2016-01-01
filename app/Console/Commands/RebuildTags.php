@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Track;
 use Illuminate\Console\Command;
 
 class RebuildTags extends Command

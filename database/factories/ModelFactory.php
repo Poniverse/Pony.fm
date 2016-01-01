@@ -29,9 +29,9 @@
 |
 */
 
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 
-$factory->define(Poniverse\Ponyfm\User::class, function (\Faker\Generator $faker) {
+$factory->define(Poniverse\Ponyfm\Models\User::class, function (\Faker\Generator $faker) {
     return [
         'username'      => $faker->userName,
         'display_name'  => $faker->userName,
@@ -45,14 +45,14 @@ $factory->define(Poniverse\Ponyfm\User::class, function (\Faker\Generator $faker
     ];
 });
 
-$factory->define(\Poniverse\Ponyfm\Track::class, function(\Faker\Generator $faker) {
+$factory->define(\Poniverse\Ponyfm\Models\Track::class, function(\Faker\Generator $faker) {
     $user = factory(User::class)->create();
 
     return [
         'user_id'           => $user->id,
         'hash'              => $faker->md5,
         'title'             => $faker->sentence(5),
-        'track_type_id'     => \Poniverse\Ponyfm\TrackType::UNCLASSIFIED_TRACK,
+        'track_type_id'     => \Poniverse\Ponyfm\Models\TrackType::UNCLASSIFIED_TRACK,
         'genre'             => $faker->word,
         'album'             => $faker->sentence(5),
         'track_number'      => null,

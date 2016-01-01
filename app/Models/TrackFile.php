@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Config;
 use Helpers;
@@ -36,7 +36,7 @@ class TrackFile extends Model
 
     public function track()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Track')->withTrashed();
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Track')->withTrashed();
     }
 
     /**

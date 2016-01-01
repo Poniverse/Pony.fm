@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace Poniverse\Ponyfm\Models;
 
 use Exception;
 use Helpers;
@@ -62,27 +62,27 @@ class Album extends Model
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\User');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
     }
 
     public function users()
     {
-        return $this->hasMany('Poniverse\Ponyfm\ResourceUser');
+        return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser');
     }
 
     public function favourites()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Favourite');
+        return $this->hasMany('Poniverse\Ponyfm\Models\Favourite');
     }
 
     public function cover()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Image');
+        return $this->belongsTo('Poniverse\Ponyfm\Models\Image');
     }
 
     public function tracks()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Track')->orderBy('track_number', 'asc');
+        return $this->hasMany('Poniverse\Ponyfm\Models\Track')->orderBy('track_number', 'asc');
     }
 
     public function trackFiles() {
@@ -91,7 +91,7 @@ class Album extends Model
 
     public function comments()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
     }
 
     public static function mapPublicAlbumShow(Album $album)

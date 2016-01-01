@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Follower;
-use Poniverse\Ponyfm\ResourceUser;
+use Poniverse\Ponyfm\Models\Follower;
+use Poniverse\Ponyfm\Models\ResourceUser;
 use Illuminate\Support\Facades\Auth;
 
 class ToggleFollowingCommand extends CommandBase

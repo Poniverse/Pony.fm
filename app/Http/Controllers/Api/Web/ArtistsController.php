@@ -21,12 +21,12 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Poniverse\Ponyfm\Album;
-use Poniverse\Ponyfm\Comment;
-use Poniverse\Ponyfm\Favourite;
+use Poniverse\Ponyfm\Models\Comment;
+use Poniverse\Ponyfm\Models\Favourite;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
 use Cover;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
@@ -59,10 +59,10 @@ class ArtistsController extends ApiControllerBase
         $albums = [];
 
         foreach ($favs as $fav) {
-            if ($fav->type == 'Poniverse\Ponyfm\Track') {
+            if ($fav->type == 'Poniverse\Ponyfm\Models\Track') {
                 $tracks[] = Track::mapPublicTrackSummary($fav->track);
             } else {
-                if ($fav->type == 'Poniverse\Ponyfm\Album') {
+                if ($fav->type == 'Poniverse\Ponyfm\Models\Album') {
                     $albums[] = Album::mapPublicAlbumSummary($fav->album);
                 }
             }

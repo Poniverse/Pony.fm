@@ -21,7 +21,7 @@
 namespace Poniverse\Ponyfm\Http\Controllers;
 
 use App;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 use View;
 use Redirect;
 

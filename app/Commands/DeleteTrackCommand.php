@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Track;
 
 class DeleteTrackCommand extends CommandBase
 {

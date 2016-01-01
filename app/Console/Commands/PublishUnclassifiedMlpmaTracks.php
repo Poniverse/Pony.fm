@@ -23,8 +23,8 @@ namespace Poniverse\Ponyfm\Console\Commands;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\TrackType;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackType;
 
 class PublishUnclassifiedMlpmaTracks extends Command
 {

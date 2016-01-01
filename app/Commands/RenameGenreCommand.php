@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Gate;
 use Illuminate\Support\Str;
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Models\Genre;
 use Validator;
 
 class RenameGenreCommand extends CommandBase

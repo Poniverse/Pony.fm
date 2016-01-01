@@ -26,7 +26,7 @@ use File;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\TrackFile;
 
 
 /**
