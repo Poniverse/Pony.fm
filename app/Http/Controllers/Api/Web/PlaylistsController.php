@@ -29,9 +29,9 @@ use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
+use Auth;
+use Input;
+use Response;
 use Poniverse\Ponyfm\Models\Track;
 
 class PlaylistsController extends ApiControllerBase

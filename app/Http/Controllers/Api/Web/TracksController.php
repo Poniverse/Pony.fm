@@ -22,13 +22,12 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use File;
-use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
 use Poniverse\Ponyfm\Commands\DeleteTrackCommand;
 use Poniverse\Ponyfm\Commands\EditTrackCommand;
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\ResourceLogItem;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\TrackFile;
 use Poniverse\Ponyfm\Models\Track;
 use Auth;
