@@ -25,6 +25,19 @@ use Illuminate\Database\Eloquent\Model;
 use Config;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * Poniverse\Ponyfm\Models\Image
+ *
+ * @property integer $id
+ * @property string $filename
+ * @property string $mime
+ * @property string $extension
+ * @property integer $size
+ * @property string $hash
+ * @property integer $uploaded_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ */
 class Image extends Model
 {
     const NORMAL = 1;

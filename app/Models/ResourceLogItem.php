@@ -26,6 +26,19 @@ use Auth;
 use DB;
 use Request;
 
+/**
+ * Poniverse\Ponyfm\Models\ResourceLogItem
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property integer $log_type
+ * @property string $ip_address
+ * @property integer $track_format_id
+ * @property integer $track_id
+ * @property integer $album_id
+ * @property integer $playlist_id
+ * @property \Carbon\Carbon $created_at
+ */
 class ResourceLogItem extends Model
 {
     protected $table = 'resource_log_items';

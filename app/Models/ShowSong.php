@@ -22,6 +22,14 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\ShowSong
+ *
+ * @property integer $id
+ * @property string $title
+ * @property string $lyrics
+ * @property string $slug
+ */
 class ShowSong extends Model
 {
     protected $table = 'show_songs';

@@ -32,6 +32,33 @@ use Poniverse\Ponyfm\Traits\TrackCollection;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
+/**
+ * Poniverse\Ponyfm\Models\Album
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property string $title
+ * @property string $slug
+ * @property string $description
+ * @property integer $cover_id
+ * @property integer $track_count
+ * @property integer $view_count
+ * @property integer $download_count
+ * @property integer $favourite_count
+ * @property integer $comment_count
+ * @property \Carbon\Carbon $created_at
+ * @property string $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property-read \Poniverse\Ponyfm\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\ResourceUser[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Favourite[] $favourites
+ * @property-read \Poniverse\Ponyfm\Models\Image $cover
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Comment[] $comments
+ * @property-read mixed $url
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album userDetails()
+ */
 class Album extends Model
 {
     use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait;

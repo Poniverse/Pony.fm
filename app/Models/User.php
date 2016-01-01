@@ -31,6 +31,37 @@ use Auth;
 use Illuminate\Support\Str;
 use Venturecraft\Revisionable\RevisionableTrait;
 
+/**
+ * Poniverse\Ponyfm\Models\User
+ *
+ * @property integer $id
+ * @property string $display_name
+ * @property string $username
+ * @property boolean $sync_names
+ * @property string $email
+ * @property string $gravatar
+ * @property string $slug
+ * @property boolean $uses_gravatar
+ * @property boolean $can_see_explicit_content
+ * @property string $bio
+ * @property integer $track_count
+ * @property integer $comment_count
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $avatar_id
+ * @property string $remember_token
+ * @property boolean $is_archived
+ * @property \Carbon\Carbon $disabled_at
+ * @property-read \Poniverse\Ponyfm\Models\Image $avatar
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\ResourceUser[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Comment[] $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
+ * @property-read mixed $url
+ * @property-read mixed $message_url
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User userDetails()
+ */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable
 {
     use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait;

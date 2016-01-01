@@ -26,6 +26,24 @@ use Illuminate\Database\Eloquent\Model;
 use App;
 use File;
 
+/**
+ * Poniverse\Ponyfm\Models\TrackFile
+ *
+ * @property integer $id
+ * @property integer $track_id
+ * @property boolean $is_master
+ * @property string $format
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property boolean $is_cacheable
+ * @property boolean $status
+ * @property string $expires_at
+ * @property integer $filesize
+ * @property-read \Poniverse\Ponyfm\Models\Track $track
+ * @property-read mixed $extension
+ * @property-read mixed $url
+ * @property-read mixed $size
+ */
 class TrackFile extends Model
 {
     // used for the "status" property

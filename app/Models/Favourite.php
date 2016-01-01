@@ -22,6 +22,22 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\Favourite
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property integer $track_id
+ * @property integer $album_id
+ * @property integer $playlist_id
+ * @property string $created_at
+ * @property-read \Poniverse\Ponyfm\Models\User $user
+ * @property-read \Poniverse\Ponyfm\Models\Track $track
+ * @property-read \Poniverse\Ponyfm\Models\Album $album
+ * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
+ * @property-read mixed $resource
+ * @property-read mixed $type
+ */
 class Favourite extends Model
 {
     protected $table = 'favourites';

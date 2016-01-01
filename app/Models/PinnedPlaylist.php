@@ -22,6 +22,17 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\PinnedPlaylist
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property integer $playlist_id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \Poniverse\Ponyfm\Models\User $user
+ * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
+ */
 class PinnedPlaylist extends Model
 {
     protected $table = 'pinned_playlists';

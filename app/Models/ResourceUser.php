@@ -22,6 +22,22 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\ResourceUser
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property integer $track_id
+ * @property integer $album_id
+ * @property integer $playlist_id
+ * @property integer $artist_id
+ * @property boolean $is_followed
+ * @property boolean $is_favourited
+ * @property boolean $is_pinned
+ * @property integer $view_count
+ * @property integer $play_count
+ * @property integer $download_count
+ */
 class ResourceUser extends Model
 {
     protected $table = 'resource_users';

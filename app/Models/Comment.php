@@ -23,6 +23,27 @@ namespace Poniverse\Ponyfm\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Poniverse\Ponyfm\Models\Comment
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property string $ip_address
+ * @property string $content
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property integer $profile_id
+ * @property integer $track_id
+ * @property integer $album_id
+ * @property integer $playlist_id
+ * @property-read \Poniverse\Ponyfm\Models\User $user
+ * @property-read \Poniverse\Ponyfm\Models\Track $track
+ * @property-read \Poniverse\Ponyfm\Models\Album $album
+ * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
+ * @property-read \Poniverse\Ponyfm\Models\User $profile
+ * @property-read mixed $resource
+ */
 class Comment extends Model
 {
 

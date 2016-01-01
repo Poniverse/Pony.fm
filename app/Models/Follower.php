@@ -22,6 +22,15 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\Follower
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property integer $artist_id
+ * @property integer $playlist_id
+ * @property string $created_at
+ */
 class Follower extends Model
 {
     protected $table = 'followers';

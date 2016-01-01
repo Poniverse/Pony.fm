@@ -22,6 +22,13 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\TrackType
+ *
+ * @property integer $id
+ * @property string $title
+ * @property string $editor_title
+ */
 class TrackType extends Model
 {
     protected $table = 'track_types';

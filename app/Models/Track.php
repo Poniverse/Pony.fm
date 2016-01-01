@@ -36,6 +36,63 @@ use Illuminate\Support\Str;
 use Log;
 use Venturecraft\Revisionable\RevisionableTrait;
 
+/**
+ * Poniverse\Ponyfm\Models\Track
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property integer $license_id
+ * @property integer $genre_id
+ * @property integer $track_type_id
+ * @property string $title
+ * @property string $slug
+ * @property string $description
+ * @property string $lyrics
+ * @property boolean $is_vocal
+ * @property boolean $is_explicit
+ * @property integer $cover_id
+ * @property boolean $is_downloadable
+ * @property float $duration
+ * @property integer $play_count
+ * @property integer $view_count
+ * @property integer $download_count
+ * @property integer $favourite_count
+ * @property integer $comment_count
+ * @property \Carbon\Carbon $created_at
+ * @property string $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property \Carbon\Carbon $published_at
+ * @property \Carbon\Carbon $released_at
+ * @property integer $album_id
+ * @property integer $track_number
+ * @property boolean $is_latest
+ * @property string $hash
+ * @property boolean $is_listed
+ * @property string $source
+ * @property string $original_tags
+ * @property string $metadata
+ * @property-read \Poniverse\Ponyfm\Models\Genre $genre
+ * @property-read \Poniverse\Ponyfm\Models\TrackType $trackType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Comment[] $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Favourite[] $favourites
+ * @property-read \Poniverse\Ponyfm\Models\Image $cover
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\ShowSong[] $showSongs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\ResourceUser[] $users
+ * @property-read \Poniverse\Ponyfm\Models\User $user
+ * @property-read \Poniverse\Ponyfm\Models\Album $album
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\TrackFile[] $trackFiles
+ * @property-read mixed $year
+ * @property-read mixed $url
+ * @property-read mixed $download_directory
+ * @property-read mixed $status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track userDetails()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track published()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track listed()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track explicitFilter()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track withComments()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track mlpma()
+ */
 class Track extends Model
 {
     use SoftDeletes;

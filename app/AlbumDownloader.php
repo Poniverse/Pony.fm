@@ -20,11 +20,19 @@
 
 namespace Poniverse\Ponyfm;
 
+use Poniverse\Ponyfm\Models\Album;
 use ZipStream;
 
 class AlbumDownloader
 {
+    /**
+     * @var Album
+     */
     private $_album;
+
+    /**
+     * @var string
+     */
     private $_format;
 
     function __construct($album, $format)

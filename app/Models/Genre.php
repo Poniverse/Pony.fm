@@ -27,6 +27,20 @@ use Poniverse\Ponyfm\Traits\SlugTrait;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 
+/**
+ * Poniverse\Ponyfm\Models\Genre
+ *
+ * @property integer $id
+ * @property string $name
+ * @property string $slug
+ * @property string $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
+ * @property-read \Poniverse\Ponyfm\Models\Track $trackCountRelation
+ * @property-read mixed $track_count
+ * @property-read mixed $url
+ * @property-write mixed $title
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ */
 class Genre extends Model
 {
     protected $table = 'genres';

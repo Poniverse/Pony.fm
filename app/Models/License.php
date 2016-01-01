@@ -22,6 +22,16 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\License
+ *
+ * @property integer $id
+ * @property string $title
+ * @property string $description
+ * @property boolean $affiliate_distribution
+ * @property boolean $open_distribution
+ * @property boolean $remix
+ */
 class License extends Model
 {
     protected $table = 'licenses';

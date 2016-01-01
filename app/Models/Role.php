@@ -22,6 +22,13 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\Role
+ *
+ * @property integer $id
+ * @property string $name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\User[] $users
+ */
 class Role extends Model
 {
     protected $table = 'roles';

@@ -20,11 +20,19 @@
 
 namespace Poniverse\Ponyfm;
 
+use Poniverse\Ponyfm\Models\Playlist;
 use ZipStream;
 
 class PlaylistDownloader
 {
+    /**
+     * @var Playlist
+     */
     private $_playlist;
+
+    /**
+     * @var string
+     */
     private $_format;
 
     function __construct($playlist, $format)
