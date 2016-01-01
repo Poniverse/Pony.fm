@@ -64,7 +64,7 @@ class AuthenticateOAuth
     public function handle(Request $request, Closure $next, $requiredScope)
     {
         // Ensure this is a valid OAuth client.
-        $accessToken = $request->get('access_token');
+        $accessToken = $this->determineAccessToken($request, false);
 
         // check that access token is valid at Poniverse.net
         $accessTokenInfo = $this->poniverse->getAccessTokenInfo($accessToken);
@@ -87,5 +87,21 @@ class AuthenticateOAuth
         $this->auth->onceUsingId($user);
 
         return $next($request);
+    }
+
+
+    private function determineAccessToken(Request $request, $headerOnly = true)
+    {
+        $header = $request->header('Authorization');
+
+        if ($header !== null && substr($header, 0, 7) === 'Bearer ') {
+            return trim(substr($header, 7));
+        }
+
+        if ($headerOnly) {
+            return null;
+        }
+
+        return $request->get('access_token');
     }
 }
