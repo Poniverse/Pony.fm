@@ -23,7 +23,7 @@ class Assets
     public static function scriptIncludes($area = 'app')
     {
         if (!Config::get("app.debug")) {
-            return '<script src="/build/scripts/' . $area . '.js?' . filemtime("./build/scripts/" . $area . ".js") . '"></script>';
+            return '<script src="/build/scripts/' . $area . '.js?' . filemtime(public_path("/build/scripts/${area}.js")) . '"></script>';
         }
 
         $scripts = self::mergeGlobs(self::getScriptsForArea($area));
@@ -31,7 +31,7 @@ class Assets
 
         foreach ($scripts as $script) {
             $filename = self::replaceExtensionWith($script, ".coffee", ".js");
-            $retVal .= "<script src='/build/$filename?" . filemtime('./build/' . $filename) . "'></script>";
+            $retVal .= "<script src='/build/$filename?" . filemtime(public_path("/build/${filename}")) . "'></script>";
         }
 
         return $retVal;
@@ -40,7 +40,9 @@ class Assets
     public static function styleIncludes($area = 'app')
     {
         if (!Config::get("app.debug")) {
-            return '<script>document.write(\'<link rel="stylesheet" href="build/styles/' . $area . '.css?' . filemtime("build/styles/" . $area . ".css") . '" />\');</script>';
+            return '<script>document.write(\'<link rel="stylesheet" href="build/styles/' . $area . '.css?' .
+                   filemtime(public_path("/build/styles/${area}.css"))
+                   . '" />\');</script>';
         }
 
         $styles = self::mergeGlobs(self::getStylesForArea($area));
@@ -48,7 +50,7 @@ class Assets
 
         foreach ($styles as $style) {
             $filename = self::replaceExtensionWith($style, ".less", ".css");
-            $retVal .= "<link rel='stylesheet' href='/build/$filename?" . filemtime('./build/' . $filename) . "' />";
+            $retVal .= "<link rel='stylesheet' href='/build/$filename?" .filemtime(public_path("/build/${filename}")). "' />";
         }
 
         return $retVal;
