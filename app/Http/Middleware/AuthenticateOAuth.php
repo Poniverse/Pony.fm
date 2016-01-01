@@ -20,9 +20,11 @@
 
 namespace Poniverse\Ponyfm\Http\Middleware;
 
-use Auth;
 use Closure;
 use GuzzleHttp;
+use Illuminate\Auth\Guard;
+use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use Poniverse;
 use Poniverse\Ponyfm\Models\User;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -34,8 +36,20 @@ class AuthenticateOAuth
      */
     private $poniverse;
 
-    public function __construct(Poniverse $poniverse) {
+    /**
+     * @var Guard
+     */
+    private $auth;
+
+    /**
+     * @var Store
+     */
+    private $session;
+
+    public function __construct(Poniverse $poniverse, Guard $auth, Store $session) {
         $this->poniverse = $poniverse;
+        $this->auth = $auth;
+        $this->session = $session;
     }
 
     /**
@@ -47,7 +61,7 @@ class AuthenticateOAuth
      * @return mixed
      * @throws \OAuth2\Exception
      */
-    public function handle($request, Closure $next, $requiredScope)
+    public function handle(Request $request, Closure $next, $requiredScope)
     {
         // Ensure this is a valid OAuth client.
         $accessToken = $request->get('access_token');
@@ -65,12 +79,12 @@ class AuthenticateOAuth
 
         // Log in as the given user, creating the account if necessary.
         $this->poniverse->setAccessToken($accessToken);
-        session()->put('api_client_id', $accessTokenInfo->getClientId());
+        $this->session->put('api_client_id', $accessTokenInfo->getClientId());
 
         $poniverseUser = $this->poniverse->getUser();
 
         $user = User::findOrCreate($poniverseUser['username'], $poniverseUser['display_name'], $poniverseUser['email']);
-        Auth::onceUsingId($user);
+        $this->auth->onceUsingId($user);
 
         return $next($request);
     }
