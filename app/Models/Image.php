@@ -113,6 +113,7 @@ class Image extends Model
                 }
 
                 External::execute($command);
+                chmod($image->getFile($coverType['id']), 644);
             }
 
             return $image;
