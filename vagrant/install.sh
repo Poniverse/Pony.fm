@@ -28,8 +28,8 @@ mkdir -p /vagrant/storage/logs/system
 
 cd /vagrant
 
-hhvm /usr/local/bin/composer self-update
-hhvm /usr/local/bin/composer install
+/usr/local/bin/composer self-update
+/usr/local/bin/composer install
 
 cp -n "/vagrant/resources/environments/.env.local" "/vagrant/.env"
 
