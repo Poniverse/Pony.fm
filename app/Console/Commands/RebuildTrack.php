@@ -63,7 +63,7 @@ class RebuildTrack extends Command
     public function handle()
     {
         /** @var Track $track */
-        $track = Track::with('trackFiles')->find((int) $this->argument('trackId'));
+        $track = Track::with('trackFiles')->withTrashed()->find((int) $this->argument('trackId'));
 
         if($this->option('upload')) {
             foreach($track->trackFiles as $trackFile) {
