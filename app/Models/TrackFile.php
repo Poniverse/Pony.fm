@@ -37,12 +37,13 @@ use File;
  * @property \Carbon\Carbon $updated_at
  * @property boolean $is_cacheable
  * @property boolean $status
- * @property string $expires_at
+ * @property \Carbon\Carbon $expires_at
  * @property integer $filesize
  * @property-read \Poniverse\Ponyfm\Models\Track $track
  * @property-read mixed $extension
  * @property-read mixed $url
  * @property-read mixed $size
+ * @property-read mixed $is_expired
  */
 class TrackFile extends Model
 {
@@ -50,11 +51,22 @@ class TrackFile extends Model
     const STATUS_NOT_BEING_PROCESSED = 0;
     const STATUS_PROCESSING = 1;
     const STATUS_PROCESSING_ERROR = 2;
+    const STATUS_PROCESSING_PENDING = 3;
 
-
-    public function track()
-    {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Track')->withTrashed();
+    protected $appends = ['is_expired'];
+    protected $dates = ['expires_at'];
+    protected $casts = [
+        'id'            => 'integer',
+        'track_id'      => 'integer',
+        'is_master'     => 'boolean',
+        'format'        => 'string',
+        'is_cacheable'  => 'boolean',
+        'status'        => 'integer',
+        'filesize'      => 'integer',
+    ];
+    
+    public function track() {
+        return $this->belongsTo(Track::class)->withTrashed();
     }
 
     /**
@@ -91,6 +103,11 @@ class TrackFile extends Model
         } else {
             return $trackFile;
         }
+    }
+
+    public function getIsExpiredAttribute() {
+        return  $this->attributes['expires_at'] === null ||
+                $this->attributes['expires_at']->isPast();
     }
 
     public function getFormatAttribute($value)

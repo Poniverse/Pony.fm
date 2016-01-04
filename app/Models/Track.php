@@ -389,11 +389,11 @@ class Track extends Model
             ],
             'url' => $track->url,
             'slug' => $track->slug,
-            'is_vocal' => (bool)$track->is_vocal,
-            'is_explicit' => (bool)$track->is_explicit,
-            'is_downloadable' => (bool)$track->is_downloadable,
-            'is_published' => (bool)$track->isPublished(),
-            'published_at' => $track->published_at->format('c'),
+            'is_vocal' => $track->is_vocal,
+            'is_explicit' => $track->is_explicit,
+            'is_downloadable' => $track->is_downloadable,
+            'is_published' => $track->isPublished(),
+            'published_at' => $track->isPublished() ? $track->published_at->format('c') : null,
             'duration' => $track->duration,
             'genre' => $track->genre != null
                 ?

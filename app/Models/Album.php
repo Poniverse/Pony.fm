@@ -388,4 +388,19 @@ class Album extends Model
     {
         return 'album-' . $this->id . '-' . $key;
     }
+
+    /**
+     * The number of tracks in an album will always be in sync.
+     *
+     * @param array $options
+     * @return bool
+     */
+    public function save(array $options = []) {
+        $this->recountTracks();
+        return parent::save($options);
+    }
+
+    protected function recountTracks() {
+        $this->track_count = $this->tracks->count();
+    }
 }

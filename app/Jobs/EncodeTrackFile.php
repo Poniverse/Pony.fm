@@ -24,11 +24,9 @@ namespace Poniverse\Ponyfm\Jobs;
 use Carbon\Carbon;
 use DB;
 use File;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
-use OAuth2\Exception;
+use Config;
+use Log;
 use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
-use Poniverse\Ponyfm\Jobs\Job;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
@@ -74,10 +72,23 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
             throw new InvalidEncodeOptionsException("Master files cannot be encoded unless we're generating a lossless master file during the upload process.");
         }
 
+        // don't start this job if the file is already being processed or if it's still valid
+        if (
+            in_array($trackFile->status, [TrackFile::STATUS_PROCESSING_PENDING, TrackFile::STATUS_PROCESSING]) ||
+            !$trackFile->is_expired
+        ) {
+            $this->delete();
+            return;
+        }
+
         $this->trackFile = $trackFile;
         $this->isExpirable = $isExpirable;
         $this->isForUpload = $isForUpload;
         $this->autoPublishWhenComplete = $autoPublish;
+
+        // "lock" this file for processing
+        $this->trackFile->status = TrackFile::STATUS_PROCESSING_PENDING;
+        $this->trackFile->save();
     }
 
     /**
@@ -87,9 +98,19 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
+        // Sanity-check: was this file just generated, or is it already being processed?
+        if ($this->trackFile->status === TrackFile::STATUS_PROCESSING) {
+            Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is already being processed!');
+            return;
+
+        } elseif (!$this->trackFile->is_expired) {
+            Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is still valid! No need to re-encode it.');
+            return;
+        }
+
         // Start the job
         $this->trackFile->status = TrackFile::STATUS_PROCESSING;
-        $this->trackFile->update();
+        $this->trackFile->save();
 
         // Use the track's master file as the source
         if ($this->isForUpload) {
@@ -132,7 +153,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         // Insert the expiration time for cached tracks
         if ($this->isExpirable) {
             $this->trackFile->expires_at = Carbon::now()->addMinutes(Config::get('ponyfm.track_file_cache_duration'));
-            $this->trackFile->update();
+            $this->trackFile->save();
         }
 
         // Update file size
@@ -140,7 +161,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
 
         // Complete the job
         $this->trackFile->status = TrackFile::STATUS_NOT_BEING_PROCESSED;
-        $this->trackFile->update();
+        $this->trackFile->save();
 
         if ($this->isForUpload) {
             if (!$this->trackFile->is_master && $this->trackFile->is_cacheable) {
@@ -171,6 +192,6 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
     {
         $this->trackFile->status = TrackFile::STATUS_PROCESSING_ERROR;
         $this->trackFile->expires_at = null;
-        $this->trackFile->update();
+        $this->trackFile->save();
     }
 }
