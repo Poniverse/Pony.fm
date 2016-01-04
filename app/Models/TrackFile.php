@@ -64,7 +64,7 @@ class TrackFile extends Model
         'status'        => 'integer',
         'filesize'      => 'integer',
     ];
-    
+
     public function track() {
         return $this->belongsTo(Track::class)->withTrashed();
     }
@@ -106,8 +106,8 @@ class TrackFile extends Model
     }
 
     public function getIsExpiredAttribute() {
-        return  $this->attributes['expires_at'] === null ||
-                $this->attributes['expires_at']->isPast();
+        return  $this->expires_at === null ||
+                $this->expires_at->isPast();
     }
 
     public function getFormatAttribute($value)
