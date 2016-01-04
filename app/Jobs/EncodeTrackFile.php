@@ -128,10 +128,9 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
             $process->mustRun();
         } catch (ProcessFailedException $e) {
             Log::error('An exception occured in the encoding process for track file ' . $this->trackFile->id . ' - ' . $e->getMessage());
+            Log::info($process->getOutput());
             // Ensure queue fails
             throw $e;
-        } finally {
-            Log::info($process->getOutput());
         }
 
         // Update the tags of the track
