@@ -106,7 +106,7 @@ class TrackFile extends Model
     }
 
     public function getIsExpiredAttribute() {
-        return  $this->expires_at === null ||
+        return  $this->attributes['expires_at'] === null ||
                 $this->expires_at->isPast();
     }
 

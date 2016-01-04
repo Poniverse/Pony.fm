@@ -698,11 +698,11 @@ class Track extends Model
 
             } elseif (
                 $carry !== static::STATUS_ERROR &&
-                (int) $trackFile->status === TrackFile::STATUS_PROCESSING) {
+                in_array($trackFile->status, [TrackFile::STATUS_PROCESSING, TrackFile::STATUS_PROCESSING_PENDING])) {
                 return static::STATUS_PROCESSING;
 
             } elseif (
-                !in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING]) &&
+                !in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING, TrackFile::STATUS_PROCESSING_PENDING]) &&
                 (int) $trackFile->status === TrackFile::STATUS_NOT_BEING_PROCESSED
             ) {
                 return static::STATUS_COMPLETE;

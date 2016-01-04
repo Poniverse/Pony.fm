@@ -42,19 +42,19 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
     /**
      * @var TrackFile
      */
-    private $trackFile;
+    protected $trackFile;
     /**
      * @var
      */
-    private $isExpirable;
+    protected $isExpirable;
     /**
      * @var bool
      */
-    private $isForUpload;
+    protected $isForUpload;
     /**
      * @var bool
      */
-    private $autoPublishWhenComplete;
+    protected $autoPublishWhenComplete;
 
     /**
      * Create a new job instance.
@@ -72,23 +72,10 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
             throw new InvalidEncodeOptionsException("Master files cannot be encoded unless we're generating a lossless master file during the upload process.");
         }
 
-        // don't start this job if the file is already being processed or if it's still valid
-        if (
-            in_array($trackFile->status, [TrackFile::STATUS_PROCESSING_PENDING, TrackFile::STATUS_PROCESSING]) ||
-            !$trackFile->is_expired
-        ) {
-            $this->delete();
-            return;
-        }
-
         $this->trackFile = $trackFile;
         $this->isExpirable = $isExpirable;
         $this->isForUpload = $isForUpload;
         $this->autoPublishWhenComplete = $autoPublish;
-
-        // "lock" this file for processing
-        $this->trackFile->status = TrackFile::STATUS_PROCESSING_PENDING;
-        $this->trackFile->save();
     }
 
     /**
@@ -151,7 +138,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         $this->trackFile->track->updateTags($this->trackFile->format);
 
         // Insert the expiration time for cached tracks
-        if ($this->isExpirable) {
+        if ($this->isExpirable && $this->trackFile->is_cacheable) {
             $this->trackFile->expires_at = Carbon::now()->addMinutes(Config::get('ponyfm.track_file_cache_duration'));
             $this->trackFile->save();
         }
