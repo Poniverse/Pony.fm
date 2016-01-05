@@ -21,7 +21,7 @@
 @section('content')
 
     <div id="fb-root"></div>
-
+ 
     <script>
         window.fbAsyncInit = function() {
             FB.init({
