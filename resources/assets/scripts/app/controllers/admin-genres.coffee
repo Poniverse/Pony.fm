@@ -50,17 +50,16 @@ angular.module('ponyfm').controller 'admin-genres', [
                 genre.isSaving = false
 
 
-        $scope.startMerge = (genreToDelete) ->
-            $scope.genreToDelete = genreToDelete
+        $scope.startMerge = (destinationGenre) ->
+            $scope.destinationGenre = destinationGenre
             $scope.mergeInProgress = true
 
         $scope.cancelMerge = () ->
-            $scope.genreToDelete = null
+            $scope.destinationGenre = null
             $scope.mergeInProgress = false
 
-        $scope.finishMerge = (destinationGenre) ->
-            $scope.mergeInProgress = false
-            genres.merge($scope.genreToDelete.id, destinationGenre.id)
+        $scope.finishMerge = (genreToDelete) ->
+            genres.merge(genreToDelete.id, $scope.destinationGenre.id)
                 .done (response) ->
                     loadGenres()
 ]

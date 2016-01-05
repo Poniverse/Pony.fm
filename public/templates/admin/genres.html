@@ -24,9 +24,9 @@
             <td><i ng-show="genre.isSaving" class="icon-cog icon-spin icon-large"></i></td>
             <td><a ng-href="{{ genre.url }}">{{ genre.track_count }}</a></td>
             <td class="-actions">
-                <button class="btn btn-warning" ng-hide="mergeInProgress" ng-click="startMerge(genre)">Merge&hellip;</button>
-                <button class="btn btn-danger" ng-show="mergeInProgress && genreToDelete.id != genre.id" ng-click="finishMerge(genre)">Merge in <em>{{ genreToDelete.name }}</em>&hellip;</button>
-                <button class="btn btn-warning" ng-show="mergeInProgress && genreToDelete.id == genre.id" ng-click="cancelMerge()">Cancel merge</button>
+                <button class="btn btn-warning" ng-hide="mergeInProgress" ng-click="startMerge(genre)">Merge genres in&hellip;</button>
+                <button class="btn btn-danger" ng-show="mergeInProgress && destinationGenre.id != genre.id" ng-click="finishMerge(genre)">Merge into <em>{{ destinationGenre.name }}</em>&hellip;</button>
+                <button class="btn btn-warning" ng-show="mergeInProgress && destinationGenre.id == genre.id" ng-click="cancelMerge()">Cancel merge</button>
             </td>
         </tr>
     </table>
