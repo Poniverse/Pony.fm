@@ -147,7 +147,7 @@ angular.module('ponyfm').controller "account-track", [
         $scope.touchModel = -> $scope.isDirty = true
 
         $scope.deleteTrack = (track) ->
-            $dialog.messageBox('Delete ' + track.title, 'Are you sure you want to delete "' + track.title + '"? This cannot be undone.', [
+            $dialog.messageBox('Delete ' + track.title, 'Are you sure you want to delete "' + track.title + '"?', [
                 {result: 'ok', label: 'Yes', cssClass: 'btn-danger'}, {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
             ]).open().then (res) ->
                 return if res == 'cancel'

@@ -113,7 +113,7 @@ angular.module('ponyfm').controller "account-albums-edit", [
             xhr.send formData
 
         $scope.deleteAlbum = () ->
-            $dialog.messageBox('Delete ' + $scope.album.title, 'Are you sure you want to delete "' + $scope.album.title + '"? This cannot be undone.', [
+            $dialog.messageBox('Delete ' + $scope.album.title, 'Are you sure you want to delete "' + $scope.album.title + '"?', [
                 {result: 'ok', label: 'Yes', cssClass: 'btn-danger'}, {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
             ]).open().then (res) ->
                 return if res == 'cancel'

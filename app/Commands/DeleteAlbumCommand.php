@@ -21,17 +21,20 @@
 namespace Poniverse\Ponyfm\Commands;
 
 use Poniverse\Ponyfm\Models\Album;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 
 class DeleteAlbumCommand extends CommandBase
 {
+    /** @var int */
     private $_albumId;
+
+    /** @var Album */
     private $_album;
 
     function __construct($albumId)
     {
         $this->_albumId = $albumId;
-        $this->_album = ALbum::find($albumId);
+        $this->_album = Album::find($albumId);
     }
 
     /**

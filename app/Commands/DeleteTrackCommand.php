@@ -24,7 +24,10 @@ use Poniverse\Ponyfm\Models\Track;
 
 class DeleteTrackCommand extends CommandBase
 {
+    /** @var int  */
     private $_trackId;
+
+    /** @var Track */
     private $_track;
 
     function __construct($trackId)

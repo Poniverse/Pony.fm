@@ -21,11 +21,14 @@
 namespace Poniverse\Ponyfm\Commands;
 
 use Poniverse\Ponyfm\Models\Playlist;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 
 class DeletePlaylistCommand extends CommandBase
 {
+    /** @var int */
     private $_playlistId;
+
+    /** @var Playlist */
     private $_playlist;
 
     function __construct($playlistId)

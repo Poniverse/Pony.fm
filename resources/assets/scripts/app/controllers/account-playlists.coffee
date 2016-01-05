@@ -44,7 +44,7 @@ angular.module('ponyfm').controller "account-playlists", [
             playlists.editPlaylist playlist
 
         $scope.deletePlaylist = (playlist) ->
-            $dialog.messageBox('Delete ' + playlist.title, 'Are you sure you want to delete "' + playlist.title + '"? This cannot be undone.', [
+            $dialog.messageBox('Delete ' + playlist.title, 'Are you sure you want to delete "' + playlist.title + '"?', [
                 {result: 'ok', label: 'Yes', cssClass: 'btn-danger'},
                 {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
             ]).open().then (res) ->
