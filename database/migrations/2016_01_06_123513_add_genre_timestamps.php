@@ -1,6 +1,8 @@
+<?php
+
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,19 +18,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'base/bootstrap/bootstrap';
-@import 'mixins';
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-.genre-creator {
-  max-width: 400px;
-}
+class AddGenreTimestamps extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('genres', function(Blueprint $table) {
+            $table->nullableTimestamps();
+        });
+    }
 
-.genre-list {
-  .-status {
-    width: 30px;
-  }
-
-  .-actions {
-    width: 300px;
-  }
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('genres', function(Blueprint $table) {
+            $table->dropTimestamps();
+        });
+    }
 }

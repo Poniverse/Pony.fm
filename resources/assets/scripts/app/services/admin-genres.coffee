@@ -28,6 +28,17 @@ angular.module('ponyfm').factory('admin-genres', [
                     def.resolve(genres['genres'])
                 def.promise()
 
+            create: (name) ->
+                url = '/api/web/admin/genres'
+                def = new $.Deferred()
+                $http.post(url, {name: name})
+                    .success (response) ->
+                        def.resolve(response)
+                    .error (response) ->
+                        def.reject(response)
+
+                def.promise()
+
             rename: (genre_id, new_name) ->
                 url = "/api/web/admin/genres/#{genre_id}"
                 def = new $.Deferred()

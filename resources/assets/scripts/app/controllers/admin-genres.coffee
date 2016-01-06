@@ -20,6 +20,11 @@ angular.module('ponyfm').controller 'admin-genres', [
 
         $scope.genres = []
 
+        $scope.isCreating = false
+        $scope.genreToCreate = ''
+        $scope.hasCreationError = false
+        $scope.createGenreError = ''
+
         # Used for merging/deleting genres
         $scope.mergeInProgress = false
         $scope.genreToDelete = null
@@ -35,6 +40,21 @@ angular.module('ponyfm').controller 'admin-genres', [
             genres.fetch().done setGenres
 
         loadGenres()
+
+
+        $scope.createGenre = (genreName) ->
+            $scope.isCreating = true
+            genres.create(genreName)
+                .done (response) ->
+                    $scope.hasCreationError = false
+                    $scope.genreToCreate = ''
+                    loadGenres()
+                .fail (response) ->
+                    $scope.hasCreationError = true
+                    $scope.createGenreError = response
+                    console.log(response)
+                .always (response) ->
+                    $scope.isCreating = false
 
 
         # Renames the given genre

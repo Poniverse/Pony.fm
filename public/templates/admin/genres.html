@@ -1,33 +1,55 @@
 <h1>Genre Editor</h1>
 
-<section class="genre-list stretch-to-bottom">
-    <table class="table">
-        <thead>
-            <th>Genre</th>
-            <th class="-status"></th>
-            <th># of tracks (including deleted)</th>
-            <th class="-actions">Actions</th>
-        </thead>
-        <tr ng-repeat="genre in genres track by genre.id">
-            <td>
-                <input
-                type="text"
-                class="x-large"
-                ng-class="{'x-saving': genre.isSaving, 'x-error': genre.isError}"
-                ng-model="genre.name"
-                pfm-on-enter="renameGenre(genre)"
-                />
-                <div class="alert alert-error" ng-show="genre.isError">
-                    {{ genre.errorMessage }}
-                </div>
-            </td>
-            <td><i ng-show="genre.isSaving" class="icon-cog icon-spin icon-large"></i></td>
-            <td><a ng-href="{{ genre.url }}">{{ genre.track_count }}</a></td>
-            <td class="-actions">
-                <button class="btn btn-warning" ng-hide="mergeInProgress" ng-click="startMerge(genre)">Merge genres in&hellip;</button>
-                <button class="btn btn-danger" ng-show="mergeInProgress && destinationGenre.id != genre.id" ng-click="finishMerge(genre)">Merge into <em>{{ destinationGenre.name }}</em>&hellip;</button>
-                <button class="btn btn-warning" ng-show="mergeInProgress && destinationGenre.id == genre.id" ng-click="cancelMerge()">Cancel merge</button>
-            </td>
-        </tr>
-    </table>
-</section>
+<div class="stretch-to-bottom">
+
+    <section class="genre-creator">
+        <h2>Add genre</h2>
+
+        <p>Enter a genre name and press enter to create it!</p>
+        <input
+            type="text"
+            class="x-large"
+            ng-class="{'x-saving': isCreating, 'x-error': hasCreationError}"
+            ng-model="genreToCreate"
+            pfm-on-enter="createGenre(genreToCreate)"
+        />
+
+        <div class="alert alert-error" ng-show="hasCreationError">
+            {{ createGenreError }}
+        </div>
+    </section>
+
+    <section class="genre-list">
+        <h2>Rename &amp; delete genres</h2>
+
+        <table class="table">
+            <thead>
+                <th>Genre</th>
+                <th class="-status"></th>
+                <th># of tracks (including deleted)</th>
+                <th class="-actions">Actions</th>
+            </thead>
+            <tr ng-repeat="genre in genres track by genre.id">
+                <td>
+                    <input
+                    type="text"
+                    class="x-large"
+                    ng-class="{'x-saving': genre.isSaving, 'x-error': genre.isError}"
+                    ng-model="genre.name"
+                    pfm-on-enter="renameGenre(genre)"
+                    />
+                    <div class="alert alert-error" ng-show="genre.isError">
+                        {{ genre.errorMessage }}
+                    </div>
+                </td>
+                <td><i ng-show="genre.isSaving" class="icon-cog icon-spin icon-large"></i></td>
+                <td><a ng-href="{{ genre.url }}">{{ genre.track_count }}</a></td>
+                <td class="-actions">
+                    <button class="btn btn-warning" ng-hide="mergeInProgress" ng-click="startMerge(genre)">Merge genres in&hellip;</button>
+                    <button class="btn btn-danger" ng-show="mergeInProgress && destinationGenre.id != genre.id" ng-click="finishMerge(genre)">Merge into <em>{{ destinationGenre.name }}</em>&hellip;</button>
+                    <button class="btn btn-warning" ng-show="mergeInProgress && destinationGenre.id == genre.id" ng-click="cancelMerge()">Cancel merge</button>
+                </td>
+            </tr>
+        </table>
+    </section>
+</div>

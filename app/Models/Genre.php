@@ -49,8 +49,6 @@ class Genre extends Model
     protected $appends = ['track_count', 'url'];
     protected $hidden = ['trackCountRelation'];
 
-    public $timestamps = false;
-
     use SlugTrait, SoftDeletes, RevisionableTrait;
 
     public function tracks(){

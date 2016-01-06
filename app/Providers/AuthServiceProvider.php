@@ -52,6 +52,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasRole('admin');
         });
 
+        $gate->define('create-genre', function(User $user) {
+            return $user->hasRole('admin');
+        });
+
         $this->registerPolicies($gate);
     }
 }
