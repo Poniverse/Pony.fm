@@ -731,7 +731,7 @@ class Track extends Model
         }
     }
 
-    private function updateTagsForTrackFile($trackFile) {
+    private function updateTagsForTrackFile(TrackFile $trackFile) {
         $trackFile->touch();
 
         if (\File::exists($trackFile->getFile())) {
