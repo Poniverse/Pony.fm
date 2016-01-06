@@ -18,17 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Log;
+use Symfony\Component\Process\Process;
 
 class External
 {
     public static function execute($command)
     {
-        $output = [];
-        $error = exec($command, $output);
+        $process = new Process($command);
+        $process->run();
 
-        if ($error != null) {
-            Log::error('"' . $command . '" failed with "' . $error . '"');
+        if (!$process->isSuccessful()) {
+            Log::error('"' . $command . '" failed with "' . $process->getErrorOutput() . '"');
         }
     }
 }

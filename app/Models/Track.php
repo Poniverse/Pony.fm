@@ -760,7 +760,7 @@ class Track extends Model
         }
 
         if ($this->cover !== null) {
-            $command .= '--artwork ' . $this->cover->getFile() . ' ';
+            $command .= '--artwork ' . $this->cover->getFile(Image::ORIGINAL) . ' ';
         }
 
         $command .= '--overWrite';
@@ -801,7 +801,7 @@ class Track extends Model
 
         if ($format == 'MP3' && $this->cover_id != null && is_file($this->cover->getFile())) {
             $tagWriter->tag_data['attached_picture'][0] = [
-                'data' => file_get_contents($this->cover->getFile()),
+                'data' => file_get_contents($this->cover->getFile(Image::ORIGINAL)),
                 'picturetypeid' => 2,
                 'description' => 'cover',
                 'mime' => $this->cover->mime
