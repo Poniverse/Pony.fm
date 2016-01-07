@@ -54,8 +54,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{{Auth::user()->url}}">Your Profile</a></li>
-                        <li ng-class="{selected: stateIncludes('favourites')}"><a href="/account/favourites/tracks">Favourites</a></li>
-                        <li ng-class="{selected: stateIncludes('account')}"><a href="/account/tracks">Account</a></li>
+                        <li ng-class="{active: stateIncludes('favourites')}"><a href="/account/favourites/tracks">Favourites</a></li>
+                        <li ng-class="{active: stateIncludes('account')}"><a href="/account/tracks">Account</a></li>
                         <li><a href="#" pfm-eat-click ng-click="logout()">Logout</a></li>
                     </ul>
                 </div>
@@ -66,13 +66,10 @@
 
     <div class="site-body">
         <ul class="sidebar" ng-controller="sidebar">
-            <li ng-class="{selected: (stateIncludes('content') && !isPinnedPlaylistSelected)}">
-                <a href="/tracks">Discover</a>
-            </li>
-            <li ng-class="{active: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a href="/tracks">Tracks</a></li>
-            <li ng-class="{active: stateIncludes('content.albums') || stateIncludes('content.album')}"><a href="/albums">Albums</a></li>
-            <li ng-class="{active: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a href="/playlists">Playlists</a></li>
-            <li ng-class="{active: stateIncludes('content.artists') || stateIncludes('content.artist')}"><a href="/artists">Artists</a></li>
+            <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a href="/tracks">Tracks</a></li>
+            <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a href="/albums">Albums</a></li>
+            <li ng-class="{selected: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a href="/playlists">Playlists</a></li>
+            <li ng-class="{selected: stateIncludes('content.artists') || stateIncludes('content.artist')}"><a href="/artists">Artists</a></li>
 
 
             <li ng-class="{selected: stateIncludes('pages')}"><a href="/about">About / FAQ</a></li>
