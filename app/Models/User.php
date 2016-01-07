@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Auth;
 use Illuminate\Support\Str;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearch;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -64,7 +65,9 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable
 {
-    use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait;
+    use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearch;
+
+    protected $elasticsearchType = 'user';
 
     protected $table = 'users';
     protected $casts = [
@@ -246,5 +249,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         return false;
+    }
+
+    /**
+     * Returns this model in Elasticsearch-friendly form. The array returned by
+     * this method should match the current mapping for this model's ES type.
+     *
+     * @return array
+     */
+    public function toElasticsearch() {
+        return $this->toArray();
     }
 }

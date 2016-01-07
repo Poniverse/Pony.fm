@@ -24,7 +24,9 @@ use Auth;
 use Cache;
 use Config;
 use DB;
+use Elasticsearch;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearch;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
@@ -95,7 +97,9 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class Track extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, IndexedInElasticsearch;
+
+    protected $elasticsearchType = 'track';
 
     protected $dates = ['deleted_at', 'published_at', 'released_at'];
     protected $hidden = ['original_tags', 'metadata'];
@@ -825,5 +829,16 @@ class Track extends Model
     private function getCacheKey($key)
     {
         return 'track-' . $this->id . '-' . $key;
+    }
+
+    public function toElasticsearch() {
+        return [
+            'title'         => $this->title,
+            'artist'        => $this->user->display_name,
+            'published_at'  => $this->published_at ? $this->published_at->toIso8601String() : null,
+            'genre'         => $this->genre->name,
+            'track_type'    => $this->trackType->title,
+            'show_songs'    => $this->showSongs->pluck('title')
+        ];
     }
 }

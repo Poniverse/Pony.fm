@@ -28,6 +28,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearch;
 use Poniverse\Ponyfm\Traits\TrackCollection;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -61,7 +62,9 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class Album extends Model
 {
-    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait;
+    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait, IndexedInElasticsearch;
+
+    protected $elasticsearchType = 'album';
 
     protected $dates = ['deleted_at'];
     protected $fillable = ['user_id', 'title', 'slug'];
@@ -402,5 +405,19 @@ class Album extends Model
 
     protected function recountTracks() {
         $this->track_count = $this->tracks->count();
+    }
+
+    /**
+     * Returns this model in Elasticsearch-friendly form. The array returned by
+     * this method should match the current mapping for this model's ES type.
+     *
+     * @return array
+     */
+    public function toElasticsearch() {
+        return [
+            'title' => $this->title,
+            'artist' => $this->user->display_name,
+            'tracks' => $this->tracks->pluck('title'),
+        ];
     }
 }

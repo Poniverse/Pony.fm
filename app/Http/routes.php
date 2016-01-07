@@ -82,8 +82,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function
 
 Route::group(['prefix' => 'api/web'], function() {
     Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
-
-    Route::get('/playlists/show/{id}', 'Api\Web\PlaylistsController@getShow');
+    Route::get('/search', 'Api\Web\SearchController@getSearch');
 
     Route::get('/tracks', 'Api\Web\TracksController@getIndex');
     Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');
@@ -94,6 +93,7 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::get('/albums/cached/{id}/{format}', 'Api\Web\AlbumsController@getCachedAlbum')->where(['id' => '\d+', 'format' => '.+']);
 
     Route::get('/playlists', 'Api\Web\PlaylistsController@getIndex');
+    Route::get('/playlists/show/{id}', 'Api\Web\PlaylistsController@getShow');
     Route::get('/playlists/{id}', 'Api\Web\PlaylistsController@getShow')->where('id', '\d+');
     Route::get('/playlists/cached/{id}/{format}', 'Api\Web\PlaylistsController@getCachedPlaylist')->where(['id' => '\d+', 'format' => '.+']);
 
