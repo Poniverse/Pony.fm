@@ -168,7 +168,7 @@ module.config [
 
         state.state 'content',
             abstract: true
-            templateUrl: '/templates/content/_layout.html'
+            template: '<ui-view/>'
 
         state.state 'content.tracks',
             templateUrl: '/templates/tracks/index.html'
