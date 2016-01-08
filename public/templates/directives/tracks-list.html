@@ -21,7 +21,7 @@
             <span class="artist" bo-text="track.user.name + ' / ' + track.genre.name"></span>
         </a>
     </li>
-    <li ng-show="!tracks.length" class="empty">
+    <li ng-if="!tracks.length" class="empty">
         No tracks found&hellip;
     </li>
 </ul>

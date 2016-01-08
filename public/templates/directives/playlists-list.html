@@ -1,11 +1,11 @@
 <ul class="playlists-listing {{class}}">
-    <li ng-repeat="playlist in playlists" bindonce>
-        <a href="{{playlist.url}}">
+    <li bindonce ng-repeat="playlist in playlists track by playlist.id">
+        <a bo-href="playlist.url">
             <img class="image" pfm-src-loader="playlist.covers.small" pfm-src-size="small" />
             <span class="info">
-                <span class="title">{{playlist.title}}</span>
+                <span class="title" bo-text="playlist.title"></span>
                 <span class="published">
-                    by {{playlist.user.name}}
+                    by <span bo-text="playlist.user.name"></span>
                 </span>
                 <span class="stats">
                     <strong bo-text="playlist.stats.favourites"></strong> <i class="icon-star"></i>
@@ -16,6 +16,6 @@
         </a>
     </li>
     <li ng-show="!playlists.length" class="empty">
-        No playlists found...
+        No playlists found&hellip;
     </li>
 </ul>

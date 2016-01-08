@@ -1,5 +1,5 @@
 <ul class="albums-listing {{class}}">
-    <li ng-repeat="album in albums" bindonce>
+    <li bindonce ng-repeat="album in albums track by album.id">
         <a bo-href="album.url">
             <img class="image" pfm-src-loader="album.covers.small" pfm-src-size="small" />
             <span class="info">
@@ -16,6 +16,6 @@
         </a>
     </li>
     <li ng-show="!albums.length" class="empty">
-        No albums found...
+        No albums found&hellip;
     </li>
 </ul>
