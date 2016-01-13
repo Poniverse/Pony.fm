@@ -33,19 +33,22 @@ these are smaller in scope and easier to tackle if you're unfamiliar with the co
 Starting a dev environment
 ==========================
 
-To begin development, you must do three things:
+To begin development, do the following:
 
-1. Install the `vagrant-hostmanager` plugin: `vagrant plugin install vagrant-hostmanager`
+1. Install [Vagrant](https://www.vagrantup.com/downloads.html) and
+   [VirtualBox](https://www.virtualbox.org/wiki/Downloads) if you don't have them already.
 
-2. Install the `vagrant-bindfs` plugin: `vagrant plugin install vagrant-bindfs`
+2. Install the `vagrant-hostmanager` plugin: `vagrant plugin install vagrant-hostmanager`
 
-3. Create the directory `pony.fm.files` in the repository's parent directory
+3. Install the `vagrant-bindfs` plugin: `vagrant plugin install vagrant-bindfs`
 
-4. Run `vagrant up` from the folder in which you cloned the repository
+4. Create the directory `pony.fm.files` in the repository's parent directory
 
-5. Run `vagrant ssh`, `cd /vagrant`, and `php artisan poni:setup`.
+5. Run `vagrant up` from the folder in which you cloned the repository
 
-6. Follow the instructions in the "Asset pipeline" section below to set that up.
+6. Run `vagrant ssh`, `cd /vagrant`, and `php artisan poni:setup`.
+
+7. Follow the instructions in the "Asset pipeline" section below to set that up.
 
 Once everything is up and running, you'll be able to access the site at [http://ponyfm-dev.poni/](http://ponyfm-dev.poni/). You can access the MySQL database by logging into **ponyfm-dev.poni:3306** with the username **homestead** and the password **secret**. Pony.fm's database is named **homestead**.
 
