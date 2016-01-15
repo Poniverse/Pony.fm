@@ -33,12 +33,9 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \Poniverse\Ponyfm\Console\Commands\MigrateOldData::class,
         \Poniverse\Ponyfm\Console\Commands\RefreshCache::class,
-        \Poniverse\Ponyfm\Console\Commands\ImportMLPMA::class,
         \Poniverse\Ponyfm\Console\Commands\ClassifyMLPMA::class,
-        \Poniverse\Ponyfm\Console\Commands\PublishUnclassifiedMlpmaTracks::class,
         \Poniverse\Ponyfm\Console\Commands\RebuildTags::class,
         \Poniverse\Ponyfm\Console\Commands\RebuildArtists::class,
-        \Poniverse\Ponyfm\Console\Commands\FixYearZeroLogs::class,
         \Poniverse\Ponyfm\Console\Commands\BootstrapLocalEnvironment::class,
         \Poniverse\Ponyfm\Console\Commands\PoniverseApiSetup::class,
         \Poniverse\Ponyfm\Console\Commands\ClearTrackCache::class,
