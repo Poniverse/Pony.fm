@@ -23,34 +23,16 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 use Elasticsearch;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Input;
+use Poniverse\Ponyfm\Library\Search;
 use Response;
 
 class SearchController extends ApiControllerBase
 {
-    public function getSearch()
+    public function getSearch(Search $search)
     {
         $input = Input::all();
 
-        $elasticsearch = Elasticsearch::connection();
-
-        $results = $elasticsearch->search([
-            'index' => 'ponyfm',
-            'type'  => 'track,album',
-            'body'  => [
-                'query' => [
-                    'multi_match' => [
-                        'query'     => $input['query'],
-                        'fields'    => [
-                            'track.title',
-                            'album.title',
-                            'track.artist',
-                            'album.artist',
-                            'track.genre',
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+        $results = $search->searchAllContent($input['query']);
 
         return Response::json([
             'results' => $results,

@@ -831,6 +831,8 @@ class Track extends Model
         return 'track-' . $this->id . '-' . $key;
     }
 
+    //============= Elasticsearch stuff ==================//
+
     public function toElasticsearch() {
         return [
             'title'         => $this->title,
