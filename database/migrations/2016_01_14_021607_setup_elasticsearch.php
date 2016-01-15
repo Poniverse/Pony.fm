@@ -18,10 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Poniverse\Ponyfm\Console\Commands\RebuildSearchIndex;
-use Poniverse\Ponyfm\Models\Track;
 
 class SetupElasticsearch extends Migration
 {
@@ -43,7 +41,7 @@ class SetupElasticsearch extends Migration
                         'dynamic' => 'strict',
                         'properties' => [
                             'title' => ['type' => 'string'],
-                            'artist' => ['type' => 'string'],
+                            'artist' => ['type' => 'string', 'index' => 'not_analyzed'],
                             'published_at' => ['type' => 'date'],
                             'genre' => ['type' => 'string', 'index' => 'not_analyzed'],
                             'track_type' => ['type' => 'string', 'index' => 'not_analyzed'],
@@ -60,7 +58,7 @@ class SetupElasticsearch extends Migration
                         'dynamic' => 'strict',
                         'properties' => [
                             'title' => ['type' => 'string'],
-                            'artist' => ['type' => 'string'],
+                            'artist' => ['type' => 'string', 'index' => 'not_analyzed'],
 
                             // This field is intended to be used as an array.
                             // Note that all Elasticsearch fields can technically be used as arrays.
