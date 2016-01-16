@@ -28,7 +28,7 @@ var plumberOptions = {
 var licenseHeader = [
     "/**",
     "* Pony.fm - A community for pony fan music.",
-    "* Copyright (C) 2015 Peter Deltchev and others",
+    "* Copyright (C) 2016 Peter Deltchev and others",
     "*",
     "* This program is free software: you can redistribute it and/or modify",
     "* it under the terms of the GNU Affero General Public License as published by",
@@ -45,7 +45,7 @@ var licenseHeader = [
     "*/",
     "",
     ""
-].join('\n')
+].join('\n');
 
 gulp.task("scripts-app", function () {
     var paths = [
@@ -85,17 +85,15 @@ gulp.task("scripts-app", function () {
         .pipe(plug.uglify())
         .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/scripts"))
+
         // Development/watch pipeline
         : gulp.src(paths, {base: "resources/assets/scripts"})
         .pipe(plug.plumber(plumberOptions))
         .pipe(plug.cached('scripts'))
         .pipe(plug.sourcemaps.init())
         .pipe(plug.if(/\.coffee/, plug.coffee()))
-        .pipe(plug.sourcemaps.write({
-            includeContent: false,
-            sourceRoot: "/dev-scripts/"
-        }))
         .pipe(header(licenseHeader))
+        .pipe(plug.sourcemaps.write())
         .pipe(gulp.dest("public/build/scripts"));
 });
 
@@ -172,17 +170,15 @@ gulp.task("styles-app", function () {
         .pipe(plug.minifyCss())
         .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/styles"))
+
         // Development pipeline
         : gulp.src(includedStyles, {base: "resources/assets/styles"})
         .pipe(plug.plumber(plumberOptions))
         .pipe(plug.cached("styles"))
         .pipe(plug.sourcemaps.init())
         .pipe(plug.if(/\.less/, plug.less()))
-        .pipe(plug.sourcemaps.write({
-            includeContent: false,
-            sourceRoot: "/dev-styles/"
-        }))
         .pipe(header(licenseHeader))
+        .pipe(plug.sourcemaps.write())
         .pipe(gulp.dest("public/build/styles"))
         .pipe(plug.livereload());
 });
