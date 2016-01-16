@@ -114,9 +114,9 @@ class Search {
             ]
         ]);
 
-        $tracks = $this->transformToEloquent(Track::class, $results['responses'][0]['hits']['hits']);
-        $albums = $this->transformToEloquent(Album::class, $results['responses'][1]['hits']['hits']);
-        $playlists = $this->transformToEloquent(Playlist::class, $results['responses'][2]['hits']['hits']);
+        $tracks = $this->transformTracks($results['responses'][0]['hits']['hits']);
+        $albums = $this->transformAlbums($results['responses'][1]['hits']['hits']);
+        $playlists = $this->transformPlaylists($results['responses'][2]['hits']['hits']);
         $users = $this->transformToEloquent(User::class, $results['responses'][3]['hits']['hits']);
 
         return [
@@ -125,6 +125,30 @@ class Search {
             'playlists' => $playlists,
             'users'     => $users
         ];
+    }
+
+    protected function transformTracks(array $searchHits) {
+        $tracks = $this->transformToEloquent(Track::class, $searchHits);
+        $tracks = $tracks->map(function (Track $track) {
+            return Track::mapPublicTrackSummary($track);
+        });
+        return $tracks;
+    }
+
+    protected function transformAlbums(array $searchHits) {
+        $albums = $this->transformToEloquent(Album::class, $searchHits);
+        $albums = $albums->map(function (Album $track) {
+            return Album::mapPublicAlbumSummary($track);
+        });
+        return $albums;
+    }
+
+    protected function transformPlaylists(array $searchHits) {
+        $playlists = $this->transformToEloquent(Playlist::class, $searchHits);
+        $playlists = $playlists->map(function (Playlist $track) {
+            return Playlist::mapPublicPlaylistSummary($track);
+        });
+        return $playlists;
     }
 
     /**

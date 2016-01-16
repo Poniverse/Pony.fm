@@ -1,6 +1,6 @@
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,19 +17,42 @@
  */
 
 @import 'base/bootstrap/bootstrap';
-@import 'base/bootstrap/responsive';
-@import 'base/font-awesome/font-awesome';
-@import 'variables';
 @import 'mixins';
-@import 'layout';
-@import 'account-content';
-@import 'admin';
-@import 'components';
-@import 'forms';
-@import 'animations';
-@import 'body';
-@import 'player';
-@import 'content';
-@import 'dashboard';
-@import 'uploader';
-@import 'search';
+@import 'variables';
+
+
+.search-input {
+
+}
+
+.search-results {
+  position: absolute;
+  width: 500px;
+  padding: 10px;
+
+  background: #fff;
+
+  ol li {
+    list-style: disc;
+  }
+
+  li a {
+    padding: 0;
+    padding-right: 0;
+    overflow: hidden;
+    color: @pfm-light-grey;
+  }
+
+  .-section-header {
+    background: transparent;
+    color: @pfm-purple;
+
+    padding-left: 0;
+  }
+
+  .albums-listing, .playlists-listing {
+    li {
+      width: 100%;
+    }
+  }
+}
