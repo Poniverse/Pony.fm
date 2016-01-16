@@ -26,7 +26,7 @@ use Config;
 use DB;
 use Elasticsearch;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
-use Poniverse\Ponyfm\Traits\IndexedInElasticsearch;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
@@ -97,7 +97,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class Track extends Model
 {
-    use SoftDeletes, IndexedInElasticsearch;
+    use SoftDeletes, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'track';
 

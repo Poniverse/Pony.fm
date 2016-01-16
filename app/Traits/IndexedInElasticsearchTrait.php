@@ -30,7 +30,7 @@ use Elasticsearch;
  *
  * @package Poniverse\Ponyfm\Traits
  */
-trait IndexedInElasticsearch
+trait IndexedInElasticsearchTrait
 {
     /**
      * Returns this model in Elasticsearch-friendly form. The array returned by
@@ -83,7 +83,7 @@ trait IndexedInElasticsearch
     }
 
     public function ensureElasticsearchEntryIsUpToDate() {
-        if ($this->trashed()) {
+        if (method_exists($this, 'trashed') && $this->trashed()) {
             $this->deleteElasticsearchEntry();
         } else {
             $this->createOrUpdateElasticsearchEntry();

@@ -22,6 +22,7 @@ namespace Poniverse\Ponyfm\Library;
 
 use DB;
 use Elasticsearch\Client;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Playlist;
@@ -53,11 +54,11 @@ class Search {
                         'multi_match' => [
                             'query' => $query,
                             'fields' => [
-                                'title',
-                                'artist',
+                                'title^3',
+                                'artist^2',
                                 'genre',
                                 'track_type',
-                                'show_songs',
+                                'show_songs^2',
                             ],
                         ],
                     ],
@@ -71,7 +72,7 @@ class Search {
                         'multi_match' => [
                             'query' => $query,
                             'fields' => [
-                                'title',
+                                'title^2',
                                 'artist',
                                 'tracks',
                             ],
@@ -87,8 +88,9 @@ class Search {
                         'multi_match' => [
                             'query' => $query,
                             'fields' => [
-                                'title',
-                                'user',
+                                'title^3',
+                                'curator',
+                                'tracks^2',
                             ],
                         ],
                     ],
@@ -102,7 +104,8 @@ class Search {
                         'multi_match' => [
                             'query' => $query,
                             'fields' => [
-                                'display_name',
+                                'display_name^2',
+                                'tracks',
                             ],
                         ],
                     ],
@@ -150,7 +153,14 @@ class Search {
         }
         $caseStatement .= 'END';
 
-        $modelInstances = $modelClass::withTrashed()
+        /** @var Builder $modelInstances */
+        $modelInstances = $modelClass::query();
+
+        if (method_exists($modelClass, 'withTrashed')) {
+            $modelInstances = $modelInstances->withTrashed();
+        }
+
+        $modelInstances = $modelInstances
             ->whereIn('id', array_keys($ids))
             ->orderBy(DB::raw($caseStatement))
             ->get();

@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Auth;
 use Illuminate\Support\Str;
-use Poniverse\Ponyfm\Traits\IndexedInElasticsearch;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -65,7 +65,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable
 {
-    use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearch;
+    use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'user';
 
@@ -258,6 +258,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @return array
      */
     public function toElasticsearch() {
-        return $this->toArray();
+        return [
+            'username'      => $this->username,
+            'display_name'  => $this->display_name,
+            'tracks'        => $this->tracks->pluck('title'),
+        ];
     }
 }

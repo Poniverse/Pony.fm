@@ -28,7 +28,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
-use Poniverse\Ponyfm\Traits\IndexedInElasticsearch;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\TrackCollection;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -62,7 +62,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class Album extends Model
 {
-    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait, IndexedInElasticsearch;
+    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'album';
 

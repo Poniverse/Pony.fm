@@ -54,6 +54,7 @@ class AddTrackToPlaylistCommand extends CommandBase
     {
         $songIndex = $this->_playlist->tracks()->count() + 1;
         $this->_playlist->tracks()->attach($this->_track, ['position' => $songIndex]);
+        $this->_playlist->touch();
 
         Playlist::whereId($this->_playlist->id)->update([
             'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = ' . $this->_playlist->id . ')')

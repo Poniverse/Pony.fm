@@ -42,6 +42,7 @@ class SetupElasticsearch extends Migration
                         'properties' => [
                             'title' => ['type' => 'string'],
                             'artist' => ['type' => 'string', 'index' => 'not_analyzed'],
+
                             'published_at' => ['type' => 'date'],
                             'genre' => ['type' => 'string', 'index' => 'not_analyzed'],
                             'track_type' => ['type' => 'string', 'index' => 'not_analyzed'],
@@ -65,7 +66,35 @@ class SetupElasticsearch extends Migration
                             // See: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
                             'tracks' => ['type' => 'string']
                         ]
-                    ]
+                    ],
+
+                    'playlist' => [
+                        '_source' => ['enabled' => true],
+                        'dynamic' => 'strict',
+                        'properties' => [
+                            'title'     => ['type' => 'string'],
+                            'curator'   => ['type' => 'string', 'index' => 'not_analyzed'],
+
+                            // This field is intended to be used as an array.
+                            // Note that all Elasticsearch fields can technically be used as arrays.
+                            // See: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
+                            'tracks' => ['type' => 'string']
+                        ]
+                    ],
+
+                    'user' => [
+                        '_source' => ['enabled' => true],
+                        'dynamic' => 'strict',
+                        'properties' => [
+                            'username'      => ['type' => 'string', 'index' => 'not_analyzed'],
+                            'display_name'  => ['type' => 'string', 'index' => 'not_analyzed'],
+
+                            // This field is intended to be used as an array.
+                            // Note that all Elasticsearch fields can technically be used as arrays.
+                            // See: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
+                            'tracks' => ['type' => 'string']
+                        ]
+                    ],
                 ]
             ]
         ]);

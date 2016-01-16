@@ -79,15 +79,18 @@ class RebuildSearchIndex extends Command
             }
         });
 
-//        Playlist::withTrashed()->chunk(200, function(Collection $playlists) {
-//            foreach($playlists as $playlist) {
-//                $this->info("Processing playlist #{$playlist->id}...");
-//                $playlist->ensureElasticsearchEntryIsUpToDate();
-//            }
-//        });
-//
-//        User::withTrashed()->chunk(200, function(User $user) {
-//            $user->ensureElasticsearchEntryIsUpToDate();
-//        });
+        Playlist::withTrashed()->chunk(200, function(Collection $playlists) {
+            foreach($playlists as $playlist) {
+                $this->info("Processing playlist #{$playlist->id}...");
+                $playlist->ensureElasticsearchEntryIsUpToDate();
+            }
+        });
+
+        User::chunk(200, function(Collection $users) {
+            foreach($users as $user) {
+                $this->info("Processing user #{$user->id}...");
+                $user->ensureElasticsearchEntryIsUpToDate();
+            }
+        });
     }
 }
