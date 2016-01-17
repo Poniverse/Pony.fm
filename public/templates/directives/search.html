@@ -1,5 +1,12 @@
 <div class="search" ng-blur="searchInProgress = false">
-    <input class="search-input" type="text" placeholder="Search&hellip;" ng-model="searchQuery" pfm-popup="search-results" />
+    <input
+        class="search-input"
+        type="text"
+        placeholder="Search&hellip;"
+        ng-model="searchQuery"
+        pfm-popup="search-results"
+        pfm-popup-close-on-click
+    />
 
     <div class="search-results pfm-popup" id="search-results">
         <h3 class="-section-header">Matching tracks</h3>
