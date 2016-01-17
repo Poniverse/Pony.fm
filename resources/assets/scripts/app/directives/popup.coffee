@@ -27,7 +27,7 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
         $element = $ element
         $positionParent = null
         open = false
-        dontCloseOnClick = attrs.pfmPopupCloseOnClick?
+        closeOnClick = attrs.pfmPopupCloseOnClick?
 
 
         close = () ->
@@ -36,18 +36,20 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 
 
         documentClickHandler = (event) ->
-            console.log(event)
-            debugger
-            return if !open
+            if !open
+                return
 
-            if (dontCloseOnClick and
-                (event.target.id == elementId or
-                $(event.target).parents("##{elementId}").size())
-            )
+            if (closeOnClick)
+                close()
                 return true
 
-            close()
-            return true
+            # Based on: https://stackoverflow.com/a/4660738/3225811
+            else if event.target.id == elementId or $(event.target).parents("##{elementId}").size()
+                return true
+
+            else
+                close()
+                return true
 
 
         calculatePosition = ->
