@@ -66,7 +66,9 @@
 
     <div class="site-body">
         <ul class="sidebar" ng-controller="sidebar">
-            <li><pfm-search></pfm-search></li>
+            @can('access-search')
+                <li><pfm-search></pfm-search></li>
+            @endcan
             <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a href="/tracks">Tracks</a></li>
             <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a href="/albums">Albums</a></li>
             <li ng-class="{selected: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a href="/playlists">Playlists</a></li>
