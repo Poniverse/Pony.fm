@@ -831,9 +831,20 @@ class Track extends Model
         return 'track-' . $this->id . '-' . $key;
     }
 
-    //============= Elasticsearch stuff ==================//
 
-    public function toElasticsearch() {
+    /**
+     * @inheritdoc
+     */
+    public function shouldBeIndexed():bool {
+        return $this->is_listed &&
+               $this->published_at !== null &&
+               !$this->trashed();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toElasticsearch():array {
         return [
             'title'         => $this->title,
             'artist'        => $this->user->display_name,

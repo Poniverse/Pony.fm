@@ -279,4 +279,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             'tracks'        => $this->tracks->pluck('title'),
         ];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function shouldBeIndexed():bool {
+        return $this->disabled_at === null;
+    }
 }

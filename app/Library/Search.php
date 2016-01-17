@@ -43,7 +43,7 @@ class Search {
      * @param int $resultsPerContentType
      * @return array
      */
-    public function searchAllContent(string $query, int $resultsPerContentType = 10) {
+    public function searchAllContent(string $query) {
         $results = $this->elasticsearch->msearch([
             'index' => $this->index,
             'body' => [
@@ -60,9 +60,10 @@ class Search {
                                 'track_type',
                                 'show_songs^2',
                             ],
+                            'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => $resultsPerContentType
+                    'size' => 11
                 ],
 
                 //===== Albums =====//
@@ -76,9 +77,10 @@ class Search {
                                 'artist',
                                 'tracks',
                             ],
+                            'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => $resultsPerContentType
+                    'size' => 3
                 ],
 
                 //===== Playlists =====//
@@ -92,9 +94,10 @@ class Search {
                                 'curator',
                                 'tracks^2',
                             ],
+                            'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => $resultsPerContentType
+                    'size' => 3
                 ],
 
                 //===== Users =====//
@@ -104,12 +107,13 @@ class Search {
                         'multi_match' => [
                             'query' => $query,
                             'fields' => [
-                                'display_name^2',
+                                'display_name',
                                 'tracks',
                             ],
+                            'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => $resultsPerContentType
+                    'size' => 3
                 ],
             ]
         ]);

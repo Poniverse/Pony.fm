@@ -41,13 +41,16 @@ angular.module('ponyfm').directive 'pfmSearch', () ->
 
             $scope.$watch 'searchQuery', _.debounce((searchQuery)->
                 $scope.$apply ()->
-                    clearResults()
-                    return if searchQuery.length <3
+                    if searchQuery.length <3
+                        clearResults()
+                        $scope.searchInProgress = false
+                        return
 
                     $scope.searchInProgress = true
 
                     search.searchAllContent(searchQuery)
                         .then (results)->
+                            clearResults()
                             for track in results.tracks
                                 $scope.tracks.push(track)
 

@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Traits;
 
 use Elasticsearch;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 /**
  * Class IndexedInElasticsearch
@@ -40,13 +41,19 @@ trait IndexedInElasticsearchTrait
      */
     abstract public function toElasticsearch();
 
-    public static function bootIndexedInElasticsearch() {
+    /**
+     * @return bool whether this particular object should be indexed or not
+     */
+    abstract public function shouldBeIndexed():bool;
+
+
+    public static function bootIndexedInElasticsearchTrait() {
         static::saved(function ($model) {
-            $model->createOrUpdateElasticsearchEntry();
+            $model->ensureElasticsearchEntryIsUpToDate();
         });
 
         static::deleted(function ($model) {
-            $model->deleteElasticsearchEntry();
+            $model->ensureElasticsearchEntryIsUpToDate();
         });
     }
 
@@ -76,17 +83,17 @@ trait IndexedInElasticsearchTrait
         try {
             Elasticsearch::connection()->delete($this->getElasticsearchParameters(false));
 
-        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
-            // If the track we're trying to delete isn't indexed in Elasticsearch,
+        } catch (Missing404Exception $e) {
+            // If the entity we're trying to delete isn't indexed in Elasticsearch,
             // that's fine.
         }
     }
 
     public function ensureElasticsearchEntryIsUpToDate() {
-        if (method_exists($this, 'trashed') && $this->trashed()) {
-            $this->deleteElasticsearchEntry();
-        } else {
+        if ($this->shouldBeIndexed()) {
             $this->createOrUpdateElasticsearchEntry();
+        } else {
+            $this->deleteElasticsearchEntry();
         }
     }
 }

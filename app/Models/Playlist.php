@@ -67,6 +67,19 @@ class Playlist extends Model
 
     protected $table = 'playlists';
     protected $dates = ['deleted_at'];
+    protected $casts = [
+        'id'                => 'integer',
+        'user_id'           => 'integer',
+        'title'             => 'string',
+        'description'       => 'string',
+        'is_public'         => 'boolean',
+        'track_count'       => 'integer',
+        'view_count'        => 'integer',
+        'download_count'    => 'integer',
+        'favourte_count'    => 'integer',
+        'follow_count'      => 'integer',
+        'comment_count'     => 'integer',
+    ];
 
     public static function summary()
     {
@@ -300,5 +313,14 @@ class Playlist extends Model
             'curator'   => $this->user->display_name,
             'tracks'    => $this->tracks->pluck('title'),
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function shouldBeIndexed():bool {
+        return $this->is_public &&
+               $this->track_count > 0 &&
+               !$this->trashed();
     }
 }

@@ -8,21 +8,27 @@
     />
 
     <section class="search-results pfm-popup" id="search-results">
-        <div class="-column1">
-            <h3 class="-section-header">Matching tracks</h3>
-            <pfm-tracks-list tracks="tracks"></pfm-tracks-list>
-
+        <div ng-hide="searchInProgress">
+            <p class="empty-box">Type something to begin searching!</p>
         </div>
 
-        <div class="-column2">
-            <h3 class="-section-header">Matching users</h3>
-            <pfm-users-list users="users"></pfm-users-list>
+        <div ng-show="searchInProgress">
+            <div class="-column1">
+                <h3 class="-section-header">Matching tracks</h3>
+                <pfm-tracks-list tracks="tracks"></pfm-tracks-list>
 
-            <h3 class="-section-header">Matching albums</h3>
-            <pfm-albums-list albums="albums"></pfm-albums-list>
+            </div>
 
-            <h3 class="-section-header">Matching playlists</h3>
-            <pfm-playlists-list playlists="playlists"></pfm-playlists-list>
+            <div class="-column2">
+                <h3 class="-section-header">Matching users</h3>
+                <pfm-users-list users="users" class="-condensed"></pfm-users-list>
+
+                <h3 class="-section-header">Matching albums</h3>
+                <pfm-albums-list albums="albums"></pfm-albums-list>
+
+                <h3 class="-section-header">Matching playlists</h3>
+                <pfm-playlists-list playlists="playlists"></pfm-playlists-list>
+            </div>
         </div>
     </section>
 </div>

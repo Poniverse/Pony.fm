@@ -420,4 +420,11 @@ class Album extends Model
             'tracks' => $this->tracks->pluck('title'),
         ];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function shouldBeIndexed():bool {
+        return $this->track_count > 0 && !$this->trashed();
+    }
 }
