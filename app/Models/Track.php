@@ -24,7 +24,10 @@ use Auth;
 use Cache;
 use Config;
 use DB;
+use Elasticsearch;
+use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
 use External;
@@ -93,9 +96,11 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track withComments()
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track mlpma()
  */
-class Track extends Model
+class Track extends Model implements Searchable
 {
-    use SoftDeletes;
+    use SoftDeletes, IndexedInElasticsearchTrait;
+
+    protected $elasticsearchType = 'track';
 
     protected $dates = ['deleted_at', 'published_at', 'released_at'];
     protected $hidden = ['original_tags', 'metadata'];
@@ -825,5 +830,29 @@ class Track extends Model
     private function getCacheKey($key)
     {
         return 'track-' . $this->id . '-' . $key;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function shouldBeIndexed():bool {
+        return $this->is_listed &&
+               $this->published_at !== null &&
+               !$this->trashed();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toElasticsearch():array {
+        return [
+            'title'         => $this->title,
+            'artist'        => $this->user->display_name,
+            'published_at'  => $this->published_at ? $this->published_at->toIso8601String() : null,
+            'genre'         => $this->genre->name,
+            'track_type'    => $this->trackType->title,
+            'show_songs'    => $this->showSongs->pluck('title')
+        ];
     }
 }

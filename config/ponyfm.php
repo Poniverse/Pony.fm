@@ -56,7 +56,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cache Duration
+    | Cache duration
     |--------------------------------------------------------------------------
     |
     | Duration in minutes for track files to be stored in cache.
@@ -64,5 +64,29 @@ return [
     */
 
     'track_file_cache_duration' => 1440,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Elasticsearch index name
+    |--------------------------------------------------------------------------
+    |
+    | The name of the Elasticsearch index to store Pony.fm's search data in.
+    |
+    */
+
+    'elasticsearch_index' => 'ponyfm',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Indexing queue name
+    |--------------------------------------------------------------------------
+    |
+    | The name of the queue to process re-indexing jobs on. This is separated
+    | from the default queue to avoid having a site-wide re-index clog uploads
+    | and downloads.
+    |
+    */
+
+    'indexing_queue' => 'indexing',
 
 ];

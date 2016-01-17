@@ -48,6 +48,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(GateContract $gate)
     {
+        $gate->define('access-search', function(User $user) {
+            return $user->hasRole('admin') || $user->hasRole('moderator');
+        });
+
         $gate->define('access-admin-area', function(User $user) {
             return $user->hasRole('admin');
         });

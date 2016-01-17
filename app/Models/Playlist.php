@@ -26,7 +26,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
+use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\TrackCollection;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -58,13 +60,27 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist userDetails()
  */
-class Playlist extends Model
+class Playlist extends Model implements Searchable
 {
-    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait;
+    use SoftDeletes, SlugTrait, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
+
+    protected $elasticsearchType = 'playlist';
 
     protected $table = 'playlists';
-
     protected $dates = ['deleted_at'];
+    protected $casts = [
+        'id'                => 'integer',
+        'user_id'           => 'integer',
+        'title'             => 'string',
+        'description'       => 'string',
+        'is_public'         => 'boolean',
+        'track_count'       => 'integer',
+        'view_count'        => 'integer',
+        'download_count'    => 'integer',
+        'favourte_count'    => 'integer',
+        'follow_count'      => 'integer',
+        'comment_count'     => 'integer',
+    ];
 
     public static function summary()
     {
@@ -284,5 +300,28 @@ class Playlist extends Model
     private function getCacheKey($key)
     {
         return 'playlist-' . $this->id . '-' . $key;
+    }
+
+    /**
+     * Returns this model in Elasticsearch-friendly form. The array returned by
+     * this method should match the current mapping for this model's ES type.
+     *
+     * @return array
+     */
+    public function toElasticsearch():array {
+        return [
+            'title'     => $this->title,
+            'curator'   => $this->user->display_name,
+            'tracks'    => $this->tracks->pluck('title'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function shouldBeIndexed():bool {
+        return $this->is_public &&
+               $this->track_count > 0 &&
+               !$this->trashed();
     }
 }

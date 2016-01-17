@@ -1,6 +1,8 @@
+<?php
+
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,20 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'base/bootstrap/bootstrap';
-@import 'base/bootstrap/responsive';
-@import 'base/font-awesome/font-awesome';
-@import 'variables';
-@import 'mixins';
-@import 'layout';
-@import 'account-content';
-@import 'admin';
-@import 'components';
-@import 'forms';
-@import 'animations';
-@import 'body';
-@import 'player';
-@import 'content';
-@import 'dashboard';
-@import 'uploader';
-@import 'search';
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+
+use Elasticsearch;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Input;
+use Poniverse\Ponyfm\Library\Search;
+use Response;
+
+class SearchController extends ApiControllerBase
+{
+    public function getSearch(Search $search)
+    {
+        $results = $search->searchAllContent(Input::query('query'));
+
+        return Response::json([
+            'results' => $results,
+        ], 200);
+    }
+}

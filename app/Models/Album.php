@@ -27,7 +27,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
+use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\TrackCollection;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -59,9 +61,11 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album userDetails()
  */
-class Album extends Model
+class Album extends Model implements Searchable
 {
-    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait;
+    use SoftDeletes, SlugTrait, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
+
+    protected $elasticsearchType = 'album';
 
     protected $dates = ['deleted_at'];
     protected $fillable = ['user_id', 'title', 'slug'];
@@ -402,5 +406,26 @@ class Album extends Model
 
     protected function recountTracks() {
         $this->track_count = $this->tracks->count();
+    }
+
+    /**
+     * Returns this model in Elasticsearch-friendly form. The array returned by
+     * this method should match the current mapping for this model's ES type.
+     *
+     * @return array
+     */
+    public function toElasticsearch():array {
+        return [
+            'title' => $this->title,
+            'artist' => $this->user->display_name,
+            'tracks' => $this->tracks->pluck('title'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function shouldBeIndexed():bool {
+        return $this->track_count > 0 && !$this->trashed();
     }
 }

@@ -1,6 +1,8 @@
+<?php
+
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,20 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'base/bootstrap/bootstrap';
-@import 'base/bootstrap/responsive';
-@import 'base/font-awesome/font-awesome';
-@import 'variables';
-@import 'mixins';
-@import 'layout';
-@import 'account-content';
-@import 'admin';
-@import 'components';
-@import 'forms';
-@import 'animations';
-@import 'body';
-@import 'player';
-@import 'content';
-@import 'dashboard';
-@import 'uploader';
-@import 'search';
+namespace Poniverse\Ponyfm\Contracts;
+
+interface Searchable {
+    /**
+     * Returns this model in Elasticsearch-friendly form. The array returned by
+     * this method should match the current mapping for this model's ES type.
+     *
+     * @return array
+     */
+    public function toElasticsearch():array;
+
+    /**
+     * @return bool whether this particular object should be indexed or not
+     */
+    public function shouldBeIndexed():bool;
+
+    public function updateElasticsearchEntry();
+    public function updateElasticsearchEntrySynchronously();
+}

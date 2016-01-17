@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Auth;
 use Illuminate\Support\Str;
+use Poniverse\Ponyfm\Contracts\Searchable;
+use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -62,9 +64,11 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User userDetails()
  */
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable
 {
-    use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait;
+    use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearchTrait;
+
+    protected $elasticsearchType = 'user';
 
     protected $table = 'users';
     protected $casts = [
@@ -246,5 +250,41 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         return false;
+    }
+
+    public static function mapPublicUserSummary(User $user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->display_name,
+            'slug' => $user->slug,
+            'url' => $user->url,
+            'is_archived' => $user->is_archived,
+            'avatars' => [
+                'small' => $user->getAvatarUrl(Image::SMALL),
+                'normal' => $user->getAvatarUrl(Image::NORMAL)
+            ],
+            'created_at' => $user->created_at
+        ];
+    }
+
+    /**
+     * Returns this model in Elasticsearch-friendly form. The array returned by
+     * this method should match the current mapping for this model's ES type.
+     *
+     * @return array
+     */
+    public function toElasticsearch():array {
+        return [
+            'username'      => $this->username,
+            'display_name'  => $this->display_name,
+            'tracks'        => $this->tracks->pluck('title'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function shouldBeIndexed():bool {
+        return $this->disabled_at === null;
     }
 }

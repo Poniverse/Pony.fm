@@ -27,20 +27,41 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
         $element = $ element
         $positionParent = null
         open = false
+        closeOnClick = attrs.pfmPopupCloseOnClick?
 
 
-        documentClickHandler = () ->
-            return if !open
+        close = () ->
             $popup.removeClass 'open'
             open = false
+
+
+        documentClickHandler = (event) ->
+            if !open
+                return
+
+            if (closeOnClick)
+                close()
+                return true
+
+            # Based on: https://stackoverflow.com/a/4660738/3225811
+            else if event.target.id == elementId or $(event.target).parents("##{elementId}").size()
+                return true
+
+            else
+                close()
+                return true
+
 
         calculatePosition = ->
             $popup.parents().each () ->
                 $this = $ this
-                $positionParent = $this if $positionParent == null && ($this.css('position') == 'relative' || $this.is 'body')
+
+                if $positionParent == null && ($this.css('position') == 'relative' || $this.is 'body')
+                    $positionParent = $this
+                    return false
 
             position = $element.offset()
-            parentPosition = $positionParent.offset()
+            parentPosition = $positionParent.offset() + $positionParent.height()
 
             windowWidth = $(window).width() - 15
             left = position.left
@@ -63,6 +84,7 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
                 top: top - parentPosition.top,
                 height: height - 15}
 
+
         windowResizeHandler = () ->
             return if !open
             $popup.css 'height', 'auto'
@@ -70,7 +92,7 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
             $popup.css
                 left: position.left
                 top: position.top
-                height: position.height
+                maxHeight: position.height
 
         $(document.body).bind 'click', documentClickHandler
         $(window).bind 'resize', windowResizeHandler
@@ -79,9 +101,8 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
             e.preventDefault()
             e.stopPropagation()
 
-            if open
-                open = false
-                $popup.removeClass 'open'
+            if open and not $element.is(':focus')
+                close
                 return
 
             $popup.addClass 'open'
@@ -96,6 +117,11 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
 
                 open = true
             ), 0
+
+
+        scope.$on '$stateChangeStart', () ->
+            close()
+
 
         scope.$on '$destroy', () ->
             $(document.body).unbind 'click', documentClickHandler

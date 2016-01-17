@@ -50,7 +50,7 @@
         </div>
         <div class="row-fluid">
             <div class="form-row album span6" ng-class="{'has-error': errors.album_id != null}">
-                <a pfm-popup="album-selector" href="#" class="btn btn-small">
+                <a pfm-popup="album-selector" pfm-popup-close-on-click href="#" class="btn btn-small">
                     Album:
                     <strong ng-show="selectedAlbum">{{selectedAlbum.title}}</strong>
                     <strong ng-hide="selectedAlbum">None</strong>
@@ -68,7 +68,7 @@
                 <div class="error">{{errors.album_id}}</div>
             </div>
             <div class="form-row show-songs span6" ng-show="edit.track_type_id == 2" ng-class="{'has-error': errors.show_song_ids != null}">
-                <a pfm-popup="song-selector" href="#" class="btn btn-small">Show Songs: <strong>{{selectedSongsTitle}}</strong></a>
+                <a pfm-popup="song-selector" pfm-popup-close-on-click href="#" class="btn btn-small">Show Songs: <strong>{{selectedSongsTitle}}</strong></a>
                 <div id="song-selector" class="pfm-popup">
                     <ul>
                         <li ng-repeat="song in taxonomies.showSongs" ng-class="{selected: selectedSongs[song.id]}">
