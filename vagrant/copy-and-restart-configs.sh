@@ -7,6 +7,7 @@ sudo cp /vagrant/vagrant/php-overrides.ini /etc/php/7.0/fpm/99-overrides.ini
 
 sudo cp /vagrant/vagrant/pony.fm.redis.config /etc/redis/redis.conf
 
+sudo service elasticsearch restart
 sudo service nginx restart
 sudo service php7.0-fpm restart
 
