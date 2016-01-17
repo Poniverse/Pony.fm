@@ -55,10 +55,13 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
         calculatePosition = ->
             $popup.parents().each () ->
                 $this = $ this
-                $positionParent = $this if $positionParent == null && ($this.css('position') == 'relative' || $this.is 'body')
+
+                if $positionParent == null && ($this.css('position') == 'relative' || $this.is 'body')
+                    $positionParent = $this
+                    return false
 
             position = $element.offset()
-            parentPosition = $positionParent.offset()
+            parentPosition = $positionParent.offset() + $positionParent.height()
 
             windowWidth = $(window).width() - 15
             left = position.left
@@ -89,7 +92,7 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
             $popup.css
                 left: position.left
                 top: position.top
-                height: position.height
+                maxHeight: position.height
 
         $(document.body).bind 'click', documentClickHandler
         $(window).bind 'resize', windowResizeHandler

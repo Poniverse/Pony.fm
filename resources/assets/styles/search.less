@@ -20,17 +20,34 @@
 @import 'mixins';
 @import 'variables';
 
+.search {
+  position: relative;
+}
 
-.search-input {
-
+input.search-input {
+  font-size: 13px;
+  padding: 15px 10px;
+  margin-bottom: 0;
 }
 
 .search-results {
-  position: absolute;
-  width: 500px;
+  width: 600px;
   padding: 10px;
 
   background: #fff;
+
+  .-column1, .-column2 {
+    width: 48%;
+    float: left;
+  }
+
+  .-column1 {
+    padding-right: 2%;
+  }
+
+  .-column2 {
+    padding-left: 2%;
+  }
 
   ol li {
     list-style: disc;
@@ -38,7 +55,6 @@
 
   li a {
     padding: 0;
-    padding-right: 0;
     overflow: hidden;
     color: @pfm-light-grey;
   }

@@ -59,5 +59,5 @@ angular.module('ponyfm').directive 'pfmSearch', () ->
 
                             for user in results.users
                                 $scope.users.push(user)
-            , 500)
+            , 200)
     ]
