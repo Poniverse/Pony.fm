@@ -251,6 +251,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return false;
     }
 
+    public static function mapPublicUserSummary(User $user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->display_name,
+            'slug' => $user->slug,
+            'url' => $user->url,
+            'is_archived' => $user->is_archived,
+            'avatars' => [
+                'small' => $user->getAvatarUrl(Image::SMALL),
+                'normal' => $user->getAvatarUrl(Image::NORMAL)
+            ],
+            'created_at' => $user->created_at
+        ];
+    }
+
     /**
      * Returns this model in Elasticsearch-friendly form. The array returned by
      * this method should match the current mapping for this model's ES type.

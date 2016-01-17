@@ -16,9 +16,7 @@
 
         <div class="-column2">
             <h3 class="-section-header">Matching users</h3>
-            <ol>
-                <li bindonce ng-repeat="user in users track by user.id" bo-text="user.display_name"></li>
-            </ol>
+            <pfm-users-list users="users"></pfm-users-list>
 
             <h3 class="-section-header">Matching albums</h3>
             <pfm-albums-list albums="albums"></pfm-albums-list>

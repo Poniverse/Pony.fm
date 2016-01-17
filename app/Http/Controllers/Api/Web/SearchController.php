@@ -30,9 +30,7 @@ class SearchController extends ApiControllerBase
 {
     public function getSearch(Search $search)
     {
-        $input = Input::all();
-
-        $results = $search->searchAllContent($input['query']);
+        $results = $search->searchAllContent(Input::query('query'));
 
         return Response::json([
             'results' => $results,

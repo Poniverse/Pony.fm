@@ -195,18 +195,7 @@ class ArtistsController extends ApiControllerBase
         $users = [];
 
         foreach ($query->get() as $user) {
-            $users[] = [
-                'id' => $user->id,
-                'name' => $user->display_name,
-                'slug' => $user->slug,
-                'url' => $user->url,
-                'is_archived' => $user->is_archived,
-                'avatars' => [
-                    'small' => $user->getAvatarUrl(Image::SMALL),
-                    'normal' => $user->getAvatarUrl(Image::NORMAL)
-                ],
-                'created_at' => $user->created_at
-            ];
+            $users[] = User::mapPublicUserSummary($user);
         }
 
         return Response::json(["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
