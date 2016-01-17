@@ -19,7 +19,6 @@
  */
 
 use Illuminate\Database\Migrations\Migration;
-use Poniverse\Ponyfm\Console\Commands\RebuildSearchIndex;
 
 class SetupElasticsearch extends Migration
 {

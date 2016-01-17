@@ -29,13 +29,14 @@ return [
 			 * instances.
 			 *
 			 * This is the only configuration value that is mandatory.
+             *
+             * If set in an environment variable, this should be a comma-separated
+             * list of hostnames. Port numbers are optional; 9200 is the default.
 			 *
 			 * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_host_configuration
 			 */
 
-			'hosts' => [
-				'localhost:9200'
-			],
+			'hosts' => explode(',', env('ELASTICSEARCH_HOSTS', 'localhost:9200')),
 
 			/**
 			 * SSL
