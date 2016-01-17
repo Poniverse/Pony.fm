@@ -25,6 +25,7 @@ use Cache;
 use Config;
 use DB;
 use Elasticsearch;
+use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\SlugTrait;
@@ -95,7 +96,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track withComments()
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track mlpma()
  */
-class Track extends Model
+class Track extends Model implements Searchable
 {
     use SoftDeletes, IndexedInElasticsearchTrait;
 

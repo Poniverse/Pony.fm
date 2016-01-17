@@ -82,7 +82,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function
 
 Route::group(['prefix' => 'api/web'], function() {
     Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
-    Route::get('/search', ['middleware' => ['auth', 'can:access-search'], 'Api\Web\SearchController@getSearch']);
+    Route::get('/search', ['middleware' => ['auth', 'can:access-search'], 'uses' => 'Api\Web\SearchController@getSearch']);
 
     Route::get('/tracks', 'Api\Web\TracksController@getIndex');
     Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');

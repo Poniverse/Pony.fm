@@ -20,40 +20,39 @@
 
 namespace Poniverse\Ponyfm\Traits;
 
+use Config;
 use Elasticsearch;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Poniverse\Ponyfm\Contracts\Searchable;
+use Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity;
 
 /**
  * Class IndexedInElasticsearch
  *
- * Classes using this trait must declare the `$elasticsearchType` property
- * and use the `SoftDeletes` trait.
+ * Classes using this trait must declare the `$elasticsearchType` property and
+ * implement the `Searchable` interface.
  *
  * @package Poniverse\Ponyfm\Traits
  */
 trait IndexedInElasticsearchTrait
 {
-    /**
-     * Returns this model in Elasticsearch-friendly form. The array returned by
-     * this method should match the current mapping for this model's ES type.
-     *
-     * @return array
-     */
-    abstract public function toElasticsearch();
+    use DispatchesJobs;
 
-    /**
-     * @return bool whether this particular object should be indexed or not
-     */
-    abstract public function shouldBeIndexed():bool;
+    // These two functions are from the Searchable interface. They're included
+    // here, without being implemented, to assist IDE's when editing this trait.
+    public abstract function toElasticsearch():array;
+    public abstract function shouldBeIndexed():bool;
 
 
+    // Laravel automatically runs this method based on the trait's name. #magic
     public static function bootIndexedInElasticsearchTrait() {
-        static::saved(function ($model) {
-            $model->ensureElasticsearchEntryIsUpToDate();
+        static::saved(function (Searchable $entity) {
+            $entity->updateElasticsearchEntry();
         });
 
-        static::deleted(function ($model) {
-            $model->ensureElasticsearchEntryIsUpToDate();
+        static::deleted(function (Searchable $entity) {
+            $entity->updateElasticsearchEntry();
         });
     }
 
@@ -63,7 +62,7 @@ trait IndexedInElasticsearchTrait
      */
     private function getElasticsearchParameters(bool $includeBody = true) {
         $parameters = [
-            'index' => 'ponyfm',
+            'index' => Config::get('ponyfm.elasticsearch_index'),
             'type'  => $this->elasticsearchType,
             'id'    => $this->id,
         ];
@@ -89,7 +88,20 @@ trait IndexedInElasticsearchTrait
         }
     }
 
-    public function ensureElasticsearchEntryIsUpToDate() {
+    /**
+     * Asynchronously updates the Elasticsearch entry.
+     * When in doubt, this is the method to use.
+     */
+    public function updateElasticsearchEntry() {
+        $job = (new UpdateSearchIndexForEntity($this))->onQueue(Config::get('ponyfm.indexing_queue'));
+        $this->dispatch($job);
+    }
+
+    /**
+     * Synchronously updates the Elasticsearch entry. This should only be
+     * called from the UpdateSearchIndexForEntity job.
+     */
+    public function updateElasticsearchEntrySynchronously() {
         if ($this->shouldBeIndexed()) {
             $this->createOrUpdateElasticsearchEntry();
         } else {

@@ -26,6 +26,7 @@ use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class RebuildSearchIndex extends Command
 {
@@ -65,32 +66,56 @@ class RebuildSearchIndex extends Command
         $totalPlaylists = Playlist::withTrashed()->count();
         $totalUsers = User::count();
 
-        Track::withTrashed()->chunk(200, function(Collection $tracks) {
+        $trackProgress = $this->output->createProgressBar($totalTracks);
+        $this->info("Processing tracks...");
+        Track::withTrashed()->chunk(200, function(Collection $tracks) use ($trackProgress) {
             foreach($tracks as $track) {
-                $this->info("Processing track #{$track->id}...");
-                $track->ensureElasticsearchEntryIsUpToDate();
+                /** @var Track $track */
+                $trackProgress->advance();
+                $track->updateElasticsearchEntry();
             }
         });
+        $trackProgress->finish();
+        $this->line('');
 
-        Album::withTrashed()->chunk(200, function(Collection $albums) {
+
+        $albumProgress = $this->output->createProgressBar($totalAlbums);
+        $this->info("Processing albums...");
+        Album::withTrashed()->chunk(200, function(Collection $albums) use ($albumProgress) {
             foreach($albums as $album) {
-                $this->info("Processing album #{$album->id}...");
-                $album->ensureElasticsearchEntryIsUpToDate();
+                /** @var Album $album */
+                $albumProgress->advance();
+                $album->updateElasticsearchEntry();
             }
         });
+        $albumProgress->finish();
+        $this->line('');
 
-        Playlist::withTrashed()->chunk(200, function(Collection $playlists) {
+
+        $playlistProgress = $this->output->createProgressBar($totalPlaylists);
+        $this->info("Processing playlists...");
+        Playlist::withTrashed()->chunk(200, function(Collection $playlists) use ($playlistProgress) {
             foreach($playlists as $playlist) {
-                $this->info("Processing playlist #{$playlist->id}...");
-                $playlist->ensureElasticsearchEntryIsUpToDate();
+                /** @var Playlist $playlist */
+                $playlistProgress->advance();
+                $playlist->updateElasticsearchEntry();
             }
         });
+        $playlistProgress->finish();
+        $this->line('');
 
-        User::chunk(200, function(Collection $users) {
+
+        $userProgress = $this->output->createProgressBar($totalUsers);
+        $this->info("Processing users...");
+        User::chunk(200, function(Collection $users) use ($userProgress) {
             foreach($users as $user) {
-                $this->info("Processing user #{$user->id}...");
-                $user->ensureElasticsearchEntryIsUpToDate();
+                /** @var User $user */
+                $userProgress->advance();
+                $user->updateElasticsearchEntry();
             }
         });
+        $userProgress->finish();
+        $this->line('');
+        $this->info('Everything has been queued for re-indexing!');
     }
 }

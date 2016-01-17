@@ -76,4 +76,17 @@ return [
 
     'elasticsearch_index' => 'ponyfm',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Indexing queue name
+    |--------------------------------------------------------------------------
+    |
+    | The name of the queue to process re-indexing jobs on. This is separated
+    | from the default queue to avoid having a site-wide re-index clog uploads
+    | and downloads.
+    |
+    */
+
+    'indexing_queue' => 'indexing',
+
 ];

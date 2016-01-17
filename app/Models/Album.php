@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
+use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\TrackCollection;
@@ -60,9 +61,9 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album userDetails()
  */
-class Album extends Model
+class Album extends Model implements Searchable
 {
-    use SoftDeletes, SlugTrait, DispatchesJobs, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
+    use SoftDeletes, SlugTrait, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'album';
 
@@ -413,7 +414,7 @@ class Album extends Model
      *
      * @return array
      */
-    public function toElasticsearch() {
+    public function toElasticsearch():array {
         return [
             'title' => $this->title,
             'artist' => $this->user->display_name,
