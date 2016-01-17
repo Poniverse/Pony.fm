@@ -1,7 +1,7 @@
 <div class="search" ng-blur="searchInProgress = false">
-    <input class="search-input" type="text" placeholder="Search&hellip;" ng-model="searchQuery" ng-keyup="quickSearch()" pfm-popup="search-results" />
+    <input class="search-input" type="text" placeholder="Search&hellip;" ng-model="searchQuery" pfm-popup="search-results" />
 
-    <div class="search-results pfm-popup" id="search-results" ng-show="searchInProgress">
+    <div class="search-results pfm-popup" id="search-results">
         <h3 class="-section-header">Matching tracks</h3>
         <pfm-tracks-list tracks="tracks"></pfm-tracks-list>
 

@@ -24,7 +24,7 @@ angular.module('ponyfm').directive 'pfmSearch', () ->
     controller: [
         '$scope', 'search'
         ($scope, search) ->
-            $scope.searchQuery = null
+            $scope.searchQuery = ''
             $scope.searchInProgress = false
 
             $scope.tracks = []
@@ -33,27 +33,31 @@ angular.module('ponyfm').directive 'pfmSearch', () ->
             $scope.users = []
 
             clearResults = ()->
-                $scope.tracks = []
-                $scope.albums = []
-                $scope.playlists = []
-                $scope.users = []
+                $scope.tracks.length = 0
+                $scope.albums.length = 0
+                $scope.playlists.length = 0
+                $scope.users.length = 0
 
-            $scope.quickSearch = ()->
-                clearResults()
-                $scope.searchInProgress = true
 
-                search.searchAllContent($scope.searchQuery)
-                    .done (results)->
-                        for track in results.tracks
-                            $scope.tracks.push(track)
+            $scope.$watch 'searchQuery', _.debounce((searchQuery)->
+                $scope.$apply ()->
+                    clearResults()
+                    return if searchQuery.length <3
 
-                        for album in results.albums
-                            $scope.albums.push(album)
+                    $scope.searchInProgress = true
 
-                        for playlist in results.playlists
-                            $scope.playlists.push(playlist)
+                    search.searchAllContent(searchQuery)
+                        .then (results)->
+                            for track in results.tracks
+                                $scope.tracks.push(track)
 
-                        for user in results.users
-                            $scope.users.push(user)
+                            for album in results.albums
+                                $scope.albums.push(album)
 
+                            for playlist in results.playlists
+                                $scope.playlists.push(playlist)
+
+                            for user in results.users
+                                $scope.users.push(user)
+            , 500)
     ]

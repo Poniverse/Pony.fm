@@ -29,10 +29,11 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
         open = false
 
 
-        documentClickHandler = () ->
+        documentClickHandler = (event) ->
             return if !open
             $popup.removeClass 'open'
             open = false
+            return true
 
         calculatePosition = ->
             $popup.parents().each () ->
@@ -79,7 +80,7 @@ angular.module('ponyfm').directive 'pfmPopup', () ->
             e.preventDefault()
             e.stopPropagation()
 
-            if open
+            if open and not $element.is(':focus')
                 open = false
                 $popup.removeClass 'open'
                 return

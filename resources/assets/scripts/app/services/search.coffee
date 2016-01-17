@@ -26,6 +26,9 @@ angular.module('ponyfm').factory('search', [
                     .success (results)->
                         searchDef.resolve(results.results)
 
+                    .error (response)->
+                        searchDef.reject(response)
+
                 searchDef.promise()
 
         self
