@@ -63,7 +63,7 @@ class Search {
                             'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => 11
+                    'size' => 13
                 ],
 
                 //===== Albums =====//
