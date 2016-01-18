@@ -96,9 +96,6 @@ class ClearTrackCache extends Command
                         $this->info('Deleted ' . $trackFile->getFile());
                     }
 
-                    // Remove the cached file size for the album
-                    Cache::forget($trackFile->track->album->getCacheKey('filesize-' . $trackFile->format));
-
                 }
                 $this->info($count . ' files deleted. Deletion complete. Exiting.');
             } else {
