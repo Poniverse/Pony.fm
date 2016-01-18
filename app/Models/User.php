@@ -88,7 +88,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         if (Auth::check()) {
             $query->with([
-                'users' => function ($query) {
+                'users' => function($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
             ]);
@@ -151,7 +151,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getIsArchivedAttribute()
     {
-        return (bool)$this->attributes['is_archived'];
+        return (bool) $this->attributes['is_archived'];
     }
 
     public function getUrlAttribute()
@@ -161,7 +161,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getMessageUrlAttribute()
     {
-        return 'http://mlpforums.com/index.php?app=members&module=messaging&section=send&do=form&fromMemberID=' . $this->id;
+        return 'http://mlpforums.com/index.php?app=members&module=messaging&section=send&do=form&fromMemberID='.$this->id;
     }
 
     public function getAuthIdentifier()
@@ -192,7 +192,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         if ($this->email == "redacted@example.net") {
-            return Gravatar::getUrl($this->id . "", Image::$ImageTypes[$type]['width'], "identicon");
+            return Gravatar::getUrl($this->id."", Image::$ImageTypes[$type]['width'], "identicon");
         }
 
         $email = $this->gravatar;
@@ -238,7 +238,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * Returns true if this user has the given role.
      *
-     * @param $roleName
+     * @param string $roleName
      * @return bool
      */
     public function hasRole($roleName)

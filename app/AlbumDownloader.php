@@ -43,25 +43,25 @@ class AlbumDownloader
 
     function download()
     {
-        $zip = new ZipStream($this->_album->user->display_name . ' - ' . $this->_album->title . '.zip');
+        $zip = new ZipStream($this->_album->user->display_name.' - '.$this->_album->title.'.zip');
         $zip->setComment(
-            'Album: ' . $this->_album->title . "\r\n" .
-            'Artist: ' . $this->_album->user->display_name . "\r\n" .
-            'URL: ' . $this->_album->url . "\r\n" . "\r\n" .
-            'Downloaded on ' . date('l, F jS, Y, \a\t h:i:s A') . '.'
+            'Album: '.$this->_album->title."\r\n".
+            'Artist: '.$this->_album->user->display_name."\r\n".
+            'URL: '.$this->_album->url."\r\n"."\r\n".
+            'Downloaded on '.date('l, F jS, Y, \a\t h:i:s A').'.'
         );
 
-        $directory = $this->_album->user->display_name . '/' . $this->_album->title . '/';
+        $directory = $this->_album->user->display_name.'/'.$this->_album->title.'/';
 
         $notes =
-            'Album: ' . $this->_album->title . "\r\n" .
-            'Artist: ' . $this->_album->user->display_name . "\r\n" .
-            'URL: ' . $this->_album->url . "\r\n" .
-            "\r\n" .
-            $this->_album->description . "\r\n" .
-            "\r\n" .
-            "\r\n" .
-            'Tracks' . "\r\n" .
+            'Album: '.$this->_album->title."\r\n".
+            'Artist: '.$this->_album->user->display_name."\r\n".
+            'URL: '.$this->_album->url."\r\n".
+            "\r\n".
+            $this->_album->description."\r\n".
+            "\r\n".
+            "\r\n".
+            'Tracks'."\r\n".
             "\r\n";
 
         foreach ($this->_album->tracks as $track) {
@@ -70,14 +70,14 @@ class AlbumDownloader
             }
 
             $zip->addLargeFile($track->getFileFor($this->_format),
-                $directory . $track->getDownloadFilenameFor($this->_format));
+                $directory.$track->getDownloadFilenameFor($this->_format));
             $notes .=
-                $track->track_number . '. ' . $track->title . "\r\n" .
-                $track->description . "\r\n" .
+                $track->track_number.'. '.$track->title."\r\n".
+                $track->description."\r\n".
                 "\r\n";
         }
 
-        $zip->addFile($notes, $directory . 'Album Notes.txt');
+        $zip->addFile($notes, $directory.'Album Notes.txt');
         $zip->finalize();
     }
 }

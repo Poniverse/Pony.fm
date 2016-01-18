@@ -22,7 +22,6 @@ namespace Poniverse\Ponyfm\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Response;
 
 class DisabledAccountCheck
 {
@@ -59,7 +58,7 @@ class DisabledAccountCheck
         if ($this->auth->check()
             && $this->auth->user()->disabled_at !== null
             && !($request->getMethod() === 'POST' && $request->getRequestUri() == '/auth/logout')
-        ){
+        ) {
             $this->auth->logout();
 //            return Response::view('home.account-disabled', ['username' => $this->auth->user()->username], 403);
         }

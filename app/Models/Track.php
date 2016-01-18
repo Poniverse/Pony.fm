@@ -24,7 +24,6 @@ use Auth;
 use Cache;
 use Config;
 use DB;
-use Elasticsearch;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
@@ -211,7 +210,7 @@ class Track extends Model implements Searchable
     {
         if (Auth::check()) {
             $query->with([
-                'users' => function ($query) {
+                'users' => function($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
             ]);
@@ -238,7 +237,7 @@ class Track extends Model implements Searchable
     public function scopeWithComments($query)
     {
         $query->with([
-            'comments' => function ($query) {
+            'comments' => function($query) {
                 $query->with('user');
             }
         ]);
@@ -254,10 +253,13 @@ class Track extends Model implements Searchable
         $query->join('mlpma_tracks', 'tracks.id', '=', 'mlpma_tracks.track_id');
     }
 
+    /**
+     * @param integer $count
+     */
     public static function popular($count, $allowExplicit = false)
     {
-        $trackIds = Cache::remember('popular_tracks' . $count . '-' . ($allowExplicit ? 'explicit' : 'safe'), 5,
-            function () use ($allowExplicit, $count) {
+        $trackIds = Cache::remember('popular_tracks'.$count.'-'.($allowExplicit ? 'explicit' : 'safe'), 5,
+            function() use ($allowExplicit, $count) {
                 $query = static
                     ::published()
                     ->listed()
@@ -342,12 +344,12 @@ class Track extends Model implements Searchable
 
         $returnValue['share'] = [
             'url' => action('TracksController@getShortlink', ['id' => $track->id]),
-            'html' => '<iframe src="' . action('TracksController@getEmbed', ['id' => $track->id]) . '" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
-            'bbcode' => '[url=' . $track->url . '][img]' . $track->getCoverUrl() . '[/img][/url]',
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $track->title . ' by ' . $track->user->display_name . ' on Pony.fm'
+            'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
+            'bbcode' => '[url='.$track->url.'][img]'.$track->getCoverUrl().'[/img][/url]',
+            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$track->title.' by '.$track->user->display_name.' on Pony.fm'
         ];
 
-        $returnValue['share']['tumblrUrl'] = 'http://www.tumblr.com/share/video?embed=' . urlencode($returnValue['share']['html']) . '&caption=' . urlencode($track->title);
+        $returnValue['share']['tumblrUrl'] = 'http://www.tumblr.com/share/video?embed='.urlencode($returnValue['share']['html']).'&caption='.urlencode($track->title);
 
         $returnValue['formats'] = $formats;
 
@@ -369,28 +371,28 @@ class Track extends Model implements Searchable
             $userRow = $track->users[0];
             $userData = [
                 'stats' => [
-                    'views' => (int)$userRow->view_count,
-                    'plays' => (int)$userRow->play_count,
+                    'views' => (int) $userRow->view_count,
+                    'plays' => (int) $userRow->play_count,
                     'downloads' => $userRow->download_count,
                 ],
-                'is_favourited' => (bool)$userRow->is_favourited
+                'is_favourited' => (bool) $userRow->is_favourited
             ];
         }
 
         return [
-            'id' => (int)$track->id,
+            'id' => (int) $track->id,
             'title' => $track->title,
             'user' => [
-                'id' => (int)$track->user->id,
+                'id' => (int) $track->user->id,
                 'name' => $track->user->display_name,
                 'url' => $track->user->url
             ],
             'stats' => [
-                'views' => (int)$track->view_count,
-                'plays' => (int)$track->play_count,
-                'downloads' => (int)$track->download_count,
-                'comments' => (int)$track->comment_count,
-                'favourites' => (int)$track->favourite_count
+                'views' => (int) $track->view_count,
+                'plays' => (int) $track->play_count,
+                'downloads' => (int) $track->download_count,
+                'comments' => (int) $track->comment_count,
+                'favourites' => (int) $track->favourite_count
             ],
             'url' => $track->url,
             'slug' => $track->slug,
@@ -403,7 +405,7 @@ class Track extends Model implements Searchable
             'genre' => $track->genre != null
                 ?
                 [
-                    'id' => (int)$track->genre->id,
+                    'id' => (int) $track->genre->id,
                     'slug' => $track->genre->slug,
                     'name' => $track->genre->name
                 ] : null,
@@ -442,7 +444,7 @@ class Track extends Model implements Searchable
         $returnValue['released_at'] = $track->released_at;
         $returnValue['lyrics'] = $track->lyrics;
         $returnValue['description'] = $track->description;
-        $returnValue['is_downloadable'] = !$track->isPublished() ? true : (bool)$track->is_downloadable;
+        $returnValue['is_downloadable'] = !$track->isPublished() ? true : (bool) $track->is_downloadable;
         $returnValue['license_id'] = $track->license_id != null ? $track->license_id : 3;
 
         return $returnValue;
@@ -528,7 +530,7 @@ class Track extends Model implements Searchable
 
     public function setTitleAttribute($value)
     {
-        $this->setTitleAttributeSlug($value);;
+        $this->setTitleAttributeSlug($value); ;
         $this->updateHash();
     }
 
@@ -567,7 +569,7 @@ class Track extends Model implements Searchable
     public function getDownloadDirectoryAttribute()
     {
         if ($this->album) {
-            return $this->user->display_name . '/' . $this->album->title;
+            return $this->user->display_name.'/'.$this->album->title;
         }
 
         return $this->user->display_name;
@@ -626,9 +628,9 @@ class Track extends Model implements Searchable
 
     public function getDirectory()
     {
-        $dir = (string)(floor($this->id / 100) * 100);
+        $dir = (string) (floor($this->id / 100) * 100);
 
-        return \Config::get('ponyfm.files_directory') . '/tracks/' . $dir;
+        return \Config::get('ponyfm.files_directory').'/tracks/'.$dir;
     }
 
     public function getDates()
@@ -658,6 +660,9 @@ class Track extends Model implements Searchable
         return "{$this->title}.{$format['extension']}";
     }
 
+    /**
+     * @return string
+     */
     public function getFileFor($format)
     {
         if (!isset(self::$Formats[$format])) {
@@ -677,7 +682,7 @@ class Track extends Model implements Searchable
      * @return string
      */
     public function getTemporarySourceFile() {
-        return Config::get('ponyfm.files_directory') . '/queued-tracks/' . $this->id;
+        return Config::get('ponyfm.files_directory').'/queued-tracks/'.$this->id;
     }
 
 
@@ -696,9 +701,9 @@ class Track extends Model implements Searchable
     /**
      * @return string one of the Track::STATUS_* values, indicating whether this track is currently being processed
      */
-    public function getStatusAttribute(){
-        return $this->trackFiles->reduce(function($carry, $trackFile){
-            if((int) $trackFile->status === TrackFile::STATUS_PROCESSING_ERROR) {
+    public function getStatusAttribute() {
+        return $this->trackFiles->reduce(function($carry, $trackFile) {
+            if ((int) $trackFile->status === TrackFile::STATUS_PROCESSING_ERROR) {
                 return static::STATUS_ERROR;
 
             } elseif (
@@ -721,7 +726,7 @@ class Track extends Model implements Searchable
 
     public function updateHash()
     {
-        $this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name) . ' - ' . Helpers::sanitizeInputForHashing($this->title));
+        $this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name).' - '.Helpers::sanitizeInputForHashing($this->title));
     }
 
     public function updateTags($trackFileFormat = 'all')
@@ -750,22 +755,22 @@ class Track extends Model implements Searchable
     /** @noinspection PhpUnusedPrivateMethodInspection */
     private function updateTagsWithAtomicParsley($format)
     {
-        $command = 'AtomicParsley "' . $this->getFileFor($format) . '" ';
-        $command .= '--title ' . escapeshellarg($this->title) . ' ';
-        $command .= '--artist ' . escapeshellarg($this->user->display_name) . ' ';
-        $command .= '--year "' . $this->year . '" ';
-        $command .= '--genre ' . escapeshellarg($this->genre != null ? $this->genre->name : '') . ' ';
-        $command .= '--copyright ' . escapeshellarg('© ' . $this->year . ' ' . $this->user->display_name) . ' ';
-        $command .= '--comment "' . 'Downloaded from: https://pony.fm/' . '" ';
-        $command .= '--encodingTool "' . 'Pony.fm - https://pony.fm/' . '" ';
+        $command = 'AtomicParsley "'.$this->getFileFor($format).'" ';
+        $command .= '--title '.escapeshellarg($this->title).' ';
+        $command .= '--artist '.escapeshellarg($this->user->display_name).' ';
+        $command .= '--year "'.$this->year.'" ';
+        $command .= '--genre '.escapeshellarg($this->genre != null ? $this->genre->name : '').' ';
+        $command .= '--copyright '.escapeshellarg('© '.$this->year.' '.$this->user->display_name).' ';
+        $command .= '--comment "'.'Downloaded from: https://pony.fm/'.'" ';
+        $command .= '--encodingTool "'.'Pony.fm - https://pony.fm/'.'" ';
 
         if ($this->album_id !== null) {
-            $command .= '--album ' . escapeshellarg($this->album->title) . ' ';
-            $command .= '--tracknum ' . $this->track_number . ' ';
+            $command .= '--album '.escapeshellarg($this->album->title).' ';
+            $command .= '--tracknum '.$this->track_number.' ';
         }
 
         if ($this->cover !== null) {
-            $command .= '--artwork ' . $this->cover->getFile(Image::ORIGINAL) . ' ';
+            $command .= '--artwork '.$this->cover->getFile(Image::ORIGINAL).' ';
         }
 
         $command .= '--overWrite';
@@ -776,8 +781,8 @@ class Track extends Model implements Searchable
     /** @noinspection PhpUnusedPrivateMethodInspection */
     private function updateTagsWithGetId3($format)
     {
-        require_once(app_path() . '/Library/getid3/getid3/getid3.php');
-        require_once(app_path() . '/Library/getid3/getid3/write.php');
+        require_once(app_path().'/Library/getid3/getid3/getid3.php');
+        require_once(app_path().'/Library/getid3/getid3/write.php');
         $tagWriter = new getid3_writetags;
 
         $tagWriter->overwrite_tags = true;
@@ -787,10 +792,10 @@ class Track extends Model implements Searchable
         $tagWriter->tag_data = [
             'title' => [$this->title],
             'artist' => [$this->user->display_name],
-            'year' => ['' . $this->year],
+            'year' => [''.$this->year],
             'genre' => [$this->genre != null ? $this->genre->name : ''],
             'comment' => ['Downloaded from: https://pony.fm/'],
-            'copyright' => ['© ' . $this->year . ' ' . $this->user->display_name],
+            'copyright' => ['© '.$this->year.' '.$this->user->display_name],
             'publisher' => ['Pony.fm - https://pony.fm/'],
             'encoded_by' => ['https://pony.fm/'],
 //                'url_artist'            => [$this->user->url],
@@ -818,18 +823,18 @@ class Track extends Model implements Searchable
 
         if ($tagWriter->WriteTags()) {
             if (!empty($tagWriter->warnings)) {
-                Log::warning('Track #' . $this->id . ': There were some warnings:<br />' . implode('<br /><br />',
+                Log::warning('Track #'.$this->id.': There were some warnings:<br />'.implode('<br /><br />',
                         $tagWriter->warnings));
             }
         } else {
-            Log::error('Track #' . $this->id . ': Failed to write tags!<br />' . implode('<br /><br />',
+            Log::error('Track #'.$this->id.': Failed to write tags!<br />'.implode('<br /><br />',
                     $tagWriter->errors));
         }
     }
 
     private function getCacheKey($key)
     {
-        return 'track-' . $this->id . '-' . $key;
+        return 'track-'.$this->id.'-'.$key;
     }
 
 

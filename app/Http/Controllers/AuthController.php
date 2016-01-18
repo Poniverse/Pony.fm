@@ -80,7 +80,7 @@ class AuthController extends Controller
 
         $setData = [
             'access_token' => $code['result']['access_token'],
-            'expires' => date('Y-m-d H:i:s', strtotime("+" . $code['result']['expires_in'] . " Seconds", time())),
+            'expires' => date('Y-m-d H:i:s', strtotime("+".$code['result']['expires_in']." Seconds", time())),
             'type' => $code['result']['token_type'],
         ];
 
