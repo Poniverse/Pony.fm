@@ -22,6 +22,7 @@ namespace Poniverse\Ponyfm\Jobs;
 
 use Auth;
 use Cache;
+use DB;
 use Log;
 use Poniverse\Ponyfm\Models\Genre;
 use Illuminate\Queue\InteractsWithQueue;
@@ -66,6 +67,8 @@ class UpdateTagsForRenamedGenre extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
+        DB::reconnect();
+
         // The user who kicked off this job is used when generating revision log entries.
         Auth::login($this->executingUser);
 

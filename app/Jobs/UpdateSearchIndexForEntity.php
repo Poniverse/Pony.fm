@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Jobs;
 
+use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
@@ -51,6 +52,7 @@ class UpdateSearchIndexForEntity extends Job implements SelfHandling, ShouldQueu
      */
     public function handle()
     {
+        DB::reconnect();
         $this->entity->updateElasticsearchEntrySynchronously();
     }
 }

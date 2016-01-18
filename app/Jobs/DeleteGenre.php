@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Jobs;
 
 use Auth;
+use DB;
 use Poniverse\Ponyfm\Models\Genre;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
@@ -60,6 +61,8 @@ class DeleteGenre extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
+        DB::reconnect();
+
         // The user who kicked off this job is used when generating revision log entries.
         Auth::login($this->executingUser);
 
