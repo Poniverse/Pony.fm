@@ -24,7 +24,6 @@ use Exception;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
 use Poniverse\Ponyfm\Contracts\Searchable;
@@ -80,7 +79,7 @@ class Album extends Model implements Searchable
     {
         if (Auth::check()) {
             $query->with([
-                'users' => function ($query) {
+                'users' => function($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
             ]);
@@ -164,8 +163,8 @@ class Album extends Model implements Searchable
         $data['is_downloadable'] = $is_downloadable;
         $data['share'] = [
             'url' => action('AlbumsController@getShortlink', ['id' => $album->id]),
-            'tumblrUrl' => 'http://www.tumblr.com/share/link?url=' . urlencode($album->url) . '&name=' . urlencode($album->title) . '&description=' . urlencode($album->description),
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $album->title . ' by ' . $album->user->display_name . ' on Pony.fm'
+            'tumblrUrl' => 'http://www.tumblr.com/share/link?url='.urlencode($album->url).'&name='.urlencode($album->title).'&description='.urlencode($album->description),
+            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$album->title.' by '.$album->user->display_name.' on Pony.fm'
         ];
 
         return $data;
@@ -185,24 +184,24 @@ class Album extends Model implements Searchable
             $userRow = $album->users[0];
             $userData = [
                 'stats' => [
-                    'views' => (int)$userRow->view_count,
-                    'downloads' => (int)$userRow->download_count,
+                    'views' => (int) $userRow->view_count,
+                    'downloads' => (int) $userRow->download_count,
                 ],
-                'is_favourited' => (bool)$userRow->is_favourited
+                'is_favourited' => (bool) $userRow->is_favourited
             ];
         }
 
         return [
-            'id' => (int)$album->id,
-            'track_count' => (int)$album->track_count,
+            'id' => (int) $album->id,
+            'track_count' => (int) $album->track_count,
             'title' => $album->title,
             'slug' => $album->slug,
             'created_at' => $album->created_at->format('c'),
             'stats' => [
-                'views' => (int)$album->view_count,
-                'downloads' => (int)$album->download_count,
-                'comments' => (int)$album->comment_count,
-                'favourites' => (int)$album->favourite_count
+                'views' => (int) $album->view_count,
+                'downloads' => (int) $album->download_count,
+                'comments' => (int) $album->comment_count,
+                'favourites' => (int) $album->favourite_count
             ],
             'covers' => [
                 'small' => $album->getCoverUrl(Image::SMALL),
@@ -211,7 +210,7 @@ class Album extends Model implements Searchable
             ],
             'url' => $album->url,
             'user' => [
-                'id' => (int)$album->user->id,
+                'id' => (int) $album->user->id,
                 'name' => $album->user->display_name,
                 'url' => $album->user->url,
             ],
@@ -245,7 +244,7 @@ class Album extends Model implements Searchable
             return 0;
         }
 
-        return Cache::remember($this->getCacheKey('filesize-' . $format), 1440, function () use ($tracks, $format) {
+        return Cache::remember($this->getCacheKey('filesize-'.$format), 1440, function() use ($tracks, $format) {
             $size = 0;
 
             foreach ($tracks as $track) {
@@ -277,9 +276,9 @@ class Album extends Model implements Searchable
 
     public function getDirectory()
     {
-        $dir = (string)(floor($this->id / 100) * 100);
+        $dir = (string) (floor($this->id / 100) * 100);
 
-        return \Config::get('ponyfm.files_directory') . '/tracks/' . $dir;
+        return \Config::get('ponyfm.files_directory').'/tracks/'.$dir;
     }
 
     public function getDates()
@@ -384,13 +383,13 @@ class Album extends Model implements Searchable
         }
 
         foreach (Track::$Formats as $name => $format) {
-            Cache::forget($this->getCacheKey('filesize' . $name));
+            Cache::forget($this->getCacheKey('filesize'.$name));
         }
     }
 
     public function getCacheKey($key)
     {
-        return 'album-' . $this->id . '-' . $key;
+        return 'album-'.$this->id.'-'.$key;
     }
 
     /**

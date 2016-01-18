@@ -87,6 +87,10 @@ class ProfileRequest
         }
     }
 
+    /**
+     * @param string $level
+     * @param string $message
+     */
     public function log($level, $message, $context)
     {
         $this->_data['log'][] = [

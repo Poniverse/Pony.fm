@@ -20,7 +20,6 @@
 
 namespace Poniverse\Ponyfm\Http\Middleware;
 
-use App;
 use Closure;
 use Cache;
 use Config;
@@ -58,7 +57,7 @@ class Profiler
 
             $response = $this->processResponse($profiler, $response);
 
-            Log::listen(function ($level, $message, $context) use ($profiler, $request) {
+            Log::listen(function($level, $message, $context) use ($profiler, $request) {
                 $profiler->log($level, $message, $context);
             });
 
@@ -74,7 +73,7 @@ class Profiler
     protected function processResponse(ProfileRequest $profiler, Response $response) {
         $profiler->recordQueries();
 
-        Cache::put('profiler-request-' . $profiler->getId(), $profiler->toString(), 2);
+        Cache::put('profiler-request-'.$profiler->getId(), $profiler->toString(), 2);
         return $response->header('X-Request-Id', $profiler->getId());
     }
 }
