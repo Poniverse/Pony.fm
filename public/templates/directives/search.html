@@ -8,15 +8,14 @@
     />
 
     <section class="search-results pfm-popup" id="search-results">
-        <div ng-hide="searchInProgress">
-            <p class="empty-box">Type something to begin searching!</p>
-        </div>
+        <p ng-show="!searchInProgress && !searchComplete" class="empty-box">Type something to begin searching!</p>
 
-        <div ng-show="searchInProgress">
+        <p ng-show="searchInProgress" class="empty-box">Searching&hellip;</p>
+
+        <div ng-show="!searchInProgress && searchComplete">
             <div class="-column1">
                 <h3 class="-section-header">Matching tracks</h3>
                 <pfm-tracks-list tracks="tracks"></pfm-tracks-list>
-
             </div>
 
             <div class="-column2">

@@ -26,6 +26,7 @@ angular.module('ponyfm').directive 'pfmSearch', () ->
         ($scope, search) ->
             $scope.searchQuery = ''
             $scope.searchInProgress = false
+            $scope.searchComplete = false
 
             $scope.tracks = []
             $scope.albums = []
@@ -44,6 +45,7 @@ angular.module('ponyfm').directive 'pfmSearch', () ->
                     if searchQuery.length <3
                         clearResults()
                         $scope.searchInProgress = false
+                        $scope.searchComplete = false
                         return
 
                     $scope.searchInProgress = true
@@ -51,6 +53,9 @@ angular.module('ponyfm').directive 'pfmSearch', () ->
                     search.searchAllContent(searchQuery)
                         .then (results)->
                             clearResults()
+                            $scope.searchInProgress = false
+                            $scope.searchComplete = true
+
                             for track in results.tracks
                                 $scope.tracks.push(track)
 
