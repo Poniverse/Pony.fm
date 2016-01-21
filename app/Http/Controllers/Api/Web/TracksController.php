@@ -40,7 +40,6 @@ class TracksController extends ApiControllerBase
     {
         session_write_close();
 
-
         return $this->execute(new UploadTrackCommand(true));
     }
 
