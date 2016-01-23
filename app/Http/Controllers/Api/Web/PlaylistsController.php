@@ -169,8 +169,12 @@ class PlaylistsController extends ApiControllerBase
 
     public function getOwned()
     {
-        $query = Playlist::summary()->with('pins', 'tracks', 'tracks.cover')->where('user_id',
-            \Auth::user()->id)->orderBy('title', 'asc')->get();
+        $query = Playlist::summary()
+            ->with('pins', 'tracks', 'tracks.cover')
+            ->where('user_id', Auth::user()->id)
+            ->orderBy('title', 'asc')
+            ->get();
+
         $playlists = [];
         foreach ($query as $playlist) {
             $playlists[] = [
@@ -185,7 +189,8 @@ class PlaylistsController extends ApiControllerBase
                     'normal' => $playlist->getCoverUrl(Image::NORMAL)
                 ],
                 'is_pinned' => $playlist->hasPinFor(Auth::user()->id),
-                'is_public' => $playlist->is_public == 1
+                'is_public' => $playlist->is_public == 1,
+                'track_ids' => $playlist->tracks->pluck('id')
             ];
         }
 

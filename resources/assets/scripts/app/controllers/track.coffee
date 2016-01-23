@@ -24,8 +24,9 @@ angular.module('ponyfm').controller "track", [
     '$scope', '$rootScope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
     ($scope, $rootScope, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
         track = null
+        trackId = parseInt($state.params.id)
 
-        tracks.fetch($state.params.id).done (trackResponse) ->
+        tracks.fetch(trackId).done (trackResponse) ->
             $scope.track = trackResponse.track
             track = trackResponse.track
             $rootScope.description = "Listen to #{track.title} by #{track.user.name} on the largest pony music site"
@@ -33,8 +34,10 @@ angular.module('ponyfm').controller "track", [
         $scope.playlists = []
 
         if auth.data.isLogged
-            playlists.refreshOwned().done (lists) ->
-                $scope.playlists.push list for list in lists
+            playlists.refreshOwned().done (playlists) ->
+                for playlist in playlists
+                    if trackId not in playlist.track_ids
+                        $scope.playlists.push playlist
 
         $scope.favouriteWorking = false
 

@@ -25,7 +25,11 @@
             </a>
             <ul class="dropdown-menu">
                 <li bindonce ng-repeat="playlist in playlists">
-                    <a ng-class="{disabled: playlist.message, 'btn-success': playlist.message}" bo-href="playlist.url" pfm-eat-click ng-click="addToPlaylist(playlist); $event.stopPropagation()">
+                    <a ng-class="{disabled: playlist.message, 'btn-success': playlist.message}"
+                       bo-href="playlist.url"
+                       pfm-eat-click
+                       ng-click="addToPlaylist(playlist); $event.stopPropagation()"
+                    >
                         <span ng-hide="playlist.message" bo-text="playlist.title"></span>
                         <span ng-show="playlist.message">{{playlist.message}}</span>
                     </a>
