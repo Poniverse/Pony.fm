@@ -35,12 +35,13 @@ class ArtistsController extends ApiControllerBase
 {
     public function getFavourites($slug)
     {
-        $user = User::whereSlug($slug)->first();
+        $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
         if (!$user) {
             App::abort(404);
         }
 
-        $favs = Favourite::whereUserId($user->id)->with([
+        $favs = Favourite::where('user_id', $user->id)
+            ->with([
             'track.genre',
             'track.cover',
             'track.user',
@@ -75,7 +76,7 @@ class ArtistsController extends ApiControllerBase
 
     public function getContent($slug)
     {
-        $user = User::whereSlug($slug)->first();
+        $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
         if (!$user) {
             App::abort(404);
         }
@@ -110,7 +111,7 @@ class ArtistsController extends ApiControllerBase
 
     public function getShow($slug)
     {
-        $user = User::whereSlug($slug)
+        $user = User::where('slug', $slug)
             ->whereNull('disabled_at')
             ->userDetails()
             ->with([
