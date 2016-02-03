@@ -42,13 +42,11 @@ To begin development, do the following:
 
 3. Install the `vagrant-bindfs` plugin: `vagrant plugin install vagrant-bindfs`
 
-4. Create the directory `pony.fm.files` in the repository's parent directory
+4. Run `vagrant up` from the folder in which you cloned the repository
 
-5. Run `vagrant up` from the folder in which you cloned the repository
+5. Run `vagrant ssh`, `cd /vagrant`, and `php artisan poni:setup`.
 
-6. Run `vagrant ssh`, `cd /vagrant`, and `php artisan poni:setup`.
-
-7. Follow the instructions in the "Asset pipeline" section below to set that up.
+6. Follow the instructions in the "Asset pipeline" section below to set that up.
 
 Once everything is up and running, you'll be able to access the site at [http://ponyfm-dev.poni/](http://ponyfm-dev.poni/). You can access the MySQL database by logging into **ponyfm-dev.poni:3306** with the username **homestead** and the password **secret**. Pony.fm's database is named **homestead**.
 
