@@ -23,6 +23,7 @@ namespace Poniverse\Ponyfm\Models;
 use External;
 use Illuminate\Database\Eloquent\Model;
 use Config;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -65,7 +66,14 @@ class Image extends Model
         return null;
     }
 
-    public static function upload(UploadedFile $file, $user)
+    /**
+     * @param UploadedFile $file
+     * @param $user
+     * @param bool $forceReupload forces the image to be re-processed even if a matching hash is found
+     * @return Image
+     * @throws \Exception
+     */
+    public static function upload(UploadedFile $file, $user, bool $forceReupload = false)
     {
         $userId = $user;
         if ($user instanceof User) {
@@ -75,11 +83,27 @@ class Image extends Model
         $hash = md5_file($file->getPathname());
         $image = Image::whereHash($hash)->whereUploadedBy($userId)->first();
 
-        if ($image) {
+        if (!$forceReupload && $image) {
             return $image;
         }
 
-        $image = new Image();
+        if ($forceReupload) {
+            // delete existing versions of the image
+            $filenames = scandir($image->getDirectory());
+            $imagePrefix = $image->id.'_';
+
+            $filenames = array_filter($filenames, function(string $filename) use ($imagePrefix) {
+                return Str::startsWith($filename, $imagePrefix);
+            });
+
+            foreach($filenames as $filename) {
+                unlink($image->getDirectory().'/'.$filename);
+            }
+
+        } else {
+            $image = new Image();
+        }
+
         try {
             $image->uploaded_by = $userId;
             $image->size = $file->getSize();
@@ -92,7 +116,7 @@ class Image extends Model
             $image->ensureDirectoryExists();
             foreach (self::$ImageTypes as $coverType) {
                 if ($coverType['id'] === self::ORIGINAL && $image->mime === 'image/jpeg') {
-                    $command = 'cp '.$file->getPathname().' '.$image->getFile($coverType['id']);
+                    $command = 'cp "'.$file->getPathname().'" '.$image->getFile($coverType['id']);
 
                 } else {
                     // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
