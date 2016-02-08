@@ -23,7 +23,7 @@ namespace Poniverse\Ponyfm\Http\Controllers;
 use Poniverse\Ponyfm\AlbumDownloader;
 use App;
 use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\ResourceLogItem;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\Track;
 use Illuminate\Support\Facades\Redirect;
 use View;
