@@ -1,63 +1,65 @@
-<div class="resource-details playlist-details" bindonce="playlist">
+<div class="resource-details playlist-details">
     <ul class="dropdowns">
         <li class="dropdown">
             <a href="#" class="btn btn-small btn-info dropdown-toggle" auto-close="outsideClick">
                 Downloads
             </a>
             <ul class="dropdown-menu">
-                <li bindonce ng-repeat="format in playlist.formats" ng-hide="isInProgress">
-                    <a target="_blank" ng-if="!format.isCacheable" bo-href="format.url">
-                        <span bo-text="format.name"></span>
-                        <small bo-text="'(' + format.size + ')'"></small>
+                <li ng-repeat="format in ::playlist.formats" ng-hide="isInProgress">
+                    <a target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
+                        <span>{{::format.name}}</span>
+                        <small>({{::format.size}})</small>
                     </a>
-                    <a ng-if="format.isCacheable" ng-click="getCachedPlaylist(playlist.id, format.name);" href="">
-                        <span bo-text="format.name"></span>
-                        <small bo-text="'(' + format.size + ')'"></small>
+                    <a ng-if="::format.isCacheable" ng-click="getCachedPlaylist(playlist.id, format.name);" href="">
+                        <span>{{::format.name}}</span>
+                        <small>({{::format.size}})</small>
                     </a>
                 </li>
                 <li ng-show="isInProgress" class="cache-loading"><img src="/images/loading.gif" /></li>
-                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take up to a few minutes.</small></li>
+                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take a few minutes.</small></li>
             </ul>
         </li>
         <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
-        <li><pfm-favourite-button resource="playlist" type="playlist"></pfm-favourite-button></li>
+        <li><pfm-favourite-button resource="::playlist" type="playlist"></pfm-favourite-button></li>
     </ul>
 
     <header>
-        <h1 bo-text="playlist.title"></h1>
+        <h1>{{::playlist.title}}</h1>
         <h2>
-            created by: <a bo-href="playlist.user.url" bo-text="playlist.user.name"></a>
+            curated by: <a ng-href="{{::playlist.user.url}}">{{::playlist.user.name}}</a>
         </h2>
     </header>
 
     <div class="stretch-to-bottom details-columns">
         <div class="right">
-            <a colorbox ng-href="{{playlist.covers.original}}" pfm-eat-click><img class="cover" pfm-src-loader="playlist.covers.normal" pfm-src-size="normal" /></a>
+            <a colorbox ng-href="{{::playlist.covers.original}}" pfm-eat-click>
+                <img class="cover" pfm-src-loader="::playlist.covers.normal" pfm-src-size="normal" />
+            </a>
 
             <div class="share-buttons" pfm-share-buttons>
-                <a class="tumblr" bo-href="playlist.share.tumblrUrl" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
-                <div class="facebook fb-like" data-href="{{playlist.url}}" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>
-                <iframe class="twitter" allowtransparency="true" frameborder="0" scrolling="no" bo-src="playlist.share.twitterUrl" style="width:130px; height:20px;"></iframe>
+                <a class="tumblr" ng-href="{{::playlist.share.tumblrUrl}}" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
+                <div class="facebook fb-like" data-href="{{::playlist.url}}" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>
+                <iframe class="twitter" allowtransparency="true" frameborder="0" scrolling="no" ng-src="{{::playlist.share.twitterUrl}}" style="width:130px; height:20px;"></iframe>
             </div>
 
             <ul class="stats">
-                <li>Created: <strong bo-text="playlist.created_at | date:'medium'"></strong></li>
-                <li>Views: <strong bo-text="playlist.stats.views"></strong></li>
-                <li>Downloads: <strong bo-text="playlist.stats.downloads"></strong></li>
-                <li>Favourites: <strong bo-text="playlist.stats.favourites"></strong></li>
+                <li>Created: <strong>{{::playlist.created_at | date:'medium'}}</strong></li>
+                <li>Views: <strong>{{::playlist.stats.views}}</strong></li>
+                <li>Downloads: <strong>{{::playlist.stats.downloads}}</strong></li>
+                <li>Favourites: <strong>{{::playlist.stats.favourites}}</strong></li>
             </ul>
         </div>
 
         <div class="left">
-            <div class="description" bo-show="playlist.description.length">
+            <div class="description" ng-show="::playlist.description.length">
                 <h2>Description</h2>
-                <p marked="playlist.description"></p>
+                <p marked="::playlist.description"></p>
             </div>
 
             <h2>Tracks</h2>
-            <pfm-tracks-list tracks="playlist.tracks"></pfm-tracks-list>
+            <pfm-tracks-list tracks="::playlist.tracks"></pfm-tracks-list>
 
-            <pfm-comments type="playlist" resource="playlist"></pfm-comments>
+            <pfm-comments type="playlist" resource="::playlist"></pfm-comments>
         </div>
     </div>
 </div>

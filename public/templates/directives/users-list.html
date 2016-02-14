@@ -1,13 +1,13 @@
 <ul class="users-listing">
-    <li class="artist" ng-class="{'x-archived': user.is_archived}" ng-repeat="user in users track by user.id" bindonce>
-        <a bo-href="user.url">
+    <li class="artist" ng-class="{'x-archived': user.is_archived}" ng-repeat="user in users track by user.id">
+        <a ng-href="{{::user.url}}">
             <img class="image" pfm-src-loader="user.avatars.small" pfm-src-size="small" />
             <span class="info">
-                <span class="title" bo-text="user.name"></span>
+                <span class="title">{{::user.name}}</span>
                 <span ng-hide="user.is_archived" class="published">
-                    joined <span bo-text="user.created_at.date | momentFromNow"></span>
+                    joined {{::user.created_at.date | momentFromNow}}
                 </span>
-                <span ng-show="user.is_archived" class="published">
+                <span ng-show="::user.is_archived" class="published">
                     archived artist
                 </span>
             </span>

@@ -1,16 +1,16 @@
-<ul class="playlists-listing {{class}}">
-    <li bindonce ng-repeat="playlist in playlists track by playlist.id">
-        <a bo-href="playlist.url">
-            <img class="image" pfm-src-loader="playlist.covers.small" pfm-src-size="small" />
+<ul class="playlists-listing {{::class}}">
+    <li ng-repeat="playlist in playlists track by playlist.id">
+        <a ng-href="{{::playlist.url}}">
+            <img class="image" pfm-src-loader="::playlist.covers.small" pfm-src-size="small" />
             <span class="info">
-                <span class="title" bo-text="playlist.title"></span>
+                <span class="title">{{::playlist.title}}</span>
                 <span class="published">
-                    by <span bo-text="playlist.user.name"></span>
+                    by {{::playlist.user.name}}
                 </span>
                 <span class="stats">
-                    <strong bo-text="playlist.stats.favourites"></strong> <i class="icon-star"></i>
-                    <strong bo-text="playlist.stats.comments"></strong> <i class="icon-comment"></i>
-                    <strong bo-text="playlist.stats.downloads"></strong> <i class="icon-download"></i>
+                    <strong>{{::playlist.stats.favourites}}</strong>  <i class="icon-star"></i>
+                    <strong>{{::playlist.stats.comments}}</strong> <i class="icon-comment"></i>
+                    <strong>{{::playlist.stats.downloads}}</strong> <i class="icon-download"></i>
                 </span>
             </span>
         </a>

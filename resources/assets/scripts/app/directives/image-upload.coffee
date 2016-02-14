@@ -64,6 +64,7 @@ angular.module('ponyfm').directive 'pfmImageUpload', () ->
 
             $scope.uploadImage = () ->
                 $uploader.trigger 'click'
+                return
 
             $scope.clearImage = () ->
                 $scope.imageObject = $scope.imageFile = $scope.imageUrl = null

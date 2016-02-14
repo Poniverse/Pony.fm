@@ -439,6 +439,7 @@ class Track extends Model implements Searchable
         $returnValue = self::mapPrivateTrackSummary($track);
         $returnValue['album_id'] = $track->album_id;
         $returnValue['show_songs'] = $showSongs;
+        $returnValue['cover_id'] = $track->cover_id;
         $returnValue['real_cover_url'] = $track->getCoverUrl(Image::NORMAL);
         $returnValue['cover_url'] = $track->hasCover() ? $track->getCoverUrl(Image::NORMAL) : null;
         $returnValue['released_at'] = $track->released_at ? $track->released_at->toDateString() : null;

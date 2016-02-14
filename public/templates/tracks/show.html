@@ -5,38 +5,38 @@
         </a>
 
         <div class="share-buttons" pfm-share-buttons>
-            <a class="tumblr" bo-href="track.share.tumblrUrl"
+            <a class="tumblr" ng-href="{{::track.share.tumblrUrl}}"
                title="Share on Tumblr"
                style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
-            <div class="facebook fb-like" data-href="{{track.url}}"
+            <div class="facebook fb-like" data-href="{{::track.url}}"
                  data-width="450" data-layout="button_count"
                  data-show-faces="true" data-send="false"></div>
             <iframe class="twitter" allowtransparency="true" frameborder="0"
-                    scrolling="no" bo-src="track.share.twitterUrl"
+                    scrolling="no" ng-src="{{::track.share.twitterUrl}}"
                     style="width:130px; height:20px;"></iframe>
         </div>
 
         <ul class="stats">
-            <li>Published: <strong bo-text="track.published_at"></strong></li>
-            <li>Views: <strong bo-text="track.stats.views"></strong></li>
-            <li>Plays: <strong bo-text="track.stats.plays"></strong></li>
-            <li>Downloads: <strong bo-text="track.stats.downloads"></strong></li>
-            <li>Favourites: <strong bo-text="track.stats.favourites"></strong></li>
+            <li>Published: <strong>{{::track.published_at}}</strong></li>
+            <li>Views: <strong>{{::track.stats.views}}</strong></li>
+            <li>Plays: <strong>{{::track.stats.plays}}</strong></li>
+            <li>Downloads: <strong>{{::track.stats.downloads}}</strong></li>
+            <li>Favourites: <strong>{{::track.stats.favourites}}</strong></li>
         </ul>
     </div>
     <div class="left">
-        <div class="description" bo-show="track.description.length">
+        <div class="description" ng-show="::track.description.length">
             <h2>Description</h2>
             <p marked="track.description"></p>
         </div>
 
-        <div bo-show="track.is_vocal && track.lyrics.length" class="lyrics-panel">
+        <div ng-show="::track.is_vocal && track.lyrics.length" class="lyrics-panel">
             <h2>Lyrics</h2>
             <div class="lyrics revealable">
                 <div class="reveal">
-                    <a href="#">Click to reveal full lyrics...</a>
+                    <a href="#">Click to reveal full lyrics&hellip;</a>
                 </div>
-                <p class="content" bo-html="track.lyrics | noHTML | nl2br"></p>
+                <p class="content" ng-html="::track.lyrics | noHTML | nl2br"></p>
             </div>
         </div>
 

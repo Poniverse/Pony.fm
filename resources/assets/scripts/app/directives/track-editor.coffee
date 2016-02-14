@@ -161,7 +161,8 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                     track_type_id: track.track_type_id
                     released_at: utc_release_date
                     remove_cover: false
-                    cover: track.cover_url
+                    cover_id: track.cover_id
+                    cover_url: track.cover_url
                     album_id: track.album_id
                     is_published: track.is_published
                     is_listed: track.is_listed

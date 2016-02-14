@@ -1,34 +1,34 @@
-<div class="resource-details track-details" bindonce="track">
+<div class="resource-details track-details">
     <ul class="dropdowns">
         <li class="dropdown">
-            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="track.is_downloadable == 0" auto-close="outsideClick">
+            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="::track.is_downloadable == 0" auto-close="outsideClick">
                 Downloads
             </a>
-            <ul class="dropdown-menu" ng-show="track.is_downloadable == 1">
-                <li bindonce ng-repeat="format in track.formats" ng-hide="isInProgress">
-                    <a target="_blank" ng-if="!format.isCacheable" bo-href="format.url">
-                        <span bo-text="format.name"></span>
-                        <small bo-text="'(' + format.size + ')'"></small>
+            <ul class="dropdown-menu" ng-show="::track.is_downloadable == 1">
+                <li ng-repeat="format in ::track.formats" ng-hide="isInProgress">
+                    <a target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
+                        <span>{{::format.name}}</span>
+                        <small>({{::format.size}})</small>
                     </a>
                     <a ng-if="format.isCacheable" ng-click="getCachedTrack(track.id, format.name);" href="">
-                        <span bo-text="format.name"></span>
-                        <small bo-text="'(' + format.size + ')'"></small>
+                        <span>{{::format.name}}</span>
+                        <small>({{::format.size}})</small>
                     </a>
                 </li>
                 <li ng-show="isInProgress" class="cache-loading"><img src="/images/loading.gif" /></li>
-                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This'll take a few seconds.</small></li>
+                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This&#39;ll take a few seconds.</small></li>
             </ul>
         </li>
         <li class="dropdown">
-            <a href="#" class="btn btn-small dropdown-toggle" ng-show="auth.isLogged">Add to Playlist</a>
+            <a href="#" class="btn btn-small dropdown-toggle" ng-show="::auth.isLogged">Add to Playlist</a>
             <ul class="dropdown-menu">
-                <li bindonce ng-repeat="playlist in playlists">
+                <li ng-repeat="playlist in playlists">
                     <a ng-class="{disabled: playlist.message, 'btn-success': playlist.message}"
-                       bo-href="playlist.url"
+                       ng-href="{{::playlist.url}}"
                        pfm-eat-click
                        ng-click="addToPlaylist(playlist); $event.stopPropagation()"
                     >
-                        <span ng-hide="playlist.message" bo-text="playlist.title"></span>
+                        <span ng-hide="playlist.message">{{::playlist.title}}</span>
                         <span ng-show="playlist.message">{{playlist.message}}</span>
                     </a>
                 </li>
@@ -37,19 +37,19 @@
         </li>
 
         <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share or Embed</a></li>
-        <li><pfm-favourite-button resource="track" type="track"></pfm-favourite-button></li>
-        <li bo-show="track.permissions.edit"><a class="btn btn-small" bo-href="'/account/tracks/edit/' + track.id">Edit</a></li>
+        <li><pfm-favourite-button resource="::track" type="track"></pfm-favourite-button></li>
+        <li ng-show="::track.permissions.edit"><a class="btn btn-small" ng-href="/account/tracks/edit/{{::track.id}}">Edit</a></li>
     </ul>
 
     <header>
-        <pfm-track-player track="track"></pfm-track-player>
-        <h1 bo-text="track.title"></h1>
+        <pfm-track-player track="::track"></pfm-track-player>
+        <h1>{{::track.title}}</h1>
         <h2>
-			<span bo-show="track.album">
-				from: <a bo-href="track.album.url" bo-text="track.album.title"></a>
+			<span ng-show="::track.album">
+				from: <a ng-href="{{::track.album.url}}" ng-text="{{::track.album.title}}"></a>
 			</span>
 
-            by: <a bo-href="track.user.url" bo-text="track.user.name"></a>
+            by: <a ng-href="{{::track.user.url}}">{{::track.user.name}}</a>
         </h2>
     </header>
 

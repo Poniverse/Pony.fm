@@ -16,7 +16,7 @@
 
 window.pfm.preloaders = {}
 
-module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'pasvaz.bindonce', 'angularytics', 'ngSanitize', 'hc.marked']
+module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
 
 if window.pfm.environment == 'production'
     module.run [
@@ -48,7 +48,9 @@ module.config [
         # This fixes resource loading on IE
         $sceDelegateProvider.resourceUrlWhitelist [
             'self',
-            '/templates/directives/*'
+            '/templates/directives/*',
+            # Used for the "Tweet" button on content item pages
+            'https://platform.twitter.com/widgets/tweet_button.html**'
         ]
 
         if window.pfm.environment == 'production'

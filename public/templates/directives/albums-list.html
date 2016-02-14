@@ -1,16 +1,16 @@
-<ul class="albums-listing {{class}}">
-    <li bindonce ng-repeat="album in albums track by album.id">
-        <a bo-href="album.url">
-            <img class="image" pfm-src-loader="album.covers.small" pfm-src-size="small" />
+<ul class="albums-listing {{::class}}">
+    <li ng-repeat="album in albums track by album.id">
+        <a ng-href="{{::album.url}}">
+            <img class="image" pfm-src-loader="::album.covers.small" pfm-src-size="small" />
             <span class="info">
-            <span class="title" bo-text="album.title"></span>
+            <span class="title">{{::album.title}}</span>
             <span class="published">
-                by <span bo-text="album.user.name"></span>
+                by <span>{{::album.user.name}}</span>
             </span>
                 <span class="stats">
-                    <strong bo-text="album.stats.favourites"></strong> <i class="icon-star"></i>
-                    <strong bo-text="album.stats.comments"></strong> <i class="icon-comment"></i>
-                    <strong bo-text="album.stats.downloads"></strong> <i class="icon-download"></i>
+                    <strong>{{::album.stats.favourites}}</strong> <i class="icon-star"></i>
+                    <strong>{{::album.stats.comments}}</strong> <i class="icon-comment"></i>
+                    <strong>{{::album.stats.downloads}}</strong> <i class="icon-download"></i>
                 </span>
             </span>
         </a>

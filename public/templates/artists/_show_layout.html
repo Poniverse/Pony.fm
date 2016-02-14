@@ -1,18 +1,20 @@
-<div class="resource-details artist-details" ng-class="{'x-archived': artist.is_archived}" bindonce="artist">
+<div class="resource-details artist-details" ng-class="::{'x-archived': artist.is_archived}">
     <ul class="dropdowns">
         <li class="dropdown">
-            <a href="#" class="btn btn-small" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
+            <a href="#" class="btn btn-small" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="::auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
                 <span ng-hide="artist.user_data.is_following">Follow</span>
                 <span ng-show="artist.user_data.is_following">Following!</span>
             </a>
         </li>
     </ul>
     <header>
-        <h1 bo-text="artist.name"></h1>
+        <h1>{{::artist.name}}</h1>
         <ul class="tabs">
-            <li ng-class="{active: stateIncludes('content.artist.profile')}"><a href="{{artist.slug}}">Profile</a></li>
-            <li ng-class="{active: stateIncludes('content.artist.content')}"><a href="{{artist.slug}}/content">Content</a></li>
-            <li ng-hide="artist.is_archived" ng-class="{active: stateIncludes('content.artist.favourites')}"><a href="{{artist.slug}}/favourites">Favourites</a></li>
+            <li ng-class="{active: stateIncludes('content.artist.profile')}"><a ng-href="{{::artist.slug}}">Profile</a></li>
+            <li ng-class="{active: stateIncludes('content.artist.content')}"><a ng-href="{{::artist.slug}}/content">Content</a></li>
+            <li ng-hide="::artist.is_archived" ng-class="::{active: stateIncludes('content.artist.favourites')}">
+                <a ng-href="{{::artist.slug}}/favourites">Favourites</a>
+            </li>
         </ul>
     </header>
     <div class="stretch-to-bottom">
