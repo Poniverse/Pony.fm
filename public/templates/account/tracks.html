@@ -1,7 +1,7 @@
 <div class="two-pane-view" ng-class="{open: data.selectedTrack != null, closed: data.selectedTrack == null}">
     <div class="list">
         <ul class="account-tracks-listing stretch-to-bottom">
-            <li ng-repeat="track in tracks" ng-class="{selected: track.id == data.selectedTrack.id, 'is-not-published': !track.is_published}">
+            <li ng-repeat="track in tracks track by track.id" ng-class="{selected: track.id == data.selectedTrack.id, 'is-not-published': !track.is_published}">
                 <a href="/account/tracks/edit/{{track.id}}" ng-click="selectTrack(track)">
                     <img class="image" ng-src="{{track.cover_url}}" />
                     <span class="title">{{track.title}}</span>
