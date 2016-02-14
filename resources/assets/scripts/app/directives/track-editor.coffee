@@ -126,7 +126,7 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             $.when(
                 albums.refresh(),
                 taxonomies.refresh(),
-                tracks.getEdit($scope.trackId)
+                tracks.getEdit($scope.trackId, true)
             ).done (albums, taxonomies, track)->
                 # Update album data
                 $scope.albums.length = 0
