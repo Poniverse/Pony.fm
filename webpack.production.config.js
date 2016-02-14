@@ -13,7 +13,4 @@ config.plugins.push(
     })
 );
 
-//config.output.publicPath = 'https://pony.fm/build/';
-
-
 module.exports = config;

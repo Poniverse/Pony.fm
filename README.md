@@ -63,15 +63,9 @@ And then install all of the required local packages by invoking:
 
     npm install
 
-Finally, build all of the scripts by executing:
-
-    gulp build
-
-During development, you should make a point to run "gulp watch". You can do this simply by executing:
+Finally, to compile and serve the assets in real time, run the following (and leave it running while you develop):
 
     gulp watch
-
-This will watch and compile the `.less` and `.coffee` files in real time.
 
 Configuring the servers
 -----------------------
@@ -79,5 +73,3 @@ Configuring the servers
 Pony.fm uses nginx, php-fpm, redis, and MySQL. You can modify the configuration of these services by locating the appropriate config file in the `vagrant` folder. Once modified, you must reload the configuration by running the appropriate shell script (`reload-config.sh`) or bat files (`reload-config.bat` and `reload-config.vmware.bat`). These scripts simply tell Vagrant to run `copy-and-restart-config.sh` on the VM.
 
 If you need to change any other configuration file on the VM - copy the entire file over into the vagrant folder, make your changes, and update the `copy-and-restart-config.sh` script to copy the modified config back into the proper folder. All potential configuration requirements should be represented in the `vagrant` folder **and never only on the VM itself** as changes will not be preserved.
-
-**NOTE:** currently, Redis's configuration is not reloaded by the `copy-and-restart-config.sh`
