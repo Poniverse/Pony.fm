@@ -14,19 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-window.pfm.preloaders['track-edit'] = [
-    'tracks', '$state', 'playlists'
-    (tracks, $state, playlists) ->
-        $.when.all [tracks.fetch $state.params.id, playlists.refreshOwned(true)]
-]
 
 angular.module('ponyfm').controller "track-edit", [
-    '$scope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog'
-    ($scope, tracks, $state, playlists, auth, favourites, $dialog) ->
-        track = null
-
-        tracks.fetch($state.params.id).done (trackResponse) ->
-            $scope.track = trackResponse.track
-            track = trackResponse.track
-
+    '$scope', '$state'
+    ($scope, $state) ->
 ]

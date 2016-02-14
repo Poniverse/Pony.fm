@@ -11,7 +11,7 @@
                 <i ng-show="isSaving" class="icon-cog icon-spin icon-large"></i>
             </button>
         </li>
-        <li class="delete"><a ng-class="{disabled: isSaving}" class="btn btn-danger" href="#" ng-click="deleteTrack(data.selectedTrack)" pfm-eat-click>Delete Track</a></li>
+        <li class="delete"><a ng-class="{disabled: isSaving}" class="btn btn-danger" href="#" ng-click="deleteTrack()" pfm-eat-click>Delete Track</a></li>
     </ul>
     <div class="stretch-to-bottom">
         <div class="form-row" ng-class="{'has-error': errors.title != null}">

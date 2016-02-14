@@ -54,7 +54,12 @@ angular.module('ponyfm').controller "account-tracks", [
             else
                 $scope.selectTrack null
 
+        $scope.$on 'track-updated', (track) ->
+            tracks.clearCache()
+            $scope.refreshList()
+
         $scope.$on 'track-deleted', () ->
+            $state.transitionTo 'account.tracks'
             tracks.clearCache()
             $scope.refreshList()
 ]

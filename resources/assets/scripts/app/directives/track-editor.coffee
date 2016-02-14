@@ -1,5 +1,5 @@
 # Pony.fm - A community for pony fan music.
-# Copyright (C) 2015 Peter Deltchev
+# Copyright (C) 2016 Peter Deltchev
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -14,14 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#
-#window.pfm.preloaders['account-track'] = [
-#    'account-albums', 'taxonomies'
-#    (albums, taxonomies, state) ->
-#        $.when.all [albums.refresh(), taxonomies.refresh()]
-#]
-
-
 angular.module('ponyfm').directive 'pfmTrackEditor', () ->
     restrict: 'E'
     templateUrl: '/templates/directives/track-editor.html'
@@ -29,8 +21,8 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
         trackId: '=trackId'
 
     controller: [
-        '$scope', 'auth', 'account-tracks', 'account-albums', 'taxonomies', 'images'
-        ($scope, auth, tracks, albums, taxonomies, images) ->
+        '$scope', '$dialog', 'auth', 'account-tracks', 'account-albums', 'taxonomies', 'images'
+        ($scope, $dialog, auth, tracks, albums, taxonomies, images) ->
             $scope.isDirty = false
             $scope.isSaving = false
             $scope.taxonomies = taxonomies
@@ -94,14 +86,9 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                         return
 
                     track = $.parseJSON(xhr.responseText)
+                    $scope.$emit('track-updated', track)
 
-#                    trackDbItem = $scope.data.selectedTrack
-#                    trackDbItem.title = $scope.track.title
-#                    trackDbItem.is_explicit = $scope.track.is_explicit
-#                    trackDbItem.is_vocal = $scope.track.is_vocal
-#                    trackDbItem.genre_id = $scope.track.genre_id
-#                    trackDbItem.is_published = true
-#                    trackDbItem.cover_url = track.real_cover_url
+                    $scope.track.is_published = true
                     $scope.isDirty = false
                     $scope.errors = {}
                     images.refresh true
@@ -123,24 +110,32 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                 $scope.isSaving = true
                 xhr.send formData
 
-            $scope.deleteTrack = (track) ->
-                $dialog.messageBox('Delete ' + track.title, 'Are you sure you want to delete "' + track.title + '"?', [
+            $scope.deleteTrack = () ->
+                $dialog.messageBox('Delete ' + $scope.track.title, 'Are you sure you want to delete "' + $scope.track.title + '"?', [
                     {result: 'ok', label: 'Yes', cssClass: 'btn-danger'},
                     {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
                 ]).open().then (res) ->
                     return if res == 'cancel'
-                    $.post('/api/web/tracks/delete/' + track.id)
+                    $.post('/api/web/tracks/delete/' + $scope.track.id)
                     .then -> $scope.$apply ->
                         $scope.$emit 'track-deleted'
-                        $state.transitionTo 'account.tracks'
 
-            ## Bootstrap this thing
-
+            # ========================================
+            #  The part where everything gets loaded!
+            # ========================================
             $.when(
                 albums.refresh(),
                 taxonomies.refresh(),
                 tracks.getEdit($scope.trackId)
             ).done (albums, taxonomies, track)->
+                # Update album data
+                $scope.albums.length = 0
+                albumsDb = {}
+                for album in albums
+                    albumsDb[album.id] = album
+                    $scope.albums.push album
+
+                # Update track data
                 $scope.track =
                     id: track.id
                     title: track.title
@@ -163,14 +158,6 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                 $scope.selectedSongs = {}
                 $scope.selectedSongs[song.id] = song for song in track.show_songs
                 updateSongDisplay()
-
-
-            albums.refresh().done (albums) ->
-                $scope.albums.legnth = 0
-                albumsDb = {}
-                for album in albums
-                    albumsDb[album.id] = album
-                    $scope.albums.push album
 
             $scope.touchModel = -> $scope.isDirty = true
 
