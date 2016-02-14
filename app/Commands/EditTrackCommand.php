@@ -61,8 +61,11 @@ class EditTrackCommand extends CommandBase
 
         $rules = [
             'title' => 'required|min:3|max:80',
-            'released_at' => 'before:' . (date('Y-m-d',
-                    time() + (86400 * 2))) . (isset($this->_input['released_at']) && $this->_input['released_at'] != "" ? '|date' : ''),
+            'released_at' => 'before:' .
+                 (date('Y-m-d', time() + (86400 * 2))) . (
+                 isset($this->_input['released_at']) && $this->_input['released_at'] != ""
+                 ? '|date'
+                 : ''),
             'license_id' => 'required|exists:licenses,id',
             'genre_id' => 'required|exists:genres,id',
             'cover' => 'image|mimes:png,jpeg|min_width:350|min_height:350',

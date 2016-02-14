@@ -99,6 +99,10 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                         return if value == null
                         if typeof(value) == 'object'
                             formData.append name, value, value.name
+
+                    if name == 'released_at' and value != null
+                        formData.append name, value.toISOString()
+
                     else if value != null
                         formData.append name, value
 
@@ -136,6 +140,14 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                     $scope.albums.push album
 
                 # Update track data
+
+                # The release date is in UTC - make sure we treat it as such.
+                if track.released_at
+                    local_date = new Date(track.released_at)
+                    utc_release_timestamp = local_date.getTime() + (local_date.getTimezoneOffset() * 60000);
+                    utc_release_date = new Date(utc_release_timestamp)
+                else utc_release_date = ''
+
                 $scope.track =
                     id: track.id
                     title: track.title
@@ -147,7 +159,7 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                     license_id: track.license_id
                     genre_id: track.genre_id
                     track_type_id: track.track_type_id
-                    released_at: if track.released_at then track.released_at.date else ''
+                    released_at: utc_release_date
                     remove_cover: false
                     cover: track.cover_url
                     album_id: track.album_id

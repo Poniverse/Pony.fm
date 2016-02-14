@@ -441,7 +441,7 @@ class Track extends Model implements Searchable
         $returnValue['show_songs'] = $showSongs;
         $returnValue['real_cover_url'] = $track->getCoverUrl(Image::NORMAL);
         $returnValue['cover_url'] = $track->hasCover() ? $track->getCoverUrl(Image::NORMAL) : null;
-        $returnValue['released_at'] = $track->released_at;
+        $returnValue['released_at'] = $track->released_at ? $track->released_at->toDateString() : null;
         $returnValue['lyrics'] = $track->lyrics;
         $returnValue['description'] = $track->description;
         $returnValue['is_downloadable'] = !$track->isPublished() ? true : (bool) $track->is_downloadable;

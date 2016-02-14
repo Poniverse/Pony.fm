@@ -86,7 +86,14 @@
             </div>
             <div class="form-row span6" ng-class="{'has-error': errors.released_at != null}">
                 <label for="released_at" class="strong">Release Date:</label>
-                <input ng-disabled="isSaving" type="text" id="released_at" ui-date ng-model="track.released_at" ng-change="touchModel()" ui-date-format="yy-mm-dd" />
+                <input
+                    id="released_at"
+                    type="text"
+                    ui-date
+                    ng-disabled="isSaving"
+                    ng-model="track.released_at"
+                    ng-change="touchModel()"
+                />
                 <div class="error">{{errors.released_at}}</div>
             </div>
         </div>
