@@ -11,8 +11,8 @@
     </div>
     <div id="image-selector" class="pfm-popup image-selector">
         <ul>
-            <li ng-repeat="image in images" ng-click="selectGalleryImage(image)">
-                <img ng-src="{{image.urls.small}}" />
+            <li ng-repeat="image in images track by image.id" ng-click="selectGalleryImage(image)">
+                <img ng-src="{{::image.urls.small}}" />
             </li>
         </ul>
     </div>

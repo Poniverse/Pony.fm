@@ -94,7 +94,7 @@
                     </h3>
                 </li>
                 <li class="none" ng-show="!playlists.length"><span>no pinned playlists</span></li>
-                <li class="dropdown" ng-repeat="playlist in playlists" ng-cloak ng-class="{selected: stateIncludes('content.playlist') && $state.params.id == playlist.id}">
+                <li class="dropdown" ng-repeat="playlist in playlists track by playlist.id" ng-cloak ng-class="{selected: stateIncludes('content.playlist') && $state.params.id == playlist.id}">
                     <a href="{{Helpers::angular('playlist.url')}}" ng-bind="playlist.title"></a>
                 </li>
             @else

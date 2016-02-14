@@ -1,5 +1,5 @@
 <ul class="playlists stretch-to-bottom">
-    <li ng-repeat="playlist in playlists">
+    <li ng-repeat="playlist in playlists track by playlist.id">
         <div class="btn-group">
             <a href="#" pfm-eat-click class="btn btn-small" ng-click="togglePlaylistPin(playlist)" ng-class="{active: playlist.is_pinned, 'btn-primary': playlist.is_pinned}">
                 <i class="icon-pushpin"></i>

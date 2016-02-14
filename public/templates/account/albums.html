@@ -10,7 +10,7 @@
     <div class="two-pane-view" ng-class="{open: data.isEditorOpen, closed: !data.isEditorOpen}">
         <div class="list">
             <ul class="account-albums-listing stretch-to-bottom">
-                <li ng-repeat="album in albums" ng-class="{selected: album.id == data.selectedAlbum.id}">
+                <li ng-repeat="album in albums track by album.id" ng-class="{selected: album.id == data.selectedAlbum.id}">
                     <a href="/account/albums/edit/{{album.id}}">
                         <img pfm-src-loader="album.covers.normal" pfm-src-size="normal" class="image" />
                         <span class="title">{{album.title}}</span>
@@ -18,7 +18,7 @@
                     </a>
                 </li>
                 <li ng-show="!albums.length" class="empty">
-                    No albums found...
+                    No albums found&hellip;
                 </li>
             </ul>
         </div>

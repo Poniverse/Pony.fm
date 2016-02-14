@@ -9,7 +9,7 @@
         <li ng-show="resource.comments.length == 0" class="empty">
             There are no comments yet!
         </li>
-        <li ng-repeat="comment in resource.comments">
+        <li ng-repeat="comment in resource.comments track by comment.id">
             <img pfm-src-loader="::comment.user.avatars.thumbnail" pfm-src-size="thumbnail" />
             <div class="content">
                 <a ng-href="{{::comment.user.url}}">{{::comment.user.name}}</a>

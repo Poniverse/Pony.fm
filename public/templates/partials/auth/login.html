@@ -1,7 +1,7 @@
 <form ng-submit="login.submit()" class="form-horizontal">
     <ul class="messages" ng-hide="!messages.length">
         <li ng-repeat="message in messages" class="alert alert-error">
-            {{message}}
+            {{::message}}
         </li>
     </ul>
     <div class="control-group">

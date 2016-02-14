@@ -22,7 +22,7 @@
         <li class="dropdown">
             <a href="#" class="btn btn-small dropdown-toggle" ng-show="::auth.isLogged">Add to Playlist</a>
             <ul class="dropdown-menu">
-                <li ng-repeat="playlist in playlists">
+                <li ng-repeat="playlist in playlists track by playlist.id">
                     <a ng-class="{disabled: playlist.message, 'btn-success': playlist.message}"
                        ng-href="{{::playlist.url}}"
                        pfm-eat-click

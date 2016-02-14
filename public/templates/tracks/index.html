@@ -33,7 +33,7 @@
         </a>
         <a class="btn" pfm-eat-click ng-click="clearFilter('genres')"><i class="icon-remove"></i></a>
         <ul class="dropdown-menu">
-            <li ng-repeat="genre in ::filters.genres.values" ng-class="{selected: query.isIdSelected('genres', genre.id)}">
+            <li ng-repeat="genre in ::filters.genres.values track by genre.id" ng-class="{selected: query.isIdSelected('genres', genre.id)}">
                 <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('genres', genre.id); $event.stopPropagation();"><i class="icon-plus"></i></a>
                 <a pfm-eat-click href="#" ng-click="setListFilter('genres', genre.id);">{{::genre.title}}</a>
             </li>

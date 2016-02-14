@@ -33,6 +33,7 @@ angular.module('ponyfm').controller "account-albums", [
         selectAlbum = (album) -> $scope.data.selectedAlbum = album
 
         updateTracks = (tracks) ->
+            $scope.data.tracksDb.length = 0
             $scope.data.tracksDb.push track for track in tracks
 
         tracks.refresh('published=true&in_album=false').done updateTracks
@@ -40,6 +41,7 @@ angular.module('ponyfm').controller "account-albums", [
         albumsDb = {}
 
         updateAlbums = (albums) ->
+            albumsDb.length = 0
             $scope.albums.length = 0
 
             for album in albums

@@ -60,8 +60,8 @@
                         <li ng-class="{selected: selectedAlbum == null}">
                             <a pfm-eat-click href="#" ng-click="selectAlbum(null);">None</a>
                         </li>
-                        <li ng-repeat="album in albums" ng-class="{selected: selectedAlbum.id == album.id}">
-                            <a pfm-eat-click href="#" ng-click="selectAlbum(album);">{{album.title}}</a>
+                        <li ng-repeat="album in albums track by album.id" ng-class="{selected: selectedAlbum.id == album.id}">
+                            <a pfm-eat-click href="#" ng-click="selectAlbum(album);">{{::album.title}}</a>
                         </li>
                     </ul>
                 </div>
@@ -71,8 +71,8 @@
                 <a pfm-popup="song-selector" pfm-popup-close-on-click href="#" class="btn btn-small">Show Songs: <strong>{{selectedSongsTitle}}</strong></a>
                 <div id="song-selector" class="pfm-popup">
                     <ul>
-                        <li ng-repeat="song in taxonomies.showSongs" ng-class="{selected: selectedSongs[song.id]}">
-                            <a pfm-eat-click href="#" ng-click="toggleSong(song); $event.stopPropagation();">{{song.title}}</a>
+                        <li ng-repeat="song in ::taxonomies.showSongs track by song.id" ng-class="{selected: selectedSongs[song.id]}">
+                            <a pfm-eat-click href="#" ng-click="toggleSong(song); $event.stopPropagation();">{{::song.title}}</a>
                         </li>
                     </ul>
                 </div>
@@ -111,10 +111,10 @@
         <div class="form-row">
             <label class="strong">Choose a License:</label>
             <ul class="license-grid">
-                <li ng-repeat="license in taxonomies.licenses" ng-class="{selected: track.license_id == license.id}">
+                <li ng-repeat="license in ::taxonomies.licenses track by license.id" ng-class="{selected: track.license_id == license.id}">
                     <div ng-click="track.license_id = license.id; touchModel()">
-                        <strong>{{license.title}}</strong>
-                        <p>{{license.description}}</p>
+                        <strong>{{::license.title}}</strong>
+                        <p>{{::license.description}}</p>
                         <a href="#" pfm-eat-click class="btn" ng-class="{'btn-primary': track.license_id == license.id, 'disabled': isSaving}">
                             <span ng-hide="track.license_id == license.id">Select</span>
                             <span ng-show="track.license_id == license.id">Selected</span>
