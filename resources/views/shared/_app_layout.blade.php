@@ -25,7 +25,7 @@
     <script>
         window.fbAsyncInit = function() {
             FB.init({
-                appId      : '186765381447538',
+                appId: '186765381447538',
                 status: true,
                 cookie: true,
                 xfbml: true
@@ -158,11 +158,9 @@
         </script>
     @endif
 
-{{--    {!! Assets::scriptIncludes() !!}--}}
-
     @if (Config::get("app.debug"))
-        <script src="http://localhost:8080/build/scripts/app.js"></script>
-        <script src="http://localhost:8080/webpack-dev-server.js"></script>
+        <script src="http://localhost:61999/build/scripts/app.js"></script>
+        <script src="http://localhost:61999/webpack-dev-server.js"></script>
     @else
         <script src="/build/scripts/app.js"></script>
         <script src="/build/scripts/templates.js"></script>

@@ -23,7 +23,8 @@ var gulp = require("gulp"),
     header = require("gulp-header"),
     webpack = require("webpack"),
     WebpackDevServer = require("webpack-dev-server"),
-    webpackConfig = require("./webpack.config.js"),
+    webpackDevConfig = require("./webpack.dev.config.js"),
+    webpackProductionConfig = require("./webpack.production.config.js"),
     webpackStream = require('webpack-stream');
 
 var plumberOptions = {
@@ -53,84 +54,29 @@ var licenseHeader = [
 ].join('\n');
 
 
-
-//gulp.task('webpack', [], function () {
-//    return gulp.src(path.ALL) // gulp looks for all source files under specified path
-//        .pipe(sourcemaps.init()) // creates a source map which would be very helpful for debugging by maintaining the actual source code structure
-//        .pipe(webpackStream(webpackConfig)) // blend in the webpack config into the source files
-//        .pipe(uglify())// minifies the code for better compression
-//        .pipe(sourcemaps.write())
-//        .pipe(gulp.dest(path.DEST_BUILD));
-//});
+gulp.task("webpack-build", function() {
+    return gulp.src(webpackProductionConfig.entry)
+        .pipe(webpackStream(webpackProductionConfig))
+        .pipe(header(licenseHeader))
+        .pipe(gulp.dest('public'));
+});
 
 
-gulp.task("webpack-dev-server", function (callback) {
-    // Start a webpack-dev-server
-    //webpackConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:8080");
-    var compiler = webpack(webpackConfig);
+gulp.task("webpack-dev-server", function () {
+    // Starts a webpack-dev-server
+    var compiler = webpack(webpackDevConfig);
 
     new WebpackDevServer(compiler, {
-        // server and middleware options
-    }).listen(8080, "localhost", function (err) {
-        if (err) throw new gutil.PluginError("webpack-dev-server", err);
-        // Server listening
-        gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
+        // server and middleware options, currently blank
+    }).listen(61999, "localhost", function (err) {
+        if (err)
+            throw new gutil.PluginError("webpack-dev-server", err);
 
-        // keep the server alive or continue?
-        // callback();
+        // Server listening
+        gutil.log("[webpack-dev-server]", "http://localhost:61999/webpack-dev-server/index.html");
     });
 });
 
-
-// ============================
-
-gulp.task("scripts-app", function () {
-    var paths = [
-        "resources/assets/scripts/app/**/*.{coffee,js}",
-        "resources/assets/scripts/base/**/*.{coffee,js}",
-        "resources/assets/scripts/shared/**/*.{coffee,js}"
-    ];
-
-    if (!argv.production) {
-        // we also want to add the embed stuff, since we're in development mode
-        // we want to watch embed files and re-compile them. However, we want
-        // to leave this path out in production so that embed files are not bloating
-        // the js file
-        paths.push("resources/assets/scripts/embed/**/*.{coffee,js}");
-    }
-
-    return argv.production
-        // Production pipeline
-        ? gulp.src(paths, {base: "resources/assets/scripts"})
-        .pipe(plug.plumber(plumberOptions))
-        .pipe(plug.order([
-            "resources/assets/scripts/base/jquery-2.0.2.js",
-            "resources/assets/scripts/base/angular.js",
-            "resources/assets/scripts/base/*.{coffee,js}",
-            "resources/assets/scripts/shared/*.{coffee,js}",
-            "resources/assets/scripts/app/*.{coffee,js}",
-            "resources/assets/scripts/app/services/*.{coffee,js}",
-            "resources/assets/scripts/app/filters/*.{coffee,js}",
-            "resources/assets/scripts/app/directives/*.{coffee,js}",
-            "resources/assets/scripts/app/controllers/*.{coffee,js}",
-            "resources/assets/scripts/**/*.{coffee,js}"
-        ], {base: "."}))
-        .pipe(plug.if(/\.coffee/, plug.coffee()))
-        .pipe(plug.concat("app.js"))
-        .pipe(plug.uglify())
-        .pipe(header(licenseHeader))
-        .pipe(gulp.dest("public/build/scripts"))
-
-        // Development/watch pipeline
-        : gulp.src(paths, {base: "resources/assets/scripts"})
-        .pipe(plug.plumber(plumberOptions))
-        .pipe(plug.cached('scripts'))
-        .pipe(plug.sourcemaps.init())
-        .pipe(plug.if(/\.coffee/, plug.coffee()))
-        .pipe(header(licenseHeader))
-        .pipe(plug.sourcemaps.write())
-        .pipe(gulp.dest("public/build/scripts"));
-});
 
 gulp.task("scripts-embed", function () {
     // note that this task should really only ever be invoked for production
@@ -245,23 +191,18 @@ gulp.task('copy:templates', function () {
 });
 
 gulp.task('build', [
-    'scripts-app',
+    'webpack-build',
+    'copy:templates',
     'styles-app',
     'scripts-embed',
     'styles-embed'
 ]);
 
-gulp.task("watch", ["build"], function () {
-    plug.livereload.listen();
-    gulp.watch("resources/assets/scripts/**/*.{coffee,js}", ["scripts-app"]);
+gulp.task("watch-legacy", ["build"], function () {
     gulp.watch("resources/assets/styles/**/*.{css,less}", ["styles-app"]);
 });
 
-
-gulp.task('watch-webpack', function () {
-    gulp.watch(path.ALL, ['webpack']);
-    gulp.run('webpack-dev-server');
-});
+gulp.task("watch", ["webpack-dev-server", "watch-legacy"], function () {});
 
 
 function endsWith(str, suffix) {

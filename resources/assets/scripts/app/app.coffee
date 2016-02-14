@@ -15,6 +15,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Some notes on what's going on here:
+#
+# - Webpack resolves all of these require statements.
+#
+# - jQuery is loaded before Angular so it replaces jqLite.
+#
+# - "script!" is used with dependencies that expect to interact with the global state.
+#
+# - The "ponyfm" module in this file must be initialized before the controllers
+#   and other Angular modules are brought in; they expect the "ponyfm" module to exist.
+
 require 'script!../base/jquery-2.0.2'
 require 'script!../base/jquery-ui'
 angular = require 'angular'
@@ -45,57 +56,14 @@ require 'script!../shared/underscore-extensions'
 ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
 window.pfm.preloaders = {}
 
-##require './controllers/'+name+'.coffee'
-#require "./controllers/account-albums-edit"
-#require "./controllers/account-albums"
-#require "./controllers/account-image-select"
-#require "./controllers/account-playlists"
-#require "./controllers/account-settings"
-#require "./controllers/account-track"
-#require "./controllers/account-tracks"
-#require "./controllers/admin-genres"
-#require "./controllers/album"
-#require "./controllers/albums-list"
-#require "./controllers/albums"
-#require "./controllers/application"
-#require "./controllers/artist-content"
-#require "./controllers/artist-favourites"
-#require "./controllers/artist-profile"
-#require "./controllers/artist"
-#require "./controllers/artists-list"
-#require "./controllers/artists"
-#require "./controllers/credits"
-#require "./controllers/dashboard"
-#require "./controllers/favourites-albums"
-#require "./controllers/favourites-playlists"
-#require "./controllers/favourites-tracks"
-#require "./controllers/home"
-#require "./controllers/login"
-#require "./controllers/playlist-form"
-#require "./controllers/playlist"
-#require "./controllers/playlists-list"
-#require "./controllers/playlists"
-#require "./controllers/sidebar"
-#require "./controllers/track-edit"
-#require "./controllers/track-show"
-#require "./controllers/track"
-#require "./controllers/tracks-list"
-#require "./controllers/tracks"
-#require "./controllers/uploader"
-
-
-requireAll = (r) ->
+# Inspired by: https://stackoverflow.com/a/30652110/3225811
+requireDirectory = (r) ->
     r.keys().forEach(r)
 
-requireAll(require.context('./controllers/', false, /\.coffee$/));
-requireAll(require.context('./directives/', false, /\.coffee$/));
-requireAll(require.context('./filters/', false, /\.coffee$/));
-requireAll(require.context('./services/', false, /\.coffee$/));
-
-#require './directives/'+name
-#require './filters/'+name
-#require './services/'+name
-
+requireDirectory(require.context('./controllers/', false, /\.coffee$/));
+requireDirectory(require.context('./directives/', false, /\.coffee$/));
+requireDirectory(require.context('./filters/', false, /\.coffee$/));
+requireDirectory(require.context('./services/', false, /\.coffee$/));
 
 
 if window.pfm.environment == 'production'

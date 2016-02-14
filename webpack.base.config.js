@@ -1,11 +1,14 @@
 var path = require('path');
 var webpack = require('webpack');
 
+// NOTE: This is a base config; it's not meant to be used directly!
+
 module.exports = {
     module: {
         loaders: [
             {test: /\.coffee$/, loader: "coffee"}
-        ]
+        ],
+        noParse: [/pfm-angular-marked\.js/]
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -16,12 +19,9 @@ module.exports = {
     entry: './resources/assets/scripts/app/app.coffee',
     output: {
         path: __dirname + '/public',
-        filename: './build/scripts/app.js',
-        publicPath: 'http://localhost:8080/build/'
+        filename: './build/scripts/app.js'
+        // publicPath should be defined in the dev config!
     },
-    //watch: true,
-    //watchDelay: 100,
-    devtool: 'source-map',
     resolve: {
         extensions: ["", ".webpack.js", ".web.js", ".js", ".coffee"]
     }
