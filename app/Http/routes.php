@@ -39,6 +39,7 @@ Route::get('/tracks/popular', 'TracksController@getIndex');
 Route::get('/tracks/random', 'TracksController@getIndex');
 
 Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
+Route::get('tracks/{id}-{slug}/edit', 'TracksController@getEdit');
 Route::get('t{id}', 'TracksController@getShortlink' )->where('id', '\d+');
 Route::get('t{id}/embed', 'TracksController@getEmbed' );
 Route::get('t{id}/stream.{extension}', 'TracksController@getStream' );

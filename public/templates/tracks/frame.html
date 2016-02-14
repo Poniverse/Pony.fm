@@ -1,10 +1,10 @@
 <div class="resource-details track-details">
     <ul class="dropdowns">
         <li class="dropdown">
-            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="::track.is_downloadable == 0" auto-close="outsideClick">
+            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="track.is_downloadable == 0" auto-close="outsideClick">
                 Downloads
             </a>
-            <ul class="dropdown-menu" ng-show="::track.is_downloadable == 1">
+            <ul class="dropdown-menu" ng-show="track.is_downloadable == 1">
                 <li ng-repeat="format in ::track.formats" ng-hide="isInProgress">
                     <a target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
                         <span>{{::format.name}}</span>
@@ -38,15 +38,15 @@
 
         <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share or Embed</a></li>
         <li><pfm-favourite-button resource="::track" type="track"></pfm-favourite-button></li>
-        <li ng-show="::track.permissions.edit"><a class="btn btn-small" ng-href="/account/tracks/edit/{{::track.id}}">Edit</a></li>
+        <li ng-show="::track.permissions.edit"><a class="btn btn-small" ng-href="/tracks/{{::track.id}}-{{::track.slug}}/edit">Edit</a></li>
     </ul>
 
     <header>
         <pfm-track-player track="::track"></pfm-track-player>
-        <h1>{{::track.title}}</h1>
+        <h1>{{track.title}}</h1>
         <h2>
-			<span ng-show="::track.album">
-				from: <a ng-href="{{::track.album.url}}" ng-text="{{::track.album.title}}"></a>
+			<span ng-if="track.album">
+				from: <a ng-href="{{::track.album.url}}">{{::track.album.title}}</a>
 			</span>
 
             by: <a ng-href="{{::track.user.url}}">{{::track.user.name}}</a>

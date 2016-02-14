@@ -18,4 +18,8 @@
 angular.module('ponyfm').controller "track-edit", [
     '$scope', '$state'
     ($scope, $state) ->
+        # All the fun stuff happens in the pfmTrackEditor directive.
+
+        # FYI: $scope.trackId is set in the `track` controller, which
+        # lies above this one in scope.
 ]

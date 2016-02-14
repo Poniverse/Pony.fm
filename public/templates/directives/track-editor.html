@@ -111,7 +111,7 @@
         <div class="form-row">
             <label class="strong">Choose a License:</label>
             <ul class="license-grid">
-                <li ng-repeat="license in ::taxonomies.licenses track by license.id" ng-class="{selected: track.license_id == license.id}">
+                <li ng-repeat="license in taxonomies.licenses track by license.id" ng-class="{selected: track.license_id == license.id}">
                     <div ng-click="track.license_id = license.id; touchModel()">
                         <strong>{{::license.title}}</strong>
                         <p>{{::license.description}}</p>

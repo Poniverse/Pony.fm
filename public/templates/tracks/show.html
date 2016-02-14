@@ -25,18 +25,18 @@
         </ul>
     </div>
     <div class="left">
-        <div class="description" ng-show="::track.description.length">
+        <div class="description" ng-if="track.description.length">
             <h2>Description</h2>
             <p marked="track.description"></p>
         </div>
 
-        <div ng-show="::track.is_vocal && track.lyrics.length" class="lyrics-panel">
+        <div ng-if="track.is_vocal && track.lyrics.length" class="lyrics-panel">
             <h2>Lyrics</h2>
             <div class="lyrics revealable">
                 <div class="reveal">
                     <a href="#">Click to reveal full lyrics&hellip;</a>
                 </div>
-                <p class="content" ng-html="::track.lyrics | noHTML | nl2br"></p>
+                <p class="content" ng-bind-html="track.lyrics | noHTML | nl2br"></p>
             </div>
         </div>
 

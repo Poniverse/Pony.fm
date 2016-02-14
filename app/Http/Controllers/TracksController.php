@@ -91,6 +91,11 @@ class TracksController extends Controller
         return View::make('tracks.show');
     }
 
+    public function getEdit($id, $slug)
+    {
+        return $this->getTrack($id, $slug);
+    }
+
     public function getShortlink($id)
     {
         $track = Track::find($id);
