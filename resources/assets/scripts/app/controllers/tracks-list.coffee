@@ -25,7 +25,7 @@ window.pfm.preloaders['tracks-list'] = [
         )
 ]
 
-angular.module('ponyfm').controller "tracks-list", [
+module.exports = angular.module('ponyfm').controller "tracks-list", [
     '$scope', 'tracks', '$state',
     ($scope, tracks, $state) ->
         tracks.mainQuery.fetch().done (searchResults) ->

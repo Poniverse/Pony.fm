@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').factory('upload', [
+module.exports = angular.module('ponyfm').factory('upload', [
     '$rootScope', '$http', '$timeout', 'account-tracks'
     ($rootScope, $http, $timeout, accountTracks) ->
         self =

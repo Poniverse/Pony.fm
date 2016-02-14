@@ -14,25 +14,105 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+require 'script!../base/jquery-2.0.2'
+require 'script!../base/jquery-ui'
+angular = require 'angular'
+
+require 'script!../base/angular-ui-date'
+require '../base/angular-ui-router'
+require '../base/angular-ui-sortable'
+require '../base/angularytics'
+require '../base/jquery.colorbox'
+require '../base/jquery.cookie'
+require '../base/jquery.timeago'
+require '../base/jquery.viewport'
+require 'script!../base/marked'
+require 'script!../base/moment'
+require '../base/soundmanager2-nodebug'
+require 'script!../base/tumblr'
+require '../base/ui-bootstrap-tpls-0.4.0'
+require 'script!../base/underscore'
+
+require '../shared/init.coffee'
+require '../shared/jquery-extensions'
+require '../shared/layout.coffee'
+require '../shared/pfm-angular-marked'
+require '../shared/pfm-angular-sanitize'
+require 'script!../shared/underscore-extensions'
+
+
+ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
 window.pfm.preloaders = {}
 
-module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
+##require './controllers/'+name+'.coffee'
+#require "./controllers/account-albums-edit"
+#require "./controllers/account-albums"
+#require "./controllers/account-image-select"
+#require "./controllers/account-playlists"
+#require "./controllers/account-settings"
+#require "./controllers/account-track"
+#require "./controllers/account-tracks"
+#require "./controllers/admin-genres"
+#require "./controllers/album"
+#require "./controllers/albums-list"
+#require "./controllers/albums"
+#require "./controllers/application"
+#require "./controllers/artist-content"
+#require "./controllers/artist-favourites"
+#require "./controllers/artist-profile"
+#require "./controllers/artist"
+#require "./controllers/artists-list"
+#require "./controllers/artists"
+#require "./controllers/credits"
+#require "./controllers/dashboard"
+#require "./controllers/favourites-albums"
+#require "./controllers/favourites-playlists"
+#require "./controllers/favourites-tracks"
+#require "./controllers/home"
+#require "./controllers/login"
+#require "./controllers/playlist-form"
+#require "./controllers/playlist"
+#require "./controllers/playlists-list"
+#require "./controllers/playlists"
+#require "./controllers/sidebar"
+#require "./controllers/track-edit"
+#require "./controllers/track-show"
+#require "./controllers/track"
+#require "./controllers/tracks-list"
+#require "./controllers/tracks"
+#require "./controllers/uploader"
+
+
+requireAll = (r) ->
+    r.keys().forEach(r)
+
+requireAll(require.context('./controllers/', false, /\.coffee$/));
+requireAll(require.context('./directives/', false, /\.coffee$/));
+requireAll(require.context('./filters/', false, /\.coffee$/));
+requireAll(require.context('./services/', false, /\.coffee$/));
+
+#require './directives/'+name
+#require './filters/'+name
+#require './services/'+name
+
+
 
 if window.pfm.environment == 'production'
-    module.run [
+    ponyfm.run [
         'Angularytics',
         (analytics) ->
             analytics.init()
     ]
 
-module.run [
+ponyfm.run [
     '$rootScope',
     ($rootScope) ->
         $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
             $rootScope.description = ''
 ]
 
-module.config [
+ponyfm.config [
     '$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider'
     (location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider, markedProvider) ->
 
@@ -330,3 +410,5 @@ module.config [
             backdropClick: false
 
 ]
+
+module.exports = ponyfm

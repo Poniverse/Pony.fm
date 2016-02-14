@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').directive 'pfmShareButtons', () ->
+module.exports = angular.module('ponyfm').directive 'pfmShareButtons', () ->
     (scope, element) ->
         window.setTimeout((->
             Tumblr.activate_share_on_tumblr_buttons()

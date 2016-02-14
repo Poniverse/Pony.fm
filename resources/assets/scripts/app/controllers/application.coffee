@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').controller "application", [
+module.exports = angular.module('ponyfm').controller "application", [
     '$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope', 'playlists'
     ($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope, playlists) ->
         $scope.auth = auth.data

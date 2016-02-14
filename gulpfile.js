@@ -17,9 +17,14 @@
  */
 
 var gulp = require("gulp"),
+    gutil = require("gulp-util"),
     plug = require("gulp-load-plugins")(),
     argv = require("yargs").argv,
-    header = require("gulp-header");
+    header = require("gulp-header"),
+    webpack = require("webpack"),
+    WebpackDevServer = require("webpack-dev-server"),
+    webpackConfig = require("./webpack.config.js"),
+    webpackStream = require('webpack-stream');
 
 var plumberOptions = {
     errorHandler: plug.notify.onError("Error: <%= error.message %>")
@@ -46,6 +51,38 @@ var licenseHeader = [
     "",
     ""
 ].join('\n');
+
+
+
+//gulp.task('webpack', [], function () {
+//    return gulp.src(path.ALL) // gulp looks for all source files under specified path
+//        .pipe(sourcemaps.init()) // creates a source map which would be very helpful for debugging by maintaining the actual source code structure
+//        .pipe(webpackStream(webpackConfig)) // blend in the webpack config into the source files
+//        .pipe(uglify())// minifies the code for better compression
+//        .pipe(sourcemaps.write())
+//        .pipe(gulp.dest(path.DEST_BUILD));
+//});
+
+
+gulp.task("webpack-dev-server", function (callback) {
+    // Start a webpack-dev-server
+    //webpackConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:8080");
+    var compiler = webpack(webpackConfig);
+
+    new WebpackDevServer(compiler, {
+        // server and middleware options
+    }).listen(8080, "localhost", function (err) {
+        if (err) throw new gutil.PluginError("webpack-dev-server", err);
+        // Server listening
+        gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
+
+        // keep the server alive or continue?
+        // callback();
+    });
+});
+
+
+// ============================
 
 gulp.task("scripts-app", function () {
     var paths = [
@@ -219,6 +256,13 @@ gulp.task("watch", ["build"], function () {
     gulp.watch("resources/assets/scripts/**/*.{coffee,js}", ["scripts-app"]);
     gulp.watch("resources/assets/styles/**/*.{css,less}", ["styles-app"]);
 });
+
+
+gulp.task('watch-webpack', function () {
+    gulp.watch(path.ALL, ['webpack']);
+    gulp.run('webpack-dev-server');
+});
+
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;

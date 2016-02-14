@@ -19,7 +19,7 @@ window.pfm.preloaders['account-playlists'] = [
     (playlists) -> playlists.refreshOwned true
 ]
 
-angular.module('ponyfm').controller "account-playlists", [
+module.exports = angular.module('ponyfm').controller "account-playlists", [
     '$scope', 'auth', '$dialog', 'playlists'
     ($scope, auth, $dialog, playlists) ->
         $scope.playlists = []

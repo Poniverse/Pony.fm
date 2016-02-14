@@ -20,7 +20,7 @@ window.pfm.preloaders['favourites-playlists'] = [
         favourites.fetchPlaylists(true)
 ]
 
-angular.module('ponyfm').controller "favourites-playlists", [
+module.exports = angular.module('ponyfm').controller "favourites-playlists", [
     '$scope', 'favourites'
     ($scope, favourites) ->
         favourites.fetchPlaylists().done (res) ->

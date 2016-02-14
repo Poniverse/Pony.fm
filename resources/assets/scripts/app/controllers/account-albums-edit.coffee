@@ -24,7 +24,7 @@ window.pfm.preloaders['account-albums-edit'] = [
         $.when.all defs
 ]
 
-angular.module('ponyfm').controller "account-albums-edit", [
+module.exports = angular.module('ponyfm').controller "account-albums-edit", [
     '$scope', '$state', '$dialog', 'account-albums'
     ($scope, $state, $dialog, albums) ->
         $scope.isNew = $state.params.album_id == undefined

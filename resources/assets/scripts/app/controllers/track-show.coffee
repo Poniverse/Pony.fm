@@ -20,7 +20,7 @@ window.pfm.preloaders['track-show'] = [
     $.when.all [tracks.fetch $state.params.id, playlists.refreshOwned(true)]
 ]
 
-angular.module('ponyfm').controller "track-show", [
+module.exports = angular.module('ponyfm').controller "track-show", [
   '$scope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog'
   ($scope, tracks, $state, playlists, auth, favourites, $dialog) ->
 ]

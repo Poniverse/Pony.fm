@@ -158,9 +158,13 @@
         </script>
     @endif
 
-    {!! Assets::scriptIncludes() !!}
+{{--    {!! Assets::scriptIncludes() !!}--}}
 
-    @if (!Config::get("app.debug"))
+    @if (Config::get("app.debug"))
+        <script src="http://localhost:8080/build/scripts/app.js"></script>
+        <script src="http://localhost:8080/webpack-dev-server.js"></script>
+    @else
+        <script src="/build/scripts/app.js"></script>
         <script src="/build/scripts/templates.js"></script>
     @endif
 

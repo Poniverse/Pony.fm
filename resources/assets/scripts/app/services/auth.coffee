@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').factory('auth', [
+module.exports = angular.module('ponyfm').factory('auth', [
     '$rootScope'
     ($rootScope) ->
         data: {isLogged: window.pfm.auth.isLogged, user: window.pfm.auth.user}

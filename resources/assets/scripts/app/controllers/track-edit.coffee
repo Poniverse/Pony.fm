@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-angular.module('ponyfm').controller "track-edit", [
+module.exports = angular.module('ponyfm').controller "track-edit", [
     '$scope', '$state'
     ($scope, $state) ->
         # All the fun stuff happens in the pfmTrackEditor directive.

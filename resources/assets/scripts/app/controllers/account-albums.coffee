@@ -20,7 +20,7 @@ window.pfm.preloaders['account-albums'] = [
         $.when.all [tracks.refresh('published=true&in_album=false', true), albums.refresh(true)]
 ]
 
-angular.module('ponyfm').controller "account-albums", [
+module.exports = angular.module('ponyfm').controller "account-albums", [
     '$scope', '$state', 'account-albums', 'account-tracks'
     ($scope, $state, albums, tracks) ->
 

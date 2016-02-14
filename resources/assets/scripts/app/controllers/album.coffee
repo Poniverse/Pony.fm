@@ -20,7 +20,7 @@ window.pfm.preloaders['album'] = [
         $.when.all [albums.fetch $state.params.id, playlists.refreshOwned(true)]
 ]
 
-angular.module('ponyfm').controller "album", [
+module.exports = angular.module('ponyfm').controller "album", [
     '$scope', '$rootScope', 'albums', '$state', 'playlists', 'auth', '$dialog', 'download-cached', '$window', '$timeout'
     ($scope, $rootScope, albums, $state, playlists, auth, $dialog, cachedAlbum, $window, $timeout) ->
         album = null

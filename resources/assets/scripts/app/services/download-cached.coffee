@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').factory('download-cached', [
+module.exports = angular.module('ponyfm').factory('download-cached', [
   '$rootScope', '$http', '$log'
   ($rootScope, $http, $log) ->
     download = (type, id, format) ->
