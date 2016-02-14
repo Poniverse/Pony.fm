@@ -15,7 +15,7 @@
             </span>
         </a>
     </li>
-    <li ng-show="!albums.length" class="empty">
+    <li ng-if="!albums.length" class="empty">
         No albums found&hellip;
     </li>
 </ul>

@@ -15,7 +15,7 @@
             </span>
         </a>
     </li>
-    <li ng-show="!playlists.length" class="empty">
+    <li ng-if="!playlists.length" class="empty">
         No playlists found&hellip;
     </li>
 </ul>
