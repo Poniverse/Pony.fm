@@ -219,7 +219,7 @@ gulp.task('build', [
     'styles-embed'
 ]);
 
-gulp.task("watch", function () {
+gulp.task("watch", ["build"], function () {
     plug.livereload.listen();
     gulp.watch("resources/assets/scripts/**/*.{coffee,js}", ["scripts-app"]);
     gulp.watch("resources/assets/styles/**/*.{css,less}", ["styles-app"]);

@@ -1,6 +1,7 @@
 {
   "name": "pony.fm",
   "version": "1.0.0",
+  "license": "AGPL",
   "repository": {
     "type": "git",
     "url": "ssh://git@phabricator.poniverse.net/diffusion/PF/pony-fm.git"
