@@ -224,6 +224,9 @@ class TracksController extends ApiControllerBase
         }
 
         if (Input::has('songs')) {
+            // DISTINCT is needed here to avoid duplicate results
+            // when a track is associated with multiple show songs.
+            $query->distinct();
             $query->join('show_song_track', function ($join) {
                 $join->on('tracks.id', '=', 'show_song_track.track_id');
             });
