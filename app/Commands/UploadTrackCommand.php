@@ -52,13 +52,8 @@ class UploadTrackCommand extends CommandBase
 
     private $_losslessFormats = [
         'flac',
-        'pcm_s16le ([1][0][0][0] / 0x0001)',
-        'pcm_s16be',
-        'adpcm_ms ([2][0][0][0] / 0x0002)',
-        'pcm_s24le ([1][0][0][0] / 0x0001)',
-        'pcm_s24be',
-        'pcm_f32le ([3][0][0][0] / 0x0003)',
-        'pcm_f32be (fl32 / 0x32336C66)'
+        'pcm',
+        'adpcm',
     ];
 
     public function __construct($allowLossy = false, $allowShortTrack = false, $customTrackSource = null, $autoPublishByDefault = false)
@@ -114,7 +109,9 @@ class UploadTrackCommand extends CommandBase
         $validator = \Validator::make($input, [
             'track' =>
                 'required|'
-                . ($this->_allowLossy ? '' : 'audio_format:'. implode(',', $this->_losslessFormats).'|')
+                . ($this->_allowLossy
+                    ? 'audio_format:flac,pcm,adpcm,aac,mp3,vorbis|'
+                    : 'audio_format:flac,pcm,adpcm|')
                 . ($this->_allowShortTrack ? '' : 'min_duration:30|')
                 . 'audio_channels:1,2',
 
@@ -194,7 +191,7 @@ class UploadTrackCommand extends CommandBase
             // Lossy uploads need to be identified and set as the master file
             // without being re-encoded.
             $audioObject = AudioCache::get($source);
-            $isLossyUpload = !in_array($audioObject->getAudioCodec(), $this->_losslessFormats);
+            $isLossyUpload = !Str::startsWith($audioObject->getAudioCodec(), $this->_losslessFormats);
 
             if ($isLossyUpload) {
                 if ($audioObject->getAudioCodec() === 'mp3') {
