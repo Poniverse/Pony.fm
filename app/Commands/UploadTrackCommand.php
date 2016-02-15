@@ -26,12 +26,9 @@ use getID3;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Input;
 use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
 use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\TrackFile;
 use AudioCache;
 use File;
 use Illuminate\Support\Str;
@@ -39,24 +36,26 @@ use Poniverse\Ponyfm\Models\TrackType;
 use Poniverse\Ponyfm\Models\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Validator;
 
 class UploadTrackCommand extends CommandBase
 {
     use DispatchesJobs;
-
 
     private $_allowLossy;
     private $_allowShortTrack;
     private $_customTrackSource;
     private $_autoPublishByDefault;
 
-    private $_losslessFormats = [
-        'flac',
-        'pcm',
-        'adpcm',
-    ];
-
-    public function __construct($allowLossy = false, $allowShortTrack = false, $customTrackSource = null, $autoPublishByDefault = false)
+    /**
+     * UploadTrackCommand constructor.
+     *
+     * @param bool $allowLossy
+     * @param bool $allowShortTrack allow tracks shorter than 30 seconds
+     * @param string|null $customTrackSource value to set in the track's "source" field; if left blank, "direct_upload" is used
+     * @param bool $autoPublishByDefault
+     */
+    public function __construct(bool $allowLossy = false, bool $allowShortTrack = false, string $customTrackSource = null, bool $autoPublishByDefault = false)
     {
         $this->_allowLossy = $allowLossy;
         $this->_allowShortTrack = $allowShortTrack;
@@ -137,7 +136,6 @@ class UploadTrackCommand extends CommandBase
             return CommandResponse::fail($validator);
         }
 
-
         // Process optional track fields
         $autoPublish = (bool) ($input['auto_publish'] ?? $this->_autoPublishByDefault);
 
@@ -184,91 +182,8 @@ class UploadTrackCommand extends CommandBase
 
         $track->save();
 
-
-        try {
-            $source = $trackFile->getPathname();
-
-            // Lossy uploads need to be identified and set as the master file
-            // without being re-encoded.
-            $audioObject = AudioCache::get($source);
-            $isLossyUpload = !Str::startsWith($audioObject->getAudioCodec(), $this->_losslessFormats);
-
-            if ($isLossyUpload) {
-                if ($audioObject->getAudioCodec() === 'mp3') {
-                    $masterFormat = 'MP3';
-
-                } else if (Str::startsWith($audioObject->getAudioCodec(), 'aac')) {
-                    $masterFormat = 'AAC';
-
-                } else if ($audioObject->getAudioCodec() === 'vorbis') {
-                    $masterFormat = 'OGG Vorbis';
-
-                } else {
-                    $validator->messages()->add('track', 'The track does not contain audio in a known lossy format.');
-                    $track->delete();
-                    return CommandResponse::fail($validator);
-                }
-
-                $trackFile = new TrackFile();
-                $trackFile->is_master = true;
-                $trackFile->format = $masterFormat;
-                $trackFile->track_id = $track->id;
-                $trackFile->save();
-
-                // Lossy masters are copied into the datastore - no re-encoding involved.
-                File::copy($source, $trackFile->getFile());
-            }
-
-
-            $trackFiles = [];
-
-            foreach (Track::$Formats as $name => $format) {
-                // Don't bother with lossless transcodes of lossy uploads, and
-                // don't re-encode the lossy master.
-                if ($isLossyUpload && ($format['is_lossless'] || $name === $masterFormat)) {
-                    continue;
-                }
-
-                $trackFile = new TrackFile();
-                $trackFile->is_master = $name === 'FLAC' ? true : false;
-                $trackFile->format = $name;
-                $trackFile->status = TrackFile::STATUS_PROCESSING_PENDING;
-
-                if (in_array($name, Track::$CacheableFormats) && $trackFile->is_master == false) {
-                    $trackFile->is_cacheable = true;
-                } else {
-                    $trackFile->is_cacheable = false;
-                }
-                $track->trackFiles()->save($trackFile);
-
-                // All TrackFile records we need are synchronously created
-                // before kicking off the encode jobs in order to avoid a race
-                // condition with the "temporary" source file getting deleted.
-                $trackFiles[] = $trackFile;
-            }
-
-            try {
-                foreach($trackFiles as $trackFile)  {
-                    $this->dispatch(new EncodeTrackFile($trackFile, false, true, $autoPublish));
-                }
-
-            } catch (InvalidEncodeOptionsException $e) {
-                $track->delete();
-                return CommandResponse::fail(['track' => [$e->getMessage()]]);
-            }
-
-        } catch (\Exception $e) {
-            $track->delete();
-            throw $e;
-        }
-
-        return CommandResponse::succeed([
-            'id' => $track->id,
-            'name' => $track->name,
-            'title' => $track->title,
-            'slug' => $track->slug,
-            'autoPublish' => $autoPublish,
-        ]);
+        $generateTrackFiles = new GenerateTrackFilesCommand($track, $trackFile, $autoPublish);
+        return $generateTrackFiles->execute();
     }
 
     /**

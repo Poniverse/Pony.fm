@@ -22,6 +22,8 @@ namespace Poniverse\Ponyfm\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Poniverse\Ponyfm\Commands\GenerateTrackFilesCommand;
+use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Models\Track;
 
@@ -66,9 +68,15 @@ class RebuildTrack extends Command
         $track = Track::with('trackFiles')->withTrashed()->find((int) $this->argument('trackId'));
 
         if($this->option('upload')) {
-            foreach($track->trackFiles as $trackFile) {
-                $this->info("Re-encoding this track's {$trackFile->format} file...");
-                $this->dispatch(new EncodeTrackFile($trackFile, false, true, false));
+            $this->info("Attempting to finish this track's upload...");
+            $sourceFile = new \SplFileInfo($track->getTemporarySourceFile());
+            $generateTrackFiles = new GenerateTrackFilesCommand($track, $sourceFile, false);
+            $result = $generateTrackFiles->execute();
+            // The GenerateTrackFiles command will re-encode all TrackFiles.
+
+            if ($result->didFail()) {
+                $this->error("Something went wrong!");
+                $this->error(json_encode($result->getMessages(), JSON_PRETTY_PRINT));
             }
 
         } else {

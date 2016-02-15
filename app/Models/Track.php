@@ -682,7 +682,7 @@ class Track extends Model implements Searchable
      *
      * @return string
      */
-    public function getTemporarySourceFile() {
+    public function getTemporarySourceFile():string {
         return Config::get('ponyfm.files_directory').'/queued-tracks/'.$this->id;
     }
 
