@@ -23,7 +23,6 @@ namespace Poniverse\Ponyfm\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Poniverse\Ponyfm\Commands\GenerateTrackFilesCommand;
-use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Models\Track;
 
@@ -66,9 +65,14 @@ class RebuildTrack extends Command
     {
         /** @var Track $track */
         $track = Track::with('trackFiles')->withTrashed()->find((int) $this->argument('trackId'));
+        $this->printTrackInfo($track);
 
         if($this->option('upload')) {
+            // The track would've been deleted if its original upload failed.
+            // It should be restored so the user can publish the track!
+            $track->restore();
             $this->info("Attempting to finish this track's upload...");
+
             $sourceFile = new \SplFileInfo($track->getTemporarySourceFile());
             $generateTrackFiles = new GenerateTrackFilesCommand($track, $sourceFile, false);
             $result = $generateTrackFiles->execute();
@@ -76,10 +80,12 @@ class RebuildTrack extends Command
 
             if ($result->didFail()) {
                 $this->error("Something went wrong!");
-                $this->error(json_encode($result->getMessages(), JSON_PRETTY_PRINT));
+                print_r($result->getMessages());
             }
 
         } else {
+            $this->info("Re-encoding this track's files - there should be a line of output for each format!");
+
             foreach ($track->trackFiles as $trackFile) {
                 if (!$trackFile->is_master) {
                     $this->info("Re-encoding this track's {$trackFile->format} file...");
@@ -87,5 +93,13 @@ class RebuildTrack extends Command
                 }
             }
         }
+    }
+
+    private function printTrackInfo(Track $track) {
+        $this->comment("Track info:");
+        $this->comment("  Title: {$track->title}");
+        $this->comment("  Uploaded at: {$track->created_at}");
+        $this->comment("  Artist: {$track->user->display_name} [User ID: {$track->user_id}]");
+        $this->comment("  Artist email: {$track->user->email}");
     }
 }

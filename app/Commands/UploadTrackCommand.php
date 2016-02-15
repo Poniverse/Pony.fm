@@ -25,6 +25,9 @@ use Config;
 use getID3;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Input;
+use Log;
+use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
+use Poniverse\Ponyfm\Exceptions\UnknownTagFormatException;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Models\Image;
@@ -236,7 +239,7 @@ class UploadTrackCommand extends CommandBase
      * @param User $artist
      * @param string $audioCodec
      * @return array the "processed" and raw tags extracted from the file
-     * @throws \Exception
+     * @throws BadRequestHttpException
      */
     protected function parseOriginalTags(UploadedFile $file, User $artist, string $audioCodec) {
         //==========================================================================================================
@@ -268,6 +271,21 @@ class UploadTrackCommand extends CommandBase
         } elseif (Str::startsWith($audioCodec, ['pcm', 'adpcm'])) {
             list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
 
+        } else {
+            // Assume the file is untagged if it's in an unknown format.
+            $parsedTags = [
+                'title' => null,
+                'artist' => null,
+                'band' => null,
+                'genre' => null,
+                'track_number' => null,
+                'album' => null,
+                'year' => null,
+                'release_date' => null,
+                'comments' => null,
+                'lyrics' => null,
+            ];
+            $rawTags = [];
         }
 
 

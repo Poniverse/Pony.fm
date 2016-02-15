@@ -73,22 +73,21 @@ class GenerateTrackFilesCommand extends CommandBase
             // without being re-encoded.
             $audioObject = AudioCache::get($source);
             $isLossyUpload = !$this->isLosslessFile($audioObject);
+            $codecString = $audioObject->getAudioCodec();
 
             if ($isLossyUpload) {
-                if ($audioObject->getAudioCodec() === 'mp3') {
+                if ($codecString === 'mp3') {
                     $masterFormat = 'MP3';
 
-                } else if (Str::startsWith($audioObject->getAudioCodec(), 'aac')) {
+                } else if (Str::startsWith($codecString, 'aac')) {
                     $masterFormat = 'AAC';
 
-                } else if ($audioObject->getAudioCodec() === 'vorbis') {
+                } else if ($codecString === 'vorbis') {
                     $masterFormat = 'OGG Vorbis';
 
                 } else {
-                    $validator = new Validator();
-                    $validator->messages()->add('track', 'The track does not contain audio in a known lossy format.');
                     $this->track->delete();
-                    return CommandResponse::fail($validator);
+                    return CommandResponse::fail(['track' => "The track does not contain audio in a known lossy format. The format read from the file is: {$codecString}"]);
                 }
 
                 // Sanity check: skip creating this TrackFile if it already exists.
