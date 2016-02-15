@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 angular.module('ponyfm').factory('upload', [
-    '$rootScope', '$http', '$timeout'
-    ($rootScope, $http, $timeout) ->
+    '$rootScope', '$http', '$timeout', 'account-tracks'
+    ($rootScope, $http, $timeout, accountTracks) ->
         self =
             queue: []
 
@@ -94,7 +94,8 @@ angular.module('ponyfm').factory('upload', [
                             upload.error = error
                             $rootScope.$broadcast 'upload-error', [upload, error]
 
-                        $rootScope.$broadcast 'upload-finished', upload
+                        accountTracks.refresh(null, true)
+                            .done($rootScope.$broadcast('upload-finished', upload))
 
                     # send the track to the server
                     formData = new FormData();

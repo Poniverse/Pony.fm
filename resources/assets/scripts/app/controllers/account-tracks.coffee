@@ -27,7 +27,6 @@ angular.module('ponyfm').controller "account-tracks", [
             selectedTrack: null
 
         $scope.tracks = []
-
         tracksDb = {}
 
         setTracks = (tracks) ->
@@ -40,13 +39,11 @@ angular.module('ponyfm').controller "account-tracks", [
             if $state.params.track_id
                 $scope.data.selectedTrack = tracksDb[$state.params.track_id]
 
-        tracks.refresh().done setTracks
-
-        $scope.refreshList = () ->
-            tracks.refresh().done setTracks
-
         $scope.selectTrack = (track) ->
             $scope.data.selectedTrack = track
+
+
+        tracks.refresh().done setTracks
 
         $scope.$on '$stateChangeSuccess', () ->
             if $state.params.track_id
@@ -54,12 +51,8 @@ angular.module('ponyfm').controller "account-tracks", [
             else
                 $scope.selectTrack null
 
-        $scope.$on 'track-updated', (track) ->
-            tracks.clearCache()
-            $scope.refreshList()
-
         $scope.$on 'track-deleted', () ->
             $state.transitionTo 'account.tracks'
             tracks.clearCache()
-            $scope.refreshList()
+            tracks.refresh(null, true).done setTracks
 ]
