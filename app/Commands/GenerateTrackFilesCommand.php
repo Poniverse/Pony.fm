@@ -47,13 +47,13 @@ class GenerateTrackFilesCommand extends CommandBase
     private $autoPublish;
     private $sourceFile;
 
-    static $_losslessFormats = [
+    protected static $_losslessFormats = [
         'flac',
         'pcm',
         'adpcm',
     ];
 
-    public function __construct(Track $track, SplFileInfo $sourceFile, bool $autoPublish = false, int $reprocessTrackId = null)
+    public function __construct(Track $track, SplFileInfo $sourceFile, bool $autoPublish = false)
     {
         $this->track = $track;
         $this->autoPublish = $autoPublish;
@@ -128,7 +128,7 @@ class GenerateTrackFilesCommand extends CommandBase
                 $trackFile->format = $name;
                 $trackFile->status = TrackFile::STATUS_PROCESSING_PENDING;
 
-                if (in_array($name, Track::$CacheableFormats) && $trackFile->is_master == false) {
+                if (in_array($name, Track::$CacheableFormats) && !$trackFile->is_master) {
                     $trackFile->is_cacheable = true;
                 } else {
                     $trackFile->is_cacheable = false;
