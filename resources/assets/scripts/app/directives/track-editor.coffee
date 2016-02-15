@@ -100,10 +100,10 @@ angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                         if typeof(value) == 'object'
                             formData.append name, value, value.name
 
-                    if name == 'released_at' and value != null
+                    if name == 'released_at' and value? and value != ''
                         formData.append name, value.toISOString()
 
-                    else if value != null
+                    else if value?
                         formData.append name, value
 
                 if parseInt($scope.track.track_type_id) == 2
