@@ -64,6 +64,10 @@ class PfmValidator extends Illuminate\Validation\Validator
             return true;
         }
 
+        if (in_array('alac', $parameters) && Str::startsWith($codecString, 'alac')) {
+            return true;
+        }
+
         return in_array($file->getAudioCodec(), $parameters);
     }
 

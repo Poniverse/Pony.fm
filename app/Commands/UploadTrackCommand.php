@@ -112,8 +112,8 @@ class UploadTrackCommand extends CommandBase
             'track' =>
                 'required|'
                 . ($this->_allowLossy
-                    ? 'audio_format:flac,pcm,adpcm,aac,mp3,vorbis|'
-                    : 'audio_format:flac,pcm,adpcm|')
+                    ? 'audio_format:flac,alac,pcm,adpcm,aac,mp3,vorbis|'
+                    : 'audio_format:flac,alac,pcm,adpcm|')
                 . ($this->_allowShortTrack ? '' : 'min_duration:30|')
                 . 'audio_channels:1,2',
 
@@ -250,22 +250,16 @@ class UploadTrackCommand extends CommandBase
         // all tags read by getID3, including the cover art
         $allTags = $getId3->analyze($file->getPathname());
 
-        // tags specific to a file format (ID3 or Atom), pre-normalization but with cover art removed
-        $rawTags = [];
-
-        // normalized tags used by Pony.fm
-        $parsedTags = [];
+        // $rawTags => tags specific to a file format (ID3 or Atom), pre-normalization but with cover art removed
+        // $parsedTags => normalized tags used by Pony.fm
 
         if ($audioCodec === 'mp3') {
             list($parsedTags, $rawTags) = $this->getId3Tags($allTags);
 
-        } elseif (Str::startsWith($audioCodec, 'aac')) {
+        } elseif (Str::startsWith($audioCodec, ['aac', 'alac'])) {
             list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
 
-        } elseif ($audioCodec === 'vorbis') {
-            list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
-
-        } elseif ($audioCodec === 'flac') {
+        } elseif (in_array($audioCodec, ['vorbis', 'flac'])) {
             list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
 
         } elseif (Str::startsWith($audioCodec, ['pcm', 'adpcm'])) {

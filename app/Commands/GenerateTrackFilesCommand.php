@@ -51,6 +51,7 @@ class GenerateTrackFilesCommand extends CommandBase
         'flac',
         'pcm',
         'adpcm',
+        'alac'
     ];
 
     public function __construct(Track $track, SplFileInfo $sourceFile, bool $autoPublish = false)
