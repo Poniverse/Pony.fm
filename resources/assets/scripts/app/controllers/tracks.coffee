@@ -71,9 +71,9 @@ module.exports = angular.module('ponyfm').controller "tracks", [
             $scope.pages.push($scope.totalPages) unless $scope.totalPages in $scope.pages
 
         $scope.pageSelectorShown = false
-        $scope.inputPageNumber = $scope.currentPage
 
         $scope.gotoPage = (page) ->
+            console.log(page)
             $state.transitionTo 'content.tracks.list', {filter: $state.params.filter, page: page}
 
         $scope.showPageSelector = () ->
@@ -84,8 +84,8 @@ module.exports = angular.module('ponyfm').controller "tracks", [
             $scope.pageSelectorShown = false
 
 
-        $scope.jumpToPage = () ->
-            $scope.gotoPage($scope.inputPageNumber)
+        $scope.jumpToPage = (inputPageNumber) ->
+            $scope.gotoPage(inputPageNumber)
 
         $scope.$on '$destroy', -> tracks.mainQuery = tracks.createQuery()
 ]

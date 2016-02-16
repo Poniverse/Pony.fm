@@ -5,7 +5,7 @@ var _ = require('underscore');
 var webpackBaseConfig = require('./webpack.base.config.js');
 var config = _.clone(webpackBaseConfig);
 
-config.devtool = 'source-map';
+config.devtool = 'eval-source-map';
 config.output.publicPath = 'http://localhost:61999/build/';
 
 

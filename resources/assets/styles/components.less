@@ -421,5 +421,12 @@ html {
       padding: 0 5px;
       text-align: center;
     }
+
+    // This submit button is hidden because the
+    // ng-submit directive it's part of doesn't work
+    // without a submit button present in the form.
+    input[type="submit"] {
+      display: none;
+    }
   }
 }
