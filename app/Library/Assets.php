@@ -20,6 +20,28 @@
 
 class Assets
 {
+    public static function scriptIncludes(string $area) {
+        $scriptTags = '';
+
+        if ('app' === $area) {
+            $scripts = ['app.js', 'templates.js'];
+        } elseif ('embed' === $area) {
+            $scripts = ['embed.js'];
+        } else {
+            throw new InvalidArgumentException('A valid app area must be specified!');
+        }
+
+        foreach ($scripts as $filename) {
+            $scriptTags .= "<script src='/build/scripts/{$filename}?" . filemtime(public_path("build/scripts/{$filename}")) . "'></script>";
+        }
+
+        if (Config::get("app.debug")) {
+            $scriptTags .= '<script src="http://localhost:61999/webpack-dev-server.js"></script>';
+        }
+
+        return $scriptTags;
+    }
+
     public static function styleIncludes($area = 'app')
     {
         if (!Config::get("app.debug")) {

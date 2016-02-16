@@ -158,13 +158,7 @@
         </script>
     @endif
 
-    @if (Config::get("app.debug"))
-        <script src="http://localhost:61999/build/scripts/app.js"></script>
-        <script src="http://localhost:61999/webpack-dev-server.js"></script>
-    @else
-        <script src="/build/scripts/app.js"></script>
-        <script src="/build/scripts/templates.js"></script>
-    @endif
+    {!! Assets::scriptIncludes('app') !!}
 
     @yield('app_scripts')
 
