@@ -55,8 +55,6 @@ gulp.task("scripts-app", function () {
     ];
 
     if (!argv.production) {
-        paths.push("resources/assets/scripts/debug/**/*.{coffee,js}");
-
         // we also want to add the embed stuff, since we're in development mode
         // we want to watch embed files and re-compile them. However, we want
         // to leave this path out in production so that embed files are not bloating
@@ -132,9 +130,6 @@ gulp.task("styles-app", function () {
     ];
 
     if (!argv.production) {
-        includedStyles.push("resources/assets/styles/profiler.less");
-        includedStyles.push("resources/assets/styles/prettify.css");
-
         // we also want to add the embed stuff, since we're in development mode
         // we want to watch embed files and re-compile them. However, we want
         // to leave this path out in production so that embed files are not bloating

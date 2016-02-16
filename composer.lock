@@ -4,9 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0deb7713636ee82aadee47da3a9217cc",
-    "content-hash": "9dea148233d815e53eb636413f2bcaed",
+    "hash": "a12fe5f5687e21aac441868ccc882fa2",
+    "content-hash": "95039400d11d1851dabe46e4c0456965",
     "packages": [
+        {
+            "name": "barryvdh/laravel-debugbar",
+            "version": "v2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barryvdh/laravel-debugbar.git",
+                "reference": "974fd16e328ca851a081449100d9509af59cf0ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/974fd16e328ca851a081449100d9509af59cf0ff",
+                "reference": "974fd16e328ca851a081449100d9509af59cf0ff",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.0.17|5.1.*|5.2.*",
+                "maximebf/debugbar": "~1.11.0",
+                "php": ">=5.4.0",
+                "symfony/finder": "~2.6|~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Barryvdh\\Debugbar\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "PHP Debugbar integration for Laravel",
+            "keywords": [
+                "debug",
+                "debugbar",
+                "laravel",
+                "profiler",
+                "webprofiler"
+            ],
+            "time": "2015-12-22 06:22:38"
+        },
         {
             "name": "barryvdh/laravel-ide-helper",
             "version": "v2.1.2",
@@ -1544,6 +1598,67 @@
             "time": "2015-12-19 20:16:43"
         },
         {
+            "name": "maximebf/debugbar",
+            "version": "v1.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maximebf/php-debugbar.git",
+                "reference": "07741d84d39d10f00551c94284cdefcc69703e77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/07741d84d39d10f00551c94284cdefcc69703e77",
+                "reference": "07741d84d39d10f00551c94284cdefcc69703e77",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "psr/log": "^1.0",
+                "symfony/var-dumper": "^2.6|^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0|^5.0"
+            },
+            "suggest": {
+                "kriswallsmith/assetic": "The best way to manage assets",
+                "monolog/monolog": "Log using Monolog",
+                "predis/predis": "Redis storage"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.11-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DebugBar\\": "src/DebugBar/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maxime Bouroumeau-Fuseau",
+                    "email": "maxime.bouroumeau@gmail.com",
+                    "homepage": "http://maximebf.com"
+                },
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "Debug bar in the browser for php application",
+            "homepage": "https://github.com/maximebf/php-debugbar",
+            "keywords": [
+                "debug",
+                "debugbar"
+            ],
+            "time": "2015-12-10 09:50:24"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.17.2",
             "source": {
@@ -1908,6 +2023,56 @@
                 }
             ],
             "time": "2015-02-03 12:10:50"
+        },
+        {
+            "name": "predis/predis",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "84060b9034d756b4d79641667d7f9efe1aeb8e04"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/84060b9034d756b4d79641667d7f9efe1aeb8e04",
+                "reference": "84060b9034d756b4d79641667d7f9efe1aeb8e04",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
+                }
+            ],
+            "description": "Flexible and feature-complete PHP client library for Redis",
+            "homepage": "http://github.com/nrk/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "time": "2015-07-30 18:34:15"
         },
         {
             "name": "psr/http-message",

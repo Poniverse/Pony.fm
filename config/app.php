@@ -148,6 +148,7 @@ return [
         Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Cviebrock\LaravelElasticsearch\ServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 

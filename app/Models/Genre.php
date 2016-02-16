@@ -40,6 +40,8 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read mixed $url
  * @property-write mixed $title
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  */
 class Genre extends Model
 {

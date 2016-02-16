@@ -126,7 +126,6 @@ class Assets
                 "styles/base/jquery-ui.css",
                 "styles/base/colorbox.css",
                 "styles/app.less",
-                "styles/profiler.less"
             ];
         } else {
             if ($area == 'embed') {
