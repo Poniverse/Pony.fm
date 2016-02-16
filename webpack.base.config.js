@@ -16,10 +16,13 @@ module.exports = {
             jQuery: "jquery"
         })
     ],
-    entry: './resources/assets/scripts/app/app.coffee',
+    entry: {
+        app: './resources/assets/scripts/app/app.coffee',
+        embed: './resources/assets/scripts/embed/embed.coffee'
+    },
     output: {
         path: __dirname + '/public',
-        filename: './build/scripts/app.js'
+        filename: './build/scripts/[name].js'
         // publicPath should be defined in the dev config!
     },
     resolve: {

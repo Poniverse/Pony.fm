@@ -62,7 +62,12 @@
         </div>
     @endif
 
-    {!! Assets::scriptIncludes('embed') !!}
+    @if (Config::get("app.debug"))
+        <script src="http://localhost:61999/build/scripts/embed.js"></script>
+        <script src="http://localhost:61999/webpack-dev-server.js"></script>
+    @else
+        <script src="/build/scripts/embed.js"></script>
+    @endif
 
     @if(config('ponyfm.google_analytics_id'))
         <script type="text/javascript">

@@ -43,14 +43,10 @@ require 'script!../base/moment'
 require '../base/soundmanager2-nodebug'
 require 'script!../base/tumblr'
 require '../base/ui-bootstrap-tpls-0.4.0'
-require 'script!../base/underscore'
 
-require '../shared/init.coffee'
-require '../shared/jquery-extensions'
-require '../shared/layout.coffee'
 require '../shared/pfm-angular-marked'
 require '../shared/pfm-angular-sanitize'
-require 'script!../shared/underscore-extensions'
+require '../shared/init.coffee'
 
 
 ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']

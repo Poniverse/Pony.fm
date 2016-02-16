@@ -20,23 +20,6 @@
 
 class Assets
 {
-    public static function scriptIncludes($area = 'app')
-    {
-        if (!Config::get("app.debug")) {
-            return '<script src="/build/scripts/' . $area . '.js?' . filemtime(public_path("/build/scripts/${area}.js")) . '"></script>';
-        }
-
-        $scripts = self::mergeGlobs(self::getScriptsForArea($area));
-        $retVal = "";
-
-        foreach ($scripts as $script) {
-            $filename = self::replaceExtensionWith($script, ".coffee", ".js");
-            $retVal .= "<script src='/build/$filename?" . filemtime(public_path("/build/${filename}")) . "'></script>";
-        }
-
-        return $retVal;
-    }
-
     public static function styleIncludes($area = 'app')
     {
         if (!Config::get("app.debug")) {
@@ -82,41 +65,6 @@ class Assets
             }
         }
         return $files;
-    }
-
-    private static function getScriptsForArea($area)
-    {
-        if ($area == 'app') {
-            return [
-                "scripts/base/jquery-2.0.2.js",
-                "scripts/base/angular.js",
-                "scripts/base/marked.js",
-                "scripts/base/*.{coffee,js}",
-                "scripts/shared/*.{coffee,js}",
-                "scripts/app/*.{coffee,js}",
-                "scripts/app/services/*.{coffee,js}",
-                "scripts/app/filters/*.{coffee,js}",
-                "scripts/app/directives/*.{coffee,js}",
-                "scripts/app/controllers/*.{coffee,js}",
-                "scripts/**/*.{coffee,js}"
-            ];
-        } else {
-            if ($area == 'embed') {
-                return [
-                    "scripts/base/jquery-2.0.2.js",
-                    "scripts/base/jquery.cookie.js",
-                    "scripts/base/jquery.viewport.js",
-                    "scripts/base/underscore.js",
-                    "scripts/base/moment.js",
-                    "scripts/base/jquery.timeago.js",
-                    "scripts/base/soundmanager2-nodebug.js",
-                    "scripts/shared/jquery-extensions.js",
-                    "scripts/embed/*.coffee"
-                ];
-            }
-        }
-
-        throw new Exception();
     }
 
     private static function getStylesForArea($area)

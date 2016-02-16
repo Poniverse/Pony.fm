@@ -25,7 +25,8 @@ var gulp = require("gulp"),
     WebpackDevServer = require("webpack-dev-server"),
     webpackDevConfig = require("./webpack.dev.config.js"),
     webpackProductionConfig = require("./webpack.production.config.js"),
-    webpackStream = require('webpack-stream');
+    webpackStream = require('webpack-stream'),
+    _ = require("underscore");
 
 var plumberOptions = {
     errorHandler: plug.notify.onError("Error: <%= error.message %>")
@@ -55,7 +56,7 @@ var licenseHeader = [
 
 
 gulp.task("webpack-build", function() {
-    return gulp.src(webpackProductionConfig.entry)
+    return gulp.src(_.values(webpackProductionConfig.entry))
         .pipe(webpackStream(webpackProductionConfig))
         .pipe(header(licenseHeader))
         .pipe(gulp.dest('public'));
@@ -77,33 +78,6 @@ gulp.task("webpack-dev-server", function () {
     });
 });
 
-
-gulp.task("scripts-embed", function () {
-    // note that this task should really only ever be invoked for production
-    // since development-mode watches and builds include the embed scripts
-    // already
-
-    var includedScripts = [
-        "resources/assets/scripts/base/jquery-2.0.2.js",
-        "resources/assets/scripts/base/jquery.cookie.js",
-        "resources/assets/scripts/base/jquery.viewport.js",
-        "resources/assets/scripts/base/underscore.js",
-        "resources/assets/scripts/base/moment.js",
-        "resources/assets/scripts/base/jquery.timeago.js",
-        "resources/assets/scripts/base/soundmanager2-nodebug.js",
-        "resources/assets/scripts/shared/jquery-extensions.js",
-        "resources/assets/scripts/embed/*.coffee"
-    ];
-
-    return gulp.src(includedScripts, {base: "resources/assets/scripts"})
-        .pipe(plug.plumber(plumberOptions))
-        .pipe(plug.if(/\.coffee/, plug.coffee()))
-        .pipe(plug.order(includedScripts, {base: "."}))
-        .pipe(plug.concat("embed.js"))
-        .pipe(plug.uglify())
-        .pipe(header(licenseHeader))
-        .pipe(gulp.dest("public/build/scripts"));
-});
 
 gulp.task("styles-app", function () {
     var includedStyles = [
@@ -194,7 +168,6 @@ gulp.task('build', [
     'webpack-build',
     'copy:templates',
     'styles-app',
-    'scripts-embed',
     'styles-embed'
 ]);
 
