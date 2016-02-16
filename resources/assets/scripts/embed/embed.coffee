@@ -14,6 +14,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+require 'script!../base/jquery-2.0.2'
+require '../base/jquery.timeago'
+require '../base/soundmanager2-nodebug'
+require './favourite.coffee'
+
+require 'script!../base/underscore'
+require '../shared/layout.coffee'
+require 'script!../shared/underscore-extensions'
+
+
 $('.timeago').timeago()
 
 loaderDef = new $.Deferred()

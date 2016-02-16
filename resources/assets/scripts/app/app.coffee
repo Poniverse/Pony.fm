@@ -14,25 +14,69 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Some notes on what's going on here:
+#
+# - Webpack resolves all of these require statements.
+#
+# - jQuery is loaded before Angular so it replaces jqLite.
+#
+# - "script!" is used with dependencies that expect to interact with the global state.
+#
+# - The "ponyfm" module in this file must be initialized before the controllers
+#   and other Angular modules are brought in; they expect the "ponyfm" module to exist.
+
+require 'script!../base/jquery-2.0.2'
+require 'script!../base/jquery-ui'
+angular = require 'angular'
+
+require 'script!../base/angular-ui-date'
+require '../base/angular-ui-router'
+require '../base/angular-ui-sortable'
+require '../base/angularytics'
+require '../base/jquery.colorbox'
+require '../base/jquery.cookie'
+require '../base/jquery.timeago'
+require '../base/jquery.viewport'
+require 'script!../base/marked'
+require 'script!../base/moment'
+require '../base/soundmanager2-nodebug'
+require 'script!../base/tumblr'
+require '../base/ui-bootstrap-tpls-0.4.0'
+
+require '../shared/pfm-angular-marked'
+require '../shared/pfm-angular-sanitize'
+require '../shared/init.coffee'
+
+
+ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
 window.pfm.preloaders = {}
 
-module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
+# Inspired by: https://stackoverflow.com/a/30652110/3225811
+requireDirectory = (r) ->
+    r.keys().forEach(r)
+
+requireDirectory(require.context('./controllers/', false, /\.coffee$/));
+requireDirectory(require.context('./directives/', false, /\.coffee$/));
+requireDirectory(require.context('./filters/', false, /\.coffee$/));
+requireDirectory(require.context('./services/', false, /\.coffee$/));
+
 
 if window.pfm.environment == 'production'
-    module.run [
+    ponyfm.run [
         'Angularytics',
         (analytics) ->
             analytics.init()
     ]
 
-module.run [
+ponyfm.run [
     '$rootScope',
     ($rootScope) ->
         $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
             $rootScope.description = ''
 ]
 
-module.config [
+ponyfm.config [
     '$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider'
     (location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider, markedProvider) ->
 
@@ -330,3 +374,5 @@ module.config [
             backdropClick: false
 
 ]
+
+module.exports = ponyfm

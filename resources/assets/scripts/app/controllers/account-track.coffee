@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').controller "account-track", [
+module.exports = angular.module('ponyfm').controller "account-track", [
     '$scope', '$state'
     ($scope, $state) ->
         # All the fun stuff happens in the pfmTrackEditor directive.

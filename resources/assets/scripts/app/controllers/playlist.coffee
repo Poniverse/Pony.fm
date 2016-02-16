@@ -20,7 +20,7 @@ window.pfm.preloaders['playlist'] = [
         playlists.fetch $state.params.id, true
 ]
 
-angular.module('ponyfm').controller 'playlist', [
+module.exports = angular.module('ponyfm').controller 'playlist', [
     '$scope', '$rootScope', '$state', 'playlists', '$dialog', 'download-cached', '$window', '$timeout'
     ($scope, $rootScope, $state, playlists, $dialog, cachedPlaylist, $window, $timeout) ->
         playlist = null

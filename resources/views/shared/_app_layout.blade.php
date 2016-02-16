@@ -25,7 +25,7 @@
     <script>
         window.fbAsyncInit = function() {
             FB.init({
-                appId      : '186765381447538',
+                appId: '186765381447538',
                 status: true,
                 cookie: true,
                 xfbml: true
@@ -158,11 +158,7 @@
         </script>
     @endif
 
-    {!! Assets::scriptIncludes() !!}
-
-    @if (!Config::get("app.debug"))
-        <script src="/build/scripts/templates.js"></script>
-    @endif
+    {!! Assets::scriptIncludes('app') !!}
 
     @yield('app_scripts')
 

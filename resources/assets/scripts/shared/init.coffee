@@ -14,6 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+require 'script!../base/underscore'
+require './jquery-extensions'
+require './layout.coffee'
+require 'script!./underscore-extensions'
+
 def = new $.Deferred()
 
 pfm.soundManager = def.promise()

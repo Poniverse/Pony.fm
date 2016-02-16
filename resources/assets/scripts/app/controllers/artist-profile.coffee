@@ -20,7 +20,7 @@ window.pfm.preloaders['artist-profile'] = [
         artists.fetch $state.params.slug, true
 ]
 
-angular.module('ponyfm').controller "artist-profile", [
+module.exports = angular.module('ponyfm').controller "artist-profile", [
     '$scope', 'artists', '$state'
     ($scope, artists, $state) ->
 ]

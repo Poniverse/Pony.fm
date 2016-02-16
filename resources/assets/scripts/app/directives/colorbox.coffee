@@ -16,7 +16,7 @@
 
 # Based on http://stackoverflow.com/questions/14641791/how-to-use-colorbox-with-angular-js
 
-angular.module('ponyfm').directive 'colorbox', ->
+module.exports = angular.module('ponyfm').directive 'colorbox', ->
     restrict: 'AC'
     link: (scope, element, attrs) ->
       $(element).colorbox({maxWidth:'90%', maxHeight:'90%'})

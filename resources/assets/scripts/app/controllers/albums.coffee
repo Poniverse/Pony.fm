@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').controller "albums", [
+module.exports = angular.module('ponyfm').controller "albums", [
     '$scope', 'albums', '$state'
     ($scope, albums, $state) ->
 

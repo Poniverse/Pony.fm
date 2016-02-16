@@ -20,7 +20,7 @@ window.pfm.preloaders['tracks'] = [
         tracks.loadFilters()
 ]
 
-angular.module('ponyfm').controller "tracks", [
+module.exports = angular.module('ponyfm').controller "tracks", [
     '$scope', 'tracks', '$state', 'focus'
     ($scope, tracks, $state, focus) ->
         $scope.recentTracks = null

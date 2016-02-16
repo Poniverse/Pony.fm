@@ -19,7 +19,7 @@
 # using a jQuery selector.
 #
 # Based on: https://stackoverflow.com/a/25597540/3225811
-angular.module('ponyfm').factory('focus', ['$timeout', '$window', ($timeout, $window) ->
+module.exports = angular.module('ponyfm').factory('focus', ['$timeout', '$window', ($timeout, $window) ->
     (selector) ->
         $timeout () ->
             element = $window.jQuery("#{selector}")

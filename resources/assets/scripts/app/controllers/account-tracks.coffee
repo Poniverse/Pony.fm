@@ -20,7 +20,7 @@ window.pfm.preloaders['account-tracks'] = [
         $.when.all [tracks.refresh(null, true), albums.refresh(true), taxonomies.refresh()]
 ]
 
-angular.module('ponyfm').controller "account-tracks", [
+module.exports = angular.module('ponyfm').controller "account-tracks", [
     '$scope', '$state', 'taxonomies', '$dialog', 'lightbox', 'account-albums', 'account-tracks'
     ($scope, $state, taxonomies, $dialog, lightbox, albums, tracks) ->
         $scope.data =
