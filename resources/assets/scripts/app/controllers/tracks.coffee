@@ -73,7 +73,6 @@ module.exports = angular.module('ponyfm').controller "tracks", [
         $scope.pageSelectorShown = false
 
         $scope.gotoPage = (page) ->
-            console.log(page)
             $state.transitionTo 'content.tracks.list', {filter: $state.params.filter, page: page}
 
         $scope.showPageSelector = () ->
