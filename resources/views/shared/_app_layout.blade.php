@@ -110,7 +110,7 @@
                     @else
                         <span>A community by</span>
                         <img src="/images/poniverse.svg" alt="Poniverse logo" title="Poniverse"/>
-                        <span>Now 20% more <span class="x-caps">FOSS</span>!</span>
+                        <span>We&#39;re open-source!</span>
                     @endif
                 </a>
             </li>
