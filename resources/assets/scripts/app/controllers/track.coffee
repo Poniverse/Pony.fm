@@ -17,20 +17,25 @@
 angular.module('ponyfm').controller "track", [
     '$scope', '$rootScope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
     ($scope, $rootScope, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
-        track = null
-        trackId = parseInt($state.params.id)
+        $scope.track
+        $scope.trackId = parseInt($state.params.id)
 
-        tracks.fetch(trackId).done (trackResponse) ->
-            $scope.track = trackResponse.track
-            track = trackResponse.track
-            $rootScope.description = "Listen to #{track.title} by #{track.user.name} on the largest pony music site"
+        updateTrackData = (forceUpdate = false) ->
+            tracks.fetch($scope.trackId, forceUpdate).done (trackResponse) ->
+                $scope.track = trackResponse.track
+                $rootScope.description = "Listen to #{$scope.track.title} by #{$scope.track.user.name} on the largest pony music site"
+
+        updateTrackData()
+
+        $scope.$on 'track-updated', () ->
+            updateTrackData(true)
 
         $scope.playlists = []
 
         if auth.data.isLogged
             playlists.refreshOwned().done (playlists) ->
                 for playlist in playlists
-                    if trackId not in playlist.track_ids
+                    if $scope.trackId not in playlist.track_ids
                         $scope.playlists.push playlist
 
         $scope.favouriteWorking = false
@@ -44,7 +49,11 @@ angular.module('ponyfm').controller "track", [
         $scope.share = () ->
             dialog = $dialog.dialog
                 templateUrl: '/templates/partials/track-share-dialog.html',
-                controller: ['$scope', ($scope) -> $scope.track = track; $scope.close = () -> dialog.close()]
+                controller: ['$scope', ($localScope) ->
+                        $localScope.track = $scope.track
+                        $localScope.close = () ->
+                            dialog.close()
+                ]
             dialog.open()
 
         $scope.addToNewPlaylist = () ->
