@@ -334,6 +334,15 @@ class ParseTrackTagsCommand extends CommandBase
             $trackNumber = $trackNumberComponents[0];
         }
 
+        if (isset($tags['release_date'])) {
+            $releaseDate = $this->parseDateString($tags['release_date'][0]);
+
+        } elseif (isset($tags['creation_date'])) {
+            $releaseDate = $this->parseDateString($tags['creation_date'][0]);
+        } else {
+            $releaseDate = 0;
+        }
+
         return [
             [
                 'title' => isset($tags['title']) ? $tags['title'][0] : null,
@@ -344,7 +353,7 @@ class ParseTrackTagsCommand extends CommandBase
                 'track_number' => $trackNumber,
                 'album' => isset($tags['album']) ? $tags['album'][0] : null,
                 'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
-                'release_date' => isset($tags['release_date']) ? $this->parseDateString($tags['release_date'][0]) : null,
+                'release_date' => $releaseDate,
                 'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
                 'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
             ],

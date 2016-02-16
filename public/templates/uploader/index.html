@@ -12,7 +12,7 @@
     <p>Contact <a href="mailto:feld0@pony.fm">feld0@pony.fm</a> if you run into any issues!</p>
 
     <ul class="uploads">
-        <li ng-repeat="upload in data.queue track by $index" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isProcessing || upload.progress >= 100}" ng-animate="'upload-queue'">
+        <li ng-repeat="upload in data.queue track by $index" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isProcessing || (upload.progress >= 100 && upload.error == null)}" ng-animate="'upload-queue'">
             <p>
 
                 <span ng-show="!upload.success">
