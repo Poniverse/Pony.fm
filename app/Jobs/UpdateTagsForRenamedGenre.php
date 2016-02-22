@@ -67,7 +67,7 @@ class UpdateTagsForRenamedGenre extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
-        DB::reconnect();
+        $this->beforeHandle();
 
         // The user who kicked off this job is used when generating revision log entries.
         Auth::login($this->executingUser);

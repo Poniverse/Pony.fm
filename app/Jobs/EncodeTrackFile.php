@@ -85,7 +85,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
-        DB::reconnect();
+        $this->beforeHandle();
 
         // Sanity check: was this file just generated, or is it already being processed?
         if ($this->trackFile->status === TrackFile::STATUS_PROCESSING) {

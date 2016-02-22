@@ -52,7 +52,7 @@ class UpdateSearchIndexForEntity extends Job implements SelfHandling, ShouldQueu
      */
     public function handle()
     {
-        DB::reconnect();
+        $this->beforeHandle();
         $this->entity->updateElasticsearchEntrySynchronously();
     }
 }

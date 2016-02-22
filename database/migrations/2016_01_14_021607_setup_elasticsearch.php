@@ -29,6 +29,12 @@ class SetupElasticsearch extends Migration
      */
     public function up()
     {
+        // As of 2016-02-21, Elasticsearch is not used in tests.
+        // Letting this migration run will blow away all data in it.
+        if (App::environment() === 'testing') {
+            return;
+        }
+
         $elasticsearch = Elasticsearch::connection();
 
         $elasticsearch->indices()->create([
@@ -108,6 +114,12 @@ class SetupElasticsearch extends Migration
      */
     public function down()
     {
+        // As of 2016-02-21, Elasticsearch is not used in tests.
+        // Letting this migration run will blow away all data in it.
+        if (App::environment() === 'testing') {
+            return;
+        }
+
         $elasticsearch = Elasticsearch::connection();
 
         $elasticsearch->indices()->delete(['index' => 'ponyfm']);
