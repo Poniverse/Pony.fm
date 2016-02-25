@@ -127,17 +127,19 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             # ========================================
             #  The part where everything gets loaded!
             # ========================================
-            $.when(
-                albums.refresh(),
-                taxonomies.refresh(),
-                tracks.getEdit($scope.trackId, true)
-            ).done (albums, taxonomies, track)->
-                # Update album data
-                $scope.albums.length = 0
-                albumsDb = {}
-                for album in albums
-                    albumsDb[album.id] = album
-                    $scope.albums.push album
+            tracks.getEdit($scope.trackId, true)
+            .then (track)->
+                $.when(
+                    albums.refresh(false, track.user_id),
+                    taxonomies.refresh()
+                ).done (albums, taxonomies)->
+                    # Update album data
+                    $scope.albums.length = 0
+                    albumsDb = {}
+                    for album in albums
+                        albumsDb[album.id] = album
+                        $scope.albums.push album
+
 
                 # Update track data
 

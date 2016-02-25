@@ -137,7 +137,8 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 
-        Route::get('/albums/owned', 'Api\Web\AlbumsController@getOwned');
+        Route::get('/users/{id}/albums', 'Api\Web\AlbumsController@getOwned')->where('id', '\d+');
+//        Route::get('/albums/owned', 'Api\Web\AlbumsController@getOwned');
         Route::get('/albums/edit/{id}', 'Api\Web\AlbumsController@getEdit');
 
         Route::get('/playlists/owned', 'Api\Web\PlaylistsController@getOwned');

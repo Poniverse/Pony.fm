@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Gate;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
@@ -46,9 +47,7 @@ class EditTrackCommand extends CommandBase
      */
     public function authorize()
     {
-        $user = \Auth::user();
-
-        return $this->_track && $user != null && $this->_track->user_id == $user->id;
+        return $this->_track && Gate::allows('edit', $this->_track);
     }
 
     /**

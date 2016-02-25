@@ -30,6 +30,7 @@ use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Auth;
 use Input;
+use Poniverse\Ponyfm\Models\User;
 use Response;
 use Poniverse\Ponyfm\Models\Track;
 
@@ -140,9 +141,12 @@ class AlbumsController extends ApiControllerBase
             200);
     }
 
-    public function getOwned()
+    public function getOwned($id)
     {
-        $query = Album::summary()->where('user_id', \Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        $user = User::findOrFail($id);
+        $this->authorize('get-albums', $user);
+
+        $query = Album::summary()->where('user_id', $id)->orderBy('created_at', 'desc')->get();
         $albums = [];
         foreach ($query as $album) {
             $albums[] = [

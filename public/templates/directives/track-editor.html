@@ -71,7 +71,7 @@
                 <a pfm-popup="song-selector" pfm-popup-close-on-click href="#" class="btn btn-small">Show Songs: <strong>{{selectedSongsTitle}}</strong></a>
                 <div id="song-selector" class="pfm-popup">
                     <ul>
-                        <li ng-repeat="song in ::taxonomies.showSongs track by song.id" ng-class="{selected: selectedSongs[song.id]}">
+                        <li ng-repeat="song in taxonomies.showSongs track by song.id" ng-class="{selected: selectedSongs[song.id]}">
                             <a pfm-eat-click href="#" ng-click="toggleSong(song); $event.stopPropagation();">{{::song.title}}</a>
                         </li>
                     </ul>
