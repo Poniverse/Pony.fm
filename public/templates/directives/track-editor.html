@@ -1,4 +1,4 @@
-<form novalidate ng-submit="updateTrack(track)">
+<form class="track-editor" novalidate ng-submit="updateTrack(track)">
     <ul class="toolbar">
         <li>
             <button type="submit" class="btn" ng-class="{disabled: (track.is_published && !isDirty) || isSaving, 'btn-primary': !track.is_published || isDirty}">
