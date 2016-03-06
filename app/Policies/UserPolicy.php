@@ -27,4 +27,8 @@ class UserPolicy
     public function getAlbums(User $userToAuthorize, User $user) {
         return $userToAuthorize->id === $user->id || $userToAuthorize->hasRole('admin');
     }
+
+    public function getImages(User $userToAuthorize, User $user) {
+        return $userToAuthorize->id === $user->id || $userToAuthorize->hasRole('admin');
+    }
 }

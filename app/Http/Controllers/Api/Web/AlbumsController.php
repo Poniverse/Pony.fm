@@ -141,13 +141,13 @@ class AlbumsController extends ApiControllerBase
             200);
     }
 
-    public function getOwned($id)
+    public function getOwned(User $user)
     {
-        $user = User::findOrFail($id);
         $this->authorize('get-albums', $user);
 
-        $query = Album::summary()->where('user_id', $id)->orderBy('created_at', 'desc')->get();
+        $query = Album::summary()->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
         $albums = [];
+
         foreach ($query as $album) {
             $albums[] = [
                 'id' => $album->id,

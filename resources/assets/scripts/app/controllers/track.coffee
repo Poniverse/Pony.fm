@@ -30,6 +30,11 @@ module.exports = angular.module('ponyfm').controller "track", [
         $scope.$on 'track-updated', () ->
             updateTrackData(true)
 
+        $scope.$on 'track-deleted', () ->
+            # This is meant to take you back to whatever state you found
+            # this track from.
+            $window.history.go(-2)
+
         $scope.playlists = []
 
         if auth.data.isLogged

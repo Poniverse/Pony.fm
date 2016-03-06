@@ -82,7 +82,7 @@
         <div class="row-fluid">
             <div class="form-row span6" ng-class="{'has-error': errors.cover != null}">
                 <label class="strong">Track Cover: </label>
-                <pfm-image-upload set-image="setCover" image="track.cover_url" />
+                <pfm-image-upload set-image="setCover" image="track.cover_url" user-id="track.user_id"></pfm-image-upload>
             </div>
             <div class="form-row span6" ng-class="{'has-error': errors.released_at != null}">
                 <label for="released_at" class="strong">Release Date:</label>

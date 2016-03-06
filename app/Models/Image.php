@@ -68,7 +68,7 @@ class Image extends Model
 
     /**
      * @param UploadedFile $file
-     * @param $user
+     * @param int|User $user
      * @param bool $forceReupload forces the image to be re-processed even if a matching hash is found
      * @return Image
      * @throws \Exception

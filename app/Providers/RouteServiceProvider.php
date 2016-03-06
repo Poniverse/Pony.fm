@@ -22,6 +22,7 @@ namespace Poniverse\Ponyfm\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Poniverse\Ponyfm\Models\User;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -42,9 +43,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        //
-
         parent::boot($router);
+
+        $router->model('userId', User::class);
     }
 
     /**
