@@ -132,12 +132,12 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::group(['middleware' => 'auth'], function() {
         Route::get('/account/settings', 'Api\Web\AccountController@getSettings');
 
-        Route::get('/images/owned', 'Api\Web\ImagesController@getOwned');
-
         Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 
-        Route::get('/albums/owned', 'Api\Web\AlbumsController@getOwned');
+        Route::get('/users/{userId}/albums', 'Api\Web\AlbumsController@getOwned')->where('id', '\d+');
+        Route::get('/users/{userId}/images', 'Api\Web\ImagesController@getOwned')->where('id', '\d+');
+
         Route::get('/albums/edit/{id}', 'Api\Web\AlbumsController@getEdit');
 
         Route::get('/playlists/owned', 'Api\Web\PlaylistsController@getOwned');

@@ -91,7 +91,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                     $scope.track.is_published = true
                     $scope.isDirty = false
                     $scope.errors = {}
-                    images.refresh true
+                    images.refresh(true, track.user_id)
 
                 formData = new FormData();
                 _.each $scope.track, (value, name) ->
@@ -127,17 +127,21 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             # ========================================
             #  The part where everything gets loaded!
             # ========================================
-            $.when(
-                albums.refresh(),
-                taxonomies.refresh(),
-                tracks.getEdit($scope.trackId, true)
-            ).done (albums, taxonomies, track)->
-                # Update album data
-                $scope.albums.length = 0
-                albumsDb = {}
-                for album in albums
-                    albumsDb[album.id] = album
-                    $scope.albums.push album
+            tracks.getEdit($scope.trackId, true)
+            .then (track)->
+                images.refresh(true, track.user_id)
+                $.when(
+                    albums.refresh(false, track.user_id),
+                    taxonomies.refresh()
+                ).done (albums, taxonomies)->
+                    # Update album data
+                    $scope.albums.length = 0
+                    albumsDb = {}
+                    for album in albums
+                        albumsDb[album.id] = album
+                        $scope.albums.push album
+                    $scope.selectedAlbum = if track.album_id then albumsDb[track.album_id] else null
+
 
                 # Update track data
 
@@ -151,6 +155,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                 $scope.track =
                     id: track.id
                     title: track.title
+                    user_id: track.user_id
                     description: track.description
                     lyrics: track.lyrics
                     is_explicit: track.is_explicit
@@ -167,7 +172,6 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                     is_published: track.is_published
                     is_listed: track.is_listed
 
-                $scope.selectedAlbum = if track.album_id then albumsDb[track.album_id] else null
                 $scope.selectedSongs = {}
                 $scope.selectedSongs[song.id] = song for song in track.show_songs
                 updateSongDisplay()

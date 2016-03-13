@@ -24,6 +24,7 @@ use Auth;
 use Cache;
 use Config;
 use DB;
+use Gate;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
@@ -423,8 +424,8 @@ class Track extends Model implements Searchable
             ],
             'user_data' => $userData,
             'permissions' => [
-                'delete' => Auth::check() && Auth::user()->id == $track->user_id,
-                'edit' => Auth::check() && Auth::user()->id == $track->user_id
+                'delete' => Gate::allows('delete', $track),
+                'edit' => Gate::allows('edit', $track)
             ]
         ];
     }

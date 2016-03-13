@@ -23,6 +23,8 @@ module.exports = angular.module('ponyfm').directive 'pfmImageUpload', () ->
     scope:
         setImage: '=setImage'
         image: '=image'
+        # ID of the user to upload images on behalf of
+        userId: '=userId'
 
     compile: (element) ->
         $image = element.find 'img'
@@ -31,6 +33,7 @@ module.exports = angular.module('ponyfm').directive 'pfmImageUpload', () ->
     controller: [
         'images', '$scope', 'lightbox'
         (images, $scope, lightbox) ->
+
             $scope.imageObject = null
             $scope.imageFile = null
             $scope.imageUrl = null
@@ -40,7 +43,7 @@ module.exports = angular.module('ponyfm').directive 'pfmImageUpload', () ->
             $scope.$watch 'image', (val) ->
                 $scope.imageObject = $scope.imageFile = $scope.imageUrl = null
                 $scope.isImageLoaded = false
-                return if !val
+                return unless val?
 
                 $scope.imageUrl = val
                 $image.attr 'src', val
@@ -50,7 +53,9 @@ module.exports = angular.module('ponyfm').directive 'pfmImageUpload', () ->
                 $scope.isImageLoaded = true
                 window.setTimeout (() -> window.alignVertically($image)), 0
 
-            images.refresh().done (images) -> $scope.images = images
+            $scope.$watch 'userId', (val)->
+                return unless val?
+                images.refresh(false, $scope.userId).done (images) -> $scope.images = images
 
             $scope.previewImage = () ->
                 return if !$scope.isImageLoaded

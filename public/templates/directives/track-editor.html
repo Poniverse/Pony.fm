@@ -1,4 +1,4 @@
-<form novalidate ng-submit="updateTrack(track)">
+<form class="track-editor" novalidate ng-submit="updateTrack(track)">
     <ul class="toolbar">
         <li>
             <button type="submit" class="btn" ng-class="{disabled: (track.is_published && !isDirty) || isSaving, 'btn-primary': !track.is_published || isDirty}">
@@ -71,7 +71,7 @@
                 <a pfm-popup="song-selector" pfm-popup-close-on-click href="#" class="btn btn-small">Show Songs: <strong>{{selectedSongsTitle}}</strong></a>
                 <div id="song-selector" class="pfm-popup">
                     <ul>
-                        <li ng-repeat="song in ::taxonomies.showSongs track by song.id" ng-class="{selected: selectedSongs[song.id]}">
+                        <li ng-repeat="song in taxonomies.showSongs track by song.id" ng-class="{selected: selectedSongs[song.id]}">
                             <a pfm-eat-click href="#" ng-click="toggleSong(song); $event.stopPropagation();">{{::song.title}}</a>
                         </li>
                     </ul>
@@ -82,7 +82,7 @@
         <div class="row-fluid">
             <div class="form-row span6" ng-class="{'has-error': errors.cover != null}">
                 <label class="strong">Track Cover: </label>
-                <pfm-image-upload set-image="setCover" image="track.cover_url" />
+                <pfm-image-upload set-image="setCover" image="track.cover_url" user-id="track.user_id"></pfm-image-upload>
             </div>
             <div class="form-row span6" ng-class="{'has-error': errors.released_at != null}">
                 <label for="released_at" class="strong">Release Date:</label>

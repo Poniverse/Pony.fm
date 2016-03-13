@@ -27,6 +27,7 @@ module.exports = angular.module('ponyfm').factory('taxonomies', [
             genresWithTracks: []
             showSongs: []
             showSongsWithTracks: []
+
             refresh: () ->
                 return def.promise() if def != null
 

@@ -183,9 +183,7 @@ class TracksController extends ApiControllerBase
             return $this->notFound('Track ' . $id . ' not found!');
         }
 
-        if ($track->user_id != Auth::user()->id) {
-            return $this->notAuthorized();
-        }
+        $this->authorize('edit', $track);
 
         return Response::json(Track::mapPrivateTrackShow($track), 200);
     }

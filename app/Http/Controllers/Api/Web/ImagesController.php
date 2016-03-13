@@ -20,17 +20,21 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Auth;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Image;
-use Cover;
-use Illuminate\Support\Facades\Response;
+use Poniverse\Ponyfm\Models\User;
+use Response;
 
 class ImagesController extends ApiControllerBase
 {
-    public function getOwned()
+    public function getOwned(User $user)
     {
-        $query = Image::where('uploaded_by', \Auth::user()->id);
+        $this->authorize('get-images', $user);
+
+        $query = Image::where('uploaded_by', $user->id);
         $images = [];
+
         foreach ($query->get() as $image) {
             $images[] = [
                 'id' => $image->id,

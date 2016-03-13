@@ -1,6 +1,8 @@
+<?php
+
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,21 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'base/bootstrap/bootstrap';
-@import 'base/bootstrap/responsive';
-@import 'base/font-awesome/font-awesome';
-@import 'variables';
-@import 'mixins';
-@import 'layout';
-@import 'account-content';
-@import 'admin';
-@import 'components/components';
-@import 'forms';
-@import 'animations';
-@import 'body';
-@import 'components/player';
-@import 'content';
-@import 'dashboard';
-@import 'components/uploader';
-@import 'components/search';
-@import 'components/track-editor';
+namespace Poniverse\Ponyfm\Policies;
+
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\User;
+
+class AlbumPolicy
+{
+    public function edit(User $user, Album $album) {
+        return $user->id === $album->user_id || $user->hasRole('admin');
+    }
+
+    public function delete(User $user, Album $album) {
+        return $user->id === $album->user_id || $user->hasRole('admin');
+    }
+}
