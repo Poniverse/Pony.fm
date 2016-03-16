@@ -1,5 +1,5 @@
 # Pony.fm - A community for pony fan music.
-# Copyright (C) 2015 Peter Deltchev
+# Copyright (C) 2016 Peter Deltchev
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -14,19 +14,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-window.pfm.preloaders['dashboard'] = [
-    'dashboard'
-    (dashboard) -> dashboard.refresh(true)
-]
+module.exports = angular.module('ponyfm').factory('meta', [
+    '$rootScope'
+    ($rootScope) ->
+        self =
+            reset: () ->
+                this.setTitle('Pony.fm - Unlimited Pony Music Hosting', false)
+                this.setDescription('Pony.fm is the world\'s largest collection of My Little Pony fan music. Enjoy unlimited uploads, streaming, and downloads!')
 
-module.exports = angular.module('ponyfm').controller "dashboard", [
-    '$scope', 'dashboard', 'auth', '$http'
-    ($scope, dashboard, auth, $http) ->
+            setTitle: (title, withSuffix=true) ->
+                $rootScope.title = title
+                if withSuffix
+                    $rootScope.title += ' - Pony.fm'
 
-        $scope.recentTracks = null
-        $scope.popularTracks = null
-
-        dashboard.refresh().done (res) ->
-            $scope.recentTracks = res.recent_tracks
-            $scope.popularTracks = res.popular_tracks
-]
+            setDescription: (description) ->
+                $rootScope.description = description
+])

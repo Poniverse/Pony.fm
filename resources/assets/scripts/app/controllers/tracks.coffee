@@ -21,8 +21,10 @@ window.pfm.preloaders['tracks'] = [
 ]
 
 module.exports = angular.module('ponyfm').controller "tracks", [
-    '$scope', 'tracks', '$state', 'focus'
-    ($scope, tracks, $state, focus) ->
+    '$scope', 'tracks', '$state', 'focus', 'meta'
+    ($scope, tracks, $state, focus, meta) ->
+        meta.setTitle('Browse Tracks')
+
         $scope.recentTracks = null
         $scope.query = tracks.mainQuery
         $scope.filters = tracks.filters

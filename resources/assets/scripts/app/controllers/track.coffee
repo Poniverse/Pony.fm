@@ -15,15 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "track", [
-    '$scope', '$rootScope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
-    ($scope, $rootScope, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
+    '$scope', 'meta', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
+    ($scope, meta, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
         $scope.track
         $scope.trackId = parseInt($state.params.id)
 
         updateTrackData = (forceUpdate = false) ->
             tracks.fetch($scope.trackId, forceUpdate).done (trackResponse) ->
                 $scope.track = trackResponse.track
-                $rootScope.description = "Listen to #{$scope.track.title} by #{$scope.track.user.name} on the largest pony music site"
+                meta.setTitle("#{$scope.track.title} | #{$scope.track.user.name}")
+                meta.setDescription("Listen to \"#{$scope.track.title}\" by #{$scope.track.user.name} on the largest pony music site.")
 
         updateTrackData()
 

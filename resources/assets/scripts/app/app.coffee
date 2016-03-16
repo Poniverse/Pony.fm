@@ -70,10 +70,10 @@ if window.pfm.environment == 'production'
     ]
 
 ponyfm.run [
-    '$rootScope',
-    ($rootScope) ->
+    '$rootScope', 'meta',
+    ($rootScope, meta) ->
         $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
-            $rootScope.description = ''
+            meta.reset()
 ]
 
 ponyfm.config [
