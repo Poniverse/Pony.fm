@@ -26,67 +26,6 @@
       margin-top: 0px;
     }
   }
-
-  .show-songs, .album {
-    .btn {
-      display: block;
-      float: none;
-    }
-  }
-
-  .show-songs, .album, .track-selector {
-    .btn {
-      .border-radius(0px);
-      padding: 3px 10px;
-      font-size: 8pt;
-      text-align: left;
-    }
-
-    .error {
-      margin-top: 10px;
-    }
-
-    .pfm-popup {
-      width: 300px;
-
-      ul {
-        margin: 0px;
-        padding: 0px;
-        list-style: none;
-
-        li {
-          margin: 0px;
-          padding: 0px;
-
-          a {
-            .ellipsis();
-            display: block;
-            padding: 3px 10px;
-            font-size: 8pt;
-            color: #333333;
-
-            &:hover {
-              #gradient> .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
-              text-decoration: none;
-              color: @dropdownLinkColorHover;
-            }
-          }
-
-          &.selected {
-            a {
-              #gradient> .vertical(@green, darken(@green, 5%));
-              color: #fff;
-              font-weight: bold;
-
-              &:hover {
-                #gradient> .vertical(fadeout(@green, 20%), fadeout(darken(@green, 5%), 20%));
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 .license-grid {
