@@ -31,7 +31,7 @@ require 'script!../base/jquery-ui'
 angular = require 'angular'
 
 require 'script!../base/angular-ui-date'
-require '../base/angular-ui-router'
+require 'angular-ui-router'
 require '../base/angular-ui-sortable'
 require '../base/angularytics'
 require '../base/jquery.colorbox'
@@ -49,7 +49,7 @@ require '../shared/pfm-angular-sanitize'
 require '../shared/init.coffee'
 
 
-ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
+ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.router', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
 window.pfm.preloaders = {}
 
 # Inspired by: https://stackoverflow.com/a/30652110/3225811
