@@ -1,6 +1,6 @@
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,21 +17,47 @@
  */
 
 @import 'base/bootstrap/bootstrap';
-@import 'base/bootstrap/responsive';
-@import 'base/font-awesome/font-awesome';
-@import 'variables';
 @import 'mixins';
-@import 'layout';
-@import 'account-content';
-@import 'account-albums';
-@import 'admin';
-@import 'components/components';
-@import 'forms';
-@import 'animations';
-@import 'body';
-@import 'components/player';
-@import 'content';
-@import 'dashboard';
-@import 'components/uploader';
-@import 'components/search';
-@import 'components/track-editor';
+
+.album-track-listing {
+  padding: 0;
+  clear: both;
+  margin: 10px 0 0;
+  list-style: none;
+
+  li {
+    overflow: hidden;
+    line-height: normal;
+    padding: 0;
+    margin: 0;
+    font-size: 8pt;
+    border-bottom: 1px dashed #ddd;
+
+    div {
+      padding: 2px;
+    }
+
+    span {
+      display: block;
+      float: left;
+      margin-left: 5px;
+      margin-top: 2px;
+    }
+
+    .btn {
+      line-height: normal;
+      padding: 2px 5px;
+      margin: 0;
+    }
+
+    &.ui-sortable-helper {
+      #gradient> .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
+      border: none;
+      color: #fff;
+    }
+
+    &.ui-sortable-placeholder {
+      background: @yellow;
+    }
+  }
+}
