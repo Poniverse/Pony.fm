@@ -346,7 +346,7 @@ ponyfm.config [
                 templateUrl: '/templates/home/index.html'
                 controller: 'home'
 
-        # Final catch-all for aritsts
+        # Final catch-all for artists
         state.state 'content.artist',
             url: '^/{slug}'
             templateUrl: '/templates/artists/_show_layout.html'

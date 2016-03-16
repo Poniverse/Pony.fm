@@ -83,23 +83,22 @@ class Image extends Model
         $hash = md5_file($file->getPathname());
         $image = Image::whereHash($hash)->whereUploadedBy($userId)->first();
 
-        if (!$forceReupload && $image) {
-            return $image;
-        }
+        if ($image) {
+            if ($forceReupload) {
+                // delete existing versions of the image
+                $filenames = scandir($image->getDirectory());
+                $imagePrefix = $image->id.'_';
 
-        if ($forceReupload) {
-            // delete existing versions of the image
-            $filenames = scandir($image->getDirectory());
-            $imagePrefix = $image->id.'_';
+                $filenames = array_filter($filenames, function(string $filename) use ($imagePrefix) {
+                    return Str::startsWith($filename, $imagePrefix);
+                });
 
-            $filenames = array_filter($filenames, function(string $filename) use ($imagePrefix) {
-                return Str::startsWith($filename, $imagePrefix);
-            });
-
-            foreach($filenames as $filename) {
-                unlink($image->getDirectory().'/'.$filename);
+                foreach($filenames as $filename) {
+                    unlink($image->getDirectory().'/'.$filename);
+                }
+            } else {
+                return $image;
             }
-
         } else {
             $image = new Image();
         }
