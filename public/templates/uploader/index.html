@@ -24,7 +24,7 @@
                 </span>
 
                 <span ng-show="upload.success">
-                    <a href="/account/tracks/edit/{{upload.trackId}}" class="btn btn-small btn-primary">
+                    <a ui-sref="content.artist.account.tracks.edit({slug: auth.user.slug, track_id: upload.trackId})" class="btn btn-small btn-primary">
                         Publish
                     </a>
                     {{upload.name}}

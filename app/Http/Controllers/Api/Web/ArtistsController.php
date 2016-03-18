@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Gate;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Favourite;
@@ -158,7 +159,7 @@ class ArtistsController extends ApiControllerBase
 
         return Response::json([
             'artist' => [
-                'id' => (int)$user->id,
+                'id' => $user->id,
                 'name' => $user->display_name,
                 'slug' => $user->slug,
                 'is_archived' => (bool)$user->is_archived,
@@ -174,7 +175,10 @@ class ArtistsController extends ApiControllerBase
                 'bio' => $user->bio,
                 'mlpforums_username' => $user->username,
                 'message_url' => $user->message_url,
-                'user_data' => $userData
+                'user_data' => $userData,
+                'permissions' => [
+                    'edit' => Gate::allows('edit', $user)
+                ]
             ]
         ], 200);
     }

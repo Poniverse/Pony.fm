@@ -10,11 +10,12 @@
     <header>
         <h1>{{::artist.name}}</h1>
         <ul class="tabs">
-            <li ng-class="{active: stateIncludes('content.artist.profile')}"><a ng-href="{{::artist.slug}}">Profile</a></li>
-            <li ng-class="{active: stateIncludes('content.artist.content')}"><a ng-href="{{::artist.slug}}/content">Content</a></li>
-            <li ng-hide="::artist.is_archived" ng-class="::{active: stateIncludes('content.artist.favourites')}">
-                <a ng-href="{{::artist.slug}}/favourites">Favourites</a>
+            <li ui-sref-active="active"><a ui-sref=".profile">Profile</a></li>
+            <li ui-sref-active="active"><a ui-sref=".content">Content</a></li>
+            <li ng-if="::!artist.is_archived" ui-sref-active="active">
+                <a ui-sref=".favourites">Favourites</a>
             </li>
+            <li ng-if="::artist.permissions.edit" ui-sref-active="active" ui-sref=".account"><a ui-sref=".account.settings">Manage Account</a></li>
         </ul>
     </header>
     <div class="stretch-to-bottom">

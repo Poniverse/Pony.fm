@@ -241,7 +241,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @param string $roleName
      * @return bool
      */
-    public function hasRole($roleName)
+    public function hasRole($roleName):bool
     {
         foreach ($this->roles as $role) {
             if ($role->name === $roleName) {
