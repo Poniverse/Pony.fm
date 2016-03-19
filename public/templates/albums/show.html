@@ -21,7 +21,7 @@
         </li>
         <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
         <li><pfm-favourite-button resource="::album" type="album"></pfm-favourite-button></li>
-        <li ng-show="::album.permissions.edit"><a class="btn btn-small" ng-href="/account/albums/edit/{{::album.id}}">Edit</a></li>
+        <li ng-if="::album.permissions.edit"><a class="btn btn-small" ui-sref="content.artist.account.albums.edit(::{slug: album.user.slug, album_id: album.id})">Edit</a></li>
     </ul>
 
     <header>

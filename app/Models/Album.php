@@ -212,6 +212,7 @@ class Album extends Model implements Searchable
             'user' => [
                 'id' => (int) $album->user->id,
                 'name' => $album->user->display_name,
+                'slug' => $album->user->slug,
                 'url' => $album->user->url,
             ],
             'user_data' => $userData,
