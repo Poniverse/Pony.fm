@@ -34,6 +34,7 @@ class AccountController extends ApiControllerBase
         $user = Auth::user();
 
         return Response::json([
+            'id'  => $user->id,
             'bio' => $user->bio,
             'can_see_explicit_content' => $user->can_see_explicit_content == 1,
             'display_name' => $user->display_name,

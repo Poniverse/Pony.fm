@@ -139,6 +139,7 @@ module.exports = angular.module('ponyfm').controller "account-albums-edit", [
             albums.getEdit($state.params.album_id).done (album) ->
                 $scope.album =
                     id: album.id
+                    user_id: album.user_id
                     title: album.title
                     description: album.description
                     remove_cover: false
