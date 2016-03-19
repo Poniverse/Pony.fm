@@ -15,9 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 window.pfm.preloaders['account-albums'] = [
-    'account-tracks', 'account-albums'
-    (tracks, albums) ->
-        $.when.all [tracks.refresh('published=true&in_album=false', true), albums.refresh(true)]
+    'account-tracks'
+    (tracks) ->
+        tracks.refresh('published=true&in_album=false', true)
 ]
 
 module.exports = angular.module('ponyfm').controller "account-albums", [

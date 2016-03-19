@@ -141,75 +141,6 @@ ponyfm.config [
             url: '/errors/invalid'
             templateUrl: '/templates/errors/400.html'
 
-        # Upload
-
-        state.state 'uploader',
-            url: '/account/uploader'
-            templateUrl: '/templates/uploader/index.html'
-            controller: 'uploader'
-
-        # Account
-
-        state.state 'account',
-            url: '/account'
-            abstract: true
-            templateUrl: '/templates/account/_layout.html'
-
-        state.state 'account.settings',
-            url: ''
-            templateUrl: '/templates/account/settings.html'
-            controller: 'account-settings'
-
-        state.state 'account.tracks',
-            url: '/tracks'
-            templateUrl: '/templates/account/tracks.html'
-            controller: 'account-tracks'
-
-        state.state 'account.tracks.edit',
-            url: '/edit/:track_id'
-            templateUrl: '/templates/account/track.html'
-            controller: 'account-track'
-
-        state.state 'account.albums',
-            url: '/albums'
-            templateUrl: '/templates/account/albums.html'
-            controller: 'account-albums'
-
-        state.state 'account.albums.create',
-            url: '/create'
-            templateUrl: '/templates/account/album.html'
-            controller: 'account-albums-edit'
-
-        state.state 'account.albums.edit',
-            url: '/edit/:album_id'
-            templateUrl: '/templates/account/album.html'
-            controller: 'account-albums-edit'
-
-        state.state 'account.playlists',
-            url: '/playlists'
-            templateUrl: '/templates/account/playlists.html'
-            controller: 'account-playlists'
-
-        state.state 'favourites',
-            url: '/account/favourites'
-            abstract: true
-            templateUrl: '/templates/favourites/_layout.html'
-
-        state.state 'favourites.tracks',
-            url: '/tracks'
-            templateUrl: '/templates/favourites/tracks.html'
-            controller: 'favourites-tracks'
-
-        state.state 'favourites.playlists',
-            url: '/playlists'
-            templateUrl: '/templates/favourites/playlists.html'
-            controller: 'favourites-playlists'
-
-        state.state 'favourites.albums',
-            url: '/albums'
-            templateUrl: '/templates/favourites/albums.html'
-            controller: 'favourites-albums'
-
         # Tracks
 
         state.state 'content',
@@ -367,6 +298,57 @@ ponyfm.config [
             url: '/favourites'
             templateUrl: '/templates/artists/favourites.html'
             controller: 'artist-favourites'
+
+
+        # Account
+
+        state.state 'content.artist.account',
+            url: '/account'
+            abstract: true
+            templateUrl: '/templates/account/_layout.html'
+
+        # Upload
+
+        state.state 'content.artist.account.uploader',
+            url: '/uploader'
+            templateUrl: '/templates/uploader/index.html'
+            controller: 'uploader'
+
+        state.state 'content.artist.account.settings',
+            url: ''
+            templateUrl: '/templates/account/settings.html'
+            controller: 'account-settings'
+
+        state.state 'content.artist.account.tracks',
+            url: '/tracks'
+            templateUrl: '/templates/account/tracks.html'
+            controller: 'account-tracks'
+
+        state.state 'content.artist.account.tracks.edit',
+            url: '/edit/:track_id'
+            templateUrl: '/templates/account/track.html'
+            controller: 'account-track'
+
+        state.state 'content.artist.account.albums',
+            url: '/albums'
+            templateUrl: '/templates/account/albums.html'
+            controller: 'account-albums'
+
+        state.state 'content.artist.account.albums.create',
+            url: '/create'
+            templateUrl: '/templates/account/album.html'
+            controller: 'account-albums-edit'
+
+        state.state 'content.artist.account.albums.edit',
+            url: '/edit/:album_id'
+            templateUrl: '/templates/account/album.html'
+            controller: 'account-albums-edit'
+
+        state.state 'content.artist.account.playlists',
+            url: '/playlists'
+            templateUrl: '/templates/account/playlists.html'
+            controller: 'account-playlists'
+
 
         location.html5Mode(true);
         $dialogProvider.options

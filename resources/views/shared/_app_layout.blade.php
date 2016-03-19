@@ -54,8 +54,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{{Auth::user()->url}}">Your Profile</a></li>
-                        <li ng-class="{active: stateIncludes('favourites')}"><a href="/account/favourites/tracks">Favourites</a></li>
-                        <li ng-class="{active: stateIncludes('account')}"><a href="/account/tracks">Account</a></li>
+                        <li ui-sref-active="active"><a ui-sref="content.artist.favourites({slug: auth.user.slug})">Favourites</a></li>
+                        <li ui-sref-active="active"><a ui-sref="content.artist.account.settings({slug: auth.user.slug})">Account</a></li>
                         <li><a href="#" pfm-eat-click ng-click="logout()">Logout</a></li>
                     </ul>
                 </div>
@@ -77,8 +77,8 @@
             <li><a href="https://mlpforums.com/forum/62-ponyfm/" title="Pony.fm Forum" target="_blank">Forum</a></li>
 
             @if (Auth::check())
-                <li class="uploader" ng-class="{selected: stateIncludes('uploader')}">
-                    <a href="/account/uploader">Upload Music</a>
+                <li class="uploader" ui-sref-active="selected">
+                    <a ui-sref="content.artist.account.uploader({slug: auth.user.slug})">Upload Music</a>
                 </li>
 
                 @can('access-admin-area')

@@ -158,22 +158,6 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
 });
 
-Route::group(['prefix' => 'account', 'middleware' => 'auth'], function() {
-    Route::get('/favourites/tracks', 'FavouritesController@getTracks');
-    Route::get('/favourites/albums', 'FavouritesController@getAlbums');
-    Route::get('/favourites/playlists', 'FavouritesController@getPlaylists');
-
-    Route::get('/tracks', 'ContentController@getTracks');
-    Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
-    Route::get('/albums', 'ContentController@getAlbums');
-    Route::get('/albums/edit/{id}', 'ContentController@getAlbums');
-    Route::get('/albums/create', 'ContentController@getAlbums');
-    Route::get('/playlists', 'ContentController@getPlaylists');
-
-    Route::get('/uploader', 'UploaderController@getIndex');
-
-    Route::get('/', 'AccountController@getIndex');
-});
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
     Route::get('/genres', 'AdminController@getGenres');
@@ -182,9 +166,27 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-ar
 
 Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
-Route::get('{slug}', 'ArtistsController@getProfile');
-Route::get('{slug}/content', 'ArtistsController@getContent');
-Route::get('{slug}/favourites', 'ArtistsController@getFavourites');
+
+
+Route::group(['prefix' => '{slug}'], function() {
+    Route::get('/', 'ArtistsController@getProfile');
+    Route::get('/content', 'ArtistsController@getContent');
+    Route::get('/favourites', 'ArtistsController@getFavourites');
+
+
+    Route::group(['prefix' => 'account', 'middleware' => 'auth'], function() {
+        Route::get('/tracks', 'ContentController@getTracks');
+        Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
+        Route::get('/albums', 'ContentController@getAlbums');
+        Route::get('/albums/edit/{id}', 'ContentController@getAlbums');
+        Route::get('/albums/create', 'ContentController@getAlbums');
+        Route::get('/playlists', 'ContentController@getPlaylists');
+
+        Route::get('/uploader', 'UploaderController@getIndex');
+
+        Route::get('/', 'AccountController@getIndex');
+    });
+});
 
 Route::get('/', 'HomeController@getIndex');
 

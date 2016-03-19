@@ -89,7 +89,7 @@ module.exports = angular.module('ponyfm').controller "account-albums-edit", [
                 if $scope.isNew
                     $scope.isDirty = false
                     $scope.$emit 'album-created'
-                    $state.transitionTo 'account.albums.edit', {album_id: response.id}
+                    $state.go '^.edit', {album_id: response.id}
                 else
                     $scope.isDirty = false
                     $scope.data.selectedAlbum.title = $scope.album.title
@@ -120,7 +120,7 @@ module.exports = angular.module('ponyfm').controller "account-albums-edit", [
                 $.post('/api/web/albums/delete/' + $scope.album.id)
                     .then -> $scope.$apply ->
                         $scope.$emit 'album-deleted'
-                        $state.transitionTo 'account.albums'
+                        $state.go '^'
 
         $scope.setCover = (image, type) ->
             delete $scope.album.cover_id
@@ -139,6 +139,7 @@ module.exports = angular.module('ponyfm').controller "account-albums-edit", [
             albums.getEdit($state.params.album_id).done (album) ->
                 $scope.album =
                     id: album.id
+                    user_id: album.user_id
                     title: album.title
                     description: album.description
                     remove_cover: false
