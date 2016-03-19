@@ -55,4 +55,8 @@ module.exports = angular.module('ponyfm').controller "account-tracks", [
             $state.transitionTo 'account.tracks'
             tracks.clearCache()
             tracks.refresh(null, true).done setTracks
+
+        $scope.$on 'track-updated', () ->
+            tracks.clearCache()
+            tracks.refresh(null, true).done setTracks
 ]

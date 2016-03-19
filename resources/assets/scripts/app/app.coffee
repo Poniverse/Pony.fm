@@ -141,33 +141,6 @@ ponyfm.config [
             url: '/errors/invalid'
             templateUrl: '/templates/errors/400.html'
 
-        # Upload
-
-        state.state 'uploader',
-            url: '/account/uploader'
-            templateUrl: '/templates/uploader/index.html'
-            controller: 'uploader'
-
-        state.state 'favourites',
-            url: '/account/favourites'
-            abstract: true
-            templateUrl: '/templates/favourites/_layout.html'
-
-        state.state 'favourites.tracks',
-            url: '/tracks'
-            templateUrl: '/templates/favourites/tracks.html'
-            controller: 'favourites-tracks'
-
-        state.state 'favourites.playlists',
-            url: '/playlists'
-            templateUrl: '/templates/favourites/playlists.html'
-            controller: 'favourites-playlists'
-
-        state.state 'favourites.albums',
-            url: '/albums'
-            templateUrl: '/templates/favourites/albums.html'
-            controller: 'favourites-albums'
-
         # Tracks
 
         state.state 'content',
@@ -333,6 +306,13 @@ ponyfm.config [
             url: '/account'
             abstract: true
             templateUrl: '/templates/account/_layout.html'
+
+        # Upload
+
+        state.state 'content.artist.account.uploader',
+            url: '/uploader'
+            templateUrl: '/templates/uploader/index.html'
+            controller: 'uploader'
 
         state.state 'content.artist.account.settings',
             url: ''
