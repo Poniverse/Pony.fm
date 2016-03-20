@@ -30,7 +30,7 @@ class RemoveTrackFromPlaylistCommand extends CommandBase
     private $_track;
     private $_playlist;
 
-    function __construct($playlistId, $trackId)
+    public function __construct($playlistId, $trackId)
     {
         $this->_playlist = Playlist::find($playlistId);
         $this->_track = Track::find($trackId);
@@ -52,7 +52,6 @@ class RemoveTrackFromPlaylistCommand extends CommandBase
      */
     public function execute()
     {
-//        $songIndex = $this->_playlist->tracks()->count() - 1;
         $this->_playlist->tracks()->detach($this->_track);
         Playlist::whereId($this->_playlist->id)->update([
             'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = ' . $this->_playlist->id . ')')
