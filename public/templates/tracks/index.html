@@ -5,9 +5,11 @@
         </a>
         <a class="btn" pfm-eat-click ng-click="clearFilter('trackTypes')"><i class="icon-remove"></i></a>
         <ul class="dropdown-menu">
-            <li ng-repeat="type in filters.trackTypes.values" ng-class="{selected: query.isIdSelected('trackTypes', type.id)}">
+            <li ng-repeat="type in ::filters.trackTypes.values track by type.id"
+                ng-class="{selected: query.isIdSelected('trackTypes', type.id)}"
+            >
                 <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('trackTypes', type.id); $event.stopPropagation();"><i class="icon-plus"></i></a>
-                <a pfm-eat-click href="#" ng-click="setListFilter('trackTypes', type.id);">{{type.title}}</a>
+                <a pfm-eat-click href="#" ng-click="setListFilter('trackTypes', type.id);">{{::type.title}}</a>
             </li>
         </ul>
     </li>
@@ -17,9 +19,11 @@
         </a>
         <a class="btn" pfm-eat-click ng-click="clearFilter('showSongs')"><i class="icon-remove"></i></a>
         <ul class="dropdown-menu">
-            <li ng-repeat="song in filters.showSongs.values" ng-class="{selected: query.isIdSelected('showSongs', song.id)}">
+            <li ng-repeat="song in ::filters.showSongs.values track by song.id"
+                ng-class="{selected: query.isIdSelected('showSongs', song.id)}"
+            >
                 <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('showSongs', song.id); $event.stopPropagation();"><i class="icon-plus"></i></a>
-                <a pfm-eat-click href="#" ng-click="setListFilter('showSongs', song.id);">{{song.title}}</a>
+                <a pfm-eat-click href="#" ng-click="setListFilter('showSongs', song.id);">{{::song.title}}</a>
             </li>
         </ul>
     </li>
@@ -29,9 +33,9 @@
         </a>
         <a class="btn" pfm-eat-click ng-click="clearFilter('genres')"><i class="icon-remove"></i></a>
         <ul class="dropdown-menu">
-            <li ng-repeat="genre in filters.genres.values" ng-class="{selected: query.isIdSelected('genres', genre.id)}">
+            <li ng-repeat="genre in ::filters.genres.values track by genre.id" ng-class="{selected: query.isIdSelected('genres', genre.id)}">
                 <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('genres', genre.id); $event.stopPropagation();"><i class="icon-plus"></i></a>
-                <a pfm-eat-click href="#" ng-click="setListFilter('genres', genre.id);">{{genre.title}}</a>
+                <a pfm-eat-click href="#" ng-click="setListFilter('genres', genre.id);">{{::genre.title}}</a>
             </li>
         </ul>
     </li>
@@ -41,8 +45,10 @@
         </a>
         <a class="btn" pfm-eat-click ng-click="clearFilter('isVocal')"><i class="icon-remove"></i></a>
         <ul class="dropdown-menu">
-            <li ng-repeat="item in filters.isVocal.values" ng-class="{selected: item == query.filters.isVocal}">
-                <a pfm-eat-click href="#" ng-click="setFilter('isVocal', item);">{{item.title}}</a>
+            <li ng-repeat="item in ::filters.isVocal.values track by $index"
+                ng-class="{selected: item == query.filters.isVocal}"
+            >
+                <a pfm-eat-click href="#" ng-click="setFilter('isVocal', item);">{{::item.title}}</a>
             </li>
         </ul>
     </li>
@@ -52,24 +58,25 @@
         </a>
         <a class="btn" pfm-eat-click ng-click="clearFilter('sort')"><i class="icon-remove"></i></a>
         <ul class="dropdown-menu">
-            <li ng-repeat="filter in filters.sort.values" ng-class="{selected: filter == query.filters.sort}">
-                <a pfm-eat-click href="#" ng-click="setFilter('sort', filter)">{{filter.title}}</a>
+            <li ng-repeat="filter in ::filters.sort.values track by $index" ng-class="{selected: filter == query.filters.sort}">
+                <a pfm-eat-click href="#" ng-click="setFilter('sort', filter)">{{::filter.title}}</a>
             </li>
         </ul>
     </li>
 </ul>
 
-<div class="pagination" ng-show="totalPages > 1">
+<div class="pagination" ng-if="totalPages > 1">
     <ul>
         <li ng-class="{disabled: !prevPage}"><a href="#" ng-click="gotoPage(prevPage);" pfm-eat-click>Prev</a></li>
-        <li ng-repeat="page in pages" ng-class="{active: page == currentPage}">
+        <li ng-repeat="page in pages track by page" ng-class="{active: page == currentPage}">
             <a href="#" ng-click="gotoPage(page);" pfm-eat-click>{{page}}</a>
         </li>
         <li ng-class="{disabled: !nextPage}"><a href="#" ng-click="gotoPage(nextPage);" pfm-eat-click>Next</a></li>
         <li class="pagination-jump">
             <a href="#" ng-click="showPageSelector();" ng-hide="pageSelectorShown" pfm-eat-click>Jump&hellip;</a>
-            <form ng-submit="jumpToPage()" ng-show="pageSelectorShown">
-                <input type="number" id="pagination-jump-destination" ng-model="inputPageNumber" ng-blur="hidePageSelector()">
+            <form ng-submit="jumpToPage(inputPageNumber)" ng-show="pageSelectorShown">
+                <input type="number" id="pagination-jump-destination" ng-model="inputPageNumber" ng-blur="hidePageSelector()" />
+                <input type="submit" />
             </form>
         </li>
     </ul>

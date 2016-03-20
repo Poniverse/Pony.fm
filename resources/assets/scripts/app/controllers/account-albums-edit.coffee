@@ -24,7 +24,7 @@ window.pfm.preloaders['account-albums-edit'] = [
         $.when.all defs
 ]
 
-angular.module('ponyfm').controller "account-albums-edit", [
+module.exports = angular.module('ponyfm').controller "account-albums-edit", [
     '$scope', '$state', '$dialog', 'account-albums'
     ($scope, $state, $dialog, albums) ->
         $scope.isNew = $state.params.album_id == undefined
@@ -89,7 +89,7 @@ angular.module('ponyfm').controller "account-albums-edit", [
                 if $scope.isNew
                     $scope.isDirty = false
                     $scope.$emit 'album-created'
-                    $state.transitionTo 'account.albums.edit', {album_id: response.id}
+                    $state.go '^.edit', {album_id: response.id}
                 else
                     $scope.isDirty = false
                     $scope.data.selectedAlbum.title = $scope.album.title
@@ -113,14 +113,14 @@ angular.module('ponyfm').controller "account-albums-edit", [
             xhr.send formData
 
         $scope.deleteAlbum = () ->
-            $dialog.messageBox('Delete ' + $scope.album.title, 'Are you sure you want to delete "' + $scope.album.title + '"? This cannot be undone.', [
+            $dialog.messageBox('Delete ' + $scope.album.title, 'Are you sure you want to delete "' + $scope.album.title + '"?', [
                 {result: 'ok', label: 'Yes', cssClass: 'btn-danger'}, {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
             ]).open().then (res) ->
                 return if res == 'cancel'
                 $.post('/api/web/albums/delete/' + $scope.album.id)
                     .then -> $scope.$apply ->
                         $scope.$emit 'album-deleted'
-                        $state.transitionTo 'account.albums'
+                        $state.go '^'
 
         $scope.setCover = (image, type) ->
             delete $scope.album.cover_id
@@ -139,6 +139,7 @@ angular.module('ponyfm').controller "account-albums-edit", [
             albums.getEdit($state.params.album_id).done (album) ->
                 $scope.album =
                     id: album.id
+                    user_id: album.user_id
                     title: album.title
                     description: album.description
                     remove_cover: false

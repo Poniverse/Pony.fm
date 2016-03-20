@@ -22,8 +22,8 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\V1;
 
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\Track;
 use Response;
 
 class TracksController extends ApiControllerBase

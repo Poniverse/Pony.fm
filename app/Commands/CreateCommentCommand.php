@@ -20,11 +20,11 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Album;
-use Poniverse\Ponyfm\Comment;
-use Poniverse\Ponyfm\Playlist;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Comment;
+use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 

@@ -20,9 +20,11 @@ window.pfm.preloaders['tracks'] = [
         tracks.loadFilters()
 ]
 
-angular.module('ponyfm').controller "tracks", [
-    '$scope', 'tracks', '$state', 'focus'
-    ($scope, tracks, $state, focus) ->
+module.exports = angular.module('ponyfm').controller "tracks", [
+    '$scope', 'tracks', '$state', 'focus', 'meta'
+    ($scope, tracks, $state, focus, meta) ->
+        meta.setTitle('Browse Tracks')
+
         $scope.recentTracks = null
         $scope.query = tracks.mainQuery
         $scope.filters = tracks.filters
@@ -71,7 +73,6 @@ angular.module('ponyfm').controller "tracks", [
             $scope.pages.push($scope.totalPages) unless $scope.totalPages in $scope.pages
 
         $scope.pageSelectorShown = false
-        $scope.inputPageNumber = $scope.currentPage
 
         $scope.gotoPage = (page) ->
             $state.transitionTo 'content.tracks.list', {filter: $state.params.filter, page: page}
@@ -84,8 +85,8 @@ angular.module('ponyfm').controller "tracks", [
             $scope.pageSelectorShown = false
 
 
-        $scope.jumpToPage = () ->
-            $scope.gotoPage($scope.inputPageNumber)
+        $scope.jumpToPage = (inputPageNumber) ->
+            $scope.gotoPage(inputPageNumber)
 
         $scope.$on '$destroy', -> tracks.mainQuery = tracks.createQuery()
 ]

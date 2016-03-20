@@ -1,0 +1,87 @@
+/**
+ * Pony.fm - A community for pony fan music.
+ * Copyright (C) 2016 Peter Deltchev
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../base/bootstrap/bootstrap';
+@import '../mixins';
+
+
+.track-editor {
+  .list {
+    .dropdowns {
+      margin-top: 0px;
+    }
+  }
+}
+
+.license-grid {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  list-style: none;
+
+  li {
+    float: left;
+    width: 25%;
+
+    > div {
+      margin: 0px 5px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      cursor: pointer;
+
+      strong {
+        font-size: 9pt;
+        display: block;
+        margin: 0px;
+        margin-bottom: 5px;
+        padding: 0px;
+        line-height: normal;
+      }
+    }
+
+    p {
+      min-height: 120px;
+      font-size: 9pt;
+    }
+
+    a {
+      .border-radius(0px);
+      display: block;
+      width: auto;
+    }
+
+    &.selected {
+      > div {
+        cursor: default;
+        border-color: @blue;
+      }
+    }
+
+    &:hover > div {
+      border: 1px solid #3366CC;
+    }
+
+    &:first-child > div {
+      margin-left: 0px;
+    }
+
+    &:last-child > div {
+      margin-right: 0px;
+    }
+  }
+}

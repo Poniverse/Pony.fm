@@ -22,25 +22,25 @@
         </div>
         <div class="form-row" ng-class="{'has-error': errors.cover != null}">
             <label class="strong">Album Cover: </label>
-            <pfm-image-upload set-image="setCover" image="album.cover" />
+            <pfm-image-upload set-image="setCover" image="album.cover" user-id="album.user_id"></pfm-image-upload>
         </div>
         <div class="form-row track-selector">
-            <a pfm-popup="track-selector,right" href="#" class="btn btn-small pull-right btn-info">Add Tracks</a>
+            <a pfm-popup="track-selector,right" pfm-popup-close-on-click href="#" class="btn btn-small pull-right btn-info">Add Tracks</a>
             <label class="strong">Album Tracks</label>
             <div id="track-selector" class="pfm-popup">
                 <ul>
-                    <li ng-repeat="track in data.tracksDb" ng-class="{selected: trackIds[track.id]}">
-                        <a pfm-eat-click href="#" ng-click="toggleTrack(track); $event.stopPropagation();">{{track.title}}</a>
+                    <li ng-repeat="track in data.tracksDb track by track.id" ng-class="{selected: trackIds[track.id]}">
+                        <a pfm-eat-click href="#" ng-click="toggleTrack(track); $event.stopPropagation();">{{::track.title}}</a>
                     </li>
                 </ul>
             </div>
 
             <ul class="album-track-listing" ui-sortable="{handle: '.handle', axis: 'y', forcePlaceholderSizeType: true, update: sortTracks}" ng-model="tracks">
-                <li ng-repeat="track in tracks">
+                <li ng-repeat="track in tracks track by track.id">
                     <div>
                         <span class="btn btn-small pull-left handle"><i class="icon-sort"></i></span>
                         <a href="#" class="btn btn-small pull-right btn-danger" ng-click="toggleTrack(track)" pfm-eat-click><i class="icon-remove"></i></a>
-                        <span>{{track.title}}</span>
+                        <span>{{::track.title}}</span>
                     </div>
                 </li>
             </ul>

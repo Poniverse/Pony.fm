@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
-use Poniverse\Ponyfm\Image;
+use Poniverse\Ponyfm\Models\Image;
 use Config;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;

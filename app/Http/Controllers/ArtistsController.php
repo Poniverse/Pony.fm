@@ -21,7 +21,7 @@
 namespace Poniverse\Ponyfm\Http\Controllers;
 
 use App;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 use View;
 use Redirect;
 
@@ -32,9 +32,17 @@ class ArtistsController extends Controller
         return View::make('artists.index');
     }
 
+    public function getFavourites($slug) {
+        return $this->getProfile($slug);
+    }
+
+    public function getContent($slug) {
+        return $this->getProfile($slug);
+    }
+
     public function getProfile($slug)
     {
-        $user = User::whereSlug($slug)->first();
+        $user = User::whereSlug($slug)->whereNull('disabled_at')->first();
         if (!$user) {
             App::abort('404');
         }
@@ -45,10 +53,10 @@ class ArtistsController extends Controller
     public function getShortlink($id)
     {
         $user = User::find($id);
-        if (!$user) {
+        if (!$user || $user->disabled_at !== NULL) {
             App::abort('404');
         }
 
-        return Redirect::action('ArtistsController@getProfile', [$id]);
+        return Redirect::action('ArtistsController@getProfile', [$user->slug]);
     }
 }

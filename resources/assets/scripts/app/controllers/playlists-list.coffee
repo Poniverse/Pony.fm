@@ -20,7 +20,7 @@ window.pfm.preloaders['playlists-list'] = [
         playlists.fetchList($state.params.page, true)
 ]
 
-angular.module('ponyfm').controller "playlists-list", [
+module.exports = angular.module('ponyfm').controller "playlists-list", [
     '$scope', 'playlists', '$state',
     ($scope, playlists, $state) ->
         playlists.fetchList($state.params.page).done (searchResults) ->

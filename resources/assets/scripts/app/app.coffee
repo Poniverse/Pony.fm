@@ -14,25 +14,69 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Some notes on what's going on here:
+#
+# - Webpack resolves all of these require statements.
+#
+# - jQuery is loaded before Angular so it replaces jqLite.
+#
+# - "script!" is used with dependencies that expect to interact with the global state.
+#
+# - The "ponyfm" module in this file must be initialized before the controllers
+#   and other Angular modules are brought in; they expect the "ponyfm" module to exist.
+
+require 'script!../base/jquery-2.0.2'
+require 'script!../base/jquery-ui'
+angular = require 'angular'
+
+require 'script!../base/angular-ui-date'
+require 'angular-ui-router'
+require '../base/angular-ui-sortable'
+require '../base/angularytics'
+require '../base/jquery.colorbox'
+require '../base/jquery.cookie'
+require '../base/jquery.timeago'
+require '../base/jquery.viewport'
+require 'script!../base/marked'
+require 'script!../base/moment'
+require '../base/soundmanager2-nodebug'
+require 'script!../base/tumblr'
+require '../base/ui-bootstrap-tpls-0.4.0'
+
+require '../shared/pfm-angular-marked'
+require '../shared/pfm-angular-sanitize'
+require '../shared/init.coffee'
+
+
+ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.router', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
 window.pfm.preloaders = {}
 
-module = angular.module 'ponyfm', ['ui.bootstrap', 'ui.state', 'ui.date', 'ui.sortable', 'pasvaz.bindonce', 'angularytics', 'ngSanitize', 'hc.marked']
+# Inspired by: https://stackoverflow.com/a/30652110/3225811
+requireDirectory = (r) ->
+    r.keys().forEach(r)
+
+requireDirectory(require.context('./controllers/', false, /\.coffee$/));
+requireDirectory(require.context('./directives/', false, /\.coffee$/));
+requireDirectory(require.context('./filters/', false, /\.coffee$/));
+requireDirectory(require.context('./services/', false, /\.coffee$/));
+
 
 if window.pfm.environment == 'production'
-    module.run [
+    ponyfm.run [
         'Angularytics',
         (analytics) ->
             analytics.init()
     ]
 
-module.run [
-    '$rootScope',
-    ($rootScope) ->
+ponyfm.run [
+    '$rootScope', 'meta',
+    ($rootScope, meta) ->
         $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
-            $rootScope.description = ''
+            meta.reset()
 ]
 
-module.config [
+ponyfm.config [
     '$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider'
     (location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider, markedProvider) ->
 
@@ -48,7 +92,9 @@ module.config [
         # This fixes resource loading on IE
         $sceDelegateProvider.resourceUrlWhitelist [
             'self',
-            '/templates/directives/*'
+            '/templates/directives/*',
+            # Used for the "Tweet" button on content item pages
+            'https://platform.twitter.com/widgets/tweet_button.html**'
         ]
 
         if window.pfm.environment == 'production'
@@ -95,80 +141,11 @@ module.config [
             url: '/errors/invalid'
             templateUrl: '/templates/errors/400.html'
 
-        # Upload
-
-        state.state 'uploader',
-            url: '/account/uploader'
-            templateUrl: '/templates/uploader/index.html'
-            controller: 'uploader'
-
-        # Account
-
-        state.state 'account',
-            url: '/account'
-            abstract: true
-            templateUrl: '/templates/account/_layout.html'
-
-        state.state 'account.settings',
-            url: ''
-            templateUrl: '/templates/account/settings.html'
-            controller: 'account-settings'
-
-        state.state 'account.tracks',
-            url: '/tracks'
-            templateUrl: '/templates/account/tracks.html'
-            controller: 'account-tracks'
-
-        state.state 'account.tracks.edit',
-            url: '/edit/:track_id'
-            templateUrl: '/templates/account/track.html'
-            controller: 'account-track'
-
-        state.state 'account.albums',
-            url: '/albums'
-            templateUrl: '/templates/account/albums.html'
-            controller: 'account-albums'
-
-        state.state 'account.albums.create',
-            url: '/create'
-            templateUrl: '/templates/account/album.html'
-            controller: 'account-albums-edit'
-
-        state.state 'account.albums.edit',
-            url: '/edit/:album_id'
-            templateUrl: '/templates/account/album.html'
-            controller: 'account-albums-edit'
-
-        state.state 'account.playlists',
-            url: '/playlists'
-            templateUrl: '/templates/account/playlists.html'
-            controller: 'account-playlists'
-
-        state.state 'favourites',
-            url: '/account/favourites'
-            abstract: true
-            templateUrl: '/templates/favourites/_layout.html'
-
-        state.state 'favourites.tracks',
-            url: '/tracks'
-            templateUrl: '/templates/favourites/tracks.html'
-            controller: 'favourites-tracks'
-
-        state.state 'favourites.playlists',
-            url: '/playlists'
-            templateUrl: '/templates/favourites/playlists.html'
-            controller: 'favourites-playlists'
-
-        state.state 'favourites.albums',
-            url: '/albums'
-            templateUrl: '/templates/favourites/albums.html'
-            controller: 'favourites-albums'
-
         # Tracks
 
         state.state 'content',
             abstract: true
-            templateUrl: '/templates/content/_layout.html'
+            template: '<ui-view/>'
 
         state.state 'content.tracks',
             templateUrl: '/templates/tracks/index.html'
@@ -183,8 +160,20 @@ module.config [
 
         state.state 'content.track',
             url: '/tracks/{id:[^\-]+}-{slug}'
-            templateUrl: '/templates/tracks/show.html'
+            templateUrl: '/templates/tracks/frame.html'
             controller: 'track'
+            abstract: true
+
+        state.state 'content.track.show',
+            url: ''
+            templateUrl: '/templates/tracks/show.html'
+            controller: 'track-show'
+
+        state.state 'content.track.edit',
+            url: '/edit'
+            templateUrl: '/templates/tracks/edit.html'
+            controller: 'track-edit'
+
 
         # Albums
 
@@ -288,7 +277,7 @@ module.config [
                 templateUrl: '/templates/home/index.html'
                 controller: 'home'
 
-        # Final catch-all for aritsts
+        # Final catch-all for artists
         state.state 'content.artist',
             url: '^/{slug}'
             templateUrl: '/templates/artists/_show_layout.html'
@@ -310,9 +299,62 @@ module.config [
             templateUrl: '/templates/artists/favourites.html'
             controller: 'artist-favourites'
 
+
+        # Account
+
+        state.state 'content.artist.account',
+            url: '/account'
+            abstract: true
+            templateUrl: '/templates/account/_layout.html'
+
+        # Upload
+
+        state.state 'content.artist.account.uploader',
+            url: '/uploader'
+            templateUrl: '/templates/uploader/index.html'
+            controller: 'uploader'
+
+        state.state 'content.artist.account.settings',
+            url: ''
+            templateUrl: '/templates/account/settings.html'
+            controller: 'account-settings'
+
+        state.state 'content.artist.account.tracks',
+            url: '/tracks'
+            templateUrl: '/templates/account/tracks.html'
+            controller: 'account-tracks'
+
+        state.state 'content.artist.account.tracks.edit',
+            url: '/edit/:track_id'
+            templateUrl: '/templates/account/track.html'
+            controller: 'account-track'
+
+        state.state 'content.artist.account.albums',
+            url: '/albums'
+            templateUrl: '/templates/account/albums.html'
+            controller: 'account-albums'
+
+        state.state 'content.artist.account.albums.create',
+            url: '/create'
+            templateUrl: '/templates/account/album.html'
+            controller: 'account-albums-edit'
+
+        state.state 'content.artist.account.albums.edit',
+            url: '/edit/:album_id'
+            templateUrl: '/templates/account/album.html'
+            controller: 'account-albums-edit'
+
+        state.state 'content.artist.account.playlists',
+            url: '/playlists'
+            templateUrl: '/templates/account/playlists.html'
+            controller: 'account-playlists'
+
+
         location.html5Mode(true);
         $dialogProvider.options
             dialogFade: true
             backdropClick: false
 
 ]
+
+module.exports = ponyfm

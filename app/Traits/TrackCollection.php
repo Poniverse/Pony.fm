@@ -26,7 +26,7 @@ use File;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\TrackFile;
 
 
 /**
@@ -102,7 +102,6 @@ trait TrackCollection
 
         foreach ($trackFiles as $trackFile) {
             /** @var TrackFile $trackFile */
-
             if (!File::exists($trackFile->getFile()) && $trackFile->status == TrackFile::STATUS_NOT_BEING_PROCESSED) {
                 $this->dispatch(new EncodeTrackFile($trackFile, true));
             }

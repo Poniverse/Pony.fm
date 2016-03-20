@@ -20,11 +20,15 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Track;
+use Gate;
+use Poniverse\Ponyfm\Models\Track;
 
 class DeleteTrackCommand extends CommandBase
 {
+    /** @var int  */
     private $_trackId;
+
+    /** @var Track */
     private $_track;
 
     function __construct($trackId)
@@ -38,9 +42,7 @@ class DeleteTrackCommand extends CommandBase
      */
     public function authorize()
     {
-        $user = \Auth::user();
-
-        return $this->_track && $user != null && $this->_track->user_id == $user->id;
+        return Gate::allows('delete', $this->_track);
     }
 
     /**

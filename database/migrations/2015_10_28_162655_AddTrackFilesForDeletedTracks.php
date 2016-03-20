@@ -20,7 +20,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Track;
 
 class AddTrackFilesForDeletedTracks extends Migration
 {

@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\PinnedPlaylist;
-use Poniverse\Ponyfm\Playlist;
+use Poniverse\Ponyfm\Models\PinnedPlaylist;
+use Poniverse\Ponyfm\Models\Playlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 

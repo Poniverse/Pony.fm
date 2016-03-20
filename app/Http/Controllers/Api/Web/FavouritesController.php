@@ -20,12 +20,12 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Commands\ToggleFavouriteCommand;
-use Poniverse\Ponyfm\Favourite;
+use Poniverse\Ponyfm\Models\Favourite;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Playlist;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\Track;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;

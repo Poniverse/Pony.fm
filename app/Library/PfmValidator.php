@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Str;
 
 /**
  * Pony.fm - A community for pony fan music.
@@ -45,6 +46,27 @@ class PfmValidator extends Illuminate\Validation\Validator
         // value is the file array itself
         // parameters is a list of formats the file can be, verified via ffmpeg
         $file = AudioCache::get($value->getPathname());
+        $codecString = $file->getAudioCodec();
+
+        // PCM, ADPCM, and AAC come in several variations as far as FFmpeg
+        // is concerned. They're all acceptable for Pony.fm, so we check what
+        // the codec string returned by FFmpeg starts with instead of looking
+        // for an exact match for these.
+        if (in_array('adpcm', $parameters) && Str::startsWith($codecString, 'adpcm')) {
+            return true;
+        }
+
+        if (in_array('pcm', $parameters) && Str::startsWith($codecString, 'pcm')) {
+            return true;
+        }
+
+        if (in_array('aac', $parameters) && Str::startsWith($codecString, 'aac')) {
+            return true;
+        }
+
+        if (in_array('alac', $parameters) && Str::startsWith($codecString, 'alac')) {
+            return true;
+        }
 
         return in_array($file->getAudioCodec(), $parameters);
     }

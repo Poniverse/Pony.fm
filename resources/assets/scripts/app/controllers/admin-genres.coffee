@@ -14,11 +14,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').controller 'admin-genres', [
+module.exports = angular.module('ponyfm').controller 'admin-genres', [
     '$scope', '$state', 'admin-genres'
     ($scope, $state, genres) ->
 
         $scope.genres = []
+
+        $scope.isCreating = false
+        $scope.genreToCreate = ''
+        $scope.hasCreationError = false
+        $scope.createGenreError = ''
 
         # Used for merging/deleting genres
         $scope.mergeInProgress = false
@@ -37,6 +42,21 @@ angular.module('ponyfm').controller 'admin-genres', [
         loadGenres()
 
 
+        $scope.createGenre = (genreName) ->
+            $scope.isCreating = true
+            genres.create(genreName)
+                .done (response) ->
+                    $scope.hasCreationError = false
+                    $scope.genreToCreate = ''
+                    loadGenres()
+                .fail (response) ->
+                    $scope.hasCreationError = true
+                    $scope.createGenreError = response
+                    console.log(response)
+                .always (response) ->
+                    $scope.isCreating = false
+
+
         # Renames the given genre
         $scope.renameGenre = (genre) ->
             genre.isSaving = true
@@ -50,17 +70,16 @@ angular.module('ponyfm').controller 'admin-genres', [
                 genre.isSaving = false
 
 
-        $scope.startMerge = (genreToDelete) ->
-            $scope.genreToDelete = genreToDelete
+        $scope.startMerge = (destinationGenre) ->
+            $scope.destinationGenre = destinationGenre
             $scope.mergeInProgress = true
 
         $scope.cancelMerge = () ->
-            $scope.genreToDelete = null
+            $scope.destinationGenre = null
             $scope.mergeInProgress = false
 
-        $scope.finishMerge = (destinationGenre) ->
-            $scope.mergeInProgress = false
-            genres.merge($scope.genreToDelete.id, destinationGenre.id)
+        $scope.finishMerge = (genreToDelete) ->
+            genres.merge(genreToDelete.id, $scope.destinationGenre.id)
                 .done (response) ->
                     loadGenres()
 ]

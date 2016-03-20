@@ -14,6 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').filter 'momentFromNow', () ->
+module.exports = angular.module('ponyfm').filter 'momentFromNow', () ->
     (input) ->
         moment.utc(input).fromNow()

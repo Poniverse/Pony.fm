@@ -147,6 +147,8 @@ return [
 
         Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Cviebrock\LaravelElasticsearch\ServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 
@@ -197,6 +199,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
+        'Elasticsearch' => Cviebrock\LaravelElasticsearch\Facade::class,
         'Newrelic'  => Intouch\LaravelNewrelic\Facades\Newrelic::class,
 
     ],

@@ -24,7 +24,7 @@ use Carbon\Carbon;
 use File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\TrackFile;
 
 class ClearTrackCache extends Command
 {
@@ -95,9 +95,6 @@ class ClearTrackCache extends Command
 
                         $this->info('Deleted ' . $trackFile->getFile());
                     }
-
-                    // Remove the cached file size for the album
-                    Cache::forget($trackFile->track->album->getCacheKey('filesize-' . $trackFile->format));
 
                 }
                 $this->info($count . ' files deleted. Deletion complete. Exiting.');

@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Policies;
 
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
 
 class TrackPolicy
 {

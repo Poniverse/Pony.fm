@@ -1,0 +1,33 @@
+<div class="search" ng-blur="searchInProgress = false">
+    <input
+        class="search-input"
+        type="text"
+        placeholder="Search&hellip;"
+        ng-model="searchQuery"
+        pfm-popup="search-results"
+    />
+
+    <section class="search-results pfm-popup" id="search-results">
+        <p ng-show="!searchInProgress && !searchComplete" class="empty-box">Type something to begin searching!</p>
+
+        <p ng-show="searchInProgress" class="empty-box">Searching&hellip;</p>
+
+        <div ng-show="!searchInProgress && searchComplete">
+            <div class="-column1">
+                <h3 class="-section-header">Matching tracks</h3>
+                <pfm-tracks-list tracks="tracks"></pfm-tracks-list>
+            </div>
+
+            <div class="-column2">
+                <h3 class="-section-header">Matching users</h3>
+                <pfm-users-list users="users" class="-condensed"></pfm-users-list>
+
+                <h3 class="-section-header">Matching albums</h3>
+                <pfm-albums-list albums="albums"></pfm-albums-list>
+
+                <h3 class="-section-header">Matching playlists</h3>
+                <pfm-playlists-list playlists="playlists"></pfm-playlists-list>
+            </div>
+        </div>
+    </section>
+</div>

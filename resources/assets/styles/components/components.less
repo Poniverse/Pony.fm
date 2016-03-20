@@ -1,0 +1,432 @@
+/**
+ * Pony.fm - A community for pony fan music.
+ * Copyright (C) 2015 Peter Deltchev
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../base/bootstrap/bootstrap';
+@import '../mixins';
+@import '../variables';
+
+.stretch-to-bottom {
+  overflow-y: auto;
+}
+
+.dropdowns {
+  .clearfix();
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  margin-bottom: 10px;
+
+  > li {
+    float: left;
+    margin: 0px;
+    padding: 0px;
+    margin-right: 10px;
+    line-height: normal;
+
+    > .btn {
+      float: left;
+      display: block;
+    }
+
+    > .btn + .btn {
+      .transition(background 300ms ease-out);
+
+      display: none;
+      margin: 0px;
+    }
+
+    &.has-filter {
+      > .btn {
+        background: @pfm-purple;
+        color: #fff;
+      }
+
+      > .btn + .btn {
+        display: block;
+        background: darken(@pfm-purple, 20%);
+
+        &:hover {
+          background: darken(@pfm-purple, 40%);
+        }
+      }
+    }
+
+    &.open {
+      > .btn {
+        background: @pfm-purple;
+        color: #fff;
+      }
+
+      .dropdown-menu {
+        .box-shadow(none);
+
+        margin: 0px;
+        border: 2px solid @pfm-purple;
+
+        li.selected {
+          a {
+            background: @pfm-purple;
+            color: #fff;
+          }
+        }
+
+        li {
+          a:hover {
+            background: lighten(@pfm-purple, 5%);
+          }
+        }
+      }
+    }
+
+    > .btn {
+      border: none;
+      background: #eee;
+      font-size: 8pt;
+      padding: 3px 7px;
+      text-shadow: none;
+
+      &.btn-info {
+        background: @pfm-purple;
+      }
+    }
+  }
+}
+
+.tabs {
+  .clearfix();
+
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  margin-bottom: 10px;
+  border-bottom: 4px solid #ddd;
+  font-size: 15px;
+
+  li {
+    margin: 0px;
+    float: left;
+    line-height: normal;
+
+    a {
+      padding: 5px 13px;
+      display: block;
+      color: #555;
+
+      &:hover {
+        text-decoration: none;
+        background: #eee;
+      }
+    }
+
+    &.active {
+      a {
+        cursor: default;
+        background: #eee;
+        color: #000;
+        border-bottom: 4px solid #C1889E;
+        margin-bottom: -4px;
+      }
+    }
+  }
+}
+
+ui-view {
+  display: block;
+
+  &:before {
+    .transition(opacity 250ms);
+
+    opacity: 0;
+    background: #fff;
+    content: ' ';
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    display: block;
+    overflow: hidden;
+  }
+
+  &.loading {
+    position: relative;
+
+    &:before {
+      opacity: .8;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.toolbar {
+  #gradient>.vertical(#555, #222);
+  list-style: none;
+  margin: 0px;
+  margin-bottom: 10px;
+  padding: 0px;
+  overflow: hidden;
+
+  li {
+    float: left;
+
+    a, button {
+      .border-radius(0px);
+      font-size: 9pt;
+    }
+
+    &.delete {
+      float: right;
+    }
+  }
+}
+
+html body {
+  .btn {
+    .border-radius(0px);
+  }
+
+  .btn.btn-primary, .add-btn, .btn-success {
+    background: @pfm-purple;
+    color: #fff;
+  }
+
+  .btn-success.disabled {
+    background: @pfm-purple;
+    color: #eee;
+  }
+
+  .ui-datepicker {
+    .border-radius(0px);
+
+    font-size: 9pt;
+    padding: 3px;
+
+    .ui-datepicker-header {
+      .border-radius(0px);
+      border: none;
+      border-bottom: 1px solid #777;
+      margin: -3px;
+    }
+  }
+
+  .alert {
+    .border-radius(0px);
+    margin-bottom: 10px;
+  }
+}
+
+html .dropdown-menu {
+  .border-radius(0px);
+  padding: 0px;
+  overflow-y: auto;
+
+  > li {
+    margin: 0px;
+
+    > a {
+      padding: 3px 10px;
+      font-size: 8pt;
+    }
+
+    > .dont-close {
+      float: right;
+      display: block;
+      width: 24px;
+      text-align: center;
+      padding: 3px 3px;
+    }
+
+    > .dont-close + a {
+      margin-right: 30px;
+      clear: none;
+    }
+
+    &.selected {
+      > .dont-close i:before {
+        content: "\f068";
+      }
+    }
+  }
+}
+
+.pfm-popup {
+  .box-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+  z-index: 1000;
+  position: absolute;
+  display: none;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: #fff;
+  overflow-y: auto;
+
+  &.open {
+    display: block;
+  }
+}
+
+.image-upload {
+  overflow: hidden;
+
+  .error {
+    clear: left;
+    margin-top: 14px;
+  }
+
+  input[type=file] {
+    display: none;
+  }
+
+  .btn {
+    .border-radius(0px) !important;
+  }
+
+  .preview {
+    .img-polaroid();
+    overflow: hidden;
+    width: 46px;
+    height: 46px;
+    float: left;
+
+    img {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+
+    &.canOpen {
+      cursor: pointer;
+
+      &:hover {
+        border-color: @blue;
+        border-style: solid;
+      }
+    }
+  }
+
+  p, .btn-group {
+    color: #555;
+    margin-left: 60px;
+    display: block;
+    margin-bottom: 1px;
+  }
+
+  p {
+    font-size: 9pt;
+  }
+}
+
+.modal {
+  form {
+    margin: 0px;
+  }
+}
+
+html {
+  .modal-backdrop {
+    background: #fff;
+  }
+
+  .modal {
+    .border-radius(0px);
+
+    border: 2px solid @pfm-purple;
+
+    h2 {
+      font-size: 12pt;
+      color: #C2889C;
+      line-height: normal;
+      margin-bottom: 5px;
+
+      small {
+        font-size: 10pt;
+      }
+    }
+  }
+
+  .breadcrumb {
+    .border-radius(0px);
+    background: #eee;
+    margin-bottom: 10px;
+    font-size: 10pt;
+  }
+
+  .pagination {
+    border: none;
+    background: #eee;
+    margin: 0px;
+    margin-bottom: 10px;
+    padding: 0px;
+    overflow: hidden;
+
+    ul {
+      .border-radius(0px);
+      margin: 5px;
+      display: block;
+      overflow: hidden;
+
+      > li:first-child > a, > li:last-child > a {
+        .border-radius(0px);
+      }
+
+      li {
+        display: block;
+        float: left;
+
+        a {
+          .border-radius(0px);
+          border: none;
+          padding: 1px 10px;
+          display: block;
+          float: left;
+          color: @pfm-purple;
+        }
+      }
+
+      li.active a {
+        background: #C1889E;
+        color: #fff;
+      }
+    }
+
+    &.pagination-right {
+      float: right;
+    }
+  }
+
+  .pagination-jump {
+    form {
+      margin: 0;
+    }
+
+    input[type="number"] {
+      margin: 0;
+      height: 22px;
+      width: 60px;
+      padding: 0 5px;
+      text-align: center;
+    }
+
+    // This submit button is hidden because the
+    // ng-submit directive it's part of doesn't work
+    // without a submit button present in the form.
+    input[type="submit"] {
+      display: none;
+    }
+  }
+}

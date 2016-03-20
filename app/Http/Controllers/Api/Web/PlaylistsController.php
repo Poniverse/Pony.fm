@@ -27,13 +27,13 @@ use Poniverse\Ponyfm\Commands\DeletePlaylistCommand;
 use Poniverse\Ponyfm\Commands\EditPlaylistCommand;
 use Poniverse\Ponyfm\Commands\RemoveTrackFromPlaylistCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\Playlist;
-use Poniverse\Ponyfm\ResourceLogItem;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
+use Auth;
+use Input;
+use Response;
+use Poniverse\Ponyfm\Models\Track;
 
 class PlaylistsController extends ApiControllerBase
 {
@@ -175,8 +175,12 @@ class PlaylistsController extends ApiControllerBase
 
     public function getOwned()
     {
-        $query = Playlist::summary()->with('pins', 'tracks', 'tracks.cover')->where('user_id',
-            \Auth::user()->id)->orderBy('title', 'asc')->get();
+        $query = Playlist::summary()
+            ->with('pins', 'tracks', 'tracks.cover')
+            ->where('user_id', Auth::user()->id)
+            ->orderBy('title', 'asc')
+            ->get();
+
         $playlists = [];
         foreach ($query as $playlist) {
             $playlists[] = [
@@ -191,7 +195,8 @@ class PlaylistsController extends ApiControllerBase
                     'normal' => $playlist->getCoverUrl(Image::NORMAL)
                 ],
                 'is_pinned' => $playlist->hasPinFor(Auth::user()->id),
-                'is_public' => $playlist->is_public == 1
+                'is_public' => $playlist->is_public == 1,
+                'track_ids' => $playlist->tracks->pluck('id')
             ];
         }
 

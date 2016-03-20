@@ -14,21 +14,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').factory('images', [
+module.exports = angular.module('ponyfm').factory('images', [
     '$rootScope'
     ($rootScope) ->
         def = null
+        currentlyLoadedUserId = null
+
         self =
             images: []
             isLoading: true
-            refresh: (force) ->
-                return def if !force && def
+
+            refresh: (force, userId = window.pfm.auth.user.id) ->
+                return def if !force && def && userId == currentlyLoadedUserId
                 def = new $.Deferred()
 
                 self.images = []
                 self.isLoading = true
 
-                $.getJSON('/api/web/images/owned').done (images) -> $rootScope.$apply ->
+                $.getJSON("/api/web/users/#{userId}/images").done (images) -> $rootScope.$apply ->
+                    currentlyLoadedUserId = userId
                     self.images = images
                     self.isLoading = false
                     def.resolve images
@@ -38,4 +42,3 @@ angular.module('ponyfm').factory('images', [
         self.refresh()
         return self
 ])
-

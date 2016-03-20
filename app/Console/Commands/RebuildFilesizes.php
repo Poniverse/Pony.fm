@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Console\Commands;
 
 use File;
 use Illuminate\Console\Command;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\TrackFile;
 
 class RebuildFilesizes extends Command
 {

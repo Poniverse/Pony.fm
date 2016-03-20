@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').factory('admin-genres', [
+module.exports = angular.module('ponyfm').factory('admin-genres', [
     '$rootScope', '$http'
     ($rootScope, $http) ->
         def = null
@@ -26,6 +26,17 @@ angular.module('ponyfm').factory('admin-genres', [
                 def = new $.Deferred()
                 $http.get(url).success (genres) ->
                     def.resolve(genres['genres'])
+                def.promise()
+
+            create: (name) ->
+                url = '/api/web/admin/genres'
+                def = new $.Deferred()
+                $http.post(url, {name: name})
+                    .success (response) ->
+                        def.resolve(response)
+                    .error (response) ->
+                        def.reject(response)
+
                 def.promise()
 
             rename: (genre_id, new_name) ->

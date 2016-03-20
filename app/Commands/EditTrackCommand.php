@@ -20,11 +20,12 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Album;
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\TrackType;
-use Poniverse\Ponyfm\User;
+use Gate;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackType;
+use Poniverse\Ponyfm\Models\User;
 use Auth;
 use DB;
 
@@ -46,9 +47,7 @@ class EditTrackCommand extends CommandBase
      */
     public function authorize()
     {
-        $user = \Auth::user();
-
-        return $this->_track && $user != null && $this->_track->user_id == $user->id;
+        return $this->_track && Gate::allows('edit', $this->_track);
     }
 
     /**
@@ -61,8 +60,11 @@ class EditTrackCommand extends CommandBase
 
         $rules = [
             'title' => 'required|min:3|max:80',
-            'released_at' => 'before:' . (date('Y-m-d',
-                    time() + (86400 * 2))) . (isset($this->_input['released_at']) && $this->_input['released_at'] != "" ? '|date' : ''),
+            'released_at' => 'before:' .
+                 (date('Y-m-d', time() + (86400 * 2))) . (
+                 isset($this->_input['released_at']) && $this->_input['released_at'] != ""
+                 ? '|date'
+                 : ''),
             'license_id' => 'required|exists:licenses,id',
             'genre_id' => 'required|exists:genres,id',
             'cover' => 'image|mimes:png,jpeg|min_width:350|min_height:350',
@@ -140,7 +142,7 @@ class EditTrackCommand extends CommandBase
         } else {
             if (isset($this->_input['cover'])) {
                 $cover = $this->_input['cover'];
-                $track->cover_id = Image::upload($cover, Auth::user())->id;
+                $track->cover_id = Image::upload($cover, $track->user_id)->id;
             } else {
                 if ($this->_input['remove_cover'] == 'true') {
                     $track->cover_id = null;

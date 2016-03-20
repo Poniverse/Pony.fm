@@ -1,64 +1,66 @@
-<div class="resource-details album-details" bindonce="album">
+<div class="resource-details album-details">
     <ul class="dropdowns">
         <li class="dropdown">
             <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="album.is_downloadable == 0" auto-close="outsideClick">
                 Downloads
             </a>
-            <ul class="dropdown-menu" ng-show="album.is_downloadable == 1">
-                <li bindonce ng-repeat="format in album.formats" ng-hide="isInProgress">
-                    <a target="_blank" ng-if="!format.isCacheable" bo-href="format.url">
-                        <span bo-text="format.name"></span>
-                        <small bo-text="'(' + format.size + ')'"></small>
+            <ul class="dropdown-menu" ng-show="::album.is_downloadable == 1">
+                <li ng-repeat="format in ::album.formats" ng-hide="isInProgress">
+                    <a target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
+                        <span>{{::format.name}}</span>
+                        <small>({{::format.size}})</small>
                     </a>
-                    <a ng-if="format.isCacheable" ng-click="getCachedAlbum(album.id, format.name);" href="">
-                        <span bo-text="format.name"></span>
-                        <small bo-text="'(' + format.size + ')'"></small>
+                    <a ng-if="::format.isCacheable" ng-click="getCachedAlbum(album.id, format.name);" href="">
+                        <span>{{::format.name}}</span>
+                        <small>({{::format.size}})</small>
                     </a>
                 </li>
                 <li ng-show="isInProgress" class="cache-loading"><img src="/images/loading.gif" /></li>
-                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take up to a few minutes.</small></li>
+                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take a few minutes.</small></li>
             </ul>
         </li>
         <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
-        <li><pfm-favourite-button resource="album" type="album"></pfm-favourite-button></li>
-        <li bo-show="album.permissions.edit"><a class="btn btn-small" bo-href="'/account/albums/edit/' + album.id">Edit</a></li>
+        <li><pfm-favourite-button resource="::album" type="album"></pfm-favourite-button></li>
+        <li ng-if="::album.permissions.edit"><a class="btn btn-small" ui-sref="content.artist.account.albums.edit(::{slug: album.user.slug, album_id: album.id})">Edit</a></li>
     </ul>
 
     <header>
-        <h1 bo-text="album.title"></h1>
+        <h1>{{::album.title}}</h1>
         <h2>
-            by: <a bo-href="album.user.url" bo-text="album.user.name"></a>
+            by: <a ng-href="{{::album.user.url}}">{{::album.user.name}}</a>
         </h2>
     </header>
 
     <div class="stretch-to-bottom details-columns">
         <div class="right">
-            <a colorbox ng-href="{{album.covers.original}}" pfm-eat-click><img class="cover" pfm-src-loader="album.covers.normal" pfm-src-size="normal" /></a>
+            <a colorbox ng-href="{{::album.covers.original}}" pfm-eat-click>
+                <img class="cover" pfm-src-loader="::album.covers.normal" pfm-src-size="normal" />
+            </a>
 
             <div class="share-buttons" pfm-share-buttons>
-                <a class="tumblr" bo-href="album.share.tumblrUrl" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
-                <div class="facebook fb-like" data-href="{{album.url}}" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>
-                <iframe class="twitter" allowtransparency="true" frameborder="0" scrolling="no" bo-src="album.share.twitterUrl" style="width:130px; height:20px;"></iframe>
+                <a class="tumblr" ng-href="{{::album.share.tumblrUrl}}" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
+                <div class="facebook fb-like" data-href="{{::album.url}}" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>
+                <iframe class="twitter" allowtransparency="true" frameborder="0" scrolling="no" ng-src="{{::album.share.twitterUrl}}" style="width:130px; height:20px;"></iframe>
             </div>
 
             <ul class="stats">
-                <li>Published: <strong bo-text="album.created_at | date:'medium'"></strong></li>
-                <li>Views: <strong bo-text="album.stats.views"></strong></li>
-                <li>Downloads: <strong bo-text="album.stats.downloads"></strong></li>
-                <li>Favourites: <strong bo-text="album.stats.favourites"></strong></li>
+                <li>Published: <strong>{{::album.created_at | date:'medium'}}</strong></li>
+                <li>Views: <strong>{{::album.stats.views}}</strong></li>
+                <li>Downloads: <strong>{{::album.stats.downloads}}</strong></li>
+                <li>Favourites: <strong>{{::album.stats.favourites}}</strong></li>
             </ul>
         </div>
 
         <div class="left">
-            <div class="description" bo-show="album.description.length">
+            <div class="description" ng-show="::album.description.length">
                 <h2>Description</h2>
-                <p marked="album.description"></p>
+                <p marked="::album.description"></p>
             </div>
 
             <h2>Tracks</h2>
-            <pfm-tracks-list tracks="album.tracks" class="condensed no-artist"></pfm-tracks-list>
+            <pfm-tracks-list tracks="::album.tracks" class="condensed no-artist"></pfm-tracks-list>
 
-            <pfm-comments type="album" resource="album"></pfm-comments>
+            <pfm-comments type="album" resource="::album"></pfm-comments>
         </div>
     </div>
 </div>

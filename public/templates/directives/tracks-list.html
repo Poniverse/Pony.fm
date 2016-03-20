@@ -1,27 +1,29 @@
-<ul class="tracks-listing {{class}}">
-    <li ng-repeat="track in tracks" ng-class="{'can-favourite': auth.isLogged, 'is-favourited': auth.isLogged && track.user_data.is_favourited, 'is-playing': track.isPlaying, 'has-played': auth.isLogged && track.user_data.views}">
+<ul class="tracks-listing {{::class}}">
+    <li ng-repeat="track in tracks track by track.id" ng-class="{'can-favourite': auth.isLogged, 'is-favourited': auth.isLogged && track.user_data.is_favourited, 'is-playing': track.isPlaying, 'has-played': auth.isLogged && track.user_data.views}">
         <div class="image">
             <a href="#" class="play-button" pfm-eat-click ng-click="play(track)">
-                <i class="icon-play" ng-show="!track.isPlaying"></i>
-                <i class="icon-pause" ng-hide="!track.isPlaying"></i>
+                <i class="icon-play" ng-if="!track.isPlaying"></i>
+                <i class="icon-pause" ng-if="track.isPlaying"></i>
             </a>
             <img pfm-src-loader="track.covers.thumbnail" pfm-src-size="thumbnail" />
         </div>
         <div class="icons">
-            <span><i ng-class="{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
-            <a pfm-eat-click class="icon-favourite" href="#" ng-click="toggleFavourite(track)" ng-show="auth.isLogged"><i class="icon-star-empty"></i></a>
+            <span><i ng-class="::{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
+            <a pfm-eat-click class="icon-favourite" href="#" ng-click="toggleFavourite(track)" ng-if="::auth.isLogged">
+                <i class="icon-star-empty"></i>
+            </a>
         </div>
-        <a class="info" href="{{track.url}}">
-            <span class="title">{{track.title}}</span>
-            <span class="stats" title="{{track.stats.favourites}} Favourites / {{track.stats.comments}} Comments / {{track.stats.plays}} Plays">
-                <strong>{{track.stats.favourites}}</strong>f
-                <strong>{{track.stats.comments}}</strong>c
-                <strong>{{track.stats.plays}}</strong>p
+        <a class="info" ng-href="{{::track.url}}">
+            <span class="title">{{::track.title}}</span>
+            <span class="stats" title="{{::track.stats.favourites}} Favourites / {{:: track.stats.comments}} Comments / {{::track.stats.plays}} Plays">
+                <strong>{{::track.stats.favourites}}</strong>f
+                <strong>{{::track.stats.comments}}</strong>c
+                <strong>{{::track.stats.plays}}</strong>p
             </span>
-            <span class="artist">{{track.user.name}} / {{track.genre.name}}</span>
+            <span class="artist">{{::track.user.name}} / {{::track.genre.name}}</span>
         </a>
     </li>
-    <li ng-show="!tracks.length" class="empty">
-        No tracks found...
+    <li ng-if="!tracks.length" class="empty">
+        No tracks found&hellip;
     </li>
 </ul>

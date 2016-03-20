@@ -19,7 +19,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>Pony.fm</title>
+        <title ng-bind="title">Pony.fm</title>
         <meta name="description" content="@{{ description }}" />
         <meta name="viewport" content="width=device-width" />
         <base href="/" />

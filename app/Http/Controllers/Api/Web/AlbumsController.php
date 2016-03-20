@@ -21,19 +21,18 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\File;
-use Poniverse\Ponyfm\Album;
+use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Commands\CreateAlbumCommand;
 use Poniverse\Ponyfm\Commands\DeleteAlbumCommand;
 use Poniverse\Ponyfm\Commands\EditAlbumCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\ResourceLogItem;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
+use Auth;
+use Input;
+use Poniverse\Ponyfm\Models\User;
+use Response;
+use Poniverse\Ponyfm\Models\Track;
 
 class AlbumsController extends ApiControllerBase
 {
@@ -142,10 +141,13 @@ class AlbumsController extends ApiControllerBase
             200);
     }
 
-    public function getOwned()
+    public function getOwned(User $user)
     {
-        $query = Album::summary()->where('user_id', \Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        $this->authorize('get-albums', $user);
+
+        $query = Album::summary()->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
         $albums = [];
+
         foreach ($query as $album) {
             $albums[] = [
                 'id' => $album->id,

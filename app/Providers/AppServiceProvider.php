@@ -20,8 +20,6 @@
 
 namespace Poniverse\Ponyfm\Providers;
 
-use DB;
-use Illuminate\Database\SQLiteConnection;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use PfmValidator;
@@ -52,6 +50,13 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(Poniverse::class, function(Application $app) {
             return new Poniverse($app['config']->get('poniverse.client_id'), $app['config']->get('poniverse.secret'));
+        });
+
+        $this->app->bind(Poniverse\Ponyfm\Library\Search::class, function(Application $app) {
+            return new Poniverse\Ponyfm\Library\Search(
+                \Elasticsearch::connection(),
+                $app['config']->get('ponyfm.elasticsearch_index')
+            );
         });
     }
 }

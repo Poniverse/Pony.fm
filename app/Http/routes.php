@@ -29,16 +29,13 @@
 |
 */
 
-if (Config::get('app.debug')) {
-    Route::get('/api/web/profiler/{id}', 'Api\Web\ProfilerController@getRequest');
-}
-
 Route::get('/dashboard', 'TracksController@getIndex');
 Route::get('/tracks', ['as' => 'tracks.discover', 'uses' => 'TracksController@getIndex']);
 Route::get('/tracks/popular', 'TracksController@getIndex');
 Route::get('/tracks/random', 'TracksController@getIndex');
 
 Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
+Route::get('tracks/{id}-{slug}/edit', 'TracksController@getEdit');
 Route::get('t{id}', 'TracksController@getShortlink' )->where('id', '\d+');
 Route::get('t{id}/embed', 'TracksController@getEmbed' );
 Route::get('t{id}/stream.{extension}', 'TracksController@getStream' );
@@ -54,6 +51,7 @@ Route::get('playlists', 'PlaylistsController@getIndex');
 
 Route::get('/register', 'AccountController@getRegister');
 Route::get('/login', 'AuthController@getLogin');
+Route::post('/auth/logout', 'AuthController@postLogout');
 Route::get('/auth/oauth', 'AuthController@getOAuth');
 
 Route::get('/about', function() { return View::make('pages.about'); });
@@ -81,8 +79,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function
 
 Route::group(['prefix' => 'api/web'], function() {
     Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
-
-    Route::get('/playlists/show/{id}', 'Api\Web\PlaylistsController@getShow');
+    Route::get('/search', 'Api\Web\SearchController@getSearch');
 
     Route::get('/tracks', 'Api\Web\TracksController@getIndex');
     Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');
@@ -93,6 +90,7 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::get('/albums/cached/{id}/{format}', 'Api\Web\AlbumsController@getCachedAlbum')->where(['id' => '\d+', 'format' => '.+']);
 
     Route::get('/playlists', 'Api\Web\PlaylistsController@getIndex');
+    Route::get('/playlists/show/{id}', 'Api\Web\PlaylistsController@getShow');
     Route::get('/playlists/{id}', 'Api\Web\PlaylistsController@getShow')->where('id', '\d+');
     Route::get('/playlists/cached/{id}/{format}', 'Api\Web\PlaylistsController@getCachedPlaylist')->where(['id' => '\d+', 'format' => '.+']);
 
@@ -135,12 +133,12 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::group(['middleware' => 'auth'], function() {
         Route::get('/account/settings', 'Api\Web\AccountController@getSettings');
 
-        Route::get('/images/owned', 'Api\Web\ImagesController@getOwned');
-
         Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 
-        Route::get('/albums/owned', 'Api\Web\AlbumsController@getOwned');
+        Route::get('/users/{userId}/albums', 'Api\Web\AlbumsController@getOwned')->where('id', '\d+');
+        Route::get('/users/{userId}/images', 'Api\Web\ImagesController@getOwned')->where('id', '\d+');
+
         Route::get('/albums/edit/{id}', 'Api\Web\AlbumsController@getEdit');
 
         Route::get('/playlists/owned', 'Api\Web\PlaylistsController@getOwned');
@@ -153,6 +151,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
         Route::get('/genres', 'Api\Web\GenresController@getIndex');
+        Route::post('/genres', 'Api\Web\GenresController@postCreate');
         Route::put('/genres/{id}', 'Api\Web\GenresController@putRename')->where('id', '\d+');
         Route::delete('/genres/{id}', 'Api\Web\GenresController@deleteGenre')->where('id', '\d+');
     });
@@ -160,22 +159,6 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
 });
 
-Route::group(['prefix' => 'account', 'middleware' => 'auth'], function() {
-    Route::get('/favourites/tracks', 'FavouritesController@getTracks');
-    Route::get('/favourites/albums', 'FavouritesController@getAlbums');
-    Route::get('/favourites/playlists', 'FavouritesController@getPlaylists');
-
-    Route::get('/tracks', 'ContentController@getTracks');
-    Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
-    Route::get('/albums', 'ContentController@getAlbums');
-    Route::get('/albums/edit/{id}', 'ContentController@getAlbums');
-    Route::get('/albums/create', 'ContentController@getAlbums');
-    Route::get('/playlists', 'ContentController@getPlaylists');
-
-    Route::get('/uploader', 'UploaderController@getIndex');
-
-    Route::get('/', 'AccountController@getIndex');
-});
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
     Route::get('/genres', 'AdminController@getGenres');
@@ -184,9 +167,27 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-ar
 
 Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
-Route::get('{slug}', 'ArtistsController@getProfile');
-Route::get('{slug}/content', 'ArtistsController@getProfile');
-Route::get('{slug}/favourites', 'ArtistsController@getProfile');
+
+
+Route::group(['prefix' => '{slug}'], function() {
+    Route::get('/', 'ArtistsController@getProfile');
+    Route::get('/content', 'ArtistsController@getContent');
+    Route::get('/favourites', 'ArtistsController@getFavourites');
+
+
+    Route::group(['prefix' => 'account', 'middleware' => 'auth'], function() {
+        Route::get('/tracks', 'ContentController@getTracks');
+        Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
+        Route::get('/albums', 'ContentController@getAlbums');
+        Route::get('/albums/edit/{id}', 'ContentController@getAlbums');
+        Route::get('/albums/create', 'ContentController@getAlbums');
+        Route::get('/playlists', 'ContentController@getPlaylists');
+
+        Route::get('/uploader', 'UploaderController@getIndex');
+
+        Route::get('/', 'AccountController@getIndex');
+    });
+});
 
 Route::get('/', 'HomeController@getIndex');
 

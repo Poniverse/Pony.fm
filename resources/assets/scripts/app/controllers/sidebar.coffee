@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').controller "sidebar", [
+module.exports = angular.module('ponyfm').controller "sidebar", [
     '$scope', '$dialog', 'playlists'
     ($scope, $dialog, playlists) ->
         $scope.playlists = playlists.pinnedPlaylists
@@ -48,7 +48,7 @@ angular.module('ponyfm').controller "sidebar", [
             playlists.editPlaylist playlist
 
         $scope.deletePlaylist = (playlist) ->
-            $dialog.messageBox('Delete ' + playlist.title, 'Are you sure you want to delete "' + playlist.title + '"? This cannot be undone.', [
+            $dialog.messageBox('Delete ' + playlist.title, 'Are you sure you want to delete "' + playlist.title + '"?', [
                 {result: 'ok', label: 'Yes', cssClass: 'btn-danger'},
                 {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
             ]).open().then (res) ->

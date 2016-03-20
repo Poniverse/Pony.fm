@@ -21,12 +21,16 @@
 namespace Poniverse\Ponyfm\Commands;
 
 use Gate;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Jobs\UpdateTagsForRenamedGenre;
+use Poniverse\Ponyfm\Models\Genre;
 use Validator;
 
 class RenameGenreCommand extends CommandBase
 {
+    use DispatchesJobs;
+
     /** @var Genre */
     private $_genre;
     private $_newName;
@@ -71,6 +75,8 @@ class RenameGenreCommand extends CommandBase
         $this->_genre->name = $this->_newName;
         $this->_genre->slug = $slug;
         $this->_genre->save();
+
+        $this->dispatch(new UpdateTagsForRenamedGenre($this->_genre));
 
         return CommandResponse::succeed(['message' => 'Genre renamed!']);
     }

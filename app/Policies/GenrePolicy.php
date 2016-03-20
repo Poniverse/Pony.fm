@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Policies;
 
-use Poniverse\Ponyfm\Genre;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\Genre;
+use Poniverse\Ponyfm\Models\User;
 
 class GenrePolicy
 {

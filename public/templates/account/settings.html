@@ -27,7 +27,7 @@
                 <input ng-change="touchModel()" ng-disabled="isLoading" id="uses_gravatar" type="checkbox" ng-model="settings.uses_gravatar" /> Use Gravatar
             </label>
             <div ng-show="!settings.uses_gravatar">
-                <pfm-image-upload set-image="setAvatar" image="settings.avatar_url" />
+                <pfm-image-upload set-image="setAvatar" image="settings.avatar_url" user-id="settings.id"></pfm-image-upload>
             </div>
             <input type="text" ng-disabled="isSaving" ng-change="touchModel()" ng-show="settings.uses_gravatar" placeholder="Gravatar Email" ng-model="settings.gravatar" />
             <div class="error" ng-show="errors.avatar != null">{{errors.avatar}}</div>

@@ -20,27 +20,38 @@
 
 class Assets
 {
-    public static function scriptIncludes($area = 'app')
-    {
-        if (!Config::get("app.debug")) {
-            return '<script src="/build/scripts/' . $area . '.js?' . filemtime("./build/scripts/" . $area . ".js") . '"></script>';
+    public static function scriptIncludes(string $area) {
+        $scriptTags = '';
+
+        if ('app' === $area) {
+            $scripts = ['app.js', 'templates.js'];
+        } elseif ('embed' === $area) {
+            $scripts = ['embed.js'];
+        } else {
+            throw new InvalidArgumentException('A valid app area must be specified!');
         }
 
-        $scripts = self::mergeGlobs(self::getScriptsForArea($area));
-        $retVal = "";
-
-        foreach ($scripts as $script) {
-            $filename = self::replaceExtensionWith($script, ".coffee", ".js");
-            $retVal .= "<script src='/build/$filename?" . filemtime('./build/' . $filename) . "'></script>";
+        foreach ($scripts as $filename) {
+            if (Config::get('app.debug') && $filename !== 'templates.js') {
+                $scriptTags .= "<script src='http://localhost:61999/build/scripts/{$filename}'></script>";
+            } else {
+                $scriptTags .= "<script src='/build/scripts/{$filename}?" . filemtime(public_path("build/scripts/{$filename}")) . "'></script>";
+            }
         }
 
-        return $retVal;
+        if (Config::get('app.debug')) {
+            $scriptTags .= '<script src="http://localhost:61999/webpack-dev-server.js"></script>';
+        }
+
+        return $scriptTags;
     }
 
     public static function styleIncludes($area = 'app')
     {
         if (!Config::get("app.debug")) {
-            return '<script>document.write(\'<link rel="stylesheet" href="build/styles/' . $area . '.css?' . filemtime("build/styles/" . $area . ".css") . '" />\');</script>';
+            return '<script>document.write(\'<link rel="stylesheet" href="build/styles/' . $area . '.css?' .
+                   filemtime(public_path("/build/styles/${area}.css"))
+                   . '" />\');</script>';
         }
 
         $styles = self::mergeGlobs(self::getStylesForArea($area));
@@ -48,7 +59,7 @@ class Assets
 
         foreach ($styles as $style) {
             $filename = self::replaceExtensionWith($style, ".less", ".css");
-            $retVal .= "<link rel='stylesheet' href='/build/$filename?" . filemtime('./build/' . $filename) . "' />";
+            $retVal .= "<link rel='stylesheet' href='/build/$filename?" .filemtime(public_path("/build/${filename}")). "' />";
         }
 
         return $retVal;
@@ -82,41 +93,6 @@ class Assets
         return $files;
     }
 
-    private static function getScriptsForArea($area)
-    {
-        if ($area == 'app') {
-            return [
-                "scripts/base/jquery-2.0.2.js",
-                "scripts/base/angular.js",
-                "scripts/base/marked.js",
-                "scripts/base/*.{coffee,js}",
-                "scripts/shared/*.{coffee,js}",
-                "scripts/app/*.{coffee,js}",
-                "scripts/app/services/*.{coffee,js}",
-                "scripts/app/filters/*.{coffee,js}",
-                "scripts/app/directives/*.{coffee,js}",
-                "scripts/app/controllers/*.{coffee,js}",
-                "scripts/**/*.{coffee,js}"
-            ];
-        } else {
-            if ($area == 'embed') {
-                return [
-                    "scripts/base/jquery-2.0.2.js",
-                    "scripts/base/jquery.cookie.js",
-                    "scripts/base/jquery.viewport.js",
-                    "scripts/base/underscore.js",
-                    "scripts/base/moment.js",
-                    "scripts/base/jquery.timeago.js",
-                    "scripts/base/soundmanager2-nodebug.js",
-                    "scripts/shared/jquery-extensions.js",
-                    "scripts/embed/*.coffee"
-                ];
-            }
-        }
-
-        throw new Exception();
-    }
-
     private static function getStylesForArea($area)
     {
         if ($area == 'app') {
@@ -124,7 +100,6 @@ class Assets
                 "styles/base/jquery-ui.css",
                 "styles/base/colorbox.css",
                 "styles/app.less",
-                "styles/profiler.less"
             ];
         } else {
             if ($area == 'embed') {

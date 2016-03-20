@@ -21,7 +21,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 
 class ApiAuthTest extends TestCase {
     use DatabaseMigrations;

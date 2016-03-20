@@ -15,12 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 window.pfm.preloaders['account-albums'] = [
-    'account-tracks', 'account-albums'
-    (tracks, albums) ->
-        $.when.all [tracks.refresh('published=true&in_album=false', true), albums.refresh(true)]
+    'account-tracks'
+    (tracks) ->
+        tracks.refresh('published=true&in_album=false', true)
 ]
 
-angular.module('ponyfm').controller "account-albums", [
+module.exports = angular.module('ponyfm').controller "account-albums", [
     '$scope', '$state', 'account-albums', 'account-tracks'
     ($scope, $state, albums, tracks) ->
 
@@ -33,6 +33,7 @@ angular.module('ponyfm').controller "account-albums", [
         selectAlbum = (album) -> $scope.data.selectedAlbum = album
 
         updateTracks = (tracks) ->
+            $scope.data.tracksDb.length = 0
             $scope.data.tracksDb.push track for track in tracks
 
         tracks.refresh('published=true&in_album=false').done updateTracks
@@ -40,6 +41,7 @@ angular.module('ponyfm').controller "account-albums", [
         albumsDb = {}
 
         updateAlbums = (albums) ->
+            albumsDb.length = 0
             $scope.albums.length = 0
 
             for album in albums

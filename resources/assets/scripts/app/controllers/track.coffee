@@ -14,27 +14,35 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-window.pfm.preloaders['track'] = [
-    'tracks', '$state', 'playlists'
-    (tracks, $state, playlists) ->
-        $.when.all [tracks.fetch $state.params.id, playlists.refreshOwned(true)]
-]
+module.exports = angular.module('ponyfm').controller "track", [
+    '$scope', 'meta', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
+    ($scope, meta, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
+        $scope.track
+        $scope.trackId = parseInt($state.params.id)
 
-angular.module('ponyfm').controller "track", [
-    '$scope', '$rootScope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
-    ($scope, $rootScope, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
-        track = null
+        updateTrackData = (forceUpdate = false) ->
+            tracks.fetch($scope.trackId, forceUpdate).done (trackResponse) ->
+                $scope.track = trackResponse.track
+                meta.setTitle("#{$scope.track.title} | #{$scope.track.user.name}")
+                meta.setDescription("Listen to \"#{$scope.track.title}\" by #{$scope.track.user.name} on the largest pony music site.")
 
-        tracks.fetch($state.params.id).done (trackResponse) ->
-            $scope.track = trackResponse.track
-            track = trackResponse.track
-            $rootScope.description = "Listen to #{track.title} by #{track.user.name} on the largest pony music site"
+        updateTrackData()
+
+        $scope.$on 'track-updated', () ->
+            updateTrackData(true)
+
+        $scope.$on 'track-deleted', () ->
+            # This is meant to take you back to whatever state you found
+            # this track from.
+            $window.history.go(-2)
 
         $scope.playlists = []
 
         if auth.data.isLogged
-            playlists.refreshOwned().done (lists) ->
-                $scope.playlists.push list for list in lists
+            playlists.refreshOwned().done (playlists) ->
+                for playlist in playlists
+                    if $scope.trackId not in playlist.track_ids
+                        $scope.playlists.push playlist
 
         $scope.favouriteWorking = false
 
@@ -47,7 +55,11 @@ angular.module('ponyfm').controller "track", [
         $scope.share = () ->
             dialog = $dialog.dialog
                 templateUrl: '/templates/partials/track-share-dialog.html',
-                controller: ['$scope', ($scope) -> $scope.track = track; $scope.close = () -> dialog.close()]
+                controller: ['$scope', ($localScope) ->
+                        $localScope.track = $scope.track
+                        $localScope.close = () ->
+                            dialog.close()
+                ]
             dialog.open()
 
         $scope.addToNewPlaylist = () ->

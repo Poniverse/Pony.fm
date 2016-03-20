@@ -20,6 +20,8 @@
 
 namespace Poniverse\Ponyfm\Jobs;
 
+use App;
+use DB;
 use Illuminate\Bus\Queueable;
 
 abstract class Job
@@ -36,4 +38,15 @@ abstract class Job
     */
 
     use Queueable;
+
+    /**
+     * This method should be called at the beginning of every job's handle()
+     * method. It ensures that we don't lose the in-memory database during
+     * testing by disconnecting from it - which causes tests to fail.
+     */
+    protected function beforeHandle() {
+        if (App::environment() !== 'testing') {
+            DB::reconnect();
+        }
+    }
 }

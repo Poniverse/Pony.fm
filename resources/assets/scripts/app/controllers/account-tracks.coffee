@@ -20,14 +20,13 @@ window.pfm.preloaders['account-tracks'] = [
         $.when.all [tracks.refresh(null, true), albums.refresh(true), taxonomies.refresh()]
 ]
 
-angular.module('ponyfm').controller "account-tracks", [
+module.exports = angular.module('ponyfm').controller "account-tracks", [
     '$scope', '$state', 'taxonomies', '$dialog', 'lightbox', 'account-albums', 'account-tracks'
     ($scope, $state, taxonomies, $dialog, lightbox, albums, tracks) ->
         $scope.data =
             selectedTrack: null
 
         $scope.tracks = []
-
         tracksDb = {}
 
         setTracks = (tracks) ->
@@ -40,13 +39,11 @@ angular.module('ponyfm').controller "account-tracks", [
             if $state.params.track_id
                 $scope.data.selectedTrack = tracksDb[$state.params.track_id]
 
-        tracks.refresh().done setTracks
-
-        $scope.refreshList = () ->
-            tracks.refresh().done setTracks
-
         $scope.selectTrack = (track) ->
             $scope.data.selectedTrack = track
+
+
+        tracks.refresh().done setTracks
 
         $scope.$on '$stateChangeSuccess', () ->
             if $state.params.track_id
@@ -55,6 +52,11 @@ angular.module('ponyfm').controller "account-tracks", [
                 $scope.selectTrack null
 
         $scope.$on 'track-deleted', () ->
+            $state.transitionTo 'account.tracks'
             tracks.clearCache()
-            $scope.refreshList()
+            tracks.refresh(null, true).done setTracks
+
+        $scope.$on 'track-updated', () ->
+            tracks.clearCache()
+            tracks.refresh(null, true).done setTracks
 ]

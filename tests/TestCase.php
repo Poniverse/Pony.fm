@@ -1,5 +1,5 @@
 <?php
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 
 /**
  * Pony.fm - A community for pony fan music.
@@ -132,7 +132,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      * @param array $files
      */
     protected function callUploadWithParameters(array $parameters, array $files = []) {
-        $this->expectsJobs(Poniverse\Ponyfm\Jobs\EncodeTrackFile::class);
+        $this->expectsJobs([
+            Poniverse\Ponyfm\Jobs\EncodeTrackFile::class,
+            Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity::class
+        ]);
         $this->user = factory(User::class)->create();
 
         $file = $this->getTestFileForUpload('ponyfm-test.flac');

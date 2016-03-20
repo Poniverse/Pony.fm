@@ -3,26 +3,28 @@
         <p>Drop files here to begin your upload!</p>
     </div>
 
-    <p>FLAC, WAV, and AIFF files will be accepted. Each file can be up to 200 MB in size.</p>
+    <p>Our preferred formats are FLAC, WAV, AIFF, and ALAC (because lossless audio is awesome) but we accept a few others, too. Each file can be up to 200 MB in size.</p>
 
     <p>Tracks must be a <strong>minimum</strong> of 30 seconds long.</p>
 
-    <p>Please note that you need to publish your tracks after uploading them before they will become available to the public.</p>
+    <p>Note that you&#39;ll need to publish your tracks after uploading them before they&#39;ll become available to the public.</p>
+
+    <p>Contact <a href="mailto:feld0@pony.fm">feld0@pony.fm</a> if you run into any issues!</p>
 
     <ul class="uploads">
-        <li ng-repeat="upload in data.queue" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isProcessing || upload.progress >= 100}" ng-animate="'upload-queue'">
+        <li ng-repeat="upload in data.queue track by $index" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isProcessing || (upload.progress >= 100 && upload.error == null)}" ng-animate="'upload-queue'">
             <p>
 
                 <span ng-show="!upload.success">
                     <strong ng-show="upload.isUploading && upload.error == null && upload.progress < 100">Uploading&hellip;</strong>
                     <strong ng-show="upload.isProcessing || (upload.isUploading && upload.progress >= 100)">Processing&hellip;</strong>
                     <strong ng-show="upload.error != null">Error</strong>
-                    {{upload.name}} -
+                    {{::upload.name}} -
                     <strong ng-show="upload.error != null">{{upload.error}}</strong>
                 </span>
 
                 <span ng-show="upload.success">
-                    <a href="/account/tracks/edit/{{upload.trackId}}" class="btn btn-small btn-primary">
+                    <a ui-sref="content.artist.account.tracks.edit({slug: auth.user.slug, track_id: upload.trackId})" class="btn btn-small btn-primary">
                         Publish
                     </a>
                     {{upload.name}}

@@ -14,10 +14,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-angular.module('ponyfm').factory('account-albums', [
+module.exports = angular.module('ponyfm').factory('account-albums', [
     '$rootScope', '$http'
     ($rootScope, $http) ->
         def = null
+        # the ID of the user whose albums are currently cached
+        currentlyLoadedUserId = null
+
         albums = []
 
         self =
@@ -31,11 +34,12 @@ angular.module('ponyfm').factory('account-albums', [
                 $http.get(url).success (album) -> editDef.resolve album
                 editDef.promise()
 
-            refresh: (force) ->
-                force = force || false
-                return def if !force && def
+            refresh: (force = false, user_id = window.pfm.auth.user.id) ->
+                return def if !force && def && user_id == currentlyLoadedUserId
+
                 def = new $.Deferred()
-                $http.get('/api/web/albums/owned').success (ownedAlbums) ->
+                $http.get("/api/web/users/#{user_id}/albums").success (ownedAlbums) ->
+                    currentlyLoadedUserId = user_id
                     def.resolve(ownedAlbums)
                 def.promise()
 

@@ -22,15 +22,14 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use File;
-use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
 use Poniverse\Ponyfm\Commands\DeleteTrackCommand;
 use Poniverse\Ponyfm\Commands\EditTrackCommand;
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\ResourceLogItem;
-use Poniverse\Ponyfm\TrackFile;
-use Poniverse\Ponyfm\Track;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
+use Poniverse\Ponyfm\Models\TrackFile;
+use Poniverse\Ponyfm\Models\Track;
 use Auth;
 use Input;
 use Response;
@@ -41,7 +40,7 @@ class TracksController extends ApiControllerBase
     {
         session_write_close();
 
-        return $this->execute(new UploadTrackCommand());
+        return $this->execute(new UploadTrackCommand(true));
     }
 
     public function getUploadStatus($trackId)
@@ -184,9 +183,7 @@ class TracksController extends ApiControllerBase
             return $this->notFound('Track ' . $id . ' not found!');
         }
 
-        if ($track->user_id != Auth::user()->id) {
-            return $this->notAuthorized();
-        }
+        $this->authorize('edit', $track);
 
         return Response::json(Track::mapPrivateTrackShow($track), 200);
     }
@@ -225,6 +222,9 @@ class TracksController extends ApiControllerBase
         }
 
         if (Input::has('songs')) {
+            // DISTINCT is needed here to avoid duplicate results
+            // when a track is associated with multiple show songs.
+            $query->distinct();
             $query->join('show_song_track', function ($join) {
                 $join->on('tracks.id', '=', 'show_song_track.track_id');
             });

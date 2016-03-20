@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\URL;
-
 class Gravatar
 {
     public static function getUrl($email, $size = 80, $default = null, $rating = 'g')
@@ -40,7 +38,10 @@ class Gravatar
                 }
             }
 
-            $url .= "&d=" . urlencode(URL::to('/images/icons/profile_' . $size . '.png'));
+            // Pony.fm's production URL is hardcoded here so Gravatar can
+            // serve functioning default avatars in the dev environment,
+            // which it won't be able to access.
+            $url .= "&d=" . urlencode(URL::to('https://pony.fm/images/icons/profile_' . $size . '.png'));
         }
 
         return $url;

@@ -21,7 +21,7 @@
 namespace Poniverse\Ponyfm\Console\Commands;
 
 use Illuminate\Console\Command;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\User;
 
 class RebuildArtists extends Command
 {
@@ -56,12 +56,19 @@ class RebuildArtists extends Command
      */
     public function handle()
     {
+        $numberOfUsers = User::count();
+
+        $bar = $this->output->createProgressBar($numberOfUsers);
+
         foreach(User::with(['tracks' => function($query) {
             $query->published()->listed();
         }])->get() as $user) {
+            $bar->advance();
             $user->track_count = $user->tracks->count();
             $user->save();
-            $this->info('Updated user #'.$user->id.'!');
         }
+
+        $bar->finish();
+        $this->line('');
     }
 }

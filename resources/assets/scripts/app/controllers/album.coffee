@@ -20,15 +20,16 @@ window.pfm.preloaders['album'] = [
         $.when.all [albums.fetch $state.params.id, playlists.refreshOwned(true)]
 ]
 
-angular.module('ponyfm').controller "album", [
-    '$scope', '$rootScope', 'albums', '$state', 'playlists', 'auth', '$dialog', 'download-cached', '$window', '$timeout'
-    ($scope, $rootScope, albums, $state, playlists, auth, $dialog, cachedAlbum, $window, $timeout) ->
+module.exports = angular.module('ponyfm').controller "album", [
+    '$scope', 'meta', 'albums', '$state', 'playlists', 'auth', '$dialog', 'download-cached', '$window', '$timeout'
+    ($scope, meta, albums, $state, playlists, auth, $dialog, cachedAlbum, $window, $timeout) ->
         album = null
 
         albums.fetch($state.params.id).done (albumResponse) ->
             $scope.album = albumResponse.album
             album = albumResponse.album
-            $rootScope.description = "Listen to #{album.title}, the album by #{album.user.name}, and more on the largest pony music site."
+            meta.setTitle("#{album.title} | #{album.user.name}")
+            meta.setDescription("Listen to #{album.title}, the album by #{album.user.name}, and more on the largest pony music site.")
 
         $scope.playlists = []
 

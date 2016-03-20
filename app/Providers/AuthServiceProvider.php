@@ -22,11 +22,14 @@ namespace Poniverse\Ponyfm\Providers;
 
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Genre;
+use Poniverse\Ponyfm\Policies\AlbumPolicy;
 use Poniverse\Ponyfm\Policies\GenrePolicy;
 use Poniverse\Ponyfm\Policies\TrackPolicy;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\User;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
+use Poniverse\Ponyfm\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -38,6 +41,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Genre::class => GenrePolicy::class,
         Track::class => TrackPolicy::class,
+        Album::class => AlbumPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -49,6 +54,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(GateContract $gate)
     {
         $gate->define('access-admin-area', function(User $user) {
+            return $user->hasRole('admin');
+        });
+
+        $gate->define('create-genre', function(User $user) {
             return $user->hasRole('admin');
         });
 

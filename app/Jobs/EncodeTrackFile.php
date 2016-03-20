@@ -24,17 +24,15 @@ namespace Poniverse\Ponyfm\Jobs;
 use Carbon\Carbon;
 use DB;
 use File;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
-use OAuth2\Exception;
+use Config;
+use Log;
 use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
-use Poniverse\Ponyfm\Jobs\Job;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackFile;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -44,19 +42,19 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
     /**
      * @var TrackFile
      */
-    private $trackFile;
+    protected $trackFile;
     /**
      * @var
      */
-    private $isExpirable;
+    protected $isExpirable;
     /**
      * @var bool
      */
-    private $isForUpload;
+    protected $isForUpload;
     /**
      * @var bool
      */
-    private $autoPublishWhenComplete;
+    protected $autoPublishWhenComplete;
 
     /**
      * Create a new job instance.
@@ -87,9 +85,21 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
+        $this->beforeHandle();
+
+        // Sanity check: was this file just generated, or is it already being processed?
+        if ($this->trackFile->status === TrackFile::STATUS_PROCESSING) {
+            Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is already being processed!');
+            return;
+
+        } elseif (!$this->trackFile->is_expired) {
+            Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is still valid! No need to re-encode it.');
+            return;
+        }
+
         // Start the job
         $this->trackFile->status = TrackFile::STATUS_PROCESSING;
-        $this->trackFile->update();
+        $this->trackFile->save();
 
         // Use the track's master file as the source
         if ($this->isForUpload) {
@@ -120,19 +130,18 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
             $process->mustRun();
         } catch (ProcessFailedException $e) {
             Log::error('An exception occured in the encoding process for track file ' . $this->trackFile->id . ' - ' . $e->getMessage());
+            Log::info($process->getOutput());
             // Ensure queue fails
             throw $e;
-        } finally {
-            Log::info($process->getOutput());
         }
 
         // Update the tags of the track
         $this->trackFile->track->updateTags($this->trackFile->format);
 
         // Insert the expiration time for cached tracks
-        if ($this->isExpirable) {
+        if ($this->isExpirable && $this->trackFile->is_cacheable) {
             $this->trackFile->expires_at = Carbon::now()->addMinutes(Config::get('ponyfm.track_file_cache_duration'));
-            $this->trackFile->update();
+            $this->trackFile->save();
         }
 
         // Update file size
@@ -140,7 +149,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
 
         // Complete the job
         $this->trackFile->status = TrackFile::STATUS_NOT_BEING_PROCESSED;
-        $this->trackFile->update();
+        $this->trackFile->save();
 
         if ($this->isForUpload) {
             if (!$this->trackFile->is_master && $this->trackFile->is_cacheable) {
@@ -171,6 +180,6 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
     {
         $this->trackFile->status = TrackFile::STATUS_PROCESSING_ERROR;
         $this->trackFile->expires_at = null;
-        $this->trackFile->update();
+        $this->trackFile->save();
     }
 }

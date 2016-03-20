@@ -25,7 +25,7 @@
     <script>
         window.fbAsyncInit = function() {
             FB.init({
-                appId      : '186765381447538',
+                appId: '186765381447538',
                 status: true,
                 cookie: true,
                 xfbml: true
@@ -49,11 +49,13 @@
             @if (Auth::check())
                 <div class="user-details dropdown">
                     <a class="avatar dropdown-toggle" href="#">
-                        <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Image::THUMBNAIL)}}" />
+                        <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
                         <span><i class="icon-chevron-down"></i></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{{Auth::user()->url}}">Your Profile</a></li>
+                        <li ui-sref-active="active"><a ui-sref="content.artist.favourites({slug: auth.user.slug})">Favourites</a></li>
+                        <li ui-sref-active="active"><a ui-sref="content.artist.account.settings({slug: auth.user.slug})">Account</a></li>
                         <li><a href="#" pfm-eat-click ng-click="logout()">Logout</a></li>
                     </ul>
                 </div>
@@ -64,26 +66,19 @@
 
     <div class="site-body">
         <ul class="sidebar" ng-controller="sidebar">
-            @if (Auth::check())
-                <li ng-class="{selected: stateIncludes('home')}"><a href="/">Dashboard</a></li>
-            @else
-                <li ng-class="{selected: stateIncludes('home')}"><a href="/">Home</a></li>
-            @endif
-            <li ng-class="{selected: (stateIncludes('content') && !isPinnedPlaylistSelected)}">
-                <a href="/tracks">Discover</a>
-            </li>
+            <li><pfm-search></pfm-search></li>
+            <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a href="/tracks">Tracks</a></li>
+            <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a href="/albums">Albums</a></li>
+            <li ng-class="{selected: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a href="/playlists">Playlists</a></li>
+            <li ng-class="{selected: stateIncludes('content.artists') || stateIncludes('content.artist')}"><a href="/artists">Artists</a></li>
 
-            @if (Auth::check())
-                <li ng-class="{selected: stateIncludes('favourites')}"><a href="/account/favourites/tracks">Favourites</a></li>
-                <li ng-class="{selected: stateIncludes('account')}"><a href="/account/tracks">Account</a></li>
-            @endif
 
             <li ng-class="{selected: stateIncludes('pages')}"><a href="/about">About / FAQ</a></li>
             <li><a href="https://mlpforums.com/forum/62-ponyfm/" title="Pony.fm Forum" target="_blank">Forum</a></li>
 
             @if (Auth::check())
-                <li class="uploader" ng-class="{selected: stateIncludes('uploader')}">
-                    <a href="/account/uploader">Upload Music</a>
+                <li class="uploader" ui-sref-active="selected">
+                    <a ui-sref="content.artist.account.uploader({slug: auth.user.slug})">Upload Music</a>
                 </li>
 
                 @can('access-admin-area')
@@ -95,11 +90,11 @@
                 <li>
                     <h3>
                         <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="icon-plus"></i></a>
-                        Playlists
+                        My Playlists
                     </h3>
                 </li>
                 <li class="none" ng-show="!playlists.length"><span>no pinned playlists</span></li>
-                <li class="dropdown" ng-repeat="playlist in playlists" ng-cloak ng-class="{selected: stateIncludes('content.playlist') && $state.params.id == playlist.id}">
+                <li class="dropdown" ng-repeat="playlist in playlists track by playlist.id" ng-cloak ng-class="{selected: stateIncludes('content.playlist') && $state.params.id == playlist.id}">
                     <a href="{{Helpers::angular('playlist.url')}}" ng-bind="playlist.title"></a>
                 </li>
             @else
@@ -115,7 +110,7 @@
                     @else
                         <span>A community by</span>
                         <img src="/images/poniverse.svg" alt="Poniverse logo" title="Poniverse"/>
-                        <span>Now 20% more <span class="x-caps">FOSS</span>!</span>
+                        <span>We&#39;re open-source!</span>
                     @endif
                 </a>
             </li>
@@ -163,11 +158,7 @@
         </script>
     @endif
 
-    {!! Assets::scriptIncludes() !!}
-
-    @if (!Config::get("app.debug"))
-        <script src="/build/scripts/templates.js"></script>
-    @endif
+    {!! Assets::scriptIncludes('app') !!}
 
     @yield('app_scripts')
 

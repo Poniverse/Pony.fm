@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'model' => Poniverse\Ponyfm\User::class,
+    'model' => Poniverse\Ponyfm\Models\User::class,
 
     /*
     |--------------------------------------------------------------------------

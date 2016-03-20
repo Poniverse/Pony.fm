@@ -17,9 +17,16 @@
  */
 
 var gulp = require("gulp"),
+    gutil = require("gulp-util"),
     plug = require("gulp-load-plugins")(),
     argv = require("yargs").argv,
-    header = require("gulp-header");
+    header = require("gulp-header"),
+    webpack = require("webpack"),
+    WebpackDevServer = require("webpack-dev-server"),
+    webpackDevConfig = require("./webpack.dev.config.js"),
+    webpackProductionConfig = require("./webpack.production.config.js"),
+    webpackStream = require('webpack-stream'),
+    _ = require("underscore");
 
 var plumberOptions = {
     errorHandler: plug.notify.onError("Error: <%= error.message %>")
@@ -28,7 +35,7 @@ var plumberOptions = {
 var licenseHeader = [
     "/**",
     "* Pony.fm - A community for pony fan music.",
-    "* Copyright (C) 2015 Peter Deltchev and others",
+    "* Copyright (C) 2016 Peter Deltchev and others",
     "*",
     "* This program is free software: you can redistribute it and/or modify",
     "* it under the terms of the GNU Affero General Public License as published by",
@@ -45,86 +52,32 @@ var licenseHeader = [
     "*/",
     "",
     ""
-].join('\n')
+].join('\n');
 
-gulp.task("scripts-app", function () {
-    var paths = [
-        "resources/assets/scripts/app/**/*.{coffee,js}",
-        "resources/assets/scripts/base/**/*.{coffee,js}",
-        "resources/assets/scripts/shared/**/*.{coffee,js}"
-    ];
 
-    if (!argv.production) {
-        paths.push("resources/assets/scripts/debug/**/*.{coffee,js}");
-
-        // we also want to add the embed stuff, since we're in development mode
-        // we want to watch embed files and re-compile them. However, we want
-        // to leave this path out in production so that embed files are not bloating
-        // the js file
-        paths.push("resources/assets/scripts/embed/**/*.{coffee,js}");
-    }
-
-    return argv.production
-        // Production pipeline
-        ? gulp.src(paths, {base: "resources/assets/scripts"})
-        .pipe(plug.plumber(plumberOptions))
-        .pipe(plug.order([
-            "resources/assets/scripts/base/jquery-2.0.2.js",
-            "resources/assets/scripts/base/angular.js",
-            "resources/assets/scripts/base/*.{coffee,js}",
-            "resources/assets/scripts/shared/*.{coffee,js}",
-            "resources/assets/scripts/app/*.{coffee,js}",
-            "resources/assets/scripts/app/services/*.{coffee,js}",
-            "resources/assets/scripts/app/filters/*.{coffee,js}",
-            "resources/assets/scripts/app/directives/*.{coffee,js}",
-            "resources/assets/scripts/app/controllers/*.{coffee,js}",
-            "resources/assets/scripts/**/*.{coffee,js}"
-        ], {base: "."}))
-        .pipe(plug.if(/\.coffee/, plug.coffee()))
-        .pipe(plug.concat("app.js"))
-        .pipe(plug.uglify())
+gulp.task("webpack-build", function() {
+    return gulp.src(_.values(webpackProductionConfig.entry))
+        .pipe(webpackStream(webpackProductionConfig))
         .pipe(header(licenseHeader))
-        .pipe(gulp.dest("public/build/scripts"))
-        // Development/watch pipeline
-        : gulp.src(paths, {base: "resources/assets/scripts"})
-        .pipe(plug.plumber(plumberOptions))
-        .pipe(plug.cached('scripts'))
-        .pipe(plug.sourcemaps.init())
-        .pipe(plug.if(/\.coffee/, plug.coffee()))
-        .pipe(plug.sourcemaps.write({
-            includeContent: false,
-            sourceRoot: "/dev-scripts/"
-        }))
-        .pipe(header(licenseHeader))
-        .pipe(gulp.dest("public/build/scripts"));
+        .pipe(gulp.dest('public'));
 });
 
-gulp.task("scripts-embed", function () {
-    // note that this task should really only ever be invoked for production
-    // since development-mode watches and builds include the embed scripts
-    // already
 
-    var includedScripts = [
-        "resources/assets/scripts/base/jquery-2.0.2.js",
-        "resources/assets/scripts/base/jquery.cookie.js",
-        "resources/assets/scripts/base/jquery.viewport.js",
-        "resources/assets/scripts/base/underscore.js",
-        "resources/assets/scripts/base/moment.js",
-        "resources/assets/scripts/base/jquery.timeago.js",
-        "resources/assets/scripts/base/soundmanager2-nodebug.js",
-        "resources/assets/scripts/shared/jquery-extensions.js",
-        "resources/assets/scripts/embed/*.coffee"
-    ];
+gulp.task("webpack-dev-server", function () {
+    // Starts a webpack-dev-server
+    var compiler = webpack(webpackDevConfig);
 
-    return gulp.src(includedScripts, {base: "resources/assets/scripts"})
-        .pipe(plug.plumber(plumberOptions))
-        .pipe(plug.if(/\.coffee/, plug.coffee()))
-        .pipe(plug.order(includedScripts, {base: "."}))
-        .pipe(plug.concat("embed.js"))
-        .pipe(plug.uglify())
-        .pipe(header(licenseHeader))
-        .pipe(gulp.dest("public/build/scripts"));
+    new WebpackDevServer(compiler, {
+        // server and middleware options, currently blank
+    }).listen(61999, "localhost", function (err) {
+        if (err)
+            throw new gutil.PluginError("webpack-dev-server", err);
+
+        // Server listening
+        gutil.log("[webpack-dev-server]", "http://localhost:61999/webpack-dev-server/index.html");
+    });
 });
+
 
 gulp.task("styles-app", function () {
     var includedStyles = [
@@ -134,9 +87,6 @@ gulp.task("styles-app", function () {
     ];
 
     if (!argv.production) {
-        includedStyles.push("resources/assets/styles/profiler.less");
-        includedStyles.push("resources/assets/styles/prettify.css");
-
         // we also want to add the embed stuff, since we're in development mode
         // we want to watch embed files and re-compile them. However, we want
         // to leave this path out in production so that embed files are not bloating
@@ -172,17 +122,15 @@ gulp.task("styles-app", function () {
         .pipe(plug.minifyCss())
         .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/styles"))
+
         // Development pipeline
         : gulp.src(includedStyles, {base: "resources/assets/styles"})
         .pipe(plug.plumber(plumberOptions))
         .pipe(plug.cached("styles"))
         .pipe(plug.sourcemaps.init())
         .pipe(plug.if(/\.less/, plug.less()))
-        .pipe(plug.sourcemaps.write({
-            includeContent: false,
-            sourceRoot: "/dev-styles/"
-        }))
         .pipe(header(licenseHeader))
+        .pipe(plug.sourcemaps.write())
         .pipe(gulp.dest("public/build/styles"))
         .pipe(plug.livereload());
 });
@@ -217,17 +165,18 @@ gulp.task('copy:templates', function () {
 });
 
 gulp.task('build', [
-    'scripts-app',
+    'webpack-build',
+    'copy:templates',
     'styles-app',
-    'scripts-embed',
     'styles-embed'
 ]);
 
-gulp.task("watch", function () {
-    plug.livereload.listen();
-    gulp.watch("resources/assets/scripts/**/*.{coffee,js}", ["scripts-app"]);
+gulp.task("watch-legacy", ["build"], function () {
     gulp.watch("resources/assets/styles/**/*.{css,less}", ["styles-app"]);
 });
+
+gulp.task("watch", ["webpack-dev-server", "watch-legacy"], function () {});
+
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;

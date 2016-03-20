@@ -19,9 +19,10 @@ window.pfm.preloaders['dashboard'] = [
     (dashboard) -> dashboard.refresh(true)
 ]
 
-angular.module('ponyfm').controller "dashboard", [
+module.exports = angular.module('ponyfm').controller "dashboard", [
     '$scope', 'dashboard', 'auth', '$http'
     ($scope, dashboard, auth, $http) ->
+
         $scope.recentTracks = null
         $scope.popularTracks = null
 

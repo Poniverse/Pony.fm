@@ -20,9 +20,9 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
-use Poniverse\Ponyfm\ResourceLogItem;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\TrackFile;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackFile;
 use Auth;
 use Config;
 use Illuminate\Support\Facades\App;
@@ -89,6 +89,11 @@ class TracksController extends Controller
         }
 
         return View::make('tracks.show');
+    }
+
+    public function getEdit($id, $slug)
+    {
+        return $this->getTrack($id, $slug);
     }
 
     public function getShortlink($id)

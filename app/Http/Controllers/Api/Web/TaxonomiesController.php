@@ -20,11 +20,11 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Genre;
+use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\License;
-use Poniverse\Ponyfm\ShowSong;
-use Poniverse\Ponyfm\TrackType;
+use Poniverse\Ponyfm\Models\License;
+use Poniverse\Ponyfm\Models\ShowSong;
+use Poniverse\Ponyfm\Models\TrackType;
 use Illuminate\Support\Facades\DB;
 
 class TaxonomiesController extends ApiControllerBase
@@ -33,8 +33,10 @@ class TaxonomiesController extends ApiControllerBase
     {
         return \Response::json([
             'licenses' => License::all()->toArray(),
-            'genres' => Genre::select('genres.*',
-                DB::raw('(SELECT COUNT(id) FROM tracks WHERE tracks.genre_id = genres.id AND tracks.published_at IS NOT NULL) AS track_count'))->orderBy('name')->get()->toArray(),
+            'genres' => Genre::with('trackCountRelation')
+                ->orderBy('name')
+                ->get()
+                ->toArray(),
             'track_types' => TrackType::select('track_types.*',
                 DB::raw('(SELECT COUNT(id) FROM tracks WHERE tracks.track_type_id = track_types.id AND tracks.published_at IS NOT NULL) AS track_count'))
                 ->where('id', '!=', TrackType::UNCLASSIFIED_TRACK)

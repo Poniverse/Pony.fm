@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
-use Poniverse\Ponyfm\ResourceLogItem;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
 use DB;
 use Illuminate\Console\Command;
 

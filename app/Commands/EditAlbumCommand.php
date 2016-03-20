@@ -20,16 +20,18 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Album;
-use Poniverse\Ponyfm\Image;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Image;
+use Auth;
+use DB;
+use Validator;
 
 class EditAlbumCommand extends CommandBase
 {
     private $_input;
+    /** @var int */
     private $_albumId;
+    /** @var Album */
     private $_album;
 
     function __construct($trackId, $input)
@@ -87,10 +89,6 @@ class EditAlbumCommand extends CommandBase
         $trackIds = explode(',', $this->_input['track_ids']);
         $this->_album->syncTrackIds($trackIds);
         $this->_album->save();
-
-        Album::where('id', $this->_album->id)->update([
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = ' . $this->_album->id . ')')
-        ]);
 
         return CommandResponse::succeed(['real_cover_url' => $this->_album->getCoverUrl(Image::NORMAL)]);
     }

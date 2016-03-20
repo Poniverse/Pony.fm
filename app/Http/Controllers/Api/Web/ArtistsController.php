@@ -20,14 +20,14 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Album;
-use Poniverse\Ponyfm\Comment;
-use Poniverse\Ponyfm\Favourite;
+use Gate;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Comment;
+use Poniverse\Ponyfm\Models\Favourite;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Image;
-use Poniverse\Ponyfm\Track;
-use Poniverse\Ponyfm\User;
-use Cover;
+use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
@@ -36,12 +36,13 @@ class ArtistsController extends ApiControllerBase
 {
     public function getFavourites($slug)
     {
-        $user = User::whereSlug($slug)->first();
+        $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
         if (!$user) {
             App::abort(404);
         }
 
-        $favs = Favourite::whereUserId($user->id)->with([
+        $favs = Favourite::where('user_id', $user->id)
+            ->with([
             'track.genre',
             'track.cover',
             'track.user',
@@ -59,10 +60,10 @@ class ArtistsController extends ApiControllerBase
         $albums = [];
 
         foreach ($favs as $fav) {
-            if ($fav->type == 'Poniverse\Ponyfm\Track') {
+            if ($fav->type == 'Poniverse\Ponyfm\Models\Track') {
                 $tracks[] = Track::mapPublicTrackSummary($fav->track);
             } else {
-                if ($fav->type == 'Poniverse\Ponyfm\Album') {
+                if ($fav->type == 'Poniverse\Ponyfm\Models\Album') {
                     $albums[] = Album::mapPublicAlbumSummary($fav->album);
                 }
             }
@@ -76,7 +77,7 @@ class ArtistsController extends ApiControllerBase
 
     public function getContent($slug)
     {
-        $user = User::whereSlug($slug)->first();
+        $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
         if (!$user) {
             App::abort(404);
         }
@@ -111,7 +112,8 @@ class ArtistsController extends ApiControllerBase
 
     public function getShow($slug)
     {
-        $user = User::whereSlug($slug)
+        $user = User::where('slug', $slug)
+            ->whereNull('disabled_at')
             ->userDetails()
             ->with([
                 'comments' => function ($query) {
@@ -157,7 +159,7 @@ class ArtistsController extends ApiControllerBase
 
         return Response::json([
             'artist' => [
-                'id' => (int)$user->id,
+                'id' => $user->id,
                 'name' => $user->display_name,
                 'slug' => $user->slug,
                 'is_archived' => (bool)$user->is_archived,
@@ -173,7 +175,10 @@ class ArtistsController extends ApiControllerBase
                 'bio' => $user->bio,
                 'mlpforums_username' => $user->username,
                 'message_url' => $user->message_url,
-                'user_data' => $userData
+                'user_data' => $userData,
+                'permissions' => [
+                    'edit' => Gate::allows('edit', $user)
+                ]
             ]
         ], 200);
     }
@@ -195,18 +200,7 @@ class ArtistsController extends ApiControllerBase
         $users = [];
 
         foreach ($query->get() as $user) {
-            $users[] = [
-                'id' => $user->id,
-                'name' => $user->display_name,
-                'slug' => $user->slug,
-                'url' => $user->url,
-                'is_archived' => $user->is_archived,
-                'avatars' => [
-                    'small' => $user->getAvatarUrl(Image::SMALL),
-                    'normal' => $user->getAvatarUrl(Image::NORMAL)
-                ],
-                'created_at' => $user->created_at
-            ];
+            $users[] = User::mapPublicUserSummary($user);
         }
 
         return Response::json(["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],

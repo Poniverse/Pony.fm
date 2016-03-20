@@ -17,7 +17,7 @@
 
 # This directive calls the given function when Enter is pressed in a
 # standalone input field.
-angular.module('ponyfm').directive 'pfmOnEnter', () ->
+module.exports = angular.module('ponyfm').directive 'pfmOnEnter', () ->
     (scope, element, attrs) ->
         element.bind("keyup", (event) ->
             if (event.which is 13)
