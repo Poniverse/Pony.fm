@@ -12,6 +12,9 @@
             <a pfm-eat-click class="icon-favourite" href="#" ng-click="toggleFavourite(track)" ng-if="::auth.isLogged">
                 <i class="icon-star-empty"></i>
             </a>
+            <a pfm-eat-click href="#" ng-click="removeFromPlaylist(track)" ng-if="::canModifyPlaylist()">
+                <i class="icon-trash"></i>
+            </a>
         </div>
         <a class="info" ng-href="{{::track.url}}">
             <span class="title">{{::track.title}}</span>
