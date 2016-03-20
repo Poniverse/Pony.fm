@@ -19,13 +19,29 @@ module.exports = angular.module('ponyfm').directive 'pfmTracksList', () ->
     templateUrl: '/templates/directives/tracks-list.html'
     replace: true
     scope:
-        tracks: '=tracks',
+        playlist: '='
+        tracks: '=tracks'
         class: '@class'
 
     controller: [
-        '$scope', 'favourites', 'player', 'auth'
-        ($scope, favourites, player, auth) ->
+        '$dialog', '$scope', 'favourites', 'player', 'playlists', 'auth'
+        ($dialog, $scope, favourites, player, playlists, auth) ->
             $scope.auth = auth.data
+
+            $scope.canModifyPlaylist = ->
+                $scope.playlist and $scope.auth.isLogged and $scope.playlist.user.id == $scope.auth.user.id
+
+            $scope.removeFromPlaylist = (track) ->
+                $dialog.messageBox "Remove #{track.title} from playlist",
+                    "Are you sure you want to delete \"#{track.title}\"?", [
+                        { result: 'ok', label: 'Yes', cssClass: 'btn-danger' },
+                        { result: 'cancel', label: 'No', cssClass: 'btn-primary' }
+                    ]
+                .open().then (res) ->
+                    return if res is 'cancel'
+                    playlists.removeTrackFromPlaylist $scope.playlist?.id, track.id
+                    .done ->
+                        $scope.tracks = _.reject $scope.tracks, (t) -> t.id == track.id
 
             $scope.toggleFavourite = (track) ->
                 favourites.toggle('track', track.id).done (res) ->

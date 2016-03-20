@@ -68,6 +68,13 @@ module.exports = angular.module('ponyfm').factory('playlists', [
 
                 def
 
+            removeTrackFromPlaylist: (playlistId, trackId) ->
+                def = new $.Deferred()
+                $http.post('/api/web/playlists/' + playlistId + '/remove-track', {track_id: trackId}).success (res) ->
+                    def.resolve(res)
+
+                def
+
             refresh: () ->
                 if auth.data.isLogged
                     $.getJSON('/api/web/playlists/pinned')
