@@ -27,7 +27,7 @@
             </div>
             <div class="span6 form-row" ng-class="{'has-error': errors.lyrics != null}">
                 <label for="is_vocal" class="strong"><input ng-disabled="isSaving" ng-change="touchModel(); updateIsVocal()" id="is_vocal" type="checkbox" ng-model="track.is_vocal" /> Is Vocal</label>
-                <textarea ng-disabled="isSaving" ng-change="touchModel()" ng-show="track.is_vocal" ng-animate="'fade'" placeholder="Lyrics (required)" id="lyrics" ng-model="track.lyrics"></textarea>
+                <textarea ng-disabled="isSaving" ng-change="touchModel()" ng-show="track.is_vocal" ng-animate="'fade'" placeholder="Lyrics (optional)" id="lyrics" ng-model="track.lyrics"></textarea>
                 <div class="error">{{errors.lyrics}}</div>
             </div>
         </div>

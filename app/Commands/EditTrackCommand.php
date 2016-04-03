@@ -74,10 +74,6 @@ class EditTrackCommand extends CommandBase
             'album_id' => 'exists:albums,id'
         ];
 
-        if ($isVocal) {
-            $rules['lyrics'] = 'required';
-        }
-
         if (isset($this->_input['track_type_id']) && $this->_input['track_type_id'] == 2) {
             $rules['show_song_ids'] = 'required|exists:show_songs,id';
         }
