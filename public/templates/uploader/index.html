@@ -3,6 +3,10 @@
         <p>Drop files here to begin your upload!</p>
     </div>
 
+    <p><b>Having issues with our uploader? Click the button below to upload your files.</b></p>
+
+    <p><input type="file" name="file" onchange="angular.element(this).scope().fileChanged(this)" ng-model="file" multiple /></p>
+
     <p>Our preferred formats are FLAC, WAV, AIFF, and ALAC (because lossless audio is awesome) but we accept a few others, too. Each file can be up to 200 MB in size.</p>
 
     <p>Tracks must be a <strong>minimum</strong> of 30 seconds long.</p>

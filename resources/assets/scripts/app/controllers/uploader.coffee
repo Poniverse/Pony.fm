@@ -18,4 +18,8 @@ module.exports = angular.module('ponyfm').controller "uploader", [
     '$scope', 'auth', 'upload', '$state'
     ($scope, auth, upload, $state) ->
         $scope.data = upload
+
+        $scope.fileChanged = (e) ->
+            files = e.files
+            $scope.$apply -> upload.upload files
 ]
