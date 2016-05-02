@@ -49,11 +49,18 @@ class StatsController extends ApiControllerBase
         $query = DB::select(DB::raw("
             SELECT HOUR(created_at) AS `hour`, COUNT(1) AS `plays`
             FROM `resource_log_items`
-            WHERE `track_id` = :id AND `log_type` = 3 AND `created_at` > now() - INTERVAL 7 DAY
+            WHERE `track_id` = :id AND `log_type` = 3 AND `created_at` > now() - INTERVAL 1 DAY
             GROUP BY HOUR(created_at);"), array(
-            'id' => $id,
+            'id' => $id
         ));
 
-        return Response::json(['stats' => $query], 200);
+        $currentHour = intval(date("H"));
+
+        foreach($query as $item) {
+            // Set hours to offsets of the current hour
+            $item->hour = $item->hour - $currentHour;
+        }
+
+        return Response::json(['playsHourly' => $query], 200);
     }
 }
