@@ -174,6 +174,11 @@ ponyfm.config [
             templateUrl: '/templates/tracks/edit.html'
             controller: 'track-edit'
 
+        state.state 'content.track.stats',
+            url: '/stats'
+            templateUrl: '/templates/tracks/stats.html'
+            controller: 'track-stats'
+
 
         # Albums
 
