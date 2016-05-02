@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Providers;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use PfmValidator;
@@ -58,5 +59,11 @@ class AppServiceProvider extends ServiceProvider
                 $app['config']->get('ponyfm.elasticsearch_index')
             );
         });
+
+        Relation::morphMap([
+            1 => Poniverse\Ponyfm\Models\Track::class,
+            2 => Poniverse\Ponyfm\Models\Album::class,
+            3 => Poniverse\Ponyfm\Models\Playlist::class,
+        ]);
     }
 }

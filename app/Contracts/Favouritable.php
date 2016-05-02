@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,18 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+namespace Poniverse\Ponyfm\Contracts;
 
-use Notification;
-use Poniverse\Ponyfm\Library\NotificationManager;
-use View;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class HomeController extends Controller
-{
-    public function getIndex(Notification $notification)
-    {
-//        $notification->testStuff();
-        dd($notification);
-        return View::make('home.index');
-    }
+/**
+ * This interface is used for type safety when referring to entities that
+ * are capable of being favourited.
+ *
+ * @package Poniverse\Ponyfm\Contracts
+ */
+interface Favouritable {
+    /**
+     * This method returns an Eloquent relation to the entity's favourites.
+     *
+     * @return HasMany
+     */
+    public function favourites():HasMany;
 }

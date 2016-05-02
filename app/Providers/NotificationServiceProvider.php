@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,18 +18,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+namespace Poniverse\Ponyfm\Providers;
 
-use Notification;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
 use Poniverse\Ponyfm\Library\NotificationManager;
-use View;
 
-class HomeController extends Controller
+class NotificationServiceProvider extends ServiceProvider
 {
-    public function getIndex(Notification $notification)
+    /**
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
+    public function boot()
     {
-//        $notification->testStuff();
-        dd($notification);
-        return View::make('home.index');
+        //
+    }
+
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton('notification', function(Application $app){
+            return new NotificationManager();
+        });
     }
 }

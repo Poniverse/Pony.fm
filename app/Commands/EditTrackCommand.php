@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Commands;
 
 use Gate;
+use Notification;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
@@ -132,6 +133,8 @@ class EditTrackCommand extends CommandBase
 
             DB::table('tracks')->whereUserId($track->user_id)->update(['is_latest' => false]);
             $track->is_latest = true;
+            
+            Notification::publishedNewTrack($track);
         }
 
         if (isset($this->_input['cover_id'])) {

@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Notification;
 use Poniverse\Ponyfm\Models\Playlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -68,6 +69,8 @@ class CreatePlaylistCommand extends CommandBase
         $playlist->is_public = $this->_input['is_public'] == 'true';
 
         $playlist->save();
+        
+        Notification::publishedNewPlaylist($playlist);
 
         if ($this->_input['is_pinned'] == 'true') {
             $playlist->pin(Auth::user()->id);

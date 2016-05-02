@@ -25,6 +25,8 @@ use Cache;
 use Config;
 use DB;
 use Gate;
+use Poniverse\Ponyfm\Contracts\Commentable;
+use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
@@ -96,7 +98,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track withComments()
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track mlpma()
  */
-class Track extends Model implements Searchable
+class Track extends Model implements Searchable, Commentable, Favouritable
 {
     use SoftDeletes, IndexedInElasticsearchTrait;
 
@@ -524,6 +526,11 @@ class Track extends Model implements Searchable
     public function trackFiles()
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\TrackFile');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notification_type');
     }
 
     public function getYearAttribute()

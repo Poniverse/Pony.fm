@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
 use Gate;
 use Cache;
+use Poniverse\Ponyfm\Contracts\Commentable;
+use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
@@ -61,7 +63,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album userDetails()
  */
-class Album extends Model implements Searchable
+class Album extends Model implements Searchable, Commentable, Favouritable
 {
     use SoftDeletes, SlugTrait, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
 
