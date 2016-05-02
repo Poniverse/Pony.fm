@@ -84,6 +84,7 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::get('/tracks', 'Api\Web\TracksController@getIndex');
     Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');
     Route::get('/tracks/cached/{id}/{format}', 'Api\Web\TracksController@getCachedTrack')->where(['id' => '\d+', 'format' => '.+']);
+    Route::get('/tracks/{id}/stats', 'Api\Web\StatsController@getTrackStatsHourly')->where('id', '\d+');
 
     Route::get('/albums', 'Api\Web\AlbumsController@getIndex');
     Route::get('/albums/{id}', 'Api\Web\AlbumsController@getShow')->where('id', '\d+');
