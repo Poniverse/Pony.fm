@@ -30,6 +30,13 @@ use Carbon\Carbon;
 
 class StatsController extends ApiControllerBase
 {
+    private function pluralise($count, $singular, $plural = false)
+    {
+        if (!$plural) $plural = $singular . 's';
+
+        return ($count == 1 ? $singular : $plural) ;
+    }
+
     public function getTrackStatsHourly($id)
     {
         // I know, raw SQL ugh. I'm not used to laravel's query system
@@ -47,7 +54,7 @@ class StatsController extends ApiControllerBase
 
         foreach($query as $item) {
             $playDate = new Carbon($item->time);
-            $key = '-' . $playDate->diffInHours($now);
+            $key = $playDate->diffInHours($now);
             if (array_key_exists($key, $calcArray)) {
                 $calcArray[$key] += $item->plays;
             } else {
@@ -55,9 +62,21 @@ class StatsController extends ApiControllerBase
             }
         }
 
+        // Get the first key in the array (oldest play)
+        reset($calcArray);
+        $lastKey = intval(key($calcArray));
+
+        for ($i = 0; $i < $lastKey; $i++) {
+            if (!isset($calcArray[$i])) {
+                $calcArray[$i] = 0;
+            }
+        }
+
+        krsort($calcArray);
+
         // Covert calcArray into output we can understand
         foreach($calcArray as $hour => $plays) {
-            $set = array('hour' => $hour . 'hours', 'plays' => $plays);
+            $set = array('hour' => $hour . ' ' . $this->pluralise($hour, 'hour', 'hours'), 'plays' => $plays);
             array_push($output, $set);
         }
 
@@ -82,7 +101,7 @@ class StatsController extends ApiControllerBase
 
         foreach($query as $item) {
             $playDate = new Carbon($item->time);
-            $key = '-' . $playDate->diffInDays($now);
+            $key = $playDate->diffInDays($now);
             if (array_key_exists($key, $calcArray)) {
                 $calcArray[$key] += $item->plays;
             } else {
@@ -90,9 +109,21 @@ class StatsController extends ApiControllerBase
             }
         }
 
+        // Get the first key in the array (oldest play)
+        reset($calcArray);
+        $lastKey = intval(key($calcArray));
+
+        for ($i = 0; $i < $lastKey; $i++) {
+            if (!isset($calcArray[$i])) {
+                $calcArray[$i] = 0;
+            }
+        }
+
+        krsort($calcArray);
+
         // Covert calcArray into output we can understand
         foreach($calcArray as $days => $plays) {
-            $set = array('days' => $days . ' days', 'plays' => $plays);
+            $set = array('days' => $days . ' ' . $this->pluralise($days, 'day', 'days'), 'plays' => $plays);
             array_push($output, $set);
         }
 
