@@ -22,7 +22,7 @@ module.exports = angular.module('ponyfm').controller 'track-stats', [
 
         labelArray = []
         dailyArray = []
-        cumArray = []
+        cumulativeArray = []
 
         statsLoaded = (stats) ->
             console.log(stats)
@@ -34,13 +34,13 @@ module.exports = angular.module('ponyfm').controller 'track-stats', [
             i = 0
             while i < dailyArray.length
                 if i == 0
-                    cumArray[i] = dailyArray[0]
+                    cumulativeArray[i] = dailyArray[0]
                 else
-                    cumArray[i] = cumArray[i - 1] + dailyArray[i]
+                    cumulativeArray[i] = cumulativeArray[i - 1] + dailyArray[i]
                 i++
 
             $scope.playsLabels = labelArray
-            $scope.playsData = cumArray
+            $scope.playsData = cumulativeArray
             $scope.colours = ['#B885BD']
             $scope.series = ['Plays']
             $scope.totalSelected = true
@@ -48,7 +48,7 @@ module.exports = angular.module('ponyfm').controller 'track-stats', [
             $scope.dailyText = stats.type
 
         $scope.totalClick = () ->
-            $scope.playsData = cumArray
+            $scope.playsData = cumulativeArray
             $scope.totalSelected = true
 
         $scope.dailyClick = () ->

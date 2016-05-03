@@ -30,23 +30,15 @@ use Carbon\Carbon;
 
 class StatsController extends ApiControllerBase
 {
-    private function pluralise($count, $singular, $plural = false)
-    {
-        if (!$plural) $plural = $singular . 's';
-
-        return ($count == 1 ? $singular : $plural) ;
-    }
-
     public function getTrackStatsHourly($id)
     {
-        // I know, raw SQL ugh. I'm not used to laravel's query system
-        $query = DB::select(DB::raw('
-            SELECT TIMESTAMP(created_at) AS `time`, COUNT(1) AS `plays`
-            FROM `resource_log_items`
-            WHERE `track_id` = :id AND `log_type` = 3 AND `created_at` > now() - INTERVAL 1 DAY
-            GROUP BY TIMESTAMP(created_at);'), array(
-            'id' => $id
-        ));
+        $query = DB::table('resource_log_items')
+            ->selectRaw('created_at AS time, COUNT(1) AS `plays`')
+            ->where('track_id', '=', $id)
+            ->where('log_type', '=', 3)
+            ->whereRaw('`created_at` > now() - INTERVAL 1 DAY')
+            ->groupBy('created_at')
+            ->get();
 
         $now = Carbon::now();
         $calcArray = array();
@@ -76,7 +68,7 @@ class StatsController extends ApiControllerBase
 
         // Covert calcArray into output we can understand
         foreach($calcArray as $hour => $plays) {
-            $set = array('hour' => $hour . ' ' . $this->pluralise($hour, 'hour', 'hours'), 'plays' => $plays);
+            $set = array('hour' => $hour . ' ' . str_plural('hour', $hour), 'plays' => $plays);
             array_push($output, $set);
         }
 
@@ -85,15 +77,13 @@ class StatsController extends ApiControllerBase
 
     public function getTrackStatsDaily($id)
     {
-        // I know, raw SQL ugh. I'm not used to laravel's query system
-        // Only go back 1 month for daily stuff, may change in the future
-        $query = DB::select(DB::raw('
-            SELECT TIMESTAMP(created_at) AS `time`, COUNT(1) AS `plays`
-            FROM `resource_log_items`
-            WHERE `track_id` = :id AND `log_type` = 3 AND `created_at` > now() - INTERVAL 1 MONTH
-            GROUP BY TIMESTAMP(created_at);'), array(
-            'id' => $id
-        ));
+        $query = DB::table('resource_log_items')
+            ->selectRaw('created_at AS time, COUNT(1) AS `plays`')
+            ->where('track_id', '=', $id)
+            ->where('log_type', '=', 3)
+            ->whereRaw('`created_at` > now() - INTERVAL 1 MONTH')
+            ->groupBy('created_at')
+            ->get();
 
         $now = Carbon::now();
         $calcArray = array();
@@ -123,7 +113,7 @@ class StatsController extends ApiControllerBase
 
         // Covert calcArray into output we can understand
         foreach($calcArray as $days => $plays) {
-            $set = array('days' => $days . ' ' . $this->pluralise($days, 'day', 'days'), 'plays' => $plays);
+            $set = array('days' => $days . ' ' . str_plural('day', $days), 'plays' => $plays);
             array_push($output, $set);
         }
 
