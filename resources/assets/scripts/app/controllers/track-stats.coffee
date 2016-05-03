@@ -15,24 +15,44 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-module.exports = angular.module('ponyfm').controller "track-stats", [
+module.exports = angular.module('ponyfm').controller 'track-stats', [
     '$scope', '$state', 'track-stats'
     ($scope, $state, statsService) ->
         $scope.trackId = parseInt($state.params.id)
 
+        labelArray = []
+        dataArray = []
+        cumArray = []
+
         statsLoaded = (stats) ->
             console.log(stats)
-
-            labelArray = []
-            dataArray = []
 
             for key, value of stats.playStats
                 labelArray.push value.hour || value.days
                 dataArray.push value.plays
 
+            i = 0
+            while i < dataArray.length
+                if i == 0
+                    cumArray[i] = dataArray[0]
+                else
+                    cumArray[i] = cumArray[i - 1] + dataArray[i]
+                i++
+
             $scope.playsLabels = labelArray
             $scope.playsData = dataArray
             $scope.series = ['Plays']
+            $scope.totalSelected = false
+
+            $scope.dailyText = stats.type
+
+        $scope.totalClick = () ->
+            $scope.playsData = cumArray
+            $scope.totalSelected = true
+
+        $scope.dailyClick = () ->
+            $scope.playsData = dataArray
+            $scope.totalSelected = false
 
         statsService.loadStats($scope.trackId).done statsLoaded
 ]

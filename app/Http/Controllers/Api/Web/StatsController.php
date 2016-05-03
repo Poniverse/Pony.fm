@@ -61,7 +61,7 @@ class StatsController extends ApiControllerBase
             array_push($output, $set);
         }
 
-        return Response::json(['playStats' => $output], 200);
+        return Response::json(['playStats' => $output, 'type' => 'Hourly'], 200);
     }
 
     public function getTrackStatsDaily($id)
@@ -96,7 +96,7 @@ class StatsController extends ApiControllerBase
             array_push($output, $set);
         }
 
-        return Response::json(['playStats' => $output], 200);
+        return Response::json(['playStats' => $output, 'type' => 'Daily'], 200);
     }
 
     public function getTrackStats($id) {

@@ -5,4 +5,5 @@
     <canvas id="line" class="chart chart-line" chart-data="playsData"
         chart-labels="playsLabels" chart-legend="true" chart-series="series">
     </canvas>
+    <button class="btn btn-primary" ng-class="{ selected: totalSelected }" ng-click="totalClick()">Cumulative</button> <button class="btn btn-primary" ng-class="{ selected: !totalSelected }" ng-click="dailyClick()">{{ dailyText }}</button>
 </div>
