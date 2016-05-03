@@ -1,1 +1,8 @@
-<h1>THERE ARE NO STATS HERE BECAUSE I HAVEN'T CODED THAT YET BUT AT LEAST YOU'RE READING THIS WHICH MEANS NOT EVERYTHING IS BROKEN</h1>
+<a href="{{::track.url}}" class="btn chart-exit">Return to track</a>
+<h1>Geeky Stats For Geeky People (BETA)</h1>
+<h4>Plays over time</h4>
+<div class="chart-container">
+    <canvas id="line" class="chart chart-line" chart-data="playsData"
+        chart-labels="playsLabels" chart-legend="true" chart-series="series">
+    </canvas>
+</div>

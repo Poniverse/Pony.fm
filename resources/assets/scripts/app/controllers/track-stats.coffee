@@ -23,5 +23,16 @@ module.exports = angular.module('ponyfm').controller "track-stats", [
         statsLoaded = (stats) ->
             console.log(stats)
 
+            labelArray = []
+            dataArray = []
+
+            for key, value of stats.playStats
+                labelArray.push value.hour || value.days
+                dataArray.push value.plays
+
+            $scope.playsLabels = labelArray
+            $scope.playsData = dataArray
+            $scope.series = ['Plays']
+
         statsService.loadStats($scope.trackId).done statsLoaded
 ]
