@@ -41,6 +41,7 @@ module.exports = angular.module('ponyfm').controller 'track-stats', [
 
             $scope.playsLabels = labelArray
             $scope.playsData = cumArray
+            $scope.colours = ['#B885BD']
             $scope.series = ['Plays']
             $scope.totalSelected = true
 
