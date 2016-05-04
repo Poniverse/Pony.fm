@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Josef Citrine
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,138 +22,118 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\Track;
 use Auth;
+use Cache;
 use DB;
 use Response;
 use Carbon\Carbon;
 
 class StatsController extends ApiControllerBase
 {
-    public function getTrackStatsHourly($id)
-    {
-        $query = DB::table('resource_log_items')
-            ->selectRaw('created_at AS time, COUNT(1) AS `plays`')
+    private function getStatsData($id, $hourly = false) {
+        $playRange = "1 MONTH";
+
+        if ($hourly) {
+            $playRange = "2 DAY";
+        }
+
+        $statQuery = DB::table('resource_log_items')
+            ->selectRaw('created_at, COUNT(1) AS `plays`')
             ->where('track_id', '=', $id)
-            ->where('log_type', '=', 3)
-            ->whereRaw('`created_at` > now() - INTERVAL 1 DAY')
+            ->where('log_type', '=', ResourceLogItem::PLAY)
+            ->whereRaw('`created_at` > now() - INTERVAL ' . $playRange)
             ->groupBy('created_at')
+            ->orderBy('created_at')
             ->get();
 
-        $now = Carbon::now();
-        $calcArray = array();
-        $output = array();
-
-        foreach($query as $item) {
-            $playDate = new Carbon($item->time);
-            $key = $playDate->diffInHours($now);
-            if (array_key_exists($key, $calcArray)) {
-                $calcArray[$key] += $item->plays;
-            } else {
-                $calcArray[$key] = $item->plays;
-            }
-        }
-
-        // Get the first key in the array (oldest play)
-        reset($calcArray);
-        $lastKey = (int) key($calcArray);
-
-        for ($i = 0; $i < $lastKey; $i++) {
-            if (!isset($calcArray[$i])) {
-                $calcArray[$i] = 0;
-            }
-        }
-
-        krsort($calcArray);
-
-        // Covert calcArray into output we can understand
-        foreach($calcArray as $hour => $plays) {
-            $set = [
-                'hour' => $hour . ' ' . str_plural('hour', $hour),
-                'plays' => $plays
-            ];
-            array_push($output, $set);
-        }
-
-        return Response::json(['playStats' => $output, 'type' => 'Hourly'], 200);
+        return $statQuery;
     }
 
-    public function getTrackStatsDaily($id)
-    {
-        $query = DB::table('resource_log_items')
-            ->selectRaw('created_at AS time, COUNT(1) AS `plays`')
-            ->where('track_id', '=', $id)
-            ->where('log_type', '=', 3)
-            ->whereRaw('`created_at` > now() - INTERVAL 1 MONTH')
-            ->groupBy('created_at')
-            ->get();
-
+    private function sortTrackStatsArray($query, $hourly = false) {
         $now = Carbon::now();
-        $calcArray = array();
-        $output = array();
+        $playsArray = [];
+        $output = [];
+
+        if ($hourly) {
+            $playsArray = array_fill(0, 24, 0);
+        } else {
+            $playsArray = array_fill(0, 30, 0);
+        }
 
         foreach($query as $item) {
-            $playDate = new Carbon($item->time);
-            $key = $playDate->diffInDays($now);
-            if (array_key_exists($key, $calcArray)) {
-                $calcArray[$key] += $item->plays;
+            $playDate = new Carbon($item->created_at);
+
+            $key = 0;
+            if ($hourly) {
+                $key = $playDate->diffInHours($now);
             } else {
-                $calcArray[$key] = $item->plays;
+                $key = $playDate->diffInDays($now);
+            }
+
+            if (array_key_exists($key, $playsArray)) {
+                $playsArray[$key] += $item->plays;
+            } else {
+                $playsArray[$key] = $item->plays;
             }
         }
 
-        // Get the first key in the array (oldest play)
-        reset($calcArray);
-        $lastKey = (int) key($calcArray);
+        krsort($playsArray);
 
-        for ($i = 0; $i < $lastKey; $i++) {
-            if (!isset($calcArray[$i])) {
-                $calcArray[$i] = 0;
+        // Covert playsArray into output we can understand
+        foreach($playsArray as $timeOffet => $plays) {
+            if ($hourly) {
+                $set = [
+                    'hours' => $timeOffet . ' ' . str_plural('hour', $timeOffet),
+                    'plays' => $plays
+                ];
+            } else {
+                $set = [
+                    'days' => $timeOffet . ' ' . str_plural('day', $timeOffet),
+                    'plays' => $plays
+                ];
             }
-        }
-
-        krsort($calcArray);
-
-        // Covert calcArray into output we can understand
-        foreach($calcArray as $days => $plays) {
-            $set = [
-                'days' => $days . ' ' . str_plural('day', $days),
-                'plays' => $plays
-            ];
             array_push($output, $set);
         }
 
-        return Response::json(['playStats' => $output, 'type' => 'Daily'], 200);
+        if ($hourly) {
+            return Response::json(['playStats' => $output, 'type' => 'Hourly'], 200);
+        } else {
+            return Response::json(['playStats' => $output, 'type' => 'Daily'], 200);
+        }
     }
 
     public function getTrackStats($id) {
-        // Get track to check if it exists
-        // and if we are allowed to view it.
-        // In the future we could do something
-        // with this data, not sure.
-        try {
-            $track = Track::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            return $this->notFound('Track not found!');
-        }
+        $cachedOutput = Cache::remember('track_stats'.$id, 5, function() use ($id) {
+            try {
+                $track = Track::published()->findOrFail($id);
+            } catch (ModelNotFoundException $e) {
+                return $this->notFound('Track not found!');
+            }
 
-        // Do we have permission to view this track?
-        if (!$track->canView(Auth::user()))
-            return $this->notFound('Track not found!');
+            // Do we have permission to view this track?
+            if (!$track->canView(Auth::user())) {
+                return $this->notFound('Track not found!');
+            }
 
-        // Run one of the functions depending on
-        // how old the track is
-        $now = Carbon::now();
-        $trackDate = $track->published_at;
+            // Run one of the functions depending on
+            // how old the track is
+            $now = Carbon::now();
+            $trackDate = $track->published_at;
 
-        // Error catching for tracks that don't exist anymore
-        // or are not published
-        if ($trackDate == null)
-            return $this->notFound('Track not found!');
+            $hourly = true;
 
-        if ($trackDate->diffInDays($now) >= 1)
-            return $this->getTrackStatsDaily($id);
+            if ($trackDate->diffInDays($now) >= 1) {
+                $hourly = false;
+            }
 
-        return $this->getTrackStatsHourly($id);
+            $statsData = $this->getStatsData($id, $hourly);
+
+            $output = $this->sortTrackStatsArray($statsData, $hourly);
+            return $output;
+        });
+
+        return $cachedOutput;
     }
 }
