@@ -146,7 +146,7 @@ class StatsController extends ApiControllerBase
         $now = Carbon::now();
         $trackDate = $track->published_at;
 
-        if ($trackDate->diffInDays($now) >= 1) {
+        if ($trackDate->diffInDays($now) >= 1)
             return $this->getTrackStatsDaily($id);
 
         return $this->getTrackStatsHourly($id);
