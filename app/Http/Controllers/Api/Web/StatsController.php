@@ -56,7 +56,7 @@ class StatsController extends ApiControllerBase
 
         // Get the first key in the array (oldest play)
         reset($calcArray);
-        $lastKey = intval(key($calcArray));
+        $lastKey = (int) key($calcArray);
 
         for ($i = 0; $i < $lastKey; $i++) {
             if (!isset($calcArray[$i])) {
@@ -68,7 +68,10 @@ class StatsController extends ApiControllerBase
 
         // Covert calcArray into output we can understand
         foreach($calcArray as $hour => $plays) {
-            $set = array('hour' => $hour . ' ' . str_plural('hour', $hour), 'plays' => $plays);
+            $set = [
+                'hour' => $hour . ' ' . str_plural('hour', $hour),
+                'plays' => $plays
+            ];
             array_push($output, $set);
         }
 
@@ -101,7 +104,7 @@ class StatsController extends ApiControllerBase
 
         // Get the first key in the array (oldest play)
         reset($calcArray);
-        $lastKey = intval(key($calcArray));
+        $lastKey = (int) key($calcArray);
 
         for ($i = 0; $i < $lastKey; $i++) {
             if (!isset($calcArray[$i])) {
@@ -113,7 +116,10 @@ class StatsController extends ApiControllerBase
 
         // Covert calcArray into output we can understand
         foreach($calcArray as $days => $plays) {
-            $set = array('days' => $days . ' ' . str_plural('day', $days), 'plays' => $plays);
+            $set = [
+                'days' => $days . ' ' . str_plural('day', $days),
+                'plays' => $plays
+            ];
             array_push($output, $set);
         }
 
@@ -142,8 +148,7 @@ class StatsController extends ApiControllerBase
 
         if ($trackDate->diffInDays($now) >= 1) {
             return $this->getTrackStatsDaily($id);
-        } else {
-            return $this->getTrackStatsHourly($id);
-        }
+
+        return $this->getTrackStatsHourly($id);
     }
 }
