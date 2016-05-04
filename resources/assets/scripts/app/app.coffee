@@ -40,11 +40,11 @@ require '../base/jquery.timeago'
 require '../base/jquery.viewport'
 require 'script!../base/marked'
 require 'script!../base/moment'
-require 'script!../base/chart'
-require '../base/angular-chart'
 require '../base/soundmanager2-nodebug'
 require 'script!../base/tumblr'
 require '../base/ui-bootstrap-tpls-0.4.0'
+require 'chart.js';
+require 'angular-chart.js';
 
 require '../shared/pfm-angular-marked'
 require '../shared/pfm-angular-sanitize'
