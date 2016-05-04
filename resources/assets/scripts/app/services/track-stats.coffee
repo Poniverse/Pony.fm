@@ -23,7 +23,8 @@ module.exports = angular.module('ponyfm').factory('track-stats', [
             loadStats: (id) ->
                 return def if def
                 def = new $.Deferred()
-                $http.get('/api/web/tracks/' + id + '/stats').success (stats) ->
+                url = "/api/web/tracks/#{ id }/stats"
+                $http.get(url).success (stats) ->
                     def.resolve stats
 
                 def.promise()
