@@ -146,6 +146,11 @@ class StatsController extends ApiControllerBase
         $now = Carbon::now();
         $trackDate = $track->published_at;
 
+        // Error catching for tracks that don't exist anymore
+        // or are not published
+        if ($trackDate == null)
+            return $this->notFound('Track not found!');
+
         if ($trackDate->diffInDays($now) >= 1)
             return $this->getTrackStatsDaily($id);
 
