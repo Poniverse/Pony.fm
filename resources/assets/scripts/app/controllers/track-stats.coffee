@@ -26,7 +26,7 @@ module.exports = angular.module('ponyfm').controller 'track-stats', [
 
         statsLoaded = (stats) ->
             for key, value of stats.playStats
-                labelArray.push value.hour || value.days
+                labelArray.push value.hours || value.days
                 dailyArray.push value.plays
 
             i = 0
