@@ -1,5 +1,5 @@
 # Pony.fm - A community for pony fan music.
-# Copyright (C) 2016 Peter Deltchev
+# Copyright (C) 2016 Josef Citrine
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
