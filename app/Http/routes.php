@@ -36,6 +36,7 @@ Route::get('/tracks/random', 'TracksController@getIndex');
 
 Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
 Route::get('tracks/{id}-{slug}/edit', 'TracksController@getEdit');
+Route::get('tracks/{id}-{slug}/stats', 'StatsController@getIndex');
 Route::get('t{id}', 'TracksController@getShortlink' )->where('id', '\d+');
 Route::get('t{id}/embed', 'TracksController@getEmbed' );
 Route::get('t{id}/stream.{extension}', 'TracksController@getStream' );
@@ -84,6 +85,7 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::get('/tracks', 'Api\Web\TracksController@getIndex');
     Route::get('/tracks/{id}', 'Api\Web\TracksController@getShow')->where('id', '\d+');
     Route::get('/tracks/cached/{id}/{format}', 'Api\Web\TracksController@getCachedTrack')->where(['id' => '\d+', 'format' => '.+']);
+    Route::get('/tracks/{id}/stats', 'Api\Web\StatsController@getTrackStats')->where('id', '\d+');
 
     Route::get('/albums', 'Api\Web\AlbumsController@getIndex');
     Route::get('/albums/{id}', 'Api\Web\AlbumsController@getShow')->where('id', '\d+');

@@ -43,13 +43,15 @@ require 'script!../base/moment'
 require '../base/soundmanager2-nodebug'
 require 'script!../base/tumblr'
 require '../base/ui-bootstrap-tpls-0.4.0'
+require 'chart.js';
+require 'angular-chart.js';
 
 require '../shared/pfm-angular-marked'
 require '../shared/pfm-angular-sanitize'
 require '../shared/init.coffee'
 
 
-ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.router', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked']
+ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.router', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked', 'chart.js']
 window.pfm.preloaders = {}
 
 # Inspired by: https://stackoverflow.com/a/30652110/3225811
@@ -173,6 +175,11 @@ ponyfm.config [
             url: '/edit'
             templateUrl: '/templates/tracks/edit.html'
             controller: 'track-edit'
+
+        state.state 'content.track.stats',
+            url: '/stats'
+            templateUrl: '/templates/tracks/stats.html'
+            controller: 'track-stats'
 
 
         # Albums
