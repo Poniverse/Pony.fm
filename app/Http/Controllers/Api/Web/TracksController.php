@@ -128,7 +128,7 @@ class TracksController extends ApiControllerBase
         return Response::json(['url' => $url], 200);
     }
 
-    public function getIndex()
+    public function getIndex($all = false)
     {
         $page = 1;
         $perPage = 45;
@@ -137,12 +137,22 @@ class TracksController extends ApiControllerBase
             $page = Input::get('page');
         }
 
-        $query = Track::summary()
-            ->userDetails()
-            ->listed()
-            ->explicitFilter()
-            ->published()
-            ->with('user', 'genre', 'cover', 'album', 'album.user');
+        $query = null;
+
+        if ($all) {
+            $query = Track::summary()
+                ->userDetails()
+                ->listed()
+                ->explicitFilter()
+                ->with('user', 'genre', 'cover', 'album', 'album.user');
+        } else {
+            $query = Track::summary()
+                ->userDetails()
+                ->listed()
+                ->explicitFilter()
+                ->published()
+                ->with('user', 'genre', 'cover', 'album', 'album.user');
+        }
 
         $this->applyFilters($query);
 
@@ -162,6 +172,12 @@ class TracksController extends ApiControllerBase
             "current_page" => $page,
             "total_pages" => ceil($totalCount / $perPage)
         ], 200);
+    }
+
+    public function getAllTracks()
+    {
+        $this->authorize('access-admin-area');
+        return $this->getIndex(true);
     }
 
     public function getOwned()

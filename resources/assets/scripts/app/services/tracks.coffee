@@ -23,6 +23,7 @@ module.exports = angular.module('ponyfm').factory('tracks', [
         class Query
             cachedDef: null
             page: 1
+            admin: false
             listeners: []
 
             constructor: (@availableFilters) ->
@@ -94,6 +95,10 @@ module.exports = angular.module('ponyfm').factory('tracks', [
                 @page = page
                 @cachedDef = null
 
+            setAdmin: (value) ->
+                @cachedDef = null
+                @admin = value
+
             setFilter: (type, value) ->
                 @cachedDef = null
                 @page = 1
@@ -145,6 +150,11 @@ module.exports = angular.module('ponyfm').factory('tracks', [
                 trackDef = @cachedDef
 
                 query = '/api/web/tracks?'
+
+                if @admin
+                    query = '/api/web/admin/tracks?'
+
+
                 parts = ['page=' + @page]
                 _.each @availableFilters, (filter, name) =>
                     if filter.type == 'single'

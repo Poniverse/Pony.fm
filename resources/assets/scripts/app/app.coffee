@@ -271,6 +271,11 @@ ponyfm.config [
             controller: 'admin-genres'
             templateUrl: '/templates/admin/genres.html'
 
+        state.state 'admin.tracks',
+            url: '/tracks'
+            controller: 'admin-tracks'
+            templateUrl: '/templates/admin/tracks.html'
+
         # Homepage
 
         if window.pfm.auth.isLogged

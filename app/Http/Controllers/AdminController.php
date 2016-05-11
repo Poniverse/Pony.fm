@@ -34,4 +34,9 @@ class AdminController extends Controller
     {
         return View::make('shared.null');
     }
+
+    public function getTracks()
+    {
+        return View::make('shared.null');
+    }
 }

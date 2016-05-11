@@ -556,7 +556,7 @@ class Track extends Model implements Searchable
 
     public function canView($user)
     {
-        if ($this->isPublished()) {
+        if ($this->isPublished() || $user->hasRole('admin')) {
             return true;
         }
 

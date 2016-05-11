@@ -156,6 +156,8 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::post('/genres', 'Api\Web\GenresController@postCreate');
         Route::put('/genres/{id}', 'Api\Web\GenresController@putRename')->where('id', '\d+');
         Route::delete('/genres/{id}', 'Api\Web\GenresController@deleteGenre')->where('id', '\d+');
+
+        Route::get('/tracks', 'Api\Web\TracksController@getAllTracks');
     });
 
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
@@ -164,6 +166,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
     Route::get('/genres', 'AdminController@getGenres');
+    Route::get('/tracks', 'AdminController@getTracks');
     Route::get('/', 'AdminController@getIndex');
 });
 
