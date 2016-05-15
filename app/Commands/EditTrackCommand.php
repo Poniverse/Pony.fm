@@ -146,12 +146,27 @@ class EditTrackCommand extends CommandBase
             }
         }
 
+        $oldid = null;
+
+        if (isset($this->_input['user_id'])) {
+          if ($track->user_id != $this->_input['user_id']) {
+            $oldid = $track->user_id;
+            $track->user_id = $this->_input['user_id'];
+          }
+        }
+
         $track->updateTags();
         $track->save();
 
         User::whereId($this->_track->user_id)->update([
             'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = ' . $this->_track->user_id . ')')
         ]);
+
+        if ($oldid != null) {
+          User::whereId($oldid)->update([
+              'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = ' . $oldid . ')')
+          ]);
+        }
 
         return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);
     }

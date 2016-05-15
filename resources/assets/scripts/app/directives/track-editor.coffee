@@ -30,6 +30,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             $scope.selectedSongs = {}
             $scope.albums = []
             $scope.selectedAlbum = null
+            $scope.isAdmin = auth.data.isAdmin
             albumsDb = {}
 
             $scope.selectAlbum = (album) ->
