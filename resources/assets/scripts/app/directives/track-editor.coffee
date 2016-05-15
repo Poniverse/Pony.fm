@@ -157,6 +157,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                     id: track.id
                     title: track.title
                     user_id: track.user_id
+                    username: track.username
                     description: track.description
                     lyrics: track.lyrics
                     is_explicit: track.is_explicit

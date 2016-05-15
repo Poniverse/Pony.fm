@@ -71,7 +71,8 @@ class EditTrackCommand extends CommandBase
             'track_type_id' => 'required|exists:track_types,id|not_in:'.TrackType::UNCLASSIFIED_TRACK,
             'songs' => 'required_when:track_type,2|exists:songs,id',
             'cover_id' => 'exists:images,id',
-            'album_id' => 'exists:albums,id'
+            'album_id' => 'exists:albums,id',
+            'username' => 'exists:users,username'
         ];
 
         if (isset($this->_input['track_type_id']) && $this->_input['track_type_id'] == 2) {
@@ -148,10 +149,12 @@ class EditTrackCommand extends CommandBase
 
         $oldid = null;
 
-        if (isset($this->_input['user_id'])) {
-          if ($track->user_id != $this->_input['user_id']) {
+        if (isset($this->_input['username'])) {
+          $newid = User::where('username', $this->_input['username'])->first()->id;
+
+          if ($track->user_id != $newid) {
             $oldid = $track->user_id;
-            $track->user_id = $this->_input['user_id'];
+            $track->user_id = $newid;
           }
         }
 

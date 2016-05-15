@@ -448,6 +448,7 @@ class Track extends Model implements Searchable
         $returnValue['description'] = $track->description;
         $returnValue['is_downloadable'] = !$track->isPublished() ? true : (bool) $track->is_downloadable;
         $returnValue['license_id'] = $track->license_id != null ? $track->license_id : 3;
+        $returnValue['username'] = User::whereId($track->user_id)->first()->username;
 
         return $returnValue;
     }
