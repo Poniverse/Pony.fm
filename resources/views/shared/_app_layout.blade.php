@@ -53,7 +53,7 @@
                         <span><i class="icon-chevron-down"></i></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{Auth::user()->url}}">Your Profile</a></li>
+                        <li ui-sref-active="active"><a ui-sref="content.artist.profile({slug: auth.user.slug})">Your Profile</a></li>
                         <li ui-sref-active="active"><a ui-sref="content.artist.favourites({slug: auth.user.slug})">Favourites</a></li>
                         <li ui-sref-active="active"><a ui-sref="content.artist.account.settings({slug: auth.user.slug})">Account</a></li>
                         <li><a href="#" pfm-eat-click ng-click="logout()">Logout</a></li>
