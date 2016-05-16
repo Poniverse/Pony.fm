@@ -44,7 +44,10 @@ module.exports = angular.module('ponyfm').factory('player', [
                     track.progress = (self.currentSound.position / (track.duration * 1000)) * 100
 
                 onfinish: () -> $rootScope.safeApply ->
-                    if self.repeatOnce
+                    if self.repeatState == 2
+                        # Track repeat
+                        # Playlist repeat is handled
+                        # in self.playNext()
                         self.currentSound.play()
                     else
                         track.isPlaying = false
@@ -82,7 +85,7 @@ module.exports = angular.module('ponyfm').factory('player', [
             readyDef: readyDef.promise()
             canGoPrev: false
             canGoNext: false
-            repeatOnce: false
+            repeatState: 0
 
             playPause: () ->
                 return if !self.ready
@@ -94,16 +97,19 @@ module.exports = angular.module('ponyfm').factory('player', [
                     self.currentSound.pause()
 
             playNext: () ->
-                return if !self.canGoNext
+                return if !self.canGoNext && self.repeatState != 1
 
                 self.currentSound.stop() if self.currentSound != null
                 self.playlistIndex++
                 if self.playlistIndex >= self.playlist.length
-                    self.playlist.length = 0
-                    self.currentTrack = null
-                    self.currentSong = null
-                    self.isPlaying = false
-                    return
+                    if self.repeatState != 1
+                        self.playlist.length = 0
+                        self.currentTrack = null
+                        self.currentSong = null
+                        self.isPlaying = false
+                        return
+                    else
+                        self.playlistIndex = 0
 
                 play self.playlist[self.playlistIndex]
                 updateCanGo()
@@ -125,7 +131,10 @@ module.exports = angular.module('ponyfm').factory('player', [
                 updateCanGo()
 
             toggleRepeat: () ->
-                self.repeatOnce = !self.repeatOnce
+                if self.repeatState >= 2
+                    self.repeatState = 0
+                else
+                    self.repeatState++
 
             seek: (progress) ->
                 return if !self.currentSound

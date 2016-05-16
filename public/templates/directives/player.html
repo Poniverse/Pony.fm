@@ -12,7 +12,7 @@
             </a>
         </li>
         <li ng-class="{disabled: !player.canGoNext}"><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="icon-fast-forward"></i></a></li>
-        <li><a ng-class="{active: player.repeatOnce}" pfm-eat-click ng-click="toggleRepeat()" class="repeat" href="#"><i class="icon-repeat"></i></a></li>
+        <li><a ng-class="{active: player.repeatState != 0}" pfm-eat-click ng-click="toggleRepeat()" class="repeat" href="#"><i class="icon-repeat"></i><span>{{ repeatText }}</span></a></li>
         <li class="volume">
             <a pfm-eat-click ng-click="" class="volume" href="#">
                 <i class="icon-volume-up"></i>

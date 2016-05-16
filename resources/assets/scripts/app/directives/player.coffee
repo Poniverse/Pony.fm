@@ -30,6 +30,7 @@ module.exports = angular.module('ponyfm').directive 'pfmPlayer', () ->
         ($scope, player, auth) ->
             $scope.player = player
             $scope.auth = auth.data
+            $scope.repeatText = ''
             $scope.playPause = () ->
                 $scope.player.playPause()
 
@@ -41,6 +42,11 @@ module.exports = angular.module('ponyfm').directive 'pfmPlayer', () ->
 
             $scope.toggleRepeat = () ->
                 $scope.player.toggleRepeat()
+
+                if $scope.player.repeatState == 2
+                    $scope.repeatText = '1'
+                else
+                    $scope.repeatText = ''
 
             $scope.seek = (e) ->
                 $transport = $ '.transport'
