@@ -31,4 +31,46 @@ module.exports = angular.module('ponyfm').controller "admin-tracks", [
     ($scope, tracks, $state) ->
         tracks.mainQuery.fetch().done (searchResults) ->
             $scope.tracks = searchResults.tracks
+
+            $scope.currentPage = parseInt(searchResults.current_page)
+            $scope.totalPages = parseInt(searchResults.total_pages)
+            delete $scope.nextPage
+            delete $scope.prevPage
+
+            $scope.nextPage = $scope.currentPage + 1 if $scope.currentPage < $scope.totalPages
+            $scope.prevPage = $scope.currentPage - 1 if $scope.currentPage > 1
+            $scope.allPages = [1..$scope.totalPages]
+
+            # TODO: turn this into a directive
+            # The actual first page will always be in the paginator.
+            $scope.pages = [1]
+
+            # This logic determines how many pages to add prior to the current page, if any.
+            firstPage = Math.max(2, $scope.currentPage-3)
+            $scope.pages = $scope.pages.concat [firstPage..$scope.currentPage] unless $scope.currentPage == 1
+
+            pagesLeftToAdd = 8-$scope.pages.length
+
+            lastPage = Math.min($scope.totalPages - 1, $scope.currentPage+1+pagesLeftToAdd)
+            $scope.pages = $scope.pages.concat([$scope.currentPage+1..lastPage]) unless $scope.currentPage >= lastPage
+
+            # The actual last page will always be in the paginator.
+            $scope.pages.push($scope.totalPages) unless $scope.totalPages in $scope.pages
+
+        $scope.pageSelectorShown = false
+
+        $scope.gotoPage = (page) ->
+            $state.transitionTo 'content.tracks.list', {filter: $state.params.filter, page: page}
+
+        $scope.showPageSelector = () ->
+            $scope.pageSelectorShown = true
+            focus('#pagination-jump-destination')
+
+        $scope.hidePageSelector = () ->
+            $scope.pageSelectorShown = false
+
+
+        $scope.jumpToPage = (inputPageNumber) ->
+            $scope.gotoPage(inputPageNumber)
+
 ]
