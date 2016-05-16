@@ -17,7 +17,7 @@
 module.exports = angular.module('ponyfm').factory('auth', [
     '$rootScope'
     ($rootScope) ->
-        data: {isLogged: window.pfm.auth.isLogged, user: window.pfm.auth.user, isAdmin: window.pfm.auth.user.roles[0].id == 2}
+        data: {isLogged: window.pfm.auth.isLogged, user: window.pfm.auth.user, isAdmin: (window.pfm.auth.user.roles[0] && window.pfm.auth.user.roles[0].id == 2)}
         login: (email, password, remember) ->
             def = new $.Deferred()
             $.post('/api/web/auth/login', {email: email, password: password, remember: remember})
