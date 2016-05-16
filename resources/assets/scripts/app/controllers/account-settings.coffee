@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "account-settings", [
-    '$scope', 'auth'
-    ($scope, auth) ->
+    '$scope', 'auth', '$state'
+    ($scope, auth, $state) ->
         $scope.settings = {}
         $scope.errors = {}
         $scope.isDirty = false
@@ -25,7 +25,7 @@ module.exports = angular.module('ponyfm').controller "account-settings", [
             $scope.isDirty = true
 
         $scope.refresh = () ->
-            $.getJSON('/api/web/account/settings')
+            $.getJSON('/api/web/account/settings/' + $state.params.slug)
                 .done (res) -> $scope.$apply ->
                     $scope.settings = res
 
@@ -66,7 +66,7 @@ module.exports = angular.module('ponyfm').controller "account-settings", [
                 else
                     formData.append name, value
 
-            xhr.open 'POST', '/api/web/account/settings/save', true
+            xhr.open 'POST', '/api/web/account/settings/save/' + $state.params.slug, true
             xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')
             $scope.isSaving = true
             xhr.send formData

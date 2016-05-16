@@ -21,16 +21,19 @@
 namespace Poniverse\Ponyfm\Commands;
 
 use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class SaveAccountSettingsCommand extends CommandBase
 {
     private $_input;
+    private $_slug;
 
-    function __construct($input)
+    function __construct($input, $slug)
     {
         $this->_input = $input;
+        $this->_slug = $slug;
     }
 
     /**
@@ -38,7 +41,7 @@ class SaveAccountSettingsCommand extends CommandBase
      */
     public function authorize()
     {
-        return Auth::user() != null;
+        return Auth::user() != null || Auth::user()->hasRole('admin');
     }
 
     /**
@@ -47,7 +50,22 @@ class SaveAccountSettingsCommand extends CommandBase
      */
     public function execute()
     {
-        $user = Auth::user();
+        $user = null;
+        $current_user = Auth::user();
+
+        if ($this->_slug == -1 || $this->_slug == $current_user->slug) {
+            $user = $current_user;
+        } else if ($current_user->hasRole('admin')) {
+            $user = User::where('slug', $this->_slug)->whereNull('disabled_at')->first();
+        }
+
+        if ($user == null) {
+            if ($current_user->hasRole('admin')) {
+                return CommandResponse::fail(['Not found']);
+            } else {
+                return CommandResponse::fail(['Permission denied']);
+            }
+        }
 
         $rules = [
             'display_name' => 'required|min:3|max:26',

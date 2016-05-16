@@ -33,6 +33,6 @@ class UserPolicy
     }
 
     public function edit(User $userToAuthorize, User $user) {
-        return $userToAuthorize->id === $user->id;
+        return $userToAuthorize->id === $user->id || $userToAuthorize->hasRole('admin');
     }
 }
