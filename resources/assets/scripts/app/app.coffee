@@ -297,7 +297,7 @@ ponyfm.config [
             controller: 'artist'
 
         state.state 'content.artist.profile',
-            url: ''
+            url: '^/{slug}'
             templateUrl: '/templates/artists/profile.html'
             controller: 'artist-profile'
 
