@@ -39,6 +39,9 @@ module.exports = angular.module('ponyfm').directive 'pfmPlayer', () ->
             $scope.playPrev = () ->
                 $scope.player.playPrev()
 
+            $scope.toggleRepeat = () ->
+                $scope.player.toggleRepeat()
+
             $scope.seek = (e) ->
                 $transport = $ '.transport'
                 percent = ((e.pageX - $transport.offset().left) / $transport.width())

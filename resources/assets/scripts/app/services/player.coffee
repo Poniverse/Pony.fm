@@ -44,8 +44,11 @@ module.exports = angular.module('ponyfm').factory('player', [
                     track.progress = (self.currentSound.position / (track.duration * 1000)) * 100
 
                 onfinish: () -> $rootScope.safeApply ->
-                    track.isPlaying = false
-                    self.playNext()
+                    if self.repeatOnce
+                        self.currentSound.play()
+                    else
+                        track.isPlaying = false
+                        self.playNext()
 
                 onstop: () -> $rootScope.safeApply ->
                     track.isPlaying = false
@@ -79,6 +82,7 @@ module.exports = angular.module('ponyfm').factory('player', [
             readyDef: readyDef.promise()
             canGoPrev: false
             canGoNext: false
+            repeatOnce: false
 
             playPause: () ->
                 return if !self.ready
@@ -119,6 +123,9 @@ module.exports = angular.module('ponyfm').factory('player', [
 
                 play self.playlist[self.playlistIndex]
                 updateCanGo()
+
+            toggleRepeat: () ->
+                self.repeatOnce = !self.repeatOnce
 
             seek: (progress) ->
                 return if !self.currentSound
