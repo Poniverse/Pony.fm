@@ -22,6 +22,7 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\User;
+use Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,11 +30,15 @@ class SaveAccountSettingsCommand extends CommandBase
 {
     private $_input;
     private $_slug;
+    private $_user;
+    private $_current;
 
     function __construct($input, $slug)
     {
         $this->_input = $input;
         $this->_slug = $slug;
+        $this->_user = null;
+        $this->_current = null;
     }
 
     /**
@@ -41,7 +46,25 @@ class SaveAccountSettingsCommand extends CommandBase
      */
     public function authorize()
     {
-        return Auth::user() != null || Auth::user()->hasRole('admin');
+        if (Auth::user() != null) {
+            $this->_current = Auth::user();
+
+            if ($this->_slug == $this->_current->slug) {
+                $this->_user = $this->_current;
+            } else {
+                $this->_user = User::where('slug', $this->_slug)->whereNull('disabled_at')->first();
+            }
+
+            if ($this->_user == null) {
+                return false;
+            }
+
+            if (Gate::allows('edit', $this->_user)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -50,17 +73,8 @@ class SaveAccountSettingsCommand extends CommandBase
      */
     public function execute()
     {
-        $user = null;
-        $current_user = Auth::user();
-
-        if ($this->_slug == -1 || $this->_slug == $current_user->slug) {
-            $user = $current_user;
-        } else if ($current_user->hasRole('admin')) {
-            $user = User::where('slug', $this->_slug)->whereNull('disabled_at')->first();
-        }
-
-        if ($user == null) {
-            if ($current_user->hasRole('admin')) {
+        if ($this->_user == null) {
+            if ($_current->hasRole('admin')) {
                 return CommandResponse::fail(['Not found']);
             } else {
                 return CommandResponse::fail(['Permission denied']);
@@ -73,7 +87,7 @@ class SaveAccountSettingsCommand extends CommandBase
         ];
 
         if ($this->_input['sync_names'] == 'true') {
-            $this->_input['display_name'] = $user->username;
+            $this->_input['display_name'] = $this->_user->username;
         }
 
         if ($this->_input['uses_gravatar'] == 'true') {
@@ -90,7 +104,7 @@ class SaveAccountSettingsCommand extends CommandBase
         }
 
         if ($this->_input['uses_gravatar'] != 'true') {
-            if ($user->avatar_id == null && !isset($this->_input['avatar']) && !isset($this->_input['avatar_id'])) {
+            if ($this->_user->avatar_id == null && !isset($this->_input['avatar']) && !isset($this->_input['avatar_id'])) {
                 $validator->messages()->add('avatar',
                     'You must upload or select an avatar if you are not using gravatar!');
 
@@ -98,26 +112,26 @@ class SaveAccountSettingsCommand extends CommandBase
             }
         }
 
-        $user->bio = $this->_input['bio'];
-        $user->display_name = $this->_input['display_name'];
-        $user->sync_names = $this->_input['sync_names'] == 'true';
-        $user->can_see_explicit_content = $this->_input['can_see_explicit_content'] == 'true';
-        $user->uses_gravatar = $this->_input['uses_gravatar'] == 'true';
+        $this->_user->bio = $this->_input['bio'];
+        $this->_user->display_name = $this->_input['display_name'];
+        $this->_user->sync_names = $this->_input['sync_names'] == 'true';
+        $this->_user->can_see_explicit_content = $this->_input['can_see_explicit_content'] == 'true';
+        $this->_user->uses_gravatar = $this->_input['uses_gravatar'] == 'true';
 
-        if ($user->uses_gravatar) {
-            $user->avatar_id = null;
-            $user->gravatar = $this->_input['gravatar'];
+        if ($this->_user->uses_gravatar) {
+            $this->_user->avatar_id = null;
+            $this->_user->gravatar = $this->_input['gravatar'];
         } else {
             if (isset($this->_input['avatar_id'])) {
-                $user->avatar_id = $this->_input['avatar_id'];
+                $this->_user->avatar_id = $this->_input['avatar_id'];
             } else {
                 if (isset($this->_input['avatar'])) {
-                    $user->avatar_id = Image::upload($this->_input['avatar'], $user)->id;
+                    $this->_user->avatar_id = Image::upload($this->_input['avatar'], $this->_user)->id;
                 }
             }
         }
 
-        $user->save();
+        $this->_user->save();
 
         return CommandResponse::succeed();
     }

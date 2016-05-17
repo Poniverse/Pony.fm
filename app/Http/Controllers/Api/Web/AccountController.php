@@ -24,27 +24,30 @@ use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Commands\SaveAccountSettingsCommand;
 use Poniverse\Ponyfm\Models\User;
 use Cover;
+use Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
 class AccountController extends ApiControllerBase
 {
-    public function getSettings($slug = -1)
+    public function getSettings($slug)
     {
         $user = null;
         $current_user = Auth::user();
 
-        if ($slug == -1 || $slug == $current_user->slug) {
-            $user = $current_user;
-        } else if ($current_user->hasRole('admin')) {
-            $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
-        }
-
-        if ($user == null) {
-            if ($current_user->hasRole('admin')) {
-                return Response::json(['error' => 'User does not exist'], 404);
+        if ($current_user != null) {
+            if ($slug == $current_user->slug) {
+                $user = $current_user;
             } else {
+                $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
+            }
+
+            if ($user == null) {
+                return Response::json(['error' => 'User does not exist'], 404);
+            }
+
+            if (Gate::denies('edit', $user)) {
                 return Response::json(['error' => 'You cannot do that. So stop trying!'], 403);
             }
         }
@@ -63,7 +66,7 @@ class AccountController extends ApiControllerBase
         ], 200);
     }
 
-    public function postSave($slug = -1)
+    public function postSave($slug)
     {
         return $this->execute(new SaveAccountSettingsCommand(Input::all(), $slug));
     }
