@@ -25,6 +25,13 @@ module.exports = angular.module('ponyfm').controller "application", [
         $loadingElement = null
         loadingStateName = null
 
+        if 'serviceWorker' of navigator
+          console.log 'Service Worker is supported'
+          navigator.serviceWorker.register('service-worker.js').then((reg) ->
+            console.log 'SW registered', reg
+          ).catch (err) ->
+            console.log 'SW register failed', err
+
         $scope.menuToggle = () ->
             $scope.menuActive = !$scope.menuActive
 
