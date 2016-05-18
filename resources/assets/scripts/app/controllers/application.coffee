@@ -26,7 +26,7 @@ module.exports = angular.module('ponyfm').controller "application", [
         loadingStateName = null
 
         $scope.menuToggle = () ->
-          $scope.menuActive = !$scope.menuActive
+            $scope.menuActive = !$scope.menuActive
 
         if window.pfm.error
             $state.transitionTo 'errors-' + window.pfm.error
@@ -64,6 +64,7 @@ module.exports = angular.module('ponyfm').controller "application", [
 
         statesPreloaded = {}
         $scope.$on '$stateChangeStart', (e, newState, newParams, oldState, oldParams) ->
+            $scope.menuActive = false
             $scope.isPinnedPlaylistSelected = false
 
             if newState.name == 'content.playlist'

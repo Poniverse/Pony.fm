@@ -126,7 +126,7 @@ header {
   margin: 0px;
   font-size: 10pt;
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
 
   li {
@@ -291,66 +291,4 @@ header {
 
 .bun-bottom {
     bottom: 0;
-}
-
-@media only screen and (max-width: 480px) {
-  header {
-    margin-top: 64px;
-  }
-
-  .site-content, .now-playing {
-    margin-left: 0px;
-  }
-
-  .mobile-header {
-    display: block !important;
-    position: absolute;
-    z-index: 10000;
-    background: #84528A;
-    height: 64px;
-    width: 100%;
-    top: 0;
-
-    .logo {
-      text-align: center;
-      vertical-align: middle;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      height: 40px;
-      width: 160px;
-      padding-top: 16px;
-
-      > img {
-        max-height: 75%;
-      }
-    }
-  }
-
-  .sidebar {
-    left: -160px;
-    transition: transform 0.5s ease;
-    transform: translateX(0px) translateZ(0);
-    perspective: 1000;
-    backface-visibility: hidden;
-    will-change: transform;
-    z-index: 1000;
-  }
-
-  .sidebar.active {
-    transform: translateX(160px) translateZ(0);
-  }
-
-  .user-details > .avatar > span {
-    display: none !important;
-  }
-
-  .track-player {
-    margin-right: 60px !important;
-    .buttons {
-      li.volume, li.status  {
-        display: none;
-      }
-    }
-  }
 }

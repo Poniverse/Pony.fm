@@ -1,0 +1,127 @@
+@media only screen and (max-width: 480px) {
+  html, body {
+    overflow: hidden !important;
+  }
+
+  body > header {
+    margin-top: 64px;
+  }
+
+  .site-content {
+    margin-left: 0px;
+    overflow: scroll;
+  }
+
+  .now-playing {
+    margin-left: 0px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 1010;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+  }
+
+  .user-details {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1002;
+  }
+
+  .mobile-header {
+    display: block !important;
+    position: absolute;
+    z-index: 1001;
+    background: #84528A;
+    height: 64px;
+    width: 100%;
+    top: 0;
+
+    .logo {
+      text-align: center;
+      vertical-align: middle;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      height: 40px;
+      width: 160px;
+      padding-top: 16px;
+
+      > img {
+        max-height: 75%;
+      }
+    }
+  }
+
+  .sidebar {
+    left: -170px;
+    transition: transform 0.5s ease;
+    transform: translateX(0px) translateZ(0);
+    perspective: 1000;
+    backface-visibility: hidden;
+    will-change: transform;
+    z-index: 1011;
+    height: ~"calc(100% - 64px)";
+    box-shadow: 0 8px 8px rgba(0,0,0,0.5);
+
+    > a {
+      display: none;
+    }
+  }
+
+  .sidebar.active {
+    transform: translateX(170px) translateZ(0);
+  }
+
+  .user-details > .avatar {
+    border: 0 !important;
+    box-shadow: initial !important;
+    background: transparent !important;
+
+    > img {
+      border-radius: 20px;
+    }
+
+    > span {
+      display: none !important;
+    }
+  }
+
+  .track-player {
+    margin-right: 0px !important;
+    .buttons {
+      li.volume, li.status  {
+        display: none;
+      }
+    }
+  }
+
+  input.search-input {
+    border: 0;
+  }
+
+  .dropdowns {
+    margin-bottom: 0px;
+    > li {
+      margin-bottom: 10px;
+      > .btn {
+        font-size: 10pt;
+      }
+    }
+  }
+  .details-columns {
+    .cboxElement {
+      display: none;
+    }
+    .right {
+      float: none;
+      padding: 0px;
+      width: auto;
+    }
+    .left {
+      margin-right: 0px;
+      margin-left: 0px;
+      margin-top: 10px;
+    }
+  }
+}
