@@ -1,3 +1,19 @@
+// Pony.fm - A community for pony fan music.
+// Copyright (C) 2016 Josef Citrine
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 var urlsToCache = [
   '/',
   '/build/styles/app.css',
@@ -17,57 +33,15 @@ var CACHE_NAME = 'pfm-cache-v1';
 
 // Set the callback for the install step
 self.addEventListener('install', function(event) {
+  // Doesn't do anything right now
+  // Could never get offline to fully
+  // work without bugs :(
+
   // Perform install steps
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache);
     })
   );
-});
-
-function updateCacheFile(request) {
-  caches.open(CACHE_NAME).then(function(cache) {
-    fetch(request).then(function(response) {
-      cache.put(request, response.clone());
-      console.log(request.url + " updated!");
-    });
-  });
-}
-
-self.addEventListener('fetch', function(event) {
-  var request = event.request;
-
-  if (request.url.indexOf('?') != -1) {
-    if (!isNaN(request.url.charAt(request.url.indexOf('?') + 1))) {
-      var url = request.url.substring(0, request.url.indexOf('?'));
-      request = new Request(url, {
-        mode: 'non-cors'
-      });
-    }
-  }
-
-  if (request.url.indexOf('pony') != -1 ||
-      request.url.indexOf('local') != -1 ||
-      request.url.indexOf('192') != -1 ||
-      request.url.indexOf('fonts') != -1 ||
-      request.url.indexOf('gravatar') != -1) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then(function(cache) {
-        return fetch(request).then(function(response) {
-          cache.put(request, response.clone());
-          return response;
-        }).catch(function(err) {
-          return caches.match(request);
-        });
-      })
-    );
-  } else {
-    event.respondWith(
-      fetch(event.request).then(function(response) {
-        return response;
-      })
-    );
-  }
 });
