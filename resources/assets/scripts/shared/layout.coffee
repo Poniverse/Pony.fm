@@ -16,8 +16,14 @@
 
 window.handleResize = () ->
 	windowHeight = $(window).height()
+	windowWidth = $(window).width()
+	isMobile = windowWidth <= 480
 	$siteBody = $ '.site-body'
-	$siteBody.height windowHeight - $('header').height()
+
+	if isMobile
+		$siteBody.height windowHeight - $('.now-playing').height() * 2
+	else
+		$siteBody.height windowHeight - $('header').height()
 
 	$('.dropdown-menu').each () ->
 		$this = $ this
@@ -26,10 +32,11 @@ window.handleResize = () ->
 			'max-height': newMaxHeight
 
 	$('.stretch-to-bottom').each () ->
-		$this = $ this
-		newHeight = windowHeight - $this.offset().top
-		if newHeight > 0
-			$this.height newHeight
+		if !isMobile
+			$this = $ this
+			newHeight = windowHeight - $this.offset().top
+			if newHeight > 0
+				$this.height newHeight
 
 	$('.revealable').each () ->
 		$this = $ this

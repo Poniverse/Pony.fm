@@ -42,9 +42,16 @@
     </script>
 
     <header>
-        <a href="/">
-            <img src="/images/ponyfm-logo-white.svg" class="logo">
-        </a>
+        <div class="mobile-header">
+          <div class="burger-wrapper" ng-click="menuToggle()">
+            <div class="burger">
+              <div class="bun-top"></div>
+              <div class="meat"></div>
+              <div class="bun-bottom"></div>
+            </div>
+          </div>
+          <a href="/" class="logo"><img src="/images/ponyfm-logo-white.svg"></a>
+        </div>
         <div class="now-playing">
             @if (Auth::check())
                 <div class="user-details dropdown">
@@ -65,7 +72,10 @@
     </header>
 
     <div class="site-body">
-        <ul class="sidebar" ng-controller="sidebar">
+        <ul class="sidebar" ng-controller="sidebar" ng-class="{'active': menuActive}">
+            <a href="/">
+              <img src="/images/ponyfm-logo-white.svg" class="logo">
+            </a>
             <li><pfm-search></pfm-search></li>
             <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a href="/tracks">Tracks</a></li>
             <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a href="/albums">Albums</a></li>

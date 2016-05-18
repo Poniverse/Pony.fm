@@ -31,35 +31,7 @@ html body {
 }
 
 header {
-  > a {
-    display: block;
-    float: left;
-    width: (@pfm-sidebar-size);
-    height: 64px;
-    line-height: 42px;
-    background: #84528A;
-    color: #fff;
-    font-size: 24pt;
-    font-weight: lighter;
-    position: relative;
-    z-index: 600;
-    font-family: 'Josefin Sans', sans-serif;
-    position: relative;
 
-    &:hover {
-      background: darken(#84528A, 25%);
-      color: #fff;
-      text-decoration: none;
-    }
-
-    img.logo {
-      padding-left: 6px;
-      width: 100%;
-      max-width: 90%;
-      padding-top: 13px;
-      max-height: 45%
-    }
-  }
 
   .user-details {
     float: right;
@@ -116,15 +88,46 @@ header {
 }
 
 .sidebar {
+  > a {
+    display: block;
+    float: left;
+    width: (@pfm-sidebar-size);
+    height: 64px;
+    line-height: 42px;
+    background: #84528A;
+    color: #fff;
+    font-size: 24pt;
+    font-weight: lighter;
+    position: relative;
+    z-index: 600;
+    font-family: 'Josefin Sans', sans-serif;
+    position: relative;
+
+    &:hover {
+      background: darken(#84528A, 25%);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    img.logo {
+      padding-left: 6px;
+      width: 100%;
+      max-width: 90%;
+      padding-top: 13px;
+      max-height: 45%
+    }
+  }
+
   background: #515151;
   width: @pfm-sidebar-size;
   height: 100%;
-  float: left;
   list-style: none;
   padding: 0px;
   margin: 0px;
   font-size: 10pt;
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 
   li {
     margin: 0px;
@@ -250,4 +253,42 @@ header {
 
 .chart-btn-container {
     margin-bottom: 10px;
+}
+
+.mobile-header {
+  display: none;
+}
+
+.burger-wrapper {
+    top:20px;
+    left: 20px;
+    position: absolute;
+}
+
+.burger {
+    width: 25px;
+    height: 20px;
+    top: 20px;
+    left: 20px;
+}
+
+.bun-top,.meat,.bun-bottom {
+    position: absolute;
+    display: block;
+    border-radius: 4px;
+    background: white;
+    width: 25px;
+    height: 2px;
+}
+
+.bun-top {
+    top: 0;
+}
+
+.meat {
+    top: 9px;
+}
+
+.bun-bottom {
+    bottom: 0;
 }
