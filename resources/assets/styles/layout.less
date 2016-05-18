@@ -330,12 +330,15 @@ header {
   .sidebar {
     left: -160px;
     transition: transform 0.5s ease;
-    transform: translateX(0px);
+    transform: translateX(0px) translateZ(0);
+    perspective: 1000;
+    backface-visibility: hidden;
+    will-change: transform;
     z-index: 1000;
   }
 
   .sidebar.active {
-    transform: translateX(160px);
+    transform: translateX(160px) translateZ(0);
   }
 
   .user-details > .avatar > span {
