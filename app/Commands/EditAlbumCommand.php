@@ -22,7 +22,9 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\User;
 use Auth;
+use Gate;
 use DB;
 use Validator;
 
@@ -48,7 +50,7 @@ class EditAlbumCommand extends CommandBase
     {
         $user = Auth::user();
 
-        return $this->_album && $user != null && $this->_album->user_id == $user->id;
+        return $this->_album && $user != null && Gate::allows('edit', $this->_album);
     }
 
     /**
@@ -61,7 +63,8 @@ class EditAlbumCommand extends CommandBase
             'title' => 'required|min:3|max:50',
             'cover' => 'image|mimes:png|min_width:350|min_height:350',
             'cover_id' => 'exists:images,id',
-            'track_ids' => 'exists:tracks,id'
+            'track_ids' => 'exists:tracks,id',
+            'username' => 'exists:users,username'
         ];
 
         $validator = Validator::make($this->_input, $rules);
@@ -84,6 +87,14 @@ class EditAlbumCommand extends CommandBase
                     $this->_album->cover_id = null;
                 }
             }
+        }
+
+        if (isset($this->_input['username'])) {
+          $newid = User::where('username', $this->_input['username'])->first()->id;
+
+          if ($this->_album->user_id != $newid) {
+            $this->_album->user_id = $newid;
+          }
         }
 
         $trackIds = explode(',', $this->_input['track_ids']);

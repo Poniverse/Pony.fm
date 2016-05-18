@@ -25,8 +25,8 @@ window.pfm.preloaders['account-albums-edit'] = [
 ]
 
 module.exports = angular.module('ponyfm').controller "account-albums-edit", [
-    '$scope', '$state', '$dialog', 'account-albums'
-    ($scope, $state, $dialog, albums) ->
+    '$scope', '$state', '$dialog', 'account-albums', 'auth'
+    ($scope, $state, $dialog, albums, auth) ->
         $scope.isNew = $state.params.album_id == undefined
         $scope.data.isEditorOpen = true
         $scope.errors = {}
@@ -35,6 +35,7 @@ module.exports = angular.module('ponyfm').controller "account-albums-edit", [
         $scope.isSaving = false
         $scope.tracks = []
         $scope.trackIds = {}
+        $scope.isAdmin = auth.data.isAdmin
 
         $scope.toggleTrack = (track) ->
             if $scope.trackIds[track.id]
@@ -140,6 +141,7 @@ module.exports = angular.module('ponyfm').controller "account-albums-edit", [
                 $scope.album =
                     id: album.id
                     user_id: album.user_id
+                    username: album.username
                     title: album.title
                     description: album.description
                     remove_cover: false

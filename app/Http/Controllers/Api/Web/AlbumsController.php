@@ -29,6 +29,7 @@ use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Auth;
+use Gate;
 use Input;
 use Poniverse\Ponyfm\Models\User;
 use Response;
@@ -171,7 +172,7 @@ class AlbumsController extends ApiControllerBase
             return $this->notFound('Album ' . $id . ' not found!');
         }
 
-        if ($album->user_id != Auth::user()->id) {
+        if (Gate::denies('edit', Auth::user())) {
             return $this->notAuthorized();
         }
 
@@ -187,6 +188,7 @@ class AlbumsController extends ApiControllerBase
             'id' => $album->id,
             'title' => $album->title,
             'user_id' => $album->user_id,
+            'username' => User::whereId($album->user_id)->first()->username,
             'slug' => $album->slug,
             'created_at' => $album->created_at,
             'published_at' => $album->published_at,

@@ -20,6 +20,11 @@
             <textarea ng-disabled="isSaving" ng-change="touchModel()" placeholder="Description (optional)" id="description" ng-model="album.description"></textarea>
             <div class="error">{{errors.description}}</div>
         </div>
+        <div class="form-row" ng-show="isAdmin" ng-class="{'has-error': errors.username != null}">
+            <label for="title" class="strong">User:</label>
+            <input ng-disabled="isSaving" ng-change="touchModel()" placeholder="Username" type="text" id="username" ng-model="album.username" />
+            <div class="error">{{errors.username}}</div>
+        </div>
         <div class="form-row" ng-class="{'has-error': errors.cover != null}">
             <label class="strong">Album Cover: </label>
             <pfm-image-upload set-image="setCover" image="album.cover" user-id="album.user_id"></pfm-image-upload>

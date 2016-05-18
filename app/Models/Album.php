@@ -25,6 +25,7 @@ use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
+use Gate;
 use Cache;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
@@ -217,8 +218,8 @@ class Album extends Model implements Searchable
             ],
             'user_data' => $userData,
             'permissions' => [
-                'delete' => Auth::check() && Auth::user()->id == $album->user_id,
-                'edit' => Auth::check() && Auth::user()->id == $album->user_id
+                'delete' => Gate::allows('delete', $album),
+                'edit' => Gate::allows('edit', $album)
             ]
         ];
     }
