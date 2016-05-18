@@ -21,8 +21,12 @@ module.exports = angular.module('ponyfm').controller "application", [
         $scope.$state = $state
         $scope.$stateParams = $stateParams
         $scope.isPinnedPlaylistSelected = false
+        $scope.menuActive = false
         $loadingElement = null
         loadingStateName = null
+
+        $scope.menuToggle = () ->
+          $scope.menuActive = !$scope.menuActive
 
         if window.pfm.error
             $state.transitionTo 'errors-' + window.pfm.error
