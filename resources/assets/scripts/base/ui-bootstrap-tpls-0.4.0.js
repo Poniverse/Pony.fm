@@ -646,16 +646,16 @@ angular.module('ui.bootstrap.carousel', ['ui.bootstrap.transition'])
     </slide>
   </carousel>
   <div class="row-fluid">
-    <div class="span6">
+    <div class="col-md-6">
       <ul>
         <li ng-repeat="slide in slides">
-          <button class="btn btn-mini" ng-class="{'btn-info': !slide.active, 'btn-success': slide.active}" ng-disabled="slide.active" ng-click="slide.active = true">select</button>
+          <button class="btn btn-xs" ng-class="{'btn-info': !slide.active, 'btn-success': slide.active}" ng-disabled="slide.active" ng-click="slide.active = true">select</button>
           {{$index}}: {{slide.text}}
         </li>
       </ul>
-      <a class="btn" ng-click="addSlide()">Add Slide</a>
+      <a class="btn btn-default" ng-click="addSlide()">Add Slide</a>
     </div>
-    <div class="span6">
+    <div class="col-md-6">
       Interval, in milliseconds: <input type="number" ng-model="myInterval">
       <br />Enter a negative number to stop the interval.
     </div>
@@ -2264,10 +2264,10 @@ function TabsetCtrl($scope, $element) {
 <example module="ui.bootstrap">
   <file name="index.html">
     <div ng-controller="TabsDemoCtrl">
-      <button class="btn btn-small" ng-click="items[0].active = true">
+      <button class="btn btn-sm" ng-click="items[0].active = true">
         Select item 1, using active binding
       </button>
-      <button class="btn btn-small" ng-click="items[1].disabled = !items[1].disabled">
+      <button class="btn btn-sm" ng-click="items[1].disabled = !items[1].disabled">
         Enable/disable item 2, using disabled binding
       </button>
       <br />
@@ -3160,9 +3160,9 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
     "		<td ng-show=\"showMeridian\"></td>\n" +
     "	</tr>\n" +
     "	<tr>\n" +
-    "		<td class=\"control-group\" ng-class=\"{'error': !validHours}\"><input type=\"text\" ng-model=\"hours\" ng-change=\"updateHours()\" class=\"span1 text-center\" ng-mousewheel=\"incrementHours()\" ng-readonly=\"readonlyInput\" maxlength=\"2\" /></td>\n" +
+    "		<td class=\"control-group\" ng-class=\"{'error': !validHours}\"><input type=\"text\" ng-model=\"hours\" ng-change=\"updateHours()\" class=\"col-md-1 text-center\" ng-mousewheel=\"incrementHours()\" ng-readonly=\"readonlyInput\" maxlength=\"2\" /></td>\n" +
     "		<td>:</td>\n" +
-    "		<td class=\"control-group\" ng-class=\"{'error': !validMinutes}\"><input type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"span1 text-center\" ng-readonly=\"readonlyInput\" maxlength=\"2\"></td>\n" +
+    "		<td class=\"control-group\" ng-class=\"{'error': !validMinutes}\"><input type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"col-md-1 text-center\" ng-readonly=\"readonlyInput\" maxlength=\"2\"></td>\n" +
     "		<td ng-show=\"showMeridian\"><button ng-click=\"toggleMeridian()\" class=\"btn text-center\">{{meridian}}</button></td>\n" +
     "	</tr>\n" +
     "	<tr class=\"text-center\">\n" +

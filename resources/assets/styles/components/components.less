@@ -88,6 +88,7 @@
         li {
           a:hover {
             background: lighten(@pfm-purple, 5%);
+            color: #fff;
           }
         }
       }
@@ -97,7 +98,7 @@
       border: none;
       background: #eee;
       font-size: 8pt;
-      padding: 3px 7px;
+      padding: 5px 7px;
       text-shadow: none;
 
       &.btn-info {
@@ -204,6 +205,7 @@ html body {
 
   .btn.btn-primary, .add-btn, .btn-success {
     background: @pfm-purple;
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25);
     color: #fff;
   }
 
@@ -245,7 +247,7 @@ html .dropdown-menu {
     margin: 0px;
 
     > a {
-      padding: 3px 10px;
+      padding: 5px 10px;
       font-size: 8pt;
     }
 
@@ -258,7 +260,7 @@ html .dropdown-menu {
     }
 
     > .dont-close + a {
-      margin-right: 30px;
+      margin-right: 24px;
       clear: none;
     }
 
@@ -301,7 +303,7 @@ html .dropdown-menu {
   }
 
   .preview {
-    .img-polaroid();
+    .img-thumbnail();
     overflow: hidden;
     width: 46px;
     height: 46px;
@@ -317,7 +319,7 @@ html .dropdown-menu {
       cursor: pointer;
 
       &:hover {
-        border-color: @blue;
+        border-color: @brand-primary;
         border-style: solid;
       }
     }

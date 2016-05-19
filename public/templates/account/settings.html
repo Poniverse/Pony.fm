@@ -1,7 +1,7 @@
 <form ng-submit="updateAccount()" class="pfm-form account-settings-form">
     <ul class="toolbar">
         <li>
-            <button type="submit" class="btn" ng-class="{disabled: !isDirty || isSaving, 'btn-primary': isDirty}">
+            <button type="submit" class="btn btn-default" ng-class="{disabled: !isDirty || isSaving, 'btn-primary': isDirty}">
                 Save Changes
                 <i ng-show="isSaving" class="icon-cog icon-spin icon-large"></i>
             </button>

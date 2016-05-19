@@ -37,7 +37,7 @@
         <file name="example.html">
           <form ng-controller="MainController">
             Markdown:<br />
-            <textarea ng-model="my_markdown" cols="60" rows="5" class="span8"></textarea><br />
+            <textarea ng-model="my_markdown" cols="60" rows="5" class="col-md-8"></textarea><br />
             Output:<br />
             <div marked="my_markdown" />
           </form>
@@ -267,7 +267,7 @@ angular.module('hc.marked', [])
         <file name="exampleB.html">
           <form ng-controller="MainController">
             Markdown:<br />
-            <textarea ng-model="my_markdown" class="span8" cols="60" rows="5"></textarea><br />
+            <textarea ng-model="my_markdown" class="col-md-8" cols="60" rows="5"></textarea><br />
             Output:<br />
             <blockquote marked="my_markdown"></blockquote>
           </form>

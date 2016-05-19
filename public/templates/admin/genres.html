@@ -14,7 +14,7 @@
             pfm-on-enter="createGenre(genreToCreate)"
         />
 
-        <div class="alert alert-error" ng-show="hasCreationError">
+        <div class="alert alert-danger" ng-show="hasCreationError">
             {{ createGenreError }}
         </div>
     </section>
@@ -38,7 +38,7 @@
                     ng-model="genre.name"
                     pfm-on-enter="renameGenre(genre)"
                     />
-                    <div class="alert alert-error" ng-show="genre.isError">
+                    <div class="alert alert-danger" ng-show="genre.isError">
                         {{ genre.errorMessage }}
                     </div>
                 </td>

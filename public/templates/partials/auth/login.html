@@ -1,6 +1,6 @@
 <form ng-submit="login.submit()" class="form-horizontal">
     <ul class="messages" ng-hide="!messages.length">
-        <li ng-repeat="message in messages" class="alert alert-error">
+        <li ng-repeat="message in messages" class="alert alert-danger">
             {{::message}}
         </li>
     </ul>
@@ -21,7 +21,7 @@
             <label class="checkbox">
                 <input type="checkbox" ng-model="login.remember" /> Remember me
             </label>
-            <button type="submit" class="btn">Sign in</button>
+            <button type="submit" class="btn btn-default">Sign in</button>
         </div>
     </div>
 </form>

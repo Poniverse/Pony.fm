@@ -1,7 +1,7 @@
 <div class="resource-details album-details">
     <ul class="dropdowns">
         <li class="dropdown">
-            <a href="#" class="btn btn-small btn-info dropdown-toggle" ng-disabled="album.is_downloadable == 0" auto-close="outsideClick">
+            <a href="#" class="btn btn-sm btn-info dropdown-toggle" ng-disabled="album.is_downloadable == 0" auto-close="outsideClick">
                 Downloads
             </a>
             <ul class="dropdown-menu" ng-show="::album.is_downloadable == 1">
@@ -19,9 +19,9 @@
                 <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take a few minutes.</small></li>
             </ul>
         </li>
-        <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
+        <li><a href="#" class="btn btn-default" pfm-eat-click ng-click="share()">Share</a></li>
         <li><pfm-favourite-button resource="::album" type="album"></pfm-favourite-button></li>
-        <li ng-if="::album.permissions.edit"><a class="btn btn-small" ui-sref="content.artist.account.albums.edit(::{slug: album.user.slug, album_id: album.id})">Edit</a></li>
+        <li ng-if="::album.permissions.edit"><a class="btn btn-sm" ui-sref="content.artist.account.albums.edit(::{slug: album.user.slug, album_id: album.id})">Edit</a></li>
     </ul>
 
     <header>
