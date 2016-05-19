@@ -75,4 +75,19 @@ class Helpers
 
         return '<abbr class="timeago" title="' . $title . '">' . $content . '</abbr>';
     }
+
+    /**
+     * Converts an RGB array to a hex string
+     *
+     * @param array[int] $rgb RGB values in an array
+     * @return string
+     */
+    public static function rgb2hex($rgb) {
+        $hex = "#";
+        $hex .= str_pad(dechex($rgb[0]), 2, "0", STR_PAD_LEFT);
+        $hex .= str_pad(dechex($rgb[1]), 2, "0", STR_PAD_LEFT);
+        $hex .= str_pad(dechex($rgb[2]), 2, "0", STR_PAD_LEFT);
+
+        return $hex;
+    }
 }

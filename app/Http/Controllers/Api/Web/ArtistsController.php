@@ -31,6 +31,8 @@ use Poniverse\Ponyfm\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
+use ColorThief\ColorThief;
+use Helpers;
 
 class ArtistsController extends ApiControllerBase
 {
@@ -157,6 +159,9 @@ class ArtistsController extends ApiControllerBase
             ];
         }
 
+        $palette = ColorThief::getPalette($user->getAvatarUrl(Image::SMALL), 2);
+        $formatted_palette = array_map("Helpers::rgb2hex", $palette);
+
         return Response::json([
             'artist' => [
                 'id' => $user->id,
@@ -167,6 +172,7 @@ class ArtistsController extends ApiControllerBase
                     'small' => $user->getAvatarUrl(Image::SMALL),
                     'normal' => $user->getAvatarUrl(Image::NORMAL)
                 ],
+                'avatar_colors' => $formatted_palette,
                 'created_at' => $user->created_at,
                 'followers' => [],
                 'following' => [],

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a12fe5f5687e21aac441868ccc882fa2",
-    "content-hash": "95039400d11d1851dabe46e4c0456965",
+    "hash": "34abdcf2e916a26919b81059ba38fa47",
+    "content-hash": "afae7bc6603035b2573af4b56c91c0dd",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -1384,6 +1384,59 @@
                 "tokenizer"
             ],
             "time": "2015-12-05 17:17:57"
+        },
+        {
+            "name": "ksubileau/color-thief-php",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ksubileau/color-thief-php.git",
+                "reference": "f0e1bc5da3dd86abd3e8c95a553c3e8f25e0fe7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ksubileau/color-thief-php/zipball/f0e1bc5da3dd86abd3e8c95a553c3e8f25e0fe7e",
+                "reference": "f0e1bc5da3dd86abd3e8c95a553c3e8f25e0fe7e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "suggest": {
+                "ext-gd": "to use the GD image adapter.",
+                "ext-gmagick": "to use the Gmagick image adapter.",
+                "ext-imagick": "to use the Imagick image adapter."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ColorThief": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC-BY-2.5"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Subileau",
+                    "homepage": "http://www.kevinsubileau.fr"
+                }
+            ],
+            "description": "Grabs the dominant color or a representative color palette from an image.",
+            "homepage": "http://www.kevinsubileau.fr/projets/color-thief-php",
+            "keywords": [
+                "color",
+                "dominant",
+                "palette",
+                "php",
+                "thief"
+            ],
+            "time": "2016-01-17 18:55:16"
         },
         {
             "name": "laravel/framework",

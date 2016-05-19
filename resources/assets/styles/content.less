@@ -144,19 +144,31 @@
 
   &.artist-details {
     > header {
-      .tabs {
-        clear: left;
-        margin: 0px;
-        margin-top: 5px;
-        border: none;
-        font-size: 9pt;
+      padding: 15px;
 
-        li.active {
-          a {
-            border: none;
-            background: #C1889E;
-            color: #fff;
-          }
+      > img {
+        width: 150px;
+        height: 150px;
+        float: left;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      }
+
+      > .artist-right {
+        margin-left: 165px;
+        margin-top: 5px;
+
+        > h1 {
+          font-size: 20pt;
+          color: #fff;
+          background: rgba(0,0,0,0.5);
+          display: inline;
+          padding: 5px 10px;
+        }
+
+        > .btn {
+          display: table;
+          margin-top: 10px;
         }
       }
     }

@@ -1,23 +1,24 @@
 <div class="resource-details artist-details" ng-class="::{'x-archived': artist.is_archived}">
-    <ul class="dropdowns">
-        <li class="dropdown">
-            <a href="#" class="btn btn-small" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="::auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
+
+    <header ng-style="{{::gradient}}">
+        <img src="{{::artist.avatars.normal}}">
+        <div class="artist-right">
+            <h1>{{::artist.name}}</h1>
+            <a href="#" class="btn btn-default" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="::auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
                 <span ng-hide="artist.user_data.is_following">Follow</span>
                 <span ng-show="artist.user_data.is_following">Following!</span>
             </a>
-        </li>
-    </ul>
-    <header>
-        <h1>{{::artist.name}}</h1>
-        <ul class="tabs">
-            <li ui-sref-active="active"><a ui-sref=".profile">Profile</a></li>
-            <li ui-sref-active="active"><a ui-sref=".content">Content</a></li>
-            <li ng-if="::!artist.is_archived" ui-sref-active="active">
-                <a ui-sref=".favourites">Favourites</a>
-            </li>
-            <li ng-if="::artist.permissions.edit" ui-sref-active="{active: '.account'}"><a ui-sref=".account.settings">Manage Account</a></li>
-        </ul>
+
+        </div>
     </header>
+    <ul class="tabs">
+        <li ui-sref-active="active"><a ui-sref=".profile">Profile</a></li>
+        <li ui-sref-active="active"><a ui-sref=".content">Content</a></li>
+        <li ng-if="::!artist.is_archived" ui-sref-active="active">
+            <a ui-sref=".favourites">Favourites</a>
+        </li>
+        <li ng-if="::artist.permissions.edit" ui-sref-active="{active: '.account'}"><a ui-sref=".account.settings">Manage Account</a></li>
+    </ul>
     <div class="stretch-to-bottom">
         <ui-view></ui-view>
     </div>
