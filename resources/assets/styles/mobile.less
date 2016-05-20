@@ -90,9 +90,33 @@
 
   .track-player {
     margin-right: 0px !important;
+    padding: 5px 10px;
+
+    .inner {
+      margin-left: 0px !important;
+    }
+
+    .image {
+      display: none;
+    }
+
     .buttons {
       li.volume, li.status  {
         display: none;
+      }
+    }
+
+    .song, .artist {
+      margin-bottom: 4px;
+    }
+
+    .transport {
+      border-radius: 0px !important;
+      margin-top: 4px;
+      height: 10px;
+
+      .bar, .loader-bar {
+        border-radius: 0px;
       }
     }
   }
@@ -142,6 +166,8 @@
     }
 
     > header {
+      margin-bottom: 0px;
+
       > img {
         float: none !important;
         display: block;
@@ -162,6 +188,10 @@
         }
       }
     }
+  }
+
+  .tabs li a {
+    padding: 10px 13px;
   }
 
   .track-details {
