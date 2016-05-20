@@ -2264,10 +2264,10 @@ function TabsetCtrl($scope, $element) {
 <example module="ui.bootstrap">
   <file name="index.html">
     <div ng-controller="TabsDemoCtrl">
-      <button class="btn btn-sm" ng-click="items[0].active = true">
+      <button class="btn btn-default btn-sm" ng-click="items[0].active = true">
         Select item 1, using active binding
       </button>
-      <button class="btn btn-sm" ng-click="items[1].disabled = !items[1].disabled">
+      <button class="btn btn-default btn-sm" ng-click="items[1].disabled = !items[1].disabled">
         Enable/disable item 2, using disabled binding
       </button>
       <br />

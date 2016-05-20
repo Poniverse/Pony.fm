@@ -10,6 +10,7 @@
   .site-content {
     margin-left: 0px;
     overflow: scroll;
+    padding: 5px;
   }
 
   .now-playing {
@@ -130,6 +131,16 @@
   }
 
   .artist-details {
+    margin: -5px;
+    padding-bottom: 10px;
+
+    > .stretch-to-bottom {
+      padding: 0 10px;
+      .col-md-6 {
+        padding: 0px;
+      }
+    }
+
     > header {
       > img {
         float: none !important;
@@ -179,5 +190,13 @@
         margin-left: 0px !important;
       }
     }
+  }
+
+  .two-pane-view.closed .account-tracks-listing li, .two-pane-view.closed .account-albums-listing li {
+    width: 50% !important;
+  }
+
+  .site-content > .ui-view.loading {
+    margin: 0px -5px;
   }
 }
