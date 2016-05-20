@@ -14,32 +14,34 @@
         <li class="delete"><a ng-class="{disabled: isSaving}" class="btn btn-danger" href="#" ng-click="deleteTrack()" pfm-eat-click>Delete Track</a></li>
     </ul>
     <div class="stretch-to-bottom">
-        <div class="form-row" ng-class="{'has-error': errors.title != null}">
-            <label for="title" class="strong">Title:</label>
-            <input ng-disabled="isSaving" ng-change="touchModel()" placeholder="Track Title" type="text" id="title" ng-model="track.title" />
-            <div class="error">{{errors.title}}</div>
+        <div class="row">
+            <div class="col-sm-12 form-row" ng-class="{'has-error': errors.title != null}">
+                <label for="title" class="strong">Title:</label>
+                <input ng-disabled="isSaving" ng-change="touchModel()" placeholder="Track Title" type="text" id="title" ng-model="track.title" />
+                <div class="error">{{errors.title}}</div>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-6 form-row" ng-class="{'has-error': errors.description != null}">
+            <div class="col-sm-6 form-row" ng-class="{'has-error': errors.description != null}">
                 <label for="description" class="strong">Description:</label>
                 <textarea ng-disabled="isSaving" ng-change="touchModel()" placeholder="Description (optional)" id="description" ng-model="track.description"></textarea>
                 <div class="error">{{errors.description}}</div>
             </div>
-            <div class="col-md-6 form-row" ng-class="{'has-error': errors.lyrics != null}">
+            <div class="col-sm-6 form-row" ng-class="{'has-error': errors.lyrics != null}">
                 <label for="is_vocal" class="strong"><input ng-disabled="isSaving" ng-change="touchModel(); updateIsVocal()" id="is_vocal" type="checkbox" ng-model="track.is_vocal" /> Is Vocal</label>
                 <textarea ng-disabled="isSaving" ng-change="touchModel()" ng-show="track.is_vocal" ng-animate="'fade'" placeholder="Lyrics (optional)" id="lyrics" ng-model="track.lyrics"></textarea>
                 <div class="error">{{errors.lyrics}}</div>
             </div>
         </div>
         <div class="row">
-            <div class="form-row col-md-6" ng-class="{'has-error': errors.genre_id != null}">
+            <div class="form-row col-sm-6" ng-class="{'has-error': errors.genre_id != null}">
                 <label for="genre" class="strong">Genre:</label>
                 <select ng-disabled="isSaving" id="genre" ng-change="touchModel()" ng-model="track.genre_id" ng-options="genre.id as genre.name for genre in taxonomies.genres">
                     <option value="">Please select a genre...</option>
                 </select>
                 <div class="error">{{errors.genre_id}}</div>
             </div>
-            <div class="form-row col-md-6" ng-class="{'has-error': errors.track_type_id != null}">
+            <div class="form-row col-sm-6" ng-class="{'has-error': errors.track_type_id != null}">
                 <label for="track_type" class="strong">This track is...</label>
                 <select ng-disabled="isSaving" id="track_type" ng-change="touchModel()" ng-model="track.track_type_id" ng-options="type.id as type.editor_title for type in taxonomies.trackTypes">
                     <option value="">Please select a type...</option>
@@ -48,7 +50,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="form-row album-selector col-md-6" ng-class="{'has-error': errors.album_id != null}">
+            <div class="form-row album-selector col-sm-6" ng-class="{'has-error': errors.album_id != null}">
                 <a pfm-popup="album-selector" pfm-popup-close-on-click href="#" class="btn btn-default">
                     Album:
                     <strong ng-show="selectedAlbum">{{selectedAlbum.title}}</strong>
@@ -66,7 +68,7 @@
                 </div>
                 <div class="error">{{errors.album_id}}</div>
             </div>
-            <div class="form-row show-songs-selector col-md-6" ng-show="track.track_type_id == 2" ng-class="{'has-error': errors.show_song_ids != null}">
+            <div class="form-row show-songs-selector col-sm-6" ng-show="track.track_type_id == 2" ng-class="{'has-error': errors.show_song_ids != null}">
                 <a pfm-popup="song-selector" pfm-popup-close-on-click href="#" class="btn btn-default">Show Songs: <strong>{{selectedSongsTitle}}</strong></a>
                 <div id="song-selector" class="pfm-popup">
                     <ul>
@@ -79,11 +81,11 @@
             </div>
         </div>
         <div class="row">
-            <div class="form-row col-md-6" ng-class="{'has-error': errors.cover != null}">
+            <div class="form-row col-sm-6" ng-class="{'has-error': errors.cover != null}">
                 <label class="strong">Track Cover: </label>
                 <pfm-image-upload set-image="setCover" image="track.cover_url" user-id="track.user_id"></pfm-image-upload>
             </div>
-            <div class="form-row col-md-6" ng-class="{'has-error': errors.released_at != null}">
+            <div class="form-row col-sm-6" ng-class="{'has-error': errors.released_at != null}">
                 <label for="released_at" class="strong">Release Date:</label>
                 <input
                     id="released_at"
@@ -108,7 +110,7 @@
             </div>
         </div>
         <div class="row" ng-show="isAdmin">
-            <div class="col-md-6 form-row" ng-class="{'has-error': errors.username != null}">
+            <div class="col-sm-6 form-row" ng-class="{'has-error': errors.username != null}">
                 <label for="title" class="strong">User:</label>
                 <input ng-disabled="isSaving" ng-change="touchModel()" placeholder="Username" type="text" id="username" ng-model="track.username" />
                 <div class="error">{{errors.username}}</div>
