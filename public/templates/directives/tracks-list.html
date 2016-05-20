@@ -2,18 +2,18 @@
     <li ng-repeat="track in tracks track by track.id" ng-class="{'can-favourite': auth.isLogged, 'is-favourited': auth.isLogged && track.user_data.is_favourited, 'is-playing': track.isPlaying, 'has-played': auth.isLogged && track.user_data.views}">
         <div class="image">
             <a href="#" class="play-button" pfm-eat-click ng-click="play(track)">
-                <i class="icon-play" ng-if="!track.isPlaying"></i>
-                <i class="icon-pause" ng-if="track.isPlaying"></i>
+                <i class="fa fa-play" ng-if="!track.isPlaying"></i>
+                <i class="fa fa-pause" ng-if="track.isPlaying"></i>
             </a>
             <img pfm-src-loader="track.covers.thumbnail" pfm-src-size="thumbnail" />
         </div>
         <div class="icons">
-            <span><i ng-class="::{'icon-microphone-off': !track.is_vocal, 'icon-microphone': track.is_vocal}"></i></span>
+            <span><i ng-class="::{'fa fa-microphone-slash': !track.is_vocal, 'fa fa-microphone': track.is_vocal}"></i></span>
             <a pfm-eat-click class="icon-favourite" href="#" ng-click="toggleFavourite(track)" ng-if="::auth.isLogged">
-                <i class="icon-star-empty"></i>
+                <i class="fa fa-star-o"></i>
             </a>
             <a pfm-eat-click href="#" ng-click="removeFromPlaylist(track)" ng-if="::canModifyPlaylist()">
-                <i class="icon-trash"></i>
+                <i class="fa fa-trash"></i>
             </a>
         </div>
         <a class="info" ng-href="{{::track.url}}">

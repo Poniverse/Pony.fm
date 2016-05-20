@@ -42,7 +42,7 @@
                         {{ genre.errorMessage }}
                     </div>
                 </td>
-                <td><i ng-show="genre.isSaving" class="icon-cog icon-spin icon-large"></i></td>
+                <td><i ng-show="genre.isSaving" class="fa fa-cog fa-spin fa-lg"></i></td>
                 <td><a ng-href="{{ genre.url }}">{{ genre.track_count }}</a></td>
                 <td class="-actions">
                     <button class="btn btn-warning" ng-hide="mergeInProgress" ng-click="startMerge(genre)">Merge genres in&hellip;</button>

@@ -57,7 +57,7 @@
                 <div class="user-details dropdown">
                     <a class="avatar dropdown-toggle" href="#">
                         <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
-                        <span><i class="icon-chevron-down"></i></span>
+                        <span><i class="fa fa-chevron-down"></i></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li ui-sref-active="active"><a ui-sref="content.artist.profile({slug: auth.user.slug})">Your Profile</a></li>
@@ -99,7 +99,7 @@
 
                 <li>
                     <h3>
-                        <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="icon-plus"></i></a>
+                        <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="fa fa-plus"></i></a>
                         My Playlists
                     </h3>
                 </li>

@@ -2274,7 +2274,7 @@ function TabsetCtrl($scope, $element) {
       <tabset>
         <tab heading="Tab 1">First Tab</tab>
         <tab select="alertMe()">
-          <tab-heading><i class="icon-bell"></i> Alert me!</tab-heading>
+          <tab-heading><i class="fa fa-bell"></i> Alert me!</tab-heading>
           Second Tab, with alert callback and html heading!
         </tab>
         <tab ng-repeat="item in items"
@@ -2320,7 +2320,7 @@ function TabsetCtrl($scope, $element) {
         And some content, too!
       </tab>
       <tab>
-        <tab-heading><i class="icon-heart"></i> Icon heading?!?</tab-heading>
+        <tab-heading><i class="fa fa-heart"></i> Icon heading?!?</tab-heading>
         That's right.
       </tab>
     </tabset>
@@ -2993,9 +2993,9 @@ angular.module("template/datepicker/datepicker.html", []).run(["$templateCache",
     "<table class=\"well well-large\">\n" +
     "  <thead>\n" +
     "    <tr class=\"text-center\">\n" +
-    "      <th><button class=\"btn pull-left\" ng-click=\"move(-1)\"><i class=\"icon-chevron-left\"></i></button></th>\n" +
+    "      <th><button class=\"btn pull-left\" ng-click=\"move(-1)\"><i class=\"fa fa-chevron-left\"></i></button></th>\n" +
     "      <th colspan=\"{{rows[0].length - 2 + showWeekNumbers}}\"><button class=\"btn btn-block\" ng-click=\"toggleMode()\"><strong>{{title}}</strong></button></th>\n" +
-    "      <th><button class=\"btn pull-right\" ng-click=\"move(1)\"><i class=\"icon-chevron-right\"></i></button></th>\n" +
+    "      <th><button class=\"btn pull-right\" ng-click=\"move(1)\"><i class=\"fa fa-chevron-right\"></i></button></th>\n" +
     "    </tr>\n" +
     "    <tr class=\"text-center\" ng-show=\"labels.length > 0\">\n" +
     "      <th ng-show=\"showWeekNumbers\">#</th>\n" +
@@ -3101,7 +3101,7 @@ angular.module("template/progressbar/progress.html", []).run(["$templateCache", 
 angular.module("template/rating/rating.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/rating/rating.html",
     "<span ng-mouseleave=\"reset()\">\n" +
-    "	<i ng-repeat=\"number in range\" ng-mouseenter=\"enter(number)\" ng-click=\"rate(number)\" ng-class=\"{'icon-star': number <= val, 'icon-star-empty': number > val}\"></i>\n" +
+    "	<i ng-repeat=\"number in range\" ng-mouseenter=\"enter(number)\" ng-click=\"rate(number)\" ng-class=\"{'fa fa-star': number <= val, 'fa fa-star-empty': number > val}\"></i>\n" +
     "</span>\n" +
     "");
 }]);
@@ -3154,9 +3154,9 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
   $templateCache.put("template/timepicker/timepicker.html",
     "<table class=\"form-inline\">\n" +
     "	<tr class=\"text-center\">\n" +
-    "		<td><a ng-click=\"incrementHours()\" class=\"btn btn-link\"><i class=\"icon-chevron-up\"></i></a></td>\n" +
+    "		<td><a ng-click=\"incrementHours()\" class=\"btn btn-link\"><i class=\"fa fa-chevron-up\"></i></a></td>\n" +
     "		<td>&nbsp;</td>\n" +
-    "		<td><a ng-click=\"incrementMinutes()\" class=\"btn btn-link\"><i class=\"icon-chevron-up\"></i></a></td>\n" +
+    "		<td><a ng-click=\"incrementMinutes()\" class=\"btn btn-link\"><i class=\"fa fa-chevron-up\"></i></a></td>\n" +
     "		<td ng-show=\"showMeridian\"></td>\n" +
     "	</tr>\n" +
     "	<tr>\n" +
@@ -3166,9 +3166,9 @@ angular.module("template/timepicker/timepicker.html", []).run(["$templateCache",
     "		<td ng-show=\"showMeridian\"><button ng-click=\"toggleMeridian()\" class=\"btn text-center\">{{meridian}}</button></td>\n" +
     "	</tr>\n" +
     "	<tr class=\"text-center\">\n" +
-    "		<td><a ng-click=\"decrementHours()\" class=\"btn btn-link\"><i class=\"icon-chevron-down\"></i></a></td>\n" +
+    "		<td><a ng-click=\"decrementHours()\" class=\"btn btn-link\"><i class=\"fa fa-chevron-down\"></i></a></td>\n" +
     "		<td>&nbsp;</td>\n" +
-    "		<td><a ng-click=\"decrementMinutes()\" class=\"btn btn-link\"><i class=\"icon-chevron-down\"></i></a></td>\n" +
+    "		<td><a ng-click=\"decrementMinutes()\" class=\"btn btn-link\"><i class=\"fa fa-chevron-down\"></i></a></td>\n" +
     "		<td ng-show=\"showMeridian\"></td>\n" +
     "	</tr>\n" +
     "</table>");

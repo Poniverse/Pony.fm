@@ -3,12 +3,12 @@
         <a class="dropdown-toggle btn btn-default">
             Type: <strong>{{query.filters.trackTypes.title}}</strong>
         </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('trackTypes')"><i class="icon-remove"></i></a>
+        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('trackTypes')"><i class="fa fa-remove"></i></a>
         <ul class="dropdown-menu">
             <li ng-repeat="type in ::filters.trackTypes.values track by type.id"
                 ng-class="{selected: query.isIdSelected('trackTypes', type.id)}"
             >
-                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('trackTypes', type.id); $event.stopPropagation();"><i class="icon-plus"></i></a>
+                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('trackTypes', type.id); $event.stopPropagation();"><i class="fa fa-plus"></i></a>
                 <a pfm-eat-click href="#" ng-click="setListFilter('trackTypes', type.id);">{{::type.title}}</a>
             </li>
         </ul>
@@ -17,12 +17,12 @@
         <a class="dropdown-toggle btn btn-default">
             Show Songs: <strong>{{query.filters.showSongs.title}}</strong>
         </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('showSongs')"><i class="icon-remove"></i></a>
+        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('showSongs')"><i class="fa fa-remove"></i></a>
         <ul class="dropdown-menu">
             <li ng-repeat="song in ::filters.showSongs.values track by song.id"
                 ng-class="{selected: query.isIdSelected('showSongs', song.id)}"
             >
-                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('showSongs', song.id); $event.stopPropagation();"><i class="icon-plus"></i></a>
+                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('showSongs', song.id); $event.stopPropagation();"><i class="fa fa-plus"></i></a>
                 <a pfm-eat-click href="#" ng-click="setListFilter('showSongs', song.id);">{{::song.title}}</a>
             </li>
         </ul>
@@ -31,10 +31,10 @@
         <a class="dropdown-toggle btn btn-default">
             Genre: <strong>{{query.filters.genres.title}}</strong>
         </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('genres')"><i class="icon-remove"></i></a>
+        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('genres')"><i class="fa fa-remove"></i></a>
         <ul class="dropdown-menu">
             <li ng-repeat="genre in ::filters.genres.values track by genre.id" ng-class="{selected: query.isIdSelected('genres', genre.id)}">
-                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('genres', genre.id); $event.stopPropagation();"><i class="icon-plus"></i></a>
+                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('genres', genre.id); $event.stopPropagation();"><i class="fa fa-plus"></i></a>
                 <a pfm-eat-click href="#" ng-click="setListFilter('genres', genre.id);">{{::genre.title}}</a>
             </li>
         </ul>
@@ -43,7 +43,7 @@
         <a class="dropdown-toggle btn btn-default">
             Is Vocal: <strong>{{query.filters.isVocal.title}}</strong>
         </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('isVocal')"><i class="icon-remove"></i></a>
+        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('isVocal')"><i class="fa fa-remove"></i></a>
         <ul class="dropdown-menu">
             <li ng-repeat="item in ::filters.isVocal.values track by $index"
                 ng-class="{selected: item == query.filters.isVocal}"
@@ -56,7 +56,7 @@
         <a class="dropdown-toggle btn btn-default">
             Order: <strong>{{query.filters.sort.title}}</strong>
         </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('sort')"><i class="icon-remove"></i></a>
+        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('sort')"><i class="fa fa-remove"></i></a>
         <ul class="dropdown-menu">
             <li ng-repeat="filter in ::filters.sort.values track by $index" ng-class="{selected: filter == query.filters.sort}">
                 <a pfm-eat-click href="#" ng-click="setFilter('sort', filter)">{{::filter.title}}</a>

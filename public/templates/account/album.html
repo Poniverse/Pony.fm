@@ -4,7 +4,7 @@
             <button type="submit" class="btn btn-default" ng-class="{disabled: (!isDirty && !isNew) || isSaving, 'btn-primary': isDirty || isNew}">
                 <span ng-show="isNew">Create Album</span>
                 <span ng-hide="isNew">Save Changes</span>
-                <i ng-show="isSaving" class="icon-cog icon-spin icon-large"></i>
+                <i ng-show="isSaving" class="fa fa-cog fa-spin fa-lg"></i>
             </button>
         </li>
         <li class="delete" ng-show="!isNew"><a ng-class="{disabled: isSaving}" class="btn btn-danger" href="#" ng-click="deleteAlbum()" pfm-eat-click>Delete Album</a></li>
@@ -43,8 +43,8 @@
             <ul class="album-track-listing" ui-sortable="{handle: '.handle', axis: 'y', forcePlaceholderSizeType: true, update: sortTracks}" ng-model="tracks">
                 <li ng-repeat="track in tracks track by track.id">
                     <div>
-                        <span class="btn btn-sm pull-left handle"><i class="icon-sort"></i></span>
-                        <a href="#" class="btn btn-sm pull-right btn-danger" ng-click="toggleTrack(track)" pfm-eat-click><i class="icon-remove"></i></a>
+                        <span class="btn btn-sm pull-left handle"><i class="fa fa-sort"></i></span>
+                        <a href="#" class="btn btn-sm pull-right btn-danger" ng-click="toggleTrack(track)" pfm-eat-click><i class="fa fa-remove"></i></a>
                         <span>{{::track.title}}</span>
                     </div>
                 </li>

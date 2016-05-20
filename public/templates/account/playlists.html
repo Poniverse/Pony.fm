@@ -2,7 +2,7 @@
     <li ng-repeat="playlist in playlists track by playlist.id">
         <div class="btn-group">
             <a href="#" pfm-eat-click class="btn btn-default btn-sm" ng-click="togglePlaylistPin(playlist)" ng-class="{active: playlist.is_pinned, 'btn-primary': playlist.is_pinned}">
-                <i class="icon-pushpin"></i>
+                <i class="fa fa-pushpin"></i>
             </a>
             <a href="#" pfm-eat-click class="btn btn-default btn-sm" ng-click="editPlaylist(playlist)">Edit</a>
             <a href="#" pfm-eat-click class="btn btn-sm btn-danger" ng-click="deletePlaylist(playlist)">Delete</a>
