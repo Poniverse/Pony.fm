@@ -1,7 +1,9 @@
 <div class="single-player">
     <a href="#" class="play-button" pfm-eat-click ng-click="play()">
-        <i class="icon-play" ng-if="!track.isPlaying"></i>
-        <i class="icon-pause" ng-if="track.isPlaying"></i>
+        <div class="button-container">
+          <i class="icon-play" ng-if="!track.isPlaying"></i>
+          <i class="icon-pause" ng-if="track.isPlaying"></i>
+        </div>
     </a>
-    <img pfm-src-loader="::track.covers.thumbnail" pfm-src-size="thumbnail" />
+    <img pfm-src-loader="::image" pfm-src-size="thumbnail" />
 </div>

@@ -45,9 +45,11 @@ header {
       float: right;
       padding: 2px;
       cursor: pointer;
+      text-decoration: none;
 
-      &:hover {
+      &:hover, &:focus {
         background: #ddd;
+        color: darken(@pfm-purple, 20%);
       }
 
       span {

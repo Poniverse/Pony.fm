@@ -42,7 +42,7 @@
     </ul>
 
     <header>
-        <pfm-track-player track="::track"></pfm-track-player>
+        <pfm-track-player class="hidden-xs" track="::track"></pfm-track-player>
         <h1>{{track.title}}</h1>
         <h2>
 			<span ng-if="track.album">
@@ -52,6 +52,8 @@
             by: <a ng-href="{{::track.user.url}}">{{::track.user.name}}</a>
         </h2>
     </header>
+
+    <pfm-track-player class="visible-xs-block" track="::track" size="normal"></pfm-track-player>
 
     <div ui-view></div>
 </div>
