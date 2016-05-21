@@ -15,12 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "sidebar", [
-    '$scope', '$dialog', 'playlists'
-    ($scope, $dialog, playlists) ->
+    '$scope', '$modal', 'playlists'
+    ($scope, $modal, playlists) ->
         $scope.playlists = playlists.pinnedPlaylists
 
         $scope.createPlaylist = () ->
-            dialog = $dialog.dialog
+            $modal
                 templateUrl: '/templates/partials/playlist-dialog.html'
                 controller: 'playlist-form'
                 resolve: {
@@ -29,38 +29,33 @@ module.exports = angular.module('ponyfm').controller "sidebar", [
                         is_pinned: true
                         name: ''
                         description: ''
-                }
-
-            dialog.open()
+                },
+                show: true
 
         $scope.editPlaylist = (playlist) ->
-            dialog = $dialog.dialog
+            $modal
                 templateUrl: '/templates/partials/playlist-dialog.html'
                 controller: 'playlist-form'
                 resolve: {
                     playlist: () -> angular.copy playlist
-                }
-
-            dialog.open()
+                },
+                show: true
 
         $scope.unpinPlaylist = (playlist) ->
             playlist.is_pinned = false;
             playlists.editPlaylist playlist
 
         $scope.deletePlaylist = (playlist) ->
-            $dialog.messageBox('Delete ' + playlist.title, 'Are you sure you want to delete "' + playlist.title + '"?', [
-                {result: 'ok', label: 'Yes', cssClass: 'btn-danger'},
-                {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
-            ]).open().then (res) ->
-                return if res == 'cancel'
-                playlists.deletePlaylist playlist
+            $scope.playlistToDelete = playlist
+            $modal({scope: $scope, templateUrl: 'templates/partials/delete-playlist-dialog.html', show: true})
 
+        $scope.confirmDeletePlaylist = () ->
+            playlists.deletePlaylist playlist
 
         $scope.showCredits = () ->
-            dialog = $dialog.dialog
+            $modal
                 templateUrl: '/templates/partials/credits-dialog.html'
-                controller: 'credits'
-
-            dialog.open()
+                controller: 'credits',
+                show: true
 
 ]

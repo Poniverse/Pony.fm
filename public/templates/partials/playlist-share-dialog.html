@@ -1,13 +1,19 @@
-<div class="modal-header">
-    <h3>
-        <button type="button" class="close" ng-click="close()" ng-hide="isLoading">&times;</button>
-        {{playlist.title}}
-    </h3>
-</div>
-<div class="modal-body">
-    <h2>Shortlink</h2>
-    <input type="text" ng-model="playlist.share.url" />
-</div>
-<div class="modal-footer">
-    <a class="btn cancel" ng-click="close()" ng-disabled="isLoading">Close</a>
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>
+                    <button type="button" class="close" ng-click="$hide()" ng-hide="isLoading">&times;</button>
+                    {{playlist.title}}
+                </h4>
+            </div>
+            <div class="modal-body">
+                <h2>Shortlink</h2>
+                <input type="text" ng-model="playlist.share.url" />
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" ng-click="$hide()" ng-disabled="isLoading">Close</a>
+            </div>
+        </div>
+    </div>
 </div>

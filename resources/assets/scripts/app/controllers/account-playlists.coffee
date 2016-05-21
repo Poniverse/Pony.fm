@@ -20,8 +20,8 @@ window.pfm.preloaders['account-playlists'] = [
 ]
 
 module.exports = angular.module('ponyfm').controller "account-playlists", [
-    '$scope', 'auth', '$dialog', 'playlists'
-    ($scope, auth, $dialog, playlists) ->
+    '$scope', 'auth', '$modal', 'playlists'
+    ($scope, auth, $modal, playlists) ->
         $scope.playlists = []
 
         loadPlaylists = (playlists) ->
@@ -30,27 +30,25 @@ module.exports = angular.module('ponyfm').controller "account-playlists", [
         playlists.refreshOwned().done loadPlaylists
 
         $scope.editPlaylist = (playlist) ->
-            dialog = $dialog.dialog
+            $modal
                 templateUrl: '/templates/partials/playlist-dialog.html'
                 controller: 'playlist-form'
                 resolve: {
                     playlist: () -> angular.copy playlist
-                }
-
-            dialog.open()
+                },
+                show: true
 
         $scope.togglePlaylistPin = (playlist) ->
             playlist.is_pinned = !playlist.is_pinned;
             playlists.editPlaylist playlist
 
         $scope.deletePlaylist = (playlist) ->
-            $dialog.messageBox('Delete ' + playlist.title, 'Are you sure you want to delete "' + playlist.title + '"?', [
-                {result: 'ok', label: 'Yes', cssClass: 'btn-danger'},
-                {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
-            ]).open().then (res) ->
-                return if res == 'cancel'
-                playlists.deletePlaylist(playlist).done ->
-                    $scope.playlists.splice _.indexOf($scope.playlists, (p) -> p.id == playlist.id), 1
+            $scope.playlistToDelete = playlist
+            $modal({scope: $scope, templateUrl: 'templates/partials/delete-playlist-dialog.html', show: true})
+
+        $scope.confirmDeletePlaylist = () ->
+            playlists.deletePlaylist($scope.playlistToDelete).done ->
+                $scope.playlists.splice _.indexOf($scope.playlists, (p) -> p.id == $scope.playlistToDelete.id), 1
 
         $scope.$on 'playlist-updated', (e, playlist) ->
             index = _.indexOf($scope.playlists, (p) -> p.id == playlist.id)

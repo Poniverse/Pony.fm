@@ -1,7 +1,7 @@
 <div class="resource-details track-details">
     <ul class="dropdowns">
         <li class="dropdown">
-            <a href="#" class="btn btn-default btn-info dropdown-toggle" ng-disabled="track.is_downloadable == 0" auto-close="outsideClick">
+            <a href="#" class="btn btn-primary dropdown-toggle" bs-dropdown ng-disabled="track.is_downloadable == 0" auto-close="outsideClick">
                 Downloads
             </a>
             <ul class="dropdown-menu" ng-show="track.is_downloadable == 1">
@@ -20,7 +20,7 @@
             </ul>
         </li>
         <li class="dropdown">
-            <a href="#" class="btn btn-default dropdown-toggle" ng-show="::auth.isLogged">Add to Playlist</a>
+            <a href="#" class="btn btn-default dropdown-toggle" bs-dropdown ng-show="::auth.isLogged">Add to Playlist</a>
             <ul class="dropdown-menu">
                 <li ng-repeat="playlist in playlists track by playlist.id">
                     <a ng-class="{disabled: playlist.message, 'btn-success': playlist.message}"

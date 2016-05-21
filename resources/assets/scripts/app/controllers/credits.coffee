@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "credits", [
-    '$scope', 'dialog',
-    ($scope, dialog) ->
-        $scope.close = () -> dialog.close(null)
+    '$scope', '$modal',
+    ($scope, modal) ->
+        $scope.close = () -> modal.$hide()
 ]

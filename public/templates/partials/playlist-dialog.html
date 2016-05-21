@@ -1,39 +1,45 @@
-<form ng-submit="createPlaylist()" class="pfm-form">
-    <div class="modal-header">
-        <h3>
-            <button type="button" class="close" ng-click="close()" ng-hide="isLoading">&times;</button>
-            <span ng-show="isNew">Create</span>
-            <span ng-hide="isNew">Edit</span>
-            Playlist
-        </h3>
-    </div>
-    <div class="modal-body">
-        <div class="form-row" ng-class="{'has-error': errors.title != null}">
-            <label class="control-label" for="title">Name</label>
-            <input type="text" id="title" placeholder="Playlist Name" ng-model="form.title" ng-disabled="isLoading" />
-            <div class="error">{{errors.title}}</div>
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content playlist-form">
+            <form ng-submit="createPlaylist()" class="pfm-form">
+                <div class="modal-header">
+                    <h4>
+                        <button type="button" class="close" ng-click="$hide()" ng-hide="isLoading">&times;</button>
+                        <span ng-show="isNew">Create</span>
+                        <span ng-hide="isNew">Edit</span>
+                        Playlist
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row" ng-class="{'has-error': errors.title != null}">
+                        <label class="control-label" for="title">Name</label>
+                        <input type="text" id="title" placeholder="Playlist Name" ng-model="form.title" ng-disabled="isLoading" />
+                        <div class="error">{{errors.title}}</div>
+                    </div>
+                    <div class="form-row" ng-class="{'has-error': errors.description != null}">
+                        <label class="control-label" for="description">Description</label>
+                        <textarea id="description" placeholder="Description (optional)" ng-model="form.description" ng-disabled="isLoading"></textarea>
+                        <div class="error">{{errors.description}}</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="form-row col-md-6">
+                            <label for="is_public"><input ng-disabled="isLoading" id="is_public" type="checkbox" ng-model="form.is_public" /> Is Public</label>
+                        </div>
+                        <div class="form-row col-md-6">
+                            <label for="is_pinned"><input ng-disabled="isLoading" id="is_pinned" type="checkbox" ng-model="form.is_pinned" /> Is Pinned to Sidebar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" ng-disabled="isLoading">
+                        <span ng-show="isNew">Create</span>
+                        <span ng-hide="isNew">Edit</span>
+                        Playlist
+                        <i class="ui-icon-gear fa-spin" ng-show="isLoading"></i>
+                    </button>
+                    <a class="btn btn-default" ng-click="$hide()" ng-disabled="isLoading">Close</a>
+                </div>
+            </form>
         </div>
-        <div class="form-row" ng-class="{'has-error': errors.description != null}">
-            <label class="control-label" for="description">Description</label>
-            <textarea id="description" placeholder="Description (optional)" ng-model="form.description" ng-disabled="isLoading"></textarea>
-            <div class="error">{{errors.description}}</div>
-        </div>
-        <div class="row-fluid">
-            <div class="form-row col-md-6">
-                <label for="is_public"><input ng-disabled="isLoading" id="is_public" type="checkbox" ng-model="form.is_public" /> Is Public</label>
-            </div>
-            <div class="form-row col-md-6">
-                <label for="is_pinned"><input ng-disabled="isLoading" id="is_pinned" type="checkbox" ng-model="form.is_pinned" /> Is Pinned to Sidebar</label>
-            </div>
-        </div>
     </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" ng-disabled="isLoading">
-            <span ng-show="isNew">Create</span>
-            <span ng-hide="isNew">Edit</span>
-            Playlist
-            <i class="ui-icon-gear fa-spin" ng-show="isLoading"></i>
-        </button>
-        <a class="btn cancel" ng-click="close()" ng-disabled="isLoading">Close</a>
-    </div>
-</form>
+</div>

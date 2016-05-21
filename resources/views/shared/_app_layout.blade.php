@@ -55,7 +55,7 @@
         <div class="now-playing">
             @if (Auth::check())
                 <div class="user-details dropdown">
-                    <a class="avatar dropdown-toggle" href="#">
+                    <a class="avatar dropdown-toggle" bs-dropdown href="#">
                         <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
                         <span><i class="fa fa-chevron-down"></i></span>
                     </a>

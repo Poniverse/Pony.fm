@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "playlist-form", [
-    '$scope', 'dialog', 'playlists', 'playlist'
-    ($scope, dialog, playlists, playlist) ->
+    '$scope', '$modal', 'playlists', 'playlist'
+    ($scope, modal, playlists, playlist) ->
         $scope.isLoading = false
         $scope.form = playlist
         $scope.isNew = playlist.id == undefined
@@ -33,11 +33,13 @@ module.exports = angular.module('ponyfm').controller "playlist-form", [
 
             def
                 .done (res) ->
-                    dialog.close(res)
+                    if $scope.track
+                        $scope.finishAddingToPlaylist(res, $scope.track)
+                    $scope.$hide()
 
                 .fail (errors)->
                     $scope.errors = errors
                     $scope.isLoading = false
 
-        $scope.close = () -> dialog.close(null)
+        $scope.close = () -> $scope.$hide()
 ]

@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "track", [
-    '$scope', 'meta', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$dialog', 'download-cached', '$window', '$timeout'
-    ($scope, meta, tracks, $state, playlists, auth, favourites, $dialog, cachedTrack, $window, $timeout) ->
+    '$scope', 'meta', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$modal', 'download-cached', '$window', '$timeout'
+    ($scope, meta, tracks, $state, playlists, auth, favourites, $modal, cachedTrack, $window, $timeout) ->
         $scope.track
         $scope.trackId = parseInt($state.params.id)
 
@@ -53,32 +53,34 @@ module.exports = angular.module('ponyfm').controller "track", [
                 $scope.favouriteWorking = false
 
         $scope.share = () ->
-            dialog = $dialog.dialog
+            dialog = $modal
                 templateUrl: '/templates/partials/track-share-dialog.html',
                 controller: ['$scope', ($localScope) ->
                         $localScope.track = $scope.track
                         $localScope.close = () ->
-                            dialog.close()
-                ]
-            dialog.open()
+                            dialog.$hide()
+                ],
+                show: true
 
         $scope.addToNewPlaylist = () ->
-            dialog = $dialog.dialog
+            dialog = $modal
                 templateUrl: '/templates/partials/playlist-dialog.html'
-                controller: 'playlist-form'
+                controller: 'playlist-form',
+                scope: $scope,
                 resolve: {
                     playlist: () ->
                         is_public: true
                         is_pinned: true
                         name: ''
                         description: ''
-                }
+                },
+                show: true
 
-            dialog.open().then (playlist) ->
-                return if !playlist
+        $scope.finishAddingToPlaylist = (playlist, track) ->
+            return if !playlist
 
-                playlists.addTrackToPlaylist playlist.id, $scope.track.id
-                $state.transitionTo 'playlist', {id: playlist.id}
+            playlists.addTrackToPlaylist playlist.id, track.id
+            $state.transitionTo 'content.playlist', {id: playlist.id}
 
         $scope.addToPlaylist = (playlist) ->
             return if playlist.message

@@ -21,8 +21,8 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
         trackId: '=trackId'
 
     controller: [
-        '$scope', '$dialog', 'auth', 'account-tracks', 'account-albums', 'taxonomies', 'images'
-        ($scope, $dialog, auth, tracks, albums, taxonomies, images) ->
+        '$scope', '$modal', 'auth', 'account-tracks', 'account-albums', 'taxonomies', 'images'
+        ($scope, $modal, auth, tracks, albums, taxonomies, images) ->
             $scope.isDirty = false
             $scope.isSaving = false
             $scope.taxonomies = taxonomies
@@ -116,14 +116,14 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                 xhr.send formData
 
             $scope.deleteTrack = () ->
-                $dialog.messageBox('Delete ' + $scope.track.title, 'Are you sure you want to delete "' + $scope.track.title + '"?', [
-                    {result: 'ok', label: 'Yes', cssClass: 'btn-danger'},
-                    {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
-                ]).open().then (res) ->
-                    return if res == 'cancel'
-                    $.post('/api/web/tracks/delete/' + $scope.track.id)
-                    .then -> $scope.$apply ->
-                        $scope.$emit 'track-deleted'
+                #$dialog.messageBox('Delete ' + $scope.track.title, 'Are you sure you want to delete "' + $scope.track.title + '"?', [
+                #    {result: 'ok', label: 'Yes', cssClass: 'btn-danger'},
+                #    {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
+                #]).open().then (res) ->
+                #    return if res == 'cancel'
+                #    $.post('/api/web/tracks/delete/' + $scope.track.id)
+                #    .then -> $scope.$apply ->
+                #        $scope.$emit 'track-deleted'
 
             # ========================================
             #  The part where everything gets loaded!
