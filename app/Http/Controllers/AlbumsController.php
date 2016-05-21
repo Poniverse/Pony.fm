@@ -25,7 +25,7 @@ use App;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\Track;
-use Illuminate\Support\Facades\Redirect;
+use Redirect;
 use View;
 
 class AlbumsController extends Controller
@@ -56,7 +56,7 @@ class AlbumsController extends Controller
             App::abort(404);
         }
 
-        return Redirect::action('AlbumsController@getTrack', [$id, $album->slug]);
+        return Redirect::action('AlbumsController@getShow', [$id, $album->slug]);
     }
 
     public function getDownload($id, $extension)
