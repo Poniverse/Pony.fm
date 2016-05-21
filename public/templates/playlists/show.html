@@ -1,7 +1,7 @@
 <div class="resource-details playlist-details">
     <ul class="dropdowns">
         <li class="dropdown">
-            <a href="#" class="btn btn-small btn-info dropdown-toggle" auto-close="outsideClick">
+            <a href="#" class="btn btn-sm btn-primary dropdown-toggle" bs-dropdown auto-close="outsideClick">
                 Downloads
             </a>
             <ul class="dropdown-menu">
@@ -19,7 +19,7 @@
                 <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take a few minutes.</small></li>
             </ul>
         </li>
-        <li><a href="#" class="btn" pfm-eat-click ng-click="share()">Share</a></li>
+        <li><a href="#" class="btn btn-default" pfm-eat-click ng-click="share()">Share</a></li>
         <li><pfm-favourite-button resource="::playlist" type="playlist"></pfm-favourite-button></li>
     </ul>
 

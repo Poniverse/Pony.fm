@@ -19,12 +19,17 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackPlayer', () ->
     templateUrl: '/templates/directives/track-player.html'
     scope:
         track: '=track',
+        size: '@size',
         class: '@class'
     replace: true
 
     controller: [
         '$scope', 'player'
         ($scope, player) ->
+            if $scope.size == 'normal'
+                $scope.image = $scope.track.covers.normal
+            else
+                $scope.image = $scope.track.covers.thumbnail
             $scope.play = () ->
                 player.playTracks [$scope.track], 0
     ]

@@ -25,8 +25,8 @@ window.pfm.preloaders['account-albums-edit'] = [
 ]
 
 module.exports = angular.module('ponyfm').controller "account-albums-edit", [
-    '$scope', '$state', '$dialog', 'account-albums', 'auth'
-    ($scope, $state, $dialog, albums, auth) ->
+    '$scope', '$state', '$modal', 'account-albums', 'auth'
+    ($scope, $state, $modal, albums, auth) ->
         $scope.isNew = $state.params.album_id == undefined
         $scope.data.isEditorOpen = true
         $scope.errors = {}
@@ -114,14 +114,13 @@ module.exports = angular.module('ponyfm').controller "account-albums-edit", [
             xhr.send formData
 
         $scope.deleteAlbum = () ->
-            $dialog.messageBox('Delete ' + $scope.album.title, 'Are you sure you want to delete "' + $scope.album.title + '"?', [
-                {result: 'ok', label: 'Yes', cssClass: 'btn-danger'}, {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
-            ]).open().then (res) ->
-                return if res == 'cancel'
-                $.post('/api/web/albums/delete/' + $scope.album.id)
-                    .then -> $scope.$apply ->
-                        $scope.$emit 'album-deleted'
-                        $state.go '^'
+            modal = $modal({scope: $scope, templateUrl: 'templates/partials/delete-album-dialog.html', show: true});
+
+        $scope.confirmDeleteAlbum = () ->
+          $.post('/api/web/albums/delete/' + $scope.album.id)
+              .then -> $scope.$apply ->
+                  $scope.$emit 'album-deleted'
+                  $state.go '^'
 
         $scope.setCover = (image, type) ->
             delete $scope.album.cover_id

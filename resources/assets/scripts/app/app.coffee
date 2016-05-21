@@ -42,7 +42,9 @@ require 'script!../base/marked'
 require 'script!../base/moment'
 require '../base/soundmanager2-nodebug'
 require 'script!../base/tumblr'
-require '../base/ui-bootstrap-tpls-0.4.0'
+require 'angular-strap'
+# Just ignore this, blame webpack
+require '../../../../node_modules/angular-strap/dist/angular-strap.tpl'
 require 'chart.js';
 require 'angular-chart.js';
 
@@ -51,7 +53,7 @@ require '../shared/pfm-angular-sanitize'
 require '../shared/init.coffee'
 
 
-ponyfm = angular.module 'ponyfm', ['ui.bootstrap', 'ui.router', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked', 'chart.js']
+ponyfm = angular.module 'ponyfm', ['mgcrea.ngStrap', 'ui.router', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked', 'chart.js']
 window.pfm.preloaders = {}
 
 # Inspired by: https://stackoverflow.com/a/30652110/3225811
@@ -79,8 +81,8 @@ ponyfm.run [
 ]
 
 ponyfm.config [
-    '$locationProvider', '$stateProvider', '$dialogProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider'
-    (location, state, $dialogProvider, analytics, $httpProvider, $sceDelegateProvider, markedProvider) ->
+    '$locationProvider', '$stateProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider'
+    (location, state, analytics, $httpProvider, $sceDelegateProvider, markedProvider) ->
 
         if window.pfm.environment == 'local'
             $httpProvider.interceptors.push [
@@ -363,9 +365,6 @@ ponyfm.config [
 
 
         location.html5Mode(true);
-        $dialogProvider.options
-            dialogFade: true
-            backdropClick: false
 
 ]
 

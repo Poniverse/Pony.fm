@@ -55,9 +55,9 @@
         <div class="now-playing">
             @if (Auth::check())
                 <div class="user-details dropdown">
-                    <a class="avatar dropdown-toggle" href="#">
+                    <a class="avatar dropdown-toggle" bs-dropdown href="#">
                         <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
-                        <span><i class="icon-chevron-down"></i></span>
+                        <span><i class="fa fa-chevron-down"></i></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li ui-sref-active="active"><a ui-sref="content.artist.profile({slug: auth.user.slug})">Your Profile</a></li>
@@ -76,7 +76,7 @@
             <a href="/">
               <img src="/images/ponyfm-logo-white.svg" class="logo">
             </a>
-            <li><pfm-search></pfm-search></li>
+            <li><pfm-search class="hidden-xs"></pfm-search></li>
             <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a href="/tracks">Tracks</a></li>
             <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a href="/albums">Albums</a></li>
             <li ng-class="{selected: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a href="/playlists">Playlists</a></li>
@@ -99,7 +99,7 @@
 
                 <li>
                     <h3>
-                        <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="icon-plus"></i></a>
+                        <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="fa fa-plus"></i></a>
                         My Playlists
                     </h3>
                 </li>

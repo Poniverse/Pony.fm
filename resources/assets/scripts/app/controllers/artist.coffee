@@ -26,9 +26,6 @@ module.exports = angular.module('ponyfm').controller "artist", [
         artists.fetch($state.params.slug)
             .done (artistResponse) ->
                 $scope.artist = artistResponse.artist
-                $scope.gradient = {
-                    'background-image': 'linear-gradient(135deg, ' + $scope.artist.avatar_colors[0] + ' 15%, ' + $scope.artist.avatar_colors[1] + ' 100%)'
-                }
 
         $scope.toggleFollow = () ->
             follow.toggle('artist', $scope.artist.id).then (res) ->

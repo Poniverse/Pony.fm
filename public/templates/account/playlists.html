@@ -1,11 +1,11 @@
 <ul class="playlists stretch-to-bottom">
     <li ng-repeat="playlist in playlists track by playlist.id">
         <div class="btn-group">
-            <a href="#" pfm-eat-click class="btn btn-small" ng-click="togglePlaylistPin(playlist)" ng-class="{active: playlist.is_pinned, 'btn-primary': playlist.is_pinned}">
-                <i class="icon-pushpin"></i>
+            <a href="#" pfm-eat-click class="btn btn-default btn-sm" ng-click="togglePlaylistPin(playlist)" ng-class="{active: playlist.is_pinned, 'btn-primary': playlist.is_pinned}">
+                <i class="fa fa-pushpin"></i>
             </a>
-            <a href="#" pfm-eat-click class="btn btn-small" ng-click="editPlaylist(playlist)">Edit</a>
-            <a href="#" pfm-eat-click class="btn btn-small btn-danger" ng-click="deletePlaylist(playlist)">Delete</a>
+            <a href="#" pfm-eat-click class="btn btn-default btn-sm" ng-click="editPlaylist(playlist)">Edit</a>
+            <a href="#" pfm-eat-click class="btn btn-sm btn-danger" ng-click="deletePlaylist(playlist)">Delete</a>
         </div>
         <a href="{{playlist.url}}" class="main">
             <span class="is-public">

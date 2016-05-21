@@ -41,12 +41,12 @@
     @else
         <div class="player loading {{Auth::check() ? 'can-favourite' : ''}} {{$user['is_favourited'] ? 'favourited' : ''}}" data-track-id="{{ $track->id }}" data-duration="{{ $track->duration * 1000 }}">
             <div class="play" disabled="disabled">
-                <div class="button"><i class="icon-play"></i></div>
+                <div class="button"><i class="fa fa-play"></i></div>
                 <img src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::SMALL) }}" />
             </div>
             <div class="meta">
                 @if (Auth::check())
-                    <a href="#" class="favourite"><i title="Favourite this track!" class="favourite-icon icon-star-empty"></i></a>
+                    <a href="#" class="favourite"><i title="Favourite this track!" class="favourite-icon fa-star-o"></i></a>
                 @endif
                 <div class="progressbar">
                     <div class="loader"></div>

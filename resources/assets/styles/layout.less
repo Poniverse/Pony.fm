@@ -39,15 +39,17 @@ header {
     margin-top: 9px;
 
     .avatar {
-      .img-polaroid();
+      .img-thumbnail();
 
       display: block;
       float: right;
       padding: 2px;
       cursor: pointer;
+      text-decoration: none;
 
-      &:hover {
+      &:hover, &:focus {
         background: #ddd;
+        color: darken(@pfm-purple, 20%);
       }
 
       span {
@@ -58,7 +60,7 @@ header {
     }
 
     .dropdown-menu {
-      left: auto;
+      left: auto !important;
       right: 0px;
     }
 
@@ -112,9 +114,8 @@ header {
     img.logo {
       padding-left: 6px;
       width: 100%;
-      max-width: 90%;
+      max-width: 94%;
       padding-top: 13px;
-      max-height: 45%
     }
   }
 
@@ -150,6 +151,10 @@ header {
       margin: 0;
       padding: 0;
       text-align: right;
+
+      img {
+        width: 100%;
+      }
 
       a {
         padding: 10px;
@@ -291,4 +296,8 @@ header {
 
 .bun-bottom {
     bottom: 0;
+}
+
+.playlist-form .modal-footer {
+    margin-top: 20px;
 }

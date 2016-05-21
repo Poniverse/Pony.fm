@@ -59,20 +59,20 @@
           color: #333333;
 
           &:hover {
-            #gradient> .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
+            #gradient> .vertical(@dropdown-link-hover-bg, darken(@dropdown-link-hover-bg, 5%));
             text-decoration: none;
-            color: @dropdownLinkColorHover;
+            color: @dropdown-link-hover-color;
           }
         }
 
         &.selected {
           a {
-            #gradient> .vertical(@green, darken(@green, 5%));
+            #gradient> .vertical(@pfm-purple, darken(@pfm-purple, 5%));
             color: #fff;
             font-weight: bold;
 
             &:hover {
-              #gradient> .vertical(fadeout(@green, 20%), fadeout(darken(@green, 5%), 20%));
+              #gradient> .vertical(fadeout(@pfm-purple, 20%), fadeout(darken(@pfm-purple, 5%), 20%));
             }
           }
         }

@@ -21,8 +21,8 @@ window.pfm.preloaders['account-tracks'] = [
 ]
 
 module.exports = angular.module('ponyfm').controller "account-tracks", [
-    '$scope', '$state', 'taxonomies', '$dialog', 'lightbox', 'account-albums', 'account-tracks'
-    ($scope, $state, taxonomies, $dialog, lightbox, albums, tracks) ->
+    '$scope', '$state', 'taxonomies', '$modal', 'lightbox', 'account-albums', 'account-tracks'
+    ($scope, $state, taxonomies, $modal, lightbox, albums, tracks) ->
         $scope.data =
             selectedTrack: null
 
@@ -52,7 +52,7 @@ module.exports = angular.module('ponyfm').controller "account-tracks", [
                 $scope.selectTrack null
 
         $scope.$on 'track-deleted', () ->
-            $state.transitionTo 'account.tracks'
+            $state.transitionTo 'content.artist.account.tracks', slug: $state.params.slug
             tracks.clearCache()
             tracks.refresh(null, true).done setTracks
 

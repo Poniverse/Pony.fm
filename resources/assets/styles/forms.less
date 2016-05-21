@@ -23,7 +23,7 @@
 
   .error {
     .alert();
-    .alert-error();
+    .alert-danger();
 
     display: none;
     padding: 3px;
@@ -36,9 +36,29 @@
   }
 }
 
+.track-editor {
+  .row [class*=col]:first-child {
+    margin-left: 0;
+  }
+
+  .row {
+    margin: 0;
+  }
+
+  .row .col-sm-12 {
+    padding: 0;
+  }
+
+  .row .col-sm-6 {
+    padding: 0;
+    width: 48.93617021%;
+    margin-left: 2.12765957%;
+  }
+}
+
 .has-error {
   label {
-    color: @red;
+    color: @brand-danger;
   }
 
   .error {
@@ -80,7 +100,7 @@ input[type="text"], input[type="password"], input[type="date"], input[type="numb
   }
 
   &.x-error {
-    background: @btnDangerBackground;
+    background: @btn-danger-bg;
   }
 }
 

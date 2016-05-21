@@ -1,4 +1,4 @@
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 768px) {
   html, body {
     overflow: hidden !important;
   }
@@ -10,6 +10,7 @@
   .site-content {
     margin-left: 0px;
     overflow: scroll;
+    padding: 5px;
   }
 
   .now-playing {
@@ -43,12 +44,12 @@
       display: block;
       margin-left: auto;
       margin-right: auto;
-      height: 40px;
+      height: 50px;
       width: 160px;
       padding-top: 16px;
 
       > img {
-        max-height: 75%;
+        max-height: 90%;
       }
     }
   }
@@ -89,9 +90,33 @@
 
   .track-player {
     margin-right: 0px !important;
+    padding: 5px 10px;
+
+    .inner {
+      margin-left: 0px !important;
+    }
+
+    .image {
+      display: none;
+    }
+
     .buttons {
       li.volume, li.status  {
         display: none;
+      }
+    }
+
+    .song, .artist {
+      margin-bottom: 4px;
+    }
+
+    .transport {
+      border-radius: 0px !important;
+      margin-top: 4px;
+      height: 10px;
+
+      .bar, .loader-bar {
+        border-radius: 0px;
       }
     }
   }
@@ -130,7 +155,19 @@
   }
 
   .artist-details {
+    margin: -5px;
+    padding-bottom: 10px;
+
+    > .stretch-to-bottom {
+      padding: 0 10px;
+      .col-md-6 {
+        padding: 0px;
+      }
+    }
+
     > header {
+      margin-bottom: 0px;
+
       > img {
         float: none !important;
         display: block;
@@ -150,6 +187,65 @@
           margin-right: auto;
         }
       }
+    }
+  }
+
+  .tabs li a {
+    padding: 10px 13px;
+  }
+
+  .track-details {
+    .single-player {
+      &.visible-xs-block {
+        float: none;
+        width: 100%;
+        height: 100%;
+      }
+
+      a {
+        font-size: 22pt;
+        background: rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    header {
+      margin-bottom: 0px;
+      h1 {
+        font-size: 16pt;
+      }
+      h2 {
+        font-size: 11pt;
+      }
+      h1, h2 {
+        margin-left: 0px !important;
+      }
+    }
+  }
+
+  .two-pane-view.closed .account-tracks-listing li, .two-pane-view.closed .account-albums-listing li {
+    width: 50% !important;
+  }
+
+  .site-content > .ui-view.loading {
+    margin: 0px -5px;
+  }
+
+  .track-editor {
+    form {
+      padding: 5px;
+    }
+
+    .row .form-row {
+      width: 97%;
+      margin-left: 5px !important;
+      margin-right: 5px;
+    }
+  }
+
+  .license-grid li {
+    width: 50%;
+    div {
+      margin: 0;
     }
   }
 }

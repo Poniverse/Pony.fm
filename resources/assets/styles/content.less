@@ -325,6 +325,18 @@ html .single-player .play-button {
   height: @icon-size;
   position: relative;
 
+  .button-container {
+    display: table;
+    width: 100%;
+    height: 100%;
+
+    > i {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+  }
+
   .play-button {
     .transition(background 250ms ease-out);
 
@@ -404,21 +416,21 @@ html {
 
     line-height: normal;
     padding: 0px;
-    padding: 5px 0px;
+    margin: 5px 0px;
     padding-right: 10px;
     position: relative;
-    height: 56px;
+    height: 43px;
 
     .icons {
       float: right;
       display: block;
       margin-top: 5px;
 
-      i.icon-microphone-off {
+      i.fa-microphone-slash {
         opacity: .5;
       }
 
-      i.icon-microphone-off, i.icon-microphone {
+      i.fa-microphone-slash, i.fa-microphone {
         color: #777;
       }
 
@@ -490,7 +502,7 @@ html {
     &.is-favourited {
       .icons {
         a.icon-favourite {
-          color: @orange;
+          color: @brand-warning;
           text-decoration: none;
 
           i {
