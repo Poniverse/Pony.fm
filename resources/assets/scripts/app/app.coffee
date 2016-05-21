@@ -42,8 +42,7 @@ require 'script!../base/marked'
 require 'script!../base/moment'
 require '../base/soundmanager2-nodebug'
 require 'script!../base/tumblr'
-require '../base/angular-strap'
-require '../base/angular-strap.tpl'
+require 'angular-strap'
 require 'chart.js';
 require 'angular-chart.js';
 

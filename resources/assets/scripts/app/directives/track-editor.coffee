@@ -116,14 +116,12 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                 xhr.send formData
 
             $scope.deleteTrack = () ->
-                #$dialog.messageBox('Delete ' + $scope.track.title, 'Are you sure you want to delete "' + $scope.track.title + '"?', [
-                #    {result: 'ok', label: 'Yes', cssClass: 'btn-danger'},
-                #    {result: 'cancel', label: 'No', cssClass: 'btn-primary'}
-                #]).open().then (res) ->
-                #    return if res == 'cancel'
-                #    $.post('/api/web/tracks/delete/' + $scope.track.id)
-                #    .then -> $scope.$apply ->
-                #        $scope.$emit 'track-deleted'
+                modal = $modal({scope: $scope, templateUrl: 'templates/partials/delete-track-dialog.html', show: true});
+
+            $scope.confirmDeleteTrack = () ->
+                $.post('/api/web/tracks/delete/' + $scope.track.id)
+                .then -> $scope.$apply ->
+                    $scope.$emit 'track-deleted'
 
             # ========================================
             #  The part where everything gets loaded!

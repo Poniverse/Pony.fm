@@ -52,7 +52,7 @@ module.exports = angular.module('ponyfm').controller "account-tracks", [
                 $scope.selectTrack null
 
         $scope.$on 'track-deleted', () ->
-            $state.transitionTo 'account.tracks'
+            $state.transitionTo 'content.artist.account.tracks', slug: $state.params.slug
             tracks.clearCache()
             tracks.refresh(null, true).done setTracks
 
