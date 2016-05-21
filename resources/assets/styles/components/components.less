@@ -375,21 +375,33 @@ html {
   }
 
   .pagination {
+    .border-radius(0px);
     border: none;
     background: #eee;
     margin: 0px;
     margin-bottom: 10px;
     padding: 0px;
     overflow: hidden;
+    width: 100%;
 
     ul {
       .border-radius(0px);
       margin: 5px;
       display: block;
       overflow: hidden;
+      padding: 0;
+      width: 100%;
 
       > li:first-child > a, > li:last-child > a {
         .border-radius(0px);
+      }
+
+      .disabled {
+        a {
+          color: #999;
+          background-color: transparent;
+          cursor: default;
+        }
       }
 
       li {
@@ -403,6 +415,7 @@ html {
           display: block;
           float: left;
           color: @pfm-purple;
+          background-color: #fff;
         }
       }
 
