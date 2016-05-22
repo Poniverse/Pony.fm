@@ -23,6 +23,8 @@ namespace Poniverse\Ponyfm\Models;
 use Exception;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
 use Gate;
@@ -62,6 +64,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read mixed $url
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album userDetails()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
  */
 class Album extends Model implements Searchable, Commentable, Favouritable
 {
@@ -103,7 +106,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser');
     }
 
-    public function favourites()
+    public function favourites():HasMany
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\Favourite');
     }
@@ -122,9 +125,13 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         return $this->hasManyThrough(TrackFile::class, Track::class, 'album_id', 'track_id');
     }
 
-    public function comments()
+    public function comments():HasMany
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
+    }
+
+    public function activities():MorphMany {
+        return $this->morphMany(Activity::class, 'resource');
     }
 
     public static function mapPublicAlbumShow(Album $album)
@@ -430,5 +437,15 @@ class Album extends Model implements Searchable, Commentable, Favouritable
      */
     public function shouldBeIndexed():bool {
         return $this->track_count > 0 && !$this->trashed();
+    }
+
+    /**
+     * Returns the corresponding resource type ID from the Activity class for
+     * this resource.
+     *
+     * @return string
+     */
+    public function getResourceType():string {
+        return 'album';
     }
 }

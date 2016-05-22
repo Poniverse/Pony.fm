@@ -24,8 +24,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Poniverse\Ponyfm\Jobs\Job;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Poniverse\Ponyfm\Library\Notifications\AbstractDriver;
-use Poniverse\Ponyfm\Library\Notifications\PonyfmDriver;
+use Poniverse\Ponyfm\Library\Notifications\Drivers\AbstractDriver;
+use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
 use Poniverse\Ponyfm\Models\User;
 use SerializesModels;
 

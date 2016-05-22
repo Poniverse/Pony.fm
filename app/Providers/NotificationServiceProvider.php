@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Providers;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Poniverse\Ponyfm\Library\NotificationManager;
+use Poniverse\Ponyfm\Library\Notifications\NotificationManager;
 
 class NotificationServiceProvider extends ServiceProvider
 {

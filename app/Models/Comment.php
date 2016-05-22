@@ -21,7 +21,10 @@
 namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Poniverse\Ponyfm\Contracts\Commentable;
+use Poniverse\Ponyfm\Contracts\GeneratesNotifications;
 
 /**
  * Poniverse\Ponyfm\Models\Comment
@@ -42,7 +45,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Poniverse\Ponyfm\Models\Album $album
  * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
  * @property-read \Poniverse\Ponyfm\Models\User $profile
- * @property-read mixed $resource
+ * @property-read Commentable $resource
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
+ * @property-read mixed $url
  */
 class Comment extends Model
 {
@@ -78,6 +83,16 @@ class Comment extends Model
         return $this->belongsTo('Poniverse\Ponyfm\Models\User', 'profile_id');
     }
 
+    public function activities():MorphMany
+    {
+        return $this->morphMany(Activity::class, 'resource');
+    }
+
+    public function getUrlAttribute()
+    {
+        return $this->resource->url;
+    }
+
     public static function mapPublic($comment)
     {
         return [
@@ -97,7 +112,7 @@ class Comment extends Model
         ];
     }
 
-    public function getResourceAttribute()
+    public function getResourceAttribute():Commentable
     {
         if ($this->track_id !== null) {
             return $this->track;

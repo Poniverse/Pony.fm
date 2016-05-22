@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Library;
+namespace Poniverse\Ponyfm\Library\Notifications;
 
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -43,43 +43,41 @@ class NotificationManager implements NotificationHandler {
     use DispatchesJobs;
 
     private function dispatchNotification(string $notificationType, array $notificationData) {
-        $this->dispatch(new SendNotifications($notificationType, $notificationData));
+        $this->dispatch( (new SendNotifications($notificationType, $notificationData))->onQueue('notifications') );
     }
 
     /**
-     * @param Track $track
+     * @inheritdoc
      */
-    public function publishedNewTrack(Track $track):void {
+    public function publishedNewTrack(Track $track) {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @param Playlist $playlist
+     * @inheritdoc
      */
-    public function publishedNewPlaylist(Playlist $playlist):void {
+    public function publishedNewPlaylist(Playlist $playlist) {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @param User $userBeingFollowed
-     * @param User $follower
+     * @inheritdoc
      */
-    public function newFollower(User $userBeingFollowed, User $follower):void {
+    public function newFollower(User $userBeingFollowed, User $follower) {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @param Comment $comment
+     * @inheritdoc
      */
-    public function newComment(Comment $comment):void {
+    public function newComment(Comment $comment) {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @param Favouritable $entityBeingFavourited
-     * @param User $favouriter
+     * @inheritdoc
      */
-    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter):void {
+    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter) {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 }

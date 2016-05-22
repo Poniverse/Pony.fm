@@ -36,28 +36,33 @@ use Poniverse\Ponyfm\Models\User;
 interface NotificationHandler {
     /**
      * @param Track $track
+     * @return void
      */
-    public function publishedNewTrack(Track $track):void;
+    public function publishedNewTrack(Track $track);
 
     /**
      * @param Playlist $playlist
+     * @return void
      */
-    public function publishedNewPlaylist(Playlist $playlist):void;
+    public function publishedNewPlaylist(Playlist $playlist);
 
     /**
      * @param User $userBeingFollowed
      * @param User $follower
+     * @return void
      */
-    public function newFollower(User $userBeingFollowed, User $follower):void;
+    public function newFollower(User $userBeingFollowed, User $follower);
 
     /**
      * @param Comment $comment
+     * @return void
      */
-    public function newComment(Comment $comment):void;
+    public function newComment(Comment $comment);
 
     /**
      * @param Favouritable $entityBeingFavourited
      * @param User $favouriter
+     * @return void
      */
-    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter):void;
+    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter);
 }

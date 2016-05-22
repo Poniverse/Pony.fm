@@ -18,10 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Library\Notifications;
+namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
 
 use Poniverse\Ponyfm\Contracts\NotificationHandler;
 
 abstract class AbstractDriver implements NotificationHandler {
-
+    protected function getRecipients(string $notificationType, array $notificationData) {
+        // given the notification type, find all users who are to receive it
+    }
 }

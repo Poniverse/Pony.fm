@@ -20,10 +20,56 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\Notification
+ *
+ * @property integer $id
+ * @property integer $activity_id
+ * @property integer $user_id
+ * @property boolean $is_read
+ * @property-read \Poniverse\Ponyfm\Models\Activity $activity
+ * @property-read \Poniverse\Ponyfm\Models\User $recipient
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification forUser($user)
+ */
 class Notification extends Model {
-    public function notificationType() {
-        return $this->morphTo();
+    protected $fillable = ['activity_id', 'user_id'];
+
+    public function activity() {
+        return $this->belongsTo(Activity::class, 'activity_id', 'id');
+    }
+    
+    public function recipient() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    /**
+     * This scope grabs eager-loaded notifications for the given user.
+     *
+     * @param Builder $query
+     * @param User $user
+     * @return Builder
+     */
+    public function scopeForUser(Builder $query, User $user) {
+        return $query->with([
+            'activity',
+            'activity.initiatingUser',
+            'activity.resource',
+        ])
+         ->join('activities', 'notifications.activity_id', '=', 'activities.id')
+         ->where('notifications.user_id', $user->id)
+         ->orderBy('activities.created_at', 'DESC');
+    }
+
+    public function toArray() {
+        return [
+            'id'            => $this->id,
+            'date'          => $this->activity->created_at->toAtomString(),
+            'thumbnail_url' => $this->activity->thumbnail_url,
+            'text'          => $this->activity->text,
+            'url'           => $this->activity->url
+        ];
     }
 }

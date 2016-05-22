@@ -33,6 +33,10 @@ use DB;
 class EditTrackCommand extends CommandBase
 {
     private $_trackId;
+
+    /**
+     * @var Track
+     */
     private $_track;
     private $_input;
 
@@ -177,12 +181,13 @@ class EditTrackCommand extends CommandBase
         return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);
     }
 
-    private function removeTrackFromAlbum($track)
+    private function removeTrackFromAlbum(Track $track)
     {
         $album = $track->album;
         $index = 0;
 
         foreach ($album->tracks as $track) {
+            /** @var $track Track */
             if ($track->id == $this->_trackId) {
                 continue;
             }

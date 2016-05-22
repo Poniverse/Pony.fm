@@ -20,10 +20,10 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Carbon\Carbon;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Commands\SaveAccountSettingsCommand;
 use Poniverse\Ponyfm\Models\User;
-use Cover;
 use Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;

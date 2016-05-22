@@ -20,19 +20,23 @@
 
 namespace Poniverse\Ponyfm\Contracts;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Poniverse\Ponyfm\Models\User;
 
 /**
- * This interface is used for type safety when referring to entities that
- * are capable of being favourited.
+ * This interface is used for type safety when referring to entities that can be
+ * the "target resource" of a notification (ie. what the notification is about).
  *
  * @package Poniverse\Ponyfm\Contracts
  */
-interface Favouritable extends GeneratesNotifications {
+interface GeneratesNotifications {
     /**
-     * This method returns an Eloquent relation to the entity's favourites.
-     *
-     * @return HasMany
+     * Returns a human-friendly string (lowercase & singular) representing this
+     * type of resource.
+     * 
+     * @return string
      */
-    public function favourites():HasMany;
+    public function getResourceType():string;
+
+    public function activities():MorphMany;
 }

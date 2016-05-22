@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Peter Deltchev
+ * Copyright (C) 2015 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,21 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Contracts;
+namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Auth;
+use Carbon\Carbon;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Models\Notification;
 
-/**
- * This interface is used for type safety when referring to entities that
- * are capable of being favourited.
- *
- * @package Poniverse\Ponyfm\Contracts
- */
-interface Favouritable extends GeneratesNotifications {
-    /**
-     * This method returns an Eloquent relation to the entity's favourites.
-     *
-     * @return HasMany
-     */
-    public function favourites():HasMany;
+class NotificationsController extends ApiControllerBase
+{
+    public function getNotifications()
+    {
+        $notifications = Notification::forUser(Auth::user())
+            ->take(20)
+            ->get()->toArray();
+
+        return ['notifications' => $notifications];
+    }
 }

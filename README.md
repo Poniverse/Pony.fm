@@ -25,6 +25,8 @@ For quick fixes, go ahead and submit a pull request!
 For larger features, it's best to open an issue before sinking a ton of work
 into building them, to coordinate with Pony.fm's maintainers.
 
+Developer documentation is available in the [`documentation` directory](documentation).
+
 **Protip:** Looking for a place to jump in and start coding? Try a
 [quickwin issue](https://github.com/Poniverse/Pony.fm/labels/quickwin%21) -
 these are smaller in scope and easier to tackle if you're unfamiliar with the codebase!

@@ -27,37 +27,34 @@ use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 
-class PonyfmDriver extends AbstractDriver {
+class PonyfmRenderer {
     /**
-     * @param Track $track
+     * @inheritdoc
      */
-    public function publishedNewTrack(Track $track):void {
-        // TODO: Implement publishedNewTrack() method.
+    public function publishedNewTrack(Track $track) {
     }
 
     /**
-     * @param Playlist $playlist
+     * @inheritdoc
      */
-    public function publishedNewPlaylist(Playlist $playlist):void {
-        // TODO: Implement publishedNewPlaylist() method.
-    }
-
-    public function newFollower(User $userBeingFollowed, User $follower):void {
-        // TODO: Implement newFollower() method.
+    public function publishedNewPlaylist(Playlist $playlist) {
     }
 
     /**
-     * @param Comment $comment
+     * @inheritdoc
      */
-    public function newComment(Comment $comment):void {
-        // TODO: Implement newComment() method.
+    public function newFollower(User $userBeingFollowed, User $follower) {
     }
 
     /**
-     * @param Favouritable $entityBeingFavourited
-     * @param User $favouriter
+     * @inheritdoc
      */
-    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter):void {
-        // TODO: Implement newFavourite() method.
+    public function newComment(Comment $comment) {
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter) {
     }
 }

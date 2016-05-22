@@ -30,20 +30,23 @@ class CreateNotificationsTables extends Migration
      */
     public function up()
     {
-        Schema::create('notifications', function(Blueprint $table){
-            $table->unsignedBigInteger('id');
-            $table->unsignedTinyInteger('notification_type');
-            $table->unsignedInteger('content_id');
-            $table->timestamps();
+        Schema::create('activities', function(Blueprint $table){
+            $table->bigIncrements('id');
+            $table->dateTime('created_at')->index();
+            $table->unsignedInteger('user_id'); // initiator of the action
+            $table->unsignedTinyInteger('activity_type');
+            $table->unsignedTinyInteger('resource_type');
+            $table->unsignedInteger('resource_id'); // ID of the entity this activity is about
         });
 
-        Schema::create('notification_user', function(Blueprint $table){
-            $table->unsignedBigInteger('id');
-            $table->unsignedInteger('notification_id');
-            $table->unsignedInteger('user_id');
-            $table->boolean('is_read')->default(false);
+        Schema::create('notifications', function(Blueprint $table){
+            // Notifications are a pivot table between activities and users.
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('activity_id')->index();
+            $table->unsignedInteger('user_id')->index(); // recipient of the notification
+            $table->boolean('is_read')->default(false)->index();
             
-            $table->foreign('notification_id')->references('id')->on('notifications')->onDelete('cascade');
+            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
@@ -55,7 +58,7 @@ class CreateNotificationsTables extends Migration
      */
     public function down()
     {
-        Schema::drop('notification_user');
         Schema::drop('notifications');
+        Schema::drop('activities');
     }
 }

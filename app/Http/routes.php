@@ -134,6 +134,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::group(['middleware' => 'auth'], function() {
         Route::get('/account/settings/{slug}', 'Api\Web\AccountController@getSettings');
+        Route::get('/account/notifications', 'Api\Web\NotificationsController@getNotifications');
 
         Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');

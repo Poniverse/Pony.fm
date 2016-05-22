@@ -20,16 +20,12 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
-use Notification;
-use Poniverse\Ponyfm\Library\NotificationManager;
 use View;
 
 class HomeController extends Controller
 {
-    public function getIndex(Notification $notification)
+    public function getIndex()
     {
-//        $notification->testStuff();
-        dd($notification);
         return View::make('home.index');
     }
 }
