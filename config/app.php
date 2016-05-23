@@ -140,6 +140,7 @@ return [
         /*
          * Application Service Providers...
          */
+        Barryvdh\Debugbar\ServiceProvider::class,
         Poniverse\Ponyfm\Providers\AppServiceProvider::class,
         Poniverse\Ponyfm\Providers\EventServiceProvider::class,
         Poniverse\Ponyfm\Providers\RouteServiceProvider::class,
@@ -148,7 +149,6 @@ return [
         Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Cviebrock\LaravelElasticsearch\ServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 
