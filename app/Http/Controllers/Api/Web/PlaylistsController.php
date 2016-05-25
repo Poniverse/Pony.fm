@@ -72,7 +72,7 @@ class PlaylistsController extends ApiControllerBase
         $query = Playlist::summary()
             ->with('user', 'user.avatar', 'tracks', 'tracks.cover', 'tracks.user', 'tracks.album', 'tracks.album.user')
             ->userDetails()
-            ->orderBy('title', 'asc')
+            ->orderBy('favourite_count', 'desc')
             ->where('track_count', '>', 0)
             ->whereIsPublic(true);
 
