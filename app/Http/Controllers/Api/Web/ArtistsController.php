@@ -184,7 +184,8 @@ class ArtistsController extends ApiControllerBase
                 'user_data' => $userData,
                 'permissions' => [
                     'edit' => Gate::allows('edit', $user)
-                ]
+                ],
+                'isAdmin' => $user->hasRole('admin')
             ]
         ], 200);
     }

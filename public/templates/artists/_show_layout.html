@@ -3,7 +3,7 @@
     <header ng-style="{'background-image': 'linear-gradient(135deg, ' + artist.avatar_colors[0] + ' 15%, ' + artist.avatar_colors[1] + ' 100%)'}">
         <img src="{{::artist.avatars.normal}}">
         <div class="artist-right">
-            <h1>{{::artist.name}}</h1>
+            <h1>{{::artist.name}}<i class="fa fa-star admin-star" ng-show="::artist.isAdmin" data-title="Admin" bs-tooltip></i></h1>
             <a href="#" class="btn btn-default" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="::auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
                 <span ng-hide="artist.user_data.is_following">Follow</span>
                 <span ng-show="artist.user_data.is_following">Following!</span>
