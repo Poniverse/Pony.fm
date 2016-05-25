@@ -20,10 +20,28 @@
 
 namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
 
+use ArrayAccess;
 use Poniverse\Ponyfm\Contracts\NotificationHandler;
+use Poniverse\Ponyfm\Library\Notifications\RecipientFinder;
+use Poniverse\Ponyfm\Models\User;
 
 abstract class AbstractDriver implements NotificationHandler {
+    private $recipientFinder;
+
+    public function __construct() {
+        $this->recipientFinder = new RecipientFinder(get_class($this));
+    }
+
+    /**
+     * Returns an array of users who are to receive the given notification type.
+     * This method is a wrapper around the {@link RecipientFinder} class, which
+     * does the actual processing for all the drivers.
+     *
+     * @param string $notificationType
+     * @param array $notificationData
+     * @return ArrayAccess collection of {@link User} objects
+     */
     protected function getRecipients(string $notificationType, array $notificationData) {
-        // given the notification type, find all users who are to receive it
+        return call_user_func_array([$this->recipientFinder, $notificationType], $notificationData);
     }
 }

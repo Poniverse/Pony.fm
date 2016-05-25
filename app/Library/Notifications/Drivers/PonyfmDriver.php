@@ -21,10 +21,9 @@
 namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
 
 
+use ArrayAccess;
 use Carbon\Carbon;
-use DB;
 use Poniverse\Ponyfm\Contracts\Favouritable;
-use Poniverse\Ponyfm\Library\Notifications\Drivers\AbstractDriver;
 use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Notification;
@@ -37,9 +36,9 @@ class PonyfmDriver extends AbstractDriver {
      * A helper method for bulk insertion of notification records.
      *
      * @param int $activityId
-     * @param User[] $recipients
+     * @param ArrayAccess $recipients collection of {@link User} objects
      */
-    private function insertNotifications(int $activityId, $recipients) {
+    private function insertNotifications(int $activityId, ArrayAccess $recipients) {
         $notifications = [];
         foreach ($recipients as $recipient) {
             $notifications[] = [
@@ -54,81 +53,71 @@ class PonyfmDriver extends AbstractDriver {
      * @inheritdoc
      */
     public function publishedNewTrack(Track $track) {
-        DB::transaction(function () use ($track) {
-            $activity = Activity::create([
-                'created_at'    => Carbon::now(),
-                'user_id'       => $track->user_id,
-                'activity_type' => Activity::TYPE_PUBLISHED_TRACK,
-                'resource_type' => Track::class,
-                'resource_id'   => $track->id,
-            ]);
+        $activity = Activity::create([
+            'created_at'    => Carbon::now(),
+            'user_id'       => $track->user_id,
+            'activity_type' => Activity::TYPE_PUBLISHED_TRACK,
+            'resource_type' => Track::class,
+            'resource_id'   => $track->id,
+        ]);
 
-            $this->insertNotifications($activity->id, $track->user->followers);
-        });
+        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
     }
 
     /**
      * @inheritdoc
      */
     public function publishedNewPlaylist(Playlist $playlist) {
-        DB::transaction(function () use ($playlist) {
-            $activity = Activity::create([
-                'created_at' => Carbon::now(),
-                'user_id' => $playlist->user_id,
-                'activity_type' => Activity::TYPE_PUBLISHED_PLAYLIST,
-                'resource_type' => Playlist::class,
-                'resource_id' => $playlist->id,
-            ]);
+        $activity = Activity::create([
+            'created_at' => Carbon::now(),
+            'user_id' => $playlist->user_id,
+            'activity_type' => Activity::TYPE_PUBLISHED_PLAYLIST,
+            'resource_type' => Playlist::class,
+            'resource_id' => $playlist->id,
+        ]);
 
-            $this->insertNotifications($activity->id, $playlist->user->followers);
-        });
+        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
     }
 
     public function newFollower(User $userBeingFollowed, User $follower) {
-        DB::transaction(function () use ($userBeingFollowed, $follower) {
-            $activity = Activity::create([
-                'created_at' => Carbon::now(),
-                'user_id' => $follower->id,
-                'activity_type' => Activity::TYPE_NEW_FOLLOWER,
-                'resource_type' => User::class,
-                'resource_id' => $userBeingFollowed->id,
-            ]);
+        $activity = Activity::create([
+            'created_at' => Carbon::now(),
+            'user_id' => $follower->id,
+            'activity_type' => Activity::TYPE_NEW_FOLLOWER,
+            'resource_type' => User::class,
+            'resource_id' => $userBeingFollowed->id,
+        ]);
 
-            $this->insertNotifications($activity->id, [$userBeingFollowed]);
-        });
+        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
     }
 
     /**
      * @inheritdoc
      */
     public function newComment(Comment $comment) {
-        DB::transaction(function () use ($comment) {
-            $activity = Activity::create([
-                'created_at' => Carbon::now(),
-                'user_id' => $comment->user_id,
-                'activity_type' => Activity::TYPE_NEW_COMMENT,
-                'resource_type' => Comment::class,
-                'resource_id' => $comment->id,
-            ]);
+        $activity = Activity::create([
+            'created_at' => Carbon::now(),
+            'user_id' => $comment->user_id,
+            'activity_type' => Activity::TYPE_NEW_COMMENT,
+            'resource_type' => Comment::class,
+            'resource_id' => $comment->id,
+        ]);
 
-            $this->insertNotifications($activity->id, [$comment->resource->user]);
-        });
+        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
     }
 
     /**
      * @inheritdoc
      */
     public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter) {
-        DB::transaction(function () use ($entityBeingFavourited, $favouriter) {
-            $activity = Activity::create([
-                'created_at' => Carbon::now(),
-                'user_id' => $favouriter->id,
-                'activity_type' => Activity::TYPE_CONTENT_FAVOURITED,
-                'resource_type' => get_class($entityBeingFavourited),
-                'resource_id' => $entityBeingFavourited->id,
-            ]);
+        $activity = Activity::create([
+            'created_at' => Carbon::now(),
+            'user_id' => $favouriter->id,
+            'activity_type' => Activity::TYPE_CONTENT_FAVOURITED,
+            'resource_type' => get_class($entityBeingFavourited),
+            'resource_id' => $entityBeingFavourited->id,
+        ]);
 
-            $this->insertNotifications($activity->id, [$entityBeingFavourited->user]);
-        });
+        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
     }
 }

@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Poniverse\Ponyfm\Models\Follower
@@ -36,4 +37,13 @@ class Follower extends Model
     protected $table = 'followers';
 
     public $timestamps = false;
+
+
+    public function follower():BelongsTo {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function artist():BelongsTo {
+        return $this->belongsTo(User::class, 'artist_id');
+    }
 }

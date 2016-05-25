@@ -43,6 +43,14 @@ class Activity extends Model {
     protected $dates = ['created_at'];
     protected $fillable = ['created_at', 'user_id', 'activity_type', 'resource_type', 'resource_id'];
     protected $appends = ['url', 'thumbnail_url', 'human_friendly_resource_type'];
+    protected $casts = [
+        'id'            => 'integer',
+        'created_at'    => 'datetime',
+        'user_id'       => 'integer',
+        'activity_type' => 'integer',
+        // resource_type has its own accessor and mutator
+        'resource_id'   => 'integer',
+    ];
 
     const TYPE_NEWS = 1;
     const TYPE_PUBLISHED_TRACK = 2;
@@ -105,6 +113,10 @@ class Activity extends Model {
 
             case static::TARGET_COMMENT:
                 return Comment::class;
+            
+            default:
+                throw new \Exception('This activity\'s resource is of an unknown type!');
+                
         }
     }
 
@@ -112,18 +124,23 @@ class Activity extends Model {
         switch ($value) {
             case User::class:
                 $this->attributes['resource_type'] = static::TARGET_USER;
+                break;
 
             case Track::class:
                 $this->attributes['resource_type'] = static::TARGET_TRACK;
+                break;
 
             case Album::class:
                 $this->attributes['resource_type'] = static::TARGET_ALBUM;
+                break;
 
             case Playlist::class:
                 $this->attributes['resource_type'] = static::TARGET_PLAYLIST;
+                break;
 
             case Comment::class:
                 $this->attributes['resource_type'] = static::TARGET_COMMENT;
+                break;
         }
     }
 
@@ -140,6 +157,9 @@ class Activity extends Model {
 
             case Comment::class:
                 return $this->resource->user->getAvatarUrl(Image::THUMBNAIL);
+
+            default:
+                throw new \Exception('This activity\'s resource is of an unknown type!');
         }
     }
 
@@ -148,7 +168,8 @@ class Activity extends Model {
         switch ($this->activity_type) {
             case static::TYPE_NEWS:
                 // not implemented yet
-                break;
+                throw new \InvalidArgumentException('This type of activity has not been implemented yet!');
+
             case static::TYPE_PUBLISHED_TRACK:
                 return "{$this->resource->user->display_name} published a new track, __{$this->resource->title}__!";
 
@@ -162,15 +183,17 @@ class Activity extends Model {
                 // Is this a profile comment?
                 if ($this->resource_type === User::class) {
                     return "{$this->initiatingUser->display_name} left a comment on your profile!";
-                    
+
                 // Must be a content comment.
                 } else {
                     return "{$this->initiatingUser->display_name} left a comment on your {$this->resource->resource->getResourceType()}, __{$this->resource->resource->title}__!";
                 }
-
-
+            
             case static::TYPE_CONTENT_FAVOURITED:
                 return "{$this->initiatingUser->display_name} favourited your {$this->resource->type}, __{$this->resource->title}__!";
+
+            default:
+                throw new \Exception('This activity\'s activity type is unknown!');
         }
     }
 }

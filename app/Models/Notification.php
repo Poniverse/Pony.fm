@@ -35,7 +35,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification forUser($user)
  */
 class Notification extends Model {
+    public $timestamps = false;
     protected $fillable = ['activity_id', 'user_id'];
+    protected $casts = [
+        'id'            => 'integer',
+        'activity_id'   => 'datetime',
+        'user_id'       => 'integer',
+        'is_read'       => 'boolean',
+    ];
 
     public function activity() {
         return $this->belongsTo(Activity::class, 'activity_id', 'id');
