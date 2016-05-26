@@ -54,6 +54,8 @@ class SendNotifications extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
+        $this->beforeHandle();
+        
         // get list of users who are supposed to receive this notification
         $recipients = [User::find(1)];
 

@@ -78,7 +78,7 @@ class Activity extends Model {
     const TARGET_COMMENT = 5;
 
     public function initiatingUser() {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function notifications() {
@@ -115,7 +115,9 @@ class Activity extends Model {
                 return Comment::class;
             
             default:
-                throw new \Exception('This activity\'s resource is of an unknown type!');
+                // Null must be returned here for Eloquent's eager-loading
+                // of the polymorphic relation to work.
+                return NULL;
                 
         }
     }
@@ -163,6 +165,10 @@ class Activity extends Model {
         }
     }
 
+    /**
+     * @return string human-readable Markdown string describing this notification
+     * @throws \Exception
+     */
     public function getTextAttribute()
     {
         switch ($this->activity_type) {

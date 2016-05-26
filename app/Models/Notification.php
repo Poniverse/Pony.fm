@@ -39,7 +39,7 @@ class Notification extends Model {
     protected $fillable = ['activity_id', 'user_id'];
     protected $casts = [
         'id'            => 'integer',
-        'activity_id'   => 'datetime',
+        'activity_id'   => 'integer',
         'user_id'       => 'integer',
         'is_read'       => 'boolean',
     ];
@@ -64,6 +64,7 @@ class Notification extends Model {
             'activity',
             'activity.initiatingUser',
             'activity.resource',
+            'activity.resource.user',
         ])
          ->join('activities', 'notifications.activity_id', '=', 'activities.id')
          ->where('notifications.user_id', $user->id)
