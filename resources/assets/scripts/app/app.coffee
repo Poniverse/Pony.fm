@@ -285,6 +285,11 @@ ponyfm.config [
                 url: '/'
                 templateUrl: '/templates/dashboard/index.html'
                 controller: 'dashboard'
+
+            state.state 'notifications',
+                url: '/notifications'
+                templateUrl: '/templates/notifications/index.html'
+                controller: 'notifications'
         else
             state.state 'home',
                 url: '/'
