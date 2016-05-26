@@ -39,7 +39,7 @@ abstract class AbstractDriver implements NotificationHandler {
      *
      * @param string $notificationType
      * @param array $notificationData
-     * @return ArrayAccess collection of {@link User} objects
+     * @return User[] collection of {@link User} objects
      */
     protected function getRecipients(string $notificationType, array $notificationData) {
         return call_user_func_array([$this->recipientFinder, $notificationType], $notificationData);

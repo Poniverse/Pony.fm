@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property integer $artist_id
  * @property integer $playlist_id
  * @property string $created_at
+ * @property-read \Poniverse\Ponyfm\Models\User $follower
+ * @property-read \Poniverse\Ponyfm\Models\User $artist
  */
 class Follower extends Model
 {
