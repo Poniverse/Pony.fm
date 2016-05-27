@@ -36,9 +36,9 @@ class PonyfmDriver extends AbstractDriver {
      * A helper method for bulk insertion of notification records.
      *
      * @param int $activityId
-     * @param ArrayAccess $recipients collection of {@link User} objects
+     * @param User[] $recipients collection of {@link User} objects
      */
-    private function insertNotifications(int $activityId, ArrayAccess $recipients) {
+    private function insertNotifications(int $activityId, $recipients) {
         $notifications = [];
         foreach ($recipients as $recipient) {
             $notifications[] = [
