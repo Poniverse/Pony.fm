@@ -20,10 +20,14 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Notification;
+use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Models\Favourite;
+use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Poniverse\Ponyfm\Models\Track;
 
 class ToggleFavouriteCommand extends CommandBase
 {
@@ -45,6 +49,20 @@ class ToggleFavouriteCommand extends CommandBase
 
         return $user != null;
     }
+    
+    private function getEntityBeingFavourited():Favouritable
+    {
+        switch ($this->_resourceType) {
+            case 'track':
+                return Track::find($this->_resourceId);
+            case 'album':
+                return Album::find($this->_resourceId);
+            case 'playlist':
+                return Playlist::find($this->_resourceId);
+            default:
+                throw new \InvalidArgumentException('Unknown resource type given!');
+        }
+    }
 
     /**
      * @throws \Exception
@@ -65,6 +83,8 @@ class ToggleFavouriteCommand extends CommandBase
             $fav->created_at = time();
             $fav->save();
             $isFavourited = true;
+            
+            Notification::newFavourite($this->getEntityBeingFavourited(), $fav->user);
         }
 
         $resourceUser = ResourceUser::get(Auth::user()->id, $this->_resourceType, $this->_resourceId);

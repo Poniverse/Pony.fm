@@ -22,10 +22,14 @@ namespace Poniverse\Ponyfm\Models;
 
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
+use Poniverse\Ponyfm\Contracts\Commentable;
+use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
@@ -59,8 +63,10 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read mixed $url
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist userDetails()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Favourite[] $favourites
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
  */
-class Playlist extends Model implements Searchable
+class Playlist extends Model implements Searchable, Commentable, Favouritable
 {
     use SoftDeletes, SlugTrait, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
 
@@ -212,7 +218,7 @@ class Playlist extends Model implements Searchable
         return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser');
     }
 
-    public function comments()
+    public function comments():HasMany
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
     }
@@ -221,10 +227,18 @@ class Playlist extends Model implements Searchable
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\PinnedPlaylist');
     }
+    
+    public function favourites():HasMany {
+        return $this->hasMany(Favourite::class);
+    }
 
     public function user()
     {
         return $this->belongsTo('Poniverse\Ponyfm\Models\User');
+    }
+
+    public function activities():MorphMany {
+        return $this->morphMany(Activity::class, 'resource');
     }
 
     public function hasPinFor($userId)
@@ -323,5 +337,12 @@ class Playlist extends Model implements Searchable
         return $this->is_public &&
                $this->track_count > 0 &&
                !$this->trashed();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getResourceType():string {
+        return 'playlist';
     }
 }

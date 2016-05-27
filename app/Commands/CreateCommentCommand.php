@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Notification;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Playlist;
@@ -115,6 +116,8 @@ class CreateCommentCommand extends CommandBase
 
         $entity->comment_count = Comment::where($column, $this->_id)->count();
         $entity->save();
+        
+        Notification::newComment($comment);
 
         return CommandResponse::succeed(Comment::mapPublic($comment));
     }

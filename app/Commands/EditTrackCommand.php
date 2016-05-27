@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Commands;
 
 use Gate;
+use Notification;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
@@ -32,6 +33,10 @@ use DB;
 class EditTrackCommand extends CommandBase
 {
     private $_trackId;
+
+    /**
+     * @var Track
+     */
     private $_track;
     private $_input;
 
@@ -132,6 +137,8 @@ class EditTrackCommand extends CommandBase
 
             DB::table('tracks')->whereUserId($track->user_id)->update(['is_latest' => false]);
             $track->is_latest = true;
+            
+            Notification::publishedNewTrack($track);
         }
 
         if (isset($this->_input['cover_id'])) {
@@ -174,12 +181,13 @@ class EditTrackCommand extends CommandBase
         return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);
     }
 
-    private function removeTrackFromAlbum($track)
+    private function removeTrackFromAlbum(Track $track)
     {
         $album = $track->album;
         $index = 0;
 
         foreach ($album->tracks as $track) {
+            /** @var $track Track */
             if ($track->id == $this->_trackId) {
                 continue;
             }

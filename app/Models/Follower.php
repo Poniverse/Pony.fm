@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Poniverse\Ponyfm\Models\Follower
@@ -30,10 +31,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $artist_id
  * @property integer $playlist_id
  * @property string $created_at
+ * @property-read \Poniverse\Ponyfm\Models\User $follower
+ * @property-read \Poniverse\Ponyfm\Models\User $artist
  */
 class Follower extends Model
 {
     protected $table = 'followers';
 
     public $timestamps = false;
+
+
+    public function follower():BelongsTo {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function artist():BelongsTo {
+        return $this->belongsTo(User::class, 'artist_id');
+    }
 }

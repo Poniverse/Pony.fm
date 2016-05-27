@@ -26,9 +26,12 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Auth;
 use Illuminate\Support\Str;
+use Poniverse\Ponyfm\Contracts\Commentable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -63,8 +66,12 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read mixed $message_url
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User userDetails()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Notification[] $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\User[] $followers
+ * @property-read mixed $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
  */
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
 {
     use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearchTrait;
 
@@ -133,13 +140,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser', 'artist_id');
     }
+    
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'artist_id', 'user_id');
+    }
 
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_user');
     }
 
-    public function comments()
+    public function comments():HasMany
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\Comment', 'profile_id')->orderBy('created_at', 'desc');
     }
@@ -147,6 +159,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function tracks()
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\Track', 'user_id');
+    }
+    
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
+
+    public function notificationActivities()
+    {
+        return $this->hasManyThrough(Activity::class, Notification::class, 'user_id', 'notification_id', 'id');
     }
 
     public function getIsArchivedAttribute()
@@ -233,6 +255,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getRememberTokenName()
     {
         return "remember_token";
+    }
+
+    public function getUserAttribute():User {
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getResourceType():string {
+        return 'profile';
+    }
+
+    public function activities():MorphMany {
+        return $this->morphMany(Activity::class, 'resource');
     }
 
     /**

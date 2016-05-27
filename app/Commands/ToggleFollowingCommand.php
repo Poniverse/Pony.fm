@@ -22,7 +22,8 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Poniverse\Ponyfm\Models\Follower;
 use Poniverse\Ponyfm\Models\ResourceUser;
-use Illuminate\Support\Facades\Auth;
+use Auth;
+use Notification;
 
 class ToggleFollowingCommand extends CommandBase
 {
@@ -64,6 +65,8 @@ class ToggleFollowingCommand extends CommandBase
             $follow->created_at = time();
             $follow->save();
             $isFollowed = true;
+            
+            Notification::newFollower($follow->artist, Auth::user());
         }
 
         $resourceUser = ResourceUser::get(Auth::user()->id, $this->_resourceType, $this->_resourceId);

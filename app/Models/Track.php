@@ -25,6 +25,10 @@ use Cache;
 use Config;
 use DB;
 use Gate;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Poniverse\Ponyfm\Contracts\Commentable;
+use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
@@ -95,8 +99,10 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track explicitFilter()
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track withComments()
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track mlpma()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
  */
-class Track extends Model implements Searchable
+class Track extends Model implements Searchable, Commentable, Favouritable
 {
     use SoftDeletes, IndexedInElasticsearchTrait;
 
@@ -486,12 +492,12 @@ class Track extends Model implements Searchable
         return $this->belongsTo('Poniverse\Ponyfm\Models\TrackType', 'track_type_id');
     }
 
-    public function comments()
+    public function comments():HasMany
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
     }
 
-    public function favourites()
+    public function favourites():HasMany
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\Favourite');
     }
@@ -524,6 +530,15 @@ class Track extends Model implements Searchable
     public function trackFiles()
     {
         return $this->hasMany('Poniverse\Ponyfm\Models\TrackFile');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(Activity::class, 'notification_type');
+    }
+
+    public function activities():MorphMany {
+        return $this->morphMany(Activity::class, 'resource');
     }
 
     public function getYearAttribute()
@@ -862,5 +877,9 @@ class Track extends Model implements Searchable
             'track_type'    => $this->trackType->title,
             'show_songs'    => $this->showSongs->pluck('title')
         ];
+    }
+
+    public function getResourceType():string {
+        return 'track';
     }
 }
