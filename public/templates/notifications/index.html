@@ -1,0 +1,4 @@
+<div ng-repeat="notification in notifications">
+    <a href="{{ notification.url }}"><img pfm-src-loader="::notification.thumbnail_url" pfm-src-size="thumbnail"></a>
+    <a href="{{ notification.url }}"><p>{{ notification.text }}</p></a>
+</div>

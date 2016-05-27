@@ -65,6 +65,8 @@ Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
 Route::get('p{id}', 'PlaylistsController@getShortlink')->where('id', '\d+');
 Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload' );
 
+Route::get('notifications', 'AccountController@getNotifications');
+
 
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function() {

@@ -17,6 +17,8 @@
 module.exports = angular.module('ponyfm').controller "notifications", [
     '$scope', 'notifications'
     ($scope, notifications) ->
+
         notifications.getNotifications().done (result) ->
+            $scope.notifications = result
             console.log result
 ]

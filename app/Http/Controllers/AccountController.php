@@ -35,4 +35,9 @@ class AccountController extends Controller
     {
         return Redirect::to(Config::get('poniverse.urls')['register']);
     }
+
+    public function getNotifications()
+    {
+        return View::make('shared.null');
+    }
 }

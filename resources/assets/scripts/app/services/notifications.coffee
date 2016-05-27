@@ -21,8 +21,8 @@ module.exports = angular.module('ponyfm').factory('notifications', [
             getNotifications: () ->
                 def = new $.Deferred()
 
-                $http.get('/api/web/account/notifications').success (response) ->
-                    def.resolve response
+                $http.get('/api/web/notifications').success (response) ->
+                    def.resolve response.notifications
 
                 def.promise()
 
