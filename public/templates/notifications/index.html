@@ -1,4 +1,4 @@
-<div ng-repeat="notification in notifications">
-    <a href="{{ notification.url }}"><img pfm-src-loader="::notification.thumbnail_url" pfm-src-size="thumbnail"></a>
-    <a href="{{ notification.url }}"><p>{{ notification.text }}</p></a>
+<div ng-repeat="notification in notifications" class="notification">
+    <a href="{{ notification.url }}" class="img-link"><img pfm-src-loader="::notification.thumbnail_url" pfm-src-size="thumbnail"></a>
+    <a href="{{ notification.url }}" class="message"><p>{{ notification.text }}</p></a>
 </div>
