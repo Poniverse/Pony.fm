@@ -263,6 +263,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     /**
      * @param integer $count
+     * @return array
      */
     public static function popular($count, $allowExplicit = false)
     {
@@ -562,7 +563,6 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getFilesize($formatName)
     {
-//        $trackFile = $this->trackFiles()->where('format', $formatName)->first();
         $trackFile = $this->trackFiles->where('format', $formatName)->first();
 
         if ($trackFile) {
@@ -681,7 +681,9 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     }
 
     /**
+     * @param $format
      * @return string
+     * @throws Exception
      */
     public function getFileFor($format)
     {
