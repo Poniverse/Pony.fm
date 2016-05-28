@@ -88,7 +88,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
                 'users' => function($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
-            ]);
+            ])
+            ->with('users.avatar');
         }
 
         return !$query;
