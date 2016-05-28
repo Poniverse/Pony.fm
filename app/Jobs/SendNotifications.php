@@ -55,30 +55,18 @@ class SendNotifications extends Job implements SelfHandling, ShouldQueue
     public function handle()
     {
         $this->beforeHandle();
-        
-        // get list of users who are supposed to receive this notification
-        $recipients = [User::find(1)];
 
-        foreach ($recipients as $recipient) {
-            // get drivers that this notification should be delivered through
-            $drivers = $this->getDriversForNotification($recipient, $this->notificationType);
+        // This variable is set here instead of as a static class variable
+        // to work around a Laravel bug - namely, the SerializesModels trait
+        // tries (and fails) to serialize static fields.
+        $drivers = [
+            PonyfmDriver::class
+        ];
 
-            foreach ($drivers as $driver) {
-                /** @var $driver AbstractDriver */
-                call_user_func_array([$driver, $this->notificationType], $this->notificationData);
-            }
+        foreach ($drivers as $driver) {
+            /** @var $driver AbstractDriver */
+            $driver = new $driver;
+            call_user_func_array([$driver, $this->notificationType], $this->notificationData);
         }
-    }
-
-    /**
-     * Returns the drivers with which the given user has subscribed to the given
-     * notification type.
-     *
-     * @param User $user
-     * @param string $notificationType
-     * @return AbstractDriver[]
-     */
-    private function getDriversForNotification(User $user, string $notificationType) {
-        return [new PonyfmDriver()];
     }
 }
