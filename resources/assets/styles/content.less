@@ -540,6 +540,21 @@ html {
   }
 }
 
+.notification-menu {
+  float: right;
+  margin-top: 15px;
+  margin-right: 14px;
+  font-size: 20pt;
+
+  a {
+    color: #5A5A5A;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
 .notification {
   min-height: 50px;
   margin-bottom: 10px;
@@ -550,5 +565,28 @@ html {
   .message {
     margin-left: 60px;
     display: block;
+  }
+}
+
+.notification-pullout {
+  position: absolute;
+  top: 64px;
+  right: -410px;
+  width: 400px;
+  height: ~"calc(100% - 64px)";
+  z-index: 1000;
+  background: #fff;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  transition: transform 0.5s ease;
+  transform: translateX(0px) translateZ(0px);
+
+  &.active {
+    transform: translateX(-410px) translateZ(0px);
+  }
+
+  .notif-container {
+    padding: 20px;
+    max-height: 100%;
+    overflow: auto;
   }
 }

@@ -66,6 +66,9 @@
                         <li><a href="#" pfm-eat-click ng-click="logout()">Logout</a></li>
                     </ul>
                 </div>
+                <div class="notification-menu">
+                    <a href="#" ng-click="notifPulloutToggle()"><i class="fa fa-bell fa-fw" aria-hidden="true"></i></a>
+                </div>
             @endif
             <pfm-player></pfm-player>
         </div>
@@ -128,6 +131,14 @@
         <ui-view class="site-content">
             @yield('app_content')
         </ui-view>
+
+        @if (Auth::check())
+            <div class="notification-pullout" ng-class="{'active': notifActive}">
+                <div class="notif-container">
+                    <pfm-notification-list></pfm-notification-list>
+                </div>
+            </div>
+        @endif
     </div>
 
 @endsection

@@ -22,18 +22,23 @@ module.exports = angular.module('ponyfm').controller "application", [
         $scope.$stateParams = $stateParams
         $scope.isPinnedPlaylistSelected = false
         $scope.menuActive = false
+        $scope.notifActive = false
         $loadingElement = null
         loadingStateName = null
 
         if 'serviceWorker' of navigator
-          console.log 'Service Worker is supported'
-          navigator.serviceWorker.register('service-worker.js').then((reg) ->
-            console.log 'SW registered', reg
-          ).catch (err) ->
-            console.log 'SW register failed', err
+            console.log 'Service Worker is supported'
+            navigator.serviceWorker.register('service-worker.js').then((reg) ->
+                console.log 'SW registered', reg
+            ).catch (err) ->
+                console.log 'SW register failed', err
 
         $scope.menuToggle = () ->
             $scope.menuActive = !$scope.menuActive
+            $scope.notifActive = false
+        
+        $scope.notifPulloutToggle = () ->
+            $scope.notifActive = !$scope.notifActive
 
         if window.pfm.error
             $state.transitionTo 'errors-' + window.pfm.error
@@ -72,6 +77,7 @@ module.exports = angular.module('ponyfm').controller "application", [
         statesPreloaded = {}
         $scope.$on '$stateChangeStart', (e, newState, newParams, oldState, oldParams) ->
             $scope.menuActive = false
+            $scope.notifActive = false
             $scope.isPinnedPlaylistSelected = false
 
             if newState.name == 'content.playlist'
