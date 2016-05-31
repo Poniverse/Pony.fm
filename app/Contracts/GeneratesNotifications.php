@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,26 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+namespace Poniverse\Ponyfm\Contracts;
 
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Redirect;
-use View;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Poniverse\Ponyfm\Models\User;
 
-class AccountController extends Controller
-{
-    public function getIndex()
-    {
-        return View::make('shared.null');
-    }
+/**
+ * This interface is used for type safety when referring to entities that can be
+ * the "target resource" of a notification (ie. what the notification is about).
+ *
+ * @package Poniverse\Ponyfm\Contracts
+ */
+interface GeneratesNotifications {
+    /**
+     * Returns a human-friendly string (lowercase & singular) representing this
+     * type of resource.
+     * 
+     * @return string
+     */
+    public function getResourceType():string;
 
-    public function getRegister()
-    {
-        return Redirect::to(Config::get('poniverse.urls')['register']);
-    }
-
-    public function getNotifications()
-    {
-        return View::make('shared.null');
-    }
+    public function activities():MorphMany;
 }

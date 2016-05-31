@@ -70,7 +70,14 @@ class PlaylistsController extends ApiControllerBase
         }
 
         $query = Playlist::summary()
-            ->with('user', 'user.avatar', 'tracks', 'tracks.cover', 'tracks.user', 'tracks.album', 'tracks.album.user')
+            ->with('user',
+                'user.avatar',
+                'tracks',
+                'tracks.cover',
+                'tracks.user',
+                'tracks.user.avatar',
+                'tracks.album',
+                'tracks.album.user')
             ->userDetails()
             ->orderBy('favourite_count', 'desc')
             ->where('track_count', '>', 0)
@@ -103,6 +110,7 @@ class PlaylistsController extends ApiControllerBase
             'tracks' => function ($query) {
                 $query->userDetails();
             },
+            'tracks.trackFiles',
             'comments',
             'comments.user'
         ])->userDetails()->find($id);

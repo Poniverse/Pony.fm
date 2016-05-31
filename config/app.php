@@ -145,6 +145,7 @@ return [
         Poniverse\Ponyfm\Providers\EventServiceProvider::class,
         Poniverse\Ponyfm\Providers\RouteServiceProvider::class,
         Poniverse\Ponyfm\Providers\AuthServiceProvider::class,
+        Poniverse\Ponyfm\Providers\NotificationServiceProvider::class,
 
         Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
@@ -201,6 +202,7 @@ return [
 
         'Elasticsearch' => Cviebrock\LaravelElasticsearch\Facade::class,
         'Newrelic'  => Intouch\LaravelNewrelic\Facades\Newrelic::class,
+        'Notification'  => Poniverse\Ponyfm\Facades\Notification::class,
 
     ],
 

@@ -61,7 +61,10 @@ class AlbumsController extends ApiControllerBase
             'tracks.cover',
             'tracks.genre',
             'tracks.user',
+            'tracks.user.avatar',
+            'tracks.trackFiles',
             'user',
+            'user.avatar',
             'comments',
             'comments.user'
         ])
@@ -146,7 +149,10 @@ class AlbumsController extends ApiControllerBase
     {
         $this->authorize('get-albums', $user);
 
-        $query = Album::summary()->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $query = Album::summary()
+            ->with('cover', 'user.avatar')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')->get();
         $albums = [];
 
         foreach ($query as $album) {

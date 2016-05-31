@@ -65,6 +65,8 @@ Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
 Route::get('p{id}', 'PlaylistsController@getShortlink')->where('id', '\d+');
 Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload' );
 
+Route::get('notifications', 'AccountController@getNotifications');
+
 
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function() {
@@ -134,6 +136,8 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::group(['middleware' => 'auth'], function() {
         Route::get('/account/settings/{slug}', 'Api\Web\AccountController@getSettings');
+        Route::get('/notifications', 'Api\Web\NotificationsController@getNotifications');
+        Route::put('/notifications/mark-as-read', 'Api\Web\NotificationsController@putMarkAsRead');
 
         Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');

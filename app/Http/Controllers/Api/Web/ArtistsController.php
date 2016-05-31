@@ -48,8 +48,13 @@ class ArtistsController extends ApiControllerBase
             'track.genre',
             'track.cover',
             'track.user',
+            'track.user.avatar',
+            'track.album',
+            'track.album.cover',
+            'track.album.user.avatar',
             'album.cover',
             'album.user',
+            'album.user.avatar',
             'track' => function ($query) {
                 $query->userDetails();
             },
@@ -84,8 +89,14 @@ class ArtistsController extends ApiControllerBase
             App::abort(404);
         }
 
-        $query = Track::summary()->published()->listed()->explicitFilter()->with('genre', 'cover',
-            'user')->userDetails()->whereUserId($user->id)->whereNotNull('published_at');
+        $query = Track::summary()
+            ->published()
+            ->listed()
+            ->explicitFilter()
+            ->with('genre', 'cover', 'user', 'user.avatar', 'album', 'album.cover')
+            ->userDetails()
+            ->whereUserId($user->id)
+            ->whereNotNull('published_at');
         $tracks = [];
         $singles = [];
 
@@ -119,7 +130,7 @@ class ArtistsController extends ApiControllerBase
             ->userDetails()
             ->with([
                 'comments' => function ($query) {
-                    $query->with('user');
+                    $query->with(['user', 'user.avatar']);
                 }
             ])
             ->first();
@@ -131,7 +142,7 @@ class ArtistsController extends ApiControllerBase
             ->published()
             ->explicitFilter()
             ->listed()
-            ->with('genre', 'cover', 'user')
+            ->with('genre', 'cover', 'user', 'album', 'album.cover')
             ->userDetails()
             ->whereUserId($user->id)
             ->whereNotNull('published_at')
@@ -184,7 +195,8 @@ class ArtistsController extends ApiControllerBase
                 'user_data' => $userData,
                 'permissions' => [
                     'edit' => Gate::allows('edit', $user)
-                ]
+                ],
+                'isAdmin' => $user->hasRole('admin')
             ]
         ], 200);
     }
