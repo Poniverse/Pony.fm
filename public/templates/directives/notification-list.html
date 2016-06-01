@@ -1,4 +1,7 @@
-<div ng-repeat="notification in notifications" class="notification">
-    <a href="{{ ::notification.url }}" class="img-link"><img pfm-src-loader="::notification.thumbnail_url" pfm-src-size="thumbnail"></a>
-    <a href="{{ ::notification.url }}" class="message"><p>{{ ::notification.text }}</p></a>
+<div class="notif-list">
+    <div ng-repeat="notification in notifications" class="notification">
+        <a href="{{ ::notification.url }}" class="img-link"><img pfm-src-loader="::notification.thumbnail_url" pfm-src-size="thumbnail"></a>
+        <a href="{{ ::notification.url }}" class="message"><p>{{ ::notification.text }}</p></a>
+    </div>
+    <p ng-show="notifications.length < 1" class="error">No notifications :(</p>
 </div>
