@@ -21,7 +21,6 @@ module.exports = angular.module('ponyfm').controller "application", [
         $scope.$state = $state
         $scope.$stateParams = $stateParams
         $scope.isPinnedPlaylistSelected = false
-        $scope.menuActive = false
         $scope.notifActive = false
         $loadingElement = null
         loadingStateName = null
@@ -34,7 +33,7 @@ module.exports = angular.module('ponyfm').controller "application", [
                 console.log 'SW register failed', err
 
         $scope.menuToggle = () ->
-            $scope.menuActive = !$scope.menuActive
+            $rootScope.$broadcast('sidebarToggled')
             $scope.notifActive = false
         
         $scope.notifPulloutToggle = () ->
@@ -76,7 +75,7 @@ module.exports = angular.module('ponyfm').controller "application", [
 
         statesPreloaded = {}
         $scope.$on '$stateChangeStart', (e, newState, newParams, oldState, oldParams) ->
-            $scope.menuActive = false
+            $rootScope.$broadcast('sidebarHide')
             $scope.notifActive = false
             $scope.isPinnedPlaylistSelected = false
 

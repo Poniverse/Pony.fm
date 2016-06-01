@@ -75,7 +75,7 @@
     </header>
 
     <div class="site-body">
-        <ul class="sidebar animated" ng-controller="sidebar" ng-class="{'active': menuActive}">
+        <ul class="sidebar" ng-controller="sidebar" ng-class="{'active': menuActive, 'animated': menuAnimated}" ng-style="navStyle">
             <a href="/">
               <img src="/images/ponyfm-logo-white.svg" class="logo">
             </a>
