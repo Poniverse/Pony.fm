@@ -91,7 +91,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     public static function summary()
     {
         return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'is_public', 'description', 'comment_count',
-            'download_count', 'view_count', 'favourite_count');
+            'download_count', 'view_count', 'favourite_count', 'track_count');
     }
 
     public function scopeUserDetails($query)

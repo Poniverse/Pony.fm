@@ -18,6 +18,7 @@ module.exports = angular.module('ponyfm').factory('playlists', [
     '$rootScope', '$state', '$http', 'auth'
     ($rootScope, $state, $http, auth) ->
         playlistDef = null
+        filterDef = null
         playlists = {}
         playlistPages = []
 
@@ -51,6 +52,55 @@ module.exports = angular.module('ponyfm').factory('playlists', [
                     currentFilter.selectedObject = {}
                     currentFilter.title = 'Any'
 
+            setPage: (page) ->
+                @page = page
+                @cachedDef = null
+
+            setFilter: (type, value) ->
+                @cachedDef = null
+                @page = 1
+                @filters[type] = value
+
+            toFilterString: ->
+                parts = []
+                _.each @availableFilters, (filter, name) =>
+                    filterName = filter.name
+                    if filter.type == 'single'
+                        return if @filters[name].query == ''
+                        parts.push(filterName + '-' + @filters[name].query)
+                    else
+                        return if @filters[name].selectedArray.length == 0
+                        parts.push(filterName + '-' + _.map(@filters[name].selectedArray, (f) -> f.id).join '-')
+
+                return parts.join '!'
+
+            fromFilterString: (str) ->
+                @hasLoadedFilters = true
+                @cachedDef = null
+                @resetFilters()
+
+                filters = (str || "").split '!'
+                for queryFilter in filters
+                    parts = queryFilter.split '-'
+                    queryName = parts[0]
+
+                    filterName = null
+                    filter = null
+
+                    for name,f of @availableFilters
+                        continue if f.name != queryName
+                        filterName = name
+                        filter = f
+
+                    return if !filter
+
+                    if filter.type == 'single'
+                        filterToSet = _.find filter.values, (f) -> f.query == parts[1]
+                        filterToSet = (_.find filter.values, (f) -> f.isDefault) if filterToSet == null
+                        @setFilter filterName, filterToSet
+                    else
+                        @toggleListFilter filterName, id for id in _.rest parts, 1
+
             listen: (listener) ->
                 @listeners.push listener
                 @cachedDef.done listener if @cachedDef
@@ -58,10 +108,9 @@ module.exports = angular.module('ponyfm').factory('playlists', [
             fetch: () ->
                 return @cachedDef if @cachedDef
                 @cachedDef = new $.Deferred()
-                trackDef = @cachedDef
+                playlistDef = @cachedDef
 
                 query = '/api/web/playlists?'
-
 
                 parts = ['page=' + @page]
                 _.each @availableFilters, (filter, name) =>
@@ -78,10 +127,9 @@ module.exports = angular.module('ponyfm').factory('playlists', [
                     for listener in @listeners
                         listener playlists
 
+                    playlistDef.resolve playlists
 
-                    trackDef.resolve tracks
-
-                trackDef.promise()
+                playlistDef.promise()
 
 
         self =
@@ -91,6 +139,9 @@ module.exports = angular.module('ponyfm').factory('playlists', [
             createQuery: -> new Query self.filters
 
             loadFilters: ->
+                return filterDef if filterDef
+
+                filterDef = new $.Deferred()
                 self.filters.sort =
                     type: 'single'
                     name: 'sort'
@@ -104,6 +155,9 @@ module.exports = angular.module('ponyfm').factory('playlists', [
                     ]
 
                 self.mainQuery = self.createQuery()
+                filterDef.resolve self
+
+                filterDef.promise()
 
             fetchList: (page, force) ->
                 force = force || false

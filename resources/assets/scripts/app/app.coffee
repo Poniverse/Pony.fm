@@ -211,7 +211,7 @@ ponyfm.config [
             abstract: true
 
         state.state 'content.playlists.list',
-            url: '?page'
+            url: '^/playlists?filter&page'
             controller: 'playlists-list'
             templateUrl: '/templates/playlists/list.html'
 
