@@ -21,8 +21,89 @@ module.exports = angular.module('ponyfm').factory('playlists', [
         playlists = {}
         playlistPages = []
 
+        class Query
+            cacheDef: null
+            page: 1
+            listeners: []
+
+            constructor: (@availableFilters) ->
+                @filters = {}
+                @hasLoadedFilters = false
+                @resetFilters()
+
+            resetFilters: ->
+                _.each @availableFilters, (filter, name) =>
+                    if filter.type == 'single'
+                        @filters[name] = _.find filter.values, (f) -> f.isDefault
+                    else
+                        @filters[name] = {title: 'Any', selectedArray: [], selectedObject: {}}
+
+            clearFilter: (type) ->
+                @cachedDef = null
+                @page = 1
+                filter = @availableFilters[type]
+
+                if filter.type == 'single'
+                    @filters[type] = _.find filter.values, (f) -> f.isDefault
+                else
+                    currentFilter = @filters[type]
+                    currentFilter.selectedArray = []
+                    currentFilter.selectedObject = {}
+                    currentFilter.title = 'Any'
+
+            listen: (listener) ->
+                @listeners.push listener
+                @cachedDef.done listener if @cachedDef
+
+            fetch: () ->
+                return @cachedDef if @cachedDef
+                @cachedDef = new $.Deferred()
+                trackDef = @cachedDef
+
+                query = '/api/web/playlists?'
+
+
+                parts = ['page=' + @page]
+                _.each @availableFilters, (filter, name) =>
+                    if filter.type == 'single'
+                        parts.push @filters[name].filter
+                    else
+                        queryName = filter.filterName
+                        for item in @filters[name].selectedArray
+                            parts.push queryName + "[]=" + item.id
+
+                query += parts.join '&'
+                $http.get(query).success (playlists) =>
+                    @playlists = playlists
+                    for listener in @listeners
+                        listener playlists
+
+
+                    trackDef.resolve tracks
+
+                trackDef.promise()
+
+
         self =
             pinnedPlaylists: []
+            filters: {}
+
+            createQuery: -> new Query self.filters
+
+            loadFilters: ->
+                self.filters.sort =
+                    type: 'single'
+                    name: 'sort'
+                    values: [
+                        {title: 'Most Favourited', query: 'favourites', isDefault: true, filter: 'order=favourite_count,desc'}
+                        {title: 'Most Viewed', query: 'plays', isDefault: false, filter: 'order=view_count,desc'},
+                        {title: 'Most Downloaded', query: 'downloads', isDefault: false, filter: 'order=download_count,desc'},
+                        {title: 'Alphabetical', query: 'alphabetical', isDefault: false, filter: 'order=title,asc'},
+                        {title: 'Latest', query: 'latest', isDefault: false, filter: 'order=created_at,desc'},
+                        {title: 'Track count', query: 'tracks', isDefault: false, filter: 'order=track_count,desc'},
+                    ]
+
+                self.mainQuery = self.createQuery()
 
             fetchList: (page, force) ->
                 force = force || false
@@ -147,6 +228,7 @@ module.exports = angular.module('ponyfm').factory('playlists', [
                             def.reject errors
 
                 def
+
 
         self.refresh()
         self

@@ -14,10 +14,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+window.pfm.preloaders['playlists'] = [
+    'playlists', '$state'
+    (playlists) ->
+        playlists.loadFilters()
+]
+
 module.exports = angular.module('ponyfm').controller "playlists", [
     '$scope', 'playlists', '$state'
     ($scope, playlists, $state) ->
+        # ToDo: Move this function back to preloaders, as soon as I figured out how they work
+        playlists.loadFilters()
 
+        $scope.query = playlists.mainQuery
+        $scope.filters = playlists.filters
+
+        playlists.mainQuery.listen (searchResults) ->
+            $scope.playlists = searchResults.playlists
+        
         refreshPages = (list) ->
             $scope.playlists = list.playlists
             $scope.currentPage = parseInt(list.current_page)
@@ -31,6 +45,8 @@ module.exports = angular.module('ponyfm').controller "playlists", [
 
         playlists.fetchList($state.params.page).done refreshPages
         $scope.$on 'playlists-feteched', (e, list) -> refreshPages(list)
+
+        $scope.pageSelectorShown = false
 
         $scope.gotoPage = (page) ->
             return if !page

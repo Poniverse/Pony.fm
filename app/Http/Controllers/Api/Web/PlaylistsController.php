@@ -64,10 +64,7 @@ class PlaylistsController extends ApiControllerBase
 
     public function getIndex()
     {
-        $page = 1;
-        if (Input::has('page')) {
-            $page = Input::get('page');
-        }
+        $page = Input::has('page') ? Input::get('page') : 1;
 
         $query = Playlist::summary()
             ->with('user',
@@ -79,9 +76,10 @@ class PlaylistsController extends ApiControllerBase
                 'tracks.album',
                 'tracks.album.user')
             ->userDetails()
-            ->orderBy('favourite_count', 'desc')
             ->where('track_count', '>', 0)
             ->whereIsPublic(true);
+
+        $this->applyFilters($query);
 
         $count = $query->count();
         $perPage = 40;
@@ -209,5 +207,16 @@ class PlaylistsController extends ApiControllerBase
         }
 
         return Response::json($playlists, 200);
+    }
+
+    private function applyFilters($query)
+    {
+        if (Input::has('order')) {
+            $order = \Input::get('order');
+            $parts = explode(',', $order);
+            $query->orderBy($parts[0], $parts[1]);
+        }
+
+        return $query;
     }
 }
