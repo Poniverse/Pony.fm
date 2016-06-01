@@ -26,7 +26,7 @@
     "gulp-less": "^3.0.3",
     "gulp-livereload": "^3.8.0",
     "gulp-load-plugins": "^0.10.0",
-    "gulp-minify-css": "^1.1.0",
+    "gulp-minify-css": "^1.2.4",
     "gulp-notify": "^2.2.0",
     "gulp-order": "^1.1.1",
     "gulp-plumber": "^1.0.0",
@@ -37,9 +37,9 @@
     "jquery-ui": "^1.10.5",
     "script-loader": "^0.6.1",
     "underscore": "^1.8.3",
-    "webpack": "^1.12.13",
+    "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
-    "webpack-stream": "^3.1.0",
+    "webpack-stream": "^3.2.0",
     "yargs": "^3.7.2"
   }
 }
