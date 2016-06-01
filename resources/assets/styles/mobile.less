@@ -56,7 +56,6 @@
 
   .sidebar {
     left: -170px;
-    transition: transform 0.5s ease;
     transform: translateX(0px) translateZ(0);
     perspective: 1000;
     backface-visibility: hidden;
@@ -68,10 +67,14 @@
     > a {
       display: none;
     }
-  }
 
-  .sidebar.active {
-    transform: translateX(170px) translateZ(0);
+    &.animated {
+      transition: transform 0.3s ease;
+    }
+
+    &.active {
+      transform: translateX(170px) translateZ(0);
+    }
   }
 
   .user-details > .avatar {
@@ -250,6 +253,10 @@
   }
 
   .notification-pullout {
+    display: none;
+  }
+
+  .notification-menu {
     display: none;
   }
 }
