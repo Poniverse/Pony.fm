@@ -177,10 +177,10 @@ class Activity extends Model {
                 throw new \InvalidArgumentException('This type of activity has not been implemented yet!');
 
             case static::TYPE_PUBLISHED_TRACK:
-                return "{$this->resource->user->display_name} published a new track, __{$this->resource->title}__!";
+                return "{$this->resource->user->display_name} published a new track, {$this->resource->title}!";
 
             case static::TYPE_PUBLISHED_PLAYLIST:
-                return "{$this->resource->user->display_name} published a new playlist, __{$this->resource->title}__!";
+                return "{$this->resource->user->display_name} published a new playlist, {$this->resource->title}!";
 
             case static::TYPE_NEW_FOLLOWER:
                 return "{$this->initiatingUser->display_name} is now following you!";
@@ -192,7 +192,7 @@ class Activity extends Model {
 
                 // Must be a content comment.
                 } else {
-                    return "{$this->initiatingUser->display_name} left a comment on your {$this->resource->resource->getResourceType()}, __{$this->resource->resource->title}__!";
+                    return "{$this->initiatingUser->display_name} left a comment on your {$this->resource->resource->getResourceType()}, {$this->resource->resource->title}!";
                 }
             
             case static::TYPE_CONTENT_FAVOURITED:
