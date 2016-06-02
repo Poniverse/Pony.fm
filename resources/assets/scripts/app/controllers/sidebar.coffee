@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "sidebar", [
-    '$scope', '$modal', 'playlists', '$rootScope'
-    ($scope, $modal, playlists, $rootScope) ->
+    '$scope', '$modal', 'playlists', '$rootScope', '$timeout'
+    ($scope, $modal, playlists, $rootScope, $timeout) ->
         $scope.playlists = playlists.pinnedPlaylists
         $scope.menuVisible = false
         $scope.menuActive = false
@@ -24,13 +24,25 @@ module.exports = angular.module('ponyfm').controller "sidebar", [
         $scope.navStyle = {}
 
         $rootScope.$on('sidebarToggled', () ->
-            $scope.menuVisible = !$scope.menuVisible
-            $scope.menuActive = $scope.menuVisible
+            $timeout(() ->
+                if $scope.menuVisible
+                    $scope.navStyle.transform = ''
+                    $scope.menuAnimated = true
+
+                $scope.menuVisible = !$scope.menuVisible
+                $scope.menuActive = $scope.menuVisible
+
+                console.log $scope.menuActive
+            )
         )
 
         $rootScope.$on('sidebarHide', () ->
-            $scope.menuVisible = false
-            $scope.menuActive = false
+            $timeout(() ->
+                $scope.navStyle.transform = ''
+                $scope.menuAnimated = true
+                $scope.menuVisible = false
+                $scope.menuActive = false
+            )
         )
 
         $scope.createPlaylist = () ->
@@ -78,6 +90,7 @@ module.exports = angular.module('ponyfm').controller "sidebar", [
         touchingNav = false
 
         onStart = (e) ->
+
             if !$scope.menuVisible
                 return
 
