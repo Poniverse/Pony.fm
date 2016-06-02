@@ -14,34 +14,47 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-var urlsToCache = [
-  '/',
-  '/build/styles/app.css',
-  '/build/scripts/app.js',
-  '/build/scripts/templates.js',
-  '/templates/directives/player.html',
-  '/templates/directives/search.html',
-  '/templates/directives/tracks-list.html',
-  '/templates/directives/users-list.html',
-  '/templates/directives/albums-list.html',
-  '/templates/directives/playlists-list.html',
-  '/templates/home/index.html',
 
+var urlsToCache = [
+  '/offline.html',
+  '/styles/offline.css',
+  '/images/ponyfm-logo-white.svg'
 ];
 
-var CACHE_NAME = 'pfm-cache-v1';
+var CACHE_NAME = 'pfm-offline-v1';
 
 // Set the callback for the install step
 self.addEventListener('install', function(event) {
-  // Doesn't do anything right now
-  // Could never get offline to fully
-  // work without bugs :(
-
   // Perform install steps
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Opened cache');
+    .then(function(cache) {
+      cache.addAll(urlsToCache);
     })
   );
+});
+
+// Delete old caches
+self.addEventListener('activate', function (event) {
+  event.waitUntil(caches.keys().then(function (cacheNames) {
+    return Promise.all(cacheNames.map(function (cacheName) {
+      if (cacheName != CACHE_NAME) {
+        return caches.delete(cacheName);
+      }
+    }));
+  }));
+});
+
+// Basic offline mode
+// Just respond with an offline error page for now
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      return response || fetch(event.request);
+    }).catch(function () {
+      if (event.request.mode == 'navigate') {
+        return caches.match('/offline.html');
+      }
+    })
+  )
 });
