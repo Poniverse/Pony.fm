@@ -31,8 +31,6 @@ module.exports = angular.module('ponyfm').controller "sidebar", [
 
                 $scope.menuVisible = !$scope.menuVisible
                 $scope.menuActive = $scope.menuVisible
-
-                console.log $scope.menuActive
             )
         )
 
