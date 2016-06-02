@@ -23,8 +23,6 @@ window.pfm.preloaders['playlists'] = [
 module.exports = angular.module('ponyfm').controller "playlists", [
     '$scope', 'playlists', '$state'
     ($scope, playlists, $state) ->
-        # ToDo: Move this function back to preloaders, as soon as I figured out how they work
-        playlists.loadFilters()
 
         $scope.query = playlists.mainQuery
         $scope.filters = playlists.filters
