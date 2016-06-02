@@ -18,11 +18,146 @@ module.exports = angular.module('ponyfm').factory('playlists', [
     '$rootScope', '$state', '$http', 'auth'
     ($rootScope, $state, $http, auth) ->
         playlistDef = null
+        filterDef = null
         playlists = {}
         playlistPages = []
 
+        class Query
+            cacheDef: null
+            page: 1
+            listeners: []
+
+            constructor: (@availableFilters) ->
+                @filters = {}
+                @hasLoadedFilters = false
+                @resetFilters()
+
+            resetFilters: ->
+                _.each @availableFilters, (filter, name) =>
+                    if filter.type == 'single'
+                        @filters[name] = _.find filter.values, (f) -> f.isDefault
+                    else
+                        @filters[name] = {title: 'Any', selectedArray: [], selectedObject: {}}
+
+            clearFilter: (type) ->
+                @cachedDef = null
+                @page = 1
+                filter = @availableFilters[type]
+
+                if filter.type == 'single'
+                    @filters[type] = _.find filter.values, (f) -> f.isDefault
+                else
+                    currentFilter = @filters[type]
+                    currentFilter.selectedArray = []
+                    currentFilter.selectedObject = {}
+                    currentFilter.title = 'Any'
+
+            setPage: (page) ->
+                @page = page
+                @cachedDef = null
+
+            setFilter: (type, value) ->
+                @cachedDef = null
+                @page = 1
+                @filters[type] = value
+
+            toFilterString: ->
+                parts = []
+                _.each @availableFilters, (filter, name) =>
+                    filterName = filter.name
+                    if filter.type == 'single'
+                        return if @filters[name].query == ''
+                        parts.push(filterName + '-' + @filters[name].query)
+                    else
+                        return if @filters[name].selectedArray.length == 0
+                        parts.push(filterName + '-' + _.map(@filters[name].selectedArray, (f) -> f.id).join '-')
+
+                return parts.join '!'
+
+            fromFilterString: (str) ->
+                @hasLoadedFilters = true
+                @cachedDef = null
+                @resetFilters()
+
+                filters = (str || "").split '!'
+                for queryFilter in filters
+                    parts = queryFilter.split '-'
+                    queryName = parts[0]
+
+                    filterName = null
+                    filter = null
+
+                    for name,f of @availableFilters
+                        continue if f.name != queryName
+                        filterName = name
+                        filter = f
+
+                    return if !filter
+
+                    if filter.type == 'single'
+                        filterToSet = _.find filter.values, (f) -> f.query == parts[1]
+                        filterToSet = (_.find filter.values, (f) -> f.isDefault) if filterToSet == null
+                        @setFilter filterName, filterToSet
+                    else
+                        @toggleListFilter filterName, id for id in _.rest parts, 1
+
+            listen: (listener) ->
+                @listeners.push listener
+                @cachedDef.done listener if @cachedDef
+
+            fetch: () ->
+                return @cachedDef if @cachedDef
+                @cachedDef = new $.Deferred()
+                playlistDef = @cachedDef
+
+                query = '/api/web/playlists?'
+
+                parts = ['page=' + @page]
+                _.each @availableFilters, (filter, name) =>
+                    if filter.type == 'single'
+                        parts.push @filters[name].filter
+                    else
+                        queryName = filter.filterName
+                        for item in @filters[name].selectedArray
+                            parts.push queryName + "[]=" + item.id
+
+                query += parts.join '&'
+                $http.get(query).success (playlists) =>
+                    @playlists = playlists
+                    for listener in @listeners
+                        listener playlists
+
+                    playlistDef.resolve playlists
+
+                playlistDef.promise()
+
+
         self =
             pinnedPlaylists: []
+            filters: {}
+
+            createQuery: -> new Query self.filters
+
+            loadFilters: ->
+                return filterDef if filterDef
+
+                filterDef = new $.Deferred()
+                self.filters.sort =
+                    type: 'single'
+                    name: 'sort'
+                    values: [
+                        {title: 'Most Favourited', query: 'favourites', isDefault: true, filter: 'order=favourite_count,desc'}
+                        {title: 'Most Viewed', query: 'plays', isDefault: false, filter: 'order=view_count,desc'},
+                        {title: 'Most Downloaded', query: 'downloads', isDefault: false, filter: 'order=download_count,desc'},
+                        {title: 'Alphabetical', query: 'alphabetical', isDefault: false, filter: 'order=title,asc'},
+                        {title: 'Latest', query: 'latest', isDefault: false, filter: 'order=created_at,desc'},
+                        {title: 'Track count', query: 'tracks', isDefault: false, filter: 'order=track_count,desc'},
+                    ]
+
+                self.mainQuery = self.createQuery()
+                filterDef.resolve self
+
+                filterDef.promise()
 
             fetchList: (page, force) ->
                 force = force || false
@@ -147,6 +282,7 @@ module.exports = angular.module('ponyfm').factory('playlists', [
                             def.reject errors
 
                 def
+
 
         self.refresh()
         self
