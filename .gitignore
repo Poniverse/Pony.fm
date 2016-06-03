@@ -7,4 +7,3 @@ Homestead.yaml
 .vagrant
 _ide_helper.php
 .idea
-composer.lock
