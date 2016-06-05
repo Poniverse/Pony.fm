@@ -14,7 +14,8 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
-        })
+        }),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],
     entry: {
         app: './resources/assets/scripts/app/app.coffee',
