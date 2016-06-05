@@ -42,7 +42,7 @@ class TaxonomiesController extends ApiControllerBase
                 ->where('id', '!=', TrackType::UNCLASSIFIED_TRACK)
                 ->get()->toArray(),
             'show_songs' => ShowSong::select('title', 'id', 'slug',
-                DB::raw('(SELECT COUNT(tracks.id) FROM show_song_track INNER JOIN tracks ON tracks.id = show_song_track.track_id WHERE show_song_track.show_song_id = show_songs.id AND tracks.published_at IS NOT NULL) AS track_count'))->get()->toArray()
+                DB::raw('(SELECT COUNT(tracks.id) FROM show_song_track INNER JOIN tracks ON tracks.id = show_song_track.track_id WHERE show_song_track.show_song_id = show_songs.id AND tracks.published_at IS NOT NULL) AS track_count'))->orderBy('title')->get()->toArray()
         ], 200);
     }
 }

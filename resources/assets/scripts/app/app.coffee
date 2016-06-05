@@ -273,6 +273,11 @@ ponyfm.config [
             controller: 'admin-genres'
             templateUrl: '/templates/admin/genres.html'
 
+        state.state 'admin.showsongs',
+            url: '/show-songs'
+            controller: 'admin-show-songs'
+            templateUrl: '/templates/admin/show-songs.html'
+
         state.state 'admin.tracks',
             url: '/tracks'
             controller: 'admin-tracks'

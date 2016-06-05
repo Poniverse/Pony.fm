@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -33,4 +34,15 @@ use Illuminate\Database\Eloquent\Model;
 class ShowSong extends Model
 {
     protected $table = 'show_songs';
+    protected $fillable = ['title', 'slug', 'lyrics'];
+
+    public function trackCountRelation() {
+        return $this->belongsToMany(Track::class)
+            ->select(['show_song_id', DB::raw('count(*) as track_count')])
+            ->groupBy('show_song_id');
+    }
+
+    public function tracks(){
+        return $this->belongsToMany(Track::class);
+    }
 }

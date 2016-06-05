@@ -1,0 +1,55 @@
+<h1>Show Song Editor</h1>
+
+<div class="stretch-to-bottom">
+
+    <section class="genre-creator">
+        <h2>Add show song</h2>
+
+        <p>Enter a show song name and press enter to create it!</p>
+        <input
+                type="text"
+                class="x-large"
+                ng-class="{'x-saving': isCreating, 'x-error': hasCreationError}"
+                ng-model="songToCreate"
+                pfm-on-enter="createSong(songToCreate)"
+        />
+
+        <div class="alert alert-danger" ng-show="hasCreationError">
+            {{ createSongError }}
+        </div>
+    </section>
+
+    <section class="genre-list">
+        <h2>Rename &amp; delete songs</h2>
+
+        <table class="table">
+            <thead>
+            <th>Song</th>
+            <th class="-status"></th>
+            <th># of tracks (including deleted)</th>
+            <th class="-actions">Actions</th>
+            </thead>
+            <tr ng-repeat="song in showsongs">
+                <td>
+                    <input
+                            type="text"
+                            class="x-large"
+                            ng-class="{'x-saving': song.isSaving, 'x-error': song.isError}"
+                            ng-model="song.title"
+                            pfm-on-enter="renameSong(song)"
+                    />
+                    <div class="alert alert-danger" ng-show="song.isError">
+                        {{ song.errorMessage }}
+                    </div>
+                </td>
+                <td><i ng-show="song.isSaving" class="fa fa-cog fa-spin fa-lg"></i></td>
+                <td><a ng-href="{{ song.url }}">{{ song.track_count_relation[0].track_count }}</a></td>
+                <td class="-actions">
+                    <button class="btn btn-warning" ng-hide="mergeInProgress" ng-click="startMerge(song)">Merge songs in&hellip;</button>
+                    <button class="btn btn-danger" ng-show="mergeInProgress && destinationSong.id != song.id" ng-click="finishMerge(song)">Merge into <em>{{ destinationSong.title }}</em>&hellip;</button>
+                    <button class="btn btn-warning" ng-show="mergeInProgress && destinationSong.id == song.id" ng-click="cancelMerge()">Cancel merge</button>
+                </td>
+            </tr>
+        </table>
+    </section>
+</div>

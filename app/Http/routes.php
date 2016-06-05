@@ -161,6 +161,11 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::put('/genres/{id}', 'Api\Web\GenresController@putRename')->where('id', '\d+');
         Route::delete('/genres/{id}', 'Api\Web\GenresController@deleteGenre')->where('id', '\d+');
 
+        Route::get('/showsongs', 'Api\Web\ShowSongsController@getIndex');
+        Route::post('/showsongs', 'Api\Web\ShowSongsController@postCreate');
+        Route::put('/showsongs/{id}', 'Api\Web\ShowSongsController@putRename')->where('id', '\d+');
+        Route::delete('/showsongs/{id}', 'Api\Web\ShowSongsController@deleteSong')->where('id', '\d+');
+
         Route::get('/tracks', 'Api\Web\TracksController@getAllTracks');
     });
 
@@ -171,6 +176,7 @@ Route::group(['prefix' => 'api/web'], function() {
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
     Route::get('/genres', 'AdminController@getGenres');
     Route::get('/tracks', 'AdminController@getTracks');
+    Route::get('/show-songs', 'AdminController@getShowSongs');
     Route::get('/', 'AdminController@getIndex');
 });
 

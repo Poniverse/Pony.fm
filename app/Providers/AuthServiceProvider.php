@@ -26,9 +26,11 @@ use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Policies\AlbumPolicy;
 use Poniverse\Ponyfm\Policies\GenrePolicy;
+use Poniverse\Ponyfm\Policies\ShowSongPolicy;
 use Poniverse\Ponyfm\Policies\TrackPolicy;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
+use Poniverse\Ponyfm\Models\ShowSong;
 use Poniverse\Ponyfm\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -43,6 +45,7 @@ class AuthServiceProvider extends ServiceProvider
         Track::class => TrackPolicy::class,
         Album::class => AlbumPolicy::class,
         User::class => UserPolicy::class,
+        ShowSong::class => ShowSongPolicy::class
     ];
 
     /**
@@ -58,6 +61,10 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         $gate->define('create-genre', function(User $user) {
+            return $user->hasRole('admin');
+        });
+
+        $gate->define('create-show-song', function(User $user) {
             return $user->hasRole('admin');
         });
 

@@ -27,7 +27,7 @@ class AdminController extends Controller
 {
     public function getIndex()
     {
-        return Redirect::to('AdminController@getGenres');
+        return View::make('shared.null');
     }
 
     public function getGenres()
@@ -36,6 +36,11 @@ class AdminController extends Controller
     }
 
     public function getTracks()
+    {
+        return View::make('shared.null');
+    }
+
+    public function getShowSongs()
     {
         return View::make('shared.null');
     }
