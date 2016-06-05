@@ -112,7 +112,7 @@ module.exports = angular.module('ponyfm').controller "application", [
             try
                 $injector.invoke(preloader, null, {$state: stateToInject}).then ->
                     statesPreloaded[newState] = true
-                    $state.transitionTo newState, newParams
+                    $state.transitionTo newState, newParams, {location: 'replace'}
             catch error
                 $state.transitionTo newState, newParams
 ]
