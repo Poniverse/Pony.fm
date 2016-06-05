@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Exceptions;
 
 use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use GrahamCampbell\Exceptions\ExceptionHandler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
