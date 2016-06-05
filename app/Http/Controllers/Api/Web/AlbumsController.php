@@ -129,7 +129,8 @@ class AlbumsController extends ApiControllerBase
             ->with('user', 'user.avatar', 'cover')
             ->userDetails()
             ->orderBy('title', 'asc')
-            ->where('track_count', '>', 0);
+            // An album with only one track is not really an album.
+            ->where('track_count', '>', 1);
 
         $count = $query->count();
         $perPage = 40;

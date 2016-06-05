@@ -76,7 +76,8 @@ class PlaylistsController extends ApiControllerBase
                 'tracks.album',
                 'tracks.album.user')
             ->userDetails()
-            ->where('track_count', '>', 0)
+            // A playlist with only one track is not much of a list.
+            ->where('track_count', '>', 1)
             ->whereIsPublic(true);
 
         $this->applyFilters($query);
