@@ -553,18 +553,37 @@ html {
       color: #000;
     }
   }
+
+  .counter {
+    position: absolute;
+    bottom: 8px;
+    right: 90px;
+    font-size: 8pt;
+    color: #fff;
+    background: #b885bd;
+    width: auto;
+    height: 15px;
+    text-align: center;
+    border-radius: 20px;
+    padding: 0 3px;
+    display: none;
+  }
 }
 
 .notification {
   min-height: 50px;
   margin-bottom: 10px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
 
   .img-link {
     float: left;
   }
   .message {
-    margin-left: 60px;
+    margin-left: 55px;
+    padding: 5px 5px 0 5px;
     display: block;
+    color: #666;
   }
 }
 
@@ -575,7 +594,7 @@ html {
   width: 400px;
   height: ~"calc(100% - 64px)";
   z-index: 1000;
-  background: #fff;
+  background: #eee;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0px) translateZ(0px);

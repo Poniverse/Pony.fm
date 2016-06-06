@@ -15,13 +15,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "application", [
-    '$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope', 'playlists'
-    ($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope, playlists) ->
+    '$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope', 'playlists', 'notifications'
+    ($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope, playlists, notifications) ->
         $scope.auth = auth.data
         $scope.$state = $state
         $scope.$stateParams = $stateParams
         $scope.isPinnedPlaylistSelected = false
         $scope.notifActive = false
+        $scope.nCount = 0
+        $scope.nCountFormatted = '0'
         $loadingElement = null
         loadingStateName = null
 
@@ -38,6 +40,17 @@ module.exports = angular.module('ponyfm').controller "application", [
         
         $scope.notifPulloutToggle = () ->
             $scope.notifActive = !$scope.notifActive
+
+            # Disabled for now
+            # if $scope.notifActive
+            #    notifications.markAllAsRead()
+
+        $rootScope.$on 'notificationsUpdated', () ->
+            $scope.nCount = notifications.getNotificationCount()
+            if $scope.nCount > 99
+                $scope.nCountFormatted = '99+'
+            else
+                $scope.nCountFormatted = $scope.nCount
 
         if window.pfm.error
             $state.transitionTo 'errors-' + window.pfm.error

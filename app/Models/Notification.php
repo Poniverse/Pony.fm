@@ -77,7 +77,8 @@ class Notification extends Model {
             'date'          => $this->activity->created_at->toAtomString(),
             'thumbnail_url' => $this->activity->thumbnail_url,
             'text'          => $this->activity->text,
-            'url'           => $this->activity->url
+            'url'           => $this->activity->url,
+            'is_read'       => $this->is_read
         ];
     }
 }
