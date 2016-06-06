@@ -37,6 +37,8 @@ class SaveAccountSettingsCommand extends CommandBase
     {
         $this->_input = $input;
         $this->_slug = $slug;
+
+        /** @var User _user */
         $this->_user = null;
         $this->_current = null;
     }
@@ -82,13 +84,16 @@ class SaveAccountSettingsCommand extends CommandBase
         }
 
         $rules = [
-            'display_name' => 'required|min:3|max:26',
-            'bio' => 'textarea_length:250'
+            'display_name'  => 'required|min:3|max:26',
+            'bio'           => 'textarea_length:250',
+            'slug'          => [
+                'required',
+                'unique:users,slug,'.$this->_user->id,
+                'min:3',
+                'regex:/^[a-z\d-]+$/',
+                'is_not_reserved_slug'
+            ]
         ];
-
-        if ($this->_input['sync_names'] == 'true') {
-            $this->_input['display_name'] = $this->_user->username;
-        }
 
         if ($this->_input['uses_gravatar'] == 'true') {
             $rules['gravatar'] = 'email';
@@ -97,7 +102,9 @@ class SaveAccountSettingsCommand extends CommandBase
             $rules['avatar_id'] = 'exists:images,id';
         }
 
-        $validator = Validator::make($this->_input, $rules);
+        $validator = Validator::make($this->_input, $rules, [
+            'slug.regex'  => 'Slugs can only contain numbers, lowercase letters, and dashes.'
+        ]);
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);
@@ -114,7 +121,7 @@ class SaveAccountSettingsCommand extends CommandBase
 
         $this->_user->bio = $this->_input['bio'];
         $this->_user->display_name = $this->_input['display_name'];
-        $this->_user->sync_names = $this->_input['sync_names'] == 'true';
+        $this->_user->slug = $this->_input['slug'];
         $this->_user->can_see_explicit_content = $this->_input['can_see_explicit_content'] == 'true';
         $this->_user->uses_gravatar = $this->_input['uses_gravatar'] == 'true';
 

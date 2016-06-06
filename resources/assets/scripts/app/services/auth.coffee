@@ -30,4 +30,17 @@ module.exports = angular.module('ponyfm').factory('auth', [
             def.promise()
 
         logout: -> $.post('/api/web/auth/logout')
+
+        # Updates the pfm.auth.user object's values with the current server-side ones.
+        refresh: ->
+            def = new $.Deferred()
+            $.get("/api/web/users/#{window.pfm.auth.user.id}")
+                .done (data) ->
+                    _.extend(window.pfm.auth.user, data.user)
+                    $rootScope.$apply -> def.resolve()
+
+                .fail (response) ->
+                    $rootScope.$apply -> def.reject response.responseJSON
+
+            def.promise()
 ])

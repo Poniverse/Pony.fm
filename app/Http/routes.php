@@ -142,6 +142,7 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 
+        Route::get('/users/{userId}', 'Api\Web\AccountController@getUser');//->where('userId', '\d+');
         Route::get('/users/{userId}/albums', 'Api\Web\AlbumsController@getOwned')->where('id', '\d+');
         Route::get('/users/{userId}/images', 'Api\Web\ImagesController@getOwned')->where('id', '\d+');
 

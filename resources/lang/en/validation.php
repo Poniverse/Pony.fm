@@ -100,6 +100,7 @@ return [
     "min_width"            => "The :attribute is not wide enough.",
     "min_height"        => "The :attribute is not tall enough.",
     "textarea_length"   => "The :attribute must be less than 250 characters long.", // @TODO: Figure out how to retrieve the parameter from the validation rule
+    'is_not_reserved_slug'      => 'This :attribute is reserved. Please pick another one.',
 
     /*
     |--------------------------------------------------------------------------

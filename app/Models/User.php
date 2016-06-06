@@ -34,6 +34,7 @@ use Illuminate\Support\Str;
 use Poniverse\Ponyfm\Contracts\Commentable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
+use Validator;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -89,7 +90,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'is_archived'               => 'boolean',
     ];
     protected $dates = ['created_at', 'updated_at', 'disabled_at'];
-    protected $hidden = ['disabled_at'];
+    protected $hidden = ['disabled_at', 'remember_token'];
 
     public function scopeUserDetails($query)
     {
@@ -102,6 +103,35 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         return !$query;
+    }
+
+    /**
+     * Takes the given string, slugifies it, and increments a counter if needed
+     * to generate a unique slug version of it.
+     *
+     * @param string $name
+     * @return string a unique slug
+     */
+    private static function getUniqueSlugForName(string $name):string {
+        $baseSlug = Str::slug($name);
+        $slugBeingTried = $baseSlug;
+        $counter = 2;
+
+        while(true) {
+            $existingEntity = static::where('slug', $slugBeingTried)->first();
+            $validator = Validator::make(['slug' => $slugBeingTried], ['isNotReservedSlug']);
+
+            if ($existingEntity || $validator->fails()) {
+                $slugBeingTried = "{$baseSlug}-{$counter}";
+                $counter++;
+                continue;
+
+            } else {
+                break;
+            }
+        }
+
+        return $slugBeingTried;
     }
 
     /**
@@ -123,6 +153,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
             $user->username = $username;
             $user->display_name = $displayName;
+            $user->slug = static::getUniqueSlugForName($displayName);
             $user->email = $email;
             $user->uses_gravatar = true;
             $user->save();
@@ -204,7 +235,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function setDisplayNameAttribute($value)
     {
         $this->attributes['display_name'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
     }
 
     public function getAvatarUrl($type = Image::NORMAL)

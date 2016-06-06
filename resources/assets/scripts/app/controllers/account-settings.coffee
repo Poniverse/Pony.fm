@@ -24,10 +24,28 @@ module.exports = angular.module('ponyfm').controller "account-settings", [
         $scope.touchModel = () ->
             $scope.isDirty = true
 
-        $scope.refresh = () ->
-            $.getJSON('/api/web/account/settings/' + $state.params.slug)
+        $scope.updateUrl = (newSlug) ->
+            $state.go(
+                'content.artist.account.settings',
+                {slug: newSlug},
+                {location: 'replace', reload: true}
+            ).then ->
+                $scope.$emit('user-updated')
+
+
+        $scope.refresh = (refreshSlug = false) ->
+            currentSlug = if refreshSlug then $scope.settings.slug else $state.params.slug
+            auth.refresh()
+
+            $.getJSON('/api/web/account/settings/' + currentSlug)
                 .done (res) -> $scope.$apply ->
                     $scope.settings = res
+
+                    if refreshSlug
+                        # Ensures the slug in the URL is up to date - the "content.artist"
+                        # state depends on it to fetch updated profile data.
+                        $scope.updateUrl(currentSlug)
+
 
         $scope.setAvatar = (image, type) ->
             delete $scope.settings.avatar_id
@@ -49,12 +67,12 @@ module.exports = angular.module('ponyfm').controller "account-settings", [
                 response = $.parseJSON(xhr.responseText)
                 if xhr.status != 200
                     $scope.errors = {}
-                    _.each response.errors, (value, key) -> $scope.errors[key] = value.join ', '
+                    _.each response.errors, (value, key) -> $scope.errors[key] = value.join ' '
                     return
 
                 $scope.isDirty = false
                 $scope.errors = {}
-                $scope.refresh()
+                $scope.refresh(true)
 
             formData = new FormData()
 

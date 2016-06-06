@@ -31,6 +31,15 @@ use Illuminate\Support\Facades\Response;
 
 class AccountController extends ApiControllerBase
 {
+    public function getUser(User $user)
+    {
+        $this->authorize('edit', $user);
+
+        return Response::json([
+            'user' => $user->toArray()
+        ]);
+    }
+
     public function getSettings($slug)
     {
         $user = null;
@@ -58,7 +67,7 @@ class AccountController extends ApiControllerBase
             'bio' => $user->bio,
             'can_see_explicit_content' => $user->can_see_explicit_content == 1,
             'display_name' => $user->display_name,
-            'sync_names' => $user->sync_names == 1,
+            'slug' => $user->slug,
             'username' => $user->username,
             'gravatar' => $user->gravatar ? $user->gravatar : $user->email,
             'avatar_url' => !$user->uses_gravatar ? $user->getAvatarUrl() : null,

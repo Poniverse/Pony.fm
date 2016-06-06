@@ -21,6 +21,104 @@ use Illuminate\Support\Str;
 
 class PfmValidator extends Illuminate\Validation\Validator
 {
+    private static $reservedNames = [
+        'about' => null,
+        'account' => null,
+        'accounts' => null,
+        'admin' => null,
+        'administration' => null,
+        'administrator' => null,
+        'admins' => null,
+        'album' => null,
+        'albums' => null,
+        'animation' => null,
+        'animations' => null,
+        'api' => null,
+        'articles' => null,
+        'artist' => null,
+        'artists' => null,
+        'audio' => null,
+        'aurora-gleam' => null,
+        'auth' => null,
+        'azura' => null,
+        'blog' => null,
+        'blogs' => null,
+        'book' => null,
+        'books' => null,
+        'buffy' => null,
+        'comment' => null,
+        'comments' => null,
+        'create' => null,
+        'dev' => null,
+        'developer' => null,
+        'developers' => null,
+        'edit' => null,
+        'editor' => null,
+        'error' => null,
+        'errors' => null,
+        'fair-dice' => null,
+        'fairdice' => null,
+        'faq' => null,
+        'favorite' => null,
+        'favourite' => null,
+        'favourites' => null,
+        'follow' => null,
+        'followers' => null,
+        'following' => null,
+        'gemini-star' => null,
+        'genre' => null,
+        'genres' => null,
+        'home' => null,
+        'log-out' => null,
+        'login' => null,
+        'logout' => null,
+        'mail' => null,
+        'mlp-forums' => null,
+        'mlpforums' => null,
+        'mlpforums-advertising-program' => null,
+        'movie' => null,
+        'movies' => null,
+        'music' => null,
+        'new' => null,
+        'news' => null,
+        'notification' => null,
+        'notifications' => null,
+        'nova-blast' => null,
+        'page' => null,
+        'pages' => null,
+        'pixel-wavelength' => null,
+        'pixelwavelength' => null,
+        'playlist' => null,
+        'playlists' => null,
+        'poniverse' => null,
+        'pony-fm' => null,
+        'ponyfm' => null,
+        'ponyverse' => null,
+        'ponyville-live' => null,
+        'ponyvillelive' => null,
+        'profile' => null,
+        'profiles' => null,
+        'register' => null,
+        'sign-in' => null,
+        'sign-up' => null,
+        'signin' => null,
+        'signup' => null,
+        'template' => null,
+        'templates' => null,
+        'track' => null,
+        'tracks' => null,
+        'tunes' => null,
+        'upload' => null,
+        'uploader' => null,
+        'user' => null,
+        'users' => null,
+        'viridian-meadows' => null,
+        'web' => null,
+        'word-play' => null,
+        'wordplay' => null,
+        'www' => null,
+    ];
+
     /**
      * Determine if a given rule implies that the attribute is required.
      *
@@ -194,5 +292,21 @@ class PfmValidator extends Illuminate\Validation\Validator
     public function validateTextareaLength($attribute, $value, $parameters)
     {
         return strlen(str_replace("\r\n", "\n", $value)) <= $parameters[0];
+    }
+
+    /**
+     * This validation rule is intended to avoid collisions between user profile
+     * slugs and site functionality.
+     *
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     * @return bool false if the given value is a reserved slug
+     */
+    public function validateIsNotReservedSlug($attribute, $value, $parameters)
+    {
+        return !array_key_exists($value, static::$reservedNames) &&
+               // Pony.fm shortlinks are in the form: /{letter}{series of numbers}
+               !preg_match('/^[a-z]?\d+$/', $value);
     }
 }
