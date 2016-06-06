@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Poniverse\Ponyfm\Contracts\Commentable;
-use Poniverse\Ponyfm\Contracts\GeneratesNotifications;
 
 /**
  * Poniverse\Ponyfm\Models\Comment

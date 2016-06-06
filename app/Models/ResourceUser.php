@@ -45,7 +45,7 @@ class ResourceUser extends Model
 
     public static function get($userId, $resourceType, $resourceId)
     {
-        $resourceIdColumn = $resourceType . '_id';
+        $resourceIdColumn = $resourceType.'_id';
         $existing = self::where($resourceIdColumn, '=', $resourceId)->where('user_id', '=', $userId)->first();
         if ($existing) {
             return $existing;

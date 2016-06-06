@@ -51,7 +51,7 @@ class ResourceLogItem extends Model
 
     public static function logItem($resourceType, $resourceId, $logType, $formatId = null)
     {
-        $resourceIdColumn = $resourceType . '_id';
+        $resourceIdColumn = $resourceType.'_id';
 
         $logItem = new ResourceLogItem();
         $logItem->{$resourceIdColumn} = $resourceId;
@@ -66,7 +66,7 @@ class ResourceLogItem extends Model
 
         $logItem->save();
 
-        $resourceTable = $resourceType . 's';
+        $resourceTable = $resourceType.'s';
         $countColumn = '';
 
         if ($logType == self::VIEW) {
@@ -92,9 +92,9 @@ class ResourceLogItem extends Model
                 FROM
                     resource_log_items
                 WHERE ' .
-                    $resourceIdColumn . ' = ' . $resourceId . '
+                    $resourceIdColumn.' = '.$resourceId.'
                 AND
-                    log_type = ' . $logType . ')')
+                    log_type = ' . $logType.')')
         ]);
 
         if (Auth::check()) {
@@ -106,11 +106,11 @@ class ResourceLogItem extends Model
                     FROM
                         resource_log_items
                     WHERE
-                        user_id = ' . Auth::user()->id . '
+                        user_id = ' . Auth::user()->id.'
                     AND ' .
-                        $resourceIdColumn . ' = ' . $resourceId . '
+                        $resourceIdColumn.' = '.$resourceId.'
                     AND
-                        log_type = ' . $logType . ')')
+                        log_type = ' . $logType.')')
             ]);
         }
     }

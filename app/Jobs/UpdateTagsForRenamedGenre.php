@@ -83,7 +83,7 @@ class UpdateTagsForRenamedGenre extends Job implements SelfHandling, ShouldQueue
         }
 
 
-        $this->genreThatWasRenamed->tracks()->chunk(200, function ($tracks) {
+        $this->genreThatWasRenamed->tracks()->chunk(200, function($tracks) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
                 $track->updateTags();

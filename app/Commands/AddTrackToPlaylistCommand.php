@@ -59,7 +59,7 @@ class AddTrackToPlaylistCommand extends CommandBase
         // check if this track is already in the playlist
         $validator = Validator::make(
             ['track_id' => $this->_track->id],
-            ['track_id' => "unique:playlist_track,track_id,null,id,playlist_id,{$this->_playlist->id}",]
+            ['track_id' => "unique:playlist_track,track_id,null,id,playlist_id,{$this->_playlist->id}", ]
         );
 
         if ($validator->fails()) {
@@ -72,7 +72,7 @@ class AddTrackToPlaylistCommand extends CommandBase
         $this->_playlist->touch();
 
         Playlist::where('id', $this->_playlist->id)->update([
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = ' . $this->_playlist->id . ')')
+            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$this->_playlist->id.')')
         ]);
 
         return CommandResponse::succeed(['message' => 'Track added!']);

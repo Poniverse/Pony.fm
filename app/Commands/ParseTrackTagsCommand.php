@@ -119,7 +119,7 @@ class ParseTrackTagsCommand extends CommandBase
      *
      * @param int $artistId
      * @param string|null $albumName
-     * @param null $coverId
+     * @param integer|null $coverId
      * @return int|null
      */
     protected function getAlbumId(int $artistId, $albumName, $coverId = null) {
@@ -236,9 +236,9 @@ class ParseTrackTagsCommand extends CommandBase
             }
 
             // write temporary image file
-            $tmpPath = Config::get('ponyfm.files_directory') . '/tmp';
+            $tmpPath = Config::get('ponyfm.files_directory').'/tmp';
 
-            $filename = $file->getFilename() . ".cover.${extension}";
+            $filename = $file->getFilename().".cover.${extension}";
             $imageFilePath = "${tmpPath}/${filename}";
 
             File::put($imageFilePath, $image['data']);

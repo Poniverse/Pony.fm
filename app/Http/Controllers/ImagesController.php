@@ -45,7 +45,7 @@ class ImagesController extends Controller
         $filename = $image->getFile($coverType['id']);
 
         if (!is_file($filename)) {
-            $redirect = url('/images/icons/profile_' . Image::$ImageTypes[$coverType['id']]['name'] . '.png');
+            $redirect = url('/images/icons/profile_'.Image::$ImageTypes[$coverType['id']]['name'].'.png');
 
             return Redirect::to($redirect);
         }
@@ -62,7 +62,7 @@ class ImagesController extends Controller
         $lastModified = filemtime($filename);
 
         $response->header('Last-Modified', $lastModified);
-        $response->header('Cache-Control', 'max-age=' . (60 * 60 * 24 * 7));
+        $response->header('Cache-Control', 'max-age='.(60 * 60 * 24 * 7));
 
         return $response;
     }

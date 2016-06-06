@@ -106,7 +106,7 @@ class PlaylistsController extends ApiControllerBase
             'tracks.genre',
             'tracks.cover',
             'tracks.album',
-            'tracks' => function ($query) {
+            'tracks' => function($query) {
                 $query->userDetails();
             },
             'tracks.trackFiles',
@@ -161,7 +161,7 @@ class PlaylistsController extends ApiControllerBase
         $query = Playlist
             ::userDetails()
             ->with('tracks', 'tracks.cover', 'tracks.user', 'user')
-            ->join('pinned_playlists', function ($join) {
+            ->join('pinned_playlists', function($join) {
                 $join->on('playlist_id', '=', 'playlists.id');
             })
             ->where('pinned_playlists.user_id', '=', Auth::user()->id)

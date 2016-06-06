@@ -68,7 +68,7 @@ class DeleteGenre extends Job implements SelfHandling, ShouldQueue
 
         // This is done instead of a single UPDATE query in order to
         // generate revision logs for the change.
-        $this->genreToDelete->tracks()->chunk(200, function ($tracks) {
+        $this->genreToDelete->tracks()->chunk(200, function($tracks) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
 

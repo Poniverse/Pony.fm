@@ -109,7 +109,7 @@ class PoniverseApiSetup extends Command
 
         if (file_exists($path)) {
             file_put_contents($path, str_replace(
-                "$key=" . $oldValue, "$key=" . $newValue, file_get_contents($path)
+                "$key=".$oldValue, "$key=".$newValue, file_get_contents($path)
             ));
         } else {
             $this->error('Please run `vagrant up`!');

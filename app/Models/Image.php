@@ -93,7 +93,7 @@ class Image extends Model
                     return Str::startsWith($filename, $imagePrefix);
                 });
 
-                foreach($filenames as $filename) {
+                foreach ($filenames as $filename) {
                     unlink($image->getDirectory().'/'.$filename);
                 }
             } else {
@@ -119,7 +119,7 @@ class Image extends Model
 
                 } else {
                     // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
-                    $command = 'convert 2>&1 "' . $file->getPathname() . '" -background white -alpha remove -alpha off -strip';
+                    $command = 'convert 2>&1 "'.$file->getPathname().'" -background white -alpha remove -alpha off -strip';
 
                     if ($image->mime === 'image/jpeg') {
                         $command .= ' -quality 100 -format jpeg';
@@ -132,7 +132,7 @@ class Image extends Model
                         $command .= " -thumbnail ${coverType['width']}x${coverType['height']}^ -gravity center -extent ${coverType['width']}x${coverType['height']}";
                     }
 
-                    $command .= ' "' . $image->getFile($coverType['id']) . '"';
+                    $command .= ' "'.$image->getFile($coverType['id']).'"';
                 }
 
                 External::execute($command);
@@ -157,21 +157,21 @@ class Image extends Model
 
     public function getFile($type = self::NORMAL)
     {
-        return $this->getDirectory() . '/' . $this->getFilename($type);
+        return $this->getDirectory().'/'.$this->getFilename($type);
     }
 
     public function getFilename($type = self::NORMAL)
     {
         $typeInfo = self::$ImageTypes[$type];
 
-        return $this->id . '_' . $typeInfo['name'] . '.'.$this->extension;
+        return $this->id.'_'.$typeInfo['name'].'.'.$this->extension;
     }
 
     public function getDirectory()
     {
-        $dir = (string)(floor($this->id / 100) * 100);
+        $dir = (string) (floor($this->id / 100) * 100);
 
-        return Config::get('ponyfm.files_directory') . '/images/' . $dir;
+        return Config::get('ponyfm.files_directory').'/images/'.$dir;
     }
 
     public function ensureDirectoryExists()

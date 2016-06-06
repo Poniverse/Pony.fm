@@ -190,7 +190,7 @@ class RefreshCache extends Command
 
         foreach ($resources as $name => $resourceArray) {
             foreach ($resourceArray as $id => $resource) {
-                DB::table($name . 's')->whereId($id)->update($resource);
+                DB::table($name.'s')->whereId($id)->update($resource);
             }
         }
 
@@ -238,7 +238,7 @@ class RefreshCache extends Command
                 'user_id' => $userId
             ];
 
-            $item[$type . '_id'] = $id;
+            $item[$type.'_id'] = $id;
 
             $items[$userId][$type][$id] = $item;
 

@@ -82,7 +82,7 @@ class UpdateTagsForRenamedShowSong extends Job implements SelfHandling, ShouldQu
         }
 
 
-        $this->songThatWasRenamed->tracks()->chunk(200, function ($tracks) {
+        $this->songThatWasRenamed->tracks()->chunk(200, function($tracks) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
                 $track->updateTags();

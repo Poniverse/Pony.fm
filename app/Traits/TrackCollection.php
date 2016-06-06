@@ -83,7 +83,7 @@ trait TrackCollection
                 $trackFile->is_master ||
                 ($trackFile->expires_at != null && File::exists($trackFile->getFile()))
             ) {
-                $availableCount ++;
+                $availableCount++;
             }
         }
 
@@ -118,7 +118,7 @@ trait TrackCollection
      */
     protected function downloadableTrackFiles($format) {
         return $this->trackFiles()->with([
-            'track' => function ($query) {
+            'track' => function($query) {
                 $query->where('is_downloadable', true);
             }
         ])->where('format', $format)->get();

@@ -43,7 +43,7 @@ class StatsController extends ApiControllerBase
             ->selectRaw('created_at, COUNT(1) AS `plays`')
             ->where('track_id', '=', $id)
             ->where('log_type', '=', ResourceLogItem::PLAY)
-            ->whereRaw('`created_at` > now() - INTERVAL ' . $playRange)
+            ->whereRaw('`created_at` > now() - INTERVAL '.$playRange)
             ->groupBy('created_at')
             ->orderBy('created_at')
             ->get();
@@ -62,7 +62,7 @@ class StatsController extends ApiControllerBase
             $playsArray = array_fill(0, 30, 0);
         }
 
-        foreach($query as $item) {
+        foreach ($query as $item) {
             $playDate = new Carbon($item->created_at);
 
             $key = 0;
@@ -82,15 +82,15 @@ class StatsController extends ApiControllerBase
         krsort($playsArray);
 
         // Covert playsArray into output we can understand
-        foreach($playsArray as $timeOffet => $plays) {
+        foreach ($playsArray as $timeOffet => $plays) {
             if ($hourly) {
                 $set = [
-                    'hours' => $timeOffet . ' ' . str_plural('hour', $timeOffet),
+                    'hours' => $timeOffet.' '.str_plural('hour', $timeOffet),
                     'plays' => $plays
                 ];
             } else {
                 $set = [
-                    'days' => $timeOffet . ' ' . str_plural('day', $timeOffet),
+                    'days' => $timeOffet.' '.str_plural('day', $timeOffet),
                     'plays' => $plays
                 ];
             }

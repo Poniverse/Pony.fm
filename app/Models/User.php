@@ -117,7 +117,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $slugBeingTried = $baseSlug;
         $counter = 2;
 
-        while(true) {
+        while (true) {
             $existingEntity = static::where('slug', $slugBeingTried)->first();
             $validator = Validator::make(['slug' => $slugBeingTried], ['isNotReservedSlug']);
 

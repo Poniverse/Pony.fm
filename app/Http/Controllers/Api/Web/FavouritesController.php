@@ -43,7 +43,7 @@ class FavouritesController extends ApiControllerBase
             ::whereUserId(Auth::user()->id)
             ->whereNotNull('track_id')
             ->with([
-                'track' => function ($query) {
+                'track' => function($query) {
                     $query
                         ->userDetails()
                         ->published();
@@ -75,7 +75,7 @@ class FavouritesController extends ApiControllerBase
             ::whereUserId(Auth::user()->id)
             ->whereNotNull('album_id')
             ->with([
-                'album' => function ($query) {
+                'album' => function($query) {
                     $query->userDetails();
                 },
                 'album.user',
@@ -103,7 +103,7 @@ class FavouritesController extends ApiControllerBase
             ::whereUserId(Auth::user()->id)
             ->whereNotNull('playlist_id')
             ->with([
-                'playlist' => function ($query) {
+                'playlist' => function($query) {
                     $query->userDetails();
                 },
                 'playlist.user',

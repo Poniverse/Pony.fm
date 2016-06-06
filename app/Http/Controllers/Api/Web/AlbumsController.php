@@ -55,7 +55,7 @@ class AlbumsController extends ApiControllerBase
     public function getShow($id)
     {
         $album = Album::with([
-            'tracks' => function ($query) {
+            'tracks' => function($query) {
                 $query->userDetails();
             },
             'tracks.cover',
@@ -176,7 +176,7 @@ class AlbumsController extends ApiControllerBase
     {
         $album = Album::with('tracks')->find($id);
         if (!$album) {
-            return $this->notFound('Album ' . $id . ' not found!');
+            return $this->notFound('Album '.$id.' not found!');
         }
 
         if (Gate::denies('edit', Auth::user())) {

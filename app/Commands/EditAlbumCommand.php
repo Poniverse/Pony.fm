@@ -90,11 +90,11 @@ class EditAlbumCommand extends CommandBase
         }
 
         if (isset($this->_input['username'])) {
-          $newid = User::where('username', $this->_input['username'])->first()->id;
+            $newid = User::where('username', $this->_input['username'])->first()->id;
 
-          if ($this->_album->user_id != $newid) {
+            if ($this->_album->user_id != $newid) {
             $this->_album->user_id = $newid;
-          }
+            }
         }
 
         $trackIds = explode(',', $this->_input['track_ids']);

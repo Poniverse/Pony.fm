@@ -27,7 +27,6 @@ use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackType;
 use Poniverse\Ponyfm\Models\User;
-use Auth;
 use DB;
 
 class EditTrackCommand extends CommandBase
@@ -66,8 +65,8 @@ class EditTrackCommand extends CommandBase
         $rules = [
             'title' => 'required|min:3|max:80',
             'released_at' => 'before:' .
-                 (date('Y-m-d', time() + (86400 * 2))) . (
-                 isset($this->_input['released_at']) && $this->_input['released_at'] != ""
+                    (date('Y-m-d', time() + (86400 * 2))) . (
+                    isset($this->_input['released_at']) && $this->_input['released_at'] != ""
                  ? '|date'
                  : ''),
             'license_id' => 'required|exists:licenses,id',
@@ -157,12 +156,12 @@ class EditTrackCommand extends CommandBase
         $oldid = null;
 
         if (isset($this->_input['username'])) {
-          $newid = User::where('username', $this->_input['username'])->first()->id;
+            $newid = User::where('username', $this->_input['username'])->first()->id;
 
-          if ($track->user_id != $newid) {
+            if ($track->user_id != $newid) {
             $oldid = $track->user_id;
             $track->user_id = $newid;
-          }
+            }
         }
 
         $track->updateTags();
@@ -173,9 +172,9 @@ class EditTrackCommand extends CommandBase
         ]);
 
         if ($oldid != null) {
-          User::whereId($oldid)->update([
-              'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = ' . $oldid . ')')
-          ]);
+            User::whereId($oldid)->update([
+                'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = ' . $oldid . ')')
+            ]);
         }
 
         return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);
