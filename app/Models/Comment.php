@@ -60,27 +60,27 @@ class Comment extends Model
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     public function track()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Track');
+        return $this->belongsTo(Track::class);
     }
 
     public function album()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Album');
+        return $this->belongsTo(Album::class);
     }
 
     public function playlist()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Playlist');
+        return $this->belongsTo(Playlist::class);
     }
 
     public function profile()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\User', 'profile_id');
+        return $this->belongsTo(User::class, 'profile_id');
     }
 
     public function activities():MorphMany

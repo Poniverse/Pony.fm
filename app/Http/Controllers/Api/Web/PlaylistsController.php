@@ -49,7 +49,7 @@ class PlaylistsController extends ApiControllerBase
 
     public function postDelete($id)
     {
-        return $this->execute(new DeletePlaylistCommand($id, Input::all()));
+        return $this->execute(new DeletePlaylistCommand($id));
     }
 
     public function postAddTrack($id)

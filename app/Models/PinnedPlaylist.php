@@ -39,11 +39,11 @@ class PinnedPlaylist extends Model
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     public function playlist()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Playlist');
+        return $this->belongsTo(Playlist::class);
     }
 }

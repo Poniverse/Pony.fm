@@ -33,7 +33,7 @@ class SaveAccountSettingsCommand extends CommandBase
     private $_user;
     private $_current;
 
-    function __construct($input, $slug)
+    public function __construct($input, $slug)
     {
         $this->_input = $input;
         $this->_slug = $slug;

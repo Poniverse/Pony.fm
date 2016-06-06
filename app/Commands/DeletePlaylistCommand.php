@@ -31,7 +31,7 @@ class DeletePlaylistCommand extends CommandBase
     /** @var Playlist */
     private $_playlist;
 
-    function __construct($playlistId)
+    public function __construct($playlistId)
     {
         $this->_playlistId = $playlistId;
         $this->_playlist = Playlist::find($playlistId);

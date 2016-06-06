@@ -40,7 +40,7 @@ class EditTrackCommand extends CommandBase
     private $_track;
     private $_input;
 
-    function __construct($trackId, $input)
+    public function __construct($trackId, $input)
     {
         $this->_trackId = $trackId;
         $this->_track = Track::find($trackId);

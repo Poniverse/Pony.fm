@@ -34,7 +34,7 @@ class ToggleFavouriteCommand extends CommandBase
     private $_resourceType;
     private $_resourceId;
 
-    function __construct($resourceType, $resourceId)
+    public function __construct($resourceType, $resourceId)
     {
         $this->_resourceId = $resourceId;
         $this->_resourceType = $resourceType;

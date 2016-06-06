@@ -98,27 +98,27 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     public function users()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser');
+        return $this->hasMany(ResourceUser::class);
     }
 
     public function favourites():HasMany
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\Favourite');
+        return $this->hasMany(Favourite::class);
     }
 
     public function cover()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Image');
+        return $this->belongsTo(Image::class);
     }
 
     public function tracks()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\Track')->orderBy('track_number', 'asc');
+        return $this->hasMany(Track::class)->orderBy('track_number', 'asc');
     }
 
     public function trackFiles() {
@@ -127,7 +127,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function comments():HasMany
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
     }
 
     public function activities():MorphMany {

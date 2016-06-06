@@ -153,7 +153,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
             $user->username = $username;
             $user->display_name = $displayName;
-            $user->slug = static::getUniqueSlugForName($displayName);
+            $user->slug = self::getUniqueSlugForName($displayName);
             $user->email = $email;
             $user->uses_gravatar = true;
             $user->save();
@@ -164,12 +164,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function avatar()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Image');
+        return $this->belongsTo(Image::class);
     }
 
     public function users()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser', 'artist_id');
+        return $this->hasMany(ResourceUser::class, 'artist_id');
     }
     
     public function followers()
@@ -184,12 +184,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function comments():HasMany
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\Comment', 'profile_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class, 'profile_id')->orderBy('created_at', 'desc');
     }
 
     public function tracks()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\Track', 'user_id');
+        return $this->hasMany(Track::class, 'user_id');
     }
     
     public function notifications()

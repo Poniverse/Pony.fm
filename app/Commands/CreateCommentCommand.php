@@ -35,7 +35,7 @@ class CreateCommentCommand extends CommandBase
     private $_id;
     private $_type;
 
-    function __construct($type, $id, $input)
+    public function __construct($type, $id, $input)
     {
         $this->_input = $input;
         $this->_id = $id;

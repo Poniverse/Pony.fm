@@ -31,7 +31,7 @@ class DeleteAlbumCommand extends CommandBase
     /** @var Album */
     private $_album;
 
-    function __construct($albumId)
+    public function __construct($albumId)
     {
         $this->_albumId = $albumId;
         $this->_album = Album::find($albumId);

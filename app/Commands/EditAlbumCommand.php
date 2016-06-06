@@ -36,7 +36,7 @@ class EditAlbumCommand extends CommandBase
     /** @var Album */
     private $_album;
 
-    function __construct($trackId, $input)
+    public function __construct($trackId, $input)
     {
         $this->_input = $input;
         $this->_albumId = $trackId;

@@ -35,13 +35,13 @@ class AlbumDownloader
      */
     private $_format;
 
-    function __construct($album, $format)
+    public function __construct($album, $format)
     {
         $this->_album = $album;
         $this->_format = $format;
     }
 
-    function download()
+    public function download()
     {
         $zip = new ZipStream($this->_album->user->display_name.' - '.$this->_album->title.'.zip');
         $zip->setComment(

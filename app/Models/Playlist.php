@@ -201,7 +201,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     public function tracks()
     {
         return $this
-            ->belongsToMany('Poniverse\Ponyfm\Models\Track')
+            ->belongsToMany(Track::class)
             ->withPivot('position')
             ->withTimestamps()
             ->orderBy('position', 'asc');
@@ -215,17 +215,17 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public function users()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser');
+        return $this->hasMany(ResourceUser::class);
     }
 
     public function comments():HasMany
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
     }
 
     public function pins()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\PinnedPlaylist');
+        return $this->hasMany(PinnedPlaylist::class);
     }
     
     public function favourites():HasMany {
@@ -234,7 +234,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     public function activities():MorphMany {

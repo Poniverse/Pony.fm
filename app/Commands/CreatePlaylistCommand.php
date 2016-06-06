@@ -29,7 +29,7 @@ class CreatePlaylistCommand extends CommandBase
 {
     private $_input;
 
-    function __construct($input)
+    public function __construct($input)
     {
         $this->_input = $input;
     }

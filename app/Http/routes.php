@@ -132,9 +132,6 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::post('/follow/toggle', 'Api\Web\FollowController@postToggle');
 
         Route::post('/dashboard/read-news', 'Api\Web\DashboardController@postReadNews');
-    });
-
-    Route::group(['middleware' => 'auth'], function() {
         Route::get('/account/settings/{slug}', 'Api\Web\AccountController@getSettings');
         Route::get('/notifications', 'Api\Web\NotificationsController@getNotifications');
         Route::put('/notifications/mark-as-read', 'Api\Web\NotificationsController@putMarkAsRead');
@@ -142,7 +139,7 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 
-        Route::get('/users/{userId}', 'Api\Web\AccountController@getUser');//->where('userId', '\d+');
+        Route::get('/users/{userId}', 'Api\Web\AccountController@getUser')->where('userId', '\d+');
         Route::get('/users/{userId}/albums', 'Api\Web\AlbumsController@getOwned')->where('id', '\d+');
         Route::get('/users/{userId}/images', 'Api\Web\ImagesController@getOwned')->where('id', '\d+');
 
@@ -210,6 +207,4 @@ Route::get('/', 'HomeController@getIndex');
 Route::group(['domain' => 'api.pony.fm'], function() {
     Route::get('tracks/latest', ['uses' => 'Api\Mobile\TracksController@latest']);
     Route::get('tracks/popular', [ 'uses' => 'Api\Mobile\TracksController@popular']);
-    /*    Route::get('tracks/id', [ 'uses' => 'Api\Mobile\TracksController@track']);
-        Route::get('user', ['uses' => 'Api\Mobile\UserController@user']);*/
 });

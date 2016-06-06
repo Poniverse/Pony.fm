@@ -39,7 +39,7 @@ class MergeAccountsCommand extends CommandBase
     private $sourceAccount;
     private $destinationAccount;
 
-    function __construct(User $sourceAccount, User $destinationAccount)
+    public function __construct(User $sourceAccount, User $destinationAccount)
     {
         $this->sourceAccount = $sourceAccount;
         $this->destinationAccount = $destinationAccount;

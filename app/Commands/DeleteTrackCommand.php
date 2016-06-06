@@ -31,7 +31,7 @@ class DeleteTrackCommand extends CommandBase
     /** @var Track */
     private $_track;
 
-    function __construct($trackId)
+    public function __construct($trackId)
     {
         $this->_trackId = $trackId;
         $this->_track = Track::find($trackId);

@@ -34,7 +34,7 @@ class AddTrackToPlaylistCommand extends CommandBase
     /** @var Playlist */
     private $_playlist;
 
-    function __construct($playlistId, $trackId)
+    public function __construct($playlistId, $trackId)
     {
         $this->_playlist = Playlist::find($playlistId);
         $this->_track = Track::find($trackId);

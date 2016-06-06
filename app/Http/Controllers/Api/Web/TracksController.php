@@ -137,8 +137,6 @@ class TracksController extends ApiControllerBase
             $page = Input::get('page');
         }
 
-        $query = null;
-
         if ($all) {
             $query = Track::summary()
                 ->userDetails()

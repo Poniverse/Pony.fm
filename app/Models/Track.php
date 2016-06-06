@@ -486,52 +486,52 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     public function genre()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Genre');
+        return $this->belongsTo(Genre::class);
     }
 
     public function trackType()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\TrackType', 'track_type_id');
+        return $this->belongsTo(TrackType::class, 'track_type_id');
     }
 
     public function comments():HasMany
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\Comment')->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
     }
 
     public function favourites():HasMany
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\Favourite');
+        return $this->hasMany(Favourite::class);
     }
 
     public function cover()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Image');
+        return $this->belongsTo(Image::class);
     }
 
     public function showSongs()
     {
-        return $this->belongsToMany('Poniverse\Ponyfm\Models\ShowSong');
+        return $this->belongsToMany(ShowSong::class);
     }
 
     public function users()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\ResourceUser');
+        return $this->hasMany(ResourceUser::class);
     }
 
     public function user()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     public function album()
     {
-        return $this->belongsTo('Poniverse\Ponyfm\Models\Album');
+        return $this->belongsTo(Album::class);
     }
 
     public function trackFiles()
     {
-        return $this->hasMany('Poniverse\Ponyfm\Models\TrackFile');
+        return $this->hasMany(TrackFile::class);
     }
 
     public function notifications()

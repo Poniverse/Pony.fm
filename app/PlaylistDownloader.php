@@ -35,13 +35,13 @@ class PlaylistDownloader
      */
     private $_format;
 
-    function __construct($playlist, $format)
+    public function __construct($playlist, $format)
     {
         $this->_playlist = $playlist;
         $this->_format = $format;
     }
 
-    function download()
+    public function download()
     {
         $zip = new ZipStream($this->_playlist->user->display_name.' - '.$this->_playlist->title.'.zip');
         $zip->setComment(

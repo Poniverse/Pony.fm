@@ -31,7 +31,7 @@ class EditPlaylistCommand extends CommandBase
     private $_playlistId;
     private $_playlist;
 
-    function __construct($playlistId, $input)
+    public function __construct($playlistId, $input)
     {
         $this->_input = $input;
         $this->_playlistId = $playlistId;

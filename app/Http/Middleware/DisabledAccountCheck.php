@@ -60,7 +60,6 @@ class DisabledAccountCheck
             && !($request->getMethod() === 'POST' && $request->getRequestUri() == '/auth/logout')
         ) {
             $this->auth->logout();
-//            return Response::view('home.account-disabled', ['username' => $this->auth->user()->username], 403);
         }
 
         return $next($request);
