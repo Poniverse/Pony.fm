@@ -98,7 +98,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     {
         if (Auth::check()) {
             $query->with([
-                'users' => function ($query) {
+                'users' => function($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
             ]);
@@ -138,8 +138,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         $data['formats'] = $formats;
         $data['share'] = [
             'url' => action('PlaylistsController@getShortlink', ['id' => $playlist->id]),
-            'tumblrUrl' => 'http://www.tumblr.com/share/link?url=' . urlencode($playlist->url) . '&name=' . urlencode($playlist->title) . '&description=' . urlencode($playlist->description),
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text=' . $playlist->title . ' by ' . $playlist->user->display_name . ' on Pony.fm'
+            'tumblrUrl' => 'http://www.tumblr.com/share/link?url='.urlencode($playlist->url).'&name='.urlencode($playlist->title).'&description='.urlencode($playlist->description),
+            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$playlist->title.' by '.$playlist->user->display_name.' on Pony.fm'
         ];
 
         return $data;
@@ -159,25 +159,25 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             $userRow = $playlist->users[0];
             $userData = [
                 'stats' => [
-                    'views' => (int)$userRow->view_count,
-                    'downloads' => (int)$userRow->download_count,
+                    'views' => (int) $userRow->view_count,
+                    'downloads' => (int) $userRow->download_count,
                 ],
-                'is_favourited' => (bool)$userRow->is_favourited
+                'is_favourited' => (bool) $userRow->is_favourited
             ];
         }
 
         return [
-            'id' => (int)$playlist->id,
+            'id' => (int) $playlist->id,
             'track_count' => $playlist->track_count,
             'title' => $playlist->title,
             'slug' => $playlist->slug,
             'created_at' => $playlist->created_at->format('c'),
-            'is_public' => (bool)$playlist->is_public,
+            'is_public' => (bool) $playlist->is_public,
             'stats' => [
-                'views' => (int)$playlist->view_count,
-                'downloads' => (int)$playlist->download_count,
-                'comments' => (int)$playlist->comment_count,
-                'favourites' => (int)$playlist->favourite_count
+                'views' => (int) $playlist->view_count,
+                'downloads' => (int) $playlist->download_count,
+                'comments' => (int) $playlist->comment_count,
+                'favourites' => (int) $playlist->favourite_count
             ],
             'covers' => [
                 'small' => $playlist->getCoverUrl(Image::SMALL),
@@ -186,7 +186,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             ],
             'url' => $playlist->url,
             'user' => [
-                'id' => (int)$playlist->user->id,
+                'id' => (int) $playlist->user->id,
                 'name' => $playlist->user->display_name,
                 'url' => $playlist->user->url,
             ],
@@ -274,7 +274,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             return 0;
         }
 
-        return Cache::remember($this->getCacheKey('filesize-' . $format), 1440, function () use ($tracks, $format) {
+        return Cache::remember($this->getCacheKey('filesize-'.$format), 1440, function() use ($tracks, $format) {
             $size = 0;
             foreach ($tracks as $track) {
                 /** @var $track Track */
@@ -313,7 +313,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     private function getCacheKey($key)
     {
-        return 'playlist-' . $this->id . '-' . $key;
+        return 'playlist-'.$this->id.'-'.$key;
     }
 
     /**

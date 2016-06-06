@@ -70,7 +70,7 @@ class ToggleFavouriteCommand extends CommandBase
      */
     public function execute()
     {
-        $typeId = $this->_resourceType . '_id';
+        $typeId = $this->_resourceType.'_id';
         $existing = Favourite::where($typeId, '=', $this->_resourceId)->whereUserId(Auth::user()->id)->first();
         $isFavourited = false;
 
@@ -91,7 +91,7 @@ class ToggleFavouriteCommand extends CommandBase
         $resourceUser->is_favourited = $isFavourited;
         $resourceUser->save();
 
-        $resourceTable = $this->_resourceType . 's';
+        $resourceTable = $this->_resourceType.'s';
 
         // We do this to prevent a race condition. Sure I could simply increment the count columns and re-save back to the db
         // but that would require an additional SELECT and the operation would be non-atomic. If two log items are created
@@ -105,7 +105,7 @@ class ToggleFavouriteCommand extends CommandBase
                     FROM
                         favourites
                     WHERE ' .
-                    $typeId . ' = ' . $this->_resourceId . ')')
+                    $typeId.' = '.$this->_resourceId.')')
         ]);
 
         return CommandResponse::succeed(['is_favourited' => $isFavourited]);

@@ -398,6 +398,9 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
+    /**
+     * @param string $key
+     */
     public function getCacheKey($key)
     {
         return 'album-'.$this->id.'-'.$key;

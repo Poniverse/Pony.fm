@@ -30,7 +30,6 @@ use AudioCache;
 use File;
 use Illuminate\Support\Str;
 use SplFileInfo;
-use Validator;
 
 /**
  * This command is the "second phase" of the upload process - once metadata has

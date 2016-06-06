@@ -142,9 +142,9 @@ class TrackFile extends Model
 
     public function getDirectory()
     {
-        $dir = (string)(floor($this->track_id / 100) * 100);
+        $dir = (string) (floor($this->track_id / 100) * 100);
 
-        return \Config::get('ponyfm.files_directory') . '/tracks/' . $dir;
+        return \Config::get('ponyfm.files_directory').'/tracks/'.$dir;
     }
 
     public function getFile()
@@ -164,7 +164,7 @@ class TrackFile extends Model
 
     private function getCacheKey($key)
     {
-        return 'track_file-' . $this->id . '-' . $key;
+        return 'track_file-'.$this->id.'-'.$key;
     }
 
     /**

@@ -53,7 +53,7 @@ class Genre extends Model
 
     use SlugTrait, SoftDeletes, RevisionableTrait;
 
-    public function tracks(){
+    public function tracks() {
         return $this->hasMany(Track::class, 'genre_id');
     }
 

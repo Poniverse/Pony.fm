@@ -26,7 +26,6 @@ use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 class RebuildSearchIndex extends Command
 {
@@ -68,7 +67,7 @@ class RebuildSearchIndex extends Command
         $trackProgress = $this->output->createProgressBar($totalTracks);
         $this->info("Processing tracks...");
         Track::withTrashed()->chunk(200, function(Collection $tracks) use ($trackProgress) {
-            foreach($tracks as $track) {
+            foreach ($tracks as $track) {
                 /** @var Track $track */
                 $trackProgress->advance();
                 $track->updateElasticsearchEntry();
@@ -81,7 +80,7 @@ class RebuildSearchIndex extends Command
         $albumProgress = $this->output->createProgressBar($totalAlbums);
         $this->info("Processing albums...");
         Album::withTrashed()->chunk(200, function(Collection $albums) use ($albumProgress) {
-            foreach($albums as $album) {
+            foreach ($albums as $album) {
                 /** @var Album $album */
                 $albumProgress->advance();
                 $album->updateElasticsearchEntry();
@@ -94,7 +93,7 @@ class RebuildSearchIndex extends Command
         $playlistProgress = $this->output->createProgressBar($totalPlaylists);
         $this->info("Processing playlists...");
         Playlist::withTrashed()->chunk(200, function(Collection $playlists) use ($playlistProgress) {
-            foreach($playlists as $playlist) {
+            foreach ($playlists as $playlist) {
                 /** @var Playlist $playlist */
                 $playlistProgress->advance();
                 $playlist->updateElasticsearchEntry();
@@ -107,7 +106,7 @@ class RebuildSearchIndex extends Command
         $userProgress = $this->output->createProgressBar($totalUsers);
         $this->info("Processing users...");
         User::chunk(200, function(Collection $users) use ($userProgress) {
-            foreach($users as $user) {
+            foreach ($users as $user) {
                 /** @var User $user */
                 $userProgress->advance();
                 $user->updateElasticsearchEntry();

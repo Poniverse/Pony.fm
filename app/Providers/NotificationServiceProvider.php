@@ -43,7 +43,7 @@ class NotificationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('notification', function(Application $app){
+        $this->app->singleton('notification', function(Application $app) {
             return new NotificationManager();
         });
     }

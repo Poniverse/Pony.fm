@@ -65,7 +65,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      */
     public function __construct(TrackFile $trackFile, $isExpirable, $isForUpload = false, $autoPublish = false)
     {
-        if(
+        if (
             (!$isForUpload && $trackFile->is_master) ||
             ($isForUpload && $trackFile->is_master && !$trackFile->getFormat()['is_lossless'])
         ) {

@@ -100,12 +100,12 @@ class MigrateOldData extends Command
             $coverId = null;
             if (!$user->uses_gravatar) {
                 try {
-                    $coverFile = $this->getIdDirectory('users', $user->id) . '/' . $user->id . '_.png';
+                    $coverFile = $this->getIdDirectory('users', $user->id).'/'.$user->id.'_.png';
                     $coverId = Image::upload(new UploadedFile($coverFile,
-                        $user->id . '_.png'), $user->id)->id;
+                        $user->id.'_.png'), $user->id)->id;
                     DB::table('users')->where('id', $user->id)->update(['avatar_id' => $coverId]);
                 } catch (\Exception $e) {
-                    $this->error('Could copy user avatar ' . $user->id . ' because ' . $e->getMessage());
+                    $this->error('Could copy user avatar '.$user->id.' because '.$e->getMessage());
                     DB::table('users')->where('id', $user->id)->update(['uses_gravatar' => true]);
                 }
             }
@@ -150,7 +150,7 @@ class MigrateOldData extends Command
                         'ip_address' => $logItem->ip_address,
                     ]);
                 } catch (\Exception $e) {
-                    $this->error('Could insert log item for album ' . $playlist->id . ' because ' . $e->getMessage());
+                    $this->error('Could insert log item for album '.$playlist->id.' because '.$e->getMessage());
                 }
             }
 
@@ -165,7 +165,7 @@ class MigrateOldData extends Command
                         'track_format_id' => $logItem->track_file_format_id - 1
                     ]);
                 } catch (\Exception $e) {
-                    $this->error('Could insert log item for album ' . $playlist->id . ' because ' . $e->getMessage());
+                    $this->error('Could insert log item for album '.$playlist->id.' because '.$e->getMessage());
                 }
             }
         }
@@ -177,11 +177,11 @@ class MigrateOldData extends Command
             if ($track->cover) {
                 try {
                     $coverFile = $this->getIdDirectory('tracks',
-                            $track->id) . '/' . $track->id . '_' . $track->cover . '.png';
+                            $track->id).'/'.$track->id.'_'.$track->cover.'.png';
                     $coverId = Image::upload(new UploadedFile($coverFile,
-                        $track->id . '_' . $track->cover . '.png'), $track->user_id)->id;
+                        $track->id.'_'.$track->cover.'.png'), $track->user_id)->id;
                 } catch (\Exception $e) {
-                    $this->error('Could copy track cover ' . $track->id . ' because ' . $e->getMessage());
+                    $this->error('Could copy track cover '.$track->id.' because '.$e->getMessage());
                 }
             }
 
@@ -226,7 +226,7 @@ class MigrateOldData extends Command
                         'ip_address' => $logItem->ip_address
                     ]);
                 } catch (\Exception $e) {
-                    $this->error('Could insert log item for track ' . $track->id . ' because ' . $e->getMessage());
+                    $this->error('Could insert log item for track '.$track->id.' because '.$e->getMessage());
                 }
             }
 
@@ -240,7 +240,7 @@ class MigrateOldData extends Command
                         'ip_address' => $logItem->ip_address
                     ]);
                 } catch (\Exception $e) {
-                    $this->error('Could insert log item for track ' . $track->id . ' because ' . $e->getMessage());
+                    $this->error('Could insert log item for track '.$track->id.' because '.$e->getMessage());
                 }
             }
 
@@ -255,7 +255,7 @@ class MigrateOldData extends Command
                         'track_format_id' => $logItem->track_file_format_id - 1
                     ]);
                 } catch (\Exception $e) {
-                    $this->error('Could insert log item for track ' . $track->id . ' because ' . $e->getMessage());
+                    $this->error('Could insert log item for track '.$track->id.' because '.$e->getMessage());
                 }
             }
         }
@@ -269,7 +269,7 @@ class MigrateOldData extends Command
                     'track_id' => $song->track_id
                 ]);
             } catch (\Exception $e) {
-                $this->error('Could insert show track item for ' . $song->track_id . ' because ' . $e->getMessage());
+                $this->error('Could insert show track item for '.$song->track_id.' because '.$e->getMessage());
             }
         }
 
@@ -303,7 +303,7 @@ class MigrateOldData extends Command
                         'ip_address' => $logItem->ip_address,
                     ]);
                 } catch (\Exception $e) {
-                    $this->error('Could insert log item for playlist ' . $playlist->id . ' because ' . $e->getMessage());
+                    $this->error('Could insert log item for playlist '.$playlist->id.' because '.$e->getMessage());
                 }
             }
 
@@ -318,7 +318,7 @@ class MigrateOldData extends Command
                         'track_format_id' => $logItem->track_file_format_id - 1
                     ]);
                 } catch (\Exception $e) {
-                    $this->error('Could insert log item for playlist ' . $playlist->id . ' because ' . $e->getMessage());
+                    $this->error('Could insert log item for playlist '.$playlist->id.' because '.$e->getMessage());
                 }
             }
         }
@@ -353,7 +353,7 @@ class MigrateOldData extends Command
                     'profile_id' => $comment->profile_id
                 ]);
             } catch (Exception $e) {
-                $this->error('Could not sync comment ' . $comment->id . ' because ' . $e->getMessage());
+                $this->error('Could not sync comment '.$comment->id.' because '.$e->getMessage());
             }
         }
 
@@ -370,7 +370,7 @@ class MigrateOldData extends Command
                     'playlist_id' => $fav->playlist_id,
                 ]);
             } catch (Exception $e) {
-                $this->error('Could not sync favourite ' . $fav->id . ' because ' . $e->getMessage());
+                $this->error('Could not sync favourite '.$fav->id.' because '.$e->getMessage());
             }
         }
 
@@ -385,16 +385,16 @@ class MigrateOldData extends Command
                     'created_at' => $follower->created_at,
                 ]);
             } catch (Exception $e) {
-                $this->error('Could not sync follower ' . $follower->id . ' because ' . $e->getMessage());
+                $this->error('Could not sync follower '.$follower->id.' because '.$e->getMessage());
             }
         }
     }
 
     private function getIdDirectory($type, $id)
     {
-        $dir = (string)(floor($id / 100) * 100);
+        $dir = (string) (floor($id / 100) * 100);
 
-        return \Config::get('ponyfm.files_directory') . '/' . $type . '/' . $dir;
+        return \Config::get('ponyfm.files_directory').'/'.$type.'/'.$dir;
     }
 
 }

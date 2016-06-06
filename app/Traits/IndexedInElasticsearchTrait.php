@@ -47,11 +47,11 @@ trait IndexedInElasticsearchTrait
 
     // Laravel automatically runs this method based on the trait's name. #magic
     public static function bootIndexedInElasticsearchTrait() {
-        static::saved(function (Searchable $entity) {
+        static::saved(function(Searchable $entity) {
             $entity->updateElasticsearchEntry();
         });
 
-        static::deleted(function (Searchable $entity) {
+        static::deleted(function(Searchable $entity) {
             $entity->updateElasticsearchEntry();
         });
     }

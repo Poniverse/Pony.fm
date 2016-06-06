@@ -63,7 +63,7 @@ Route::get('i{id}/{type}.{extension}', 'ImagesController@getImage')->where('id',
 
 Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');
 Route::get('p{id}', 'PlaylistsController@getShortlink')->where('id', '\d+');
-Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload' );
+Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload');
 
 Route::get('notifications', 'AccountController@getNotifications');
 

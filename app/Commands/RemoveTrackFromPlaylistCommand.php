@@ -54,7 +54,7 @@ class RemoveTrackFromPlaylistCommand extends CommandBase
     {
         $this->_playlist->tracks()->detach($this->_track);
         Playlist::whereId($this->_playlist->id)->update([
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = ' . $this->_playlist->id . ')')
+            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$this->_playlist->id.')')
         ]);
 
         return CommandResponse::succeed(['message' => 'Track removed!']);

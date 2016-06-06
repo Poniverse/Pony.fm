@@ -48,7 +48,7 @@ class TracksController extends ApiControllerBase
         $track = Track::findOrFail($trackId);
         $this->authorize('edit', $track);
 
-        if ($track->status === Track::STATUS_PROCESSING){
+        if ($track->status === Track::STATUS_PROCESSING) {
             return Response::json(['message' => 'Processing...'], 202);
 
         } elseif ($track->status === Track::STATUS_COMPLETE) {
@@ -99,11 +99,13 @@ class TracksController extends ApiControllerBase
             return $this->notFound('Track not found!');
         }
 
-        if (!$track->canView(Auth::user()))
-            return $this->notFound('Track not found!');
+        if (!$track->canView(Auth::user())) {
+                    return $this->notFound('Track not found!');
+        }
 
-        if ($track->is_downloadable == false)
-            return $this->notFound('Track not found!');
+        if ($track->is_downloadable == false) {
+                    return $this->notFound('Track not found!');
+        }
 
         if (!in_array($format, Track::$CacheableFormats)) {
             return $this->notFound('Format not found!');
@@ -194,7 +196,7 @@ class TracksController extends ApiControllerBase
     {
         $track = Track::with('showSongs')->find($id);
         if (!$track) {
-            return $this->notFound('Track ' . $id . ' not found!');
+            return $this->notFound('Track '.$id.' not found!');
         }
 
         $this->authorize('edit', $track);

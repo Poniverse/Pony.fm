@@ -63,7 +63,7 @@ class RebuildFilesizes extends Command
                 false)
         ) {
 
-            TrackFile::chunk(200, function ($trackFiles) {
+            TrackFile::chunk(200, function($trackFiles) {
 
                 $this->info('========== Start Chunk ==========');
 
@@ -72,9 +72,9 @@ class RebuildFilesizes extends Command
 
                     if (File::exists($trackFile->getFile())) {
                         $size = $trackFile->updateFilesize();
-                        $this->info('ID ' . $trackFile->id . ' processed - ' . $size . ' bytes');
+                        $this->info('ID '.$trackFile->id.' processed - '.$size.' bytes');
                     } else {
-                        $this->info('ID ' . $trackFile->id . ' skipped');
+                        $this->info('ID '.$trackFile->id.' skipped');
                     }
                 }
 

@@ -76,15 +76,15 @@ class ClassifyMLPMA extends Command
 
         $totalTracks = sizeof($tracks);
 
-        $fileToStartAt = (int)$this->option('startAt') - 1;
-        $this->comment("Skipping $fileToStartAt files..." . PHP_EOL);
+        $fileToStartAt = (int) $this->option('startAt') - 1;
+        $this->comment("Skipping $fileToStartAt files...".PHP_EOL);
 
         $tracks = array_slice($tracks, $fileToStartAt);
         $this->currentTrack = $fileToStartAt;
 
         foreach ($tracks as $track) {
             $this->currentTrack++;
-            $this->comment('[' . $this->currentTrack . '/' . $totalTracks . '] Classifying track [' . $track->filename . ']...');
+            $this->comment('['.$this->currentTrack.'/'.$totalTracks.'] Classifying track ['.$track->filename.']...');
 
             $parsedTags = json_decode($track->parsed_tags, true);
 
@@ -163,7 +163,7 @@ class ClassifyMLPMA extends Command
 
 
         foreach ($officialSongs as $song) {
-            $this->comment('=> Matched official song: [' . $song->id . '] ' . $song->title);
+            $this->comment('=> Matched official song: ['.$song->id.'] '.$song->title);
         }
 
 
@@ -186,11 +186,11 @@ class ClassifyMLPMA extends Command
             }
             $this->question('If this is a medley, multiple song ID\'s can be separated by commas. ');
             $this->question('                                                                    ');
-            $this->question('  ' . $filename . '    ');
+            $this->question('  '.$filename.'    ');
             $this->question('                                                                    ');
-            $this->question('    Title:  ' . $tags['title'] . '    ');
-            $this->question('    Album:  ' . $tags['album'] . '    ');
-            $this->question('    Artist: ' . $tags['artist'] . '    ');
+            $this->question('    Title:  '.$tags['title'].'    ');
+            $this->question('    Album:  '.$tags['album'].'    ');
+            $this->question('    Artist: '.$tags['artist'].'    ');
             $this->question('                                                                    ');
             $this->question('    r = official song remix (accept all "guessed" matches)          ');
             $this->question('    # = official song remix (enter the ID(s) of the show song(s))   ');
@@ -205,7 +205,7 @@ class ClassifyMLPMA extends Command
                 case 'r':
                     $trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
                     foreach ($officialSongs as $officialSong) {
-                        $linkedSongIds[] = (int)$officialSong->id;
+                        $linkedSongIds[] = (int) $officialSong->id;
                     }
                     break;
 
@@ -228,8 +228,8 @@ class ClassifyMLPMA extends Command
                 default:
                     $trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
                     $linkedSongIds = explode(',', $input);
-                    $linkedSongIds = array_map(function ($item) {
-                        return (int)$item;
+                    $linkedSongIds = array_map(function($item) {
+                        return (int) $item;
                     }, $linkedSongIds);
             }
         }

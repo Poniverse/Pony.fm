@@ -79,35 +79,35 @@ class FixMLPMAImages extends Command
      */
     public function handle()
     {
-        $mlpmaPath = Config::get('ponyfm.files_directory') . '/mlpma';
-        $tmpPath = Config::get('ponyfm.files_directory') . '/tmp';
+        $mlpmaPath = Config::get('ponyfm.files_directory').'/mlpma';
+        $tmpPath = Config::get('ponyfm.files_directory').'/tmp';
 
         $this->comment('Enumerating MLP Music Archive source files...');
         $files = File::allFiles($mlpmaPath);
-        $this->info(sizeof($files) . ' files found!');
+        $this->info(sizeof($files).' files found!');
 
         $this->comment('Importing tracks...');
         $totalFiles = sizeof($files);
         $fileToStartAt = (int) $this->option('startAt') - 1;
 
-        $this->comment("Skipping $fileToStartAt files..." . PHP_EOL);
+        $this->comment("Skipping $fileToStartAt files...".PHP_EOL);
         $files = array_slice($files, $fileToStartAt);
         $this->currentFile = $fileToStartAt;
 
 
         foreach ($files as $file) {
-            $this->currentFile ++;
+            $this->currentFile++;
 
-            $this->info('[' . $this->currentFile . '/' . $totalFiles . '] Importing track [' . $file->getFilename() . ']...');
+            $this->info('['.$this->currentFile.'/'.$totalFiles.'] Importing track ['.$file->getFilename().']...');
             if (in_array($file->getExtension(), $this->ignoredExtensions)) {
-                $this->comment('This is not an audio file! Skipping...' . PHP_EOL);
+                $this->comment('This is not an audio file! Skipping...'.PHP_EOL);
                 continue;
             }
             // Get this track's MLPMA record
             $importedTrack = DB::table('mlpma_tracks')
-                               ->where('filename', '=', $file->getFilename())
-                               ->join('tracks', 'mlpma_tracks.track_id', '=', 'tracks.id')
-                               ->first();
+                                ->where('filename', '=', $file->getFilename())
+                                ->join('tracks', 'mlpma_tracks.track_id', '=', 'tracks.id')
+                                ->first();
             $artistId = $importedTrack->user_id;
 
 
@@ -138,8 +138,8 @@ class FixMLPMAImages extends Command
                     $this->error('Unknown cover art format!');
                 }
                 // write temporary image file
-                $imageFilename = $file->getFilename() . ".cover.$extension";
-                $imageFilePath = "$tmpPath/" . $imageFilename;
+                $imageFilename = $file->getFilename().".cover.$extension";
+                $imageFilePath = "$tmpPath/".$imageFilename;
                 File::put($imageFilePath, $image['data']);
                 $imageFile = new UploadedFile($imageFilePath, $imageFilename, $image['image_mime']);
                 $cover = Image::upload($imageFile, $artistId, true);
