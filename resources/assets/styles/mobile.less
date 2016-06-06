@@ -1,3 +1,7 @@
+.small-logo {
+  display: none;
+}
+
 @media only screen and (max-width: 768px) {
   html, body {
     overflow: hidden !important;
@@ -27,6 +31,8 @@
     top: 0;
     right: 0;
     z-index: 1002;
+    margin-right: 10px;
+    margin-top: 10px;
   }
 
   .mobile-header {
@@ -253,10 +259,57 @@
   }
 
   .notification-pullout {
-    display: none;
+    left: 0;
+    width: 100%;
+    height: ~"calc(100% - 128px)";
+    transform: translateY(-105%) translateZ(0);
+
+    &.active {
+      transform: translateY(0) translateZ(0);
+    }
+
+    .notif-container {
+      padding: 10px;
+    }
   }
 
   .notification-menu {
+    position: fixed;
+    top: 0;
+    right: 54px;
+    margin-top: 13px;
+
+    a, a:active, a:hover, a:focus {
+      color: #fff;
+    }
+  }
+}
+
+// Super small phones like the iPhone 5
+@media only screen and (max-width: 370px) {
+  .default-logo {
     display: none;
+  }
+
+  .small-logo {
+    display: block;
+  }
+
+  .burger-wrapper {
+    top: 23px;
+    left: 15px;
+  }
+
+  .notification-menu {
+    top: 0;
+    right: 54px;
+    margin-top: 13px;
+  }
+
+  .mobile-header .logo {
+    margin-left: 55px;
+    height: 52px;
+    width: 122px;
+    padding-top: 18px;
   }
 }

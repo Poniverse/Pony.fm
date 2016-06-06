@@ -50,7 +50,7 @@
               <div class="bun-bottom"></div>
             </div>
           </div>
-          <a href="/" class="logo"><img src="/images/ponyfm-logo-white.svg"></a>
+          <a href="/" class="logo"><img class="default-logo" src="/images/ponyfm-logo-white.svg"><img class="small-logo" src="/images/ponyfm-logo-white-nodisc.svg"></a>
         </div>
         <div class="now-playing">
             @if (Auth::check())
