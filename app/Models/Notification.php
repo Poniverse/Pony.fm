@@ -60,7 +60,7 @@ class Notification extends Model {
      * @return Builder
      */
     public function scopeForUser(Builder $query, User $user) {
-        return $query->with([
+        $result = $query->with([
             'activity',
             'activity.initiatingUser',
             'activity.resource',
@@ -68,7 +68,10 @@ class Notification extends Model {
         ])
          ->join('activities', 'notifications.activity_id', '=', 'activities.id')
          ->where('notifications.user_id', $user->id)
+         ->select('*', 'notifications.id as id')
          ->orderBy('activities.created_at', 'DESC');
+
+        return $result;
     }
 
     public function toArray() {

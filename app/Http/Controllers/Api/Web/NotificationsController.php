@@ -39,7 +39,6 @@ class NotificationsController extends ApiControllerBase
             ->take(20)
             ->get();
 
-
         return ['notifications' => $notifications->toArray()];
     }
 
@@ -52,7 +51,7 @@ class NotificationsController extends ApiControllerBase
      */
     public function putMarkAsRead()
     {
-        $notificationIds = Input::get('notification_ids');
+        $notificationIds = Input::json('notification_ids');
         $numberOfUpdatedRows = Auth::user()
             ->notifications()
             ->whereIn('id', $notificationIds)

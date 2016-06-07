@@ -21,24 +21,28 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
     scope: {}
 
     controller: [
-        '$scope', 'notifications', '$timeout'
-        ($scope, notifications, $timeout) ->
+        '$scope', 'notifications', '$timeout', '$rootScope'
+        ($scope, notifications, $timeout, $rootScope) ->
             $scope.notifications = []
             isTimeoutScheduled = false
 
             # TODO: ADD REFRESH BUTTON
 
+            $rootScope.$on 'shouldUpdateNotifications', () ->
+                refreshNotifications()
+
             refreshNotifications = () ->
                 notifications.getNotifications().done (result) ->
                     if $scope.notifications.length > 0
-                        if result[0].text != $scope.notifications[0].text
+                        if result[0].id != $scope.notifications[0].id || result[0].is_read != $scope.notifications[0].is_read
                             $scope.notifications = result
                     else if result.length > 0
                         $scope.notifications = result
                         
                     $scope.nCount = $scope.notifications.length
-                    
-                    scheduleTimeout()
+
+                    if !isTimeoutScheduled
+                        scheduleTimeout()
 
             scheduleTimeout = () ->
                 isTimeoutScheduled = true
@@ -46,8 +50,6 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
                     refreshNotifications()
                     isTimeoutScheduled = false
                 , 60000)
-
-            
 
             refreshNotifications()
     ]

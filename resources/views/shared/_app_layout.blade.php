@@ -68,7 +68,7 @@
                 </div>
                 <div class="notification-menu">
                     <a href="#" ng-click="notifPulloutToggle()"><i class="fa fa-bell fa-fw" aria-hidden="true"></i></a>
-                    <div class="counter" ng-show="nCount > 0">@{{ nCountFormatted }}</div>
+                    <div class="counter" ng-class="{'show': nCount > 0}">@{{ nCountFormatted }}</div>
                 </div>
             @endif
             <pfm-player></pfm-player>

@@ -1,5 +1,5 @@
 <div class="notif-list">
-    <div ng-repeat="notification in notifications" class="notification">
+    <div ng-repeat="notification in notifications" class="notification" ng-class="{'unread': !notification.is_read}">
         <a href="{{ ::notification.url }}" class="img-link"><img pfm-src-loader="::notification.thumbnail_url" pfm-src-size="thumbnail"></a>
         <a href="{{ ::notification.url }}" class="message"><p>{{ ::notification.text }}</p></a>
     </div>

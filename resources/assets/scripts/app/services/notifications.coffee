@@ -32,18 +32,34 @@ module.exports = angular.module('ponyfm').factory('notifications', [
 
             getNotificationCount: () ->
                 return self.notificationList.length
+            
+            getUnreadCount: () ->
+                count = 0
+                
+                for n, notifObject of self.notificationList
+                    if !notifObject.is_read
+                        count++
+                
+                return count
 
             markAllAsRead: () ->
+                def = new $.Deferred()
                 unread = []
 
                 for n, notifObject of self.notificationList
                     if !notifObject.is_read
-                        unread.push notifObject.id.toString()
+                        unread.push notifObject.id
 
-                $http.put('/api/web/notifications/mark-as-read', {notification_ids: unread}).success (response) ->
-                    console.log response
+                if unread.length > 0
+                    $http.put('/api/web/notifications/mark-as-read', {notification_ids: unread}).success (response) ->
+                        if response.notifications_updated != 0
+                            $rootScope.$broadcast 'shouldUpdateNotifications'
 
-                console.log unread
+                        def.resolve response.notifications_updated
+
+                    def.promise()
+                else
+                    return 0
 
         self
 ])

@@ -36,17 +36,20 @@ module.exports = angular.module('ponyfm').controller "application", [
 
         $scope.menuToggle = () ->
             $rootScope.$broadcast('sidebarToggled')
+
+            if $scope.notifActive
+                notifications.markAllAsRead()
+
             $scope.notifActive = false
         
         $scope.notifPulloutToggle = () ->
             $scope.notifActive = !$scope.notifActive
 
-            # Disabled for now
-            # if $scope.notifActive
-            #    notifications.markAllAsRead()
+            if !$scope.notifActive
+               notifications.markAllAsRead()
 
         $rootScope.$on 'notificationsUpdated', () ->
-            $scope.nCount = notifications.getNotificationCount()
+            $scope.nCount = notifications.getUnreadCount()
             if $scope.nCount > 99
                 $scope.nCountFormatted = '99+'
             else
@@ -89,6 +92,8 @@ module.exports = angular.module('ponyfm').controller "application", [
         statesPreloaded = {}
         $scope.$on '$stateChangeStart', (e, newState, newParams, oldState, oldParams) ->
             $rootScope.$broadcast('sidebarHide')
+            if $scope.notifActive
+                notifications.markAllAsRead()
             $scope.notifActive = false
             $scope.isPinnedPlaylistSelected = false
 
