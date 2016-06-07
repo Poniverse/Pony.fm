@@ -4,6 +4,13 @@
         <img src="{{artist.avatars.normal}}">
         <div class="artist-right">
             <h1>{{artist.name}}<i class="fa fa-star admin-star" ng-show="::artist.isAdmin" data-title="Admin" bs-tooltip></i></h1>
+            <p class="follower-count">
+                <ng-pluralize count="artist.followers"
+                when="{'0': 'No followers',
+                     'one': '1 follower',
+                     'other': '{} followers'}">
+                </ng-pluralize>
+            </p>
             <a href="#" class="btn btn-default" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
                 <span ng-if="!artist.user_data.is_following">Follow</span>
                 <span ng-if="artist.user_data.is_following">Following!</span>
