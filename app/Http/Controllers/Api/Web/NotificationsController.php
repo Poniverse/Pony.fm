@@ -21,10 +21,11 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Auth;
-use Carbon\Carbon;
 use Input;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Notification;
+use Poniverse\Ponyfm\Models\Subscription;
+use Minishlink\WebPush\WebPush;
 
 class NotificationsController extends ApiControllerBase
 {
@@ -58,5 +59,34 @@ class NotificationsController extends ApiControllerBase
             ->update(['is_read' => true]);
 
         return ['notifications_updated' => $numberOfUpdatedRows];
+    }
+
+    /**
+     * Subscribe a user to native push notifications. Takes an endpoint and
+     * encryption keys from the client and stores them in the database
+     * for future use.
+     *
+     * @return string
+     */
+    public function postSubscribe()
+    {
+        $input = json_decode(Input::json('subscription'));
+
+        $existing = Subscription::where('endpoint', '=', $input->endpoint)
+            ->where('user_id', '=', Auth::user()->id)
+            ->first();
+
+        if ($existing === null) {
+            $subscription = Subscription::create([
+                'user_id' => Auth::user()->id,
+                'endpoint' => $input->endpoint,
+                'p256dh' => $input->keys->p256dh,
+                'auth' => $input->keys->auth
+            ]);
+
+            return $subscription->id;
+        } else {
+            return $existing->id;
+        }
     }
 }

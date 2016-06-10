@@ -58,3 +58,7 @@ self.addEventListener('fetch', function(event) {
     })
   )
 });
+
+self.addEventListener('push', function(event) {
+  console.log('Push message', event);
+});

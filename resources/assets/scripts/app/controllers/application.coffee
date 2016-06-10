@@ -31,6 +31,7 @@ module.exports = angular.module('ponyfm').controller "application", [
             console.log 'Service Worker is supported'
             navigator.serviceWorker.register('service-worker.js').then((reg) ->
                 console.log 'SW registered', reg
+                
             ).catch (err) ->
                 console.log 'SW register failed', err
 

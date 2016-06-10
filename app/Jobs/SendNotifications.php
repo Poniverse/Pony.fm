@@ -25,6 +25,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Poniverse\Ponyfm\Jobs\Job;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\AbstractDriver;
+use Poniverse\Ponyfm\Library\Notifications\Drivers\NativeDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
 use Poniverse\Ponyfm\Models\User;
 use SerializesModels;
@@ -60,7 +61,8 @@ class SendNotifications extends Job implements SelfHandling, ShouldQueue
         // to work around a Laravel bug - namely, the SerializesModels trait
         // tries (and fails) to serialize static fields.
         $drivers = [
-            PonyfmDriver::class
+            PonyfmDriver::class,
+            //NativeDriver::class
         ];
 
         foreach ($drivers as $driver) {

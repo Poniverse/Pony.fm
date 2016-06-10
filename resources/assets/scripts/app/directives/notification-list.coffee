@@ -21,8 +21,8 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
     scope: {}
 
     controller: [
-        '$scope', 'notifications', '$timeout', '$rootScope'
-        ($scope, notifications, $timeout, $rootScope) ->
+        '$scope', 'notifications', '$timeout', '$rootScope', '$http'
+        ($scope, notifications, $timeout, $rootScope, $http) ->
             $scope.notifications = []
             isTimeoutScheduled = false
 
@@ -30,6 +30,15 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
 
             $rootScope.$on 'shouldUpdateNotifications', () ->
                 refreshNotifications()
+
+            checkSubscription = () ->
+                navigator.serviceWorker.ready.then((reg) ->
+                    reg.pushManager.subscribe({userVisibleOnly: true}).then((sub) ->
+                        console.log 'Push sub', JSON.stringify(sub)
+                        subData = JSON.stringify(sub)
+                        $http.post('/api/web/notifications/subscribe', {subscription: subData})
+                    )
+                )
 
             refreshNotifications = () ->
                 notifications.getNotifications().done (result) ->
@@ -51,5 +60,6 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
                     isTimeoutScheduled = false
                 , 60000)
 
+            checkSubscription()
             refreshNotifications()
     ]

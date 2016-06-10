@@ -134,8 +134,10 @@ Route::group(['prefix' => 'api/web'], function() {
 
         Route::post('/dashboard/read-news', 'Api\Web\DashboardController@postReadNews');
         Route::get('/account/settings/{slug}', 'Api\Web\AccountController@getSettings');
+
         Route::get('/notifications', 'Api\Web\NotificationsController@getNotifications');
         Route::put('/notifications/mark-as-read', 'Api\Web\NotificationsController@putMarkAsRead');
+        Route::post('/notifications/subscribe', 'Api\Web\NotificationsController@postSubscribe');
 
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 
