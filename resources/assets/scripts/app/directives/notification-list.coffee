@@ -24,21 +24,43 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
         '$scope', 'notifications', '$timeout', '$rootScope', '$http'
         ($scope, notifications, $timeout, $rootScope, $http) ->
             $scope.notifications = []
+            $scope.subscribed = false
+            $scope.switchDisabled = true
+            $scope.switchHidden = false
             isTimeoutScheduled = false
 
             # TODO: ADD REFRESH BUTTON
 
             $rootScope.$on 'shouldUpdateNotifications', () ->
                 refreshNotifications()
+            
+            $scope.switchToggled = () ->
+                if $scope.subscribed
+                    $scope.switchDisabled = true
+                    notifications.subscribe().done (result) ->
+                        if result
+                            $scope.switchDisabled = false
+                else
+                    $scope.switchDisabled = true
+                    notifications.unsubscribe().done (result) ->
+                        if result
+                            $scope.switchDisabled = false
+
 
             checkSubscription = () ->
-                navigator.serviceWorker.ready.then((reg) ->
-                    reg.pushManager.subscribe({userVisibleOnly: true}).then((sub) ->
-                        console.log 'Push sub', JSON.stringify(sub)
-                        subData = JSON.stringify(sub)
-                        $http.post('/api/web/notifications/subscribe', {subscription: subData})
-                    )
-                )
+                $scope.disabled = true
+                notifications.checkSubscription().done (subStatus) ->
+                    switch subStatus
+                        when 0
+                            $scope.subscribed = false
+                            $scope.switchDisabled = false
+                        when 1
+                            $scope.subscribed = true
+                            $scope.switchDisabled = false
+                        else
+                            $scope.subscribed = false
+                            $scope.switchDisabled = true
+                            $scope.hidden = true
 
             refreshNotifications = () ->
                 notifications.getNotifications().done (result) ->

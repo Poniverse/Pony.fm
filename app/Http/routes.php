@@ -138,6 +138,7 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/notifications', 'Api\Web\NotificationsController@getNotifications');
         Route::put('/notifications/mark-as-read', 'Api\Web\NotificationsController@putMarkAsRead');
         Route::post('/notifications/subscribe', 'Api\Web\NotificationsController@postSubscribe');
+        Route::post('/notifications/unsubscribe', 'Api\Web\NotificationsController@postUnsubscribe');
 
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 

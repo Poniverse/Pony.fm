@@ -62,7 +62,7 @@ class SendNotifications extends Job implements SelfHandling, ShouldQueue
         // tries (and fails) to serialize static fields.
         $drivers = [
             PonyfmDriver::class,
-            //NativeDriver::class
+            NativeDriver::class
         ];
 
         foreach ($drivers as $driver) {

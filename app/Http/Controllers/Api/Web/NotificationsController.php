@@ -25,6 +25,8 @@ use Input;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Notification;
 use Poniverse\Ponyfm\Models\Subscription;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
 use Minishlink\WebPush\WebPush;
 
 class NotificationsController extends ApiControllerBase
@@ -84,9 +86,25 @@ class NotificationsController extends ApiControllerBase
                 'auth' => $input->keys->auth
             ]);
 
-            return $subscription->id;
+            return ['id' => $subscription->id];
         } else {
-            return $existing->id;
+            return ['id' => $existing->id];
         }
+    }
+
+    /**
+     * Removes a user's notification subscription
+     *
+     * @return string
+     */
+    public function postUnsubscribe()
+    {
+        $input = json_decode(Input::json('subscription'));
+
+        $existing = Subscription::where('endpoint', '=', $input->endpoint)
+            ->where('user_id', '=', Auth::user()->id)
+            ->delete();
+
+        return ['result' => 'success'];
     }
 }

@@ -23,6 +23,14 @@ var urlsToCache = [
 
 var CACHE_NAME = 'pfm-offline-v1';
 
+var notifUrlCache = {};
+
+function getChromeVersion () {
+  var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+
+  return raw ? parseInt(raw[2], 10) : false;
+}
+
 // Set the callback for the install step
 self.addEventListener('install', function(event) {
   // Perform install steps
@@ -60,5 +68,41 @@ self.addEventListener('fetch', function(event) {
 });
 
 self.addEventListener('push', function(event) {
-  console.log('Push message', event);
+  console.log(event);
+  var data = {};
+
+  if (event.data) {
+    console.log(event.data.json());
+    data = JSON.parse(event.data.text());
+  }
+
+  notifUrlCache['pfm-' + data.id] = data.url;
+
+  self.registration.showNotification(data.title, {
+    body: data.text,
+    icon: data.image,
+    tag: 'pfm-' + data.id
+  })
+});
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+
+  event.waitUntil(
+    clients.matchAll({
+      type: "window"
+    })
+    .then(function(clientList) {
+      var url = notifUrlCache[event.notification.tag];
+      for (var i = 0; i < clientList.length; i++) {
+        var client = clientList[i];
+        if (client.url == url && 'focus' in client)
+          return client.focus();
+      }
+
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
+    })
+  );
 });

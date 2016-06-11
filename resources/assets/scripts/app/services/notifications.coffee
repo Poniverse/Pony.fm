@@ -61,5 +61,78 @@ module.exports = angular.module('ponyfm').factory('notifications', [
                 else
                     return 0
 
+            subscribe: () ->
+                def = new $.Deferred()
+                navigator.serviceWorker.ready.then (reg) ->
+                    reg.pushManager.subscribe({userVisibleOnly: true}).then (sub) ->
+                        console.log 'Push sub', JSON.stringify(sub)
+                        self.sendSubscriptionToServer(sub).done (result) ->
+                            def.resolve result
+
+                def.promise()
+
+            unsubscribe: () ->
+                def = new $.Deferred()
+                navigator.serviceWorker.ready.then (reg) ->
+                    reg.pushManager.getSubscription().then (sub) ->
+                        sub.unsubscribe().then (result) ->
+                            self.removeSubscriptionFromServer(sub).done (result) ->
+                                def.resolve true
+                        .catch (e) ->
+                            console.warn('Unsubscription error: ', e)
+                            def.resolve false
+
+                def.promise()
+
+            sendSubscriptionToServer: (sub) ->
+                def = new $.Deferred()
+                subData = JSON.stringify(sub)
+                $http.post('/api/web/notifications/subscribe', {subscription: subData}).success () ->
+                    def.resolve true
+                .error () ->
+                    def.resolve false
+
+                def.promise()
+
+            removeSubscriptionFromServer: (sub) ->
+                def = new $.Deferred()
+                subData = JSON.stringify(sub)
+                $http.post('/api/web/notifications/unsubscribe', {subscription: subData}).success () ->
+                    def.resolve true
+                .error () ->
+                    def.resolve false
+
+                def.promise()
+
+            checkSubscription: () ->
+                def = new $.Deferred()
+                if 'serviceWorker' of navigator
+                    if !('showNotification' of ServiceWorkerRegistration.prototype)
+                        console.warn('Notifications aren\'t supported.')
+                        def.resolve -1
+
+                    if Notification.permission == 'denied'
+                        console.warn('The user has blocked notifications.')
+                        def.resolve -1
+
+                    if !('PushManager' of window)
+                        console.warn('Push messaging isn\'t supported.')
+                        def.resolve -1
+
+                    navigator.serviceWorker.ready.then (reg) ->
+                        reg.pushManager.getSubscription().then (sub) ->
+                            if !sub
+                                def.resolve 0
+
+                            self.sendSubscriptionToServer(sub)
+
+                            def.resolve 1
+
+
+                else
+                    console.warn('Service worker isn\'t supported.')
+                    def.resolve -1
+
+                def.promise()
         self
 ])
