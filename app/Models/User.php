@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use DB;
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -114,6 +115,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     private static function getUniqueSlugForName(string $name):string {
         $baseSlug = Str::slug($name);
+
+        // Ensure that the slug we generate is long enough.
+        for ($i = Str::length($baseSlug); $i < config('ponyfm.user_slug_minimum_length'); $i++) {
+            $baseSlug = $baseSlug.'-';
+        }
+
         $slugBeingTried = $baseSlug;
         $counter = 2;
 
@@ -135,15 +142,23 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-     * @param string $username
+     * @param string $username used to perform the search
      * @param string $displayName
-     * @param string $email
+     * @param string|null $email set to null if creating an archived user
+     * @param bool $createArchivedUser if true, includes archived users in the search and creates an archived user
      * @return User
      */
-    public static function findOrCreate(string $username, string $displayName, string $email) {
-        $user = static::where('username', $username)
-            ->where('is_archived', false)
-            ->first();
+    public static function findOrCreate(
+        string $username,
+        string $displayName,
+        string $email = null,
+        bool $createArchivedUser = false
+    ) {
+        $user = static::where(DB::raw('LOWER(username)'), Str::lower($username));
+        if (false === $createArchivedUser) {
+            $user = $user->where('is_archived', false);
+        }
+        $user = $user->first();
 
         if (null !== $user) {
             return $user;
@@ -156,7 +171,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             $user->slug = self::getUniqueSlugForName($displayName);
             $user->email = $email;
             $user->uses_gravatar = true;
+            $user->is_archived = $createArchivedUser;
             $user->save();
+            $user = $user->fresh();
+            $user->wasRecentlyCreated = true;
 
             return $user;
         }

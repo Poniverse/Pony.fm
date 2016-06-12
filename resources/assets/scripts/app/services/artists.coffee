@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').factory('artists', [
-    '$rootScope', '$http'
-    ($rootScope, $http) ->
+    '$rootScope', '$http', '$q'
+    ($rootScope, $http, $q) ->
         artistPage = []
         artists = {}
         artistContent = {}
@@ -71,6 +71,9 @@ module.exports = angular.module('ponyfm').factory('artists', [
                     artistsDef.resolve albums
 
                 artistFavourites[slug] = artistsDef.promise()
+
+            create: (username) ->
+                $http.post('/api/web/artists', {username: username})
 
         self
 ])

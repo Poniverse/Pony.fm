@@ -1,8 +1,6 @@
-<?php
-
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2016 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,35 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+@import '../base/bootstrap/bootstrap';
+@import '../mixins';
 
-use Illuminate\Support\Facades\Redirect;
-use View;
+.user-creator {
+  margin-bottom: 1em;
 
-class AdminController extends Controller
-{
-    public function getIndex()
-    {
-        return View::make('shared.null');
-    }
+  .-usernameField {
+  }
 
-    public function getGenres()
-    {
-        return View::make('shared.null');
-    }
+  .-submitButton {
+    .btn;
+    .btn-primary;
+  }
 
-    public function getTracks()
-    {
-        return View::make('shared.null');
-    }
-
-    public function getShowSongs()
-    {
-        return View::make('shared.null');
-    }
-
-    public function getUsers()
-    {
-        return View::make('shared.null');
-    }
+  .-createdUser {
+    .alert;
+    margin-top: 1em;
+  }
 }

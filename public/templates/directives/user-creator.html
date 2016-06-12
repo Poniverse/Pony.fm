@@ -1,0 +1,32 @@
+<form
+    class="user-creator form-inline"
+    ng-submit="$ctrl.createUser()"
+>
+    <input
+        type="text"
+        class="-usernameField form-control x-large"
+        ng-class="{'x-saving': $ctrl.isCreating, 'x-error': !$ctrl.creationSucceeded && $ctrl.creationMessage}"
+        ng-model="$ctrl.usernameToCreate"
+        placeholder="Username"
+    />
+
+    <input class="-submitButton form-control" type="submit" value="Create!"/>
+
+    <div
+        class="-createdUser"
+        ng-if="$ctrl.creationMessage"
+        ng-class="{'alert-success': $ctrl.creationSucceeded, 'alert-warning': !$ctrl.creationSucceeded}"
+    >
+        <strong>{{ $ctrl.creationMessage }}</strong>
+        <ul ng-if="$ctrl.user">
+            <li ng-if="!$ctrl.user.is_archived"><span class="label label-warning">Caution</span> This is <strong>NOT</strong> an archived profile.</li>
+            <li ng-if="$ctrl.user.is_archived">This is an archived profile.</li>
+
+            <li><a class="-profile-link"
+                   ui-sref="content.artist.account.uploader({slug: $ctrl.user.slug})">
+                Go to <strong>{{$ctrl.user.name}}&#39;s</strong> track uploader!</a>
+            </li>
+            <li><a ng-href="{{$ctrl.user.url}}">Visit <strong>{{$ctrl.user.name}}&#39;s</strong> profile!</a></li>
+        </ul>
+    </div>
+</form>

@@ -43,10 +43,10 @@ abstract class ApiControllerBase extends Controller
             return Response::json([
                 'message' => 'Validation failed',
                 'errors' => $result->getMessages()
-            ], 400);
+            ], $result->getStatusCode());
         }
 
-        return Response::json($result->getResponse(), 200);
+        return Response::json($result->getResponse(), $result->getStatusCode());
     }
 
     public function notAuthorized()

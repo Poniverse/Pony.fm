@@ -89,4 +89,31 @@ return [
 
     'indexing_queue' => 'indexing',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Global validation rules
+    |--------------------------------------------------------------------------
+    |
+    | Data fields that are validated in multiple places have their validation
+    | rules centralized here.
+    |
+    */
+
+    'validation_rules' => [
+        'username'      => ['required', 'min:3', 'max:26'],
+        'display_name'  => ['required', 'min:3', 'max:26'],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Minimum length of a user slug
+    |--------------------------------------------------------------------------
+    |
+    | No profile slugs shorter than this will be generated. This setting is
+    | intended to pre-emptively avoid collisions with very short URL's that may
+    | be desirable for future site functionality.
+    |
+    */
+    
+    'user_slug_minimum_length' => 3
 ];

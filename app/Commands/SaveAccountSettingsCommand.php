@@ -89,7 +89,7 @@ class SaveAccountSettingsCommand extends CommandBase
             'slug'          => [
                 'required',
                 'unique:users,slug,'.$this->_user->id,
-                'min:3',
+                'min:'.config('ponyfm.user_slug_minimum_length'),
                 'regex:/^[a-z\d-]+$/',
                 'is_not_reserved_slug'
             ]

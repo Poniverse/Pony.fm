@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Gate;
+use Poniverse\Ponyfm\Commands\CreateUserCommand;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Favourite;
@@ -29,9 +30,9 @@ use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 use Poniverse\Ponyfm\Models\Follower;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
+use App;
+use Input;
+use Response;
 use ColorThief\ColorThief;
 use Helpers;
 
@@ -227,5 +228,10 @@ class ArtistsController extends ApiControllerBase
 
         return Response::json(["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
             200);
+    }
+
+    public function postIndex() {
+        $name = Input::json('username');
+        return $this->execute(new CreateUserCommand($name, $name, null, true));
     }
 }

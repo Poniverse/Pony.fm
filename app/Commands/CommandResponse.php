@@ -30,11 +30,16 @@ class CommandResponse
     private $_validator;
     private $_response;
     private $_didFail;
+    /**
+     * @var int Used for HTTP responses.
+     */
+    private $_statusCode;
 
-    public static function fail($validatorOrMessages)
+    public static function fail($validatorOrMessages, int $statusCode = 400)
     {
         $response = new CommandResponse();
         $response->_didFail = true;
+        $response->_statusCode = $statusCode;
 
         if (is_array($validatorOrMessages)) {
             $response->_messages = $validatorOrMessages;
@@ -47,11 +52,12 @@ class CommandResponse
         return $response;
     }
 
-    public static function succeed($response = null)
+    public static function succeed($response = null, int $statusCode = 200)
     {
         $cmdResponse = new CommandResponse();
         $cmdResponse->_didFail = false;
         $cmdResponse->_response = $response;
+        $cmdResponse->_statusCode = $statusCode;
 
         return $cmdResponse;
     }
@@ -74,6 +80,14 @@ class CommandResponse
     public function getResponse()
     {
         return $this->_response;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode():int
+    {
+        return $this->_statusCode;
     }
 
     /**

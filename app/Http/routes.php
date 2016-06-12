@@ -101,6 +101,7 @@ Route::group(['prefix' => 'api/web'], function() {
     Route::get('/comments/{type}/{id}', 'Api\Web\CommentsController@getIndex')->where('id', '\d+');
 
     Route::get('/artists', 'Api\Web\ArtistsController@getIndex');
+    Route::post('/artists', 'Api\Web\ArtistsController@postIndex');
     Route::get('/artists/{slug}', 'Api\Web\ArtistsController@getShow');
     Route::get('/artists/{slug}/content', 'Api\Web\ArtistsController@getContent');
     Route::get('/artists/{slug}/favourites', 'Api\Web\ArtistsController@getFavourites');
@@ -175,6 +176,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-ar
     Route::get('/genres', 'AdminController@getGenres');
     Route::get('/tracks', 'AdminController@getTracks');
     Route::get('/show-songs', 'AdminController@getShowSongs');
+    Route::get('/users', 'AdminController@getUsers');
     Route::get('/', 'AdminController@getIndex');
 });
 
