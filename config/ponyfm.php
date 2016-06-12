@@ -116,4 +116,17 @@ return [
     */
     
     'user_slug_minimum_length' => 3
+	
+	/*
+     |--------------------------------------------------------------------------
+     | Indexing queue name
+     |--------------------------------------------------------------------------
+     |
+     | Google Cloud Messaging API key. Needs to be generated in the Google Cloud
+     | Console as a browser key. This is used to send notifications to users
+     | with push notifications enabled.
+     |
+     */
+
+    'gcm_key' => env('GCM_KEY', 'default'),
 ];

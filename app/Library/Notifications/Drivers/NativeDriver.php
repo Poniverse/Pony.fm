@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
 
 
+use Config;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\Comment;
@@ -37,32 +38,34 @@ class NativeDriver extends AbstractDriver {
      * @param User[] $recipients collection of {@link User} objects
      */
     private function pushNotifications(Activity $activity, $recipients) {
-        $apiKeys = array(
-            'GCM' => 'AIzaSyCLmCVIgASWL280rHyPz8OP7il3pf8SrGg',
-        );
-
-        $webPush = new WebPush($apiKeys);
-
-        $data = [
-            'id' => $activity->id,
-            'text' => $activity->getTextAttribute(),
-            'title' => $activity->getTitleFromActivityType(),
-            'image' => $activity->getThumbnailUrlAttribute(),
-            'url' => $activity->url
-        ];
-        
-        $jsonData = json_encode($data);
-
-        foreach ($recipients as $recipient) {
-            $webPush->sendNotification(
-                $recipient->endpoint,
-                $jsonData,
-                $recipient->p256dh,
-                $recipient->auth
+        if (Config::get('ponyfm.gcm_key') != 'default') {
+            $apiKeys = array(
+                'GCM' => Config::get('ponyfm.gcm_key'),
             );
-        }
 
-        $webPush->flush();
+            $webPush = new WebPush($apiKeys);
+
+            $data = [
+                'id' => $activity->id,
+                'text' => $activity->getTextAttribute(),
+                'title' => $activity->getTitleFromActivityType(),
+                'image' => $activity->getThumbnailUrlAttribute(),
+                'url' => $activity->url
+            ];
+
+            $jsonData = json_encode($data);
+
+            foreach ($recipients as $recipient) {
+                $webPush->sendNotification(
+                    $recipient->endpoint,
+                    $jsonData,
+                    $recipient->p256dh,
+                    $recipient->auth
+                );
+            }
+
+            $webPush->flush();
+        }
     }
 
     /**
