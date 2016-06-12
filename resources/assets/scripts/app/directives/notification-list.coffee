@@ -48,19 +48,22 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
 
 
             checkSubscription = () ->
-                $scope.disabled = true
-                notifications.checkSubscription().done (subStatus) ->
-                    switch subStatus
-                        when 0
-                            $scope.subscribed = false
-                            $scope.switchDisabled = false
-                        when 1
-                            $scope.subscribed = true
-                            $scope.switchDisabled = false
-                        else
-                            $scope.subscribed = false
-                            $scope.switchDisabled = true
-                            $scope.hidden = true
+                if 'serviceWorker' of navigator && notifications.serviceWorkerSupported
+                    $scope.disabled = true
+                    notifications.checkSubscription().done (subStatus) ->
+                        switch subStatus
+                            when 0
+                                $scope.subscribed = false
+                                $scope.switchDisabled = false
+                            when 1
+                                $scope.subscribed = true
+                                $scope.switchDisabled = false
+                            else
+                                $scope.subscribed = false
+                                $scope.switchDisabled = true
+                                $scope.hidden = true
+                else
+                    $scope.switchHidden = true
 
             refreshNotifications = () ->
                 notifications.getNotifications().done (result) ->

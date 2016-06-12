@@ -19,6 +19,7 @@ module.exports = angular.module('ponyfm').factory('notifications', [
     ($rootScope, $http) ->
         self =
             notificationList: []
+            serviceWorkerSupported: true
 
             getNotifications: () ->
                 def = new $.Deferred()

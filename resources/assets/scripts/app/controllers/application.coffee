@@ -33,6 +33,7 @@ module.exports = angular.module('ponyfm').controller "application", [
                 console.log 'SW registered', reg
             ).catch (err) ->
                 console.log 'SW register failed', err
+                notifications.serviceWorkerSupported = false
 
         $scope.menuToggle = () ->
             $rootScope.$broadcast('sidebarToggled')
