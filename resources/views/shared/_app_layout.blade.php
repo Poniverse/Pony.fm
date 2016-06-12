@@ -81,10 +81,10 @@
               <img src="/images/ponyfm-logo-white.svg" class="logo">
             </a>
             <li><pfm-search class="hidden-xs"></pfm-search></li>
-            <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a href="/tracks">Tracks</a></li>
-            <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a href="/albums">Albums</a></li>
-            <li ng-class="{selected: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a href="/playlists">Playlists</a></li>
-            <li ng-class="{selected: stateIncludes('content.artists') || stateIncludes('content.artist')}"><a href="/artists">Artists</a></li>
+            <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a ui-sref="content.tracks.list">Tracks</a></li>
+            <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a ui-sref="content.albums.list">Albums</a></li>
+            <li ng-class="{selected: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a ui-sref="content.playlists.list">Playlists</a></li>
+            <li ng-class="{selected: stateIncludes('content.artists') || stateIncludes('content.artist')}"><a ui-sref="content.artists.list">Artists</a></li>
 
 
             <li ng-class="{selected: stateIncludes('pages')}"><a href="/about">About / FAQ</a></li>

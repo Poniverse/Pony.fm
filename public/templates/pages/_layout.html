@@ -1,7 +1,7 @@
 <ul class="tabs">
-    <li ng-class="{active: stateIncludes('pages.about')}"><a href="/about">About Pony.fm</a></li>
-    <li ng-class="{active: stateIncludes('pages.faq')}"><a href="/faq">FAQ</a></li>
-    <li ng-class="{active: stateIncludes('pages.mlpforums-advertising-program')}"><a href="/mlpforums-advertising-program">MLP Forums Advertising Program</a></li>
+    <li ui-sref-active="active"><a ui-sref=".about">About Pony.fm</a></li>
+    <li ui-sref-active="active"><a ui-sref=".faq">FAQ</a></li>
+    <li ui-sref-active="active"><a ui-sref=".mlpforums-advertising-program">MLP Forums Advertising Program</a></li>
 </ul>
 
 <ui-view class="static-page"></ui-view>

@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').factory('artists', [
-    '$rootScope', '$http', '$q'
-    ($rootScope, $http, $q) ->
+    '$rootScope', '$http'
+    ($rootScope, $http) ->
         artistPage = []
         artists = {}
         artistContent = {}

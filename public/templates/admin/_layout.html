@@ -1,8 +1,8 @@
 <ul class="tabs">
-    <li ng-class="{active: stateIncludes('admin.tracks')}"><a href="/admin/tracks">All Tracks</a></li>
-    <li ng-class="{active: stateIncludes('admin.genres')}"><a href="/admin/genres">Genres</a></li>
-    <li ng-class="{active: stateIncludes('admin.showsongs')}"><a href="/admin/show-songs">Show Songs</a></li>
-    <li ng-class="{active: stateIncludes('admin.users')}"><a ui-sref="admin.users">Users</a></li>
+    <li ui-sref-active="active"><a ui-sref=".tracks">All Tracks</a></li>
+    <li ui-sref-active="active"><a ui-sref=".genres">Genres</a></li>
+    <li ui-sref-active="active"><a ui-sref=".showsongs">Show Songs</a></li>
+    <li ui-sref-active="active"><a ui-sref=".users">Users</a></li>
 </ul>
 
 <ui-view></ui-view>
