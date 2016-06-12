@@ -96,8 +96,8 @@
                 </li>
 
                 @can('access-admin-area')
-                    <li ng-class="{selected: stateIncludes('admin')}">
-                        <a href="/admin/genres">Admin Area</a>
+                    <li ui-sref-active="selected">
+                        <a ui-sref="admin.users">Admin Area</a>
                     </li>
                 @endcan
 
