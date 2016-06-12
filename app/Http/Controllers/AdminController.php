@@ -20,7 +20,6 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
-use Illuminate\Support\Facades\Redirect;
 use View;
 
 class AdminController extends Controller

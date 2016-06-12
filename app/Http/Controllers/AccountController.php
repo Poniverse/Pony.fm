@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Redirect;
+use Config;
+use Redirect;
 use View;
 
 class AccountController extends Controller

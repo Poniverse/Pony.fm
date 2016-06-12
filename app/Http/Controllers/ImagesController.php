@@ -22,8 +22,8 @@ namespace Poniverse\Ponyfm\Http\Controllers;
 
 use Poniverse\Ponyfm\Models\Image;
 use Config;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Redirect;
+use App;
+use Redirect;
 use Response;
 
 class ImagesController extends Controller

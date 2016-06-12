@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Poniverse\Ponyfm\Commands\ToggleFollowingCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Illuminate\Support\Facades\Input;
+use Input;
 
 class FollowController extends ApiControllerBase
 {

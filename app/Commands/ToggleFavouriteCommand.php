@@ -25,8 +25,8 @@ use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Models\Favourite;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceUser;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Auth;
+use DB;
 use Poniverse\Ponyfm\Models\Track;
 
 class ToggleFavouriteCommand extends CommandBase

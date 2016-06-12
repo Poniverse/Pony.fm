@@ -23,8 +23,8 @@ namespace Poniverse\Ponyfm\Commands;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\User;
 use Gate;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Auth;
+use Validator;
 
 class SaveAccountSettingsCommand extends CommandBase
 {

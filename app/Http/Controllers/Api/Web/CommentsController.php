@@ -24,8 +24,8 @@ use App;
 use Poniverse\Ponyfm\Commands\CreateCommentCommand;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
+use Input;
+use Response;
 
 class CommentsController extends ApiControllerBase
 {

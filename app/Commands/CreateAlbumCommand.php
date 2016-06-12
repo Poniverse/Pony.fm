@@ -22,8 +22,8 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Image;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Auth;
+use Validator;
 
 class CreateAlbumCommand extends CommandBase
 {

@@ -22,8 +22,8 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Auth;
+use DB;
 
 class RemoveTrackFromPlaylistCommand extends CommandBase
 {

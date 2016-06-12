@@ -26,7 +26,7 @@ use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\PlaylistDownloader;
 use Auth;
-use Illuminate\Support\Facades\Redirect;
+use Redirect;
 use View;
 
 class PlaylistsController extends Controller

@@ -25,7 +25,7 @@ use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackFile;
 use Auth;
 use Config;
-use Illuminate\Support\Facades\App;
+use App;
 use Redirect;
 use Response;
 use View;

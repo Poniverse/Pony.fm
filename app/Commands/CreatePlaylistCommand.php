@@ -22,8 +22,8 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Notification;
 use Poniverse\Ponyfm\Models\Playlist;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Auth;
+use Validator;
 
 class CreatePlaylistCommand extends CommandBase
 {

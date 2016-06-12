@@ -25,7 +25,7 @@ use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\License;
 use Poniverse\Ponyfm\Models\ShowSong;
 use Poniverse\Ponyfm\Models\TrackType;
-use Illuminate\Support\Facades\DB;
+use DB;
 
 class TaxonomiesController extends ApiControllerBase
 {
