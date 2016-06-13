@@ -56,15 +56,19 @@ self.addEventListener('activate', function (event) {
 // Basic offline mode
 // Just respond with an offline error page for now
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request).then(function(response) {
-      return response || fetch(event.request);
-    }).catch(function () {
-      if (event.request.mode == 'navigate') {
-        return caches.match('/offline.html');
-      }
-    })
-  )
+  if (event.request.url.indexOf('stage.pony.fm') > -1) {
+    event.respondWith(fetch(event.request));
+  } else {
+    event.respondWith(
+        caches.match(event.request).then(function (response) {
+          return response || fetch(event.request);
+        }).catch(function () {
+          if (event.request.mode == 'navigate') {
+            return caches.match('/offline.html');
+          }
+        })
+    )
+  }
 });
 
 self.addEventListener('push', function(event) {
