@@ -73,22 +73,25 @@ class NotificationsController extends ApiControllerBase
     public function postSubscribe()
     {
         $input = json_decode(Input::json('subscription'));
+        if ($input != 'null') {
+            $existing = Subscription::where('endpoint', '=', $input->endpoint)
+                ->where('user_id', '=', Auth::user()->id)
+                ->first();
 
-        $existing = Subscription::where('endpoint', '=', $input->endpoint)
-            ->where('user_id', '=', Auth::user()->id)
-            ->first();
+            if ($existing === null) {
+                $subscription = Subscription::create([
+                    'user_id' => Auth::user()->id,
+                    'endpoint' => $input->endpoint,
+                    'p256dh' => $input->keys->p256dh,
+                    'auth' => $input->keys->auth
+                ]);
 
-        if ($existing === null) {
-            $subscription = Subscription::create([
-                'user_id' => Auth::user()->id,
-                'endpoint' => $input->endpoint,
-                'p256dh' => $input->keys->p256dh,
-                'auth' => $input->keys->auth
-            ]);
-
-            return ['id' => $subscription->id];
+                return ['id' => $subscription->id];
+            } else {
+                return ['id' => $existing->id];
+            }
         } else {
-            return ['id' => $existing->id];
+            return ['error' => 'No data'];
         }
     }
 

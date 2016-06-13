@@ -37,7 +37,8 @@ class NativeDriver extends AbstractDriver {
      * @param Activity $activity
      * @param User[] $recipients collection of {@link User} objects
      */
-    private function pushNotifications(Activity $activity, $recipients) {
+    private function pushNotifications(Activity $activity, $recipients)
+    {
         if (Config::get('ponyfm.gcm_key') != 'default') {
             $apiKeys = array(
                 'GCM' => Config::get('ponyfm.gcm_key'),
