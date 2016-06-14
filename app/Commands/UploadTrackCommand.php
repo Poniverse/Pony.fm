@@ -20,18 +20,22 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Auth;
 use Carbon\Carbon;
 use Config;
+use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Input;
 use Poniverse\Ponyfm\Models\Track;
 use AudioCache;
+use Poniverse\Ponyfm\Models\User;
 use Validator;
 
 class UploadTrackCommand extends CommandBase
 {
     use DispatchesJobs;
 
+    private $_artist;
     private $_allowLossy;
     private $_allowShortTrack;
     private $_customTrackSource;
@@ -45,8 +49,18 @@ class UploadTrackCommand extends CommandBase
      * @param string|null $customTrackSource value to set in the track's "source" field; if left blank, "direct_upload" is used
      * @param bool $autoPublishByDefault
      */
-    public function __construct(bool $allowLossy = false, bool $allowShortTrack = false, string $customTrackSource = null, bool $autoPublishByDefault = false)
-    {
+    public function __construct(
+        bool $allowLossy = false,
+        bool $allowShortTrack = false,
+        string $customTrackSource = null,
+        bool $autoPublishByDefault = false
+    ) {
+        $userSlug = Input::get('user_slug', null);
+        $this->_artist =
+            $userSlug !== null
+            ? User::where('slug', $userSlug)->first()
+            : Auth::user();
+
         $this->_allowLossy = $allowLossy;
         $this->_allowShortTrack = $allowShortTrack;
         $this->_customTrackSource = $customTrackSource;
@@ -58,7 +72,7 @@ class UploadTrackCommand extends CommandBase
      */
     public function authorize()
     {
-        return \Auth::user() != null;
+        return Gate::allows('create-track', $this->_artist);
     }
 
     /**
@@ -67,7 +81,6 @@ class UploadTrackCommand extends CommandBase
      */
     public function execute()
     {
-        $user = \Auth::user();
         $trackFile = Input::file('track', null);
         $coverFile = Input::file('cover', null);
 
@@ -78,7 +91,7 @@ class UploadTrackCommand extends CommandBase
         $audio = \AudioCache::get($trackFile->getPathname());
 
         $track = new Track();
-        $track->user_id = $user->id;
+        $track->user_id = $this->_artist->id;
         // The title set here is a placeholder; it'll be replaced by ParseTrackTagsCommand
         // if the file contains a title tag.
         $track->title = Input::get('title', pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME));

@@ -137,16 +137,24 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/notifications', 'Api\Web\NotificationsController@getNotifications');
         Route::put('/notifications/mark-as-read', 'Api\Web\NotificationsController@putMarkAsRead');
 
-        Route::get('/tracks/owned', 'Api\Web\TracksController@getOwned');
         Route::get('/tracks/edit/{id}', 'Api\Web\TracksController@getEdit');
 
         Route::get('/users/{userId}', 'Api\Web\AccountController@getUser')->where('userId', '\d+');
-        Route::get('/users/{userId}/albums', 'Api\Web\AlbumsController@getOwned')->where('id', '\d+');
-        Route::get('/users/{userId}/images', 'Api\Web\ImagesController@getOwned')->where('id', '\d+');
+
+        Route::get('/users/{userId}/tracks', 'Api\Web\TracksController@getOwned')->where('userId', '\d+');
+        Route::get('/users/{userSlug}/tracks', 'Api\Web\TracksController@getOwned');
+
+        Route::get('/users/{userId}/albums', 'Api\Web\AlbumsController@getOwned')->where('userId', '\d+');
+        Route::get('/users/{userSlug}/albums', 'Api\Web\AlbumsController@getOwned');
+
+        Route::get('/users/{userId}/images', 'Api\Web\ImagesController@getOwned')->where('userId', '\d+');
+        Route::get('/users/{userSlug}/images', 'Api\Web\ImagesController@getOwned');
+
+        Route::get('/users/{userId}/playlists', 'Api\Web\PlaylistsController@getOwned')->where('userId', '\d+');
+        Route::get('/users/{userSlug}/playlists', 'Api\Web\PlaylistsController@getOwned');
 
         Route::get('/albums/edit/{id}', 'Api\Web\AlbumsController@getEdit');
 
-        Route::get('/playlists/owned', 'Api\Web\PlaylistsController@getOwned');
         Route::get('/playlists/pinned', 'Api\Web\PlaylistsController@getPinned');
 
         Route::get('/favourites/tracks', 'Api\Web\FavouritesController@getTracks');

@@ -14,16 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-window.pfm.preloaders['account-albums'] = [
-    'account-tracks'
-    (tracks) ->
-        tracks.refresh('published=true&in_album=false', true)
-]
-
 module.exports = angular.module('ponyfm').controller "account-albums", [
     '$scope', '$state', 'account-albums', 'account-tracks'
     ($scope, $state, albums, tracks) ->
-
         $scope.albums = []
         $scope.data =
             isEditorOpen: false
@@ -36,7 +29,7 @@ module.exports = angular.module('ponyfm').controller "account-albums", [
             $scope.data.tracksDb.length = 0
             $scope.data.tracksDb.push track for track in tracks
 
-        tracks.refresh('published=true&in_album=false').done updateTracks
+        tracks.refresh('published=true&in_album=false', false, $state.params.slug).done updateTracks
 
         albumsDb = {}
 
@@ -51,7 +44,7 @@ module.exports = angular.module('ponyfm').controller "account-albums", [
             if $state.params.album_id
                 selectAlbum albumsDb[$state.params.album_id]
 
-        albums.refresh().done updateAlbums
+        albums.refresh(false, $state.params.slug).done updateAlbums
 
         $scope.$on '$stateChangeSuccess', () ->
             if $state.params.album_id
@@ -59,7 +52,7 @@ module.exports = angular.module('ponyfm').controller "account-albums", [
             else
                 selectAlbum null
 
-        $scope.$on 'album-created', () -> albums.refresh(true).done(updateAlbums)
-        $scope.$on 'album-deleted', () -> albums.refresh(true).done(updateAlbums)
-        $scope.$on 'album-updated', () -> tracks.refresh('published=true&in_album=false', true).done updateTracks
+        $scope.$on 'album-created', () -> albums.refresh(true, $state.params.slug).done(updateAlbums)
+        $scope.$on 'album-deleted', () -> albums.refresh(true, $state.params.slug).done(updateAlbums)
+        $scope.$on 'album-updated', () -> tracks.refresh('published=true&in_album=false', true, $state.params.slug).done(updateTracks)
 ]

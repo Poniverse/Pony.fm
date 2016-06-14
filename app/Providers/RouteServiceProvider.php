@@ -46,6 +46,9 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot($router);
 
         $router->model('userId', User::class);
+        $router->bind('userSlug', function ($value) {
+            return User::where('slug', $value)->first();
+        });
     }
 
     /**

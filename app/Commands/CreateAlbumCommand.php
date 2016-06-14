@@ -20,18 +20,25 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Gate;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Image;
 use Auth;
+use Poniverse\Ponyfm\Models\User;
 use Validator;
 
 class CreateAlbumCommand extends CommandBase
 {
     private $_input;
+    /**
+     * @var User
+     */
+    private $_albumOwner;
 
     public function __construct($input)
     {
         $this->_input = $input;
+        $this->_albumOwner = User::find($this->_input['user_id']);
     }
 
     /**
@@ -39,9 +46,7 @@ class CreateAlbumCommand extends CommandBase
      */
     public function authorize()
     {
-        $user = \Auth::user();
-
-        return $user != null;
+        return $this->_albumOwner !== null && Gate::allows('create-album', $this->_albumOwner);
     }
 
     /**
@@ -54,7 +59,8 @@ class CreateAlbumCommand extends CommandBase
             'title' => 'required|min:3|max:50',
             'cover' => 'image|mimes:png|min_width:350|min_height:350',
             'cover_id' => 'exists:images,id',
-            'track_ids' => 'exists:tracks,id'
+            'track_ids' => 'exists:tracks,id',
+            'user_id'   => 'exists:users,id'
         ];
 
         $validator = Validator::make($this->_input, $rules);
@@ -64,7 +70,7 @@ class CreateAlbumCommand extends CommandBase
         }
 
         $album = new Album();
-        $album->user_id = Auth::user()->id;
+        $album->user_id = $this->_albumOwner->id;
         $album->title = $this->_input['title'];
         $album->description = $this->_input['description'];
 
@@ -73,7 +79,7 @@ class CreateAlbumCommand extends CommandBase
         } else {
             if (isset($this->_input['cover'])) {
                 $cover = $this->_input['cover'];
-                $album->cover_id = Image::upload($cover, Auth::user())->id;
+                $album->cover_id = Image::upload($cover, $this->_albumOwner)->id;
             } else {
                 if (isset($this->_input['remove_cover']) && $this->_input['remove_cover'] == 'true') {
                     $album->cover_id = null;

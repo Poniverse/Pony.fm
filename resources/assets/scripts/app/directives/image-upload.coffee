@@ -55,7 +55,7 @@ module.exports = angular.module('ponyfm').directive 'pfmImageUpload', () ->
 
             $scope.$watch 'userId', (val)->
                 return unless val?
-                images.refresh(false, $scope.userId).done (images) -> $scope.images = images
+                images.refresh(true, $scope.userId).done (images) -> $scope.images = images
 
             $scope.previewImage = () ->
                 return if !$scope.isImageLoaded

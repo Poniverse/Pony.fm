@@ -32,10 +32,8 @@ module.exports = angular.module('ponyfm').factory('account-tracks', [
                 $http.get(url).success (track) -> def.resolve track
                 def.promise()
 
-            refresh: (query, force) ->
-                query = query || 'created_at,desc'
-                url = '/api/web/tracks/owned?' + query
-                force = force || false
+            refresh: (query = 'created_at,desc', force = false, userId = window.pfm.auth.user.slug) ->
+                url = "/api/web/users/#{userId}/tracks?" + query
                 return cache[url] if !force && cache[url]
 
                 def = new $.Deferred()

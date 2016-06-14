@@ -182,14 +182,13 @@ module.exports = angular.module('ponyfm').factory('playlists', [
             isPlaylistPinned: (id) ->
                 _.find(self.pinnedPlaylists, (p) -> `p.id == id`) != undefined
 
-            refreshOwned: (force) ->
-                force = force || false
+            refreshOwned: (force = false, slug = window.pfm.auth.user.slug) ->
                 return playlistDef if !force && playlistDef
 
                 playlistDef = new $.Deferred()
 
                 if auth.data.isLogged
-                    $http.get('/api/web/playlists/owned').success (playlists) ->
+                    $http.get("/api/web/users/#{slug}/playlists").success (playlists) ->
                         playlistDef.resolve playlists
                 else
                     playlistDef.resolve []

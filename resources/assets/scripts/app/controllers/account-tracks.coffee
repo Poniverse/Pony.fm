@@ -42,21 +42,20 @@ module.exports = angular.module('ponyfm').controller "account-tracks", [
         $scope.selectTrack = (track) ->
             $scope.data.selectedTrack = track
 
+        tracks.refresh('created_at,desc', false, $state.params.slug).done setTracks
 
-        tracks.refresh().done setTracks
-
-        $scope.$on '$stateChangeSuccess', () ->
+        $scope.$on '$stateChangeSuccess', ->
             if $state.params.track_id
                 $scope.selectTrack tracksDb[$state.params.track_id]
             else
                 $scope.selectTrack null
 
-        $scope.$on 'track-deleted', () ->
+        $scope.$on 'track-deleted', ->
             $state.transitionTo 'content.artist.account.tracks', slug: $state.params.slug
             tracks.clearCache()
-            tracks.refresh(null, true).done setTracks
+            tracks.refresh(null, true, $state.params.slug).done setTracks
 
-        $scope.$on 'track-updated', () ->
+        $scope.$on 'track-updated', ->
             tracks.clearCache()
-            tracks.refresh(null, true).done setTracks
+            tracks.refresh(null, true, $state.params.slug).done setTracks
 ]

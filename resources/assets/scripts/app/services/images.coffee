@@ -39,6 +39,5 @@ module.exports = angular.module('ponyfm').factory('images', [
 
                 return def
 
-        self.refresh()
         return self
 ])

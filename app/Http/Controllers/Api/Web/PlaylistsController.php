@@ -32,6 +32,7 @@ use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Auth;
 use Input;
+use Poniverse\Ponyfm\Models\User;
 use Response;
 use Poniverse\Ponyfm\Models\Track;
 
@@ -180,11 +181,11 @@ class PlaylistsController extends ApiControllerBase
         return Response::json($playlists, 200);
     }
 
-    public function getOwned()
+    public function getOwned(User $user)
     {
         $query = Playlist::summary()
             ->with('pins', 'tracks', 'tracks.cover')
-            ->where('user_id', Auth::user()->id)
+            ->where('user_id', $user->id)
             ->orderBy('title', 'asc')
             ->get();
 

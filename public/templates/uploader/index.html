@@ -1,5 +1,5 @@
 <div class="uploader">
-    <div class="dropzone" uploader>
+    <div class="dropzone" uploader="userSlug">
         <p>Drop files here to begin your upload!</p>
     </div>
 
@@ -28,7 +28,7 @@
                 </span>
 
                 <span ng-show="upload.success">
-                    <a ui-sref="content.artist.account.tracks.edit({slug: auth.user.slug, track_id: upload.trackId})" class="btn btn-sm btn-primary">
+                    <a ui-sref="content.artist.account.tracks.edit({slug: userSlug, track_id: upload.trackId})" class="btn btn-sm btn-primary">
                         Publish
                     </a>
                     {{upload.name}}

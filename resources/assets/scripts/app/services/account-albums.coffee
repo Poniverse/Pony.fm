@@ -34,12 +34,12 @@ module.exports = angular.module('ponyfm').factory('account-albums', [
                 $http.get(url).success (album) -> editDef.resolve album
                 editDef.promise()
 
-            refresh: (force = false, user_id = window.pfm.auth.user.id) ->
-                return def if !force && def && user_id == currentlyLoadedUserId
+            refresh: (force = false, userId = window.pfm.auth.user.slug) ->
+                return def if !force && def && userId == currentlyLoadedUserId
 
                 def = new $.Deferred()
-                $http.get("/api/web/users/#{user_id}/albums").success (ownedAlbums) ->
-                    currentlyLoadedUserId = user_id
+                $http.get("/api/web/users/#{userId}/albums").success (ownedAlbums) ->
+                    currentlyLoadedUserId = userId
                     def.resolve(ownedAlbums)
                 def.promise()
 

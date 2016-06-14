@@ -32,6 +32,7 @@ use Poniverse\Ponyfm\Models\TrackFile;
 use Poniverse\Ponyfm\Models\Track;
 use Auth;
 use Input;
+use Poniverse\Ponyfm\Models\User;
 use Response;
 
 class TracksController extends ApiControllerBase
@@ -180,9 +181,9 @@ class TracksController extends ApiControllerBase
         return $this->getIndex(true);
     }
 
-    public function getOwned()
+    public function getOwned(User $user)
     {
-        $query = Track::summary()->where('user_id', \Auth::user()->id)->orderBy('created_at', 'desc');
+        $query = Track::summary()->where('user_id', $user->id)->orderBy('created_at', 'desc');
 
         $tracks = [];
         foreach ($query->get() as $track) {

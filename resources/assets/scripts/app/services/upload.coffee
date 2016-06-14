@@ -48,7 +48,7 @@ module.exports = angular.module('ponyfm').factory('upload', [
 
 
 
-            upload: (files) ->
+            upload: (files, userSlug) ->
                 _.each files, (file) ->
                     upload =
                         name: file.name
@@ -86,7 +86,7 @@ module.exports = angular.module('ponyfm').factory('upload', [
                         else
                             error =
                                 if xhr.getResponseHeader('content-type') == 'application/json'
-                                    $.parseJSON(xhr.responseText).errors.track.join ', '
+                                    'Error: ' + $.parseJSON(xhr.responseText)?.errors?.track?.join ', '
                                 else
                                     'There was an unknown error!'
 
@@ -98,8 +98,9 @@ module.exports = angular.module('ponyfm').factory('upload', [
                             .done($rootScope.$broadcast('upload-finished', upload))
 
                     # send the track to the server
-                    formData = new FormData();
-                    formData.append('track', file);
+                    formData = new FormData()
+                    formData.append('track', file)
+                    formData.append('user_slug', userSlug)
 
                     xhr.open 'POST', '/api/web/tracks/upload', true
                     xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')

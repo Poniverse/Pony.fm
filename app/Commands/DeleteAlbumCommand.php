@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Gate;
 use Poniverse\Ponyfm\Models\Album;
 use Auth;
 
@@ -42,9 +43,7 @@ class DeleteAlbumCommand extends CommandBase
      */
     public function authorize()
     {
-        $user = Auth::user();
-
-        return $this->_album && $user != null && $this->_album->user_id == $user->id;
+        return Gate::allows('delete', $this->_album);
     }
 
     /**

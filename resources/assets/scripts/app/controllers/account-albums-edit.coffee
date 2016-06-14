@@ -14,16 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-window.pfm.preloaders['account-albums-edit'] = [
-    'account-tracks', 'account-albums', '$state'
-    (tracks, albums, $state) ->
-        defs = [tracks.refresh()]
-        if $state.params.album_id
-            defs.push albums.getEdit($state.params.album_id, true)
-
-        $.when.all defs
-]
-
 module.exports = angular.module('ponyfm').controller "account-albums-edit", [
     '$scope', '$state', '$modal', 'account-albums', 'auth'
     ($scope, $state, $modal, albums, auth) ->
@@ -107,6 +97,7 @@ module.exports = angular.module('ponyfm').controller "account-albums-edit", [
                     formData.append name, value
 
             formData.append 'track_ids', _.map($scope.tracks, (t) -> t.id).join()
+            formData.append 'user_id', $scope.artist.id
 
             xhr.open 'POST', url, true
             xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')

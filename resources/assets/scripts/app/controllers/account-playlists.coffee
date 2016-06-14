@@ -14,20 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-window.pfm.preloaders['account-playlists'] = [
-    'playlists'
-    (playlists) -> playlists.refreshOwned true
-]
-
 module.exports = angular.module('ponyfm').controller "account-playlists", [
-    '$scope', 'auth', '$modal', 'playlists'
-    ($scope, auth, $modal, playlists) ->
+    '$scope', '$state', 'auth', '$modal', 'playlists'
+    ($scope, $state, auth, $modal, playlistService) ->
         $scope.playlists = []
 
         loadPlaylists = (playlists) ->
             $scope.playlists.push playlist for playlist in playlists
 
-        playlists.refreshOwned().done loadPlaylists
+        playlistService.refreshOwned(true, $state.params.slug).done loadPlaylists
 
         $scope.editPlaylist = (playlist) ->
             $modal
@@ -40,14 +35,14 @@ module.exports = angular.module('ponyfm').controller "account-playlists", [
 
         $scope.togglePlaylistPin = (playlist) ->
             playlist.is_pinned = !playlist.is_pinned;
-            playlists.editPlaylist playlist
+            playlistService.editPlaylist playlist
 
         $scope.deletePlaylist = (playlist) ->
             $scope.playlistToDelete = playlist
             $modal({scope: $scope, templateUrl: 'templates/partials/delete-playlist-dialog.html', show: true})
 
         $scope.confirmDeletePlaylist = () ->
-            playlists.deletePlaylist($scope.playlistToDelete).done ->
+            playlistService.deletePlaylist($scope.playlistToDelete).done ->
                 $scope.playlists.splice _.indexOf($scope.playlists, (p) -> p.id == $scope.playlistToDelete.id), 1
 
         $scope.$on 'playlist-updated', (e, playlist) ->
