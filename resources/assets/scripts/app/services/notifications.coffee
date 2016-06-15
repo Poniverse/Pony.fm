@@ -107,17 +107,9 @@ module.exports = angular.module('ponyfm').factory('notifications', [
 
             checkSubscription: () ->
                 def = new $.Deferred()
+
                 if 'serviceWorker' of navigator
-                    if !('showNotification' of ServiceWorkerRegistration.prototype)
-                        console.warn('Notifications aren\'t supported.')
-                        def.resolve -1
-
-                    if Notification.permission == 'denied'
-                        console.warn('The user has blocked notifications.')
-                        def.resolve -1
-
-                    if !('PushManager' of window)
-                        console.warn('Push messaging isn\'t supported.')
+                    if !self.checkPushSupport()
                         def.resolve -1
 
                     navigator.serviceWorker.ready.then (reg) ->
@@ -135,5 +127,30 @@ module.exports = angular.module('ponyfm').factory('notifications', [
                     def.resolve -1
 
                 def.promise()
+
+            checkPushSupport: () ->
+                if !('showNotification' of ServiceWorkerRegistration.prototype)
+                    console.warn('Notifications aren\'t supported.')
+                    return false
+
+                if Notification.permission == 'denied'
+                    console.warn('The user has blocked notifications.')
+                    return false
+
+                if !('PushManager' of window)
+                    console.warn('Push messaging isn\'t supported.')
+                    return false
+
+                # If Chrome 50+
+                if !!window.chrome && !!window.chrome.webstore
+                    if parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]) >= 50
+                        return true
+                # If Firefox 46+
+                else if typeof InstallTrigger != 'undefined'
+                    if parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]) >= 46
+                        return true
+
+                return false
+
         self
 ])
