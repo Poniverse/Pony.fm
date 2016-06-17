@@ -91,7 +91,7 @@ gulp.task("styles-app", function () {
         // we want to watch embed files and re-compile them. However, we want
         // to leave this path out in production so that embed files are not bloating
         // the css file
-        includedStyles.push("resources/assets/styles/embed.css");
+        includedStyles.push("resources/assets/styles/embed.less");
 
         // Remove app.less from the cache so that it gets recompiled
         var styleCache = plug.cached.caches.styles;
