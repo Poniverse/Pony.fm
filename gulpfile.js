@@ -146,7 +146,8 @@ gulp.task("styles-embed", function () {
             browsers: ["last 2 versions"],
             cascade: false
         }))
-        .pipe(plug.minifyCss())
+		//disabled for testing
+        //.pipe(plug.minifyCss())
         .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/styles"));
 });
