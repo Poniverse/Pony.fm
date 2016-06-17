@@ -21,10 +21,13 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Auth;
-use Carbon\Carbon;
 use Input;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Notification;
+use Poniverse\Ponyfm\Models\Subscription;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
+use Minishlink\WebPush\WebPush;
 
 class NotificationsController extends ApiControllerBase
 {
@@ -58,5 +61,53 @@ class NotificationsController extends ApiControllerBase
             ->update(['is_read' => true]);
 
         return ['notifications_updated' => $numberOfUpdatedRows];
+    }
+
+    /**
+     * Subscribe a user to native push notifications. Takes an endpoint and
+     * encryption keys from the client and stores them in the database
+     * for future use.
+     *
+     * @return string
+     */
+    public function postSubscribe()
+    {
+        $input = json_decode(Input::json('subscription'));
+        if ($input != 'null') {
+            $existing = Subscription::where('endpoint', '=', $input->endpoint)
+                ->where('user_id', '=', Auth::user()->id)
+                ->first();
+
+            if ($existing === null) {
+                $subscription = Subscription::create([
+                    'user_id' => Auth::user()->id,
+                    'endpoint' => $input->endpoint,
+                    'p256dh' => $input->keys->p256dh,
+                    'auth' => $input->keys->auth
+                ]);
+
+                return ['id' => $subscription->id];
+            } else {
+                return ['id' => $existing->id];
+            }
+        } else {
+            return ['error' => 'No data'];
+        }
+    }
+
+    /**
+     * Removes a user's notification subscription
+     *
+     * @return string
+     */
+    public function postUnsubscribe()
+    {
+        $input = json_decode(Input::json('subscription'));
+
+        $existing = Subscription::where('endpoint', '=', $input->endpoint)
+            ->where('user_id', '=', Auth::user()->id)
+            ->delete();
+
+        return ['result' => 'success'];
     }
 }

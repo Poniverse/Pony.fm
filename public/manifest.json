@@ -22,5 +22,6 @@
   "background_color": "#EEE",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "gcm_sender_id": "628116355343"
 }

@@ -25,9 +25,11 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\NotificationHandler;
 use Poniverse\Ponyfm\Jobs\SendNotifications;
+use Poniverse\Ponyfm\Library\Notifications\Drivers\NativeDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\Subscription;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 
@@ -59,6 +61,21 @@ class RecipientFinder implements NotificationHandler {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
                 return $track->user->followers;
+            case NativeDriver::class:
+                $followerIds = [];
+                $subIds = [];
+                $rawSubIds = Subscription::select('id')->get();
+
+                foreach ($track->user->followers as $follower) {
+                    array_push($followerIds, $follower->id);
+                }
+
+                foreach ($rawSubIds as $sub) {
+                    array_push($subIds, $sub->id);
+                }
+
+                $targetIds = array_intersect($followerIds, $subIds);
+                return Subscription::whereIn('user_id', $targetIds)->get();
             default:
                 return $this->fail();
         }
@@ -71,6 +88,21 @@ class RecipientFinder implements NotificationHandler {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
                 return $playlist->user->followers;
+            case NativeDriver::class:
+                $followerIds = [];
+                $subIds = [];
+                $rawSubIds = Subscription::select('id')->get();
+
+                foreach ($playlist->user->followers as $follower) {
+                    array_push($followerIds, $follower->id);
+                }
+
+                foreach ($rawSubIds as $sub) {
+                    array_push($subIds, $sub->id);
+                }
+
+                $targetIds = array_intersect($followerIds, $subIds);
+                return Subscription::whereIn('user_id', $targetIds)->get();
             default:
                 return $this->fail();
         }
@@ -83,6 +115,8 @@ class RecipientFinder implements NotificationHandler {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
                 return [$userBeingFollowed];
+            case NativeDriver::class:
+                return Subscription::where('user_id', '=', $userBeingFollowed->id)->get();
             default:
                 return $this->fail();
         }
@@ -98,6 +132,8 @@ class RecipientFinder implements NotificationHandler {
                     $comment->user->id === $comment->resource->user->id
                         ? []
                         : [$comment->resource->user];
+            case NativeDriver::class:
+                return Subscription::where('user_id', '=', $comment->resource->user->id)->get();
             default:
                 return $this->fail();
         }
@@ -113,6 +149,8 @@ class RecipientFinder implements NotificationHandler {
                     $favouriter->id === $entityBeingFavourited->user->id
                         ? []
                         : [$entityBeingFavourited->user];
+            case NativeDriver::class:
+                return Subscription::where('user_id', '=', $entityBeingFavourited->user->id)->get();
             default:
                 return $this->fail();
         }

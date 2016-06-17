@@ -121,3 +121,55 @@ label {
 textarea {
   height: 60px;
 }
+
+.switch {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 16px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.26);
+  -webkit-transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  vertical-align: middle;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 24px;
+    height: 24px;
+    background: #fafafa;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+    border-radius: 50%;
+    transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:active::before {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(128,128,128,0.1);
+  }
+}
+
+input:checked + .switch {
+  background: rgba(132,82,138,0.5);
+}
+
+input:checked + .switch::before {
+  left: 20px;
+  background: #84528a;
+}
+
+input:checked + .switch:active::before {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(0,150,136,0.2);
+}
+
+.switch.disabled {
+  background: #bfbfbf;
+}
+
+.switch.disabled::before {
+  background: #dadada;
+}
+

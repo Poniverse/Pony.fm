@@ -21,15 +21,49 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
     scope: {}
 
     controller: [
-        '$scope', 'notifications', '$timeout', '$rootScope'
-        ($scope, notifications, $timeout, $rootScope) ->
+        '$scope', 'notifications', '$timeout', '$rootScope', '$http'
+        ($scope, notifications, $timeout, $rootScope, $http) ->
             $scope.notifications = []
+            $scope.subscribed = false
+            $scope.switchDisabled = true
+            $scope.switchHidden = false
             isTimeoutScheduled = false
 
             # TODO: ADD REFRESH BUTTON
 
             $rootScope.$on 'shouldUpdateNotifications', () ->
                 refreshNotifications()
+            
+            $scope.switchToggled = () ->
+                if $scope.subscribed
+                    $scope.switchDisabled = true
+                    notifications.subscribe().done (result) ->
+                        if result
+                            $scope.switchDisabled = false
+                else
+                    $scope.switchDisabled = true
+                    notifications.unsubscribe().done (result) ->
+                        if result
+                            $scope.switchDisabled = false
+
+
+            checkSubscription = () ->
+                if 'serviceWorker' of navigator && notifications.serviceWorkerSupported
+                    $scope.disabled = true
+                    notifications.checkSubscription().done (subStatus) ->
+                        switch subStatus
+                            when 0
+                                $scope.subscribed = false
+                                $scope.switchDisabled = false
+                            when 1
+                                $scope.subscribed = true
+                                $scope.switchDisabled = false
+                            else
+                                $scope.subscribed = false
+                                $scope.switchDisabled = true
+                                $scope.hidden = true
+                else
+                    $scope.switchHidden = true
 
             refreshNotifications = () ->
                 notifications.getNotifications().done (result) ->
@@ -51,5 +85,6 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
                     isTimeoutScheduled = false
                 , 60000)
 
+            checkSubscription()
             refreshNotifications()
     ]

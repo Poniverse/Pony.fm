@@ -165,6 +165,24 @@ class Activity extends Model {
         }
     }
 
+    public function getTitleFromActivityType() {
+        switch($this->activity_type) {
+            case static::TYPE_PUBLISHED_TRACK:
+                return "Pony.fm - New track";
+            case static::TYPE_PUBLISHED_PLAYLIST:
+                return "Pony.fm - New playlist";
+            case static::TYPE_NEW_FOLLOWER:
+                return "Pony.fm - New follower";
+            case static::TYPE_NEW_COMMENT:
+                return "Pony.fm - New comment";
+            case static::TYPE_CONTENT_FAVOURITED:
+                return "Pony.fm - Favourited";
+
+            default:
+                return "Pony.fm - Unknown";
+        }
+    }
+
     /**
      * @return string human-readable Markdown string describing this notification
      * @throws \Exception
