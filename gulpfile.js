@@ -119,7 +119,7 @@ gulp.task("styles-app", function () {
             cascade: false
         }))
         .pipe(plug.concat("app.css"))
-        .pipe(plug.minifyCss())
+        .pipe(plug.cleanCss())
         .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/styles"))
 
@@ -147,7 +147,7 @@ gulp.task("styles-embed", function () {
             cascade: false
         }))
         .pipe(plug.concat("embed.css"))
-        .pipe(plug.minifyCss())
+        .pipe(plug.cleanCss())
         .pipe(header(licenseHeader))
         .pipe(gulp.dest("public/build/styles"));
 });
