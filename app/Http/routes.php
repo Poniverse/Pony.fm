@@ -126,7 +126,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
         Route::post('/comments/{type}/{id}', 'Api\Web\CommentsController@postCreate')->where('id', '\d+');
 
-        Route::post('/account/settings/save/{slug}', 'Api\Web\AccountController@postSave');
+        Route::post('/account/settings/save/{userSlug}', 'Api\Web\AccountController@postSave');
 
         Route::post('/favourites/toggle', 'Api\Web\FavouritesController@postToggle');
 

@@ -67,6 +67,10 @@ module.exports = angular.module('ponyfm').directive 'pfmImageUpload', () ->
                 else if $scope.imageUrl
                     lightbox.openImageUrl $scope.imageUrl
 
+                # An explicit return value is needed here to avoid this issue:
+                #   https://docs.angularjs.org/error/$parse/isecdom
+                return null
+
             $scope.uploadImage = () ->
                 $uploader.trigger 'click'
                 return

@@ -75,8 +75,8 @@ class AccountController extends ApiControllerBase
         ], 200);
     }
 
-    public function postSave($slug)
+    public function postSave(User $user)
     {
-        return $this->execute(new SaveAccountSettingsCommand(Input::all(), $slug));
+        return $this->execute(new SaveAccountSettingsCommand(Input::all(), $user));
     }
 }

@@ -257,7 +257,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getAvatarUrl($type = Image::NORMAL)
     {
-        if (!$this->uses_gravatar) {
+        if (!$this->uses_gravatar && $this->avatar !== null) {
             return $this->avatar->getUrl($type);
         }
 

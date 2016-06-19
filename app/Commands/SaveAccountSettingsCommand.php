@@ -29,18 +29,14 @@ use Validator;
 class SaveAccountSettingsCommand extends CommandBase
 {
     private $_input;
-    private $_slug;
-    private $_user;
-    private $_current;
 
-    public function __construct($input, $slug)
+    /** @var User */
+    private $_user;
+
+    public function __construct($input, User $user)
     {
         $this->_input = $input;
-        $this->_slug = $slug;
-
-        /** @var User _user */
-        $this->_user = null;
-        $this->_current = null;
+        $this->_user = $user;
     }
 
     /**
@@ -48,25 +44,7 @@ class SaveAccountSettingsCommand extends CommandBase
      */
     public function authorize()
     {
-        if (Auth::user() != null) {
-            $this->_current = Auth::user();
-
-            if ($this->_slug == $this->_current->slug) {
-                $this->_user = $this->_current;
-            } else {
-                $this->_user = User::where('slug', $this->_slug)->whereNull('disabled_at')->first();
-            }
-
-            if ($this->_user == null) {
-                return false;
-            }
-
-            if (Gate::allows('edit', $this->_user)) {
-                return true;
-            }
-        }
-
-        return false;
+        return Gate::allows('edit', $this->_user);
     }
 
     /**
@@ -75,14 +53,6 @@ class SaveAccountSettingsCommand extends CommandBase
      */
     public function execute()
     {
-        if ($this->_user == null) {
-            if ($_current->hasRole('admin')) {
-                return CommandResponse::fail(['Not found']);
-            } else {
-                return CommandResponse::fail(['Permission denied']);
-            }
-        }
-
         $rules = [
             'display_name'  => 'required|min:3|max:26',
             'bio'           => 'textarea_length:250',
@@ -110,31 +80,26 @@ class SaveAccountSettingsCommand extends CommandBase
             return CommandResponse::fail($validator);
         }
 
-        if ($this->_input['uses_gravatar'] != 'true') {
-            if ($this->_user->avatar_id == null && !isset($this->_input['avatar']) && !isset($this->_input['avatar_id'])) {
-                $validator->messages()->add('avatar',
-                    'You must upload or select an avatar if you are not using gravatar!');
-
-                return CommandResponse::fail($validator);
-            }
-        }
-
         $this->_user->bio = $this->_input['bio'];
         $this->_user->display_name = $this->_input['display_name'];
         $this->_user->slug = $this->_input['slug'];
         $this->_user->can_see_explicit_content = $this->_input['can_see_explicit_content'] == 'true';
         $this->_user->uses_gravatar = $this->_input['uses_gravatar'] == 'true';
 
-        if ($this->_user->uses_gravatar) {
+        if ($this->_user->uses_gravatar && !empty($this->_input['gravatar'])) {
             $this->_user->avatar_id = null;
             $this->_user->gravatar = $this->_input['gravatar'];
         } else {
+            $this->_user->uses_gravatar = false;
+
             if (isset($this->_input['avatar_id'])) {
                 $this->_user->avatar_id = $this->_input['avatar_id'];
+
+            } elseif (isset($this->_input['avatar'])) {
+                $this->_user->avatar_id = Image::upload($this->_input['avatar'], $this->_user)->id;
+
             } else {
-                if (isset($this->_input['avatar'])) {
-                    $this->_user->avatar_id = Image::upload($this->_input['avatar'], $this->_user)->id;
-                }
+                $this->_user->avatar_id = null;
             }
         }
 
