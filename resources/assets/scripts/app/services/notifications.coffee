@@ -142,7 +142,7 @@ module.exports = angular.module('ponyfm').factory('notifications', [
                     return false
 
                 # If Chrome 50+
-                if !!window.chrome && !!window.chrome.webstore
+                if !!window.chrome
                     if parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]) >= 50
                         return true
                 # If Firefox 46+

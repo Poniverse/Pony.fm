@@ -26,7 +26,7 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
             $scope.notifications = []
             $scope.subscribed = false
             $scope.switchDisabled = true
-            $scope.switchHidden = false
+            $scope.switchHidden = true
             isTimeoutScheduled = false
 
             # TODO: ADD REFRESH BUTTON
@@ -85,6 +85,6 @@ module.exports = angular.module('ponyfm').directive 'pfmNotificationList', () ->
                     isTimeoutScheduled = false
                 , 60000)
 
-            checkSubscription()
+            #checkSubscription()
             refreshNotifications()
     ]
