@@ -73,6 +73,7 @@
     z-index: 1011;
     height: ~"calc(100% - 64px)";
     box-shadow: 0 8px 8px rgba(0,0,0,0.5);
+    overflow-y: scroll;
 
     > a {
       display: none;
@@ -83,6 +84,9 @@
       a {
         padding: 13px 25px;
       }
+      h3 a {
+        margin-top: -12px;
+      }
     }
 
     &.animated {
@@ -91,6 +95,10 @@
 
     &.active {
       transform: translateX(170px) translateZ(0);
+    }
+
+    .x-attribution {
+      position: static !important;
     }
   }
 
