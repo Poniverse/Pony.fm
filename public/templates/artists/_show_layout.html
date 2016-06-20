@@ -1,4 +1,4 @@
-<div class="resource-details artist-details" ng-class="::{'x-archived': artist.is_archived}">
+<div class="resource-details artist-details fixed-tabs" ng-class="::{'x-archived': artist.is_archived}">
 
     <header ng-style="{'background-image': 'linear-gradient(135deg, ' + artist.avatar_colors[0] + ' 15%, ' + artist.avatar_colors[1] + ' 100%)'}">
         <img src="{{artist.avatars.normal}}">
@@ -18,7 +18,7 @@
 
         </div>
     </header>
-    <ul class="tabs">
+    <ul class="tabs fixed">
         <li ui-sref-active="active"><a ui-sref=".profile">Profile</a></li>
         <li ui-sref-active="active"><a ui-sref=".content">Content</a></li>
         <li ng-if="::!artist.is_archived" ui-sref-active="active">
@@ -26,7 +26,7 @@
         </li>
         <li ng-if="::artist.permissions.edit" ui-sref-active="{active: '.account'}"><a ui-sref=".account.settings">Manage Account</a></li>
     </ul>
-    <div class="stretch-to-bottom">
+    <div class="stretch-to-bottom secondary-content">
         <ui-view></ui-view>
     </div>
 </div>
