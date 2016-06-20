@@ -96,10 +96,6 @@
     &.active {
       transform: translateX(170px) translateZ(0);
     }
-
-    .x-attribution {
-      position: static !important;
-    }
   }
 
   .user-details > .avatar {
@@ -414,5 +410,11 @@
     height: 52px;
     width: 122px;
     padding-top: 18px;
+  }
+}
+
+@media only screen and (max-height: 500px) {
+  .x-attribution {
+    position: static !important;
   }
 }
