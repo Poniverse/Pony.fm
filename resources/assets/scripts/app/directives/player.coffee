@@ -61,7 +61,7 @@ module.exports = angular.module('ponyfm').directive 'pfmPlayer', () ->
             $bar = $element.find('.volume-slider .bar')
 
             player.readyDef.done ->
-                initialY = (180 - (180 * (player.volume / 100))) - 7.5
+                initialY = (180 - (180 * (player.volume / 100)))
                 $knob.css {top: initialY}
 
             moveVolumeSlider = (absoluteY) ->
