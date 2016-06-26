@@ -151,8 +151,6 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Cviebrock\LaravelElasticsearch\ServiceProvider::class,
 		GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
-        Way\Generators\GeneratorsServiceProvider::class,
-        Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
 
     ],
 
