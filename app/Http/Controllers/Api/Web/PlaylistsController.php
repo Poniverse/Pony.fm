@@ -81,11 +81,10 @@ class PlaylistsController extends ApiControllerBase
             ->where('track_count', '>', 1)
             ->whereIsPublic(true);
 
-        $this->applyFilters($query);
-
         $count = $query->count();
-        $perPage = 40;
+        $this->applyOrdering($query);
 
+        $perPage = 40;
         $query->skip(($page - 1) * $perPage)->take($perPage);
         $playlists = [];
 
@@ -211,7 +210,16 @@ class PlaylistsController extends ApiControllerBase
         return Response::json($playlists, 200);
     }
 
-    private function applyFilters($query)
+
+    /**
+     * This function should not deal with anything other than applying order,
+     * which is done after the query's total possible results are counted due
+     * to Postgres not allowing "ORDER BY" to be combined with "COUNT()".
+     *
+     * @param $query
+     * @return mixed
+     */
+    private function applyOrdering($query)
     {
         if (Input::has('order')) {
             $order = \Input::get('order');

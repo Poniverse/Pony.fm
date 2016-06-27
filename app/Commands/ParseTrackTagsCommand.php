@@ -340,7 +340,7 @@ class ParseTrackTagsCommand extends CommandBase
         } elseif (isset($tags['creation_date'])) {
             $releaseDate = $this->parseDateString($tags['creation_date'][0]);
         } else {
-            $releaseDate = 0;
+            $releaseDate = null;
         }
 
         return [

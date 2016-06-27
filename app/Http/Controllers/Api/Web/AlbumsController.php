@@ -128,14 +128,16 @@ class AlbumsController extends ApiControllerBase
         $query = Album::summary()
             ->with('user', 'user.avatar', 'cover')
             ->userDetails()
-            ->orderBy('title', 'asc')
             // An album with only one track is not really an album.
             ->where('track_count', '>', 1);
 
         $count = $query->count();
         $perPage = 40;
 
-        $query->skip(($page - 1) * $perPage)->take($perPage);
+        $query
+            ->orderBy('title', 'asc')
+            ->skip(($page - 1) * $perPage)
+            ->take($perPage);
         $albums = [];
 
         foreach ($query->get() as $album) {

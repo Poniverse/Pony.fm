@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration {
 			$table->string('slug')->unique();
 			$table->boolean('uses_gravatar')->default(1);
 			$table->boolean('can_see_explicit_content')->default(0);
-			$table->text('bio', 65535);
+			$table->text('bio', 65535)->default('');
 			$table->integer('track_count')->unsigned()->default(0)->index();
 			$table->integer('comment_count')->unsigned()->default(0);
 			$table->timestamps();

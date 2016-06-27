@@ -213,12 +213,13 @@ class ArtistsController extends ApiControllerBase
             $page = Input::get('page');
         }
 
-        $query = User::orderBy('display_name', 'asc')
-            ->where('track_count', '>', 0);
-
+        $query = User::where('track_count', '>', 0);
         $count = $query->count();
-        $perPage = 40;
 
+        // The query results are ordered after they're counted
+        // due to Postgres's behaviour when combining those two operations.
+        $query->orderBy('display_name', 'asc');
+        $perPage = 40;
         $query->skip(($page - 1) * $perPage)->take($perPage);
         $users = [];
 
