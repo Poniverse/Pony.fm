@@ -19,7 +19,7 @@ class CreateSubscriptionsTable extends Migration {
 			$table->string('endpoint');
 			$table->string('p256dh');
 			$table->string('auth');
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

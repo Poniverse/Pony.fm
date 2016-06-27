@@ -17,9 +17,9 @@ class CreateLicensesTable extends Migration {
 			$table->increments('id');
 			$table->string('title', 100);
 			$table->text('description', 65535);
-			$table->boolean('affiliate_distribution');
-			$table->boolean('open_distribution');
-			$table->boolean('remix');
+			$table->unsignedTinyInteger('affiliate_distribution');
+			$table->unsignedTinyInteger('open_distribution');
+			$table->unsignedTinyInteger('remix');
 		});
 	}
 

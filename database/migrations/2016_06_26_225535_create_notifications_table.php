@@ -17,7 +17,7 @@ class CreateNotificationsTable extends Migration {
 			$table->bigInteger('id', true)->unsigned();
 			$table->bigInteger('activity_id')->unsigned()->index();
 			$table->integer('user_id')->unsigned()->index();
-			$table->boolean('is_read')->default(0)->index();
+			$table->unsignedTinyInteger('is_read')->default(0)->index();
 		});
 	}
 

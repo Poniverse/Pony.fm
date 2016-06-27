@@ -19,7 +19,7 @@ class CreateFavouritesTable extends Migration {
 			$table->integer('track_id')->unsigned()->nullable()->index();
 			$table->integer('album_id')->unsigned()->nullable()->index();
 			$table->integer('playlist_id')->unsigned()->nullable()->index();
-			$table->dateTime('created_at')->default('now()');
+			$table->dateTime('created_at')->default('now()')->nullable();
 		});
 	}
 

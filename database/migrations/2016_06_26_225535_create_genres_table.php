@@ -18,7 +18,7 @@ class CreateGenresTable extends Migration {
 			$table->string('name')->unique();
 			$table->string('slug', 200)->index();
 			$table->softDeletes()->index();
-			$table->timestamps();
+			$table->nullableTimestamps();
 		});
 	}
 

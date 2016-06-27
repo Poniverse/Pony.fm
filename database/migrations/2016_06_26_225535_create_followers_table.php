@@ -18,7 +18,7 @@ class CreateFollowersTable extends Migration {
 			$table->integer('user_id')->unsigned()->index();
 			$table->integer('artist_id')->unsigned()->nullable()->index();
 			$table->integer('playlist_id')->unsigned()->nullable()->index();
-			$table->dateTime('created_at')->default('now()');
+			$table->dateTime('created_at')->default('now()')->nullable();
 		});
 	}
 

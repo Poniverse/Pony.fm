@@ -19,7 +19,7 @@ class CreatePlaylistsTable extends Migration {
 			$table->string('title')->index();
 			$table->string('slug');
 			$table->text('description', 65535);
-			$table->boolean('is_public')->index();
+			$table->unsignedTinyInteger('is_public')->index();
 			$table->integer('track_count')->unsigned()->index();
 			$table->integer('view_count')->unsigned();
 			$table->integer('download_count')->unsigned();
