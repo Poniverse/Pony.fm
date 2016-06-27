@@ -73,10 +73,10 @@ return [
 
         'pgsql' => [
             'driver'   => 'pgsql',
-            'host'     => env('DB_HOST', 'localhost'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host'     => env('POSTGRESQL_DB_HOST', 'localhost'),
+            'database' => env('POSTGRESQL_DB_DATABASE', 'forge'),
+            'username' => env('POSTGRESQL_DB_USERNAME', 'forge'),
+            'password' => env('POSTGRESQL_DB_PASSWORD', ''),
             'charset'  => 'utf8',
             'prefix'   => '',
             'schema'   => 'public',
