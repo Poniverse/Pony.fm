@@ -16,7 +16,7 @@ class CreateCommentsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('user_id')->unsigned()->index('comments_user_id_foreign');
-			$table->string('ip_address', 46);
+			$table->string('ip_address', 46)->nullable();
 			$table->text('content', 65535);
 			$table->timestamps();
 			$table->softDeletes()->index();

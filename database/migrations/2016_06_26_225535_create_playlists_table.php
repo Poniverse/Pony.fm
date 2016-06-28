@@ -20,12 +20,12 @@ class CreatePlaylistsTable extends Migration {
 			$table->string('slug');
 			$table->text('description', 65535);
 			$table->unsignedTinyInteger('is_public')->index();
-			$table->integer('track_count')->unsigned()->index();
-			$table->integer('view_count')->unsigned();
-			$table->integer('download_count')->unsigned();
-			$table->integer('favourite_count')->unsigned();
-			$table->integer('follow_count')->unsigned();
-			$table->integer('comment_count')->unsigned();
+			$table->integer('track_count')->unsigned()->default(0)->index();
+			$table->integer('view_count')->unsigned()->default(0);
+			$table->integer('download_count')->unsigned()->default(0);
+			$table->integer('favourite_count')->unsigned()->default(0);
+			$table->integer('follow_count')->unsigned()->default(0);
+			$table->integer('comment_count')->unsigned()->default(0);
 			$table->timestamps();
 			$table->date('deleted_at')->nullable()->index();
 		});

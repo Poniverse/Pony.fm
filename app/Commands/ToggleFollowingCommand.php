@@ -62,10 +62,9 @@ class ToggleFollowingCommand extends CommandBase
             $follow = new Follower();
             $follow->$typeId = $this->_resourceId;
             $follow->user_id = Auth::user()->id;
-            $follow->created_at = time();
             $follow->save();
             $isFollowed = true;
-            
+
             Notification::newFollower($follow->artist, Auth::user());
         }
 

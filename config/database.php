@@ -74,9 +74,9 @@ return [
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => env('POSTGRESQL_DB_HOST', 'localhost'),
-            'database' => env('POSTGRESQL_DB_DATABASE', 'forge'),
-            'username' => env('POSTGRESQL_DB_USERNAME', 'forge'),
-            'password' => env('POSTGRESQL_DB_PASSWORD', ''),
+            'database' => env('POSTGRESQL_DB_DATABASE', 'homestead'),
+            'username' => env('POSTGRESQL_DB_USERNAME', 'homestead'),
+            'password' => env('POSTGRESQL_DB_PASSWORD', 'secret'),
             'charset'  => 'utf8',
             'prefix'   => '',
             'schema'   => 'public',

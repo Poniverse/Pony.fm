@@ -20,12 +20,12 @@ class CreateResourceUsersTable extends Migration {
 			$table->integer('album_id')->unsigned()->nullable()->index();
 			$table->integer('playlist_id')->unsigned()->nullable()->index();
 			$table->integer('artist_id')->unsigned()->nullable()->index();
-			$table->unsignedTinyInteger('is_followed');
-			$table->unsignedTinyInteger('is_favourited');
-			$table->unsignedTinyInteger('is_pinned');
-			$table->integer('view_count');
-			$table->integer('play_count');
-			$table->integer('download_count');
+			$table->unsignedTinyInteger('is_followed')->default(0);
+			$table->unsignedTinyInteger('is_favourited')->default(0);
+			$table->unsignedTinyInteger('is_pinned')->default(0);
+			$table->integer('view_count')->default(0);
+			$table->integer('play_count')->default(0);
+			$table->integer('download_count')->default(0);
 			$table->unique(['user_id','track_id','album_id','playlist_id','artist_id'], 'resource_unique');
 		});
 	}
