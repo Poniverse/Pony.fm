@@ -80,7 +80,7 @@ class ParseTrackTagsCommand extends CommandBase
         if ($this->track->album_id === null) {
             $this->track->track_number = null;
         } else {
-            $this->track->track_number = $this->input['track_number'] ?? $parsedTags['track_number'];
+            $this->track->track_number = filter_var($this->input['track_number'] ?? $parsedTags['track_number'], FILTER_SANITIZE_NUMBER_INT);
         }
 
         $this->track->released_at = isset($this->input['released_at'])
