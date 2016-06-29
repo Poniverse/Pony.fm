@@ -16,11 +16,11 @@ class CreateTrackFilesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('track_id')->unsigned()->index('track_files_track_id_foreign');
-			$table->unsignedTinyInteger('is_master')->default(0)->index();
+			$table->boolean('is_master')->default(false)->index();
 			$table->string('format')->index();
 			$table->timestamps();
-			$table->unsignedTinyInteger('is_cacheable')->default(0)->index();
-			$table->unsignedTinyInteger('status')->default(0);
+			$table->boolean('is_cacheable')->default(false)->index();
+			$table->boolean('status')->default(false);
 			$table->dateTime('expires_at')->nullable()->index();
 			$table->integer('filesize')->unsigned()->nullable();
 		});
