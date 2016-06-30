@@ -16,9 +16,9 @@ class CreateResourceLogItemsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('user_id')->unsigned()->nullable()->index();
-			$table->integer('log_type')->unsigned();
+			$table->tinyInteger('log_type')->unsigned();
 			$table->string('ip_address', 46)->index();
-			$table->integer('track_format_id')->unsigned()->nullable();
+			$table->tinyInteger('track_format_id')->unsigned()->nullable();
 			$table->integer('track_id')->unsigned()->nullable()->index();
 			$table->integer('album_id')->unsigned()->nullable()->index();
 			$table->integer('playlist_id')->unsigned()->nullable()->index();

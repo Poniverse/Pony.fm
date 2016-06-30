@@ -23,9 +23,9 @@ class CreateResourceUsersTable extends Migration {
 			$table->boolean('is_followed')->default(false);
 			$table->boolean('is_favourited')->default(false);
 			$table->boolean('is_pinned')->default(false);
-			$table->integer('view_count')->default(0);
-			$table->integer('play_count')->default(0);
-			$table->integer('download_count')->default(0);
+			$table->unsignedInteger('view_count')->default(0);
+			$table->unsignedInteger('play_count')->default(0);
+			$table->unsignedInteger('download_count')->default(0);
 			$table->unique(['user_id','track_id','album_id','playlist_id','artist_id'], 'resource_unique');
 		});
 	}

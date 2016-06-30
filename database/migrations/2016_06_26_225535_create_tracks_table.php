@@ -23,10 +23,10 @@ class CreateTracksTable extends Migration {
 			$table->string('slug', 200)->index();
 			$table->text('description', 65535)->nullable();
 			$table->text('lyrics', 65535)->nullable();
-			$table->unsignedTinyInteger('is_vocal')->default(0);
-			$table->unsignedTinyInteger('is_explicit')->default(0);
+			$table->boolean('is_vocal')->default(0);
+			$table->boolean('is_explicit')->default(0);
 			$table->integer('cover_id')->unsigned()->nullable()->index('tracks_cover_id_foreign');
-			$table->unsignedTinyInteger('is_downloadable')->default(0);
+			$table->boolean('is_downloadable')->default(0);
 			$table->float('duration')->unsigned();
 			$table->integer('play_count')->unsigned()->default(0);
 			$table->integer('view_count')->unsigned()->default(0);
@@ -39,12 +39,12 @@ class CreateTracksTable extends Migration {
 			$table->dateTime('released_at')->nullable();
 			$table->integer('album_id')->unsigned()->nullable()->index('tracks_album_id_foreign');
 			$table->integer('track_number')->unsigned()->nullable();
-			$table->unsignedTinyInteger('is_latest')->default(0);
+			$table->boolean('is_latest')->default(0);
 			$table->string('hash', 32)->nullable();
-			$table->unsignedTinyInteger('is_listed')->default(1);
+			$table->boolean('is_listed')->default(1);
 			$table->string('source', 40)->default('direct_upload');
-			$table->text('metadata')->nullable();
-			$table->text('original_tags')->nullable();
+			$table->jsonb('metadata')->nullable();
+			$table->jsonb('original_tags')->nullable();
 		});
 	}
 

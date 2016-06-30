@@ -20,7 +20,7 @@ class CreateTrackFilesTable extends Migration {
 			$table->string('format')->index();
 			$table->timestamps();
 			$table->boolean('is_cacheable')->default(false)->index();
-			$table->boolean('status')->default(false);
+			$table->unsignedTinyInteger('status')->default(false);
 			$table->dateTime('expires_at')->nullable()->index();
 			$table->integer('filesize')->unsigned()->nullable();
 		});

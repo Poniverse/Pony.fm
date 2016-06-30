@@ -20,7 +20,7 @@ class CreateAlbumsTable extends Migration {
 			$table->string('slug')->index();
 			$table->text('description', 65535);
 			$table->integer('cover_id')->unsigned()->nullable()->index('albums_cover_id_foreign');
-			$table->integer('track_count')->unsigned();
+			$table->integer('track_count')->unsigned()->default(0);
 			$table->integer('view_count')->unsigned()->default(0);
 			$table->integer('download_count')->unsigned()->default(0);
 			$table->integer('favourite_count')->unsigned()->default(0);
