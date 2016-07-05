@@ -203,8 +203,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         return $this
             ->belongsToMany(Track::class)
             ->withPivot('position')
-            ->withTimestamps()
-            ->orderBy('position', 'asc');
+            ->withTimestamps();
+            //->orderBy('position', 'asc');
     }
 
     public function trackFiles()
@@ -227,7 +227,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     {
         return $this->hasMany(PinnedPlaylist::class);
     }
-    
+
     public function favourites():HasMany {
         return $this->hasMany(Favourite::class);
     }
