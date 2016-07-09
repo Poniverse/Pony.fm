@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateFailedJobsTable extends Migration {
+/**
+ * Class CreateFailedJobsTable2
+ *
+ * This is the PostgreSQL version of CreateFailedJobsTable.
+ */
+class CreateFailedJobsTable2 extends Migration {
 
 	/**
 	 * Run the migrations.

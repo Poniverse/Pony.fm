@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateImagesTable extends Migration {
+/**
+ * Class CreateImagesTable2
+ *
+ * This is the PostgreSQL version of CreateImagesTable.
+ */
+class CreateImagesTable2 extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -20,7 +25,7 @@ class CreateImagesTable extends Migration {
 			$table->string('extension', 32);
 			$table->integer('size');
 			$table->string('hash', 32)->index();
-			$table->integer('uploaded_by')->unsigned()->index('images_uploaded_by_foreign');
+			$table->unsignedInteger('uploaded_by')->index();
 			$table->timestamps();
 		});
 	}

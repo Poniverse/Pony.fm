@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateNewsTable extends Migration {
+/**
+ * Class CreateNewsTable2
+ *
+ * This is the PostgreSQL version of CreateNewsTable.
+ */
+class CreateNewsTable2 extends Migration {
 
 	/**
 	 * Run the migrations.

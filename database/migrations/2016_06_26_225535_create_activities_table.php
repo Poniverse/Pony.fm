@@ -17,8 +17,8 @@ class CreateActivitiesTable extends Migration {
 			$table->bigInteger('id', true)->unsigned();
 			$table->dateTime('created_at')->index();
 			$table->integer('user_id')->unsigned();
-			$table->boolean('activity_type');
-			$table->boolean('resource_type');
+			$table->unsignedTinyInteger('activity_type');
+			$table->unsignedTinyInteger('resource_type');
 			$table->integer('resource_id')->unsigned();
 		});
 	}

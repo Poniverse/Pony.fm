@@ -3,7 +3,13 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateRevisionsTable extends Migration {
+
+/**
+ * Class CreateRevisionsTable2
+ *
+ * This is the PostgreSQL version of CreateRevisionsTable.
+ */
+class CreateRevisionsTable2 extends Migration {
 
 	/**
 	 * Run the migrations.

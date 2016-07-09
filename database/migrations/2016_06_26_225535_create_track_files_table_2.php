@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTrackFilesTable extends Migration {
+/**
+ * Class CreateTrackFilesTable2
+ *
+ * This is the PostgreSQL version of CreateTrackFilesTable.
+ */
+class CreateTrackFilesTable2 extends Migration {
 
 	/**
 	 * Run the migrations.

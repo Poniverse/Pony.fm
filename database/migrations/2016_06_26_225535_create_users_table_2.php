@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateUsersTable extends Migration {
+/**
+ * Class CreateUsersTable2
+ *
+ * This is the PostgreSQL version of CreateUsersTable.
+ */
+class CreateUsersTable2 extends Migration {
 
 	/**
 	 * Run the migrations.
