@@ -56,7 +56,7 @@ self.addEventListener('activate', function (event) {
 // Basic offline mode
 // Just respond with an offline error page for now
 self.addEventListener('fetch', function(event) {
-  if (event.request.url.indexOf('stage.pony.fm') > -1 || event.request.url.indexOf('upload') > -1) {
+  if (event.request.url.indexOf('stage.pony.fm') > -1 || event.request.url.indexOf('upload' || event.request.url.indexOf('mp3') > -1) > -1) {
     // Ignore some requests
     return;
   } else {
