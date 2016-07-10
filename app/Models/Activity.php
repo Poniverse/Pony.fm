@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Poniverse\Ponyfm\Models\Activity
@@ -39,6 +40,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $text
  */
 class Activity extends Model {
+    use SoftDeletes;
+
     public $timestamps = false;
     protected $dates = ['created_at'];
     protected $fillable = ['created_at', 'user_id', 'activity_type', 'resource_type', 'resource_id'];
