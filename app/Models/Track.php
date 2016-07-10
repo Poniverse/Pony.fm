@@ -205,6 +205,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         'AAC'
     ];
 
+    public static $LosslessFormats = [
+        'FLAC',
+        'ALAC'
+    ];
+
     public static function summary()
     {
         return self::select('tracks.id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at',
@@ -628,6 +633,16 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $this->published_at != null && $this->deleted_at == null;
     }
 
+    public function isMasterLossy()
+    {
+        return is_null(
+            $this->trackFiles->where('is_master', true)
+                ->first(function ($key, $trackFile) {
+                    return in_array($trackFile->format, Track::$LosslessFormats);
+                })
+        );
+    }
+    
     public function getCoverUrl($type = Image::NORMAL)
     {
         if (!$this->hasCover()) {

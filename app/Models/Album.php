@@ -134,6 +134,18 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         return $this->morphMany(Activity::class, 'resource');
     }
 
+    public static function hasLosslessTracks(Album $album)
+    {
+        $hasLosslessTracks = false;
+        foreach ($album->tracks as $track) {
+            if (!$track->isMasterLossy()) {
+                $hasLosslessTracks = true;
+                break;
+            }
+        }
+        return $hasLosslessTracks;
+    }
+
     public static function mapPublicAlbumShow(Album $album)
     {
         $tracks = [];
@@ -142,7 +154,12 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         }
 
         $formats = [];
+        $hasLosslessTracks = Album::hasLosslessTracks($album);
         foreach (Track::$Formats as $name => $format) {
+            if (!$hasLosslessTracks && in_array($name, Track::$LosslessFormats)) {
+                continue;
+            }
+
             $formats[] = [
                 'name' => $name,
                 'extension' => $format['extension'],
@@ -151,7 +168,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
                 'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false)
             ];
         }
-
+        
         $comments = [];
         foreach ($album->comments as $comment) {
             $comments[] = Comment::mapPublic($comment);
