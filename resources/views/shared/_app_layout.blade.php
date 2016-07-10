@@ -42,22 +42,20 @@
     </script>
 
     <header>
-        <div class="mobile-header">
-          <div class="burger-wrapper" ng-click="menuToggle()">
-            <div class="burger">
-              <div class="bun-top"></div>
-              <div class="meat"></div>
-              <div class="bun-bottom"></div>
+        <div class="top-bar">
+            <div class="burger-wrapper" ng-click="menuToggle()">
+                <div class="burger">
+                    <div class="bun-top"></div>
+                    <div class="meat"></div>
+                    <div class="bun-bottom"></div>
+                </div>
             </div>
-          </div>
-          <a href="/" class="logo"><img class="default-logo" src="/images/ponyfm-logo-white.svg"><img class="small-logo" src="/images/ponyfm-logo-white-nodisc.svg"></a>
-        </div>
-        <div class="now-playing">
+            <a href="/" class="logo"><img class="default-logo" src="/images/ponyfm-logo-white.svg"><img class="small-logo" src="/images/ponyfm-logo-white-nodisc.svg"></a>
+            <pfm-search></pfm-search>
             @if (Auth::check())
                 <div class="user-details dropdown">
                     <a class="avatar dropdown-toggle" bs-dropdown href="#">
                         <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
-                        <span><i class="fa fa-chevron-down"></i></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li ui-sref-active="active"><a ui-sref="content.artist.profile({slug: auth.user.slug})">Your Profile</a></li>
@@ -71,6 +69,8 @@
                     <div class="counter" ng-class="{'show': nCount > 0}">@{{ nCountFormatted }}</div>
                 </div>
             @endif
+        </div>
+        <div class="now-playing">
             <pfm-player></pfm-player>
         </div>
     </header>
@@ -80,7 +80,6 @@
             <a href="/">
               <img src="/images/ponyfm-logo-white.svg" class="logo">
             </a>
-            <li><pfm-search class="hidden-xs"></pfm-search></li>
             <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a ui-sref="content.tracks.list">Tracks</a></li>
             <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a ui-sref="content.albums.list">Albums</a></li>
             <li ng-class="{selected: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a ui-sref="content.playlists.list">Playlists</a></li>

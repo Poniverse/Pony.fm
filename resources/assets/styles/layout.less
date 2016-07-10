@@ -36,27 +36,26 @@ header {
 
   .user-details {
     float: right;
-    margin-right: 10px;
+    margin-right: 20px;
     margin-top: 9px;
+    position: absolute;
+    top: 0;
+    right: 0;
 
     .avatar {
-      .img-thumbnail();
-
       display: block;
       float: right;
-      padding: 2px;
       cursor: pointer;
       text-decoration: none;
+      border-radius: 22px;
+      box-shadow: 0 0 0 transparent;
+      transition: box-shadow 0.3s @swift-ease-out;
 
-      &:hover, &:focus {
-        background: #ddd;
-        color: darken(@pfm-purple, 20%);
+      &:hover {
+        .light-material-shadow(1);
       }
-
-      span {
-        font-weight: bold;
-        display: inline-block;
-        padding: 0px 3px;
+      &:focus {
+        .light-material-shadow(2);
       }
     }
 
@@ -65,18 +64,10 @@ header {
       right: 0px;
     }
 
-    .name {
-      float: left;
-      height: 44px;
-      line-height: 44px;
-      padding-right: 10px;
-      font-weight: bold;
-      font-size: 12pt;
-    }
-
     img {
-      height: 40px;
-      width: 40px;
+      height: 44px;
+      width: 44px;
+      border-radius: 22px;
     }
   }
 }
@@ -85,9 +76,12 @@ header {
   margin-left: @pfm-sidebar-size;
   height: 64px;
   background: #fff;
-  position: relative;
-  z-index: 500;
   border-bottom: 1px solid #bcbcbc;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  z-index: 1010;
+  box-shadow: 0 0 8px rgba(0,0,0,0.5);
 }
 
 .sidebar {
@@ -97,7 +91,7 @@ header {
     width: (@pfm-sidebar-size);
     height: 64px;
     line-height: 42px;
-    background: #84528A;
+    background: @pfm-logo-purple;
     color: #fff;
     font-size: 24pt;
     font-weight: lighter;
@@ -107,7 +101,7 @@ header {
     position: relative;
 
     &:hover {
-      background: darken(#84528A, 25%);
+      background: darken(@pfm-logo-purple, 15%);
       color: #fff;
       text-decoration: none;
     }
@@ -130,6 +124,7 @@ header {
   position: absolute;
   bottom: 0;
   left: 0;
+  .material-shadow(3);
 
   li {
     margin: 0px;
@@ -242,15 +237,19 @@ header {
 }
 
 .site-content {
-  overflow: hidden;
-  margin-left: @pfm-sidebar-size;
-  background: #fff;
-  height: 100%;
-  z-index: 100;
+    overflow: hidden;
+    margin-left: @pfm-sidebar-size;
+    background: #fff;
+    height: 100%;
+    z-index: 100;
+}
+
+.site-body {
+    margin-top: @pfm-top-bar-size;
 }
 
 .file-over-notice {
-  display: none;
+    display: none;
 }
 
 .chart-container {
@@ -261,14 +260,25 @@ header {
     margin-bottom: 10px;
 }
 
-.mobile-header {
-  display: none;
-}
-
-.burger-wrapper {
-    top:20px;
-    left: 20px;
+.top-bar {
+    display: block;
     position: absolute;
+    z-index: 599;
+    background: @pfm-logo-purple;
+    height: @pfm-top-bar-size;
+    width: 100%;
+    top: 0;
+
+    .burger-wrapper {
+        top:20px;
+        left: 20px;
+        position: absolute;
+        display: none;
+    }
+
+    .logo {
+        display: none;
+    }
 }
 
 .burger {

@@ -19,34 +19,28 @@
 
   .site-body {
     overflow-x: hidden;
+    margin-top: 64px + 44px;
   }
 
   .now-playing {
-    margin-left: 0px;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    z-index: 1010;
-    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    margin-left: 0;
   }
 
   .user-details {
     position: fixed;
     top: 0;
-    right: 0;
+    right: 0 !important;
     z-index: 1002;
-    margin-right: 10px;
+    margin-right: 10px !important;
     margin-top: 10px;
   }
 
-  .mobile-header {
-    display: block !important;
-    position: absolute;
-    z-index: 1001;
-    background: #84528A;
-    height: 64px;
-    width: 100%;
-    top: 0;
+  .top-bar {
+    margin-left: 0;
+
+    .burger-wrapper {
+      display: block;
+    }
 
     .logo {
       text-align: center;
@@ -65,7 +59,7 @@
   }
 
   .sidebar {
-    left: -170px;
+    left: -(@pfm-sidebar-size + 10);
     transform: translateX(0px) translateZ(0);
     perspective: 1000;
     backface-visibility: hidden;
@@ -94,22 +88,21 @@
     }
 
     &.active {
-      transform: translateX(170px) translateZ(0);
+      transform: translateX(@pfm-sidebar-size + 10) translateZ(0);
     }
   }
 
-  .user-details > .avatar {
-    border: 0 !important;
-    box-shadow: initial !important;
-    background: transparent !important;
+  .search {
+    width: 100%;
+    margin-top: 14px;
+  }
 
-    > img {
-      border-radius: 20px;
-    }
+  input.search-input {
+    border-radius: 0;
+  }
 
-    > span {
-      display: none !important;
-    }
+  .search-results {
+    width: 100%;
   }
 
   .track-player {
@@ -143,10 +136,6 @@
         border-radius: 0px;
       }
     }
-  }
-
-  input.search-input {
-    border: 0;
   }
 
   .dropdowns {
@@ -299,9 +288,9 @@
   .notification-menu {
     position: fixed;
     top: 0;
-    right: 54px;
+    right: 54px !important;
     margin-top: 13px;
-    margin-right: 10px;
+    margin-right: 10px !important;
 
     a, a:active, a:hover, a:focus {
       color: #fff;
@@ -405,7 +394,7 @@
     margin-top: 13px;
   }
 
-  .mobile-header .logo {
+  .top-bar .logo {
     margin-left: 55px;
     height: 52px;
     width: 122px;
