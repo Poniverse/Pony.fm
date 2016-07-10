@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,7 +51,6 @@ use Poniverse\Ponyfm\Contracts\Commentable;
  */
 class Comment extends Model
 {
-
     use SoftDeletes;
 
     protected $table = 'comments';
@@ -130,5 +130,12 @@ class Comment extends Model
                 }
             }
         }
+    }
+
+    public function delete() {
+        DB::transaction(function () {
+            $this->activities()->delete();
+            parent::delete();
+        });
     }
 }

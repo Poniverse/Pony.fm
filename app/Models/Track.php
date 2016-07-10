@@ -880,6 +880,12 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return 'track-'.$this->id.'-'.$key;
     }
 
+    public function delete() {
+        DB::transaction(function () {
+            $this->activities()->delete();
+            parent::delete();
+        });
+    }
 
     /**
      * @inheritdoc

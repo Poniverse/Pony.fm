@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use DB;
 use Exception;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
@@ -377,6 +378,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     /**
      * @param string $key
+     * @return string
      */
     public function getCacheKey($key)
     {
@@ -392,6 +394,13 @@ class Album extends Model implements Searchable, Commentable, Favouritable
     public function save(array $options = []) {
         $this->recountTracks();
         return parent::save($options);
+    }
+
+    public function delete() {
+        DB::transaction(function () {
+            $this->activities()->delete();
+            parent::delete();
+        });
     }
 
     protected function recountTracks() {

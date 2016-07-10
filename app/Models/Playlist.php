@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use DB;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -292,6 +293,13 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     private function getCacheKey($key)
     {
         return 'playlist-'.$this->id.'-'.$key;
+    }
+
+    public function delete() {
+        DB::transaction(function () {
+            $this->activities()->delete();
+            parent::delete();
+        });
     }
 
     /**
