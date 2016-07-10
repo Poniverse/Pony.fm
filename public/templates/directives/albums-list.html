@@ -1,7 +1,7 @@
 <ul class="albums-listing {{::class}}">
     <li ng-repeat="album in albums track by album.id">
         <a ng-href="{{::album.url}}">
-            <img class="image" pfm-src-loader="::album.covers.small" pfm-src-size="small" />
+            <img class="image" pfm-src-loader="::album.covers.normal" pfm-src-size="normal" />
             <span class="info">
             <span class="title">{{::album.title}}</span>
             <span class="published">
