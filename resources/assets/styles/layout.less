@@ -70,12 +70,12 @@ header {
 }
 
 .now-playing {
-  margin-left: @pfm-sidebar-size;
   height: 64px;
   background: #fff;
   border-bottom: 1px solid #bcbcbc;
   position: fixed;
-  width: 100%;
+  width: ~"calc(100% - 180px)";
+  right: 0;
   bottom: 0;
   z-index: 1010;
   box-shadow: 0 0 6px rgba(0,0,0,0.3);
