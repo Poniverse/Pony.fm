@@ -37,6 +37,7 @@
 
   .top-bar {
     margin-left: 0;
+    box-shadow: 0 0 0 transparent;
 
     .burger-wrapper {
       display: block;
@@ -103,11 +104,17 @@
 
   .search-results {
     width: 100%;
+
+    .-column1, .-column2 {
+      padding: 0;
+      width: 100%;
+      float: none;
+      clear: both;
+    }
   }
 
   .track-player {
     margin-right: 0px !important;
-    padding: 5px 10px;
 
     .inner {
       margin-left: 0px !important;
@@ -118,19 +125,33 @@
     }
 
     .buttons {
+      margin-top: 15px;
+      margin-right: 5px;
+
       li.volume, li.status  {
         display: none;
+      }
+
+      li {
+        font-size: 20px;
+        a {
+          width: 40px;
+        }
       }
     }
 
     .song, .artist {
       margin-bottom: 4px;
+      margin-left: 5px;
     }
 
     .transport {
       border-radius: 0px !important;
       margin-top: 4px;
       height: 10px;
+      left: 0;
+      width: 100%;
+      bottom: 55px;
 
       .bar, .loader-bar {
         border-radius: 0px;
@@ -342,10 +363,10 @@
       background: #84528a;
       top: 64px;
       left: 0;
-      height: 41px;
+      height: 44px;
       width: 100%;
       border-bottom: 0;
-      z-index: 100;
+      z-index: 600;
 
       li {
         a {
@@ -361,10 +382,6 @@
         }
       }
     }
-  }
-
-  .fixed-tabs {
-    padding-top: 41px;
   }
 
   .secondary-content {

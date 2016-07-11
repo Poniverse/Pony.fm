@@ -21,45 +21,44 @@
 
 body.is-logged {
   .track-player {
-    margin-right: 130px;
+    margin-right: @pfm-sidebar-size;
   }
 }
 
 .track-player {
-  padding: 10px;
+  padding: 0;
 
   .image {
     float: left;
-    width: 43px;
-    height: 43px;
+    width: 64px;
+    height: 64px;
     position: relative;
     overflow: hidden;
-    padding: 1px;
 
     img {
       .box-shadow(none);
 
       display: block;
-      width: 40px;
-      height: 40px;
+      width: 64px;
+      height: 64px;
       padding: 0px;
-      border: 1px solid #bcbcbc;
     }
 
     .loader {
-      .transition(top 250ms linear);
+      .transition(top 250ms @swift-ease-out);
 
       z-index: 1000;
       background: rgba(0, 0, 0, .6);
       color: #fff;
       position: absolute;
-      top: -50px;
-      left: 2px;
-      width: 42px;
-      height: 42px;
-      line-height: 43px;
+      top: -64px;
+      left: 0;
+      width: 64px;
+      height: 66px;
+      line-height: 65px;
       text-align: center;
       font-size: 16px;
+      margin-top: -2px;
 
       &.showing {
         top: 2px;
@@ -68,13 +67,14 @@ body.is-logged {
   }
 
   .inner {
-    margin-left: 55px;
+    margin-left: 75px;
   }
 
   .song, .artist {
     .ellipsis();
     line-height: normal;
     display: block;
+    font-size: 17px;
 
     a {
       color: #555;
@@ -88,6 +88,7 @@ body.is-logged {
 
   .song {
     font-weight: bold;
+    padding-top: 12px;
   }
 
   .volume-slider {
@@ -97,13 +98,14 @@ body.is-logged {
   }
 
   .transport {
-    .border-radius(4px);
-
     background: #aaa;
     height: 5px;
-    position: relative;
+    position: absolute;
     cursor: pointer;
-    margin-top: 4px;
+    bottom: 58px;
+    left: 64px;
+    width: 100%;
+    width: ~"calc(100% - 244px)";
 
     .bar {
       z-index: 500;
@@ -116,8 +118,6 @@ body.is-logged {
     }
 
     .bar, .loader-bar {
-      .border-radius(4px);
-
       position: absolute;
       top: 0px;
       left: 0px;
@@ -130,9 +130,10 @@ body.is-logged {
     margin: 0px;
     padding: 0px;
     float: right;
+    margin-top: 12px;
 
     li.status {
-      font-size: 10pt;
+      font-size: 14px;
       margin-top: 12px;
       margin-right: 5px;
 
@@ -146,15 +147,16 @@ body.is-logged {
       float: left;
       margin: 0px;
       padding: 0px;
-      font-size: 15pt;
+      font-size: 24px;
 
       > a {
         display: block;
-        padding: 5px 0px;
-        width: 40px;
+        padding: 6px 0px;
+        width: 44px;
         text-align: center;
         color: #5A5A5A;
         text-decoration: none !important;
+        .border-radius(22px);
 
         &:hover {
           text-decoration: none;
@@ -188,12 +190,16 @@ body.is-logged {
       &.volume {
         position: relative;
 
+        > a {
+          .border-radius(0);
+        }
+
         .volume-slider {
           display: none;
           z-index: 1000;
           position: absolute;
           left: 0px;
-          top: 33px;
+          bottom: 44px;
           width: 100%;
           height: 150px;
           background: #ddd;
