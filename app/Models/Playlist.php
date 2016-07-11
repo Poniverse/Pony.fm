@@ -127,7 +127,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
                 'extension' => $format['extension'],
                 'url' => $playlist->getDownloadUrl($name),
                 'size' => Helpers::formatBytes($playlist->getFilesize($name)),
-                'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false)
+                'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false),
+                'isMixedLosslessness' => (in_array($name, Track::$LosslessFormats) && !$playlist->hasLosslessTracksOnly() && $playlist->hasLosslessTracks())
             ];
         }
 

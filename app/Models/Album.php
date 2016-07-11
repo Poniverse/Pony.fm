@@ -152,7 +152,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
                 'extension' => $format['extension'],
                 'url' => $album->getDownloadUrl($name),
                 'size' => Helpers::formatBytes($album->getFilesize($name)),
-                'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false)
+                'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false),
+                'isMixedLosslessness' => (in_array($name, Track::$LosslessFormats) && !$album->hasLosslessTracksOnly() && $album->hasLosslessTracks())
             ];
         }
         

@@ -37,10 +37,16 @@ module.exports = angular.module('ponyfm').controller 'playlist', [
                 controller: ['$scope', ($scope) -> $scope.playlist = playlist; $scope.close = () -> dialog.close()],
                 show: true
 
+        $scope.checkMixedLosslessness = (format) ->
+            if format.isMixedLosslessness == true
+                $scope.format = format
+                $modal({scope: $scope, templateUrl: 'templates/partials/collection-mixed-losslessness-dialog.html', show: true})
+
+            
         $scope.getCachedPlaylist = (id, format) ->
             $scope.isInProgress = true
 
-            cachedPlaylist.download('playlists', id, format).then (response) ->
+            cachedPlaylist.download('playlists', id, format.name).then (response) ->
                 $scope.playlistUrl = response
                 if $scope.playlistUrl == 'error'
                     $scope.isInProgress = false
@@ -53,4 +59,5 @@ module.exports = angular.module('ponyfm').controller 'playlist', [
                 else
                     $scope.isInProgress = false
                     $window.open $scope.playlistUrl
+                    $scope.checkMixedLosslessness(format)
 ]
