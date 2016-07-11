@@ -51,6 +51,12 @@
       margin: 0px;
     }
 
+    > .btn {
+      text-transform: initial;
+      box-shadow: 0 0 0 transparent !important;
+      transition: background-color 0.3s @swift-ease-in-out;
+    }
+
     &.has-filter {
       > .btn {
         background: @pfm-purple;
@@ -216,13 +222,39 @@ ui-view {
 
 html body {
   .btn {
-    .border-radius(0px);
+    .material-shadow(1);
+    .border-radius(3px);
+    border:0;
+    transition: all 0.3s @swift-ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    outline: 0;
+
+    &:hover {
+      .material-shadow(2);
+    }
+
+    &.btn-flat {
+      box-shadow: 0 0 0 transparent !important;
+    }
   }
 
   .btn.btn-primary, .add-btn, .btn-success {
     background: @pfm-purple;
     border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25);
     color: #fff;
+    &:hover {
+      background-color: darken(@pfm-purple, 15%);
+    }
+
+    &.btn-flat {
+      background-color: transparent;
+      color: @pfm-purple;
+      &:hover {
+        background-color: lighten(@pfm-purple, 30%);
+        color: darken(@pfm-purple, 15%);
+      }
+    }
   }
 
   .btn-success.disabled {
