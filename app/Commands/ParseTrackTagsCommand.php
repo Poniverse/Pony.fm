@@ -95,8 +95,28 @@ class ParseTrackTagsCommand extends CommandBase
         $this->track->is_downloadable = $this->input['is_downloadable'] ?? true;
         $this->track->is_listed       = $this->input['is_listed'] ?? true;
 
+        $this->track = $this->unsetNullVariables($this->track);
+
         $this->track->save();
         return CommandResponse::succeed();
+    }
+
+    /**
+     * If a value is null, remove it! Helps prevent weird SQL errors
+     *
+     * @param Track
+     * @return Track
+    */
+    private function unsetNullVariables($track) {
+        $vars = $track->getAttributes();
+
+        foreach ($vars as $key => $value) {
+            if ($value == null) {
+                unset($track->{"$key"});
+            }
+        }
+
+        return $track;
     }
 
     /**
