@@ -90,8 +90,19 @@ input.search-input {
   }
 
   .albums-listing, .playlists-listing, .users-listing {
+    width: 100% !important;
+
     li {
-      width: 100%;
+      width: 98%;
+      a img {
+        width: 60px;
+        float: left;
+      }
+
+      .info {
+        margin-left: 60px;
+        padding: 2px 5px;
+      }
     }
   }
 }
