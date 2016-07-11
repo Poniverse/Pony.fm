@@ -293,9 +293,10 @@
 
   .notification-pullout {
     left: 0;
+    top: 108px;
     width: 100%;
-    height: ~"calc(100% - 128px)";
-    transform: translateY(-105%) translateZ(0);
+    height: ~"calc(100% - 172px)";
+    transform: translateY(-120%) translateZ(0);
 
     &.active {
       transform: translateY(0) translateZ(0);
@@ -387,10 +388,6 @@
   .secondary-content {
     margin-top: 5px;
   }
-
-  .albums-listing {
-    width: 50% !important;
-  }
 }
 
 // Super small phones like the iPhone 5
@@ -435,6 +432,9 @@
     width: 100% !important;
 
     li {
+      width: 97% !important;
+      margin: 5px;
+
       a img {
         width: 60px;
         float: left;
