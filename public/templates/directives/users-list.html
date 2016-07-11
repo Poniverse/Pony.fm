@@ -1,7 +1,7 @@
 <ul class="users-listing">
     <li class="artist" ng-class="{'x-archived': user.is_archived}" ng-repeat="user in users track by user.id">
         <a ng-href="{{::user.url}}">
-            <img class="image" pfm-src-loader="user.avatars.small" pfm-src-size="small" />
+            <img class="image" pfm-src-loader="user.avatars.normal" pfm-src-size="normal" />
             <span class="info">
                 <span class="title">{{::user.name}}</span>
                 <span ng-hide="user.is_archived" class="published">

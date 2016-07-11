@@ -414,8 +414,20 @@
     left: 16px;
   }
 
-  .albums-listing {
+  .albums-listing, .playlists-listing, .users-listing {
     width: 100% !important;
+
+    li {
+      a img {
+        width: 60px;
+        float: left;
+      }
+
+      .info {
+        margin-left: 60px;
+        padding: 2px 5px;
+      }
+    }
   }
 }
 

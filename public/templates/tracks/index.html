@@ -1,5 +1,5 @@
 <ul class="dropdowns">
-    <li class="dropdown" ng-class="{'has-filter': query.filters.trackTypes.selectedArray.length}">
+    <li class="dropdown filterable" ng-class="{'has-filter': query.filters.trackTypes.selectedArray.length}">
         <a class="dropdown-toggle btn btn-default" bs-dropdown>
             Type: <strong>{{query.filters.trackTypes.title}}</strong>
         </a>
@@ -13,7 +13,7 @@
             </li>
         </ul>
     </li>
-    <li class="dropdown" ng-class="{'has-filter': query.filters.showSongs.selectedArray.length}">
+    <li class="dropdown filterable" ng-class="{'has-filter': query.filters.showSongs.selectedArray.length}">
         <a class="dropdown-toggle btn btn-default" bs-dropdown>
             Show Songs: <strong>{{query.filters.showSongs.title}}</strong>
         </a>
@@ -27,7 +27,7 @@
             </li>
         </ul>
     </li>
-    <li class="dropdown" ng-class="{'has-filter': query.filters.genres.selectedArray.length}">
+    <li class="dropdown filterable" ng-class="{'has-filter': query.filters.genres.selectedArray.length}">
         <a class="dropdown-toggle btn btn-default" bs-dropdown>
             Genre: <strong>{{query.filters.genres.title}}</strong>
         </a>
@@ -39,7 +39,7 @@
             </li>
         </ul>
     </li>
-    <li class="dropdown" ng-class="{'has-filter': !query.filters.isVocal.isDefault}">
+    <li class="dropdown filterable" ng-class="{'has-filter': !query.filters.isVocal.isDefault}">
         <a class="dropdown-toggle btn btn-default" bs-dropdown>
             Is Vocal: <strong>{{query.filters.isVocal.title}}</strong>
         </a>
@@ -52,7 +52,7 @@
             </li>
         </ul>
     </li>
-    <li class="dropdown" ng-class="{'has-filter': !query.filters.sort.isDefault}">
+    <li class="dropdown filterable" ng-class="{'has-filter': !query.filters.sort.isDefault}">
         <a class="dropdown-toggle btn btn-default" bs-dropdown>
             Order: <strong>{{query.filters.sort.title}}</strong>
         </a>

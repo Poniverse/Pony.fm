@@ -76,11 +76,16 @@
       > .btn {
         background: @pfm-purple;
         color: #fff;
-        border-radius: 0 15px 15px 0;
       }
 
-      > .dropdown-toggle {
-        border-radius: 15px 0 0 15px;
+      &.filterable {
+        > .btn {
+          border-radius: 0 15px 15px 0;
+        }
+
+        > .dropdown-toggle {
+          border-radius: 15px 0 0 15px;
+        }
       }
 
       .dropdown-menu {
