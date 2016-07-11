@@ -41,6 +41,7 @@
     > .btn {
       float: left;
       display: block;
+      border-radius: 15px;
     }
 
     > .btn + .btn {
@@ -54,6 +55,11 @@
       > .btn {
         background: @pfm-purple;
         color: #fff;
+        border-radius: 0 15px 15px 0;
+      }
+
+      > .dropdown-toggle {
+        border-radius: 15px 0 0 15px;
       }
 
       > .btn + .btn {
@@ -70,13 +76,18 @@
       > .btn {
         background: @pfm-purple;
         color: #fff;
+        border-radius: 0 15px 15px 0;
+      }
+
+      > .dropdown-toggle {
+        border-radius: 15px 0 0 15px;
       }
 
       .dropdown-menu {
-        .box-shadow(none);
-
+        .material-shadow(2);
         margin: 0px;
-        border: 2px solid @pfm-purple;
+        border: 0;
+        border-radius: 2px;
 
         li.selected {
           a {
@@ -96,7 +107,7 @@
 
     > .btn {
       border: none;
-      background: #eee;
+      background: #e0e0e0;
       font-size: 8pt;
       padding: 5px 7px;
       text-shadow: none;
@@ -247,21 +258,21 @@ html .dropdown-menu {
     margin: 0px;
 
     > a {
-      padding: 6px 10px;
-      font-size: 8pt;
+      padding: 8px 10px;
+      font-size: 10pt;
     }
 
     > .dont-close {
       float: right;
       display: block;
-      width: 24px;
+      width: 30px;
       text-align: center;
-      padding: 3px 3px;
+      padding: 8px 6px;
       font-size: 10pt;
     }
 
     > .dont-close + a {
-      margin-right: 24px;
+      margin-right: 30px;
       clear: none;
     }
 
