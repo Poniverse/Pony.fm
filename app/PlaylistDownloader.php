@@ -21,6 +21,7 @@
 namespace Poniverse\Ponyfm;
 
 use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\Track;
 use ZipStream;
 
 class PlaylistDownloader
@@ -43,6 +44,11 @@ class PlaylistDownloader
 
     public function download()
     {
+        // Check whether the format is lossless yet not all master files are lossless
+        $isLosslessFormatWithLossyTracks =  in_array($this->_format, Track::$LosslessFormats) 
+            && !$this->_playlist->hasLosslessTracksOnly()
+            && $this->_playlist->hasLosslessTracks();
+
         $zip = new ZipStream($this->_playlist->user->display_name.' - '.$this->_playlist->title.'.zip');
         $zip->setComment(
             'Playlist: '.$this->_playlist->title."\r\n".
@@ -69,8 +75,15 @@ class PlaylistDownloader
                 continue;
             }
 
-            $trackTarget = $track->downloadDirectory.'/'.$track->getDownloadFilenameFor($this->_format);
-            $zip->addLargeFile($track->getFileFor($this->_format), $trackTarget);
+            if ($isLosslessFormatWithLossyTracks && $track->isMasterLossy()) {
+                $masterFormatName = $track->getMasterFormatName();
+                $trackTarget = $track->downloadDirectory . '/' . $track->getDownloadFilenameFor($masterFormatName);
+                $zip->addLargeFile($track->getFileFor($masterFormatName), $trackTarget);
+            } else {
+                $trackTarget = $track->downloadDirectory . '/' . $track->getDownloadFilenameFor($this->_format);
+                $zip->addLargeFile($track->getFileFor($this->_format), $trackTarget);
+            }
+            
             $notes .=
                 $index.'. '.$track->title."\r\n".
                 $track->description."\r\n".

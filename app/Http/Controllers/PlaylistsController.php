@@ -62,7 +62,7 @@ class PlaylistsController extends Controller
 
     public function getDownload($id, $extension)
     {
-        $playlist = Playlist::with('tracks', 'user', 'tracks.album')->find($id);
+        $playlist = Playlist::with('tracks', 'tracks.trackFiles', 'user', 'tracks.album')->find($id);
         if (!$playlist || (!$playlist->is_public && !Auth::check()) || (!$playlist->is_public && ($playlist->user_id !== Auth::user()->id))) {
             App::abort(404);
         }
@@ -79,6 +79,10 @@ class PlaylistsController extends Controller
         }
 
         if ($format == null) {
+            App::abort(404);
+        }
+
+        if (!$playlist->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
             App::abort(404);
         }
 

@@ -6,11 +6,11 @@
             </a>
             <ul class="dropdown-menu">
                 <li ng-repeat="format in ::playlist.formats" ng-hide="isInProgress">
-                    <a target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
+                    <a target="_blank" ng-if="::!format.isCacheable" ng-click="checkMixedLosslessness(format);" ng-href="{{::format.url}}">
                         <span>{{::format.name}}</span>
                         <small>({{::format.size}})</small>
                     </a>
-                    <a ng-if="::format.isCacheable" ng-click="getCachedPlaylist(playlist.id, format.name);" href="">
+                    <a ng-if="::format.isCacheable" ng-click="getCachedPlaylist(playlist.id, format);" href="">
                         <span>{{::format.name}}</span>
                         <small>({{::format.size}})</small>
                     </a>

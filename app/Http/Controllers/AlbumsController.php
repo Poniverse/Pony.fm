@@ -61,7 +61,7 @@ class AlbumsController extends Controller
 
     public function getDownload($id, $extension)
     {
-        $album = Album::with('tracks', 'user')->find($id);
+        $album = Album::with('tracks', 'tracks.trackFiles', 'user')->find($id);
         if (!$album) {
             App::abort(404);
         }
@@ -78,6 +78,10 @@ class AlbumsController extends Controller
         }
 
         if ($format == null) {
+            App::abort(404);
+        }
+
+        if (!$album->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
             App::abort(404);
         }
 

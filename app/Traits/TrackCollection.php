@@ -24,8 +24,11 @@ namespace Poniverse\Ponyfm\Traits;
 
 use File;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Cache;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
+use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackFile;
 
 
@@ -122,5 +125,87 @@ trait TrackCollection
                 $query->where('is_downloadable', true);
             }
         ])->where('format', $format)->get();
+    }
+
+    /**
+     * Returns a boolean based on whether at least one (@link TrackFile)
+     * for this (@link TrackCollection)'s tracks has a lossless master file.
+     *
+     * @return bool
+     */
+    public function hasLosslessTracks() : bool
+    {
+        $hasLosslessTracks = false;
+        foreach ($this->tracks as $track) {
+            if (!$track->isMasterLossy()) {
+                $hasLosslessTracks = true;
+                break;
+            }
+        }
+        return $hasLosslessTracks;  
+    }
+
+    /**
+     * Returns a boolean based on whether all (@link TrackFile)s
+     * for this (@link TrackCollection)'s tracks have lossless master files.
+     *
+     * @return bool
+     */
+    public function hasLosslessTracksOnly() : bool 
+    {
+        $hasLosslessTracksOnly = true;
+        foreach ($this->tracks as $track) {
+            if ($track->isMasterLossy()) {
+                $hasLosslessTracksOnly = false;
+                break;
+            }
+        }
+        return $hasLosslessTracksOnly;
+    }
+
+    /**
+     * Gets the filesize in bytes for a (@link Album) or (@link Playlist) based on a format.
+     *
+     * @param $format
+     * @return int
+     */
+    public function getFilesize($format) : int
+    {
+        $tracks = $this->tracks;
+        if (!count($tracks)) {
+            return 0;
+        }
+
+        return Cache::remember($this->getCacheKey('filesize-'.$format), 1440, function() use ($tracks, $format) {
+            $size = 0;
+
+            // Check whether the format is lossless yet not all master files are lossless
+            $isLosslessFormatWithLossyTracks =  in_array($format, Track::$LosslessFormats) 
+                && !$this->hasLosslessTracksOnly()
+                && $this->hasLosslessTracks();
+            
+            foreach ($tracks as $track) {
+                /** @var $track Track */
+
+                // Ensure that only downloadable tracks are added onto the file size
+                if (!$track->is_downloadable) {
+                    continue;
+                }
+
+                try {
+                    // Get the file size corresponding to the losslessness of the track master file and format specified
+                    if ($isLosslessFormatWithLossyTracks && $track->isMasterLossy()) {
+                        $size += $track->getFilesize($track->getMasterFormatName());
+                    } else {
+                        $size += $track->getFilesize($format);
+                    }
+
+                } catch (TrackFileNotFoundException $e) {
+                    // do nothing - this track won't be included in the download
+                }
+            }
+
+            return $size;
+        });
     }
 }

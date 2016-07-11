@@ -185,4 +185,9 @@ class TrackFile extends Model
 
         return $this->filesize;
     }
+
+    public function isLossy() : bool
+    {
+        return !in_array($this->format, Track::$LosslessFormats);
+    }
 }

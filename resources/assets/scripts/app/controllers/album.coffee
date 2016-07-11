@@ -43,10 +43,16 @@ module.exports = angular.module('ponyfm').controller "album", [
             playlists.refreshOwned().done (lists) ->
                 $scope.playlists.push list for list in lists
 
+        $scope.checkMixedLosslessness = (format) ->
+            if format.isMixedLosslessness == true
+                $scope.format = format
+                $modal({scope: $scope, templateUrl: 'templates/partials/collection-mixed-losslessness-dialog.html', show: true})
+
+
         $scope.getCachedAlbum = (id, format) ->
             $scope.isInProgress = true
 
-            cachedAlbum.download('albums', id, format).then (response) ->
+            cachedAlbum.download('albums', id, format.name).then (response) ->
                 $scope.albumUrl = response
                 if $scope.albumUrl == 'error'
                     $scope.isInProgress = false
@@ -59,4 +65,5 @@ module.exports = angular.module('ponyfm').controller "album", [
                 else
                     $scope.isInProgress = false
                     $window.open $scope.albumUrl
+                    $scope.checkMixedLosslessness(format)
 ]

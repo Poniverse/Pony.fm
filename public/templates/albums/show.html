@@ -6,11 +6,11 @@
             </a>
             <ul class="dropdown-menu" ng-show="::album.is_downloadable == 1">
                 <li ng-repeat="format in ::album.formats" ng-hide="isInProgress">
-                    <a target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
+                    <a target="_blank" ng-if="::!format.isCacheable" ng-click="checkMixedLosslessness(format);" ng-href="{{::format.url}}">
                         <span>{{::format.name}}</span>
                         <small>({{::format.size}})</small>
                     </a>
-                    <a ng-if="::format.isCacheable" ng-click="getCachedAlbum(album.id, format.name);" href="">
+                    <a ng-if="::format.isCacheable" ng-click="getCachedAlbum(album.id, format);" href="">
                         <span>{{::format.name}}</span>
                         <small>({{::format.size}})</small>
                     </a>
