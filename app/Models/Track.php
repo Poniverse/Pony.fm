@@ -639,6 +639,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $this->trackFiles->where('is_master', true)->first();
     }
 
+    public function getMasterFormatName() : string
+    {
+        return $this->getMasterTrackFile()->format;
+    }
+
     public function isMasterLossy() : bool
     {
         return $this->getMasterTrackFile()->isLossy();

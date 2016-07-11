@@ -117,9 +117,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         }
 
         $formats = [];
-        $hasLosslessTracks = $playlist->hasLosslessTracksOnly();
         foreach (Track::$Formats as $name => $format) {
-            if (!$hasLosslessTracks && in_array($name, Track::$LosslessFormats)) {
+            if (in_array($name, Track::$LosslessFormats) && !$playlist->hasLosslessTracksOnly() && !$playlist->hasLosslessTracks()) {
                 continue;
             }
             
@@ -270,33 +269,6 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     public function getDownloadUrl($format)
     {
         return action('PlaylistsController@getDownload', ['id' => $this->id, 'format' => Track::$Formats[$format]['extension']]);
-    }
-
-    public function getFilesize($format)
-    {
-        $tracks = $this->tracks;
-        if (!count($tracks)) {
-            return 0;
-        }
-
-        return Cache::remember($this->getCacheKey('filesize-'.$format), 1440, function() use ($tracks, $format) {
-            $size = 0;
-            foreach ($tracks as $track) {
-                /** @var $track Track */
-
-                // Ensure that only downloadable tracks are added onto the file size
-                if ($track->is_downloadable == 1) {
-                    try {
-                        $size += $track->getFilesize($format);
-
-                    } catch (TrackFileNotFoundException $e) {
-                        // do nothing - this track won't be included in the download
-                    }
-                }
-            }
-
-            return $size;
-        });
     }
 
     public function getCoverUrl($type = Image::NORMAL)
