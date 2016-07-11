@@ -33,17 +33,17 @@ use Carbon\Carbon;
 class StatsController extends ApiControllerBase
 {
     private function getStatsData($id, $hourly = false) {
-        $playRange = "1 MONTH";
+        $playRange = "'1 MONTH'";
 
         if ($hourly) {
-            $playRange = "2 DAY";
+            $playRange = "'2 DAY'";
         }
 
         $statQuery = DB::table('resource_log_items')
-            ->selectRaw('created_at, COUNT(1) AS `plays`')
+            ->selectRaw('created_at, COUNT(1) AS "plays"')
             ->where('track_id', '=', $id)
             ->where('log_type', '=', ResourceLogItem::PLAY)
-            ->whereRaw('`created_at` > now() - INTERVAL '.$playRange)
+            ->whereRaw('"created_at" > now() - INTERVAL '.$playRange)
             ->groupBy('created_at')
             ->orderBy('created_at')
             ->get();
