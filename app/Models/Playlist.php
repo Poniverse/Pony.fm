@@ -107,18 +107,6 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         return !$query;
     }
 
-    public static function hasLosslessTracks(Playlist $playlist)
-    {
-        $hasLosslessTracks = false;
-        foreach ($playlist->tracks as $track) {
-            if (!$track->isMasterLossy()) {
-                $hasLosslessTracks = true;
-                break;
-            }
-        }
-        return $hasLosslessTracks;
-    }
-
     public static function mapPublicPlaylistShow(Playlist $playlist)
     {
         $tracks = [];
@@ -129,7 +117,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         }
 
         $formats = [];
-        $hasLosslessTracks = Playlist::hasLosslessTracks($playlist);
+        $hasLosslessTracks = $playlist->hasLosslessTracksOnly();
         foreach (Track::$Formats as $name => $format) {
             if (!$hasLosslessTracks && in_array($name, Track::$LosslessFormats)) {
                 continue;

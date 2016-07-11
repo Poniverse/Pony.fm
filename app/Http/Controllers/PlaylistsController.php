@@ -82,7 +82,7 @@ class PlaylistsController extends Controller
             App::abort(404);
         }
 
-        if (!Playlist::hasLosslessTracks($playlist) && in_array($formatName, Track::$LosslessFormats)) {
+        if (!$this->hasLosslessTracksOnly() && in_array($formatName, Track::$LosslessFormats)) {
             App::abort(404);
         }
 

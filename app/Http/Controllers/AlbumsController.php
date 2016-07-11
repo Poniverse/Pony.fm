@@ -81,7 +81,7 @@ class AlbumsController extends Controller
             App::abort(404);
         }
 
-        if (!Album::hasLosslessTracks($album) && in_array($formatName, Track::$LosslessFormats)) {
+        if (!$album->hasLosslessTracksOnly() && in_array($formatName, Track::$LosslessFormats)) {
             App::abort(404);
         }
 

@@ -633,14 +633,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $this->published_at != null && $this->deleted_at == null;
     }
 
-    public function isMasterLossy()
+
+    protected function getMasterTrackFile() : TrackFile
     {
-        return is_null(
-            $this->trackFiles->where('is_master', true)
-                ->first(function ($key, $trackFile) {
-                    return in_array($trackFile->format, Track::$LosslessFormats);
-                })
-        );
+        return $this->trackFiles->where('is_master', true)->first();
+    }
+
+    public function isMasterLossy() : bool
+    {
+        return $this->getMasterTrackFile()->isLossy();
     }
     
     public function getCoverUrl($type = Image::NORMAL)

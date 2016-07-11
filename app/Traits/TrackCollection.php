@@ -24,6 +24,7 @@ namespace Poniverse\Ponyfm\Traits;
 
 use File;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Models\TrackFile;
@@ -122,5 +123,23 @@ trait TrackCollection
                 $query->where('is_downloadable', true);
             }
         ])->where('format', $format)->get();
+    }
+
+    /**
+     * Returns a boolean based on whether all (@link TrackFile)s
+     * for this (@link TrackCollection)'s tracks have lossless master files.
+     *
+     * @return bool
+     */
+    public function hasLosslessTracksOnly() : bool 
+    {
+        $hasLosslessTracksOnly = false;
+        foreach ($this->tracks as $track) {
+            if (!$track->isMasterLossy()) {
+                $hasLosslessTracksOnly = true;
+                break;
+            }
+        }
+        return $hasLosslessTracksOnly;
     }
 }
