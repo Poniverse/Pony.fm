@@ -286,17 +286,58 @@ html body {
   }
 }
 
+@keyframes dropdown-open {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes dropdown-link {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@iterations: 10;
+.link-loop (@i) when (@i > 0) {
+    @time: ((@i - 1) / 20);
+    html .dropdown-menu > li:nth-child(@{i}) {
+        animation-delay: ~"@{time}s";
+    }
+    .link-loop(@i - 1);
+}
+.link-loop (@iterations);
+
 html .dropdown-menu {
-  .border-radius(0px);
-  padding: 0px;
+  .border-radius(4px);
+  border: 0;
+  padding: 0;
   overflow-y: auto;
+  animation: dropdown-open 0.2s;
+  animation-timing-function: @swift-ease-out;
+  animation-fill-mode: forwards;
+  transform-origin: top left;
 
   > li {
     margin: 0px;
+    animation: dropdown-link 0.2s;
+    animation-timing-function: @swift-ease-in-out;
+    animation-fill-mode: forwards;
+    opacity: 0;
 
     > a {
-      padding: 8px 10px;
-      font-size: 10pt;
+      padding: 14px 16px;
+      font-size: 14px;
+      line-height: 18px;
+      &:hover {
+        background-color: #eeeeee;
+      }
     }
 
     > .dont-close {
