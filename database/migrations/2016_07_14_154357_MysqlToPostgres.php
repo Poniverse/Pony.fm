@@ -18,8 +18,8 @@ class MysqlToPostgres extends Migration
         $this->console = new ConsoleOutput();
 
         // Generate pgloader config
-        $mysqlConnection = "from mysql://" . env('DB_USERNAME') . ":" . env('DB_PASSWORD') . "@" . env('DB_HOST') . "/" . env('DB_DATABASE');
-        $postgresConnection = "into postgresql://" . env('POSTGRESQL_DB_USERNAME', 'homestead') . ":" . env('POSTGRESQL_DB_PASSWORD', 'secret') . "@" . env('POSTGRESQL_DB_HOST', 'localhost') . "/" . env('POSTGRESQL_DB_DATABASE', 'homestead');
+        $mysqlConnection = "from mysql://" . env('DB_USERNAME') . ":" . urlencode(env('DB_PASSWORD')) . "@" . env('DB_HOST') . "/" . env('DB_DATABASE');
+        $postgresConnection = "into postgresql://" . env('POSTGRESQL_DB_USERNAME', 'homestead') . ":" . urlencode(env('POSTGRESQL_DB_PASSWORD', 'secret')) . "@" . env('POSTGRESQL_DB_HOST', 'localhost') . "/" . env('POSTGRESQL_DB_DATABASE', 'homestead');
 
         $header = "LOAD DATABASE";
         $body = <<<'EOD'
