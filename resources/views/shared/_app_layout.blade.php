@@ -65,10 +65,11 @@
                     </ul>
                 </div>
                 <div class="notification-menu">
-                    <a href="#" ng-click="notifPulloutToggle()"><i class="fa fa-bell fa-fw" aria-hidden="true"></i></a>
+                    <a href="#" ng-click="notifPulloutToggle()"><i class="material-icons">notifications</i></a>
                     <div class="counter" ng-class="{'show': nCount > 0}">@{{ nCountFormatted }}</div>
                 </div>
             @endif
+            <a href="#" ng-click="toggleSearchBar()" class="search-button"><i class="material-icons">search</i></a>
         </div>
         <div class="now-playing">
             <pfm-player></pfm-player>
@@ -102,7 +103,7 @@
 
                 <li>
                     <h3>
-                        <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="fa fa-plus"></i></a>
+                        <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="material-icons">add</i></a></a>
                         My Playlists
                     </h3>
                 </li>

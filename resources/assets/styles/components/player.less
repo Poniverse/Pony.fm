@@ -19,12 +19,6 @@
 @import '../variables';
 @import '../mixins';
 
-body.is-logged {
-  .track-player {
-    margin-right: @pfm-sidebar-size;
-  }
-}
-
 .track-player {
   padding: 0;
 
@@ -152,12 +146,16 @@ body.is-logged {
 
       > a {
         display: block;
-        padding: 6px 0px;
+        padding: 3px 0px 7px;
         width: 44px;
         text-align: center;
         color: #5A5A5A;
         text-decoration: none !important;
         .border-radius(22px);
+
+        i {
+          font-size: 30px;
+        }
 
         &:hover {
           text-decoration: none;

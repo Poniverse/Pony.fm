@@ -3,7 +3,7 @@
         <a class="dropdown-toggle btn btn-default" bs-dropdown>
             Order: <strong>{{query.filters.sort.title}}</strong>
         </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('sort')"><i class="fa fa-remove"></i></a>
+        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('sort')"><i class="material-icons">remove</i></a>
         <ul class="dropdown-menu">
             <li ng-repeat="filter in ::filters.sort.values track by $index" ng-class="{selected: filter == query.filters.sort}">
                 <a pfm-eat-click href="#" ng-click="setFilter('sort', filter)">{{::filter.title}}</a>

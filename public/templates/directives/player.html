@@ -4,18 +4,18 @@
             <strong>{{player.currentTrack.progressSeconds | secondsDisplay}}</strong> /
             <strong>{{player.currentTrack.duration | secondsDisplay}}</strong>
         </li>
-        <li ng-class="{disabled: !player.canGoPrev}"><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="fa fa-fast-backward"></i></a></li>
+        <li ng-class="{disabled: !player.canGoPrev}"><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="material-icons">fast_rewind</i></a></li>
         <li>
             <a pfm-eat-click ng-click="playPause()" class="play" href="#">
-                <i class="fa fa-pause" ng-show="player.currentTrack.isPlaying"></i>
-                <i class="fa fa-play" ng-hide="player.currentTrack.isPlaying"></i>
+                <i class="material-icons" ng-if="!player.currentTrack.isPlaying">play_arrow</i>
+                <i class="material-icons" ng-if="player.currentTrack.isPlaying">pause</i>
             </a>
         </li>
-        <li ng-class="{disabled: !player.canGoNext}"><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="fa fa-fast-forward"></i></a></li>
-        <li><a ng-class="{active: player.repeatState != 0}" pfm-eat-click ng-click="toggleRepeat()" class="repeat" href="#"><i class="fa fa-repeat"></i><span>{{ repeatText }}</span></a></li>
+        <li ng-class="{disabled: !player.canGoNext}"><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="material-icons">fast_forward</i></a></li>
+        <li><a ng-class="{active: player.repeatState != 0}" pfm-eat-click ng-click="toggleRepeat()" class="repeat" href="#"><i class="material-icons">{{ repeatIcon }}</i></a></li>
         <li class="volume">
             <a pfm-eat-click ng-click="" class="volume" href="#">
-                <i class="fa fa-volume-up"></i>
+                <i class="material-icons">{{ player.volumeIcon }}</i>
             </a>
             <div class="volume-slider">
                 <div class="bar"><a href="#" class="knob">&nbsp;</a></div>
@@ -23,7 +23,7 @@
         </li>
     </ul>
     <div class="image">
-        <div class="loader" ng-class="{showing: player.currentTrack.loadingProgress == 0}"><i class="fa fa-spin fa-rotate-right"></i></div>
+        <div class="loader" ng-class="{showing: player.currentTrack.loadingProgress == 0}"><i class="material-icons">autorenew</i></div>
         <a colorbox ng-href="{{player.currentTrack.covers.original}}" pfm-eat-click>
             <img pfm-src-loader="player.currentTrack.covers.small" pfm-src-size="small" />
         </a>

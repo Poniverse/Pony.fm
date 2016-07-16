@@ -82,6 +82,7 @@ module.exports = angular.module('ponyfm').factory('player', [
             playlist: []
             playlistIndex: 0
             volume: 0
+            volumeIcon: 'volume_up'
             readyDef: readyDef.promise()
             canGoPrev: false
             canGoNext: false
@@ -145,6 +146,12 @@ module.exports = angular.module('ponyfm').factory('player', [
                 self.currentSound.setVolume(theVolume) if self.currentSound
                 $.cookie('pfm-volume', theVolume)
                 self.volume = theVolume
+                if self.volume >= 50
+                    self.volumeIcon = 'volume_up'
+                else if self.volume < 50 && self.volume != 0
+                    self.volumeIcon = 'volume_down'
+                else
+                    self.volumeIcon = 'volume_mute'
 
             playTracks: (tracks, index) ->
                 return if !self.ready

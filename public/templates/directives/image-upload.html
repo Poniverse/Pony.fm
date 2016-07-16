@@ -5,9 +5,9 @@
         <input type="file" onchange="angular.element(this).scope().setImageFile(this)" />
     </p>
     <div class="btn-group">
-        <a href="#" pfm-popup="image-selector" pfm-popup-close-on-click class="btn btn-default btn-sm"><i class="fa fa-picture"></i> Gallery</a>
-        <a href="#" pfm-eat-click ng-click="uploadImage()" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> Upload</a>
-        <a href="#" pfm-eat-click ng-click="clearImage()" class="btn btn-danger btn-sm" ng-show="isImageLoaded"><i class="fa fa-remove"></i></a>
+        <a href="#" pfm-popup="image-selector" pfm-popup-close-on-click class="btn btn-default btn-sm">Gallery</a>
+        <a href="#" pfm-eat-click ng-click="uploadImage()" class="btn btn-info btn-sm">Upload</a>
+        <a href="#" pfm-eat-click ng-click="clearImage()" class="btn btn-danger btn-sm" ng-show="isImageLoaded">Remove</a>
     </div>
     <div id="image-selector" class="pfm-popup image-selector">
         <ul>

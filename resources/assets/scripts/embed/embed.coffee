@@ -68,8 +68,10 @@ loaderDef.done ->
 		if currentSound
 			if isPlaying
 				currentSound.pause()
+				$('.button > i').text('play_arrow')
 			else
 				currentSound.play()
+				$('.button > i').text('pause')
 		else
 
 			currentSound = soundManager.createSound
