@@ -641,18 +641,18 @@ html {
 
 .notification-pullout {
   position: absolute;
-  top: 64px;
-  right: -410px;
+  top: -450px;
+  right: 10px;
   width: 400px;
-  height: ~"calc(100% - 128px)";
+  height: 500px;
   z-index: 500;
   background: #eee;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateX(0px) translateZ(0px);
+  .material-shadow(2);
+  transition: transform 0.3s @swift-ease-in-out;
+  transform: translateY(0px) translateZ(0px);
 
   &.active {
-    transform: translateX(-410px) translateZ(0px);
+    transform: translateY(520px) translateZ(0px);
   }
 
   .notif-container {
