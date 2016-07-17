@@ -56,6 +56,7 @@ module.exports = angular.module('ponyfm').factory('player', [
                 onstop: () -> $rootScope.safeApply ->
                     track.isPlaying = false
                     self.isPlaying = false
+                    $rootScope.$broadcast 'player-stopping'
 
                 onplay: () -> $rootScope.safeApply ->
                     track.isPlaying = true

@@ -24,6 +24,7 @@ module.exports = angular.module('ponyfm').controller "application", [
         $scope.notifActive = false
         $scope.nCount = 0
         $scope.nCountFormatted = '0'
+        $scope.isPlaying = false
         $loadingElement = null
         loadingStateName = null
 
@@ -48,6 +49,14 @@ module.exports = angular.module('ponyfm').controller "application", [
 
             if !$scope.notifActive
                notifications.markAllAsRead()
+
+        $rootScope.$on 'player-starting-track', () ->
+            $scope.isPlaying = true
+            windowHeight = $(window).height()
+            $('.site-body').height windowHeight - ($('.top-bar').height() + $('.now-playing').height())
+
+        $rootScope.$on 'player-stopping', () ->
+            $scope.isPlaying = false
 
         $rootScope.$on 'notificationsUpdated', () ->
             $scope.nCount = notifications.getUnreadCount()

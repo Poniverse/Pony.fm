@@ -25,12 +25,10 @@ html body {
   background: #fff;
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   padding: 0px !important;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 header {
-
-
   .user-details {
     float: right;
     margin-right: 20px;
@@ -80,6 +78,11 @@ header {
   bottom: 0;
   z-index: 1010;
   box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  transform: translateY(70px);
+  transition: transform 0.5s @swift-ease-out;
+  &.playing {
+    transform: translateY(0);
+  }
 }
 
 .sidebar {

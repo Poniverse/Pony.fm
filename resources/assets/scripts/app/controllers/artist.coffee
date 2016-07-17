@@ -27,16 +27,18 @@ module.exports = angular.module('ponyfm').controller "artist", [
             artists.fetch($state.params.slug, force)
                 .done (artistResponse) ->
                     $scope.artist = artistResponse.artist
+                    $scope.headerStyle = {'background-image': createGradient(artistResponse.artist.avatar_colors[0], artistResponse.artist.avatar_colors[1])}
 
                     tempImg = document.createElement('img')
-                    tempImg.setAttribute 'src', artistResponse.artist.avatars.small
+                    tempImg.setAttribute 'src', artistResponse.artist.avatars.small + '?' + new Date().getTime()
                     tempImg.setAttribute 'crossOrigin', ''
                     tempImg.crossOrigin = 'Anonymous'
+
                     tempImg.addEventListener 'load', ->
                         colorThief = new ColorThief();
                         palette = colorThief.getPalette(tempImg, 2)
+
                         $('.top-bar').css('background': selectHeaderColour(palette[0], palette[1]))
-                        $scope.headerStyle = {'background-image': createGradient(palette[0], palette[1])}
                         $scope.$apply()
 
         rgbArrayToCss = (array) ->
@@ -45,8 +47,15 @@ module.exports = angular.module('ponyfm').controller "artist", [
         hslArrayToCss = (array) ->
             'hsl(' + array[0] + ',' + array[1] + '%,' + array[2] + '%)'
 
+        hexToRgb = (hex) ->
+            h = '0123456789ABCDEF'
+            r = h.indexOf(hex[1]) * 16 + h.indexOf(hex[2])
+            g = h.indexOf(hex[3]) * 16 + h.indexOf(hex[4])
+            b = h.indexOf(hex[5]) * 16 + h.indexOf(hex[6])
+            return [r,g,b]
+
         dimColor = (colour) ->
-            hsl = rgbToHsl(colour)
+            hsl = rgbToHsl(hexToRgb(colour))
 
             if hsl[2] >= 50
                 hsl[2] = 50
@@ -54,13 +63,13 @@ module.exports = angular.module('ponyfm').controller "artist", [
                     hsl[1] = 30
                 return hslToRgb(hsl)
             else
-                return colour
+                return hexToRgb(colour)
 
         createGradient = (vib, dark) ->
             if $(window).width() <= 480
-                'linear-gradient(180deg, ' + rgbArrayToCss(vib) + ' 5%, ' + rgbArrayToCss(dimColor(dark)) + ' 95%)'
+                'linear-gradient(180deg, ' + vib + ' 5%, ' + rgbArrayToCss(dimColor(dark)) + ' 95%)'
             else
-                'linear-gradient(170deg, ' + rgbArrayToCss(vib) + ' 15%, ' + rgbArrayToCss(dark) + ' 110%)'
+                'linear-gradient(170deg, ' + vib + ' 15%, ' + dark + ' 110%)'
 
         findHighestSaturation = (hsl1, hsl2) ->
             if hsl1[1] > hsl2[1]

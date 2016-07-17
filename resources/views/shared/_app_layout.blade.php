@@ -67,7 +67,7 @@
             @endif
             <a href="#" ng-click="toggleSearchBar()" class="search-button"><i class="material-icons">search</i></a>
         </div>
-        <div class="now-playing">
+        <div class="now-playing" ng-class="{'playing': isPlaying}">
             <pfm-player></pfm-player>
         </div>
     </header>

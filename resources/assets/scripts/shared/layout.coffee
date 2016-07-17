@@ -20,10 +20,7 @@ window.handleResize = () ->
 	isMobile = windowWidth <= 480
 	$siteBody = $ '.site-body'
 
-	if isMobile
-		$siteBody.height windowHeight - ($('.top-bar').height() + $('.now-playing').height() + $('.search').height())
-	else
-		$siteBody.height windowHeight - ($('.top-bar').height() + $('.now-playing').height())
+	$siteBody.height windowHeight - $('.top-bar').height()
 
 	$('.dropdown-menu').each () ->
 		$this = $ this
