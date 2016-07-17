@@ -14,13 +14,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+window.isPlaying = false
+
 window.handleResize = () ->
 	windowHeight = $(window).height()
 	windowWidth = $(window).width()
 	isMobile = windowWidth <= 480
 	$siteBody = $ '.site-body'
 
-	$siteBody.height windowHeight - $('.top-bar').height()
+	if window.isPlaying
+		$siteBody.height windowHeight - ($('.top-bar').height() + $('.now-playing').height())
+	else
+		$siteBody.height windowHeight - $('.top-bar').height()
 
 	$('.dropdown-menu').each () ->
 		$this = $ this
@@ -32,6 +37,8 @@ window.handleResize = () ->
 		if !isMobile
 			$this = $ this
 			newHeight = windowHeight - $this.offset().top
+			if window.isPlaying
+				newHeight = newHeight - $('.now-playing').height()
 			if newHeight > 0
 				$this.height newHeight
 

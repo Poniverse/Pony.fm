@@ -52,8 +52,7 @@ module.exports = angular.module('ponyfm').controller "application", [
 
         $rootScope.$on 'player-starting-track', () ->
             $scope.isPlaying = true
-            windowHeight = $(window).height()
-            $('.site-body').height windowHeight - ($('.top-bar').height() + $('.now-playing').height())
+            window.isPlaying = true
 
         $rootScope.$on 'player-stopping', () ->
             $scope.isPlaying = false
