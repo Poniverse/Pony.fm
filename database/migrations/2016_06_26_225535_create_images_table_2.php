@@ -23,7 +23,7 @@ class CreateImagesTable2 extends Migration {
 			$table->string('filename', 256);
 			$table->string('mime', 100);
 			$table->string('extension', 32);
-			$table->integer('size');
+			$table->unsignedInteger('size');
 			$table->string('hash', 32)->index();
 			$table->unsignedInteger('uploaded_by')->index();
 			$table->timestamps();
