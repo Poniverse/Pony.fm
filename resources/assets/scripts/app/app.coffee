@@ -42,6 +42,7 @@ require 'script!../base/marked'
 require 'script!../base/moment'
 require '../base/soundmanager2-nodebug'
 require 'script!../base/tumblr'
+require 'color-thief';
 require 'angular-strap'
 # Just ignore this, blame webpack
 require '../../../../node_modules/angular-strap/dist/angular-strap.tpl'

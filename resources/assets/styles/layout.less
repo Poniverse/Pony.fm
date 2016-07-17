@@ -89,7 +89,6 @@ header {
     width: (@pfm-sidebar-size);
     height: 64px;
     line-height: 42px;
-    background: @pfm-logo-purple;
     color: #fff;
     font-size: 24pt;
     font-weight: lighter;
@@ -99,7 +98,7 @@ header {
     position: relative;
 
     &:hover {
-      background: darken(@pfm-logo-purple, 15%);
+      background: rgba(0,0,0,0.3);
       color: #fff;
       text-decoration: none;
     }
@@ -267,6 +266,7 @@ header {
     height: @pfm-top-bar-size;
     width: 100%;
     top: 0;
+    transition: background 0.5s @swift-ease-in-out;
     .material-shadow(1);
 
     .burger-wrapper {

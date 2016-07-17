@@ -1,7 +1,7 @@
 <div class="resource-details artist-details" ng-class="::{'x-archived': artist.is_archived}">
 
-    <header ng-style="{'background-image': 'linear-gradient(180deg, ' + artist.avatar_colors[0] + ' 15%, ' + artist.avatar_colors[1] + ' 100%)'}">
-        <img src="{{artist.avatars.normal}}">
+    <header ng-style="headerStyle">
+        <img src="{{artist.avatars.normal}}" id="avatar">
         <div class="artist-right">
             <h1>{{artist.name}}<i class="material-icons admin-star" ng-show="::artist.isAdmin" data-title="Admin" bs-tooltip>verified_user</i></h1>
             <p class="follower-count">
@@ -11,7 +11,7 @@
                      'other': '{} followers'}">
                 </ng-pluralize>
             </p>
-            <a href="#" class="btn btn-default" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
+            <a href="#" class="btn btn-default btn-flat" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
                 <span ng-if="!artist.user_data.is_following">Follow</span>
                 <span ng-if="artist.user_data.is_following">Following!</span>
             </a>

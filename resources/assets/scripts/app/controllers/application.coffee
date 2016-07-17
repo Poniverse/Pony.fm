@@ -42,7 +42,7 @@ module.exports = angular.module('ponyfm').controller "application", [
                 notifications.markAllAsRead()
 
             $scope.notifActive = false
-        
+
         $scope.notifPulloutToggle = () ->
             $scope.notifActive = !$scope.notifActive
 
@@ -97,6 +97,9 @@ module.exports = angular.module('ponyfm').controller "application", [
                 notifications.markAllAsRead()
             $scope.notifActive = false
             $scope.isPinnedPlaylistSelected = false
+
+            if oldState.name.indexOf('content.artist.') != -1 && newState.name.indexOf('content.artist.') == -1
+                $('.top-bar').css('background': '')
 
             if newState.name == 'content.playlist'
                 $scope.isPinnedPlaylistSelected = playlists.isPlaylistPinned newParams.id

@@ -7,7 +7,9 @@
     "url": "ssh://git@phabricator.poniverse.net/diffusion/PF/pony-fm.git"
   },
   "packages": {},
-  "dependencies": {},
+  "dependencies": {
+    "color-thief": "github:logic-dev/color-thief"
+  },
   "devDependencies": {
     "angular": "1.5.6",
     "angular-chart.js": "1.0.0-alpha6",
