@@ -44,11 +44,7 @@
     <header>
         <div class="top-bar">
             <div class="burger-wrapper" ng-click="menuToggle()">
-                <div class="burger">
-                    <div class="bun-top"></div>
-                    <div class="meat"></div>
-                    <div class="bun-bottom"></div>
-                </div>
+                <i class="material-icons">menu</i>
             </div>
             <a href="/" class="logo"><img class="default-logo" src="/images/ponyfm-logo-white.svg"><img class="small-logo" src="/images/ponyfm-logo-white-nodisc.svg"></a>
             <pfm-search></pfm-search>

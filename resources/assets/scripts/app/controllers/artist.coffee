@@ -30,6 +30,8 @@ module.exports = angular.module('ponyfm').controller "artist", [
 
                     tempImg = document.createElement('img')
                     tempImg.setAttribute 'src', artistResponse.artist.avatars.small
+                    tempImg.setAttribute 'crossOrigin', ''
+                    tempImg.crossOrigin = 'Anonymous'
                     tempImg.addEventListener 'load', ->
                         colorThief = new ColorThief();
                         palette = colorThief.getPalette(tempImg, 2)

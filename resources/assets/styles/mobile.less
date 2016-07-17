@@ -42,6 +42,13 @@
 
     .burger-wrapper {
       display: block;
+      top: 15px;
+      left: 15px;
+
+      i {
+        font-size: 32px;
+        color: #fff;
+      }
     }
 
     .logo {
@@ -101,7 +108,11 @@
     top: 0;
     left: 60px;
     color: #fff;
-    padding: 16px 7px;
+    padding: 13px 7px 18px;
+
+    i {
+      font-size: 30px;
+    }
 
     &:hover, &:focus, &:active {
       color: #fff;
@@ -115,6 +126,7 @@
   }
 
   input.search-input {
+    background: lighten(@pfm-logo-purple, 10%);
     border-radius: 0;
   }
 
@@ -335,9 +347,7 @@
 
   .notification-pullout {
     left: 0;
-    top: 108px;
     width: 100%;
-    height: ~"calc(100% - 172px)";
     transform: translateY(-120%) translateZ(0);
 
     &.active {
@@ -352,13 +362,13 @@
   .notification-menu {
     position: fixed;
     top: 0;
-    right: 53px !important;
+    right: 60px !important;
     font-size: 22px;
     margin-right: 0 !important;
-    margin-top: 16px !important;
+    margin-top: 12px !important;
 
     a {
-      padding: 17px 7px;
+      padding: 13px 7px 22px;
     }
 
     a, a:active, a:hover, a:focus {
@@ -447,14 +457,10 @@
     display: block;
   }
 
-  .burger-wrapper {
-    top: 23px;
-    left: 15px;
-  }
-
   .notification-menu {
     top: 0;
-    right: 54px;
+    right: 55px !important;
+    margin-top: 14px !important;
   }
 
   .top-bar .logo {
@@ -471,11 +477,12 @@
   .search-button {
     right: 90px;
     left: initial;
+    padding: 15px 7px !important;
   }
 
   .top-bar .burger-wrapper {
-    top: 22px;
-    left: 16px;
+    top: 17px;
+    left: 11px;
   }
 
   .albums-listing, .playlists-listing, .users-listing {
