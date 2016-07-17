@@ -53,6 +53,7 @@ module.exports = angular.module('ponyfm').controller "application", [
         $rootScope.$on 'player-starting-track', () ->
             $scope.isPlaying = true
             window.isPlaying = true
+            window.handleResize()
 
         $rootScope.$on 'player-stopping', () ->
             $scope.isPlaying = false

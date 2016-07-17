@@ -34,13 +34,14 @@ window.handleResize = () ->
 			'max-height': newMaxHeight
 
 	$('.stretch-to-bottom').each () ->
-		if !isMobile
-			$this = $ this
-			newHeight = windowHeight - $this.offset().top
-			if window.isPlaying
-				newHeight = newHeight - $('.now-playing').height()
-			if newHeight > 0
-				$this.height newHeight
+		$this = $ this
+		newHeight = windowHeight - $this.offset().top
+		if isMobile
+			newHeight = newHeight - 5
+		if window.isPlaying
+			newHeight = newHeight - $('.now-playing').height()
+		if newHeight > 0
+			$this.height newHeight
 
 	$('.revealable').each () ->
 		$this = $ this
