@@ -26,7 +26,8 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    //'mysql' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -72,10 +73,10 @@ return [
 
         'pgsql' => [
             'driver'   => 'pgsql',
-            'host'     => env('DB_HOST', 'localhost'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host'     => env('POSTGRESQL_DB_HOST', 'localhost'),
+            'database' => env('POSTGRESQL_DB_DATABASE', 'homestead'),
+            'username' => env('POSTGRESQL_DB_USERNAME', 'homestead'),
+            'password' => env('POSTGRESQL_DB_PASSWORD', 'secret'),
             'charset'  => 'utf8',
             'prefix'   => '',
             'schema'   => 'public',

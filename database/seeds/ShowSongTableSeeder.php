@@ -22,25 +22,12 @@ use Illuminate\Database\Seeder;
 
 class ShowSongTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        // This table only needs to be filled once.
-        //
-        // Song lyrics used are (C) Hasbro and
-        // sourced from http://mlp.wikia.com/wiki/Songs
-        if (DB::table('show_songs')->count() === 0) {
-            DB::table('show_songs')->insert(
-                [
-                    [
-                        'title' => 'My Little Pony Theme Song',
-                        'slug' => 'my-little-pony-theme-song',
-                        'lyrics' =>
-"[Backup singer]
+    private $showSongs = [
+        [
+            'title' => 'My Little Pony Theme Song',
+            'slug' => 'my-little-pony-theme-song',
+            'lyrics' =>
+                "[Backup singer]
 My Little Pony, My Little Pony
 Ahh, ahh, ahh, ahhh...
 
@@ -71,12 +58,12 @@ And magic makes it all complete
 You have my little ponies
 Do you know you're all my very best friends?"
 
-                    ],
-                    [
-                        'title' => 'Laughter Song (Giggle at the Ghostly)',
-                        'slug' => 'laughter-song',
-                        'lyrics' =>
-"[Pinkie Pie]
+        ],
+        [
+            'title' => 'Laughter Song (Giggle at the Ghostly)',
+            'slug' => 'laughter-song',
+            'lyrics' =>
+                "[Pinkie Pie]
 When I was a little filly and the sun was going down...
 
 Twilight Sparkle: Tell me she's not...
@@ -116,12 +103,12 @@ And tell that big dumb scary face to take a hike and leave you alone and if he t
 
 Laaaaaaauuugh!"
 
-                    ],
-                    [
-                        'title' => 'Winter Wrap-Up',
-                        'slug' => 'winter-wrap-up',
-                        'lyrics' =>
-"[Rainbow Dash]
+        ],
+        [
+            'title' => 'Winter Wrap-Up',
+            'slug' => 'winter-wrap-up',
+            'lyrics' =>
+                "[Rainbow Dash]
 Three months of winter coolness
 And awesome holidays
 
@@ -256,12 +243,12 @@ Winter Wrap Up! Winter Wrap Up!
 'Cause tomorrow spring is here
 'Cause tomorrow spring is here
 'Cause tomorrow spring is here!"
-                    ],
-                    [
-                        'title' => 'EQG - Helping Twilight Win The Crown',
-                        'slug' => 'helping-twilight-win-the-crown',
-                        'lyrics' =>
-"[Pinkie Pie, Rainbow Dash, Applejack, Fluttershy, Rarity]
+        ],
+        [
+            'title' => 'EQG - Helping Twilight Win The Crown',
+            'slug' => 'helping-twilight-win-the-crown',
+            'lyrics' =>
+                "[Pinkie Pie, Rainbow Dash, Applejack, Fluttershy, Rarity]
 Hey! Hey! Everybody!
 We've got something to say.
 We may seem as different,
@@ -354,8 +341,28 @@ Jump up, make a sound. Hey!
 Stomp your hooves, turn around.
 Canterlot Wondercolts
 Help her win the crown..."
-                    ]
-                ]);
+        ]
+    ];
+
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // This table only needs to be filled once.
+        //
+        // Song lyrics used are (C) Hasbro and
+        // sourced from http://mlp.wikia.com/wiki/Songs
+        if (DB::table('show_songs')->count() === 0) {
+            $now = \Carbon\Carbon::now();
+            $showSongs = array_map(function(array $item) use ($now) {
+                $item['created_at'] = $now;
+                $item['updated_at'] = $now;
+                return $item;
+            }, $this->showSongs);
+            DB::table('show_songs')->insert($showSongs);
         }
     }
 }

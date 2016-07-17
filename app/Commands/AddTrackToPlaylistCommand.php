@@ -67,7 +67,7 @@ class AddTrackToPlaylistCommand extends CommandBase
         }
 
 
-        $songIndex = $this->_playlist->tracks()->count() + 1;
+        $songIndex = $this->_playlist->trackCount() + 1;
         $this->_playlist->tracks()->attach($this->_track, ['position' => $songIndex]);
         $this->_playlist->touch();
 

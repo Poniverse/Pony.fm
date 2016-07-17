@@ -49,7 +49,7 @@ class ToggleFavouriteCommand extends CommandBase
 
         return $user != null;
     }
-    
+
     private function getEntityBeingFavourited():Favouritable
     {
         switch ($this->_resourceType) {
@@ -80,10 +80,9 @@ class ToggleFavouriteCommand extends CommandBase
             $fav = new Favourite();
             $fav->$typeId = $this->_resourceId;
             $fav->user_id = Auth::user()->id;
-            $fav->created_at = time();
             $fav->save();
             $isFavourited = true;
-            
+
             Notification::newFavourite($this->getEntityBeingFavourited(), $fav->user);
         }
 

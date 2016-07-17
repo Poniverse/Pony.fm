@@ -80,7 +80,7 @@ class ParseTrackTagsCommand extends CommandBase
         if ($this->track->album_id === null) {
             $this->track->track_number = null;
         } else {
-            $this->track->track_number = $this->input['track_number'] ?? $parsedTags['track_number'];
+            $this->track->track_number = filter_var($this->input['track_number'] ?? $parsedTags['track_number'], FILTER_SANITIZE_NUMBER_INT);
         }
 
         $this->track->released_at = isset($this->input['released_at'])
@@ -95,8 +95,28 @@ class ParseTrackTagsCommand extends CommandBase
         $this->track->is_downloadable = $this->input['is_downloadable'] ?? true;
         $this->track->is_listed       = $this->input['is_listed'] ?? true;
 
+        $this->track = $this->unsetNullVariables($this->track);
+
         $this->track->save();
         return CommandResponse::succeed();
+    }
+
+    /**
+     * If a value is null, remove it! Helps prevent weird SQL errors
+     *
+     * @param Track
+     * @return Track
+    */
+    private function unsetNullVariables($track) {
+        $vars = $track->getAttributes();
+
+        foreach ($vars as $key => $value) {
+            if ($value == null) {
+                unset($track->{"$key"});
+            }
+        }
+
+        return $track;
     }
 
     /**
@@ -340,7 +360,7 @@ class ParseTrackTagsCommand extends CommandBase
         } elseif (isset($tags['creation_date'])) {
             $releaseDate = $this->parseDateString($tags['creation_date'][0]);
         } else {
-            $releaseDate = 0;
+            $releaseDate = null;
         }
 
         return [

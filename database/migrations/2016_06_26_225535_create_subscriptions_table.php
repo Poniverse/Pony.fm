@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+
+class CreateSubscriptionsTable extends Migration {
+
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
+	public function up()
+	{
+		Schema::create('subscriptions', function(Blueprint $table)
+		{
+			$table->bigInteger('id', true)->unsigned();
+			$table->integer('user_id')->unsigned()->index();
+			$table->string('endpoint');
+			$table->string('p256dh');
+			$table->string('auth');
+			$table->nullableTimestamps();
+		});
+	}
+
+
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
+	public function down()
+	{
+		Schema::drop('subscriptions');
+	}
+
+}

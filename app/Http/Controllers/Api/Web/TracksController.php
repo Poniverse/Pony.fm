@@ -156,8 +156,9 @@ class TracksController extends ApiControllerBase
         }
 
         $this->applyFilters($query);
-
         $totalCount = $query->count();
+        $this->applyOrdering($query);
+
         $query->take($perPage)->skip($perPage * ($page - 1));
 
         $tracks = [];
@@ -205,7 +206,15 @@ class TracksController extends ApiControllerBase
         return Response::json(Track::mapPrivateTrackShow($track), 200);
     }
 
-    private function applyFilters($query)
+    /**
+     * To be run after aggregating the total number of tracks for a given query.
+     * This is separated from applyFilters() because Postgres doesn't allow
+     * ORDER BY statements in a COUNT(*) query that returns a single value.
+     *
+     * @param $query
+     * @return mixed
+     */
+    private function applyOrdering($query)
     {
         if (Input::has('order')) {
             $order = \Input::get('order');
@@ -213,6 +222,17 @@ class TracksController extends ApiControllerBase
             $query->orderBy($parts[0], $parts[1]);
         }
 
+        return $query;
+    }
+
+    /**
+     * This should be run before count()'ing a query's results.
+     *
+     * @param $query
+     * @return mixed
+     */
+    private function applyFilters($query)
+    {
         if (Input::has('is_vocal')) {
             $isVocal = \Input::get('is_vocal');
             if ($isVocal == 'true') {

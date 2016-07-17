@@ -63,7 +63,6 @@ class EditAlbumCommand extends CommandBase
             'title' => 'required|min:3|max:50',
             'cover' => 'image|mimes:png|min_width:350|min_height:350',
             'cover_id' => 'exists:images,id',
-            'track_ids' => 'exists:tracks,id',
             'username' => 'exists:users,username'
         ];
 
@@ -71,6 +70,14 @@ class EditAlbumCommand extends CommandBase
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);
+        }
+
+        $trackIds = explode(',', $this->_input['track_ids']);
+        $trackIdsCount = count($trackIds);
+        $trackDbCount = DB::table('tracks')->whereIn('id', $trackIds)->count();
+
+        if ($trackDbCount != $trackIdsCount) {
+            return CommandResponse::fail("Track IDs invalid");
         }
 
         $this->_album->title = $this->_input['title'];

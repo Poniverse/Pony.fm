@@ -277,18 +277,18 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 $query = static
                     ::published()
                     ->listed()
-                    ->join(DB::raw('
-                        (    SELECT `track_id`, `created_at`
-                            FROM `resource_log_items`
-                            WHERE track_id IS NOT NULL AND log_type = 3 AND `created_at` > now() - INTERVAL 1 DAY
-                        ) AS ranged_plays'),
+                    ->join(DB::raw('(
+                            SELECT "track_id"
+                            FROM "resource_log_items"
+                            WHERE track_id IS NOT NULL AND log_type = 3 AND "created_at" > now() - INTERVAL \'1\' DAY
+                        ) ranged_plays'),
                         'tracks.id', '=', 'ranged_plays.track_id')
-                    ->groupBy('id')
+                    ->groupBy(['id', 'track_id'])
                     ->orderBy('plays', 'desc')
                     ->take($count);
 
                 if (!$allowExplicit) {
-                    $query->whereIsExplicit(false);
+                    $query->where('is_explicit', false);
                 }
 
                 $results = [];
@@ -298,7 +298,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 }
 
                 return $results;
-            });
+            }
+        );
 
         if (!count($trackIds)) {
             return [];

@@ -204,13 +204,23 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         ];
     }
 
-    public function tracks()
+    public function tracks(bool $ordered = true)
     {
-        return $this
+        $query = $this
             ->belongsToMany(Track::class)
             ->withPivot('position')
-            ->withTimestamps()
-            ->orderBy('position', 'asc');
+            ->withTimestamps();
+
+        if ($ordered) {
+            $query = $query->orderBy('position', 'asc');
+        }
+
+        return $query;
+    }
+
+    public function trackCount():int
+    {
+        return $this->tracks(false)->count();
     }
 
     public function trackFiles()
@@ -233,7 +243,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     {
         return $this->hasMany(PinnedPlaylist::class);
     }
-    
+
     public function favourites():HasMany {
         return $this->hasMany(Favourite::class);
     }
