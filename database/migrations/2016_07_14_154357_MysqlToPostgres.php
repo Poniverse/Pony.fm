@@ -18,15 +18,15 @@ class MysqlToPostgres extends Migration
         $this->console = new ConsoleOutput();
 
         // Generate pgloader config
-        $mysqlConnection = "from mysql://" . env('DB_USERNAME') . ":" . urlencode(env('DB_PASSWORD')) . "@" . env('DB_HOST') . "/" . env('DB_DATABASE');
-        $postgresConnection = "into postgresql://" . env('POSTGRESQL_DB_USERNAME', 'homestead') . ":" . urlencode(env('POSTGRESQL_DB_PASSWORD', 'secret')) . "@" . env('POSTGRESQL_DB_HOST', 'localhost') . "/" . env('POSTGRESQL_DB_DATABASE', 'homestead');
+        $mysqlConnection = "from mysql://" . env('DB_USERNAME') . ":" . env('DB_PASSWORD') . "@" . env('DB_HOST') . "/" . env('DB_DATABASE');
+        $postgresConnection = "into postgresql://" . env('POSTGRESQL_DB_USERNAME', 'homestead') . ":" . env('POSTGRESQL_DB_PASSWORD', 'secret') . "@" . env('POSTGRESQL_DB_HOST', 'localhost') . "/" . env('POSTGRESQL_DB_DATABASE', 'homestead');
 
         $header = "LOAD DATABASE";
         $body = <<<'EOD'
 with truncate
 
-CAST type datetime to timestamp drop default drop not null using zero-dates-to-null,
-      type date drop not null drop default using zero-dates-to-null
+CAST type datetime to timestamp using zero-dates-to-null,
+     type date to timestamp using zero-dates-to-null
 
 EXCLUDING TABLE NAMES MATCHING 'migrations';
 EOD;

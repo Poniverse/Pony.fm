@@ -27,6 +27,8 @@ sudo apt-get -qq install -y AtomicParsley flac vorbis-tools imagemagick oracle-j
 echo "Installing PHP extensions"
 sudo apt-get -qq install -y libgmp-dev php-gmp
 
+echo "Installing Postgres migration tool"
+sudo apt-get -qq install -y pgloader
 
 if type ffmpeg &>/dev/null; then
     echo "ffmpeg is installed!"
