@@ -43,10 +43,7 @@ module.exports = angular.module('ponyfm').factory('color', [
                     return self.hexToRgb(colour)
 
             createGradient: (vib, dark) ->
-                if $(window).width() <= 480
-                    'linear-gradient(180deg, ' + vib + ' 5%, ' + self.rgbArrayToCss(self.dimColor(dark)) + ' 95%)'
-                else
-                    'linear-gradient(170deg, ' + vib + ' 15%, ' + dark + ' 110%)'
+                'linear-gradient(180deg, ' + vib + ' 0%, ' + self.rgbArrayToCss(self.dimColor(dark)) + ' 95%)'
 
             findHighestSaturation: (hsl1, hsl2) ->
                 if hsl1[1] > hsl2[1]

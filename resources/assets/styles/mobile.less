@@ -229,7 +229,7 @@
 
     > header {
       margin: 0 !important;
-      padding: 20px 0 40px !important;
+      padding: 25px 25px 40px !important;
 
       > img {
         float: none !important;
@@ -254,31 +254,6 @@
           margin-left: auto;
           margin-right: auto;
         }
-      }
-    }
-
-    .tabs.header {
-      width: 100vw;
-      margin-top: -44px;
-      margin-bottom: 10px;
-
-      li a {
-        color: #fff;
-        border-bottom: 0;
-        opacity: 0.5;
-        text-transform: uppercase;
-        text-decoration: none;
-
-        &:hover {
-          background: rgba(255, 255, 255, 0.2);
-        }
-      }
-
-      li.active a {
-        border-bottom: 4px solid #fff;
-        background: transparent;
-        color: #fff;
-        opacity: 1;
       }
     }
   }
@@ -408,6 +383,11 @@
     white-space: nowrap;
     border-bottom: 0;
     height: 44px;
+
+    &.header {
+      height: 48px;
+      margin-top: -48px;
+    }
 
     li {
       a {

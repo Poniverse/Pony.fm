@@ -166,6 +166,31 @@
       }
     }
   }
+
+  &.header {
+    margin-top: -58px;
+    border-bottom: 0;
+
+    li a {
+      color: #fff;
+      border-bottom: 4px solid transparent;
+      opacity: 0.5;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 12px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+      }
+    }
+
+    li.active a {
+      border-bottom: 4px solid #fff;
+      background: transparent;
+      color: #fff;
+      opacity: 1;
+    }
+  }
 }
 
 ui-view {
@@ -210,7 +235,7 @@ ui-view {
     float: left;
 
     a, button {
-      .border-radius(0px);
+      .border-radius(0px) !important;
       font-size: 9pt;
     }
 
@@ -241,6 +266,14 @@ html body {
       &.btn-default:hover {
         background-color: rgba(255, 255, 255, 0.5);
       }
+    }
+  }
+
+  .btn-danger.btn-flat {
+    background: @brand-danger;
+    color: #fff;
+    &:hover {
+      background: lighten(@brand-danger, 15%);
     }
   }
 

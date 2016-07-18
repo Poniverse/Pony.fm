@@ -26,11 +26,12 @@ module.exports = angular.module('ponyfm').controller "artist", [
         updateArtist = (force = false) ->
             if force
                 window.location.reload()
-                
+
             artists.fetch($state.params.slug, force)
                 .done (artistResponse) ->
                     $scope.artist = artistResponse.artist
-                    $scope.headerStyle = {'background-image': color.createGradient(artistResponse.artist.avatar_colors[0], artistResponse.artist.avatar_colors[1])}
+                    if artistResponse.artist.avatar_colors.length > 2
+                        $scope.headerStyle = {'background-image': color.createGradient(artistResponse.artist.avatar_colors[0], artistResponse.artist.avatar_colors[1])}
 
                     tempImg = document.createElement('img')
                     tempImg.setAttribute 'src', artistResponse.artist.avatars.small + '?' + new Date().getTime()
