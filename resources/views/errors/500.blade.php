@@ -19,7 +19,7 @@
 @extends('shared._app_layout')
 
 @section('app_content')
-    <h1>400 - Server Error</h1>
+    <h1>500 - Server Error</h1>
     <p>There was an error in the server.</p>
 @endsection
 
