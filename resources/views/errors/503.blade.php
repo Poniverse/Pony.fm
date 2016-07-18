@@ -14,12 +14,13 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
---}}<!DOCTYPE html>
+--}}
+<!DOCTYPE html>
 <html>
     <head>
         <title>Be right back.</title>
 
-        <link href="//fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+        <link href="//fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
 
         <style>
             html, body {
@@ -30,10 +31,10 @@
                 margin: 0;
                 padding: 0;
                 width: 100%;
-                color: #B0BEC5;
+                color: #292929;
                 display: table;
-                font-weight: 100;
-                font-family: 'Lato';
+                font-weight: 700;
+                font-family: 'Roboto', Arial, sans-serif;
             }
 
             .container {
@@ -48,15 +49,26 @@
             }
 
             .title {
-                font-size: 72px;
-                margin-bottom: 40px;
+                font-size: 50px;
+                margin-bottom: 20px;
+            }
+
+            p {
+                font-weight: 400;
+                font-size: 16px;
+            }
+
+            .art {
+                width: 75%;
             }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Be right back.</div>
+                <img class="art" src="//67.media.tumblr.com/a4f77fa596545e84b438fd637086ccc0/tumblr_o40hjpQLUd1uwvmjvo1_1280.png">
+                <div class="title">We're down for maintenance</div>
+                <p>Sorry! Pony.fm is not available right now. Please check <a href="https://status.poniverse.io/" target="_blank">status.poniverse.io</a> for details.</p>
             </div>
         </div>
     </body>
