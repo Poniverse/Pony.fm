@@ -4,14 +4,14 @@
             <strong>{{player.currentTrack.progressSeconds | secondsDisplay}}</strong> /
             <strong>{{player.currentTrack.duration | secondsDisplay}}</strong>
         </li>
-        <li ng-class="{disabled: !player.canGoPrev}"><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="material-icons">fast_rewind</i></a></li>
+        <li ng-class="{disabled: !player.canGoPrev}"><a pfm-eat-click ng-click="playPrev()" class="previous" href="#"><i class="material-icons">skip_previous</i></a></li>
         <li>
             <a pfm-eat-click ng-click="playPause()" class="play" href="#">
                 <i class="material-icons" ng-if="!player.currentTrack.isPlaying">play_arrow</i>
                 <i class="material-icons" ng-if="player.currentTrack.isPlaying">pause</i>
             </a>
         </li>
-        <li ng-class="{disabled: !player.canGoNext}"><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="material-icons">fast_forward</i></a></li>
+        <li ng-class="{disabled: !player.canGoNext}"><a pfm-eat-click ng-click="playNext()" class="next" href="#"><i class="material-icons">skip_next</i></a></li>
         <li><a ng-class="{active: player.repeatState != 0}" pfm-eat-click ng-click="toggleRepeat()" class="repeat" href="#"><i class="material-icons">{{ repeatIcon }}</i></a></li>
         <li class="volume">
             <a pfm-eat-click ng-click="" class="volume" href="#">
