@@ -23,11 +23,12 @@ namespace Poniverse\Ponyfm\Commands;
 use Notification;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Models\Favourite;
+use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceUser;
 use Auth;
 use DB;
-use Poniverse\Ponyfm\Models\Track;
 
 class ToggleFavouriteCommand extends CommandBase
 {
