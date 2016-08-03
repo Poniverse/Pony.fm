@@ -7,17 +7,18 @@
     "url": "ssh://git@phabricator.poniverse.net/diffusion/PF/pony-fm.git"
   },
   "packages": {},
-  "dependencies": {
-    "color-thief": "github:logic-dev/color-thief"
-  },
   "devDependencies": {
     "angular": "1.5.6",
+    "angular-animate": "^1.5.8",
+    "angular-aria": "^1.5.8",
     "angular-chart.js": "1.0.0-alpha6",
+    "angular-material": "^1.1.0-rc.5",
     "angular-strap": "2.3.8",
     "angular-ui-router": "0.2.18",
     "chart.js": "2.1.0",
     "coffee-loader": "0.7.2",
     "coffee-script": "1.10.0",
+    "color-thief": "github:logic-dev/color-thief",
     "gulp": "3.9.1",
     "gulp-angular-templatecache": "1.8.0",
     "gulp-autoprefixer": "3.1.0",

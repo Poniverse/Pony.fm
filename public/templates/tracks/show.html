@@ -4,18 +4,6 @@
             <img class="cover" pfm-src-loader="track.covers.normal" pfm-src-size="normal"/>
         </a>
 
-        <div class="share-buttons" pfm-share-buttons>
-            <a class="tumblr" ng-href="{{::track.share.tumblrUrl}}"
-               title="Share on Tumblr"
-               style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
-            <div class="facebook fb-like" data-href="{{::track.url}}"
-                 data-width="450" data-layout="button_count"
-                 data-show-faces="true" data-send="false"></div>
-            <iframe class="twitter" allowtransparency="true" frameborder="0"
-                    scrolling="no" ng-src="{{::track.share.twitterUrl}}"
-                    style="width:130px; height:20px;"></iframe>
-        </div>
-
         <ul class="stats">
             <li>Published: <strong>{{::track.published_at}}</strong></li>
             <li>Views: <strong>{{::track.stats.views}}</strong></li>

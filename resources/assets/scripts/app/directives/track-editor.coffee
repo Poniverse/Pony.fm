@@ -33,11 +33,6 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             $scope.isAdmin = auth.data.isAdmin
             albumsDb = {}
 
-            $scope.selectAlbum = (album) ->
-                $scope.selectedAlbum = album
-                $scope.track.album_id = if album then album.id else null
-                $scope.isDirty = true
-
             $scope.setCover = (image, type) ->
                 delete $scope.track.cover_id
                 delete $scope.track.cover
@@ -108,7 +103,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                         formData.append name, value
 
                 if parseInt($scope.track.track_type_id) == 2
-                    formData.append 'show_song_ids', _.map(_.values($scope.selectedSongs), (s) -> s.id).join()
+                    formData.append 'show_song_ids', $scope.selectedSongs
 
                 xhr.open 'POST', '/api/web/tracks/edit/' + $scope.track.id, true
                 xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')
@@ -139,7 +134,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                     for album in albums
                         albumsDb[album.id] = album
                         $scope.albums.push album
-                    $scope.selectedAlbum = if track.album_id then albumsDb[track.album_id] else null
+                    $scope.selectedAlbum = track.album_id
 
 
                 # Update track data

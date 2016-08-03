@@ -27,21 +27,18 @@
 #   and other Angular modules are brought in; they expect the "ponyfm" module to exist.
 
 require 'script!../base/jquery-2.0.2'
-require 'script!../base/jquery-ui'
 angular = require 'angular'
 
-require 'script!../base/angular-ui-date'
 require 'angular-ui-router'
+require 'angular-material'
 require '../base/angular-ui-sortable'
 require '../base/angularytics'
 require '../base/jquery.colorbox'
 require '../base/jquery.cookie'
 require '../base/jquery.timeago'
-require '../base/jquery.viewport'
 require 'script!../base/marked'
 require 'script!../base/moment'
 require '../base/soundmanager2-nodebug'
-require 'script!../base/tumblr'
 require 'color-thief';
 require 'angular-strap'
 # Just ignore this, blame webpack
@@ -54,7 +51,7 @@ require '../shared/pfm-angular-sanitize'
 require '../shared/init.coffee'
 
 
-ponyfm = angular.module 'ponyfm', ['mgcrea.ngStrap', 'ui.router', 'ui.date', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked', 'chart.js']
+ponyfm = angular.module 'ponyfm', ['ngMaterial', 'mgcrea.ngStrap', 'ui.router', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked', 'chart.js']
 window.pfm.preloaders = {}
 
 # Inspired by: https://stackoverflow.com/a/30652110/3225811
@@ -82,8 +79,8 @@ ponyfm.run [
 ]
 
 ponyfm.config [
-    '$locationProvider', '$stateProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider'
-    (location, state, analytics, $httpProvider, $sceDelegateProvider, markedProvider) ->
+    '$locationProvider', '$stateProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider', '$mdDateLocaleProvider', '$mdThemingProvider'
+    (location, state, analytics, $httpProvider, $sceDelegateProvider, markedProvider, $mdDateLocaleProvider, $mdThemingProvider) ->
 
         if window.pfm.environment == 'local'
             $httpProvider.interceptors.push [
@@ -128,6 +125,37 @@ ponyfm.config [
             del: (text) ->
                 text
 
+        $mdDateLocaleProvider.formatDate = (date) ->
+            return moment(date).format('DD/MM/YYYY')
+
+        $mdDateLocaleProvider.parseDate = (string) ->
+            return moment(date).format('DD/MM/YYYY')
+
+        pfmPurple = $mdThemingProvider.extendPalette('purple', {
+            '50': '#f5eff6',
+            '100': '#d6bfd9',
+            '200': '#c09cc4',
+            '300': '#a36faa',
+            '400': '#965d9d',
+            '500': '#84528a',
+            '600': '#724777',
+            '700': '#5f3b64',
+            '800': '#4d3050',
+            '900': '#3b243d',
+            'A100': '#c09cc4',
+            'A200': '#965d9d',
+            'A400': '#724777',
+            'A700': '#65326b',
+            'contrastDefaultColor': 'light',
+            'contrastDarkColors': '50 100 200 300 A100'
+        })
+
+        $mdThemingProvider.definePalette('pfmPurple', pfmPurple)
+
+        $mdThemingProvider.theme('default')
+            .primaryPalette('pfmPurple')
+            .accentPalette('pfmPurple')
+            .warnPalette('red')
 
         # Errors
         state.state 'errors-404',

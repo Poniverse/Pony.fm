@@ -49,16 +49,18 @@
             <a href="/" class="logo"><img class="default-logo" src="/images/ponyfm-logo-white.svg"><img class="small-logo" src="/images/ponyfm-logo-white-nodisc.svg"></a>
             <pfm-search></pfm-search>
             @if (Auth::check())
-                <div class="user-details dropdown">
-                    <a class="avatar dropdown-toggle" bs-dropdown href="#">
-                        <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li ui-sref-active="active"><a ui-sref="content.artist.profile({slug: auth.user.slug})">Your Profile</a></li>
-                        <li ui-sref-active="active"><a ui-sref="content.artist.favourites({slug: auth.user.slug})">Favourites</a></li>
-                        <li ui-sref-active="active"><a ui-sref="content.artist.account.settings({slug: auth.user.slug})">Account</a></li>
-                        <li><a href="#" pfm-eat-click ng-click="logout()">Logout</a></li>
-                    </ul>
+                <div class="user-details">
+                    <md-menu md-position-mode="target-right target">
+                        <a class="avatar dropdown-toggle" ng-click="$mdOpenMenu($event)" href="#">
+                            <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
+                        </a>
+                        <md-menu-content width="3">
+                            <md-menu-item><md-button ui-sref="content.artist.profile({slug: auth.user.slug})">Your Profile</md-button></md-menu-item>
+                            <md-menu-item><md-button ui-sref="content.artist.favourites({slug: auth.user.slug})">Favourites</md-button></md-menu-item>
+                            <md-menu-item><md-button ui-sref="content.artist.account.settings({slug: auth.user.slug})">Account</md-button></md-menu-item>
+                            <md-menu-item><md-button href="#" pfm-eat-click ng-click="logout()">Logout</md-button></md-menu-item>
+                        </ul>
+                    </md-menu>
                 </div>
                 <div class="notification-menu">
                     <a href="#" ng-click="notifPulloutToggle()"><i class="material-icons">notifications</i></a>

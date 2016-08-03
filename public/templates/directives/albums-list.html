@@ -1,4 +1,4 @@
-<ul class="albums-listing {{::class}}">
+<div><!--<ul class="albums-listing {{::class}}">
     <li ng-repeat="album in albums track by album.id">
         <a ng-href="{{::album.url}}">
             <img class="image" pfm-src-loader="::album.covers.normal" pfm-src-size="normal" />
@@ -18,4 +18,23 @@
     <li ng-if="!albums.length" class="empty">
         No albums found&hellip;
     </li>
-</ul>
+</ul>-->
+
+<div flex-xs="50" flex-gt-xs="25" layout="column">
+    <a ng-repeat="album in albums track by album.id" ng-href="{{::album.url}}" class="clickable">
+    <md-card class="album">
+        <img class="md-card-image" pfm-src-loader="::album.covers.normal" pfm-src-size="normal">
+
+        <md-card-content>
+            <span>{{::album.title}}</span>
+        </md-card-content>
+
+        <md-card-actions layout="row" layout-align="end center" class="album-stats">
+            <span><md-icon>favorite</md-icon> {{::album.stats.favourites}}</span>
+            <span><md-icon>comment</md-icon> {{::album.stats.comments}}</span>
+            <span><md-icon>file_download</md-icon> {{::album.stats.downloads}}</span>
+        </md-card-actions>
+    </md-card>
+    </a>
+</div>
+</div>

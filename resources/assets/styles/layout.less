@@ -26,6 +26,7 @@ html body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   padding: 0px !important;
   overflow: hidden;
+  position: initial !important;
 }
 
 header {
@@ -246,7 +247,8 @@ header {
 }
 
 .site-body {
-    margin-top: @pfm-top-bar-size;
+    height: 100%;
+    padding-top: @pfm-top-bar-size;
 }
 
 .file-over-notice {
@@ -264,8 +266,8 @@ header {
 .top-bar {
     display: block;
     position: absolute;
-    z-index: 599;
-    background: @pfm-logo-purple;
+    z-index: 99;
+    background: @pfm-palette-500;
     height: @pfm-top-bar-size;
     width: 100%;
     top: 0;
@@ -338,4 +340,23 @@ header {
 .modal-footer {
   padding: 20px;
   border-top: 0;
+}
+
+.account-tabs {
+  background: #fff;
+  margin: -59px -10px 5px;
+  border-radius: 0;
+
+  &.manage-account-tabs {
+    margin: 0px -10px 5px;
+  }
+}
+
+.checkboxes md-input-container {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+md-input-container#title {
+  margin-bottom: 0;
 }

@@ -23,6 +23,8 @@ window.pfm.preloaders['artist'] = [
 module.exports = angular.module('ponyfm').controller "artist", [
     '$scope', 'artists', '$state', 'follow', '$rootScope', 'color'
     ($scope, artists, $state, follow, $rootScope, color) ->
+        $scope.selectedTab = 0
+
         updateArtist = (force = false) ->
             if force
                 window.location.reload()
@@ -45,12 +47,23 @@ module.exports = angular.module('ponyfm').controller "artist", [
                         $('.top-bar').css('background': color.selectHeaderColour(palette[0], palette[1]))
                         $scope.$apply()
 
+        evaluateTab = (route) ->
+            switch route
+                when 'content.artist.profile' then $scope.selectedTab = 0
+                when 'content.artist.content' then $scope.selectedTab = 1
+                when 'content.artist.favourites' then $scope.selectedTab = 2
+                when 'content.artist.account.settings' then $scope.selectedTab = 3
+
         $scope.toggleFollow = () ->
             follow.toggle('artist', $scope.artist.id).then (res) ->
                 $scope.artist.user_data.is_following = res.is_followed
 
         updateArtist()
+        evaluateTab($state.current.name)
 
         $scope.$on 'user-updated', ->
             updateArtist(true)
+
+        $rootScope.$on '$stateChangeStart', (e, to, toParam, from, fromParam) ->
+            evaluateTab to.name
 ]

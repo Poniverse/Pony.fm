@@ -97,8 +97,6 @@ class Assets
     {
         if ($area == 'app') {
             return [
-                "styles/base/jquery-ui.css",
-                "styles/base/colorbox.css",
                 "styles/app.less",
             ];
         } else {

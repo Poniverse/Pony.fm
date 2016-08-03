@@ -163,7 +163,7 @@
       background: #aaa;
       background-size: cover;
       background-position: center;
-      padding: 25px 25px 60px;
+      padding: 25px 25px 70px;
       margin: -15px -15px 10px;
 
       > img {
@@ -642,7 +642,7 @@ html {
   right: 10px;
   width: 400px;
   height: 500px;
-  z-index: 500;
+  z-index: 98;
   background: #eee;
   .material-shadow(2);
   transition: transform 0.3s @swift-ease-in-out;
@@ -687,4 +687,31 @@ i {
 canvas {
   visibility: hidden;
   opacity: 0;
+}
+
+.clickable {
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+md-card.album {
+  md-card-content {
+    padding: 4px 12px;
+    span {
+      font-size: 16px;
+    }
+  }
+
+  .album-stats span {
+    margin: 0 3px;
+    font-size: 12px;
+
+    md-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      min-height: 16px;
+    }
+  }
 }
