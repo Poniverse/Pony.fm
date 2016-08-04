@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "application", [
-    '$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope', 'playlists', 'notifications'
-    ($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope, playlists, notifications) ->
+    '$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope', 'playlists', 'notifications', '$timeout'
+    ($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope, playlists, notifications, $timeout) ->
         $scope.auth = auth.data
         $scope.$state = $state
         $scope.$stateParams = $stateParams
@@ -25,6 +25,8 @@ module.exports = angular.module('ponyfm').controller "application", [
         $scope.nCount = 0
         $scope.nCountFormatted = '0'
         $scope.isPlaying = false
+        $scope.hideLoading = false
+        $scope.loading = true
         $loadingElement = null
         loadingStateName = null
 
@@ -84,6 +86,7 @@ module.exports = angular.module('ponyfm').controller "application", [
             window.setTimeout (-> window.handleResize()), 0
 
             $scope.loading = false
+            $scope.hideLoading = true
 
         $scope.stateIncludes = (state) ->
             if $loadingElement
@@ -128,7 +131,15 @@ module.exports = angular.module('ponyfm').controller "application", [
             oldParts = oldState.name.split '.'
             zipped = _.zip(newParts, oldParts)
 
-            $scope.loading = true;
+            $scope.loading = true
+
+            # Don't show the loading bar until 400ms has passed
+            # Avoids flickering on fast connections while still
+            # providing feedback to users on slow connections
+            $timeout(() ->
+                if $scope.loading
+                    $scope.hideLoading = false
+            , 400)
 
             stateToInject = angular.copy newState
             stateToInject.params = newParams

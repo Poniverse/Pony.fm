@@ -1,19 +1,24 @@
-<ul class="users-listing">
-    <li class="artist" ng-class="{'x-archived': user.is_archived}" ng-repeat="user in users track by user.id">
-        <a ng-href="{{::user.url}}">
-            <img class="image" pfm-src-loader="user.avatars.normal" pfm-src-size="normal" />
-            <span class="info">
-                <span class="title">{{::user.name}}</span>
+<div layout="row" layout-xs="column" layout-wrap>
+    <p ng-show="!users.length" class="empty">
+        No users found&hellip;
+    </p>
+
+    <a ng-repeat="user in users track by user.id" ng-href="{{::user.url}}" class="clickable" flex-gt-xs="50" flex-gt-sm="25" flex-gt-md="20">
+        <md-card class="user">
+            <img class="md-card-image" pfm-src-loader="::user.avatars.normal" pfm-src-size="normal">
+
+            <md-card-content>
+                <span><strong>{{::user.name}}</strong></span>
+            </md-card-content>
+
+            <md-card-actions layout="row" layout-align="start center" class="user-info">
                 <span ng-hide="user.is_archived" class="published">
                     joined {{::user.created_at.date | momentFromNow}}
                 </span>
                 <span ng-show="::user.is_archived" class="published">
                     archived artist
                 </span>
-            </span>
-        </a>
-    </li>
-    <li ng-show="!users.length" class="empty">
-        No users found&hellip;
-    </li>
-</ul>
+            </md-card-actions>
+        </md-card>
+    </a>
+</div>

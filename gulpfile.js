@@ -81,7 +81,6 @@ gulp.task("webpack-dev-server", function () {
 
 gulp.task("styles-app", function () {
     var includedStyles = [
-        "resources/assets/styles/base/jquery-ui.css",
         "resources/assets/styles/base/colorbox.css",
         "resources/assets/styles/app.less"
     ];

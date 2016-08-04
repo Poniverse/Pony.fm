@@ -24,9 +24,7 @@
     </ul>
     <div class="image">
         <div class="loader" ng-class="{showing: player.currentTrack.loadingProgress == 0}"><i class="material-icons">autorenew</i></div>
-        <a colorbox ng-href="{{player.currentTrack.covers.original}}" pfm-eat-click>
-            <img pfm-src-loader="player.currentTrack.covers.small" pfm-src-size="small" />
-        </a>
+        <img pfm-src-loader="player.currentTrack.covers.small" pfm-src-size="small" />
     </div>
     <div class="inner">
         <div class="title">

@@ -63,12 +63,11 @@
                     </md-menu>
                 </div>
                 <div class="notification-menu">
-                    <a href="#" ng-click="notifPulloutToggle()"><i class="material-icons">notifications</i></a>
+                    <md-button ng-click="notifPulloutToggle()" class="md-icon-button"><md-icon>notifications</md-icon></md-button>
                     <div class="counter" ng-class="{'show': nCount > 0}">@{{ nCountFormatted }}</div>
                 </div>
             @endif
-            <a href="#" ng-click="toggleSearchBar()" class="search-button"><i class="material-icons">search</i></a>
-            <md-progress-linear md-mode="indeterminate" class="loader" ng-disabled="!loading"></md-progress-linear>
+            <md-progress-linear md-mode="indeterminate" class="loader" ng-disabled="hideLoading"></md-progress-linear>
         </div>
         <div class="now-playing" ng-class="{'playing': isPlaying}">
             <pfm-player></pfm-player>

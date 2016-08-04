@@ -31,19 +31,30 @@ module.exports = angular.module('ponyfm').factory('color', [
                 b = h.indexOf(hex[5]) * 16 + h.indexOf(hex[6])
                 return [r,g,b]
 
-            dimColor: (colour) ->
+            dimColor: (colour, alt) ->
                 hsl = self.rgbToHsl(self.hexToRgb(colour))
+                altHsl = self.rgbToHsl(self.hexToRgb(alt))
 
                 if hsl[2] >= 50
                     hsl[2] = 50
                     if hsl[1] <= 20
                         hsl[1] = 30
                     return self.hslToRgb(hsl)
-                else
-                    return self.hexToRgb(colour)
+
+                if hsl[2] <= 20
+                    if altHsl[2] <= 50
+                        hsl = altHsl
+                        hsl[2] = 20
+                    else
+                        if hsl[1] <= 25
+                            hsl[0] = altHsl[0]
+                            hsl[1] = altHsl[1]
+                        hsl[2] = 20
+
+                return self.hslToRgb(hsl)
 
             createGradient: (vib, dark) ->
-                'linear-gradient(180deg, ' + vib + ' 0%, ' + self.rgbArrayToCss(self.dimColor(dark)) + ' 95%)'
+                'linear-gradient(180deg, ' + vib + ' 0%, ' + self.rgbArrayToCss(self.dimColor(dark, vib)) + ' 95%)'
 
             findHighestSaturation: (hsl1, hsl2) ->
                 if hsl1[1] > hsl2[1]

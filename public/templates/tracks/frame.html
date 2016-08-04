@@ -39,6 +39,26 @@
         <li><a href="#" class="btn btn-default" pfm-eat-click ng-click="share()">Share or Embed</a></li>
         <li><pfm-favourite-button resource="::track" type="track"></pfm-favourite-button></li>
         <li ng-show="::track.permissions.edit"><a class="btn btn-default" ng-href="/tracks/{{::track.id}}-{{::track.slug}}/edit">Edit</a></li>
+
+        <md-button class="md-icon-button" aria-label="Download">
+            <md-tooltip md-direction="bottom" md-delay="200">Download</md-tooltip>
+            <md-icon>file_download</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" aria-label="Favourite">
+            <md-tooltip md-direction="bottom" md-delay="200">Favourite</md-tooltip>
+            <md-icon>favorite_border</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" aria-label="Add to playlist">
+            <md-tooltip md-direction="bottom" md-delay="200">Add to playlist</md-tooltip>
+            <md-icon>playlist_add</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" aria-label="Share or embed">
+            <md-tooltip md-direction="bottom" md-delay="200">Share or embed</md-tooltip>
+            <md-icon>share</md-icon>
+        </md-button>
     </ul>
 
     <header>

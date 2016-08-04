@@ -566,6 +566,10 @@ html {
   }
 }
 
+.loading .notification-menu md-icon {
+  display: none;
+}
+
 .notification-menu {
   float: right;
   margin-top: 9px;
@@ -575,12 +579,9 @@ html {
   top: 0;
   right: 60px;
 
-  a {
+  .md-button .material-icons {
     color: #fff;
-
-    i {
-      font-size: 30px;
-    }
+    font-size: 30px;
 
     &:hover {
       color: #eee;
@@ -698,7 +699,7 @@ form.thin md-input-container {
   margin: 15px 0 0 0;
 }
 
-md-card.album {
+md-card.album, md-card.user {
   md-card-content {
     padding: 4px 12px;
     span {
@@ -716,6 +717,15 @@ md-card.album {
       height: 16px;
       min-width: 16px;
       min-height: 16px;
+    }
+  }
+
+  .user-info {
+    margin: 0 12px 8px;
+
+    span {
+      margin: 0;
+      font-size: 12px;
     }
   }
 }
