@@ -83,9 +83,7 @@ module.exports = angular.module('ponyfm').controller "application", [
         $scope.$on '$viewContentLoaded', () ->
             window.setTimeout (-> window.handleResize()), 0
 
-            if $loadingElement
-                $loadingElement.removeClass 'loading'
-                $loadingElement = null
+            $scope.loading = false
 
         $scope.stateIncludes = (state) ->
             if $loadingElement
@@ -129,14 +127,8 @@ module.exports = angular.module('ponyfm').controller "application", [
             newParts = newState.name.split '.'
             oldParts = oldState.name.split '.'
             zipped = _.zip(newParts, oldParts)
-            for i in [0..zipped.length]
-                break if !zipped[i] || zipped[i][0] != zipped[i][1]
-                selector += ' ui-view '
 
-            selector += ' ui-view ' if newState.name != oldState.name
-
-            $loadingElement = $ selector
-            $loadingElement.addClass 'loading'
+            $scope.loading = true;
 
             stateToInject = angular.copy newState
             stateToInject.params = newParams

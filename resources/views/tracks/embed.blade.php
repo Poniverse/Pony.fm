@@ -28,6 +28,7 @@
     <meta property="fb:admins" content="1165335382" />
     <base href="/" />
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {!! Assets::styleIncludes('embed') !!}
 </head>
 <body>

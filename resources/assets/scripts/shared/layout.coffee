@@ -64,3 +64,6 @@ window.handleResize()
 $(window).resize window.handleResize
 
 $('.site-content').empty()
+
+$(document).ready () ->
+		$('body').removeClass('loading');

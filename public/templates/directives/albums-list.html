@@ -1,40 +1,17 @@
-<div><!--<ul class="albums-listing {{::class}}">
-    <li ng-repeat="album in albums track by album.id">
-        <a ng-href="{{::album.url}}">
-            <img class="image" pfm-src-loader="::album.covers.normal" pfm-src-size="normal" />
-            <span class="info">
-            <span class="title">{{::album.title}}</span>
-            <span class="published">
-                by <span>{{::album.user.name}}</span>
-            </span>
-                <span class="stats">
-                    <strong>{{::album.stats.favourites}}</strong> <i class="material-icons">favorite</i>
-                    <strong>{{::album.stats.comments}}</strong> <i class="material-icons">comment</i>
-                    <strong>{{::album.stats.downloads}}</strong> <i class="material-icons">file_download</i>
-                </span>
-            </span>
-        </a>
-    </li>
-    <li ng-if="!albums.length" class="empty">
-        No albums found&hellip;
-    </li>
-</ul>-->
+<div layout="row" layout-xs="column" layout-wrap>
+    <a ng-repeat="album in albums track by album.id" ng-href="{{::album.url}}" class="clickable" flex-gt-xs="50" flex-gt-sm="25" flex-gt-md="20">
+        <md-card class="album">
+            <img class="md-card-image" pfm-src-loader="::album.covers.normal" pfm-src-size="normal">
 
-<div flex-xs="50" flex-gt-xs="25" layout="column">
-    <a ng-repeat="album in albums track by album.id" ng-href="{{::album.url}}" class="clickable">
-    <md-card class="album">
-        <img class="md-card-image" pfm-src-loader="::album.covers.normal" pfm-src-size="normal">
+            <md-card-content>
+                <span>{{::album.title}}</span>
+            </md-card-content>
 
-        <md-card-content>
-            <span>{{::album.title}}</span>
-        </md-card-content>
-
-        <md-card-actions layout="row" layout-align="end center" class="album-stats">
-            <span><md-icon>favorite</md-icon> {{::album.stats.favourites}}</span>
-            <span><md-icon>comment</md-icon> {{::album.stats.comments}}</span>
-            <span><md-icon>file_download</md-icon> {{::album.stats.downloads}}</span>
-        </md-card-actions>
-    </md-card>
+            <md-card-actions layout="row" layout-align="end center" class="album-stats">
+                <span><md-icon>favorite</md-icon> {{::album.stats.favourites}}</span>
+                <span><md-icon>comment</md-icon> {{::album.stats.comments}}</span>
+                <span><md-icon>file_download</md-icon> {{::album.stats.downloads}}</span>
+            </md-card-actions>
+        </md-card>
     </a>
-</div>
 </div>

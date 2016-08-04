@@ -68,6 +68,7 @@
                 </div>
             @endif
             <a href="#" ng-click="toggleSearchBar()" class="search-button"><i class="material-icons">search</i></a>
+            <md-progress-linear md-mode="indeterminate" class="loader" ng-disabled="!loading"></md-progress-linear>
         </div>
         <div class="now-playing" ng-class="{'playing': isPlaying}">
             <pfm-player></pfm-player>
@@ -127,6 +128,7 @@
                 </a>
             </li>
         </ul>
+
         <ui-view class="site-content">
             @yield('app_content')
         </ui-view>

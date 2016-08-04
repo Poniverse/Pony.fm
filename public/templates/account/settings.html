@@ -1,44 +1,49 @@
-<form ng-submit="updateAccount()" class="pfm-form account-settings-form">
-    <ul class="toolbar">
-        <li>
-            <button type="submit" class="btn btn-default" ng-class="{disabled: !isDirty || isSaving, 'btn-primary': isDirty}">
-                Save Changes
-                <i ng-show="isSaving" class="fa fa-cog fa-spin fa-lg"></i>
-            </button>
-        </li>
-    </ul>
-    <div class="stretch-to-bottom">
-        <div class="form-row" ng-class="{'has-error': errors.display_name != null}">
-            <label class="strong" for="display_name">Display Name</label>
-            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" placeholder="Display Name" id="display_name" ng-model="settings.display_name" />
-            <div class="error">{{errors.display_name}}</div>
-        </div>
+<form ng-submit="updateAccount()" class="pfm-form account-settings-form thin">
+    <div layout="row" class="button-bar">
+        <md-button class="md-raised md-primary" type="submit" ng-class="{disabled: !isDirty || isSaving, 'btn-primary': isDirty}">
+            Save Changes
+        </button>
+    </div>
 
-        <div class="form-row" ng-class="{'has-error': errors.slug != null}">
-            <label class="strong" for="slug">Slug (your profile URL: https://pony.fm/{{settings.slug}})</label>
-            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" placeholder="slug" id="slug" ng-model="settings.slug" />
-            <div class="error">{{errors.slug}}</div>
-        </div>
+    <div layout="row" layout-xs="column">
+        <md-input-container flex-gt-sm>
+            <label>Display Name</label>
+            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" id="display_name" ng-model="settings.display_name" />
+        </md-input-container>
 
-        <div class="form-row">
-            <label for="can_see_explicit_content" class="strong"><input ng-change="touchModel()" ng-disabled="isLoading" id="can_see_explicit_content" type="checkbox" ng-model="settings.can_see_explicit_content" /> Can See Explicit Content</label>
-        </div>
+        <md-input-container flex-gt-sm>
+            <label>Profile URL</label>
+            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" id="slug" ng-model="settings.slug" />
+        </md-input-container>
+    </div>
 
-        <div class="form-row" ng-class="{'has-error': errors.bio != null}">
-            <label class="strong" for="bio">Bio</label>
-            <textarea id="bio" placeholder="bio (optional)" ng-model="settings.bio" ng-disabled="isLoading" ng-change="touchModel()"></textarea>
-            <div class="error">{{errors.description}}</div>
-        </div>
+    <div layout="row" layout-xs="column">
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Bio</label>
+            <textarea id="bio" ng-model="settings.bio" ng-disabled="isLoading" ng-change="touchModel()"></textarea>
+        </md-input-container>
+    </div>
 
-        <div class="form-row" ng-class="{'has-error': errors.avatar != null || errors.gravatar != null}">
-            <label for="uses_gravatar" class="strong">
-                <input ng-change="touchModel()" ng-disabled="isLoading" id="uses_gravatar" type="checkbox" ng-model="settings.uses_gravatar" /> Use Gravatar
-            </label>
-            <div ng-show="!settings.uses_gravatar">
-                <pfm-image-upload set-image="setAvatar" image="settings.avatar_url" user-id="settings.id"></pfm-image-upload>
-            </div>
-            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" ng-show="settings.uses_gravatar" placeholder="Gravatar Email" ng-model="settings.gravatar" />
-            <div class="error" ng-show="errors.avatar != null">{{errors.avatar}}</div>
-            <div class="error" ng-show="errors.gravatar != null">{{errors.gravatar}}</div>
-        </div>
+    <div layout="row" layout-xs="column">
+        <md-input-container flex-gt-sm>
+            <md-checkbox ng-disabled="isLoading" ng-model="settings.can_see_explicit_content"> Can See Explicit Content</md-checkbox>
+        </md-input-container>
+    </div>
+
+    <div layout="row" layout-xs="column">
+        <md-input-container flex-gt-sm>
+            <md-checkbox ng-change="touchModel()" ng-disabled="isLoading" id="uses_gravatar" type="checkbox" ng-model="settings.uses_gravatar">Use Gravatar</md-checkbox>
+        </md-input-container>
+    </div>
+    <div layout="row" layout-xs="column" ng-show="settings.uses_gravatar">
+        <md-input-container flex-gt-sm>
+            <label>Gravatar email</label>
+            <input type="text" ng-disabled="isSaving" ng-model="settings.gravatar" />
+        </md-input-container>
+    </div>
+    <div layout="row" layout-xs="column" ng-show="!settings.uses_gravatar">
+        <md-input-container flex-gt-sm>
+            <pfm-image-upload set-image="setAvatar" image="settings.avatar_url" user-id="settings.id"></pfm-image-upload>
+        </md-input-container>
+    </div>
 </form>
