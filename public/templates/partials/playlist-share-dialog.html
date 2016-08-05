@@ -1,19 +1,16 @@
-<div class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>
-                    <button type="button" class="close" ng-click="$hide()" ng-hide="isLoading">&times;</button>
-                    {{playlist.title}}
-                </h4>
-            </div>
-            <div class="modal-body">
-                <h2>Shortlink</h2>
-                <input type="text" ng-model="playlist.share.url" />
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-flat btn-primary" ng-click="$hide()" ng-disabled="isLoading">Close</a>
-            </div>
+<md-dialog ng-cloak>
+    <md-dialog-content>
+        <div class="modal-header">
+            <h4>
+                {{playlist.title}}
+            </h4>
         </div>
-    </div>
-</div>
+        <div class="modal-body">
+            <h2>Shortlink</h2>
+            <input type="text" ng-model="playlist.share.url" />
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="closeDialog()" class="md-primary">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>

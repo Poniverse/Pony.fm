@@ -81,8 +81,8 @@ gulp.task("webpack-dev-server", function () {
 
 gulp.task("styles-app", function () {
     var includedStyles = [
-        "resources/assets/styles/base/colorbox.css",
-        "resources/assets/styles/app.less"
+        "node_modules/angular-material/angular-material.css",
+        "resources/assets/styles/app.less",
     ];
 
     if (!argv.production) {
@@ -108,30 +108,32 @@ gulp.task("styles-app", function () {
     // note that we're not doing autoprefixer on dev builds for now to shave off roughly 600-700 milliseconds per
     // build. It's already taking forever to recompile the less
 
-    return argv.production
+    if (argv.production) {
         // Production pipeline
-        ? gulp.src(includedStyles, {base: "resources/assets/styles"})
-        .pipe(plug.plumber(plumberOptions))
-        .pipe(plug.if(/\.less/, plug.less()))
-        .pipe(plug.autoprefixer({
-            browsers: ["last 2 versions"],
-            cascade: false
-        }))
-        .pipe(plug.concat("app.css"))
-        .pipe(plug.cleanCss())
-        .pipe(header(licenseHeader))
-        .pipe(gulp.dest("public/build/styles"))
-
+        return gulp.src(includedStyles)
+            .pipe(plug.plumber(plumberOptions))
+            .pipe(plug.if(/\.less/, plug.less()))
+            .pipe(plug.autoprefixer({
+                browsers: ["last 2 versions"],
+                cascade: false
+            }))
+            .pipe(plug.concat("app.css"))
+            .pipe(plug.cleanCss())
+            .pipe(header(licenseHeader))
+            .pipe(gulp.dest("public/build/styles"));
+    } else {
         // Development pipeline
-        : gulp.src(includedStyles, {base: "resources/assets/styles"})
-        .pipe(plug.plumber(plumberOptions))
-        .pipe(plug.cached("styles"))
-        .pipe(plug.sourcemaps.init())
-        .pipe(plug.if(/\.less/, plug.less()))
-        .pipe(header(licenseHeader))
-        .pipe(plug.sourcemaps.write())
-        .pipe(gulp.dest("public/build/styles"))
-        .pipe(plug.livereload());
+        return gulp.src(includedStyles)
+            .pipe(plug.plumber(plumberOptions))
+            .pipe(plug.cached("styles"))
+            .pipe(plug.sourcemaps.init())
+            .pipe(plug.if(/\.less/, plug.less()))
+            .pipe(plug.concat("app.css"))
+            .pipe(header(licenseHeader))
+            .pipe(plug.sourcemaps.write())
+            .pipe(gulp.dest("public/build/styles"))
+            .pipe(plug.livereload());
+    }
 });
 
 gulp.task("styles-embed", function () {

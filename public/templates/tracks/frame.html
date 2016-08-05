@@ -1,65 +1,53 @@
 <div class="resource-details track-details">
-    <ul class="dropdowns">
-        <li class="dropdown">
-            <a href="#" class="btn btn-primary dropdown-toggle" bs-dropdown ng-disabled="track.is_downloadable == 0" auto-close="outsideClick">
-                Downloads
-            </a>
-            <ul class="dropdown-menu" ng-show="track.is_downloadable == 1">
-                <li ng-repeat="format in ::track.formats" ng-hide="isInProgress">
-                    <a target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
-                        <span>{{::format.name}}</span>
-                        <small>({{::format.size}})</small>
-                    </a>
-                    <a ng-if="format.isCacheable" ng-click="getCachedTrack(track.id, format.name);" href="">
-                        <span>{{::format.name}}</span>
-                        <small>({{::format.size}})</small>
-                    </a>
-                </li>
-                <li ng-show="isInProgress" class="cache-loading"><img src="/images/loading.gif" /></li>
-                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This&#39;ll take a few seconds.</small></li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a href="#" class="btn btn-default dropdown-toggle" bs-dropdown ng-show="::auth.isLogged">Add to Playlist</a>
-            <ul class="dropdown-menu">
-                <li ng-repeat="playlist in playlists track by playlist.id">
-                    <a ng-class="{disabled: playlist.message, 'btn-success': playlist.message}"
+    <div class="buttons" layout="row">
+        <md-menu>
+            <md-button class="md-icon-button" aria-label="Download" ng-click="$mdOpenMenu($event)">
+                <md-tooltip md-direction="bottom" md-delay="200">Download</md-tooltip>
+                <md-icon>file_download</md-icon>
+            </md-button>
+
+            <md-menu-content>
+                <md-menu-item ng-repeat="format in ::track.formats" ng-hide="isInProgress">
+                    <md-button target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
+                        {{::format.name}} ({{::format.size}})
+                    </md-button>
+                    <md-button ng-if="format.isCacheable" ng-click="getCachedTrack(track.id, format.name);" href="">
+                        {{::format.name}} ({{::format.size}})
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+
+        <pfm-favourite-button resource="::track" type="track"></pfm-favourite-button>
+
+        <md-menu>
+            <md-button class="md-icon-button" aria-label="Add to playlist" ng-show="::auth.isLogged" ng-click="$mdOpenMenu($event)">
+                <md-tooltip md-direction="bottom" md-delay="200">Add to playlist</md-tooltip>
+                <md-icon>playlist_add</md-icon>
+            </md-button>
+
+            <md-menu-content>
+                <md-menu-item ng-repeat="playlist in playlists track by playlist.id">
+                    <md-button ng-class="{disabled: playlist.message, 'btn-success': playlist.message}"
                        ng-href="{{::playlist.url}}"
-                       pfm-eat-click
-                       ng-click="addToPlaylist(playlist); $event.stopPropagation()"
-                    >
+                       ng-click="addToPlaylist(playlist); $event.stopPropagation()">
                         <span ng-hide="playlist.message">{{::playlist.title}}</span>
                         <span ng-show="playlist.message">{{playlist.message}}</span>
-                    </a>
-                </li>
-                <li><a href="#" class="add-btn btn-default" pfm-eat-click ng-click="addToNewPlaylist()">Add to New Playlist</a></li>
-            </ul>
-        </li>
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
 
-        <li><a href="#" class="btn btn-default" pfm-eat-click ng-click="share()">Share or Embed</a></li>
-        <li><pfm-favourite-button resource="::track" type="track"></pfm-favourite-button></li>
-        <li ng-show="::track.permissions.edit"><a class="btn btn-default" ng-href="/tracks/{{::track.id}}-{{::track.slug}}/edit">Edit</a></li>
-
-        <md-button class="md-icon-button" aria-label="Download">
-            <md-tooltip md-direction="bottom" md-delay="200">Download</md-tooltip>
-            <md-icon>file_download</md-icon>
-        </md-button>
-
-        <md-button class="md-icon-button" aria-label="Favourite">
-            <md-tooltip md-direction="bottom" md-delay="200">Favourite</md-tooltip>
-            <md-icon>favorite_border</md-icon>
-        </md-button>
-
-        <md-button class="md-icon-button" aria-label="Add to playlist">
-            <md-tooltip md-direction="bottom" md-delay="200">Add to playlist</md-tooltip>
-            <md-icon>playlist_add</md-icon>
-        </md-button>
-
-        <md-button class="md-icon-button" aria-label="Share or embed">
+        <md-button class="md-icon-button" aria-label="Share or embed" ng-click="share()">
             <md-tooltip md-direction="bottom" md-delay="200">Share or embed</md-tooltip>
             <md-icon>share</md-icon>
         </md-button>
-    </ul>
+
+        <md-button class="md-icon-button" aria-label="Edit" ng-show="::track.permissions.edit" ng-href="/tracks/{{::track.id}}-{{::track.slug}}/edit">
+            <md-tooltip md-direction="bottom" md-delay="200">Edit</md-tooltip>
+            <md-icon>edit</md-icon>
+        </md-button>
+    </div>
 
     <header>
         <pfm-track-player class="hidden-xs" track="::track"></pfm-track-player>

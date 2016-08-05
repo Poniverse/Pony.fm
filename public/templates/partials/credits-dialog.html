@@ -2,7 +2,6 @@
     <md-dialog-content>
         <div class="modal-header">
             <h4>
-                <button type="button" class="close" ng-click="$hide()" ng-hide="isLoading">&times;</button>
                 Pony.fm source &amp; credits
             </h4>
         </div>
@@ -59,6 +58,6 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <a class="btn btn-flat btn-primary" ng-click="$hide()" ng-disabled="isLoading">Close</a>
+        <md-button ng-click="closeDialog()" class="md-primary">Close</md-button>
     </md-dialog-actions>
 </md-dialog>

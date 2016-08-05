@@ -1,10 +1,10 @@
-<a href="#" class="btn btn-default favourite-button" ng-class="{'is-favourited': resource.is_favourited, disabled: isWorking}" pfm-eat-click ng-click="toggleFavourite()" ng-show="auth.isLogged">
-    <span ng-hide="resource.user_data.is_favourited">
-        Favourite This!
-        <i class="material-icons">favorite_border</i>
-    </span>
-    <span ng-show="resource.user_data.is_favourited">
-        In Your Favourites
-        <i class="material-icons">favorite</i>
-    </span>
-</a>
+<div ng-show="auth.isLogged">
+    <md-button class="md-icon-button" aria-label="Favourite" ng-hide="resource.user_data.is_favourited" ng-click="toggleFavourite()">
+        <md-tooltip md-direction="bottom" md-delay="200">Favourite</md-tooltip>
+        <md-icon>favorite_border</md-icon>
+    </md-button>
+    <md-button class="md-icon-button" aria-label="Favourite" ng-show="resource.user_data.is_favourited" ng-click="toggleFavourite()">
+        <md-tooltip md-direction="bottom" md-delay="200">In your favourites</md-tooltip>
+        <md-icon>favorite</md-icon>
+    </md-button>
+</div>

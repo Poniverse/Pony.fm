@@ -33,7 +33,7 @@ window.handleResize = () ->
 		$this.css
 			'max-height': newMaxHeight
 
-	$('.stretch-to-bottom').each () ->
+	$('ui-view').each () ->
 		$this = $ this
 		newHeight = windowHeight - $this.offset().top
 		if isMobile
