@@ -144,8 +144,7 @@
 @endsection
 
 @section('styles')
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans" />
-    <link rel="stylesheet" href="/styles/loader.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700|Material+Icons" />
     {!! Assets::styleIncludes() !!}
 @endsection
 

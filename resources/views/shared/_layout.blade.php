@@ -26,7 +26,6 @@
         <link rel="manifest" href="/manifest.json">
         <base href="/" />
 
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700|Material+Icons" />
         @yield('styles')
     </head>
     <body ng-controller="application" class="{{Auth::check() ? 'is-logged' : ''}} loading">
