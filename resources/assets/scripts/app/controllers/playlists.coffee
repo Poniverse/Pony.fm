@@ -27,10 +27,23 @@ module.exports = angular.module('ponyfm').controller "playlists", [
         $scope.query = playlists.mainQuery
         $scope.filters = playlists.filters
 
+        filterDropdown = (newVar, oldVar) ->
+            if newVar instanceof Array && oldVar instanceof Array
+                if 'any' in newVar
+                    if !('any' in oldVar)
+                        newVar = ['any']
+                    else if newVar.length > oldVar.length
+                        anyIndex = newVar.indexOf('any')
+                        newVar.splice(anyIndex, 1)
+
+        $scope.handleSingularDropdown = (filter, value) ->
+            $scope.clearFilter filter
+            $scope.setFilter filter, JSON.parse(value)
+
         $scope.setFilter = (filter, value) ->
             $scope.query.setFilter filter, value
             $state.transitionTo 'content.playlists.list', {filter: $scope.query.toFilterString()}
-            
+
         $scope.clearFilter = (filter) ->
             $scope.query.clearFilter filter
             $state.transitionTo 'content.playlists.list', {filter: $scope.query.toFilterString()}

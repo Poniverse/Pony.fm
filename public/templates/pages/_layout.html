@@ -1,7 +1,7 @@
-<ul class="tabs fixed">
-    <li ui-sref-active="active"><a ui-sref=".about">About Pony.fm</a></li>
-    <li ui-sref-active="active"><a ui-sref=".faq">FAQ</a></li>
-    <li ui-sref-active="active"><a ui-sref=".mlpforums-advertising-program">MLP Forums Advertising Program</a></li>
-</ul>
+<md-tabs class="about-tabs" md-selected="selectedTab" md-border-bottom>
+    <md-tab ui-sref=".about" name="about">About Pony.fm</md-tab>
+    <md-tab ui-sref=".faq" name="faq">FAQ</md-tab>
+    <md-tab ui-sref=".mlpforums-advertising-program" name="advertising">MLP Forums Advertising Program</md-tab>
+</md-tabs>
 
 <ui-view class="static-page fixed-tabs"></ui-view>
