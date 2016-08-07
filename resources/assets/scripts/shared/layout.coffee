@@ -48,7 +48,7 @@ window.handleResize = () ->
 		return if $this.data 'real-height'
 		$this.data 'real-height', $this.height()
 		$this.css
-			height: '15em'
+			maxHeight: '15em'
 
 		$this.find('.reveal').click (e) ->
 			e.preventDefault()
