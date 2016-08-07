@@ -1,9 +1,6 @@
 <div class="single-player">
-    <a href="#" class="play-button" pfm-eat-click ng-click="play()">
-        <div class="button-container">
-            <i class="material-icons" ng-if="!track.isPlaying">play_arrow</i>
-            <i class="material-icons" ng-if="track.isPlaying">pause</i>
-        </div>
-    </a>
-    <img pfm-src-loader="::image" pfm-src-size="thumbnail" />
+    <md-button class="md-fab md-primary" pfm-eat-click ng-click="play()">
+        <md-icon ng-if="!track.isPlaying">play_arrow</md-icon>
+        <md-icon ng-if="track.isPlaying">pause</md-icon>
+    </md-button>
 </div>

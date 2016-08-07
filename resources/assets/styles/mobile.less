@@ -13,7 +13,6 @@
 
   .site-content {
     margin-left: 0px;
-    overflow: scroll;
     padding: 5px;
   }
 
@@ -436,6 +435,27 @@
 
   .modal-dialog {
     width: 95%;
+  }
+
+  .resource-details {
+    &.track-details, &.album-details, &.playlist-details {
+      > header {
+        img {
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+    }
+
+    .info {
+      margin-left: 0;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .buttons {
+      margin-top: 15px;
+    }
   }
 }
 

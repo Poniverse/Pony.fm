@@ -19,10 +19,12 @@ module.exports = angular.module('ponyfm').controller "track", [
     ($scope, meta, tracks, $state, playlists, auth, favourites, $modal, cachedTrack, $window, $timeout, $mdDialog) ->
         $scope.track
         $scope.trackId = parseInt($state.params.id)
-
         updateTrackData = (forceUpdate = false) ->
             tracks.fetch($scope.trackId, forceUpdate).done (trackResponse) ->
                 $scope.track = trackResponse.track
+                console.log(moment($scope.track.published_at))
+                $scope.track.readableDate = moment($scope.track.published_at).format("Do MMM YYYY")
+
                 meta.setTitle("#{$scope.track.title} | #{$scope.track.user.name}")
                 meta.setDescription("Listen to \"#{$scope.track.title}\" by #{$scope.track.user.name} on the largest pony music site.")
 
@@ -63,7 +65,6 @@ module.exports = angular.module('ponyfm').controller "track", [
             ).then (() ->
                 return
             ), ->
-                console.log $state.current
                 $scope.$apply()
 
         $scope.addToNewPlaylist = () ->

@@ -98,7 +98,7 @@ gulp.task("styles-app", function () {
             if (!styleCache.hasOwnProperty(file))
                 continue;
 
-            if (!endsWith(file, "app.less"))
+            if (!endsWith(file, "app.less") && !endsWith(file, "angular-material.css"))
                 continue;
 
             delete styleCache[file];

@@ -20,12 +20,13 @@
 @import 'mixins';
 @import 'variables';
 
-html body {
+html, body {
   height: 100%;
-  background: #fff;
+  background: transparent;
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   padding: 0px !important;
   overflow: hidden;
+  overflow-y: hidden !important;
   position: initial !important;
 }
 
@@ -117,7 +118,7 @@ header {
       padding-left: 6px;
       width: 100%;
       max-width: 94%;
-      padding-top: 13px;
+      padding-top: 16px;
     }
   }
 
@@ -247,7 +248,7 @@ header {
 .site-content {
     overflow: hidden;
     margin-left: @pfm-sidebar-size;
-    background: #fff;
+    background: transparent;
     height: 100%;
     z-index: 100;
 }
@@ -376,8 +377,6 @@ md-backdrop {
 }
 
 .buttons {
-  margin-bottom: 10px;
-  
   .md-menu {
     padding: 0;
   }

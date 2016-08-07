@@ -1,5 +1,5 @@
-<div layout="row" layout-xs="column" layout-wrap>
-    <a ng-repeat="album in albums track by album.id" ng-href="{{::album.url}}" class="clickable" flex-gt-xs="50" flex-gt-sm="25" flex-gt-md="20">
+<div layout="row" layout-wrap>
+    <a ng-repeat="album in albums track by album.id" ng-href="{{::album.url}}" class="clickable" flex-xs="100" flex-sm="50" flex-md="25" flex-lg="20">
         <md-card class="album">
             <img class="md-card-image" pfm-src-loader="::album.covers.normal" pfm-src-size="normal">
 

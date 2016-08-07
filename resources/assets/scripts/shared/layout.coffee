@@ -33,7 +33,7 @@ window.handleResize = () ->
 		$this.css
 			'max-height': newMaxHeight
 
-	$('ui-view').each () ->
+	$('.site-content').each () ->
 		$this = $ this
 		newHeight = windowHeight - $this.offset().top
 		if isMobile
@@ -54,6 +54,14 @@ window.handleResize = () ->
 			e.preventDefault()
 			$this.css {height: 'auto'}
 			$(this).fadeOut 200
+
+	$('.blurred-background').each () ->
+		$this = $ this
+		$this.height $('.resource-details header').height() + 55
+
+	$('.resource-details .single-player button').each () ->
+		$this = $ this
+		$this.css 'top', $('.resource-details header').height() + 5
 
 window.alignVertically = (element) ->
 	$element = $(element)
