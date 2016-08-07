@@ -1,12 +1,9 @@
-<md-dialog ng-cloak>
+<md-dialog ng-cloak class="modal-dialog">
     <md-dialog-content>
-        <div class="modal-header">
-            <h4>
-                {{playlist.title}}
-            </h4>
-        </div>
         <div class="modal-body">
-            <h2>Shortlink</h2>
+            <h2>{{playlist.title}}</h2>
+
+            <h5>Shortlink</h5>
             <input type="text" ng-model="playlist.share.url" />
         </div>
     </md-dialog-content>

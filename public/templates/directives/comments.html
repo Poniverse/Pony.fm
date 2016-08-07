@@ -5,17 +5,17 @@
             <input type="text" ng-model="content" placeholder="Write a comment&hellip;" />
         </div>
     </form>
-    <ul>
+    <md-list>
         <li ng-show="resource.comments.length == 0" class="empty">
             There are no comments yet!
         </li>
-        <li ng-repeat="comment in resource.comments track by comment.id">
-            <img pfm-src-loader="::comment.user.avatars.thumbnail" pfm-src-size="thumbnail" />
-            <div class="content">
+        <md-list-item ng-repeat="comment in resource.comments track by comment.id" class="md-3-line">
+            <img pfm-src-loader="::comment.user.avatars.thumbnail" class="md-avatar" alt="::comment.user.name" pfm-src-size="thumbnail" />
+            <div class="md-list-item-text">
                 <a ng-href="{{::comment.user.url}}">{{::comment.user.name}}</a>
-                <span marked="comment.content"></span>
-                <div class="meta">{{::comment.created_at.date | momentFromNow}}</div>
+                <h4>{{::comment.content}}</h4>
+                <p>{{::comment.created_at.date | momentFromNow}}</p>
             </div>
-        </li>
-    </ul>
+        </md-list-item>
+    </md-list>
 </div>

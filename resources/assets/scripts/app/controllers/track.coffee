@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "track", [
-    '$scope', 'meta', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$modal', 'download-cached', '$window', '$timeout', '$mdDialog'
-    ($scope, meta, tracks, $state, playlists, auth, favourites, $modal, cachedTrack, $window, $timeout, $mdDialog) ->
+    '$scope', 'meta', 'tracks', '$state', 'playlists', 'auth', 'favourites', 'download-cached', '$window', '$timeout', '$mdDialog'
+    ($scope, meta, tracks, $state, playlists, auth, favourites, cachedTrack, $window, $timeout, $mdDialog) ->
         $scope.track
         $scope.trackId = parseInt($state.params.id)
         updateTrackData = (forceUpdate = false) ->

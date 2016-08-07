@@ -1,5 +1,5 @@
 <div class="resource-details track-details">
-    <pfm-track-player track="::track"></pfm-track-player>    
+    <pfm-track-player track="::track"></pfm-track-player>
     <header layout="row" layout-xs="column">
         <div class="blurred-background" style="background-image: url('{{track.covers.normal}}');"></div>
         <img class="cover" pfm-src-loader="track.covers.normal" pfm-src-size="normal" />
@@ -11,7 +11,7 @@
             </div>
             <div class="buttons" layout="row" layout-align="end top" layout-align-xs="center center" flex="50" flex-xs="100">
                 <md-menu>
-                    <md-button class="md-icon-button" aria-label="Download" ng-click="$mdOpenMenu($event)">
+                    <md-button class="md-icon-button" aria-label="Download" ng-hide="track.is_downloadable == 0" ng-click="$mdOpenMenu($event)">
                         <md-tooltip md-direction="bottom" md-delay="200">Download</md-tooltip>
                         <md-icon>file_download</md-icon>
                     </md-button>

@@ -21,8 +21,8 @@ window.pfm.preloaders['playlist'] = [
 ]
 
 module.exports = angular.module('ponyfm').controller 'playlist', [
-    '$scope', 'meta', '$state', 'playlists', '$modal', 'download-cached', '$window', '$timeout'
-    ($scope, meta, $state, playlists, $modal, cachedPlaylist, $window, $timeout) ->
+    '$scope', 'meta', '$state', 'playlists', '$mdDialog', 'download-cached', '$window', '$timeout'
+    ($scope, meta, $state, playlists, $mdDialog, cachedPlaylist, $window, $timeout) ->
         playlist = null
 
         playlists.fetch($state.params.id).done (playlistResponse) ->
@@ -31,18 +31,25 @@ module.exports = angular.module('ponyfm').controller 'playlist', [
             meta.setTitle("#{playlist.title} | #{playlist.user.name}")
             meta.setDescription("Listen to \"#{playlist.title}\", a playlist by #{playlist.user.name}, on the largest pony music site.")
 
-        $scope.share = () ->
-            dialog = $modal
+        $scope.share = (ev) ->
+            $mdDialog.show(
                 templateUrl: '/templates/partials/playlist-share-dialog.html',
-                controller: ['$scope', ($scope) -> $scope.playlist = playlist; $scope.close = () -> dialog.close()],
-                show: true
+                scope: $scope,
+                clickOutsideToClose: true,
+                controller: ($scope, $mdDialog) ->
+                    $scope.closeDialog = ->
+                        $mdDialog.cancel()
+            ).then (() ->
+                return
+            ), ->
+                $scope.$apply()
 
         $scope.checkMixedLosslessness = (format) ->
             if format.isMixedLosslessness == true
                 $scope.format = format
                 $modal({scope: $scope, templateUrl: 'templates/partials/collection-mixed-losslessness-dialog.html', show: true})
 
-            
+
         $scope.getCachedPlaylist = (id, format) ->
             $scope.isInProgress = true
 
