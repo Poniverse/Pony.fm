@@ -43,8 +43,8 @@
             <ul class="album-track-listing" ui-sortable="{handle: '.handle', axis: 'y', forcePlaceholderSizeType: true, update: sortTracks}" ng-model="tracks">
                 <li ng-repeat="track in tracks track by track.id">
                     <div>
-                        <span class="btn btn-sm pull-left handle"><i class="fa fa-sort"></i></span>
-                        <a href="#" class="btn btn-sm pull-right btn-danger" ng-click="toggleTrack(track)" pfm-eat-click><i class="fa fa-remove"></i></a>
+                        <span class="btn btn-sm pull-left handle"><i class="material-icons">swap_vert</i></span>
+                        <a href="#" class="btn btn-sm pull-right btn-danger" ng-click="toggleTrack(track)" pfm-eat-click><i class="material-icons">delete</i></a>
                         <span>{{::track.title}}</span>
                     </div>
                 </li>

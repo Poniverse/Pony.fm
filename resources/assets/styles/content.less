@@ -29,7 +29,7 @@
       }
 
       li {
-        width: 33.33333%;
+        width: 30%;
       }
     }
   }
@@ -44,8 +44,7 @@
       }
 
       li {
-        width: auto;
-        float: none;
+        width: 44%;
       }
     }
   }
@@ -56,6 +55,7 @@
   padding: 0px;
   list-style: none;
   overflow: hidden;
+  height: 100%;
 
   &.two-columns {
     li {
@@ -66,9 +66,11 @@
   li {
     .box-sizing(border-box);
     float: left;
-    width: 25%;
-    padding: 5px;
+    width: 12.5%;
+    margin: 10px;
     line-height: normal;
+    .material-shadow(1);
+    border-radius: 2px;
 
     a {
       background: #eee;
@@ -78,14 +80,14 @@
 
       img {
         display: block;
-        float: left;
-        width: 67px;
-        height: 67px;
+        width: 100%;
+        height: auto;
         background: #ddd;
+        border-radius: 2px 2px 0 0;
       }
 
       .info {
-        margin-left: 72px;
+        padding: 5px;
         display: block;
       }
 
@@ -119,9 +121,15 @@
         position: absolute;
         bottom: 3px;
         right: 3px;
+        padding: 2px 5px;
+
+        i {
+          font-size: 12px;
+        }
 
         strong {
           font-weight: normal;
+          font-size: 14px;
         }
       }
 
@@ -130,28 +138,83 @@
         background: #ddd;
       }
     }
+
+    &.empty {
+      box-shadow: 0 0 0 transparent;
+    }
   }
 }
 
+.dropdowns .btn i {
+  font-size: inherit;
+}
+
 .resource-details {
-  &.track-details {
+  .info {
+    margin-left: 15px;
+  }
+
+  &.track-details, &.album-details, &.playlist-details {
     > header {
-      h2, h1 {
-        margin-left: 47px;
+      margin: -10px -10px 20px;
+      padding: 20px;
+      background: transparent;
+      box-shadow: inset 0 -5px 10px -5px rgba(0,0,0,0.3);
+      position: relative;
+
+      .blurred-background {
+        width: 100%;
+        height: 250px;
+        -webkit-filter: blur(30px) brightness(0.8);
+        filter: blur(15px) brightness(0.75);
+        z-index: -1;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        background-color: #a2a2a2;
+        background-position: left center;
+        background-size: 50%;
+        position: absolute;
+      }
+
+      h1, h2, .buttons md-icon, a {
+        color: #fff;
+        text-shadow: 0 1px 5px black;
+      }
+
+      img {
+        width: 200px;
+        height: 200px;
+        background: #fff;
+        .material-shadow(2);
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      h2 {
+        margin-top: 2px;
+        font-size: 16px;
       }
     }
   }
 
   &.artist-details {
     > header {
-      padding: 15px;
+      background: #aaa;
+      background-size: cover;
+      background-position: center;
+      padding: 25px 25px 70px;
+      margin: -15px -15px 10px;
 
       > img {
         width: 150px;
         height: 150px;
         float: left;
         background: #fff;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        border-radius: 50%;
+        .material-shadow(2);
       }
 
       > .artist-right {
@@ -159,14 +222,13 @@
         margin-top: 5px;
 
         > h1, .follower-count {
+          text-shadow: 0 1px 3px black;
           font-size: 20pt;
           color: #fff;
-          background: rgba(0,0,0,0.5);
           padding: 5px 10px;
-          margin-bottom: 5px;
           display: table;
         }
-        
+
         > .follower-count {
           font-size: 14pt;
         }
@@ -179,10 +241,12 @@
 
     .admin-star {
       margin-left: 10px;
+      font-size: 26px;
+      margin-top: -6px;
     }
 
-    &.x-archived {
-      background: #eee;
+    .albums-listing li {
+      width: 22%;
     }
   }
 
@@ -205,7 +269,6 @@
 
   > header {
     padding: 5px;
-    background: #eee;
     overflow: hidden;
     margin-bottom: 10px;
 
@@ -327,12 +390,23 @@ html .single-player .play-button {
   display: block;
 }
 
-.single-player, .tracks-listing li .image {
-  float: left;
-  width: @icon-size;
-  height: @icon-size;
+.single-player {
   position: relative;
+  button {
+    position: absolute;
+    top: 270px;
+    right: 0;
+  }
+}
 
+.tracks-listing li .image {
+  float: left;
+  position: relative;
+  width: 43px;
+  height: 43px;
+}
+
+.single-player, .tracks-listing li .image {
   .button-container {
     display: table;
     width: 100%;
@@ -353,7 +427,7 @@ html .single-player .play-button {
     left: 0px;
     width: 100%;
     height: 100%;
-    line-height: 45px;
+    line-height: 32px;
     text-align: center;
     font-size: 12pt;
     color: #fff;
@@ -432,13 +506,18 @@ html {
     .icons {
       float: right;
       display: block;
-      margin-top: 5px;
+      margin-top: 3px;
+      height: 16px;
 
-      i.fa-microphone-slash {
+      i {
+        font-size: 18px;
+      }
+
+      i.no-vocals {
         opacity: .5;
       }
 
-      i.fa-microphone-slash, i.fa-microphone {
+      i.no-vocals, i.has-vocals {
         color: #777;
       }
 
@@ -464,7 +543,7 @@ html {
       .ellipsis();
 
       color: #000;
-      margin-top: 5px;
+      margin-top: 2px;
     }
 
     .artist {
@@ -485,16 +564,15 @@ html {
       }
     }
 
-    .artist, .stats {
-      margin-top: 2px;
-    }
-
     &:hover {
       background: #dedede;
 
       .image {
         .play-button {
           display: block;
+          i {
+            padding-top: 9px;
+          }
         }
       }
     }
@@ -514,12 +592,8 @@ html {
           text-decoration: none;
 
           i {
-            color: #FFD76E;
-            text-shadow: 0px 0px 2px rgba(0,0,0,0.8);
-
-            &:before {
-              content: "\f005"
-            }
+            color: @brand-danger;
+            width: 18px;
           }
         }
       }
@@ -544,24 +618,32 @@ html {
   }
 }
 
+.loading .notification-menu md-icon {
+  display: none;
+}
+
 .notification-menu {
   float: right;
-  margin-top: 15px;
+  margin-top: 9px;
   margin-right: 14px;
-  font-size: 20pt;
+  font-size: 30px;
+  position: absolute;
+  top: 0;
+  right: 60px;
 
-  a {
-    color: #5A5A5A;
+  .md-button .material-icons {
+    color: #fff;
+    font-size: 30px;
 
     &:hover {
-      color: #000;
+      color: #eee;
     }
   }
 
   .counter {
     position: absolute;
     bottom: 8px;
-    right: 90px;
+    right: 5px;
     font-size: 8pt;
     color: #fff;
     background: #b885bd;
@@ -609,18 +691,18 @@ html {
 
 .notification-pullout {
   position: absolute;
-  top: 64px;
-  right: -410px;
+  top: -450px;
+  right: 10px;
   width: 400px;
-  height: ~"calc(100% - 64px)";
-  z-index: 1000;
+  height: 500px;
+  z-index: 98;
   background: #eee;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateX(0px) translateZ(0px);
+  .material-shadow(2);
+  transition: transform 0.3s @swift-ease-in-out;
+  transform: translateY(0px) translateZ(0px);
 
   &.active {
-    transform: translateX(-410px) translateZ(0px);
+    transform: translateY(520px) translateZ(0px);
   }
 
   .notif-container {
@@ -644,4 +726,62 @@ html {
     font-size: 16pt;
     color: #222;
   }
+}
+
+.search-button {
+  display: none;
+}
+
+i {
+  font-size: inherit;
+  vertical-align: middle;
+}
+
+canvas {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.clickable {
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+form.thin md-input-container {
+  margin: 15px 0 0 0;
+}
+
+md-card.album, md-card.user {
+  md-card-content {
+    padding: 4px 12px;
+    span {
+      font-size: 16px;
+    }
+  }
+
+  .album-stats span {
+    margin: 0 3px;
+    font-size: 12px;
+
+    md-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      min-height: 16px;
+    }
+  }
+
+  .user-info {
+    margin: 0 12px 8px;
+
+    span {
+      margin: 0;
+      font-size: 12px;
+    }
+  }
+}
+
+.button-bar {
+  margin-bottom: 10px;
 }

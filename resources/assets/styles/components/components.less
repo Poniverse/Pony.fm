@@ -22,6 +22,7 @@
 
 .stretch-to-bottom {
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .dropdowns {
@@ -41,6 +42,7 @@
     > .btn {
       float: left;
       display: block;
+      border-radius: 15px;
     }
 
     > .btn + .btn {
@@ -50,10 +52,21 @@
       margin: 0px;
     }
 
+    > .btn {
+      text-transform: initial;
+      box-shadow: 0 0 0 transparent !important;
+      transition: background-color 0.3s @swift-ease-in-out;
+    }
+
     &.has-filter {
       > .btn {
         background: @pfm-purple;
         color: #fff;
+        border-radius: 0 15px 15px 0;
+      }
+
+      > .dropdown-toggle {
+        border-radius: 15px 0 0 15px;
       }
 
       > .btn + .btn {
@@ -72,11 +85,21 @@
         color: #fff;
       }
 
-      .dropdown-menu {
-        .box-shadow(none);
+      &.filterable {
+        > .btn {
+          border-radius: 0 15px 15px 0;
+        }
 
+        > .dropdown-toggle {
+          border-radius: 15px 0 0 15px;
+        }
+      }
+
+      .dropdown-menu {
+        .material-shadow(2);
         margin: 0px;
-        border: 2px solid @pfm-purple;
+        border: 0;
+        border-radius: 2px;
 
         li.selected {
           a {
@@ -96,7 +119,7 @@
 
     > .btn {
       border: none;
-      background: #eee;
+      background: #e0e0e0;
       font-size: 8pt;
       padding: 5px 7px;
       text-shadow: none;
@@ -144,6 +167,31 @@
       }
     }
   }
+
+  &.header {
+    margin-top: -58px;
+    border-bottom: 0;
+
+    li a {
+      color: #fff;
+      border-bottom: 4px solid transparent;
+      opacity: 0.5;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 12px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+      }
+    }
+
+    li.active a {
+      border-bottom: 4px solid #fff;
+      background: transparent;
+      color: #fff;
+      opacity: 1;
+    }
+  }
 }
 
 ui-view {
@@ -188,7 +236,7 @@ ui-view {
     float: left;
 
     a, button {
-      .border-radius(0px);
+      .border-radius(0px) !important;
       font-size: 9pt;
     }
 
@@ -200,13 +248,52 @@ ui-view {
 
 html body {
   .btn {
-    .border-radius(0px);
+    .material-shadow(1);
+    .border-radius(3px);
+    border:0;
+    transition: all 0.3s @swift-ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    outline: 0;
+
+    &:hover {
+      .material-shadow(2);
+    }
+
+    &.btn-flat {
+      box-shadow: 0 0 0 transparent !important;
+      background-color: transparent;
+
+      &.btn-default:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+
+  .btn-danger.btn-flat {
+    background: @brand-danger;
+    color: #fff;
+    &:hover {
+      background: lighten(@brand-danger, 15%);
+    }
   }
 
   .btn.btn-primary, .add-btn, .btn-success {
     background: @pfm-purple;
     border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25);
     color: #fff;
+    &:hover {
+      background-color: darken(@pfm-purple, 15%);
+    }
+
+    &.btn-flat {
+      background-color: transparent;
+      color: @pfm-purple;
+      &:hover {
+        background-color: lighten(@pfm-purple, 30%);
+        color: darken(@pfm-purple, 15%);
+      }
+    }
   }
 
   .btn-success.disabled {
@@ -238,37 +325,58 @@ html body {
   }
 }
 
+@keyframes dropdown-open {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes dropdown-link {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 html .dropdown-menu {
-  .border-radius(0px);
-  padding: 0px;
+  .border-radius(4px);
+  border: 0;
+  padding: 0;
   overflow-y: auto;
+  animation: dropdown-open 0.2s;
+  animation-timing-function: @swift-ease-out;
+  animation-fill-mode: forwards;
+  transform-origin: top left;
 
   > li {
     margin: 0px;
 
     > a {
-      padding: 6px 10px;
-      font-size: 8pt;
+      padding: 10px 16px;
+      font-size: 14px;
+      line-height: 18px;
+      &:hover {
+        background-color: #eeeeee;
+      }
     }
 
     > .dont-close {
       float: right;
       display: block;
-      width: 24px;
+      width: 40px;
       text-align: center;
-      padding: 3px 3px;
+      padding: 7px 0;
       font-size: 10pt;
     }
 
     > .dont-close + a {
-      margin-right: 24px;
+      margin-right: 40px;
       clear: none;
-    }
-
-    &.selected {
-      > .dont-close i:before {
-        content: "\f068";
-      }
     }
   }
 }
@@ -304,7 +412,6 @@ html .dropdown-menu {
   }
 
   .preview {
-    .img-thumbnail();
     overflow: hidden;
     width: 50px;
     height: 50px;

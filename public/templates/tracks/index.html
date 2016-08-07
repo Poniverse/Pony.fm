@@ -1,69 +1,42 @@
-<ul class="dropdowns">
-    <li class="dropdown" ng-class="{'has-filter': query.filters.trackTypes.selectedArray.length}">
-        <a class="dropdown-toggle btn btn-default" bs-dropdown>
-            Type: <strong>{{query.filters.trackTypes.title}}</strong>
-        </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('trackTypes')"><i class="fa fa-remove"></i></a>
-        <ul class="dropdown-menu">
-            <li ng-repeat="type in ::filters.trackTypes.values track by type.id"
-                ng-class="{selected: query.isIdSelected('trackTypes', type.id)}"
-            >
-                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('trackTypes', type.id); $event.stopPropagation();"><i class="fa fa-plus"></i></a>
-                <a pfm-eat-click href="#" ng-click="setListFilter('trackTypes', type.id);">{{::type.title}}</a>
-            </li>
-        </ul>
-    </li>
-    <li class="dropdown" ng-class="{'has-filter': query.filters.showSongs.selectedArray.length}">
-        <a class="dropdown-toggle btn btn-default" bs-dropdown>
-            Show Songs: <strong>{{query.filters.showSongs.title}}</strong>
-        </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('showSongs')"><i class="fa fa-remove"></i></a>
-        <ul class="dropdown-menu">
-            <li ng-repeat="song in ::filters.showSongs.values track by song.id"
-                ng-class="{selected: query.isIdSelected('showSongs', song.id)}"
-            >
-                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('showSongs', song.id); $event.stopPropagation();"><i class="fa fa-plus"></i></a>
-                <a pfm-eat-click href="#" ng-click="setListFilter('showSongs', song.id);">{{::song.title}}</a>
-            </li>
-        </ul>
-    </li>
-    <li class="dropdown" ng-class="{'has-filter': query.filters.genres.selectedArray.length}">
-        <a class="dropdown-toggle btn btn-default" bs-dropdown>
-            Genre: <strong>{{query.filters.genres.title}}</strong>
-        </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('genres')"><i class="fa fa-remove"></i></a>
-        <ul class="dropdown-menu">
-            <li ng-repeat="genre in ::filters.genres.values track by genre.id" ng-class="{selected: query.isIdSelected('genres', genre.id)}">
-                <a class="dont-close" pfm-eat-click href="#" ng-click="toggleListFilter('genres', genre.id); $event.stopPropagation();"><i class="fa fa-plus"></i></a>
-                <a pfm-eat-click href="#" ng-click="setListFilter('genres', genre.id);">{{::genre.title}}</a>
-            </li>
-        </ul>
-    </li>
-    <li class="dropdown" ng-class="{'has-filter': !query.filters.isVocal.isDefault}">
-        <a class="dropdown-toggle btn btn-default" bs-dropdown>
-            Is Vocal: <strong>{{query.filters.isVocal.title}}</strong>
-        </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('isVocal')"><i class="fa fa-remove"></i></a>
-        <ul class="dropdown-menu">
-            <li ng-repeat="item in ::filters.isVocal.values track by $index"
-                ng-class="{selected: item == query.filters.isVocal}"
-            >
-                <a pfm-eat-click href="#" ng-click="setFilter('isVocal', item);">{{::item.title}}</a>
-            </li>
-        </ul>
-    </li>
-    <li class="dropdown" ng-class="{'has-filter': !query.filters.sort.isDefault}">
-        <a class="dropdown-toggle btn btn-default" bs-dropdown>
-            Order: <strong>{{query.filters.sort.title}}</strong>
-        </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('sort')"><i class="fa fa-remove"></i></a>
-        <ul class="dropdown-menu">
-            <li ng-repeat="filter in ::filters.sort.values track by $index" ng-class="{selected: filter == query.filters.sort}">
-                <a pfm-eat-click href="#" ng-click="setFilter('sort', filter)">{{::filter.title}}</a>
-            </li>
-        </ul>
-    </li>
-</ul>
+<div layout="row" layout-wrap flex flex-gt-md="50">
+    <md-input-container flex flex-xs="50">
+        <label>Type</label>
+        <md-select ng-model="type" md-on-close="filterDropdownAfterClose(type, 'trackTypes')" multiple>
+            <md-option value="any" selected>Any</md-option>
+            <md-option ng-repeat="type in ::filters.trackTypes.values track by type.id" value="{{type.id}}">{{::type.title}}</md-option>
+        </md-select>
+    </md-input-container>
+
+    <md-input-container flex flex-xs="50">
+        <label>Show songs</label>
+        <md-select ng-model="showSongs" md-on-close="filterDropdownAfterClose(showSongs, 'showSongs')" multiple>
+            <md-option value="any" selected>Any</md-option>
+            <md-option ng-repeat="song in ::filters.showSongs.values track by song.id" value="{{song.id}}">{{::song.title}}</md-option>
+        </md-select>
+    </md-input-container>
+
+    <md-input-container flex flex-xs="50">
+        <label>Genre</label>
+        <md-select ng-model="genres" md-on-close="filterDropdownAfterClose(genres, 'genres')" multiple>
+            <md-option value="any" selected>Any</md-option>
+            <md-option ng-repeat="genre in ::filters.genres.values track by genre.id" value="{{genre.id}}">{{::genre.title}}</md-option>
+        </md-select>
+    </md-input-container>
+
+    <md-input-container flex flex-xs="50">
+        <label>Has vocals</label>
+        <md-select ng-model="isVocal" md-on-close="handleSingularDropdown('isVocal', isVocal)">
+            <md-option ng-repeat="item in ::filters.isVocal.values track by $index" value="{{item}}">{{::item.title}}</md-option>
+        </md-select>
+    </md-input-container>
+
+    <md-input-container flex>
+        <label>Order by</label>
+        <md-select ng-model="order" md-on-close="handleSingularDropdown('sort', order)">
+            <md-option ng-repeat="filter in ::filters.sort.values track by $index" value="{{filter}}">{{::filter.title}}</md-option>
+        </md-select>
+    </md-input-container>
+</div>
 
 <div class="pagination" ng-if="totalPages > 1">
     <ul>

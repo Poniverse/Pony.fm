@@ -42,35 +42,34 @@
     </script>
 
     <header>
-        <div class="mobile-header">
-          <div class="burger-wrapper" ng-click="menuToggle()">
-            <div class="burger">
-              <div class="bun-top"></div>
-              <div class="meat"></div>
-              <div class="bun-bottom"></div>
+        <div class="top-bar">
+            <div class="burger-wrapper" ng-click="menuToggle()">
+                <i class="material-icons">menu</i>
             </div>
-          </div>
-          <a href="/" class="logo"><img class="default-logo" src="/images/ponyfm-logo-white.svg"><img class="small-logo" src="/images/ponyfm-logo-white-nodisc.svg"></a>
-        </div>
-        <div class="now-playing">
+            <a href="/" class="logo"><img class="default-logo" src="/images/ponyfm-logo-white.svg"><img class="small-logo" src="/images/ponyfm-logo-white-nodisc.svg"></a>
+            <pfm-search></pfm-search>
             @if (Auth::check())
-                <div class="user-details dropdown">
-                    <a class="avatar dropdown-toggle" bs-dropdown href="#">
-                        <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
-                        <span><i class="fa fa-chevron-down"></i></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li ui-sref-active="active"><a ui-sref="content.artist.profile({slug: auth.user.slug})">Your Profile</a></li>
-                        <li ui-sref-active="active"><a ui-sref="content.artist.favourites({slug: auth.user.slug})">Favourites</a></li>
-                        <li ui-sref-active="active"><a ui-sref="content.artist.account.settings({slug: auth.user.slug})">Account</a></li>
-                        <li><a href="#" pfm-eat-click ng-click="logout()">Logout</a></li>
-                    </ul>
+                <div class="user-details">
+                    <md-menu md-position-mode="target-right target">
+                        <a class="avatar dropdown-toggle" ng-click="$mdOpenMenu($event)" href="#">
+                            <img src="{{Auth::user()->getAvatarUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL)}}" />
+                        </a>
+                        <md-menu-content width="3">
+                            <md-menu-item><md-button ui-sref="content.artist.profile({slug: auth.user.slug})">Your Profile</md-button></md-menu-item>
+                            <md-menu-item><md-button ui-sref="content.artist.favourites({slug: auth.user.slug})">Favourites</md-button></md-menu-item>
+                            <md-menu-item><md-button ui-sref="content.artist.account.settings({slug: auth.user.slug})">Account</md-button></md-menu-item>
+                            <md-menu-item><md-button href="#" pfm-eat-click ng-click="logout()">Logout</md-button></md-menu-item>
+                        </ul>
+                    </md-menu>
                 </div>
                 <div class="notification-menu">
-                    <a href="#" ng-click="notifPulloutToggle()"><i class="fa fa-bell fa-fw" aria-hidden="true"></i></a>
+                    <md-button ng-click="notifPulloutToggle()" class="md-icon-button"><md-icon>notifications</md-icon></md-button>
                     <div class="counter" ng-class="{'show': nCount > 0}">@{{ nCountFormatted }}</div>
                 </div>
             @endif
+            <md-progress-linear md-mode="indeterminate" class="loader" ng-disabled="hideLoading"></md-progress-linear>
+        </div>
+        <div class="now-playing" ng-class="{'playing': isPlaying}">
             <pfm-player></pfm-player>
         </div>
     </header>
@@ -80,7 +79,6 @@
             <a href="/">
               <img src="/images/ponyfm-logo-white.svg" class="logo">
             </a>
-            <li><pfm-search class="hidden-xs"></pfm-search></li>
             <li ng-class="{selected: stateIncludes('content.tracks') || stateIncludes('content.track')}"><a ui-sref="content.tracks.list">Tracks</a></li>
             <li ng-class="{selected: stateIncludes('content.albums') || stateIncludes('content.album')}"><a ui-sref="content.albums.list">Albums</a></li>
             <li ng-class="{selected: stateIncludes('content.playlists') || stateIncludes('content.playlist')}"><a ui-sref="content.playlists.list">Playlists</a></li>
@@ -103,7 +101,7 @@
 
                 <li>
                     <h3>
-                        <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="fa fa-plus"></i></a>
+                        <a href="#" ng-click="createPlaylist()" pfm-eat-click title="Create Playlist"><i class="material-icons">add</i></a></a>
                         My Playlists
                     </h3>
                 </li>
@@ -129,6 +127,7 @@
                 </a>
             </li>
         </ul>
+
         <ui-view class="site-content">
             @yield('app_content')
         </ui-view>
@@ -145,8 +144,7 @@
 @endsection
 
 @section('styles')
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans" />
-    <link rel="stylesheet" href="/styles/loader.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700|Material+Icons" />
     {!! Assets::styleIncludes() !!}
 @endsection
 

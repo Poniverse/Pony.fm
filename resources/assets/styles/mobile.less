@@ -13,40 +13,43 @@
 
   .site-content {
     margin-left: 0px;
-    overflow: scroll;
     padding: 5px;
   }
 
   .site-body {
     overflow-x: hidden;
+    padding-top: 0;
   }
 
   .now-playing {
-    margin-left: 0px;
-    position: fixed;
+    margin-left: 0;
+    left: 0;
     width: 100%;
-    bottom: 0;
-    z-index: 1010;
-    box-shadow: 0 0 8px rgba(0,0,0,0.5);
   }
 
   .user-details {
     position: fixed;
     top: 0;
-    right: 0;
+    right: 0 !important;
     z-index: 1002;
-    margin-right: 10px;
+    margin-right: 10px !important;
     margin-top: 10px;
   }
 
-  .mobile-header {
-    display: block !important;
-    position: absolute;
-    z-index: 1001;
-    background: #84528A;
-    height: 64px;
-    width: 100%;
-    top: 0;
+  .top-bar {
+    margin-left: 0;
+    box-shadow: 0 0 0 transparent;
+
+    .burger-wrapper {
+      display: block;
+      top: 15px;
+      left: 15px;
+
+      i {
+        font-size: 32px;
+        color: #fff;
+      }
+    }
 
     .logo {
       text-align: center;
@@ -65,7 +68,7 @@
   }
 
   .sidebar {
-    left: -170px;
+    left: -(@pfm-sidebar-size + 10);
     transform: translateX(0px) translateZ(0);
     perspective: 1000;
     backface-visibility: hidden;
@@ -73,7 +76,7 @@
     z-index: 1011;
     height: ~"calc(100% - 64px)";
     box-shadow: 0 8px 8px rgba(0,0,0,0.5);
-    overflow-y: scroll;
+    overflow-y: auto;
 
     > a {
       display: none;
@@ -94,27 +97,52 @@
     }
 
     &.active {
-      transform: translateX(170px) translateZ(0);
+      transform: translateX(@pfm-sidebar-size + 10) translateZ(0);
     }
   }
 
-  .user-details > .avatar {
-    border: 0 !important;
-    box-shadow: initial !important;
-    background: transparent !important;
+  .search-button {
+    display: block;
+    position: absolute;
+    font-size: 22px;
+    top: 0;
+    left: 60px;
+    color: #fff;
+    padding: 13px 7px 18px;
 
-    > img {
-      border-radius: 20px;
+    i {
+      font-size: 30px;
     }
 
-    > span {
-      display: none !important;
+    &:hover, &:focus, &:active {
+      color: #fff;
+    }
+  }
+
+  .search {
+    display: none;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  input.search-input {
+    background: lighten(@pfm-logo-purple, 10%);
+    border-radius: 0;
+  }
+
+  .search-results {
+    width: 100%;
+
+    .-column1, .-column2 {
+      padding: 0;
+      width: 100%;
+      float: none;
+      clear: both;
     }
   }
 
   .track-player {
     margin-right: 0px !important;
-    padding: 5px 10px;
 
     .inner {
       margin-left: 0px !important;
@@ -125,28 +153,38 @@
     }
 
     .buttons {
+      margin-top: 15px;
+      margin-right: 5px;
+
       li.volume, li.status  {
         display: none;
+      }
+
+      li {
+        font-size: 20px;
+        a {
+          width: 40px;
+        }
       }
     }
 
     .song, .artist {
       margin-bottom: 4px;
+      margin-left: 5px;
     }
 
     .transport {
       border-radius: 0px !important;
       margin-top: 4px;
       height: 10px;
+      left: 0;
+      width: 100%;
+      bottom: 55px;
 
       .bar, .loader-bar {
         border-radius: 0px;
       }
     }
-  }
-
-  input.search-input {
-    border: 0;
   }
 
   .dropdowns {
@@ -190,7 +228,8 @@
     }
 
     > header {
-      margin-bottom: 0px;
+      margin: 0 !important;
+      padding: 25px 25px 50px !important;
 
       > img {
         float: none !important;
@@ -283,9 +322,11 @@
 
   .notification-pullout {
     left: 0;
+    right: 0;
+    top: 64px;
     width: 100%;
     height: ~"calc(100% - 128px)";
-    transform: translateY(-105%) translateZ(0);
+    transform: translateY(-120%) translateZ(0);
 
     &.active {
       transform: translateY(0) translateZ(0);
@@ -299,9 +340,14 @@
   .notification-menu {
     position: fixed;
     top: 0;
-    right: 54px;
-    margin-top: 13px;
-    margin-right: 10px;
+    right: 60px !important;
+    font-size: 22px;
+    margin-right: 0 !important;
+    margin-top: 8px !important;
+
+    a {
+      padding: 13px 7px 22px;
+    }
 
     a, a:active, a:hover, a:focus {
       color: #fff;
@@ -336,7 +382,12 @@
     display: flex;
     white-space: nowrap;
     border-bottom: 0;
-    height: 41px;
+    height: 44px;
+
+    &.header {
+      height: 48px;
+      margin-top: -48px;
+    }
 
     li {
       a {
@@ -353,10 +404,10 @@
       background: #84528a;
       top: 64px;
       left: 0;
-      height: 41px;
+      height: 44px;
       width: 100%;
       border-bottom: 0;
-      z-index: 100;
+      z-index: 600;
 
       li {
         a {
@@ -374,12 +425,43 @@
     }
   }
 
-  .fixed-tabs {
-    padding-top: 41px;
-  }
-
   .secondary-content {
     margin-top: 5px;
+  }
+
+  .account-tabs {
+    margin: -49px 0px 5px;
+  }
+
+  .modal-dialog {
+    width: 95%;
+  }
+
+  .resource-details {
+    &.track-details, &.album-details, &.playlist-details {
+      > header {
+        img {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .info {
+          margin-left: 0;
+          margin-top: 15px;
+          text-align: center;
+        }
+      }
+    }
+
+    .cover {
+      display: block !important;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .buttons {
+      margin-top: 15px;
+    }
   }
 }
 
@@ -393,23 +475,54 @@
     display: block;
   }
 
-  .burger-wrapper {
-    top: 23px;
-    left: 15px;
-  }
-
   .notification-menu {
     top: 0;
-    right: 54px;
-    margin-right: 13px;
-    margin-top: 13px;
+    right: 55px !important;
+    margin-top: 14px !important;
   }
 
-  .mobile-header .logo {
+  .top-bar .logo {
     margin-left: 55px;
     height: 52px;
     width: 122px;
     padding-top: 18px;
+  }
+
+  .search {
+    margin-top: 12px;
+  }
+
+  .search-button {
+    right: 90px;
+    left: initial;
+    padding: 15px 7px !important;
+  }
+
+  .top-bar .burger-wrapper {
+    top: 17px;
+    left: 11px;
+  }
+
+  .albums-listing, .playlists-listing, .users-listing {
+    width: 100% !important;
+
+    li {
+      width: 97% !important;
+      margin: 5px;
+
+      a img {
+        width: 60px;
+        float: left;
+      }
+
+      .info {
+        margin-left: 60px;
+        padding: 2px 5px;
+      }
+    }
+  }
+  .modal-dialog {
+    width: 100%;
   }
 }
 

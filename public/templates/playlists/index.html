@@ -1,16 +1,11 @@
-<ul class="dropdowns">
-    <li class="dropdown" ng-class="{'has-filter': !query.filters.sort.isDefault}">
-        <a class="dropdown-toggle btn btn-default" bs-dropdown>
-            Order: <strong>{{query.filters.sort.title}}</strong>
-        </a>
-        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('sort')"><i class="fa fa-remove"></i></a>
-        <ul class="dropdown-menu">
-            <li ng-repeat="filter in ::filters.sort.values track by $index" ng-class="{selected: filter == query.filters.sort}">
-                <a pfm-eat-click href="#" ng-click="setFilter('sort', filter)">{{::filter.title}}</a>
-            </li>
-        </ul>
-    </li>
-</ul>
+<div layout="row">
+    <md-input-container flex="100" flex-sm="50" flex-gt-sm="25">
+        <label>Order by</label>
+        <md-select ng-model="filter" md-on-close="handleSingularDropdown('sort', filter)">
+            <md-option ng-repeat="filter in ::filters.sort.values track by $index" value="{{filter}}">{{::filter.title}}</md-option>
+        </md-select>
+    </md-input-container>
+</div>
 
 <div class="pagination" ng-if="totalPages > 1">
     <ul>

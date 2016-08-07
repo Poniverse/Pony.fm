@@ -1,25 +1,19 @@
-<div class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>
-                    <button type="button" class="close" ng-click="$hide()" ng-hide="isLoading">&times;</button>
-                    {{track.title}}
-                </h4>
-            </div>
-            <div class="modal-body">
-                <h2>Shortlink</h2>
-                <input type="text" ng-model="track.share.url" />
+<md-dialog ng-cloak class="modal-dialog">
+    <md-dialog-content>
+        <div class="modal-body">
+            <h2>Share '{{track.title}}'</h2>
 
-                <h2>HTML Embed <small>(websites, blogs)</small></h2>
-                <textarea type="text" ng-model="track.share.html"></textarea>
+            <h5>Shortlink</h5>
+            <input type="text" ng-model="track.share.url" />
 
-                <h2>BBCode Embed <small>(forums)</small></h2>
-                <textarea type="text" ng-model="track.share.bbcode"></textarea>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-primary" ng-click="$hide()" ng-disabled="isLoading">Close</a>
-            </div>
+            <h5>HTML Embed <small>(websites, blogs)</small></h5>
+            <textarea type="text" ng-model="track.share.html"></textarea>
+
+            <h5>BBCode Embed <small>(forums)</small></h5>
+            <textarea type="text" ng-model="track.share.bbcode"></textarea>
         </div>
-    </div>
-</div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="closeDialog()" class="md-primary">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>

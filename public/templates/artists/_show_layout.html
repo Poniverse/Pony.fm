@@ -1,9 +1,9 @@
-<div class="resource-details artist-details fixed-tabs" ng-class="::{'x-archived': artist.is_archived}">
+<div class="resource-details artist-details" ng-class="::{'x-archived': artist.is_archived}">
 
-    <header ng-style="{'background-image': 'linear-gradient(135deg, ' + artist.avatar_colors[0] + ' 15%, ' + artist.avatar_colors[1] + ' 100%)'}">
-        <img src="{{artist.avatars.normal}}">
+    <header ng-style="headerStyle">
+        <img src="{{artist.avatars.normal}}" id="avatar">
         <div class="artist-right">
-            <h1>{{artist.name}}<i class="fa fa-star admin-star" ng-show="::artist.isAdmin" data-title="Admin" bs-tooltip></i></h1>
+            <h1>{{artist.name}}<i class="material-icons admin-star" ng-show="::artist.isAdmin" data-title="Admin" bs-tooltip>verified_user</i></h1>
             <p class="follower-count">
                 <ng-pluralize count="artist.followers"
                 when="{'0': 'No followers',
@@ -11,21 +11,19 @@
                      'other': '{} followers'}">
                 </ng-pluralize>
             </p>
-            <a href="#" class="btn btn-default" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
+            <a href="#" class="btn btn-default btn-flat" ng-class="{'btn-primary': !artist.user_data.is_following}" ng-show="auth.isLogged && auth.user.id != artist.id" pfm-eat-click ng-click="toggleFollow()">
                 <span ng-if="!artist.user_data.is_following">Follow</span>
                 <span ng-if="artist.user_data.is_following">Following!</span>
             </a>
 
         </div>
     </header>
-    <ul class="tabs fixed">
-        <li ui-sref-active="active"><a ui-sref=".profile">Profile</a></li>
-        <li ui-sref-active="active"><a ui-sref=".content">Content</a></li>
-        <li ng-if="::!artist.is_archived" ui-sref-active="active">
-            <a ui-sref=".favourites">Favourites</a>
-        </li>
-        <li ng-if="::artist.permissions.edit" ui-sref-active="{active: '.account'}"><a ui-sref=".account.settings">Manage Account</a></li>
-    </ul>
+    <md-tabs class="account-tabs" md-selected="selectedTab" md-border-bottom>
+        <md-tab ui-sref=".profile" name="profile">Profile</md-tab>
+        <md-tab ui-sref=".content" name="content">Content</md-tab>
+        <md-tab ng-if="::!artist.is_archived" ui-sref=".favourites" name="favourites">Favourites</md-tab>
+        <md-tab ng-if="::artist.permissions.edit" ui-sref=".account.settings" name="settings">Manage Account</md-tab>
+    </md-tabs>
     <div class="stretch-to-bottom secondary-content">
         <ui-view></ui-view>
     </div>

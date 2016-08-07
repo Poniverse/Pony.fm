@@ -1,41 +1,51 @@
 <div class="resource-details album-details">
-    <ul class="dropdowns">
-        <li class="dropdown">
-            <a href="#" class="btn btn-sm btn-primary dropdown-toggle" bs-dropdown ng-disabled="album.is_downloadable == 0" auto-close="outsideClick">
-                Downloads
-            </a>
-            <ul class="dropdown-menu" ng-show="::album.is_downloadable == 1">
-                <li ng-repeat="format in ::album.formats" ng-hide="isInProgress">
-                    <a target="_blank" ng-if="::!format.isCacheable" ng-click="checkMixedLosslessness(format);" ng-href="{{::format.url}}">
-                        <span>{{::format.name}}</span>
-                        <small>({{::format.size}})</small>
-                    </a>
-                    <a ng-if="::format.isCacheable" ng-click="getCachedAlbum(album.id, format);" href="">
-                        <span>{{::format.name}}</span>
-                        <small>({{::format.size}})</small>
-                    </a>
-                </li>
-                <li ng-show="isInProgress" class="cache-loading"><img src="/images/loading.gif" /></li>
-                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take a few minutes.</small></li>
-            </ul>
-        </li>
-        <li><a href="#" class="btn btn-default" pfm-eat-click ng-click="share()">Share</a></li>
-        <li><pfm-favourite-button resource="::album" type="album"></pfm-favourite-button></li>
-        <li ng-if="::album.permissions.edit"><a class="btn btn-default btn-sm" ui-sref="content.artist.account.albums.edit(::{slug: album.user.slug, album_id: album.id})">Edit</a></li>
-    </ul>
+    <header layout="row" layout-xs="column">
+        <div class="blurred-background" style="background-image: url('{{album.covers.normal}}');"></div>
+        <div layout="row" layout-xs="column" flex>
+            <div flex="50" flex-xs="100" class="info">
+                <h1>{{::album.title}}</h1>
+                <h2>
+                    by: <a ng-href="{{::album.user.url}}">{{::album.user.name}}</a>
+                </h2>
+            </div>
 
-    <header>
-        <h1>{{::album.title}}</h1>
-        <h2>
-            by: <a ng-href="{{::album.user.url}}">{{::album.user.name}}</a>
-        </h2>
+            <div class="buttons" layout="row" layout-align="end top" layout-align-xs="center center" flex="50" flex-xs="100">
+                <md-menu>
+                    <md-button class="md-icon-button" aria-label="Download" ng-click="$mdOpenMenu($event)" ng-hide="album.is_downloadable == 0">
+                        <md-tooltip md-direction="bottom" md-delay="200">Download</md-tooltip>
+                        <md-icon>file_download</md-icon>
+                    </md-button>
+
+                    <md-menu-content>
+                        <md-menu-item ng-repeat="format in ::album.formats" ng-hide="isInProgress">
+                            <md-button target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
+                                {{::format.name}} ({{::format.size}})
+                            </md-button>
+                            <md-button ng-if="format.isCacheable" ng-click="getCachedAlbum(album.id, format);" href="">
+                                {{::format.name}} ({{::format.size}})
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+
+                <pfm-favourite-button resource="::album" type="album"></pfm-favourite-button>
+
+                <md-button class="md-icon-button" aria-label="Share or embed" ng-click="share()">
+                    <md-tooltip md-direction="bottom" md-delay="200">Share or embed</md-tooltip>
+                    <md-icon>share</md-icon>
+                </md-button>
+
+                <md-button class="md-icon-button" aria-label="Edit" ng-show="::album.permissions.edit" ui-sref="content.artist.account.albums.edit(::{slug: album.user.slug, album_id: album.id})">
+                    <md-tooltip md-direction="bottom" md-delay="200">Edit</md-tooltip>
+                    <md-icon>edit</md-icon>
+                </md-button>
+            </div>
+        </div>
     </header>
 
     <div class="stretch-to-bottom details-columns">
         <div class="right">
-            <a colorbox ng-href="{{::album.covers.original}}" pfm-eat-click>
-                <img class="cover" pfm-src-loader="::album.covers.normal" pfm-src-size="normal" />
-            </a>
+            <img class="cover" pfm-src-loader="::album.covers.normal" pfm-src-size="normal" />
 
             <div class="share-buttons" pfm-share-buttons>
                 <a class="tumblr" ng-href="{{::album.share.tumblrUrl}}" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>

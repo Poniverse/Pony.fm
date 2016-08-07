@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "sidebar", [
-    '$scope', '$modal', 'playlists', '$rootScope', '$timeout'
-    ($scope, $modal, playlists, $rootScope, $timeout) ->
+    '$scope', '$modal', 'playlists', '$rootScope', '$timeout', '$mdDialog', '$mdMedia'
+    ($scope, $modal, playlists, $rootScope, $timeout, $mdDialog, $mdMedia) ->
         $scope.playlists = playlists.pinnedPlaylists
         $scope.menuVisible = false
         $scope.menuActive = false
@@ -36,10 +36,7 @@ module.exports = angular.module('ponyfm').controller "sidebar", [
 
         $rootScope.$on('sidebarHide', () ->
             $timeout(() ->
-                $scope.navStyle.transform = ''
-                $scope.menuAnimated = true
-                $scope.menuVisible = false
-                $scope.menuActive = false
+                hideNav()
             )
         )
 
@@ -77,69 +74,18 @@ module.exports = angular.module('ponyfm').controller "sidebar", [
             playlists.deletePlaylist playlist
 
         $scope.showCredits = () ->
-            $modal
+            useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen
+            $mdDialog.show
                 templateUrl: '/templates/partials/credits-dialog.html'
                 controller: 'credits',
-                show: true
+                clickOutsideToClose: true,
+                fullscreen: useFullScreen
 
-        # Swipable side nav code
-        startX = 0
-        currentX = 0
-        touchingNav = false
-
-        onStart = (e) ->
-
-            if !$scope.menuVisible
-                return
-
-            startX = e.touches[0].pageX
-            currentX = startX
-            touchingNav = true
-            $scope.menuAnimated = false
-            requestAnimationFrame(update)
-
-        onMove = (e) ->
-            if !touchingNav
-                return
-
-            currentX = e.touches[0].pageX
-            translateX = Math.min(0, currentX - startX)
-
-            if translateX < 0
-                e.preventDefault()
-
-        onEnd = (e) ->
-            if !touchingNav
-                return
-
-            touchingNav = false
-            translateX = Math.min(0, currentX - startX)
-            $scope.menuAnimated = true
-
-            if translateX < 0
-                hideNav()
+            hideNav()
 
         hideNav = () ->
             $scope.navStyle.transform = ''
             $scope.menuAnimated = true
             $scope.menuVisible = false
             $scope.menuActive = false
-            $scope.$apply()
-
-        update = () ->
-            if !touchingNav
-                return
-
-            requestAnimationFrame(update)
-
-            translateX = 170 + Math.min(0, currentX - startX)
-            $scope.navStyle.transform = 'translateX(' + translateX + 'px)'
-            $scope.$apply()
-
-        addEventListeners = () ->
-            document.addEventListener('touchstart', onStart)
-            document.addEventListener('touchmove', onMove)
-            document.addEventListener('touchend', onEnd)
-
-        addEventListeners()
 ]

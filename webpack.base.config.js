@@ -13,7 +13,8 @@ module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             $: "jquery",
-            jQuery: "jquery"
+            jQuery: "jquery",
+            ColorThief: "color-thief"
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],

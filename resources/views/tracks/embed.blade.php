@@ -28,6 +28,7 @@
     <meta property="fb:admins" content="1165335382" />
     <base href="/" />
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {!! Assets::styleIncludes('embed') !!}
 </head>
 <body>
@@ -41,12 +42,12 @@
     @else
         <div class="player loading {{Auth::check() ? 'can-favourite' : ''}} {{$user['is_favourited'] ? 'favourited' : ''}}" data-track-id="{{ $track->id }}" data-duration="{{ $track->duration * 1000 }}">
             <div class="play" disabled="disabled">
-                <div class="button"><i class="fa fa-play"></i></div>
+                <div class="button"><i class="material-icons">play_arrow</i></div>
                 <img src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::SMALL) }}" />
             </div>
             <div class="meta">
                 @if (Auth::check())
-                    <a href="#" class="favourite"><i title="Favourite this track!" class="favourite-icon fa-star-o"></i></a>
+                    <a href="#" class="favourite"><i title="Favourite this track!" class="favourite-icon material-icons">favorite</i></a>
                 @endif
                 <div class="progressbar">
                     <div class="loader"></div>

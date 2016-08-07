@@ -28,6 +28,45 @@ module.exports = angular.module('ponyfm').controller "tracks", [
         $scope.recentTracks = null
         $scope.query = tracks.mainQuery
         $scope.filters = tracks.filters
+        $scope.isVocal = JSON.stringify($scope.query.filters.isVocal)
+        $scope.order = JSON.stringify($scope.query.filters.sort)
+
+        filterDropdown = (newVar, oldVar) ->
+            if newVar instanceof Array && oldVar instanceof Array
+                if 'any' in newVar
+                    if !('any' in oldVar)
+                        newVar = ['any']
+                    else if newVar.length > oldVar.length
+                        anyIndex = newVar.indexOf('any')
+                        newVar.splice(anyIndex, 1)
+
+        $scope.handleSingularDropdown = (filter, value) ->
+            $scope.clearFilter filter
+            $scope.setFilter filter, JSON.parse(value)
+
+        $scope.filterDropdownAfterClose = (values, filter) ->
+            $scope.clearFilter filter
+            anyOption = 'any'
+
+            if anyOption in values && values.length > 1
+                anyIndex = values.indexOf(anyOption)
+                values.splice(anyIndex, 1)
+
+            for id in values
+                if id != anyOption
+                    if filter == 'isVocal'
+                        $scope.setFilter filter, id
+                    else
+                        $scope.toggleListFilter filter, id
+
+        $scope.$watch 'type', (newVar, oldVar) ->
+            filterDropdown newVar, oldVar
+
+        $scope.$watch 'showSongs', (newVar, oldVar) ->
+            filterDropdown newVar, oldVar
+
+        $scope.$watch 'genres', (newVar, oldVar) ->
+            filterDropdown newVar, oldVar
 
         $scope.toggleListFilter = (filter, id) ->
             $scope.query.toggleListFilter filter, id

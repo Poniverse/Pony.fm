@@ -1,16 +1,16 @@
 <ul class="playlists-listing {{::class}}">
     <li ng-repeat="playlist in playlists track by playlist.id">
         <a ng-href="{{::playlist.url}}">
-            <img class="image" pfm-src-loader="::playlist.covers.small" pfm-src-size="small" />
+            <img class="image" pfm-src-loader="::playlist.covers.normal" pfm-src-size="normal" />
             <span class="info">
                 <span class="title">{{::playlist.title}}</span>
                 <span class="published">
                     by {{::playlist.user.name}}
                 </span>
                 <span class="stats">
-                    <strong>{{::playlist.stats.favourites}}</strong>  <i class="fa fa-star"></i>
-                    <strong>{{::playlist.stats.comments}}</strong> <i class="fa fa-comment"></i>
-                    <strong>{{::playlist.stats.downloads}}</strong> <i class="fa fa-download"></i>
+                    <strong>{{::playlist.stats.favourites}}</strong> <i class="material-icons">favorite</i>
+                    <strong>{{::playlist.stats.comments}}</strong> <i class="material-icons">comment</i>
+                    <strong>{{::playlist.stats.downloads}}</strong> <i class="material-icons">file_download</i>
                 </span>
             </span>
         </a>

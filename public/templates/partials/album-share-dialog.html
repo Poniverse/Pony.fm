@@ -1,17 +1,13 @@
-<div class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" ng-click="$hide()">&times;</button>
-                <h4 class="modal-title">{{ album.title }}</h4>
-            </div>
-            <div class="modal-body">
-                <h4>Shortlink</h4>
-                <input type="text" ng-model="album.share.url" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" ng-click="$hide()">Close</button>
-            </div>
+<md-dialog ng-cloak class="modal-dialog">
+    <md-dialog-content>
+        <div class="modal-body">
+            <h2>Share '{{album.title}}'</h2>
+
+            <h5>Shortlink</h5>
+            <input type="text" ng-model="album.share.url" />
         </div>
-    </div>
-</div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="closeDialog()" class="md-primary">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>

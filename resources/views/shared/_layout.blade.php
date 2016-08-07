@@ -28,7 +28,7 @@
 
         @yield('styles')
     </head>
-    <body ng-controller="application" class="{{Auth::check() ? 'is-logged' : ''}}">
+    <body ng-controller="application" class="{{Auth::check() ? 'is-logged' : ''}} loading">
         @yield('content')
         @yield('scripts')
     </body>

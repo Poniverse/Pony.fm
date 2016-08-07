@@ -27,9 +27,21 @@ a {
   }
 }
 
+.loading {
+  md-menu-content {
+    display: none;
+  }
+}
+
 .site-content{
   .box-sizing(border-box);
   padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  > ui-view {
+    margin-bottom: 20px;
+  }
 
   h1, h2 {
     margin: 1px 1px 5px;
@@ -99,7 +111,7 @@ a {
     left: -1px;
     width: 100%;
     height: 100%;
-    z-index: 400;
+    z-index: 10;
     border: 2px solid #fff;
     cursor: pointer;
 
@@ -124,6 +136,10 @@ a {
 }
 
 .details-columns {
+  .flex-50 {
+    margin: 0 10px;
+  }
+
   .left {
     margin-right: 310px;
     margin-left: 5px;
@@ -172,6 +188,7 @@ a {
     input[type=text] {
       margin: 0px;
       padding: 5px;
+      width: 100%;
     }
   }
 

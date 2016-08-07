@@ -1,31 +1,31 @@
-<div class="stretch-to-bottom details-columns">
-    <div class="right">
-        <a colorbox ng-href="{{track.covers.original}}" pfm-eat-click>
-            <img class="cover" pfm-src-loader="track.covers.normal" pfm-src-size="normal"/>
-        </a>
-
-        <div class="share-buttons" pfm-share-buttons>
-            <a class="tumblr" ng-href="{{::track.share.tumblrUrl}}"
-               title="Share on Tumblr"
-               style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
-            <div class="facebook fb-like" data-href="{{::track.url}}"
-                 data-width="450" data-layout="button_count"
-                 data-show-faces="true" data-send="false"></div>
-            <iframe class="twitter" allowtransparency="true" frameborder="0"
-                    scrolling="no" ng-src="{{::track.share.twitterUrl}}"
-                    style="width:130px; height:20px;"></iframe>
+<div class="stretch-to-bottom details-columns" layout="row" layout-xs="column">
+    <div flex="50" flex-xs="100">
+        <div class="stats">
+            <p>Released on {{::track.readableDate}}</p>
+            <p>
+                <ng-pluralize count="::track.stats.views"
+                when="{'0': '0 views',
+                     'one': '1 view',
+                     'other': '{} views'}">
+                </ng-pluralize> |
+                <ng-pluralize count="::track.stats.plays"
+                when="{'0': '0 plays',
+                     'one': '1 play',
+                     'other': '{} plays'}">
+                </ng-pluralize> |
+                <ng-pluralize count="::track.stats.downloads"
+                when="{'0': '0 downloads',
+                     'one': '1 download',
+                     'other': '{} downloads'}">
+                </ng-pluralize> |
+                <ng-pluralize count="::track.stats.favourites"
+                when="{'0': '0 favourites',
+                     'one': '1 favourite',
+                     'other': '{} favourites'}">
+                </ng-pluralize>
+            </p>
         </div>
 
-        <ul class="stats">
-            <li>Published: <strong>{{::track.published_at}}</strong></li>
-            <li>Views: <strong>{{::track.stats.views}}</strong></li>
-            <li>Plays: <strong>{{::track.stats.plays}}</strong></li>
-            <li>Downloads: <strong>{{::track.stats.downloads}}</strong></li>
-            <li>Favourites: <strong>{{::track.stats.favourites}}</strong></li>
-            <li><strong><a ui-sref="content.track.stats">View more stats</a></strong></li>
-        </ul>
-    </div>
-    <div class="left">
         <div class="description" ng-if="track.description.length">
             <h2>Description</h2>
             <p marked="track.description"></p>
@@ -34,13 +34,15 @@
         <div ng-if="track.is_vocal && track.lyrics.length" class="lyrics-panel">
             <h2>Lyrics</h2>
             <div class="lyrics revealable">
-                <div class="reveal">
+                <div class="reveal" ng-show="track.lyrics.length > 300">
                     <a href="#">Click to reveal full lyrics&hellip;</a>
                 </div>
                 <p class="content" ng-bind-html="track.lyrics | noHTML | nl2br"></p>
             </div>
         </div>
+    </div>
 
+    <div flex="50" flex-xs="100">
         <pfm-comments type="track" resource="track"></pfm-comments>
     </div>
 </div>

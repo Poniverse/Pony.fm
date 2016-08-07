@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "application", [
-    '$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope', 'playlists', 'notifications'
-    ($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope, playlists, notifications) ->
+    '$scope', 'auth', '$location', 'upload', '$state', '$stateParams', '$injector', '$rootScope', 'playlists', 'notifications', '$timeout'
+    ($scope, auth, $location, upload, $state, $stateParams, $injector, $rootScope, playlists, notifications, $timeout) ->
         $scope.auth = auth.data
         $scope.$state = $state
         $scope.$stateParams = $stateParams
@@ -24,6 +24,9 @@ module.exports = angular.module('ponyfm').controller "application", [
         $scope.notifActive = false
         $scope.nCount = 0
         $scope.nCountFormatted = '0'
+        $scope.isPlaying = false
+        $scope.hideLoading = false
+        $scope.loading = true
         $loadingElement = null
         loadingStateName = null
 
@@ -42,12 +45,20 @@ module.exports = angular.module('ponyfm').controller "application", [
                 notifications.markAllAsRead()
 
             $scope.notifActive = false
-        
+
         $scope.notifPulloutToggle = () ->
             $scope.notifActive = !$scope.notifActive
 
             if !$scope.notifActive
                notifications.markAllAsRead()
+
+        $rootScope.$on 'player-starting-track', () ->
+            $scope.isPlaying = true
+            window.isPlaying = true
+            window.handleResize()
+
+        $rootScope.$on 'player-stopping', () ->
+            $scope.isPlaying = false
 
         $rootScope.$on 'notificationsUpdated', () ->
             $scope.nCount = notifications.getUnreadCount()
@@ -74,9 +85,8 @@ module.exports = angular.module('ponyfm').controller "application", [
         $scope.$on '$viewContentLoaded', () ->
             window.setTimeout (-> window.handleResize()), 0
 
-            if $loadingElement
-                $loadingElement.removeClass 'loading'
-                $loadingElement = null
+            $scope.loading = false
+            $scope.hideLoading = true
 
         $scope.stateIncludes = (state) ->
             if $loadingElement
@@ -98,6 +108,9 @@ module.exports = angular.module('ponyfm').controller "application", [
             $scope.notifActive = false
             $scope.isPinnedPlaylistSelected = false
 
+            if oldState.name.indexOf('content.artist.') != -1 && newState.name.indexOf('content.artist.') == -1
+                $('.top-bar').css('background': '')
+
             if newState.name == 'content.playlist'
                 $scope.isPinnedPlaylistSelected = playlists.isPlaylistPinned newParams.id
 
@@ -117,14 +130,16 @@ module.exports = angular.module('ponyfm').controller "application", [
             newParts = newState.name.split '.'
             oldParts = oldState.name.split '.'
             zipped = _.zip(newParts, oldParts)
-            for i in [0..zipped.length]
-                break if !zipped[i] || zipped[i][0] != zipped[i][1]
-                selector += ' ui-view '
 
-            selector += ' ui-view ' if newState.name != oldState.name
+            $scope.loading = true
 
-            $loadingElement = $ selector
-            $loadingElement.addClass 'loading'
+            # Don't show the loading bar until 400ms has passed
+            # Avoids flickering on fast connections while still
+            # providing feedback to users on slow connections
+            $timeout(() ->
+                if $scope.loading
+                    $scope.hideLoading = false
+            , 400)
 
             stateToInject = angular.copy newState
             stateToInject.params = newParams

@@ -15,14 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "track", [
-    '$scope', 'meta', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$modal', 'download-cached', '$window', '$timeout'
-    ($scope, meta, tracks, $state, playlists, auth, favourites, $modal, cachedTrack, $window, $timeout) ->
+    '$scope', 'meta', 'tracks', '$state', 'playlists', 'auth', 'favourites', 'download-cached', '$window', '$timeout', '$mdDialog'
+    ($scope, meta, tracks, $state, playlists, auth, favourites, cachedTrack, $window, $timeout, $mdDialog) ->
         $scope.track
         $scope.trackId = parseInt($state.params.id)
-
         updateTrackData = (forceUpdate = false) ->
             tracks.fetch($scope.trackId, forceUpdate).done (trackResponse) ->
                 $scope.track = trackResponse.track
+                console.log(moment($scope.track.published_at))
+                $scope.track.readableDate = moment($scope.track.published_at).format("Do MMM YYYY")
+
                 meta.setTitle("#{$scope.track.title} | #{$scope.track.user.name}")
                 meta.setDescription("Listen to \"#{$scope.track.title}\" by #{$scope.track.user.name} on the largest pony music site.")
 
@@ -52,15 +54,18 @@ module.exports = angular.module('ponyfm').controller "track", [
                 track.is_favourited = res.is_favourited
                 $scope.favouriteWorking = false
 
-        $scope.share = () ->
-            dialog = $modal
+        $scope.share = (ev) ->
+            $mdDialog.show(
                 templateUrl: '/templates/partials/track-share-dialog.html',
-                controller: ['$scope', ($localScope) ->
-                        $localScope.track = $scope.track
-                        $localScope.close = () ->
-                            dialog.$hide()
-                ],
-                show: true
+                scope: $scope,
+                clickOutsideToClose: true,
+                controller: ($scope, $mdDialog) ->
+                    $scope.closeDialog = ->
+                        $mdDialog.cancel()
+            ).then (() ->
+                return
+            ), ->
+                $scope.$apply()
 
         $scope.addToNewPlaylist = () ->
             dialog = $modal
@@ -90,6 +95,14 @@ module.exports = angular.module('ponyfm').controller "track", [
 
         $scope.getCachedTrack = (id, format) ->
             $scope.isInProgress = true
+
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title('Preparing download...')
+                    .textContent('We\'re getting your download ready! This\'ll take a few seconds.')
+                    .ok('Sure thing')
+            )
 
             cachedTrack.download('tracks', id, format).then (response) ->
                 $scope.trackUrl = response

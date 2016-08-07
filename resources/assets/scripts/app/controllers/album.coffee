@@ -21,8 +21,8 @@ window.pfm.preloaders['album'] = [
 ]
 
 module.exports = angular.module('ponyfm').controller "album", [
-    '$scope', 'meta', 'albums', '$state', 'playlists', 'auth', '$modal', 'download-cached', '$window', '$timeout'
-    ($scope, meta, albums, $state, playlists, auth, $modal, cachedAlbum, $window, $timeout) ->
+    '$scope', 'meta', 'albums', '$state', 'playlists', 'auth', '$mdDialog', 'download-cached', '$window', '$timeout'
+    ($scope, meta, albums, $state, playlists, auth, $mdDialog, cachedAlbum, $window, $timeout) ->
         album = null
 
         albums.fetch($state.params.id).done (albumResponse) ->
@@ -33,11 +33,18 @@ module.exports = angular.module('ponyfm').controller "album", [
 
         $scope.playlists = []
 
-        $scope.share = () ->
-            dialog = $modal
+        $scope.share = (ev) ->
+            $mdDialog.show(
                 templateUrl: '/templates/partials/album-share-dialog.html',
                 scope: $scope,
-                show: true
+                clickOutsideToClose: true,
+                controller: ($scope, $mdDialog) ->
+                    $scope.closeDialog = ->
+                        $mdDialog.cancel()
+            ).then (() ->
+                return
+            ), ->
+                $scope.$apply()
 
         if auth.data.isLogged
             playlists.refreshOwned().done (lists) ->

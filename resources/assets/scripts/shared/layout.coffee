@@ -14,16 +14,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+window.isPlaying = false
+
 window.handleResize = () ->
 	windowHeight = $(window).height()
 	windowWidth = $(window).width()
 	isMobile = windowWidth <= 480
 	$siteBody = $ '.site-body'
 
-	if isMobile
-		$siteBody.height windowHeight - $('.now-playing').height() * 2
-	else
-		$siteBody.height windowHeight - $('header').height()
+	#if window.isPlaying
+	#	$siteBody.height windowHeight - ($('.top-bar').height() + $('.now-playing').height())
+	#else
+	#	$siteBody.height windowHeight - $('.top-bar').height()
 
 	$('.dropdown-menu').each () ->
 		$this = $ this
@@ -31,24 +33,35 @@ window.handleResize = () ->
 		$this.css
 			'max-height': newMaxHeight
 
-	$('.stretch-to-bottom').each () ->
-		if !isMobile
-			$this = $ this
-			newHeight = windowHeight - $this.offset().top
-			if newHeight > 0
-				$this.height newHeight
+	$('.site-content').each () ->
+		$this = $ this
+		newHeight = windowHeight - $this.offset().top
+		if isMobile
+			newHeight = newHeight - 5
+		if window.isPlaying
+			newHeight = newHeight - $('.now-playing').height()
+		if newHeight > 0
+			$this.height newHeight
 
 	$('.revealable').each () ->
 		$this = $ this
 		return if $this.data 'real-height'
 		$this.data 'real-height', $this.height()
 		$this.css
-			height: '15em'
+			maxHeight: '15em'
 
 		$this.find('.reveal').click (e) ->
 			e.preventDefault()
 			$this.css {height: 'auto'}
 			$(this).fadeOut 200
+
+	$('.blurred-background').each () ->
+		$this = $ this
+		$this.height $('.resource-details header').height() + 55
+
+	$('.resource-details .single-player button').each () ->
+		$this = $ this
+		$this.css 'top', $('.resource-details header').height() + 5
 
 window.alignVertically = (element) ->
 	$element = $(element)
@@ -59,3 +72,6 @@ window.handleResize()
 $(window).resize window.handleResize
 
 $('.site-content').empty()
+
+$(document).ready () ->
+		$('body').removeClass('loading');

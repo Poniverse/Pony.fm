@@ -1,19 +1,9 @@
-<ul class="tabs">
-    <li ui-sref-active="active">
-        <a ui-sref=".uploader">Upload music!</a>
-    </li>
-    <li ui-sref-active="active">
-        <a ui-sref=".tracks">Tracks</a>
-    </li>
-    <li ui-sref-active="active">
-        <a ui-sref=".albums">Albums</a>
-    </li>
-    <li ui-sref-active="active">
-        <a ui-sref=".playlists">Playlists</a>
-    </li>
-    <li ui-sref-active="active">
-        <a ui-sref=".settings">Settings</a>
-    </li>
-</ul>
+<md-tabs class="account-tabs manage-account-tabs" md-selected="4" md-border-bottom>
+    <md-tab ui-sref=".uploader" name="uploader">Upload music</md-tab>
+    <md-tab ui-sref=".tracks" name="tracks">Tracks</md-tab>
+    <md-tab ui-sref=".albums" name="albums">Albums</md-tab>
+    <md-tab ui-sref=".playlists" name="playlists">Playlists</md-tab>
+    <md-tab ui-sref=".settings" name="settings">Settings</md-tab>
+</md-tabs>
 
 <ui-view></ui-view>

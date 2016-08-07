@@ -1,40 +1,46 @@
 <div class="resource-details playlist-details">
-    <ul class="dropdowns">
-        <li class="dropdown">
-            <a href="#" class="btn btn-sm btn-primary dropdown-toggle" bs-dropdown auto-close="outsideClick">
-                Downloads
-            </a>
-            <ul class="dropdown-menu">
-                <li ng-repeat="format in ::playlist.formats" ng-hide="isInProgress">
-                    <a target="_blank" ng-if="::!format.isCacheable" ng-click="checkMixedLosslessness(format);" ng-href="{{::format.url}}">
-                        <span>{{::format.name}}</span>
-                        <small>({{::format.size}})</small>
-                    </a>
-                    <a ng-if="::format.isCacheable" ng-click="getCachedPlaylist(playlist.id, format);" href="">
-                        <span>{{::format.name}}</span>
-                        <small>({{::format.size}})</small>
-                    </a>
-                </li>
-                <li ng-show="isInProgress" class="cache-loading"><img src="/images/loading.gif" /></li>
-                <li ng-show="isInProgress" class="cache-loading"><small>We&#39;re getting your download ready! This may take a few minutes.</small></li>
-            </ul>
-        </li>
-        <li><a href="#" class="btn btn-default" pfm-eat-click ng-click="share()">Share</a></li>
-        <li><pfm-favourite-button resource="::playlist" type="playlist"></pfm-favourite-button></li>
-    </ul>
+    <header layout="row" layout-xs="column">
+        <div class="blurred-background" style="background-image: url('{{playlist.covers.normal}}');"></div>
+        <div layout="row" layout-xs="column" flex>
+            <div flex="50" flex-xs="100" class="info">
+                <h1>{{::playlist.title}}</h1>
+                <h2>
+                    curated by: <a ng-href="{{::playlist.user.url}}">{{::playlist.user.name}}</a>
+                </h2>
+            </div>
 
-    <header>
-        <h1>{{::playlist.title}}</h1>
-        <h2>
-            curated by: <a ng-href="{{::playlist.user.url}}">{{::playlist.user.name}}</a>
-        </h2>
+            <div class="buttons" layout="row" layout-align="end top" layout-align-xs="center center" flex="50" flex-xs="100">
+                <md-menu>
+                    <md-button class="md-icon-button" aria-label="Download" ng-click="$mdOpenMenu($event)">
+                        <md-tooltip md-direction="bottom" md-delay="200">Download</md-tooltip>
+                        <md-icon>file_download</md-icon>
+                    </md-button>
+
+                    <md-menu-content>
+                        <md-menu-item ng-repeat="format in ::playlist.formats" ng-hide="isInProgress">
+                            <md-button target="_blank" ng-if="::!format.isCacheable" ng-href="{{::format.url}}">
+                                {{::format.name}} ({{::format.size}})
+                            </md-button>
+                            <md-button ng-if="format.isCacheable" ng-click="getCachedPlaylist(playlist.id, format);" href="">
+                                {{::format.name}} ({{::format.size}})
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+
+                <pfm-favourite-button resource="::playlist" type="playlist"></pfm-favourite-button>
+
+                <md-button class="md-icon-button" aria-label="Share or embed" ng-click="share()">
+                    <md-tooltip md-direction="bottom" md-delay="200">Share or embed</md-tooltip>
+                    <md-icon>share</md-icon>
+                </md-button>
+            </div>
+        </div>
     </header>
 
     <div class="stretch-to-bottom details-columns">
         <div class="right">
-            <a colorbox ng-href="{{::playlist.covers.original}}" pfm-eat-click>
-                <img class="cover" pfm-src-loader="::playlist.covers.normal" pfm-src-size="normal" />
-            </a>
+            <img class="cover" pfm-src-loader="::playlist.covers.normal" pfm-src-size="normal" />
 
             <div class="share-buttons" pfm-share-buttons>
                 <a class="tumblr" ng-href="{{::playlist.share.tumblrUrl}}" title="Share on Tumblr" style="display:inline-block; overflow:hidden; width:20px; height:20px; background:url('/images/tumblr-share.png') top left no-repeat transparent;"></a>
