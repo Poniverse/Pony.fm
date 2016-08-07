@@ -73,14 +73,14 @@ class EditTrackCommand extends CommandBase
             'genre_id' => 'required|exists:genres,id',
             'cover' => 'image|mimes:png,jpeg|min_width:350|min_height:350',
             'track_type_id' => 'required|exists:track_types,id|not_in:'.TrackType::UNCLASSIFIED_TRACK,
-            'songs' => 'required_when:track_type,2|exists:songs,id',
             'cover_id' => 'exists:images,id',
             'album_id' => 'exists:albums,id',
             'username' => 'exists:users,username'
         ];
 
-        if (isset($this->_input['track_type_id']) && $this->_input['track_type_id'] == 2) {
+        if (isset($this->_input['track_type_id']) && $this->_input['track_type_id'] == TrackType::OFFICIAL_TRACK_REMIX) {
             $rules['show_song_ids'] = 'required|exists:show_songs,id';
+            $this->_input['show_song_ids'] = json_decode($this->_input['show_song_ids']);
         }
 
         $validator = \Validator::make($this->_input, $rules);
@@ -126,7 +126,7 @@ class EditTrackCommand extends CommandBase
         }
 
         if ($track->track_type_id == TrackType::OFFICIAL_TRACK_REMIX) {
-            $track->showSongs()->sync(explode(',', $this->_input['show_song_ids']));
+            $track->showSongs()->sync($this->_input['show_song_ids']);
         } else {
             $track->showSongs()->sync([]);
         }

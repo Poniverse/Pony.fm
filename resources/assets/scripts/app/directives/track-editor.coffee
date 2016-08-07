@@ -108,7 +108,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                         formData.append name, value
 
                 if parseInt($scope.track.track_type_id) == 2
-                    formData.append 'show_song_ids', _.map(_.values($scope.selectedSongs), (s) -> s.id).join()
+                    formData.append 'show_song_ids', JSON.stringify(_.map(_.values($scope.selectedSongs), (s) -> s.id))
 
                 xhr.open 'POST', '/api/web/tracks/edit/' + $scope.track.id, true
                 xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')
