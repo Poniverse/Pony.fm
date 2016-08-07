@@ -217,7 +217,7 @@ class Activity extends Model {
                 }
             
             case static::TYPE_CONTENT_FAVOURITED:
-                return "{$this->initiatingUser->display_name} favourited your {$this->resource->type}, __{$this->resource->title}__!";
+                return "{$this->initiatingUser->display_name} favourited your {$this->resource->getResourceType()}, {$this->resource->title}!";
 
             default:
                 throw new \Exception('This activity\'s activity type is unknown!');
