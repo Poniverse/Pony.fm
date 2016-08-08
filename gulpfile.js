@@ -82,6 +82,7 @@ gulp.task("webpack-dev-server", function () {
 gulp.task("styles-app", function () {
     var includedStyles = [
         "node_modules/angular-material/angular-material.css",
+        "node_modules/ng-sortable/dist/ng-sortable.css",
         "resources/assets/styles/app.less",
     ];
 
@@ -98,8 +99,8 @@ gulp.task("styles-app", function () {
             if (!styleCache.hasOwnProperty(file))
                 continue;
 
-            if (!endsWith(file, "app.less") && !endsWith(file, "angular-material.css"))
-                continue;
+            /*if (!endsWith(file, "app.less") && !endsWith(file, "angular-material.css"))
+                continue;*/
 
             delete styleCache[file];
         }

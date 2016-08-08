@@ -76,9 +76,7 @@ a {
   }
 
   h2 {
-    margin: 0px;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
+    margin: 1.5em 0 0.5em;
     font-size: 13pt;
     color: #C2889C;
     line-height: normal;
@@ -97,8 +95,8 @@ a {
   color: #222;
   position: relative;
   overflow: hidden;
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
 
   h2 {
   }
@@ -107,7 +105,7 @@ a {
     #gradient>.vertical(rgba(255,255,255,0), rgba(255,255,255,1));
     .box-sizing(border-box);
     position: absolute;
-    top: 0px;
+    top: 0;
     left: -1px;
     width: 100%;
     height: 100%;
@@ -123,8 +121,8 @@ a {
       .box-sizing(border-box);
       display: block;
       position: absolute;
-      bottom: 0px;
-      left: 0px;
+      bottom: 0;
+      left: 0;
       width: 100%;
       background: #eee;
       padding: 3px;
@@ -158,14 +156,14 @@ a {
 
     .stats {
       list-style: none;
-      padding: 0px;
-      margin: 0px;
+      padding: 0;
+      margin: 0;
       font-size: 9pt;
       color: #555;
 
       li {
-        padding: 5px 0px;
-        margin: 0px;
+        padding: 5px 0;
+        margin: 0;
         border-bottom: 1px solid #ddd;
 
         strong {
@@ -177,16 +175,21 @@ a {
 }
 
 .comments {
+  h4 {
+    text-overflow: initial !important;
+    white-space: normal !important;
+    line-height: 1.4 !important;
+  }
+
   form {
-    margin: 0px;
-    margin-bottom: 10px;
+    margin: 0 0 10px;
 
     .form-row {
-      margin: 0px;
+      margin: 0;
     }
 
     input[type=text] {
-      margin: 0px;
+      margin: 0;
       padding: 5px;
       width: 100%;
     }
@@ -194,13 +197,13 @@ a {
 
   ul {
     list-style: none;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 
     li {
       line-height: normal;
-      padding: 5px 0px;
-      margin: 0px;
+      padding: 5px 0;
+      margin: 0;
       overflow: hidden;
 
       img {
@@ -213,7 +216,7 @@ a {
 
       .meta {
         font-size: 8pt;
-        padding: 5px 0px;
+        padding: 5px 0;
       }
 
       .content {

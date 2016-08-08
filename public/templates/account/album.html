@@ -10,21 +10,18 @@
         <li class="delete" ng-show="!isNew"><a ng-class="{disabled: isSaving}" class="btn btn-danger" href="#" ng-click="deleteAlbum()" pfm-eat-click>Delete Album</a></li>
     </ul>
     <div class="stretch-to-bottom">
-        <div class="form-row" ng-class="{'has-error': errors.title != null}">
-            <label for="title" class="strong">Title:</label>
-            <input ng-disabled="isSaving" ng-change="touchModel()" placeholder="Album Title" type="text" id="title" ng-model="album.title" />
-            <div class="error">{{errors.title}}</div>
-        </div>
-        <div class="form-row">
-            <label for="description" class="strong">Description:</label>
-            <textarea ng-disabled="isSaving" ng-change="touchModel()" placeholder="Description (optional)" id="description" ng-model="album.description"></textarea>
-            <div class="error">{{errors.description}}</div>
-        </div>
-        <div class="form-row" ng-show="isAdmin" ng-class="{'has-error': errors.username != null}">
-            <label for="title" class="strong">User:</label>
-            <input ng-disabled="isSaving" ng-change="touchModel()" placeholder="Username" type="text" id="username" ng-model="album.username" />
-            <div class="error">{{errors.username}}</div>
-        </div>
+        <md-input-container>
+            <label>Title</label>
+            <input ng-disabled="isSaving" ng-change="touchModel()" type="text" ng-model="album.title">
+        </md-input-container>
+        <md-input-container>
+            <label>Description</label>
+            <textarea ng-disabled="isSaving" ng-change="touchModel()" ng-model="album.description"></textarea>
+        </md-input-container>
+        <md-input-container ng-show="isAdmin">
+            <label>User</label>
+            <input ng-disabled="isSaving" ng-change="touchModel()" type="text" ng-model="album.username">
+        </md-input-container>
         <div class="form-row" ng-class="{'has-error': errors.cover != null}">
             <label class="strong">Album Cover: </label>
             <pfm-image-upload set-image="setCover" image="album.cover" user-id="album.user_id"></pfm-image-upload>
@@ -40,10 +37,10 @@
                 </ul>
             </div>
 
-            <ul class="album-track-listing" ui-sortable="{handle: '.handle', axis: 'y', forcePlaceholderSizeType: true, update: sortTracks}" ng-model="tracks">
-                <li ng-repeat="track in tracks track by track.id">
+            <ul class="album-track-listing" as-sortable ng-model="tracks">
+                <li ng-repeat="track in tracks track by track.id" as-sortable-item>
                     <div>
-                        <span class="btn btn-sm pull-left handle"><i class="material-icons">swap_vert</i></span>
+                        <span class="btn btn-sm pull-left handle" as-sortable-item-handle><i class="material-icons">swap_vert</i></span>
                         <a href="#" class="btn btn-sm pull-right btn-danger" ng-click="toggleTrack(track)" pfm-eat-click><i class="material-icons">delete</i></a>
                         <span>{{::track.title}}</span>
                     </div>

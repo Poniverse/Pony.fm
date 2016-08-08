@@ -31,10 +31,12 @@ angular = require 'angular'
 
 require 'angular-ui-router'
 require 'angular-material'
+require 'ng-sortable'
 require '../base/angular-ui-sortable'
 require '../base/angularytics'
 require '../base/jquery.cookie'
 require '../base/jquery.timeago'
+require 'script!../base/modernizr'
 require 'script!../base/marked'
 require 'script!../base/moment'
 require '../base/soundmanager2-nodebug'
@@ -50,7 +52,7 @@ require '../shared/pfm-angular-sanitize'
 require '../shared/init.coffee'
 
 
-ponyfm = angular.module 'ponyfm', ['ngMaterial', 'mgcrea.ngStrap', 'ui.router', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked', 'chart.js']
+ponyfm = angular.module 'ponyfm', ['ngMaterial', 'mgcrea.ngStrap', 'as.sortable', 'ui.router', 'ui.sortable', 'angularytics', 'ngSanitize', 'hc.marked', 'chart.js']
 window.pfm.preloaders = {}
 
 # Inspired by: https://stackoverflow.com/a/30652110/3225811

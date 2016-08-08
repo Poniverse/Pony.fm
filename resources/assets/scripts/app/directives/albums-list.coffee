@@ -20,10 +20,26 @@ module.exports = angular.module('ponyfm').directive 'pfmAlbumsList', () ->
     templateUrl: '/templates/directives/albums-list.html'
     scope:
         albums: '=albums',
-        class: '@class'
+        class: '@class',
+        size: '@size'
 
     controller: [
         '$scope', 'auth'
         ($scope, auth) ->
+            if typeof $scope.size == 'undefined'
+                $scope.size = 'large'
+
+            if $scope.size == 'small'
+                $scope.lgSize = '20'
+                $scope.mdSize = '33'
+                $scope.smSize = '50'
+                $scope.xsSize = '100'
+            else
+                $scope.lgSize = '15'
+                $scope.mdSize = ''
+                $scope.smSize = '20'
+                $scope.xsSize = '50'
+
+            console.log $scope.size
             $scope.auth = auth.data
     ]
