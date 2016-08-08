@@ -1,9 +1,9 @@
-<div layout="row" layout-xs="column" layout-wrap>
+<div layout="row" layout-wrap>
     <p ng-show="!users.length" class="empty">
         No users found&hellip;
     </p>
 
-    <a ng-repeat="user in users track by user.id" ng-href="{{::user.url}}" class="clickable" flex-gt-xs="50" flex-gt-sm="25" flex-gt-md="20">
+    <a ng-repeat="user in users track by user.id" ng-href="{{::user.url}}" class="clickable" flex-xs="{{xsSize}}" flex-sm="50" flex-gt-sm="{{smSize}}" flex-gt-md="{{mdSize}}" flex-gt-lg="{{lgSize}}">
         <md-card class="user">
             <img class="md-card-image" pfm-src-loader="::user.avatars.normal" pfm-src-size="normal">
 
