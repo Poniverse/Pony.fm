@@ -1,21 +1,23 @@
-<ul class="playlists-listing {{::class}}">
-    <li ng-repeat="playlist in playlists track by playlist.id">
-        <a ng-href="{{::playlist.url}}">
-            <img class="image" pfm-src-loader="::playlist.covers.normal" pfm-src-size="normal" />
-            <span class="info">
-                <span class="title">{{::playlist.title}}</span>
-                <span class="published">
-                    by {{::playlist.user.name}}
-                </span>
-                <span class="stats">
-                    <strong>{{::playlist.stats.favourites}}</strong> <i class="material-icons">favorite</i>
-                    <strong>{{::playlist.stats.comments}}</strong> <i class="material-icons">comment</i>
-                    <strong>{{::playlist.stats.downloads}}</strong> <i class="material-icons">file_download</i>
-                </span>
-            </span>
-        </a>
-    </li>
-    <li ng-if="!playlists.length" class="empty">
-        No playlists found&hellip;
-    </li>
-</ul>
+<div layout="row" layout-wrap>
+    <div ng-if="!playlists.length" class="empty ng-scope">
+        No playlists found…
+    </div>
+
+    <a ng-repeat="playlist in playlists track by playlist.id" ng-href="{{::playlist.url}}" class="clickable" flex-xs="{{xsSize}}" flex-sm="50" flex-gt-sm="{{smSize}}" flex-gt-md="{{mdSize}}" flex-gt-lg="{{lgSize}}">
+        <md-card class="album">
+            <img class="md-card-image" pfm-src-loader="::playlist.covers.normal" pfm-src-size="normal">
+
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">{{::playlist.title}}</span>
+                    <span class="md-subhead">{{::playlist.user.name}}</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-actions layout="row" layout-align="end center" class="album-stats">
+                <span><md-icon>favorite</md-icon> {{::playlist.stats.favourites}}</span>
+                <span><md-icon>comment</md-icon> {{::playlist.stats.comments}}</span>
+                <span><md-icon>file_download</md-icon> {{::playlist.stats.downloads}}</span>
+            </md-card-actions>
+        </md-card>
+    </a>
+</div>

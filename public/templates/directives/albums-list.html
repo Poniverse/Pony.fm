@@ -7,9 +7,12 @@
         <md-card class="album">
             <img class="md-card-image" pfm-src-loader="::album.covers.normal" pfm-src-size="normal">
 
-            <md-card-content>
-                <span>{{::album.title}}</span>
-            </md-card-content>
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">{{::album.title}}</span>
+                    <span class="md-subhead">{{::album.user.name}}</span>
+                </md-card-title-text>
+            </md-card-title>
 
             <md-card-actions layout="row" layout-align="end center" class="album-stats">
                 <span><md-icon>favorite</md-icon> {{::album.stats.favourites}}</span>

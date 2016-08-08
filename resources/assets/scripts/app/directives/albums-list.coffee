@@ -40,6 +40,5 @@ module.exports = angular.module('ponyfm').directive 'pfmAlbumsList', () ->
                 $scope.smSize = '20'
                 $scope.xsSize = '50'
 
-            console.log $scope.size
             $scope.auth = auth.data
     ]
