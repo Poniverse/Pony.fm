@@ -12,6 +12,8 @@ sudo cp /vagrant/vagrant/pony.fm.redis.config /etc/redis/redis.conf &
 sudo cp /vagrant/vagrant/pony.fm.supervisor.config /etc/supervisor/conf.d/pony.fm.conf &
 wait
 
+sudo service supervisor start
+
 sudo supervisorctl update &
 sudo service elasticsearch restart &
 sudo service nginx restart &
