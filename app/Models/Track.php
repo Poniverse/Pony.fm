@@ -537,7 +537,18 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     public function trackFiles()
     {
+        return $this->hasMany(TrackFile::class)->where('version', $this->current_version);
+    }
+
+
+    public function trackFilesForAllVersions()
+    {
         return $this->hasMany(TrackFile::class);
+    }
+
+    public function trackFilesForVersion(int $version)
+    {
+        return $this->hasMany(TrackFile::class)->where('track_files.version', $version);
     }
 
     public function notifications()
@@ -688,7 +699,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
         $format = self::$Formats[$format];
 
-        return "{$this->id}.{$format['extension']}";
+        return "{$this->id}-v{$this->current_version}.{$format['extension']}";
     }
 
     public function getDownloadFilenameFor($format)
@@ -715,7 +726,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
         $format = self::$Formats[$format];
 
-        return "{$this->getDirectory()}/{$this->id}.{$format['extension']}";
+        return "{$this->getDirectory()}/{$this->id}-v{$this->current_version}.{$format['extension']}";
     }
 
     /**
@@ -723,10 +734,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * This file is used during the upload process to generate the actual master
      * file stored by Pony.fm.
      *
+     * @param int $version
      * @return string
      */
-    public function getTemporarySourceFile():string {
-        return Config::get('ponyfm.files_directory').'/queued-tracks/'.$this->id;
+    public function getTemporarySourceFileForVersion(int $version):string {
+        return Config::get('ponyfm.files_directory').'/queued-tracks/'.$this->id.'v'.$version;
     }
 
 
@@ -913,5 +925,10 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     public function getResourceType():string {
         return 'track';
+    }
+
+    public function getNextVersion()
+    {
+        return $this->current_version + 1;
     }
 }

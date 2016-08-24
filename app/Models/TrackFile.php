@@ -80,6 +80,11 @@ class TrackFile extends Model
      */
     public static function findOrFailByExtension($trackId, $extension)
     {
+        $track = Track::find($trackId);
+        if (!$track) {
+            App::abort(404);
+        }
+
         // find the extension's format
         $requestedFormatName = null;
         foreach (Track::$Formats as $name => $format) {
@@ -96,6 +101,7 @@ class TrackFile extends Model
         with('track')
             ->where('track_id', $trackId)
             ->where('format', $requestedFormatName)
+            ->where('version', $track->current_version)
             ->first();
 
         if ($trackFile === null) {
@@ -149,10 +155,20 @@ class TrackFile extends Model
 
     public function getFile()
     {
+        return "{$this->getDirectory()}/{$this->track_id}-v{$this->version}.{$this->extension}";
+    }
+
+    public function getUnversionedFile()
+    {
         return "{$this->getDirectory()}/{$this->track_id}.{$this->extension}";
     }
 
     public function getFilename()
+    {
+        return "{$this->track_id}-v{$this->track->current_version}.{$this->extension}";
+    }
+
+    public function getUnversionedFilename()
     {
         return "{$this->track_id}.{$this->extension}";
     }

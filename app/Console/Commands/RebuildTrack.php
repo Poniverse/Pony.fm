@@ -72,7 +72,7 @@ class RebuildTrack extends Command
             $track->restore();
             $this->info("Attempting to finish this track's upload...");
 
-            $sourceFile = new \SplFileInfo($track->getTemporarySourceFile());
+            $sourceFile = new \SplFileInfo($track->getTemporarySourceFileForVersion($track->current_version));
             $generateTrackFiles = new GenerateTrackFilesCommand($track, $sourceFile, false);
             $result = $generateTrackFiles->execute();
             // The GenerateTrackFiles command will re-encode all TrackFiles.
