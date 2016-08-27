@@ -151,6 +151,9 @@ class Activity extends Model {
 
     public function getThumbnailUrlAttribute()
     {
+        if (!is_null($this->resource))
+            return "/images/icons/profile_small.png";
+
         switch ($this->resource_type) {
             case User::class:
                 return $this->resource->getAvatarUrl(Image::THUMBNAIL);
