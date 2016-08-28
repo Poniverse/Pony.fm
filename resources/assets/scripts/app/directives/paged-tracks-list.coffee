@@ -61,7 +61,7 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
             $scope.pageSelectorShown = false
 
             $scope.gotoPage = (page) ->
-                $state.transitionTo 'content.tracks.list', {filter: $state.params.filter, page: page}
+                $state.transitionTo $state.current.name, {filter: $state.params.filter, page: page}
 
             $scope.showPageSelector = () ->
                 $scope.pageSelectorShown = true
