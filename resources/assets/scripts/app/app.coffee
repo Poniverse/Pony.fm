@@ -279,12 +279,12 @@ ponyfm.config [
             templateUrl: '/templates/admin/show-songs.html'
 
         state.state 'admin.tracks',
-            url: '/tracks'
+            url: '/tracks?filter&page'
             controller: 'admin-tracks'
             templateUrl: '/templates/admin/tracks.html'
 
         state.state 'admin.classifier',
-            url: '/tracks/unclassified'
+            url: '/tracks/unclassified?filter&page'
             controller: 'admin-classifier'
             templateUrl: '/templates/admin/classifier.html'
 

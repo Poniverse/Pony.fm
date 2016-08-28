@@ -21,12 +21,12 @@ window.pfm.preloaders['admin-classifier'] = [
             tracks.mainQuery.fromFilterString($state.params.filter)
             tracks.mainQuery.setPage $state.params.page || 1
             tracks.mainQuery.setAdmin true
+            tracks.mainQuery.fetch(tracks.FetchType.UNCLASSIFIED)
         )
 ]
 
 module.exports = angular.module('ponyfm').controller "admin-classifier", [
     '$scope', 'tracks', '$state',
     ($scope, tracks, $state) ->
-
 
 ]

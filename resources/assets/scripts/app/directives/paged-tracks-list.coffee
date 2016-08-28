@@ -23,8 +23,8 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
         class: '@class'
 
     controller: [
-        '$scope', 'tracks', '$state',
-        ($scope, tracks, $state) ->
+        '$scope', 'tracks', '$state', '$location'
+        ($scope, tracks, $state, $location) ->
             typeEnum = switch
                 when $scope.type == 'normal' then tracks.FetchType.NORMAL
                 when $scope.type == 'all' then tracks.FetchType.ALL
@@ -61,7 +61,8 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
             $scope.pageSelectorShown = false
 
             $scope.gotoPage = (page) ->
-                $state.transitionTo $state.current.name, {filter: $state.params.filter, page: page}
+                #$scope.$emit 'pageChange', {filter: $state.params.filter, page: page}
+                $state.go '.', {filter: $state.params.filter, page: page}
 
             $scope.showPageSelector = () ->
                 $scope.pageSelectorShown = true

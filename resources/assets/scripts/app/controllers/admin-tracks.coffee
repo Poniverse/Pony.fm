@@ -21,12 +21,11 @@ window.pfm.preloaders['admin-tracks'] = [
             tracks.mainQuery.fromFilterString($state.params.filter)
             tracks.mainQuery.setPage $state.params.page || 1
             tracks.mainQuery.setAdmin true
+            tracks.mainQuery.fetch(tracks.FetchType.ALL)
         )
 ]
 
 module.exports = angular.module('ponyfm').controller "admin-tracks", [
     '$scope', 'tracks', '$state',
     ($scope, tracks, $state) ->
-
-
 ]
