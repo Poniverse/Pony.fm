@@ -177,6 +177,7 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::delete('/showsongs/{id}', 'Api\Web\ShowSongsController@deleteSong')->where('id', '\d+');
 
         Route::get('/tracks', 'Api\Web\TracksController@getAllTracks');
+        Route::get('/tracks/unclassified', 'Api\Web\TracksController@getClassifierQueue');
     });
 
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
@@ -186,6 +187,7 @@ Route::group(['prefix' => 'api/web'], function() {
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
     Route::get('/genres', 'AdminController@getGenres');
     Route::get('/tracks', 'AdminController@getTracks');
+    Route::get('/tracks/unclassified', 'AdminController@getClassifierQueue');
     Route::get('/show-songs', 'AdminController@getShowSongs');
     Route::get('/users', 'AdminController@getUsers');
     Route::get('/', 'AdminController@getIndex');

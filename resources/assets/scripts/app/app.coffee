@@ -283,6 +283,11 @@ ponyfm.config [
             controller: 'admin-tracks'
             templateUrl: '/templates/admin/tracks.html'
 
+        state.state 'admin.classifier',
+            url: '/tracks/unclassified'
+            controller: 'admin-classifier'
+            templateUrl: '/templates/admin/classifier.html'
+
         state.state 'admin.users',
             url: '/users'
             controller: 'admin-users'

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-window.pfm.preloaders['admin-tracks'] = [
+window.pfm.preloaders['admin-classifier'] = [
     'tracks', '$state'
     (tracks, $state) ->
         tracks.loadFilters().then(->
@@ -24,7 +24,7 @@ window.pfm.preloaders['admin-tracks'] = [
         )
 ]
 
-module.exports = angular.module('ponyfm').controller "admin-tracks", [
+module.exports = angular.module('ponyfm').controller "admin-classifier", [
     '$scope', 'tracks', '$state',
     ($scope, tracks, $state) ->
 

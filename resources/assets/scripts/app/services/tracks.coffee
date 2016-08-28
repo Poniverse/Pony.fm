@@ -144,15 +144,18 @@ module.exports = angular.module('ponyfm').factory('tracks', [
                     else
                         @toggleListFilter filterName, id for id in _.rest parts, 1
 
-            fetch: () ->
+            fetch: (type) ->
                 return @cachedDef if @cachedDef
                 @cachedDef = new $.Deferred()
                 trackDef = @cachedDef
 
                 query = '/api/web/tracks?'
 
-                if @admin
+                if type == self.FetchType.ALL && @admin
                     query = '/api/web/admin/tracks?'
+
+                if type == self.FetchType.UNCLASSIFIED && @admin
+                    query = '/api/web/admin/tracks/unclassified?'
 
 
                 parts = ['page=' + @page]
@@ -177,6 +180,11 @@ module.exports = angular.module('ponyfm').factory('tracks', [
 
         self =
             filters: {}
+
+            FetchType:
+                NORMAL: 0
+                ALL: 1
+                UNCLASSIFIED: 2
 
             fetch: (id, force) ->
                 force = force || false

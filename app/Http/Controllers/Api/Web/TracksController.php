@@ -27,9 +27,12 @@ use Poniverse\Ponyfm\Commands\EditTrackCommand;
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
+use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\TrackFile;
 use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\TrackType;
+use Poniverse\Ponyfm\Models\TrackTypes;
 use Auth;
 use Input;
 use Poniverse\Ponyfm\Models\User;
@@ -131,7 +134,7 @@ class TracksController extends ApiControllerBase
         return Response::json(['url' => $url], 200);
     }
 
-    public function getIndex($all = false)
+    public function getIndex($all = false, $unknown = false)
     {
         $page = 1;
         $perPage = 45;
@@ -155,7 +158,7 @@ class TracksController extends ApiControllerBase
                 ->with('user', 'genre', 'cover', 'album', 'album.user');
         }
 
-        $this->applyFilters($query);
+        $this->applyFilters($query, $unknown);
         $totalCount = $query->count();
         $this->applyOrdering($query);
 
@@ -180,6 +183,12 @@ class TracksController extends ApiControllerBase
     {
         $this->authorize('access-admin-area');
         return $this->getIndex(true);
+    }
+
+    public function getClassifierQueue()
+    {
+        $this->authorize('access-admin-area');
+        return $this->getIndex(true, true);
     }
 
     public function getOwned(User $user)
@@ -231,7 +240,7 @@ class TracksController extends ApiControllerBase
      * @param $query
      * @return mixed
      */
-    private function applyFilters($query)
+    private function applyFilters($query, $unknown = false)
     {
         if (Input::has('is_vocal')) {
             $isVocal = \Input::get('is_vocal');
@@ -254,8 +263,21 @@ class TracksController extends ApiControllerBase
             $query->whereIn('genre_id', Input::get('genres'));
         }
 
-        if (Input::has('types')) {
+        if (Input::has('types') && !$unknown) {
             $query->whereIn('track_type_id', Input::get('types'));
+        }
+
+        if ($unknown) {
+            $query->where(function($q) {
+                $unknownGenre = Genre::where('name', 'Unknown')->first();
+
+                $q->where('track_type_id', TrackType::UNCLASSIFIED_TRACK);
+
+                if ($unknownGenre) {
+                    $q->orWhere('genre_id', $unknownGenre->id);
+                }
+            });
+
         }
 
         if (Input::has('songs')) {

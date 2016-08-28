@@ -48,4 +48,9 @@ class AdminController extends Controller
     {
         return View::make('shared.null');
     }
+
+    public function getClassifierQueue()
+    {
+        return View::make('shared.null');
+    }
 }
