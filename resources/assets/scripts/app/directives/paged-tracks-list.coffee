@@ -58,16 +58,11 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
                 # The actual last page will always be in the paginator.
                 $scope.pages.push($scope.totalPages) unless $scope.totalPages in $scope.pages
 
-                console.log $state
-
             $scope.pageSelectorShown = false
 
             $scope.gotoPage = (page) ->
-                #$state.transitionTo $state.current.name, {filter: $state.params.filter, page: page}
-                #$location.search 'filter', $state.params.filter
-                #$location.search 'page', page
-                tracks.mainQuery.fromFilterString($state.params.filter)
-                tracks.mainQuery.setPage page || 1
+                #$scope.$emit 'pageChange', {filter: $state.params.filter, page: page}
+                $state.go '.', {filter: $state.params.filter, page: page}
 
             $scope.showPageSelector = () ->
                 $scope.pageSelectorShown = true
