@@ -76,6 +76,10 @@ class Notification extends Model {
     }
 
     public function toArray() {
+        if (is_null($this->activity->resource)) {
+            return '';
+        }
+
         return [
             'id'            => $this->id,
             'date'          => $this->activity->created_at->toAtomString(),

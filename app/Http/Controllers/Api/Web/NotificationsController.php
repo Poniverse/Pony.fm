@@ -42,7 +42,9 @@ class NotificationsController extends ApiControllerBase
             ->take(20)
             ->get();
 
-        return ['notifications' => $notifications->toArray()];
+        $outputArray = $notifications->toArray();
+
+        return ['notifications' => array_values(array_filter($outputArray))];
     }
 
     /**
