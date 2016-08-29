@@ -16,7 +16,16 @@
                 <i class="fa fa-trash"></i>
             </a>
         </div>
-        <a class="info" ng-href="{{::track.url}}">
+        <a class="info" ng-href="{{::track.url}}" ng-if="!clickOverride">
+            <span class="title">{{::track.title}}</span>
+            <span class="stats" title="{{::track.stats.favourites}} Favourites / {{:: track.stats.comments}} Comments / {{::track.stats.plays}} Plays">
+                <strong>{{::track.stats.favourites}}</strong>f
+                <strong>{{::track.stats.comments}}</strong>c
+                <strong>{{::track.stats.plays}}</strong>p
+            </span>
+            <span class="artist">{{::track.user.name}} / {{::track.genre.name}}</span>
+        </a>
+        <a class="info" ng-if="clickOverride" href="#" ng-click="clickOverride({id: track.id})">
             <span class="title">{{::track.title}}</span>
             <span class="stats" title="{{::track.stats.favourites}} Favourites / {{:: track.stats.comments}} Comments / {{::track.stats.plays}} Plays">
                 <strong>{{::track.stats.favourites}}</strong>f

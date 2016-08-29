@@ -21,10 +21,14 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
     scope:
         type: '@'
         class: '@class'
+        clickOverride: '&'
 
     controller: [
         '$scope', 'tracks', '$state', '$location'
         ($scope, tracks, $state, $location) ->
+            $scope.newClickOverride = (id) ->
+                $scope.clickOverride({id: id})
+
             typeEnum = switch
                 when $scope.type == 'normal' then tracks.FetchType.NORMAL
                 when $scope.type == 'all' then tracks.FetchType.ALL
@@ -70,7 +74,6 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
 
             $scope.hidePageSelector = () ->
                 $scope.pageSelectorShown = false
-
 
             $scope.jumpToPage = (inputPageNumber) ->
                 $scope.gotoPage(inputPageNumber)

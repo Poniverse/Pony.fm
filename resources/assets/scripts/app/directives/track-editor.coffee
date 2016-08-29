@@ -33,6 +33,10 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             $scope.isAdmin = auth.data.isAdmin
             albumsDb = {}
 
+            $scope.$watch 'trackId', (newValue, oldValue) ->
+                console.log newValue, oldValue
+                $scope.updateUI()
+
             $scope.selectAlbum = (album) ->
                 $scope.selectedAlbum = album
                 $scope.track.album_id = if album then album.id else null
@@ -126,59 +130,62 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             # ========================================
             #  The part where everything gets loaded!
             # ========================================
-            tracks.getEdit($scope.trackId, true)
-            .then (track)->
-                images.refresh(true, track.user_id)
-                $.when(
-                    albums.refresh(false, track.user_id),
-                    taxonomies.refresh()
-                ).done (albums, taxonomies)->
-                    # Update album data
-                    $scope.albums.length = 0
-                    albumsDb = {}
-                    for album in albums
-                        albumsDb[album.id] = album
-                        $scope.albums.push album
-                    $scope.selectedAlbum = if track.album_id then albumsDb[track.album_id] else null
+            $scope.updateUI = () ->
+                tracks.getEdit($scope.trackId, true)
+                .then (track)->
+                    images.refresh(true, track.user_id)
+                    $.when(
+                        albums.refresh(false, track.user_id),
+                        taxonomies.refresh()
+                    ).done (albums, taxonomies)->
+                        # Update album data
+                        $scope.albums.length = 0
+                        albumsDb = {}
+                        for album in albums
+                            albumsDb[album.id] = album
+                            $scope.albums.push album
+                        $scope.selectedAlbum = if track.album_id then albumsDb[track.album_id] else null
 
 
-                # Update track data
+                    # Update track data
 
-                # The release date is in UTC - make sure we treat it as such.
-                if track.released_at
-                    local_date = new Date(track.released_at)
-                    utc_release_timestamp = local_date.getTime() + (local_date.getTimezoneOffset() * 60000);
-                    utc_release_date = new Date(utc_release_timestamp)
-                else utc_release_date = ''
+                    # The release date is in UTC - make sure we treat it as such.
+                    if track.released_at
+                        local_date = new Date(track.released_at)
+                        utc_release_timestamp = local_date.getTime() + (local_date.getTimezoneOffset() * 60000);
+                        utc_release_date = new Date(utc_release_timestamp)
+                    else utc_release_date = ''
 
-                $scope.track =
-                    id: track.id
-                    title: track.title
-                    user_id: track.user_id
-                    username: track.username
-                    description: track.description
-                    lyrics: track.lyrics
-                    is_explicit: track.is_explicit
-                    is_downloadable: track.is_downloadable
-                    is_vocal: track.is_vocal
-                    license_id: track.license_id
-                    genre_id: track.genre_id
-                    track_type_id: track.track_type_id
-                    released_at: utc_release_date
-                    remove_cover: false
-                    cover_id: track.cover_id
-                    cover_url: track.cover_url
-                    album_id: track.album_id
-                    is_published: track.is_published
-                    is_listed: track.is_listed
+                    $scope.track =
+                        id: track.id
+                        title: track.title
+                        user_id: track.user_id
+                        username: track.username
+                        description: track.description
+                        lyrics: track.lyrics
+                        is_explicit: track.is_explicit
+                        is_downloadable: track.is_downloadable
+                        is_vocal: track.is_vocal
+                        license_id: track.license_id
+                        genre_id: track.genre_id
+                        track_type_id: track.track_type_id
+                        released_at: utc_release_date
+                        remove_cover: false
+                        cover_id: track.cover_id
+                        cover_url: track.cover_url
+                        album_id: track.album_id
+                        is_published: track.is_published
+                        is_listed: track.is_listed
 
-                $scope.selectedSongs = {}
-                $scope.selectedSongs[song.id] = song for song in track.show_songs
-                updateSongDisplay()
+                    $scope.selectedSongs = {}
+                    $scope.selectedSongs[song.id] = song for song in track.show_songs
+                    updateSongDisplay()
 
             $scope.touchModel = -> $scope.isDirty = true
 
             $scope.$on '$locationChangeStart', (e) ->
                 return if !$scope.isDirty
                 e.preventDefault() if !confirm('Are you sure you want to leave this page without saving your changes?')
+
+            $scope.updateUI()
     ]
