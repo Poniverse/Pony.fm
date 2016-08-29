@@ -580,7 +580,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getFilesize($formatName)
     {
-        $trackFile = $this->trackFiles->where('format', $formatName)->first();
+        $trackFile = $this->trackFiles()->where('format', $formatName)->first();
 
         if ($trackFile) {
             return (int) $trackFile->filesize;
@@ -646,9 +646,9 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     }
 
 
-    protected function getMasterTrackFile() : TrackFile
+    public function getMasterTrackFile() : TrackFile
     {
-        return $this->trackFiles->where('is_master', true)->first();
+        return $this->trackFiles()->where('is_master', true)->first();
     }
 
     public function getMasterFormatName() : string
