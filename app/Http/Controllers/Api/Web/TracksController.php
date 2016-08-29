@@ -278,6 +278,7 @@ class TracksController extends ApiControllerBase
                 }
             });
 
+            $query->join('mlpma_tracks', 'tracks.id', '=', 'mlpma_tracks.track_id');
         }
 
         if (Input::has('songs')) {
