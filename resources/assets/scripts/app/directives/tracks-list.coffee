@@ -23,6 +23,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTracksList', () ->
         tracks: '=tracks'
         class: '@class'
         clickOverride: '&'
+        hasOverride: '@'
 
     controller: [
         '$modal', '$scope', 'favourites', 'player', 'playlists', 'auth'

@@ -22,6 +22,7 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
         type: '@'
         class: '@class'
         clickOverride: '&'
+        hasOverride: '@'
 
     controller: [
         '$scope', 'tracks', '$state', '$location'

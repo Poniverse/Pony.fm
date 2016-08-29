@@ -16,7 +16,7 @@
                 <i class="fa fa-trash"></i>
             </a>
         </div>
-        <a class="info" ng-href="{{::track.url}}" ng-if="!clickOverride">
+        <a class="info" ng-href="{{::track.url}}" ng-if="!hasOverride">
             <span class="title">{{::track.title}}</span>
             <span class="stats" title="{{::track.stats.favourites}} Favourites / {{:: track.stats.comments}} Comments / {{::track.stats.plays}} Plays">
                 <strong>{{::track.stats.favourites}}</strong>f
@@ -25,7 +25,7 @@
             </span>
             <span class="artist">{{::track.user.name}} / {{::track.genre.name}}</span>
         </a>
-        <a class="info" ng-if="clickOverride" href="#" ng-click="clickOverride({id: track.id})">
+        <a class="info" ng-if="hasOverride" href="#" ng-click="clickOverride({id: track.id})">
             <span class="title">{{::track.title}}</span>
             <span class="stats" title="{{::track.stats.favourites}} Favourites / {{:: track.stats.comments}} Comments / {{::track.stats.plays}} Plays">
                 <strong>{{::track.stats.favourites}}</strong>f
