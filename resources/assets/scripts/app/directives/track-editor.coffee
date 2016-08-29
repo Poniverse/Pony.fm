@@ -34,7 +34,6 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             albumsDb = {}
 
             $scope.$watch 'trackId', (newValue, oldValue) ->
-                console.log newValue, oldValue
                 $scope.updateUI()
 
             $scope.selectAlbum = (album) ->

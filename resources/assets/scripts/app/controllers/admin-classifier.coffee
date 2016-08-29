@@ -21,7 +21,7 @@ window.pfm.preloaders['admin-classifier'] = [
             tracks.mainQuery.fromFilterString($state.params.filter)
             tracks.mainQuery.setPage $state.params.page || 1
             tracks.mainQuery.setAdmin true
-            tracks.mainQuery.fetch(tracks.FetchType.ALL)
+            tracks.mainQuery.fetch(tracks.FetchType.UNCLASSIFIED)
         )
 ]
 
