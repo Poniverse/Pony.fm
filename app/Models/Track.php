@@ -646,7 +646,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     }
 
 
-    public function getMasterTrackFile() : TrackFile
+    protected function getMasterTrackFile() : TrackFile
     {
         return $this->trackFiles()->where('is_master', true)->first();
     }
