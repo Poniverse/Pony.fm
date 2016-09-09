@@ -39,6 +39,10 @@ class DashboardController extends ApiControllerBase
             ->orderBy('published_at', 'desc')
             ->take(30);
 
+        $recentQuery->whereHas('user', function($q) {
+            $q->whereIsArchived(false);
+        });
+
         $recentTracks = [];
 
         foreach ($recentQuery->get() as $track) {

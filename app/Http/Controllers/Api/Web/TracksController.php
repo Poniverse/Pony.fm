@@ -242,7 +242,10 @@ class TracksController extends ApiControllerBase
      */
     private function applyFilters($query, $unknown = false)
     {
+        $has_filters = false;
+
         if (Input::has('is_vocal')) {
+            $has_filters = true;
             $isVocal = \Input::get('is_vocal');
             if ($isVocal == 'true') {
                 $query->whereIsVocal(true);
@@ -252,6 +255,7 @@ class TracksController extends ApiControllerBase
         }
 
         if (Input::has('in_album')) {
+            $has_filters = true;
             if (Input::get('in_album') == 'true') {
                 $query->whereNotNull('album_id');
             } else {
@@ -260,10 +264,12 @@ class TracksController extends ApiControllerBase
         }
 
         if (Input::has('genres')) {
+            $has_filters = true;
             $query->whereIn('genre_id', Input::get('genres'));
         }
 
         if (Input::has('types') && !$unknown) {
+            $has_filters = true;
             $query->whereIn('track_type_id', Input::get('types'));
         }
 
@@ -282,6 +288,7 @@ class TracksController extends ApiControllerBase
         }
 
         if (Input::has('songs')) {
+            $has_filters = true;
             // DISTINCT is needed here to avoid duplicate results
             // when a track is associated with multiple show songs.
             $query->distinct();
@@ -289,6 +296,12 @@ class TracksController extends ApiControllerBase
                 $join->on('tracks.id', '=', 'show_song_track.track_id');
             });
             $query->whereIn('show_song_track.show_song_id', Input::get('songs'));
+        }
+
+        if (!$has_filters) {
+            $query->whereHas('user', function($q) {
+                $q->whereIsArchived(false);
+            });
         }
 
         return $query;
