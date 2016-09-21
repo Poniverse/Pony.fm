@@ -71,7 +71,7 @@ class TracksController extends ApiControllerBase
 
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed! Please contact feld0@poniverse.net to figure out what went wrong.'], 500);
+            return Response::json(['error' => 'Processing failed! Please contact logic@pony.fm to figure out what went wrong.'], 500);
         }
     }
 
