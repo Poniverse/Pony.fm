@@ -20,23 +20,24 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Auth;
 use File;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Input;
 use Poniverse\Ponyfm\Commands\DeleteTrackCommand;
 use Poniverse\Ponyfm\Commands\EditTrackCommand;
+use Poniverse\Ponyfm\Commands\GenerateTrackFilesCommand;
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
-use Poniverse\Ponyfm\Models\TrackFile;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackType;
-use Poniverse\Ponyfm\Models\TrackTypes;
-use Auth;
-use Input;
+use Poniverse\Ponyfm\Models\TrackFile;
 use Poniverse\Ponyfm\Models\User;
 use Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TracksController extends ApiControllerBase
 {
@@ -72,6 +73,75 @@ class TracksController extends ApiControllerBase
     public function postEdit($id)
     {
         return $this->execute(new EditTrackCommand($id, Input::all()));
+    }
+
+    public function postUploadNewVersion($trackId)
+    {
+        session_write_close();
+
+        $track = Track::find($trackId);
+        if (!$track) {
+            return $this->notFound('Track not found!');
+        }
+        $this->authorize('edit', $track);
+
+        $track->version_upload_status = Track::STATUS_PROCESSING;
+        $track->update();
+        return $this->execute(new UploadTrackCommand(true, false, null, false, $track->getNextVersion(), $track));
+    }
+
+    public function getVersionUploadStatus($trackId)
+    {
+        $track = Track::findOrFail($trackId);
+        $this->authorize('edit', $track);
+
+        if ($track->version_upload_status === Track::STATUS_PROCESSING) {
+            return Response::json(['message' => 'Processing...'], 202);
+
+        } elseif ($track->version_upload_status === Track::STATUS_COMPLETE) {
+            return Response::json(['message' => 'Processing complete!'], 201);
+
+        } else {
+            // something went wrong
+            return Response::json(['error' => 'Processing failed!'], 500);
+        }
+    }
+
+    public function getVersionList($trackId)
+    {
+        $track = Track::findOrFail($trackId);
+        $this->authorize('edit', $track);
+
+        $versions = [];
+        $trackFiles = $track->trackFilesForAllVersions()->where('is_master', 'true')->get();
+        foreach($trackFiles as $trackFile) {
+            $versions[] = [
+                'version' => $trackFile->version,
+                'url' => '/tracks/' . $track->id . '/version-change/' . $trackFile->version,
+                'created_at' => $trackFile->created_at->timestamp
+            ];
+        }
+
+        return Response::json(['current_version' => $track->current_version, 'versions' => $versions], 200);
+    }
+
+    public function getChangeVersion($trackId, $newVersion)
+    {
+        $track = Track::find($trackId);
+        if (!$track) {
+            return $this->notFound('Track not found!');
+        }
+        $this->authorize('edit', $track);
+
+        $masterTrackFile = $track->trackFilesForVersion($newVersion)->where('is_master', true)->first();
+        if (!$masterTrackFile) {
+            return $this->notFound('Version not found!');
+        }
+
+        $track->version_upload_status = Track::STATUS_PROCESSING;
+        $track->update();
+        $sourceFile = new UploadedFile($masterTrackFile->getFile(), $masterTrackFile->getFilename());
+        return $this->execute(new GenerateTrackFilesCommand($track, $sourceFile, false, false, true, $newVersion));
     }
 
     public function getShow($id)

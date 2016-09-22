@@ -22,15 +22,15 @@
 namespace Poniverse\Ponyfm\Jobs;
 
 use Carbon\Carbon;
+use Config;
 use DB;
 use File;
-use Config;
-use Log;
-use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Log;
+use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackFile;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -50,20 +50,25 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
     /**
      * @var bool
      */
+    protected $autoPublishWhenComplete;
+    /**
+     * @var bool
+     */
     protected $isForUpload;
     /**
      * @var bool
      */
-    protected $autoPublishWhenComplete;
+    protected $isReplacingTrack;
 
     /**
      * Create a new job instance.
      * @param TrackFile $trackFile
      * @param bool $isExpirable
-     * @param bool $isForUpload indicates whether this encode job is for an upload
      * @param bool $autoPublish
+     * @param bool $isForUpload indicates whether this encode job is for an upload
+     * @param bool $isReplacingTrack
      */
-    public function __construct(TrackFile $trackFile, $isExpirable, $isForUpload = false, $autoPublish = false)
+    public function __construct(TrackFile $trackFile, $isExpirable, $autoPublish = false, $isForUpload = false, $isReplacingTrack = false)
     {
         if (
             (!$isForUpload && $trackFile->is_master) ||
@@ -74,8 +79,9 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
 
         $this->trackFile = $trackFile;
         $this->isExpirable = $isExpirable;
-        $this->isForUpload = $isForUpload;
         $this->autoPublishWhenComplete = $autoPublish;
+        $this->isForUpload = $isForUpload;
+        $this->isReplacingTrack = $isReplacingTrack;
     }
 
     /**
@@ -92,7 +98,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
             Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is already being processed!');
             return;
 
-        } elseif (!$this->trackFile->is_expired) {
+        } elseif (!$this->trackFile->is_expired && File::exists($this->trackFile->getFile())) {
             Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is still valid! No need to re-encode it.');
             return;
         }
@@ -103,11 +109,11 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
 
         // Use the track's master file as the source
         if ($this->isForUpload) {
-            $source = $this->trackFile->track->getTemporarySourceFile();
-
+            $source = $this->trackFile->track->getTemporarySourceFileForVersion($this->trackFile->version);
         } else {
             $source = TrackFile::where('track_id', $this->trackFile->track_id)
                 ->where('is_master', true)
+                ->where('version', $this->trackFile->version)
                 ->first()
                 ->getFile();
         }
@@ -151,7 +157,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         $this->trackFile->status = TrackFile::STATUS_NOT_BEING_PROCESSED;
         $this->trackFile->save();
 
-        if ($this->isForUpload) {
+        if ($this->isForUpload || $this->isReplacingTrack) {
             if (!$this->trackFile->is_master && $this->trackFile->is_cacheable) {
                 File::delete($this->trackFile->getFile());
             }
@@ -166,7 +172,29 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
                     $this->trackFile->track->save();
                 }
 
-                File::delete($this->trackFile->track->getTemporarySourceFile());
+                if ($this->isReplacingTrack) {
+                    $oldVersion = $this->trackFile->track->current_version;
+
+                    // Update the version of the track being uploaded
+                    $this->trackFile->track->duration = \AudioCache::get($source)->getDuration();
+                    $this->trackFile->track->current_version = $this->trackFile->version;
+                    $this->trackFile->track->version_upload_status = Track::STATUS_COMPLETE;
+                    $this->trackFile->track->update();
+
+                    // Delete the non-master files for the old version
+                    if ($oldVersion !== $this->trackFile->version) {
+                        $trackFilesToDelete = $this->trackFile->track->trackFilesForVersion($oldVersion)->where('is_master', false)->get();
+                        foreach ($trackFilesToDelete as $trackFileToDelete) {
+                            if (File::exists($trackFileToDelete->getFile())) {
+                                File::delete($trackFileToDelete->getFile());
+                            }
+                        }
+                    }
+                }
+
+                if ($this->isForUpload) {
+                    File::delete($this->trackFile->track->getTemporarySourceFileForVersion($this->trackFile->version));
+                }
             }
         }
     }
@@ -181,5 +209,21 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         $this->trackFile->status = TrackFile::STATUS_PROCESSING_ERROR;
         $this->trackFile->expires_at = null;
         $this->trackFile->save();
+
+        if ($this->isReplacingTrack) {
+            // If a new version is being uploaded to replace a file, yet the upload fails,
+            // all track files for that version should be deleted as it would other clutter the version
+            if ($this->isForUpload) {
+                $trackFiles = $this->trackFile->track->trackFilesForVersion($this->trackFile->version)->get();
+                foreach ($trackFiles as $trackFile) {
+                    if (File::exists($trackFile->getFile())) {
+                        File::delete($trackFile->getFile());
+                    }
+                    $trackFile->delete();
+                }
+            }
+            $this->trackFile->track->version_upload_status = Track::STATUS_ERROR;
+            $this->trackFile->track->update();
+        }
     }
 }

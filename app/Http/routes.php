@@ -114,6 +114,11 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
         Route::post('/tracks/edit/{id}', 'Api\Web\TracksController@postEdit');
 
+        Route::post('/tracks/{id}/version-upload', 'Api\Web\TracksController@postUploadNewVersion');
+        Route::get('/tracks/{id}/version-change/{version}', 'Api\Web\TracksController@getChangeVersion');
+        Route::get('/tracks/{id}/version-upload-status', 'Api\Web\TracksController@getVersionUploadStatus');
+        Route::get('/tracks/{id}/versions', 'Api\Web\TracksController@getVersionList');
+
         Route::post('/albums/create', 'Api\Web\AlbumsController@postCreate');
         Route::post('/albums/delete/{id}', 'Api\Web\AlbumsController@postDelete');
         Route::post('/albums/edit/{id}', 'Api\Web\AlbumsController@postEdit');

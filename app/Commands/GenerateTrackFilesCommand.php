@@ -20,15 +20,15 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use AudioCache;
 use FFmpegMovie;
+use File;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Str;
 use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackFile;
-use AudioCache;
-use File;
-use Illuminate\Support\Str;
 use SplFileInfo;
 
 /**
@@ -45,6 +45,9 @@ class GenerateTrackFilesCommand extends CommandBase
     private $track;
     private $autoPublish;
     private $sourceFile;
+    private $isForUpload;
+    private $isReplacingTrack;
+    private $version;
 
     protected static $_losslessFormats = [
         'flac',
@@ -53,11 +56,14 @@ class GenerateTrackFilesCommand extends CommandBase
         'alac'
     ];
 
-    public function __construct(Track $track, SplFileInfo $sourceFile, bool $autoPublish = false)
+    public function __construct(Track $track, SplFileInfo $sourceFile, bool $autoPublish = false, bool $isForUpload = false, bool $isReplacingTrack = false, int $version = 1)
     {
         $this->track = $track;
         $this->autoPublish = $autoPublish;
         $this->sourceFile = $sourceFile;
+        $this->isForUpload = $isForUpload;
+        $this->isReplacingTrack = $isReplacingTrack;
+        $this->version = $version;
     }
 
     /**
@@ -98,6 +104,7 @@ class GenerateTrackFilesCommand extends CommandBase
                     $trackFile->is_master = true;
                     $trackFile->format = $masterFormat;
                     $trackFile->track_id = $this->track->id;
+                    $trackFile->version = $this->version;
                     $trackFile->save();
                 }
 
@@ -126,13 +133,14 @@ class GenerateTrackFilesCommand extends CommandBase
                 $trackFile->is_master = $name === 'FLAC' ? true : false;
                 $trackFile->format = $name;
                 $trackFile->status = TrackFile::STATUS_PROCESSING_PENDING;
+                $trackFile->version = $this->version;
 
                 if (in_array($name, Track::$CacheableFormats) && !$trackFile->is_master) {
                     $trackFile->is_cacheable = true;
                 } else {
                     $trackFile->is_cacheable = false;
                 }
-                $this->track->trackFiles()->save($trackFile);
+                $this->track->trackFilesForAllVersions()->save($trackFile);
 
                 // All TrackFile records we need are synchronously created
                 // before kicking off the encode jobs in order to avoid a race
@@ -142,16 +150,31 @@ class GenerateTrackFilesCommand extends CommandBase
 
             try {
                 foreach ($trackFiles as $trackFile) {
-                    $this->dispatch(new EncodeTrackFile($trackFile, false, true, $this->autoPublish));
+                    // Don't re-encode master files when replacing tracks with an already-uploaded version
+                    if ($trackFile->is_master && !$this->isForUpload && $this->isReplacingTrack) {
+                        continue;
+                    }
+                    $this->dispatch(new EncodeTrackFile($trackFile, false, false, $this->isForUpload, $this->isReplacingTrack));
                 }
 
             } catch (InvalidEncodeOptionsException $e) {
-                $this->track->delete();
+                // Only delete the track if the track is not being replaced
+                if ($this->isReplacingTrack) {
+                    $this->track->version_upload_status = Track::STATUS_ERROR;
+                    $this->track->update();
+                } else {
+                    $this->track->delete();
+                }
                 return CommandResponse::fail(['track' => [$e->getMessage()]]);
             }
 
         } catch (\Exception $e) {
-            $this->track->delete();
+            if ($this->isReplacingTrack) {
+                $this->track->version_upload_status = Track::STATUS_ERROR;
+                $this->track->update();
+            } else {
+                $this->track->delete();
+            }
             throw $e;
         }
 
@@ -168,7 +191,8 @@ class GenerateTrackFilesCommand extends CommandBase
      * @param FFmpegMovie|string $file object or full path of the file we're checking
      * @return bool whether the given file is lossless
      */
-    private function isLosslessFile($file) {
+    private function isLosslessFile($file)
+    {
         if (is_string($file)) {
             $file = AudioCache::get($file);
         }
@@ -180,7 +204,8 @@ class GenerateTrackFilesCommand extends CommandBase
      * @param string $format
      * @return TrackFile|null
      */
-    private function trackFileExists(string $format) {
-        return $this->track->trackFiles()->where('format', $format)->first();
+    private function trackFileExists(string $format)
+    {
+        return $this->track->trackFilesForAllVersions()->where('format', $format)->where('version', $this->version)->first();
     }
 }

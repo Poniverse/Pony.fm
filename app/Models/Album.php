@@ -123,7 +123,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
     }
 
     public function trackFiles() {
-        return $this->hasManyThrough(TrackFile::class, Track::class, 'album_id', 'track_id');
+        $trackIds = $this->tracks->lists('id');
+        return TrackFile::join('tracks', 'tracks.current_version', '=', 'track_files.version')->whereIn('track_id', $trackIds);
     }
 
     public function comments():HasMany
