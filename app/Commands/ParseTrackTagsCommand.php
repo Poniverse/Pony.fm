@@ -126,10 +126,33 @@ class ParseTrackTagsCommand extends CommandBase
      * @return int
      */
     protected function getGenreId(string $genreName) {
-        return Genre::firstOrCreate([
-            'name' => $genreName,
-            'slug' => Str::slug($genreName)
-        ])->id;
+        $existingGenre = Genre::withTrashed()
+                            ->where('name', $genreName)->first();
+
+        if ($existingGenre == null) {
+            // Has never existed, create new genre
+
+            return Genre::create([
+                'name' => $genreName,
+                'slug' => Str::slug($genreName)
+            ])->id;
+        } else {
+            // Exists in db, has it been deleted?
+
+            $visibleGenre = Genre::where('name', $genreName)->first();
+
+            if ($visibleGenre == null) {
+                // This genre was deleted. Let's bring it back
+                // instead of creating a new one
+
+                $existingGenre->restore();
+                return $existingGenre->id;
+            } else {
+                // It's fine, just return the ID
+
+                return $visibleGenre->id;
+            }
+        }
     }
 
     /**
