@@ -3,6 +3,7 @@
 /public/build
 /logs
 Homestead.yaml
+/public/storage
 .env
 .vagrant
 _ide_helper.php
