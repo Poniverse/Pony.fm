@@ -28,7 +28,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
 
-class DeleteGenre extends Job implements  ShouldQueue
+class DeleteGenre extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

@@ -28,7 +28,7 @@ use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Jobs\Job;
 use SerializesModels;
 
-class UpdateSearchIndexForEntity extends Job implements  ShouldQueue
+class UpdateSearchIndexForEntity extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

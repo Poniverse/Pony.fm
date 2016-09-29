@@ -38,7 +38,7 @@ use SerializesModels;
  *
  * @package Poniverse\Ponyfm\Jobs
  */
-class UpdateTagsForRenamedGenre extends Job implements  ShouldQueue
+class UpdateTagsForRenamedGenre extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

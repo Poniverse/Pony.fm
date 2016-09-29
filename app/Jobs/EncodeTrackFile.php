@@ -35,7 +35,7 @@ use Poniverse\Ponyfm\Models\TrackFile;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class EncodeTrackFile extends Job implements  ShouldQueue
+class EncodeTrackFile extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
     /**

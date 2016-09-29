@@ -29,7 +29,7 @@ use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
 use Poniverse\Ponyfm\Models\User;
 use SerializesModels;
 
-class SendNotifications extends Job implements  ShouldQueue
+class SendNotifications extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
