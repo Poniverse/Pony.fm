@@ -25,7 +25,6 @@ use Cache;
 use Log;
 use Poniverse\Ponyfm\Models\ShowSong;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
@@ -38,7 +37,7 @@ use SerializesModels;
  *
  * @package Poniverse\Ponyfm\Jobs
  */
-class UpdateTagsForRenamedShowSong extends Job implements SelfHandling, ShouldQueue
+class UpdateTagsForRenamedShowSong extends Job implements  ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

@@ -26,10 +26,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Jobs\Job;
-use Illuminate\Contracts\Bus\SelfHandling;
 use SerializesModels;
 
-class UpdateSearchIndexForEntity extends Job implements SelfHandling, ShouldQueue
+class UpdateSearchIndexForEntity extends Job implements  ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

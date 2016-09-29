@@ -24,12 +24,11 @@ use Auth;
 use DB;
 use Poniverse\Ponyfm\Models\Genre;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
 
-class DeleteGenre extends Job implements SelfHandling, ShouldQueue
+class DeleteGenre extends Job implements  ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

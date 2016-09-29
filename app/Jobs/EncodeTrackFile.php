@@ -25,7 +25,6 @@ use Carbon\Carbon;
 use Config;
 use DB;
 use File;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -36,7 +35,7 @@ use Poniverse\Ponyfm\Models\TrackFile;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
+class EncodeTrackFile extends Job implements  ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
     /**

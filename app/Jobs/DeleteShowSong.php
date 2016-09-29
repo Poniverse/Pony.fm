@@ -24,12 +24,11 @@ use Auth;
 use DB;
 use Poniverse\Ponyfm\Models\ShowSong;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
 
-class DeleteShowSong extends Job implements SelfHandling, ShouldQueue
+class DeleteShowSong extends Job implements  ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 

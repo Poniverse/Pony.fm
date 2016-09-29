@@ -23,14 +23,13 @@ namespace Poniverse\Ponyfm\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Poniverse\Ponyfm\Jobs\Job;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\AbstractDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\NativeDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
 use Poniverse\Ponyfm\Models\User;
 use SerializesModels;
 
-class SendNotifications extends Job implements SelfHandling, ShouldQueue
+class SendNotifications extends Job implements  ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
