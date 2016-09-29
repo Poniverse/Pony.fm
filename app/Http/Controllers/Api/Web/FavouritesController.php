@@ -95,7 +95,7 @@ class FavouritesController extends ApiControllerBase
         return Response::json(["albums" => $albums], 200);
     }
 
-    public function getPlaylists()
+    public function getPlaypluck()
     {
         $query = Favourite
             ::whereUserId(Auth::user()->id)

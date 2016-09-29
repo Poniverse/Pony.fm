@@ -237,7 +237,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public function trackFiles()
     {
-        $trackIds = $this->tracks->lists('id');
+        $trackIds = $this->tracks->pluck('id');
         return TrackFile::join('tracks', 'tracks.current_version', '=', 'track_files.version')->whereIn('track_id', $trackIds);
     }
 

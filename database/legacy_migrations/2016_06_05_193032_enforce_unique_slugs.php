@@ -17,7 +17,7 @@ class EnforceUniqueSlugs extends Migration
             ->select(['slug', DB::raw('COUNT(*)')])
             ->groupBy('slug')
             ->havingRaw('COUNT(*) > 1')
-            ->lists('slug');
+            ->pluck('slug');
 
         foreach ($slugs as $slug) {
             DB::transaction(function () use ($slug) {

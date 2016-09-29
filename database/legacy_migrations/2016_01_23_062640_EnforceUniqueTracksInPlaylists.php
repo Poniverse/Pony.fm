@@ -32,7 +32,7 @@ class EnforceUniqueTracksInPlaylists extends Migration
     public function up()
     {
         DB::transaction(function(){
-            $playlistIds = DB::table('playlists')->lists('id');
+            $playlistIds = DB::table('playlists')->pluck('id');
 
             foreach ($playlistIds as $playlistId) {
                 /** @var Playlist $playlist */
