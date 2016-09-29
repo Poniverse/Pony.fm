@@ -135,7 +135,7 @@ return [
     |
     */
 
-    'domain' => null,
+    'domain' => env('SESSION_DOMAIN', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -161,6 +161,6 @@ return [
     |
     */
 
-    'http_only' => false,
+    'http_only' => true,
 
 ];
