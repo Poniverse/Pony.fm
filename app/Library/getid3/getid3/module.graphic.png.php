@@ -25,7 +25,7 @@ class getid3_png extends getid3_handler
         $info = &$this->getid3->info;
 
         // shortcut
-        $info['png'] = array();
+        $info['png'] = [];
         $thisfile_png = &$info['png'];
 
         $info['fileformat']          = 'png';
@@ -75,7 +75,7 @@ class getid3_png extends getid3_handler
             $chunk['flags']['safe_to_copy'] = (bool) ($chunk['type_raw'] & 0x00000020);
 
             // shortcut
-            $thisfile_png[$chunk['type_text']] = array();
+            $thisfile_png[$chunk['type_text']] = [];
             $thisfile_png_chunk_type_text = &$thisfile_png[$chunk['type_text']];
 
             switch ($chunk['type_text']) {
@@ -449,58 +449,58 @@ class getid3_png extends getid3_handler
 
     public function PNGsRGBintentLookup($sRGB)
     {
-        static $PNGsRGBintentLookup = array(
+        static $PNGsRGBintentLookup = [
             0 => 'Perceptual',
             1 => 'Relative colorimetric',
             2 => 'Saturation',
             3 => 'Absolute colorimetric'
-        );
+        ];
         return (isset($PNGsRGBintentLookup[$sRGB]) ? $PNGsRGBintentLookup[$sRGB] : 'invalid');
     }
 
     public function PNGcompressionMethodLookup($compressionmethod)
     {
-        static $PNGcompressionMethodLookup = array(
+        static $PNGcompressionMethodLookup = [
             0 => 'deflate/inflate'
-        );
+        ];
         return (isset($PNGcompressionMethodLookup[$compressionmethod]) ? $PNGcompressionMethodLookup[$compressionmethod] : 'invalid');
     }
 
     public function PNGpHYsUnitLookup($unitid)
     {
-        static $PNGpHYsUnitLookup = array(
+        static $PNGpHYsUnitLookup = [
             0 => 'unknown',
             1 => 'meter'
-        );
+        ];
         return (isset($PNGpHYsUnitLookup[$unitid]) ? $PNGpHYsUnitLookup[$unitid] : 'invalid');
     }
 
     public function PNGoFFsUnitLookup($unitid)
     {
-        static $PNGoFFsUnitLookup = array(
+        static $PNGoFFsUnitLookup = [
             0 => 'pixel',
             1 => 'micrometer'
-        );
+        ];
         return (isset($PNGoFFsUnitLookup[$unitid]) ? $PNGoFFsUnitLookup[$unitid] : 'invalid');
     }
 
     public function PNGpCALequationTypeLookup($equationtype)
     {
-        static $PNGpCALequationTypeLookup = array(
+        static $PNGpCALequationTypeLookup = [
             0 => 'Linear mapping',
             1 => 'Base-e exponential mapping',
             2 => 'Arbitrary-base exponential mapping',
             3 => 'Hyperbolic mapping'
-        );
+        ];
         return (isset($PNGpCALequationTypeLookup[$equationtype]) ? $PNGpCALequationTypeLookup[$equationtype] : 'invalid');
     }
 
     public function PNGsCALUnitLookup($unitid)
     {
-        static $PNGsCALUnitLookup = array(
+        static $PNGsCALUnitLookup = [
             0 => 'meter',
             1 => 'radian'
-        );
+        ];
         return (isset($PNGsCALUnitLookup[$unitid]) ? $PNGsCALUnitLookup[$unitid] : 'invalid');
     }
 

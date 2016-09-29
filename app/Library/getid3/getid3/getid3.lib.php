@@ -134,7 +134,7 @@ class getid3_lib
             }
         }
         $binarypointnumber = str_pad(substr($binarypointnumber, 0, $maxbits + 2), $maxbits + 2, '0', STR_PAD_RIGHT);
-        return array('normalized'=>$binarypointnumber, 'exponent'=>(int) $exponent);
+        return ['normalized'=>$binarypointnumber, 'exponent'=>(int) $exponent];
     }
 
 
@@ -628,7 +628,7 @@ class getid3_lib
                     break;
                 }
 
-                $RequiredFiles = array('cygwin1.dll', 'head.exe', 'tail.exe', $windows_call);
+                $RequiredFiles = ['cygwin1.dll', 'head.exe', 'tail.exe', $windows_call];
                 foreach ($RequiredFiles as $required_file) {
                     if (!is_readable(GETID3_HELPERAPPSDIR.$required_file)) {
                         // helper apps not available - fall back to old method
@@ -1027,7 +1027,7 @@ class getid3_lib
 
 
         // iconv() not available
-        static $ConversionFunctionList = array();
+        static $ConversionFunctionList = [];
         if (empty($ConversionFunctionList)) {
             $ConversionFunctionList['ISO-8859-1']['UTF-8']    = 'iconv_fallback_iso88591_utf8';
             $ConversionFunctionList['ISO-8859-1']['UTF-16']   = 'iconv_fallback_iso88591_utf16';
@@ -1056,7 +1056,7 @@ class getid3_lib
         if (is_string($data)) {
             return self::MultiByteCharString2HTML($data, $charset);
         } elseif (is_array($data)) {
-            $return_data = array();
+            $return_data = [];
             foreach ($data as $key => $value) {
                 $return_data[$key] = self::recursiveMultiByteCharString2HTML($value, $charset);
             }
@@ -1163,7 +1163,7 @@ class getid3_lib
 
     public static function RGADnameLookup($namecode)
     {
-        static $RGADname = array();
+        static $RGADname = [];
         if (empty($RGADname)) {
             $RGADname[0] = 'not set';
             $RGADname[1] = 'Track Gain Adjustment';
@@ -1176,7 +1176,7 @@ class getid3_lib
 
     public static function RGADoriginatorLookup($originatorcode)
     {
-        static $RGADoriginator = array();
+        static $RGADoriginator = [];
         if (empty($RGADoriginator)) {
             $RGADoriginator[0] = 'unspecified';
             $RGADoriginator[1] = 'pre-set by artist/producer/mastering engineer';
@@ -1220,7 +1220,7 @@ class getid3_lib
     }
 
 
-    public static function GetDataImageSize($imgData, &$imageinfo = array())
+    public static function GetDataImageSize($imgData, &$imageinfo = [])
     {
         static $tempdir = '';
         if (empty($tempdir)) {
@@ -1258,12 +1258,12 @@ class getid3_lib
     public static function ImageExtFromMime($mime_type)
     {
         // temporary way, works OK for now, but should be reworked in the future
-        return str_replace(array('image/', 'x-', 'jpeg'), array('', '', 'jpg'), $mime_type);
+        return str_replace(['image/', 'x-', 'jpeg'], ['', '', 'jpg'], $mime_type);
     }
 
     public static function ImageTypesLookup($imagetypeid)
     {
-        static $ImageTypesLookup = array();
+        static $ImageTypesLookup = [];
         if (empty($ImageTypesLookup)) {
             $ImageTypesLookup[1]  = 'gif';
             $ImageTypesLookup[2]  = 'jpeg';

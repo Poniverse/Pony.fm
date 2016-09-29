@@ -32,7 +32,7 @@ class getid3_dss extends getid3_handler
 
         // some structure information taken from http://cpansearch.perl.org/src/RGIBSON/Audio-DSS-0.02/lib/Audio/DSS.pm
         $info['encoding']              = 'ISO-8859-1'; // not certain, but assumed
-        $info['dss'] = array();
+        $info['dss'] = [];
 
         $info['fileformat']            = 'dss';
         $info['mime_type']             = 'audio/x-'.substr($DSSheader, 1, 3); // "audio/x-dss" or "audio/x-ds2"
@@ -80,12 +80,12 @@ class getid3_dss extends getid3_handler
 
     public function DSSsampleRateLookup($sample_rate_index)
     {
-        static $dssSampleRateLookup = array(
+        static $dssSampleRateLookup = [
             0x0A => 16000,
             0x0C => 11025,
             0x0D => 12000,
             0x15 =>  8000,
-        );
+        ];
         if (!array_key_exists($sample_rate_index, $dssSampleRateLookup)) {
             $this->getid3->warning('unknown sample_rate_index: '.$sample_rate_index);
             return false;

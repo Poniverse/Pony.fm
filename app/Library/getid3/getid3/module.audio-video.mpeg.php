@@ -45,8 +45,8 @@ class getid3_mpeg extends getid3_handler
         $prevStartCodeValue = false;
 
         $GOPcounter = -1;
-        $FramesByGOP = array();
-        $ParsedAVchannels = array();
+        $FramesByGOP = [];
+        $ParsedAVchannels = [];
 
         do {
 //echo $MPEGstreamDataOffset.' vs '.(strlen($MPEGstreamData) - 1024).'<Br>';
@@ -76,7 +76,7 @@ class getid3_mpeg extends getid3_handler
                         $bitstream = getid3_lib::BigEndian2Bin(substr($MPEGstreamData, $StartCodeOffset + 4, 4));
                         $bitstreamoffset = 0;
 
-                        $PictureHeader = array();
+                        $PictureHeader = [];
 
                         $PictureHeader['temporal_reference']  = self::readBitsFromStream($bitstream, $bitstreamoffset, 10); // 10-bit unsigned integer associated with each input picture. It is incremented by one, modulo 1024, for each input frame. When a frame is coded as two fields the temporal reference in the picture header of both fields is the same. Following a group start header the temporal reference of the earliest picture (in display order) shall be reset to zero.
                         $PictureHeader['picture_coding_type'] = self::readBitsFromStream($bitstream, $bitstreamoffset, 3); //  3 bits for picture_coding_type
@@ -263,7 +263,7 @@ class getid3_mpeg extends getid3_handler
                         $bitstream = getid3_lib::BigEndian2Bin(substr($MPEGstreamData, $StartCodeOffset + 4, 4)); // 27 bits needed for group_of_pictures_header
                         $bitstreamoffset = 0;
 
-                        $GOPheader = array();
+                        $GOPheader = [];
 
                         $GOPheader['byte_offset'] = $MPEGstreamBaseOffset + $StartCodeOffset;
                         $GOPheader['drop_frame_flag']    = self::readBitsFromStream($bitstream, $bitstreamoffset, 1); //  1 bit flag: drop_frame_flag
@@ -523,18 +523,18 @@ echo 'average_File_bitrate = '.number_format(array_sum($vbr_bitrates) / count($v
 
 
         //OMBB[audiobitrate]              = array(video-10kbps,       video-100kbps,      video-1000kbps,     video-10000kbps)
-        $OverheadMultiplierByBitrate[32]  = array(0, 0.9676287944368530, 0.9802276264360310, 0.9844916183244460, 0.9852821845179940);
-        $OverheadMultiplierByBitrate[48]  = array(0, 0.9779100089209830, 0.9787770035359320, 0.9846738664076130, 0.9852683013799960);
-        $OverheadMultiplierByBitrate[56]  = array(0, 0.9731249855367600, 0.9776624308938040, 0.9832606361852130, 0.9843922606633340);
-        $OverheadMultiplierByBitrate[64]  = array(0, 0.9755642683275760, 0.9795256705493390, 0.9836573009193170, 0.9851122539404470);
-        $OverheadMultiplierByBitrate[96]  = array(0, 0.9788025247497290, 0.9798553314148700, 0.9822956869792560, 0.9834815119124690);
-        $OverheadMultiplierByBitrate[128] = array(0, 0.9816940050925480, 0.9821675936072120, 0.9829756927470870, 0.9839763420152050);
-        $OverheadMultiplierByBitrate[160] = array(0, 0.9825894094561180, 0.9820913399073960, 0.9823907143253970, 0.9832821783651570);
-        $OverheadMultiplierByBitrate[192] = array(0, 0.9832038474336260, 0.9825731694317960, 0.9821028622712400, 0.9828262076447620);
-        $OverheadMultiplierByBitrate[224] = array(0, 0.9836516298538770, 0.9824718601823890, 0.9818302180625380, 0.9823735101626480);
-        $OverheadMultiplierByBitrate[256] = array(0, 0.9845863022094920, 0.9837229411967540, 0.9824521662210830, 0.9828645172100790);
-        $OverheadMultiplierByBitrate[320] = array(0, 0.9849565280263180, 0.9837683142805110, 0.9822885275960400, 0.9824424382727190);
-        $OverheadMultiplierByBitrate[384] = array(0, 0.9856094774357600, 0.9844573394432720, 0.9825970399837330, 0.9824673808303890);
+        $OverheadMultiplierByBitrate[32]  = [0, 0.9676287944368530, 0.9802276264360310, 0.9844916183244460, 0.9852821845179940];
+        $OverheadMultiplierByBitrate[48]  = [0, 0.9779100089209830, 0.9787770035359320, 0.9846738664076130, 0.9852683013799960];
+        $OverheadMultiplierByBitrate[56]  = [0, 0.9731249855367600, 0.9776624308938040, 0.9832606361852130, 0.9843922606633340];
+        $OverheadMultiplierByBitrate[64]  = [0, 0.9755642683275760, 0.9795256705493390, 0.9836573009193170, 0.9851122539404470];
+        $OverheadMultiplierByBitrate[96]  = [0, 0.9788025247497290, 0.9798553314148700, 0.9822956869792560, 0.9834815119124690];
+        $OverheadMultiplierByBitrate[128] = [0, 0.9816940050925480, 0.9821675936072120, 0.9829756927470870, 0.9839763420152050];
+        $OverheadMultiplierByBitrate[160] = [0, 0.9825894094561180, 0.9820913399073960, 0.9823907143253970, 0.9832821783651570];
+        $OverheadMultiplierByBitrate[192] = [0, 0.9832038474336260, 0.9825731694317960, 0.9821028622712400, 0.9828262076447620];
+        $OverheadMultiplierByBitrate[224] = [0, 0.9836516298538770, 0.9824718601823890, 0.9818302180625380, 0.9823735101626480];
+        $OverheadMultiplierByBitrate[256] = [0, 0.9845863022094920, 0.9837229411967540, 0.9824521662210830, 0.9828645172100790];
+        $OverheadMultiplierByBitrate[320] = [0, 0.9849565280263180, 0.9837683142805110, 0.9822885275960400, 0.9824424382727190];
+        $OverheadMultiplierByBitrate[384] = [0, 0.9856094774357600, 0.9844573394432720, 0.9825970399837330, 0.9824673808303890];
 
         $BitrateToUseMin = 32;
         $BitrateToUseMax = 32;
@@ -569,47 +569,47 @@ echo 'average_File_bitrate = '.number_format(array_sum($vbr_bitrates) / count($v
 
     public static function videoFramerateLookup($rawframerate)
     {
-        $lookup = array(0, 23.976, 24, 25, 29.97, 30, 50, 59.94, 60);
+        $lookup = [0, 23.976, 24, 25, 29.97, 30, 50, 59.94, 60];
         return (isset($lookup[$rawframerate]) ? (float) $lookup[$rawframerate] : (float) 0);
     }
 
     public static function videoAspectRatioLookup($rawaspectratio)
     {
-        $lookup = array(0, 1, 0.6735, 0.7031, 0.7615, 0.8055, 0.8437, 0.8935, 0.9157, 0.9815, 1.0255, 1.0695, 1.0950, 1.1575, 1.2015, 0);
+        $lookup = [0, 1, 0.6735, 0.7031, 0.7615, 0.8055, 0.8437, 0.8935, 0.9157, 0.9815, 1.0255, 1.0695, 1.0950, 1.1575, 1.2015, 0];
         return (isset($lookup[$rawaspectratio]) ? (float) $lookup[$rawaspectratio] : (float) 0);
     }
 
     public static function videoAspectRatioTextLookup($rawaspectratio)
     {
-        $lookup = array('forbidden', 'square pixels', '0.6735', '16:9, 625 line, PAL', '0.7615', '0.8055', '16:9, 525 line, NTSC', '0.8935', '4:3, 625 line, PAL, CCIR601', '0.9815', '1.0255', '1.0695', '4:3, 525 line, NTSC, CCIR601', '1.1575', '1.2015', 'reserved');
+        $lookup = ['forbidden', 'square pixels', '0.6735', '16:9, 625 line, PAL', '0.7615', '0.8055', '16:9, 525 line, NTSC', '0.8935', '4:3, 625 line, PAL, CCIR601', '0.9815', '1.0255', '1.0695', '4:3, 525 line, NTSC, CCIR601', '1.1575', '1.2015', 'reserved'];
         return (isset($lookup[$rawaspectratio]) ? $lookup[$rawaspectratio] : '');
     }
 
     public static function videoFormatTextLookup($video_format)
     {
         // ISO/IEC 13818-2, section 6.3.6, Table 6-6. Meaning of video_format
-        $lookup = array('component', 'PAL', 'NTSC', 'SECAM', 'MAC', 'Unspecified video format', 'reserved(6)', 'reserved(7)');
+        $lookup = ['component', 'PAL', 'NTSC', 'SECAM', 'MAC', 'Unspecified video format', 'reserved(6)', 'reserved(7)'];
         return (isset($lookup[$video_format]) ? $lookup[$video_format] : '');
     }
 
     public static function scalableModeTextLookup($scalable_mode)
     {
         // ISO/IEC 13818-2, section 6.3.8, Table 6-10. Definition of scalable_mode
-        $lookup = array('data partitioning', 'spatial scalability', 'SNR scalability', 'temporal scalability');
+        $lookup = ['data partitioning', 'spatial scalability', 'SNR scalability', 'temporal scalability'];
         return (isset($lookup[$scalable_mode]) ? $lookup[$scalable_mode] : '');
     }
 
     public static function pictureStructureTextLookup($picture_structure)
     {
         // ISO/IEC 13818-2, section 6.3.11, Table 6-14 Meaning of picture_structure
-        $lookup = array('reserved', 'Top Field', 'Bottom Field', 'Frame picture');
+        $lookup = ['reserved', 'Top Field', 'Bottom Field', 'Frame picture'];
         return (isset($lookup[$picture_structure]) ? $lookup[$picture_structure] : '');
     }
 
     public static function chromaFormatTextLookup($chroma_format)
     {
         // ISO/IEC 13818-2, section 6.3.11, Table 6-14 Meaning of picture_structure
-        $lookup = array('reserved', '4:2:0', '4:2:2', '4:4:4');
+        $lookup = ['reserved', '4:2:0', '4:2:2', '4:4:4'];
         return (isset($lookup[$chroma_format]) ? $lookup[$chroma_format] : '');
     }
 }

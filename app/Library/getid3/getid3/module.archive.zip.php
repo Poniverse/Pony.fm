@@ -24,7 +24,7 @@ class getid3_zip extends getid3_handler
 
         $info['fileformat']      = 'zip';
         $info['zip']['encoding'] = 'ISO-8859-1';
-        $info['zip']['files']    = array();
+        $info['zip']['files']    = [];
 
         $info['zip']['compressed_size']   = 0;
         $info['zip']['uncompressed_size'] = 0;
@@ -432,7 +432,7 @@ class getid3_zip extends getid3_handler
 
     public static function ZIPversionOSLookup($index)
     {
-        static $ZIPversionOSLookup = array(
+        static $ZIPversionOSLookup = [
             0  => 'MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)',
             1  => 'Amiga',
             2  => 'OpenVMS',
@@ -453,7 +453,7 @@ class getid3_zip extends getid3_handler
             17 => 'Tandem',
             18 => 'OS/400',
             19 => 'OS/X (Darwin)',
-        );
+        ];
 
         return (isset($ZIPversionOSLookup[$index]) ? $ZIPversionOSLookup[$index] : '[unknown]');
     }
@@ -461,7 +461,7 @@ class getid3_zip extends getid3_handler
     public static function ZIPcompressionMethodLookup($index)
     {
         // http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/ZIP.html
-        static $ZIPcompressionMethodLookup = array(
+        static $ZIPcompressionMethodLookup = [
             0  => 'store',
             1  => 'shrink',
             2  => 'reduce-1',
@@ -485,7 +485,7 @@ class getid3_zip extends getid3_handler
             96 => 'JPEG recompressed',
             97 => 'WavPack compressed',
             98 => 'PPMd version I, Rev 1',
-        );
+        ];
 
         return (isset($ZIPcompressionMethodLookup[$index]) ? $ZIPcompressionMethodLookup[$index] : '[unknown]');
     }

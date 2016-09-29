@@ -32,7 +32,7 @@ class getid3_amr extends getid3_handler
         }
 
         // shortcut
-        $info['amr'] = array();
+        $info['amr'] = [];
         $thisfile_amr = &$info['amr'];
 
         $info['fileformat']               = 'amr';
@@ -41,7 +41,7 @@ class getid3_amr extends getid3_handler
         $info['audio']['bits_per_sample'] =    13;   // http://en.wikipedia.org/wiki/Adaptive_Multi-Rate_audio_codec: "Sampling frequency 8 kHz/13-bit (160 samples for 20 ms frames), filtered to 200–3400 Hz"
         $info['audio']['sample_rate']     =  8000;   // http://en.wikipedia.org/wiki/Adaptive_Multi-Rate_audio_codec: "Sampling frequency 8 kHz/13-bit (160 samples for 20 ms frames), filtered to 200–3400 Hz"
         $info['audio']['channels']        =     1;
-        $thisfile_amr['frame_mode_count'] = array(0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 6=>0, 7=>0);
+        $thisfile_amr['frame_mode_count'] = [0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 6=>0, 7=>0];
 
         $buffer = '';
         do {
@@ -68,7 +68,7 @@ class getid3_amr extends getid3_handler
 
     public function amr_mode_bitrate($key)
     {
-        static $amr_mode_bitrate = array(
+        static $amr_mode_bitrate = [
             0 =>  4750,
             1 =>  5150,
             2 =>  5900,
@@ -77,13 +77,13 @@ class getid3_amr extends getid3_handler
             5 =>  7950,
             6 => 10200,
             7 => 12200,
-        );
+        ];
         return (isset($amr_mode_bitrate[$key]) ? $amr_mode_bitrate[$key] : false);
     }
 
     public function amr_mode_bytes_per_frame($key)
     {
-        static $amr_mode_bitrate = array(
+        static $amr_mode_bitrate = [
             0 =>  13, // 1-byte frame header +  95 bits [padded to: 12 bytes] audio data
             1 =>  14, // 1-byte frame header + 103 bits [padded to: 13 bytes] audio data
             2 =>  16, // 1-byte frame header + 118 bits [padded to: 15 bytes] audio data
@@ -92,7 +92,7 @@ class getid3_amr extends getid3_handler
             5 =>  21, // 1-byte frame header + 159 bits [padded to: 20 bytes] audio data
             6 =>  27, // 1-byte frame header + 204 bits [padded to: 26 bytes] audio data
             7 =>  32, // 1-byte frame header + 244 bits [padded to: 31 bytes] audio data
-        );
+        ];
         return (isset($amr_mode_bitrate[$key]) ? $amr_mode_bitrate[$key] : false);
     }
 }

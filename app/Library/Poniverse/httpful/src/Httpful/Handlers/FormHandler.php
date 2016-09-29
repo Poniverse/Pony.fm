@@ -14,7 +14,7 @@ class FormHandler extends MimeHandlerAdapter
      */
     public function parse($body)
     {
-        $parsed = array();
+        $parsed = [];
         parse_str($body, $parsed);
         return $parsed;
     }

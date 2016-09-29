@@ -67,10 +67,10 @@ X-My-Header:Value2\r\n";
 
     function testMethods()
     {
-        $valid_methods = array('get', 'post', 'delete', 'put', 'options', 'head');
+        $valid_methods = ['get', 'post', 'delete', 'put', 'options', 'head'];
         $url = 'http://example.com/';
         foreach ($valid_methods as $method) {
-            $r = call_user_func(array('Httpful\Request', $method), $url);
+            $r = call_user_func(['Httpful\Request', $method], $url);
             $this->assertEquals('Httpful\Request', get_class($r));
             $this->assertEquals(strtoupper($method), $r->method);
         }
@@ -446,7 +446,7 @@ Transfer-Encoding: chunked\r\n",
         // Lazy test...
         $prev = \Httpful\Httpful::get(\Httpful\Mime::XML);
         $this->assertEquals($prev, new \Httpful\Handlers\XmlHandler());
-        $conf = array('namespace' => 'http://example.com');
+        $conf = ['namespace' => 'http://example.com'];
         \Httpful\Httpful::register(\Httpful\Mime::XML, new \Httpful\Handlers\XmlHandler($conf));
         $new = \Httpful\Httpful::get(\Httpful\Mime::XML);
         $this->assertNotEquals($prev, $new);

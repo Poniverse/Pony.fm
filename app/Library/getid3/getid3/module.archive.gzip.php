@@ -69,7 +69,7 @@ class getid3_gzip extends getid3_handler
             }
         }
 
-        $info['gzip']['files'] = array();
+        $info['gzip']['files'] = [];
 
         $fpointer = 0;
         $idx = 0;
@@ -104,7 +104,7 @@ class getid3_gzip extends getid3_handler
             }
 
             $fpointer = 10;
-            $arr_xsubfield = array();
+            $arr_xsubfield = [];
             // bit 2 - FLG.FEXTRA
             //+---+---+=================================+
             //| XLEN  |...XLEN bytes of "extra field"...|
@@ -251,7 +251,7 @@ class getid3_gzip extends getid3_handler
     // Converts the OS type
     public function get_os_type($key)
     {
-        static $os_type = array(
+        static $os_type = [
             '0'   => 'FAT filesystem (MS-DOS, OS/2, NT/Win32)',
             '1'   => 'Amiga',
             '2'   => 'VMS (or OpenVMS)',
@@ -267,18 +267,18 @@ class getid3_gzip extends getid3_handler
             '12'  => 'QDOS',
             '13'  => 'Acorn RISCOS',
             '255' => 'unknown'
-        );
+        ];
         return (isset($os_type[$key]) ? $os_type[$key] : '');
     }
 
     // Converts the eXtra FLags
     public function get_xflag_type($key)
     {
-        static $xflag_type = array(
+        static $xflag_type = [
             '0' => 'unknown',
             '2' => 'maximum compression',
             '4' => 'fastest algorithm'
-        );
+        ];
         return (isset($xflag_type[$key]) ? $xflag_type[$key] : '');
     }
 }

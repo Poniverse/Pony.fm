@@ -41,10 +41,10 @@ class getid3_tiff extends getid3_handler
         $info['fileformat']          = 'tiff';
         $info['video']['dataformat'] = 'tiff';
         $info['video']['lossless']   = true;
-        $info['tiff']['ifd']         = array();
-        $CurrentIFD                          = array();
+        $info['tiff']['ifd']         = [];
+        $CurrentIFD                          = [];
 
-        $FieldTypeByteLength = array(1=>1, 2=>1, 3=>2, 4=>4, 5=>8);
+        $FieldTypeByteLength = [1=>1, 2=>1, 3=>2, 4=>4, 5=>8];
 
         $nextIFDoffset = $this->TIFFendian2Int($this->fread(4), $info['tiff']['byte_order']);
 
@@ -99,7 +99,7 @@ class getid3_tiff extends getid3_handler
             }
 
             $info['tiff']['ifd'][] = $CurrentIFD;
-            $CurrentIFD = array();
+            $CurrentIFD = [];
             $nextIFDoffset = $this->TIFFendian2Int($this->fread(4), $info['tiff']['byte_order']);
         }
 
@@ -166,7 +166,7 @@ class getid3_tiff extends getid3_handler
                         if (isset($info['tiff']['comments'][$TIFFcommentName])) {
                             $info['tiff']['comments'][$TIFFcommentName][] =       $info['tiff']['ifd'][$IFDid]['fields'][$key]['raw']['data'];
                         } else {
-                            $info['tiff']['comments'][$TIFFcommentName]   = array($info['tiff']['ifd'][$IFDid]['fields'][$key]['raw']['data']);
+                            $info['tiff']['comments'][$TIFFcommentName]   = [$info['tiff']['ifd'][$IFDid]['fields'][$key]['raw']['data']];
                         }
                         break;
 
@@ -192,24 +192,24 @@ class getid3_tiff extends getid3_handler
 
     public function TIFFcompressionMethod($id)
     {
-        static $TIFFcompressionMethod = array();
+        static $TIFFcompressionMethod = [];
         if (empty($TIFFcompressionMethod)) {
-            $TIFFcompressionMethod = array(
+            $TIFFcompressionMethod = [
                 1     => 'Uncompressed',
                 2     => 'Huffman',
                 3     => 'Fax - CCITT 3',
                 5     => 'LZW',
                 32773 => 'PackBits',
-            );
+            ];
         }
         return (isset($TIFFcompressionMethod[$id]) ? $TIFFcompressionMethod[$id] : 'unknown/invalid ('.$id.')');
     }
 
     public function TIFFcommentName($id)
     {
-        static $TIFFcommentName = array();
+        static $TIFFcommentName = [];
         if (empty($TIFFcommentName)) {
-            $TIFFcommentName = array(
+            $TIFFcommentName = [
                 270 => 'imagedescription',
                 271 => 'make',
                 272 => 'model',
@@ -217,7 +217,7 @@ class getid3_tiff extends getid3_handler
                 306 => 'datetime',
                 315 => 'artist',
                 316 => 'hostcomputer',
-            );
+            ];
         }
         return (isset($TIFFcommentName[$id]) ? $TIFFcommentName[$id] : 'unknown/invalid ('.$id.')');
     }

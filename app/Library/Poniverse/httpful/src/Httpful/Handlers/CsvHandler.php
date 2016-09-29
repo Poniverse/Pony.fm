@@ -18,7 +18,7 @@ class CsvHandler extends MimeHandlerAdapter
             return null;
         }
 
-        $parsed = array();
+        $parsed = [];
         $fp = fopen('data://text/plain;base64,' . base64_encode($body), 'r');
         while (($r = fgetcsv($fp)) !== false) {
             $parsed[] = $r;

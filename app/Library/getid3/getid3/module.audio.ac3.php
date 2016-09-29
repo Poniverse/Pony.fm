@@ -17,7 +17,7 @@
 
 class getid3_ac3 extends getid3_handler
 {
-    private $AC3header = array();
+    private $AC3header = [];
     private $BSIoffset = 0;
 
     const syncword = "\x0B\x77";
@@ -27,7 +27,7 @@ class getid3_ac3 extends getid3_handler
         $info = &$this->getid3->info;
 
         ///AH
-        $info['ac3']['raw']['bsi'] = array();
+        $info['ac3']['raw']['bsi'] = [];
         $thisfile_ac3              = &$info['ac3'];
         $thisfile_ac3_raw          = &$thisfile_ac3['raw'];
         $thisfile_ac3_raw_bsi      = &$thisfile_ac3_raw['bsi'];
@@ -244,18 +244,18 @@ class getid3_ac3 extends getid3_handler
 
     public static function sampleRateCodeLookup($fscod)
     {
-        static $sampleRateCodeLookup = array(
+        static $sampleRateCodeLookup = [
             0 => 48000,
             1 => 44100,
             2 => 32000,
             3 => 'reserved' // If the reserved code is indicated, the decoder should not attempt to decode audio and should mute.
-        );
+        ];
         return (isset($sampleRateCodeLookup[$fscod]) ? $sampleRateCodeLookup[$fscod] : false);
     }
 
     public static function serviceTypeLookup($bsmod, $acmod)
     {
-        static $serviceTypeLookup = array();
+        static $serviceTypeLookup = [];
         if (empty($serviceTypeLookup)) {
             for ($i = 0; $i <= 7; $i++) {
                 $serviceTypeLookup[0][$i] = 'main audio service: complete main (CM)';
@@ -278,16 +278,16 @@ class getid3_ac3 extends getid3_handler
     public static function audioCodingModeLookup($acmod)
     {
         // array(channel configuration, # channels (not incl LFE), channel order)
-        static $audioCodingModeLookup = array (
-            0 => array('channel_config'=>'1+1', 'num_channels'=>2, 'channel_order'=>'Ch1,Ch2'),
-            1 => array('channel_config'=>'1/0', 'num_channels'=>1, 'channel_order'=>'C'),
-            2 => array('channel_config'=>'2/0', 'num_channels'=>2, 'channel_order'=>'L,R'),
-            3 => array('channel_config'=>'3/0', 'num_channels'=>3, 'channel_order'=>'L,C,R'),
-            4 => array('channel_config'=>'2/1', 'num_channels'=>3, 'channel_order'=>'L,R,S'),
-            5 => array('channel_config'=>'3/1', 'num_channels'=>4, 'channel_order'=>'L,C,R,S'),
-            6 => array('channel_config'=>'2/2', 'num_channels'=>4, 'channel_order'=>'L,R,SL,SR'),
-            7 => array('channel_config'=>'3/2', 'num_channels'=>5, 'channel_order'=>'L,C,R,SL,SR'),
-        );
+        static $audioCodingModeLookup =  [
+            0 => ['channel_config'=>'1+1', 'num_channels'=>2, 'channel_order'=>'Ch1,Ch2'],
+            1 => ['channel_config'=>'1/0', 'num_channels'=>1, 'channel_order'=>'C'],
+            2 => ['channel_config'=>'2/0', 'num_channels'=>2, 'channel_order'=>'L,R'],
+            3 => ['channel_config'=>'3/0', 'num_channels'=>3, 'channel_order'=>'L,C,R'],
+            4 => ['channel_config'=>'2/1', 'num_channels'=>3, 'channel_order'=>'L,R,S'],
+            5 => ['channel_config'=>'3/1', 'num_channels'=>4, 'channel_order'=>'L,C,R,S'],
+            6 => ['channel_config'=>'2/2', 'num_channels'=>4, 'channel_order'=>'L,R,SL,SR'],
+            7 => ['channel_config'=>'3/2', 'num_channels'=>5, 'channel_order'=>'L,C,R,SL,SR'],
+        ];
         return (isset($audioCodingModeLookup[$acmod]) ? $audioCodingModeLookup[$acmod] : false);
     }
 
@@ -295,12 +295,12 @@ class getid3_ac3 extends getid3_handler
     {
         static $centerMixLevelLookup;
         if (empty($centerMixLevelLookup)) {
-            $centerMixLevelLookup = array(
+            $centerMixLevelLookup = [
                 0 => pow(2, -3.0 / 6), // 0.707 (-3.0 dB)
                 1 => pow(2, -4.5 / 6), // 0.595 (-4.5 dB)
                 2 => pow(2, -6.0 / 6), // 0.500 (-6.0 dB)
                 3 => 'reserved'
-            );
+            ];
         }
         return (isset($centerMixLevelLookup[$cmixlev]) ? $centerMixLevelLookup[$cmixlev] : false);
     }
@@ -309,30 +309,30 @@ class getid3_ac3 extends getid3_handler
     {
         static $surroundMixLevelLookup;
         if (empty($surroundMixLevelLookup)) {
-            $surroundMixLevelLookup = array(
+            $surroundMixLevelLookup = [
                 0 => pow(2, -3.0 / 6),
                 1 => pow(2, -6.0 / 6),
                 2 => 0,
                 3 => 'reserved'
-            );
+            ];
         }
         return (isset($surroundMixLevelLookup[$surmixlev]) ? $surroundMixLevelLookup[$surmixlev] : false);
     }
 
     public static function dolbySurroundModeLookup($dsurmod)
     {
-        static $dolbySurroundModeLookup = array(
+        static $dolbySurroundModeLookup = [
             0 => 'not indicated',
             1 => 'Not Dolby Surround encoded',
             2 => 'Dolby Surround encoded',
             3 => 'reserved'
-        );
+        ];
         return (isset($dolbySurroundModeLookup[$dsurmod]) ? $dolbySurroundModeLookup[$dsurmod] : false);
     }
 
     public static function channelsEnabledLookup($acmod, $lfeon)
     {
-        $lookup = array(
+        $lookup = [
             'ch1'=>(bool) ($acmod == 0),
             'ch2'=>(bool) ($acmod == 0),
             'left'=>(bool) ($acmod > 1),
@@ -341,7 +341,7 @@ class getid3_ac3 extends getid3_handler
             'surround_mono'=>false,
             'surround_left'=>false,
             'surround_right'=>false,
-            'lfe'=>$lfeon);
+            'lfe'=>$lfeon];
         switch ($acmod) {
             case 4:
             case 5:
@@ -409,12 +409,12 @@ class getid3_ac3 extends getid3_handler
 
     public static function roomTypeLookup($roomtyp)
     {
-        static $roomTypeLookup = array(
+        static $roomTypeLookup = [
             0 => 'not indicated',
             1 => 'large room, X curve monitor',
             2 => 'small room, flat monitor',
             3 => 'reserved'
-        );
+        ];
         return (isset($roomTypeLookup[$roomtyp]) ? $roomTypeLookup[$roomtyp] : false);
     }
 
@@ -423,29 +423,29 @@ class getid3_ac3 extends getid3_handler
         $padding     = (bool) ($frmsizecod % 2);
         $framesizeid =   floor($frmsizecod / 2);
 
-        static $frameSizeLookup = array();
+        static $frameSizeLookup = [];
         if (empty($frameSizeLookup)) {
-            $frameSizeLookup = array (
-                0  => array(128, 138, 192),
-                1  => array(40, 160, 174, 240),
-                2  => array(48, 192, 208, 288),
-                3  => array(56, 224, 242, 336),
-                4  => array(64, 256, 278, 384),
-                5  => array(80, 320, 348, 480),
-                6  => array(96, 384, 416, 576),
-                7  => array(112, 448, 486, 672),
-                8  => array(128, 512, 556, 768),
-                9  => array(160, 640, 696, 960),
-                10 => array(192, 768, 834, 1152),
-                11 => array(224, 896, 974, 1344),
-                12 => array(256, 1024, 1114, 1536),
-                13 => array(320, 1280, 1392, 1920),
-                14 => array(384, 1536, 1670, 2304),
-                15 => array(448, 1792, 1950, 2688),
-                16 => array(512, 2048, 2228, 3072),
-                17 => array(576, 2304, 2506, 3456),
-                18 => array(640, 2560, 2786, 3840)
-            );
+            $frameSizeLookup =  [
+                0  => [128, 138, 192],
+                1  => [40, 160, 174, 240],
+                2  => [48, 192, 208, 288],
+                3  => [56, 224, 242, 336],
+                4  => [64, 256, 278, 384],
+                5  => [80, 320, 348, 480],
+                6  => [96, 384, 416, 576],
+                7  => [112, 448, 486, 672],
+                8  => [128, 512, 556, 768],
+                9  => [160, 640, 696, 960],
+                10 => [192, 768, 834, 1152],
+                11 => [224, 896, 974, 1344],
+                12 => [256, 1024, 1114, 1536],
+                13 => [320, 1280, 1392, 1920],
+                14 => [384, 1536, 1670, 2304],
+                15 => [448, 1792, 1950, 2688],
+                16 => [512, 2048, 2228, 3072],
+                17 => [576, 2304, 2506, 3456],
+                18 => [640, 2560, 2786, 3840]
+            ];
         }
         if (($fscod == 1) && $padding) {
             // frame lengths are padded by 1 word (16 bits) at 44100
@@ -458,7 +458,7 @@ class getid3_ac3 extends getid3_handler
     {
         $framesizeid =   floor($frmsizecod / 2);
 
-        static $bitrateLookup = array(
+        static $bitrateLookup = [
             0  => 32000,
             1  => 40000,
             2  => 48000,
@@ -478,7 +478,7 @@ class getid3_ac3 extends getid3_handler
             16 => 512000,
             17 => 576000,
             18 => 640000
-        );
+        ];
         return (isset($bitrateLookup[$framesizeid]) ? $bitrateLookup[$framesizeid] : false);
     }
 }

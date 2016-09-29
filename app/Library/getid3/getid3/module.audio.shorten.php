@@ -115,7 +115,7 @@ class getid3_shorten extends getid3_handler
         }
 
         if (GETID3_OS_ISWINDOWS) {
-            $RequiredFiles = array('shorten.exe', 'cygwin1.dll', 'head.exe');
+            $RequiredFiles = ['shorten.exe', 'cygwin1.dll', 'head.exe'];
             foreach ($RequiredFiles as $required_file) {
                 if (!is_readable(GETID3_HELPERAPPSDIR.$required_file)) {
                     $info['error'][] = GETID3_HELPERAPPSDIR.$required_file.' does not exist';

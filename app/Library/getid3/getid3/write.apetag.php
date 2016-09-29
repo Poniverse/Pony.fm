@@ -23,8 +23,8 @@ class getid3_write_apetag
     public $filename;
     public $tag_data;
     public $always_preserve_replaygain = true;    // ReplayGain / MP3gain tags will be copied from old tag even if not passed in data
-    public $warnings                   = array(); // any non-critical errors will be stored here
-    public $errors                     = array(); // any critical errors will be stored here
+    public $warnings                   = []; // any non-critical errors will be stored here
+    public $errors                     = []; // any critical errors will be stored here
 
     public function __construct()
     {
@@ -50,7 +50,7 @@ class getid3_write_apetag
         }
 
         if ($this->always_preserve_replaygain) {
-            $ReplayGainTagsToPreserve = array('mp3gain_minmax', 'mp3gain_album_minmax', 'mp3gain_undo', 'replaygain_track_peak', 'replaygain_track_gain', 'replaygain_album_peak', 'replaygain_album_gain');
+            $ReplayGainTagsToPreserve = ['mp3gain_minmax', 'mp3gain_album_minmax', 'mp3gain_undo', 'replaygain_track_peak', 'replaygain_track_gain', 'replaygain_album_peak', 'replaygain_album_gain'];
             foreach ($ReplayGainTagsToPreserve as $rg_key) {
                 if (isset($ThisFileInfo['ape']['items'][strtolower($rg_key)]['data'][0]) && !isset($this->tag_data[strtoupper($rg_key)][0])) {
                     $this->tag_data[strtoupper($rg_key)][0] = $ThisFileInfo['ape']['items'][strtolower($rg_key)]['data'][0];
@@ -132,7 +132,7 @@ class getid3_write_apetag
     {
         // NOTE: All data passed to this function must be UTF-8 format
 
-        $items = array();
+        $items = [];
         if (!is_array($this->tag_data)) {
             return false;
         }

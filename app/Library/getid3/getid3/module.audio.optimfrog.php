@@ -108,7 +108,7 @@ class getid3_optimfrog extends getid3_handler
                 $BlockName = 'OFR ';
             }
             if (!isset($info['ofr'][$BlockName])) {
-                $info['ofr'][$BlockName] = array();
+                $info['ofr'][$BlockName] = [];
             }
             $thisfile_ofr_thisblock = &$info['ofr'][$BlockName];
 
@@ -306,7 +306,7 @@ class getid3_optimfrog extends getid3_handler
 
     public static function OptimFROGsampleTypeLookup($SampleType)
     {
-        static $OptimFROGsampleTypeLookup = array(
+        static $OptimFROGsampleTypeLookup = [
             0  => 'unsigned int (8-bit)',
             1  => 'signed int (8-bit)',
             2  => 'unsigned int (16-bit)',
@@ -318,13 +318,13 @@ class getid3_optimfrog extends getid3_handler
             8  => 'float 0.24 (32-bit)',
             9  => 'float 16.8 (32-bit)',
             10 => 'float 24.0 (32-bit)'
-        );
+        ];
         return (isset($OptimFROGsampleTypeLookup[$SampleType]) ? $OptimFROGsampleTypeLookup[$SampleType] : false);
     }
 
     public static function OptimFROGbitsPerSampleTypeLookup($SampleType)
     {
-        static $OptimFROGbitsPerSampleTypeLookup = array(
+        static $OptimFROGbitsPerSampleTypeLookup = [
             0  => 8,
             1  => 8,
             2  => 16,
@@ -336,25 +336,25 @@ class getid3_optimfrog extends getid3_handler
             8  => 32,
             9  => 32,
             10 => 32
-        );
+        ];
         return (isset($OptimFROGbitsPerSampleTypeLookup[$SampleType]) ? $OptimFROGbitsPerSampleTypeLookup[$SampleType] : false);
     }
 
     public static function OptimFROGchannelConfigurationLookup($ChannelConfiguration)
     {
-        static $OptimFROGchannelConfigurationLookup = array(
+        static $OptimFROGchannelConfigurationLookup = [
             0 => 'mono',
             1 => 'stereo'
-        );
+        ];
         return (isset($OptimFROGchannelConfigurationLookup[$ChannelConfiguration]) ? $OptimFROGchannelConfigurationLookup[$ChannelConfiguration] : false);
     }
 
     public static function OptimFROGchannelConfigNumChannelsLookup($ChannelConfiguration)
     {
-        static $OptimFROGchannelConfigNumChannelsLookup = array(
+        static $OptimFROGchannelConfigNumChannelsLookup = [
             0 => 1,
             1 => 2
-        );
+        ];
         return (isset($OptimFROGchannelConfigNumChannelsLookup[$ChannelConfiguration]) ? $OptimFROGchannelConfigNumChannelsLookup[$ChannelConfiguration] : false);
     }
 
@@ -374,11 +374,11 @@ class getid3_optimfrog extends getid3_handler
         $EncoderVersion  = number_format(((($EncoderID & 0xF0) >> 4) + 4500) / 1000, 3);
         $EncoderSystemID = ($EncoderID & 0x0F);
 
-        static $OptimFROGencoderSystemLookup = array(
+        static $OptimFROGencoderSystemLookup = [
             0x00 => 'Windows console',
             0x01 => 'Linux console',
             0x0F => 'unknown'
-        );
+        ];
         return $EncoderVersion.' ('.(isset($OptimFROGencoderSystemLookup[$EncoderSystemID]) ? $OptimFROGencoderSystemLookup[$EncoderSystemID] : 'undefined encoder type (0x'.dechex($EncoderSystemID).')').')';
     }
 
@@ -390,7 +390,7 @@ class getid3_optimfrog extends getid3_handler
         $CompressionModeID    = ($CompressionID & 0xF8) >> 3;
         //$CompressionSpeedupID = ($CompressionID & 0x07);
 
-        static $OptimFROGencoderModeLookup = array(
+        static $OptimFROGencoderModeLookup = [
             0x00 => 'fast',
             0x01 => 'normal',
             0x02 => 'high',
@@ -401,7 +401,7 @@ class getid3_optimfrog extends getid3_handler
             0x07 => 'highnew',
             0x08 => 'extranew',
             0x09 => 'bestnew'
-        );
+        ];
         return (isset($OptimFROGencoderModeLookup[$CompressionModeID]) ? $OptimFROGencoderModeLookup[$CompressionModeID] : 'undefined mode (0x'.str_pad(dechex($CompressionModeID), 2, '0', STR_PAD_LEFT).')');
     }
 
@@ -413,11 +413,11 @@ class getid3_optimfrog extends getid3_handler
         //$CompressionModeID    = ($CompressionID & 0xF8) >> 3;
         $CompressionSpeedupID = ($CompressionID & 0x07);
 
-        static $OptimFROGencoderSpeedupLookup = array(
+        static $OptimFROGencoderSpeedupLookup = [
             0x00 => '1x',
             0x01 => '2x',
             0x02 => '4x'
-        );
+        ];
         return (isset($OptimFROGencoderSpeedupLookup[$CompressionSpeedupID]) ? $OptimFROGencoderSpeedupLookup[$CompressionSpeedupID] : 'undefined mode (0x'.dechex($CompressionSpeedupID));
     }
 }

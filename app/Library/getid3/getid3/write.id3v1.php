@@ -21,8 +21,8 @@ class getid3_write_id3v1
     public $filename;
     public $filesize;
     public $tag_data;
-    public $warnings = array(); // any non-critical errors will be stored here
-    public $errors   = array(); // any critical errors will be stored here
+    public $warnings = []; // any non-critical errors will be stored here
+    public $errors   = []; // any critical errors will be stored here
 
     public function __construct()
     {

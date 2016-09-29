@@ -36,8 +36,8 @@ $temp_dir = @realpath($temp_dir); // see https://github.com/JamesHeinrich/getID3
 $open_basedir = ini_get('open_basedir');
 if ($open_basedir) {
     // e.g. "/var/www/vhosts/getid3.org/httpdocs/:/tmp/"
-    $temp_dir     = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $temp_dir);
-    $open_basedir = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $open_basedir);
+    $temp_dir     = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $temp_dir);
+    $open_basedir = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $open_basedir);
     if (substr($temp_dir, -1, 1) != DIRECTORY_SEPARATOR) {
         $temp_dir .= DIRECTORY_SEPARATOR;
     }
@@ -189,7 +189,7 @@ class getID3
                 $this->startup_warning .= '"'.$helperappsdir.'" cannot be defined as GETID3_HELPERAPPSDIR because it does not exist';
             } elseif (strpos(realpath($helperappsdir), ' ') !== false) {
                 $DirPieces = explode(DIRECTORY_SEPARATOR, realpath($helperappsdir));
-                $path_so_far = array();
+                $path_so_far = [];
                 foreach ($DirPieces as $key => $value) {
                     if (strpos($value, ' ') !== false) {
                         if (!empty($path_so_far)) {
@@ -258,7 +258,7 @@ class getID3
 
             // init result array and set parameters
             $this->filename = $filename;
-            $this->info = array();
+            $this->info = [];
             $this->info['GETID3_VERSION']   = $this->version();
             $this->info['php_memory_limit'] = (($this->memory_limit > 0) ? $this->memory_limit : false);
 
@@ -275,7 +275,7 @@ class getID3
             if ((is_readable($filename) || file_exists($filename)) && is_file($filename) && ($this->fp = fopen($filename, 'rb'))) {
                 // great
             } else {
-                $errormessagelist = array();
+                $errormessagelist = [];
                 if (!is_readable($filename)) {
                     $errormessagelist[] = '!is_readable';
                 }
@@ -331,10 +331,10 @@ class getID3
             $this->info['fileformat']          = '';                // filled in later
             $this->info['audio']['dataformat'] = '';                // filled in later, unset if not used
             $this->info['video']['dataformat'] = '';                // filled in later, unset if not used
-            $this->info['tags']                = array();           // filled in later, unset if not used
-            $this->info['error']               = array();           // filled in later, unset if not used
-            $this->info['warning']             = array();           // filled in later, unset if not used
-            $this->info['comments']            = array();           // filled in later, unset if not used
+            $this->info['tags']                = [];           // filled in later, unset if not used
+            $this->info['error']               = [];           // filled in later, unset if not used
+            $this->info['warning']             = [];           // filled in later, unset if not used
+            $this->info['comments']            = [];           // filled in later, unset if not used
             $this->info['encoding']            = $this->encoding;   // required by id3v2 and iso modules - can be unset at the end if desired
 
             return true;
@@ -353,7 +353,7 @@ class getID3
             }
 
             // Handle tags
-            foreach (array('id3v2'=>'id3v2', 'id3v1'=>'id3v1', 'apetag'=>'ape', 'lyrics3'=>'lyrics3') as $tag_name => $tag_key) {
+            foreach (['id3v2'=>'id3v2', 'id3v1'=>'id3v1', 'apetag'=>'ape', 'lyrics3'=>'lyrics3'] as $tag_name => $tag_key) {
                 $option_tag = 'option_tag_'.$tag_name;
                 if ($this->$option_tag) {
                     $this->include_module('tag.'.$tag_name);
@@ -369,7 +369,7 @@ class getID3
             if (isset($this->info['id3v2']['tag_offset_start'])) {
                 $this->info['avdataoffset'] = max($this->info['avdataoffset'], $this->info['id3v2']['tag_offset_end']);
             }
-            foreach (array('id3v1'=>'id3v1', 'apetag'=>'ape', 'lyrics3'=>'lyrics3') as $tag_name => $tag_key) {
+            foreach (['id3v1'=>'id3v1', 'apetag'=>'ape', 'lyrics3'=>'lyrics3'] as $tag_name => $tag_key) {
                 if (isset($this->info[$tag_key]['tag_offset_start'])) {
                     $this->info['avdataend'] = min($this->info['avdataend'], $this->info[$tag_key]['tag_offset_start']);
                 }
@@ -431,7 +431,7 @@ class getID3
 
             // module requires iconv support
             // Check encoding/iconv support
-            if (!empty($determined_format['iconv_req']) && !function_exists('iconv') && !in_array($this->encoding, array('ISO-8859-1', 'UTF-8', 'UTF-16LE', 'UTF-16BE', 'UTF-16'))) {
+            if (!empty($determined_format['iconv_req']) && !function_exists('iconv') && !in_array($this->encoding, ['ISO-8859-1', 'UTF-8', 'UTF-16LE', 'UTF-16BE', 'UTF-16'])) {
                 $errormessage = 'iconv() support is required for this module ('.$determined_format['include'].') for encodings other than ISO-8859-1, UTF-8, UTF-16LE, UTF16-BE, UTF-16. ';
                 if (GETID3_OS_ISWINDOWS) {
                     $errormessage .= 'PHP does not have iconv() support. Please enable php_iconv.dll in php.ini, and copy iconv.dll from c:/php/dlls to c:/windows/system32';
@@ -499,7 +499,7 @@ class getID3
     {
         $this->CleanUp();
         if (!isset($this->info['error'])) {
-            $this->info['error'] = array();
+            $this->info['error'] = [];
         }
         $this->info['error'][] = $message;
         return $this->info;
@@ -519,7 +519,7 @@ class getID3
     {
 
         // remove possible empty keys
-        $AVpossibleEmptyKeys = array('dataformat', 'bits_per_sample', 'encoder_options', 'streams', 'bitrate');
+        $AVpossibleEmptyKeys = ['dataformat', 'bits_per_sample', 'encoder_options', 'streams', 'bitrate'];
         foreach ($AVpossibleEmptyKeys as $dummy => $key) {
             if (empty($this->info['audio'][$key]) && isset($this->info['audio'][$key])) {
                 unset($this->info['audio'][$key]);
@@ -566,28 +566,28 @@ class getID3
     // return array containing information about all supported formats
     public function GetFileFormatArray()
     {
-        static $format_info = array();
+        static $format_info = [];
         if (empty($format_info)) {
-            $format_info = array(
+            $format_info = [
 
                 // Audio formats
 
                 // AC-3   - audio      - Dolby AC-3 / Dolby Digital
-                'ac3'  => array(
+                'ac3'  => [
                             'pattern'   => '^\x0B\x77',
                             'group'     => 'audio',
                             'module'    => 'ac3',
                             'mime_type' => 'audio/ac3',
-                        ),
+                        ],
 
                 // AAC  - audio       - Advanced Audio Coding (AAC) - ADIF format
-                'adif' => array(
+                'adif' => [
                             'pattern'   => '^ADIF',
                             'group'     => 'audio',
                             'module'    => 'aac',
                             'mime_type' => 'application/octet-stream',
                             'fail_ape'  => 'WARNING',
-                        ),
+                        ],
 
 /*
 				// AA   - audio       - Audible Audiobook
@@ -599,102 +599,102 @@ class getID3
 						),
 */
                 // AAC  - audio       - Advanced Audio Coding (AAC) - ADTS format (very similar to MP3)
-                'adts' => array(
+                'adts' => [
                             'pattern'   => '^\xFF[\xF0-\xF1\xF8-\xF9]',
                             'group'     => 'audio',
                             'module'    => 'aac',
                             'mime_type' => 'application/octet-stream',
                             'fail_ape'  => 'WARNING',
-                        ),
+                        ],
 
 
                 // AU   - audio       - NeXT/Sun AUdio (AU)
-                'au'   => array(
+                'au'   => [
                             'pattern'   => '^\.snd',
                             'group'     => 'audio',
                             'module'    => 'au',
                             'mime_type' => 'audio/basic',
-                        ),
+                        ],
 
                 // AMR  - audio       - Adaptive Multi Rate
-                'amr'  => array(
+                'amr'  => [
                             'pattern'   => '^\x23\x21AMR\x0A', // #!AMR[0A]
                             'group'     => 'audio',
                             'module'    => 'amr',
                             'mime_type' => 'audio/amr',
-                        ),
+                        ],
 
                 // AVR  - audio       - Audio Visual Research
-                'avr'  => array(
+                'avr'  => [
                             'pattern'   => '^2BIT',
                             'group'     => 'audio',
                             'module'    => 'avr',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // BONK - audio       - Bonk v0.9+
-                'bonk' => array(
+                'bonk' => [
                             'pattern'   => '^\x00(BONK|INFO|META| ID3)',
                             'group'     => 'audio',
                             'module'    => 'bonk',
                             'mime_type' => 'audio/xmms-bonk',
-                        ),
+                        ],
 
                 // DSS  - audio       - Digital Speech Standard
-                'dss'  => array(
+                'dss'  => [
                             'pattern'   => '^[\x02-\x03]ds[s2]',
                             'group'     => 'audio',
                             'module'    => 'dss',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // DTS  - audio       - Dolby Theatre System
-                'dts'  => array(
+                'dts'  => [
                             'pattern'   => '^\x7F\xFE\x80\x01',
                             'group'     => 'audio',
                             'module'    => 'dts',
                             'mime_type' => 'audio/dts',
-                        ),
+                        ],
 
                 // FLAC - audio       - Free Lossless Audio Codec
-                'flac' => array(
+                'flac' => [
                             'pattern'   => '^fLaC',
                             'group'     => 'audio',
                             'module'    => 'flac',
                             'mime_type' => 'audio/x-flac',
-                        ),
+                        ],
 
                 // LA   - audio       - Lossless Audio (LA)
-                'la'   => array(
+                'la'   => [
                             'pattern'   => '^LA0[2-4]',
                             'group'     => 'audio',
                             'module'    => 'la',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // LPAC - audio       - Lossless Predictive Audio Compression (LPAC)
-                'lpac' => array(
+                'lpac' => [
                             'pattern'   => '^LPAC',
                             'group'     => 'audio',
                             'module'    => 'lpac',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // MIDI - audio       - MIDI (Musical Instrument Digital Interface)
-                'midi' => array(
+                'midi' => [
                             'pattern'   => '^MThd',
                             'group'     => 'audio',
                             'module'    => 'midi',
                             'mime_type' => 'audio/midi',
-                        ),
+                        ],
 
                 // MAC  - audio       - Monkey's Audio Compressor
-                'mac'  => array(
+                'mac'  => [
                             'pattern'   => '^MAC ',
                             'group'     => 'audio',
                             'module'    => 'monkey',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
 // has been known to produce false matches in random files (e.g. JPEGs), leave out until more precise matching available
 //				// MOD  - audio       - MODule (assorted sub-formats)
@@ -707,301 +707,301 @@ class getID3
 //						),
 
                 // MOD  - audio       - MODule (Impulse Tracker)
-                'it'   => array(
+                'it'   => [
                             'pattern'   => '^IMPM',
                             'group'     => 'audio',
                             'module'    => 'mod',
                             //'option'    => 'it',
                             'mime_type' => 'audio/it',
-                        ),
+                        ],
 
                 // MOD  - audio       - MODule (eXtended Module, various sub-formats)
-                'xm'   => array(
+                'xm'   => [
                             'pattern'   => '^Extended Module',
                             'group'     => 'audio',
                             'module'    => 'mod',
                             //'option'    => 'xm',
                             'mime_type' => 'audio/xm',
-                        ),
+                        ],
 
                 // MOD  - audio       - MODule (ScreamTracker)
-                's3m'  => array(
+                's3m'  => [
                             'pattern'   => '^.{44}SCRM',
                             'group'     => 'audio',
                             'module'    => 'mod',
                             //'option'    => 's3m',
                             'mime_type' => 'audio/s3m',
-                        ),
+                        ],
 
                 // MPC  - audio       - Musepack / MPEGplus
-                'mpc'  => array(
+                'mpc'  => [
                             'pattern'   => '^(MPCK|MP\+|[\x00\x01\x10\x11\x40\x41\x50\x51\x80\x81\x90\x91\xC0\xC1\xD0\xD1][\x20-37][\x00\x20\x40\x60\x80\xA0\xC0\xE0])',
                             'group'     => 'audio',
                             'module'    => 'mpc',
                             'mime_type' => 'audio/x-musepack',
-                        ),
+                        ],
 
                 // MP3  - audio       - MPEG-audio Layer 3 (very similar to AAC-ADTS)
-                'mp3'  => array(
+                'mp3'  => [
                             'pattern'   => '^\xFF[\xE2-\xE7\xF2-\xF7\xFA-\xFF][\x00-\x0B\x10-\x1B\x20-\x2B\x30-\x3B\x40-\x4B\x50-\x5B\x60-\x6B\x70-\x7B\x80-\x8B\x90-\x9B\xA0-\xAB\xB0-\xBB\xC0-\xCB\xD0-\xDB\xE0-\xEB\xF0-\xFB]',
                             'group'     => 'audio',
                             'module'    => 'mp3',
                             'mime_type' => 'audio/mpeg',
-                        ),
+                        ],
 
                 // OFR  - audio       - OptimFROG
-                'ofr'  => array(
+                'ofr'  => [
                             'pattern'   => '^(\*RIFF|OFR)',
                             'group'     => 'audio',
                             'module'    => 'optimfrog',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // RKAU - audio       - RKive AUdio compressor
-                'rkau' => array(
+                'rkau' => [
                             'pattern'   => '^RKA',
                             'group'     => 'audio',
                             'module'    => 'rkau',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // SHN  - audio       - Shorten
-                'shn'  => array(
+                'shn'  => [
                             'pattern'   => '^ajkg',
                             'group'     => 'audio',
                             'module'    => 'shorten',
                             'mime_type' => 'audio/xmms-shn',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // TTA  - audio       - TTA Lossless Audio Compressor (http://tta.corecodec.org)
-                'tta'  => array(
+                'tta'  => [
                             'pattern'   => '^TTA',  // could also be '^TTA(\x01|\x02|\x03|2|1)'
                             'group'     => 'audio',
                             'module'    => 'tta',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // VOC  - audio       - Creative Voice (VOC)
-                'voc'  => array(
+                'voc'  => [
                             'pattern'   => '^Creative Voice File',
                             'group'     => 'audio',
                             'module'    => 'voc',
                             'mime_type' => 'audio/voc',
-                        ),
+                        ],
 
                 // VQF  - audio       - transform-domain weighted interleave Vector Quantization Format (VQF)
-                'vqf'  => array(
+                'vqf'  => [
                             'pattern'   => '^TWIN',
                             'group'     => 'audio',
                             'module'    => 'vqf',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // WV  - audio        - WavPack (v4.0+)
-                'wv'   => array(
+                'wv'   => [
                             'pattern'   => '^wvpk',
                             'group'     => 'audio',
                             'module'    => 'wavpack',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
 
                 // Audio-Video formats
 
                 // ASF  - audio/video - Advanced Streaming Format, Windows Media Video, Windows Media Audio
-                'asf'  => array(
+                'asf'  => [
                             'pattern'   => '^\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C',
                             'group'     => 'audio-video',
                             'module'    => 'asf',
                             'mime_type' => 'video/x-ms-asf',
                             'iconv_req' => false,
-                        ),
+                        ],
 
                 // BINK - audio/video - Bink / Smacker
-                'bink' => array(
+                'bink' => [
                             'pattern'   => '^(BIK|SMK)',
                             'group'     => 'audio-video',
                             'module'    => 'bink',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // FLV  - audio/video - FLash Video
-                'flv' => array(
+                'flv' => [
                             'pattern'   => '^FLV\x01',
                             'group'     => 'audio-video',
                             'module'    => 'flv',
                             'mime_type' => 'video/x-flv',
-                        ),
+                        ],
 
                 // MKAV - audio/video - Mastroka
-                'matroska' => array(
+                'matroska' => [
                             'pattern'   => '^\x1A\x45\xDF\xA3',
                             'group'     => 'audio-video',
                             'module'    => 'matroska',
                             'mime_type' => 'video/x-matroska', // may also be audio/x-matroska
-                        ),
+                        ],
 
                 // MPEG - audio/video - MPEG (Moving Pictures Experts Group)
-                'mpeg' => array(
+                'mpeg' => [
                             'pattern'   => '^\x00\x00\x01(\xBA|\xB3)',
                             'group'     => 'audio-video',
                             'module'    => 'mpeg',
                             'mime_type' => 'video/mpeg',
-                        ),
+                        ],
 
                 // NSV  - audio/video - Nullsoft Streaming Video (NSV)
-                'nsv'  => array(
+                'nsv'  => [
                             'pattern'   => '^NSV[sf]',
                             'group'     => 'audio-video',
                             'module'    => 'nsv',
                             'mime_type' => 'application/octet-stream',
-                        ),
+                        ],
 
                 // Ogg  - audio/video - Ogg (Ogg-Vorbis, Ogg-FLAC, Speex, Ogg-Theora(*), Ogg-Tarkin(*))
-                'ogg'  => array(
+                'ogg'  => [
                             'pattern'   => '^OggS',
                             'group'     => 'audio',
                             'module'    => 'ogg',
                             'mime_type' => 'application/ogg',
                             'fail_id3'  => 'WARNING',
                             'fail_ape'  => 'WARNING',
-                        ),
+                        ],
 
                 // QT   - audio/video - Quicktime
-                'quicktime' => array(
+                'quicktime' => [
                             'pattern'   => '^.{4}(cmov|free|ftyp|mdat|moov|pnot|skip|wide)',
                             'group'     => 'audio-video',
                             'module'    => 'quicktime',
                             'mime_type' => 'video/quicktime',
-                        ),
+                        ],
 
                 // RIFF - audio/video - Resource Interchange File Format (RIFF) / WAV / AVI / CD-audio / SDSS = renamed variant used by SmartSound QuickTracks (www.smartsound.com) / FORM = Audio Interchange File Format (AIFF)
-                'riff' => array(
+                'riff' => [
                             'pattern'   => '^(RIFF|SDSS|FORM)',
                             'group'     => 'audio-video',
                             'module'    => 'riff',
                             'mime_type' => 'audio/x-wav',
                             'fail_ape'  => 'WARNING',
-                        ),
+                        ],
 
                 // Real - audio/video - RealAudio, RealVideo
-                'real' => array(
+                'real' => [
                             'pattern'   => '^(\\.RMF|\\.ra)',
                             'group'     => 'audio-video',
                             'module'    => 'real',
                             'mime_type' => 'audio/x-realaudio',
-                        ),
+                        ],
 
                 // SWF - audio/video - ShockWave Flash
-                'swf' => array(
+                'swf' => [
                             'pattern'   => '^(F|C)WS',
                             'group'     => 'audio-video',
                             'module'    => 'swf',
                             'mime_type' => 'application/x-shockwave-flash',
-                        ),
+                        ],
 
                 // TS - audio/video - MPEG-2 Transport Stream
-                'ts' => array(
+                'ts' => [
                             'pattern'   => '^(\x47.{187}){10,}', // packets are 188 bytes long and start with 0x47 "G".  Check for at least 10 packets matching this pattern
                             'group'     => 'audio-video',
                             'module'    => 'ts',
                             'mime_type' => 'video/MP2T',
-                        ),
+                        ],
 
 
                 // Still-Image formats
 
                 // BMP  - still image - Bitmap (Windows, OS/2; uncompressed, RLE8, RLE4)
-                'bmp'  => array(
+                'bmp'  => [
                             'pattern'   => '^BM',
                             'group'     => 'graphic',
                             'module'    => 'bmp',
                             'mime_type' => 'image/bmp',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // GIF  - still image - Graphics Interchange Format
-                'gif'  => array(
+                'gif'  => [
                             'pattern'   => '^GIF',
                             'group'     => 'graphic',
                             'module'    => 'gif',
                             'mime_type' => 'image/gif',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // JPEG - still image - Joint Photographic Experts Group (JPEG)
-                'jpg'  => array(
+                'jpg'  => [
                             'pattern'   => '^\xFF\xD8\xFF',
                             'group'     => 'graphic',
                             'module'    => 'jpg',
                             'mime_type' => 'image/jpeg',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // PCD  - still image - Kodak Photo CD
-                'pcd'  => array(
+                'pcd'  => [
                             'pattern'   => '^.{2048}PCD_IPI\x00',
                             'group'     => 'graphic',
                             'module'    => 'pcd',
                             'mime_type' => 'image/x-photo-cd',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
 
                 // PNG  - still image - Portable Network Graphics (PNG)
-                'png'  => array(
+                'png'  => [
                             'pattern'   => '^\x89\x50\x4E\x47\x0D\x0A\x1A\x0A',
                             'group'     => 'graphic',
                             'module'    => 'png',
                             'mime_type' => 'image/png',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
 
                 // SVG  - still image - Scalable Vector Graphics (SVG)
-                'svg'  => array(
+                'svg'  => [
                             'pattern'   => '(<!DOCTYPE svg PUBLIC |xmlns="http:\/\/www\.w3\.org\/2000\/svg")',
                             'group'     => 'graphic',
                             'module'    => 'svg',
                             'mime_type' => 'image/svg+xml',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
 
                 // TIFF - still image - Tagged Information File Format (TIFF)
-                'tiff' => array(
+                'tiff' => [
                             'pattern'   => '^(II\x2A\x00|MM\x00\x2A)',
                             'group'     => 'graphic',
                             'module'    => 'tiff',
                             'mime_type' => 'image/tiff',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
 
                 // EFAX - still image - eFax (TIFF derivative)
-                'efax'  => array(
+                'efax'  => [
                             'pattern'   => '^\xDC\xFE',
                             'group'     => 'graphic',
                             'module'    => 'efax',
                             'mime_type' => 'image/efax',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
 
                 // Data formats
 
                 // ISO  - data        - International Standards Organization (ISO) CD-ROM Image
-                'iso'  => array(
+                'iso'  => [
                             'pattern'   => '^.{32769}CD001',
                             'group'     => 'misc',
                             'module'    => 'iso',
@@ -1009,100 +1009,100 @@ class getID3
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
                             'iconv_req' => false,
-                        ),
+                        ],
 
                 // RAR  - data        - RAR compressed data
-                'rar'  => array(
+                'rar'  => [
                             'pattern'   => '^Rar\!',
                             'group'     => 'archive',
                             'module'    => 'rar',
                             'mime_type' => 'application/octet-stream',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // SZIP - audio/data  - SZIP compressed data
-                'szip' => array(
+                'szip' => [
                             'pattern'   => '^SZ\x0A\x04',
                             'group'     => 'archive',
                             'module'    => 'szip',
                             'mime_type' => 'application/octet-stream',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // TAR  - data        - TAR compressed data
-                'tar'  => array(
+                'tar'  => [
                             'pattern'   => '^.{100}[0-9\x20]{7}\x00[0-9\x20]{7}\x00[0-9\x20]{7}\x00[0-9\x20\x00]{12}[0-9\x20\x00]{12}',
                             'group'     => 'archive',
                             'module'    => 'tar',
                             'mime_type' => 'application/x-tar',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // GZIP  - data        - GZIP compressed data
-                'gz'  => array(
+                'gz'  => [
                             'pattern'   => '^\x1F\x8B\x08',
                             'group'     => 'archive',
                             'module'    => 'gzip',
                             'mime_type' => 'application/x-gzip',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // ZIP  - data         - ZIP compressed data
-                'zip'  => array(
+                'zip'  => [
                             'pattern'   => '^PK\x03\x04',
                             'group'     => 'archive',
                             'module'    => 'zip',
                             'mime_type' => 'application/zip',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
 
                 // Misc other formats
 
                 // PAR2 - data        - Parity Volume Set Specification 2.0
-                'par2' => array (
+                'par2' =>  [
                             'pattern'   => '^PAR2\x00PKT',
                             'group'     => 'misc',
                             'module'    => 'par2',
                             'mime_type' => 'application/octet-stream',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // PDF  - data        - Portable Document Format
-                'pdf'  => array(
+                'pdf'  => [
                             'pattern'   => '^\x25PDF',
                             'group'     => 'misc',
                             'module'    => 'pdf',
                             'mime_type' => 'application/pdf',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                 // MSOFFICE  - data   - ZIP compressed data
-                'msoffice' => array(
+                'msoffice' => [
                             'pattern'   => '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', // D0CF11E == DOCFILE == Microsoft Office Document
                             'group'     => 'misc',
                             'module'    => 'msoffice',
                             'mime_type' => 'application/octet-stream',
                             'fail_id3'  => 'ERROR',
                             'fail_ape'  => 'ERROR',
-                        ),
+                        ],
 
                  // CUE  - data       - CUEsheet (index to single-file disc images)
-                 'cue' => array(
+                 'cue' => [
                             'pattern'   => '', // empty pattern means cannot be automatically detected, will fall through all other formats and match based on filename and very basic file contents
                             'group'     => 'misc',
                             'module'    => 'cue',
                             'mime_type' => 'application/octet-stream',
-                           ),
+                           ],
 
-            );
+            ];
         }
 
         return $format_info;
@@ -1177,28 +1177,28 @@ class getID3
         // key name => array (tag name, character encoding)
         static $tags;
         if (empty($tags)) {
-            $tags = array(
-                'asf'       => array('asf'           , 'UTF-16LE'),
-                'midi'      => array('midi'          , 'ISO-8859-1'),
-                'nsv'       => array('nsv'           , 'ISO-8859-1'),
-                'ogg'       => array('vorbiscomment' , 'UTF-8'),
-                'png'       => array('png'           , 'UTF-8'),
-                'tiff'      => array('tiff'          , 'ISO-8859-1'),
-                'quicktime' => array('quicktime'     , 'UTF-8'),
-                'real'      => array('real'          , 'ISO-8859-1'),
-                'vqf'       => array('vqf'           , 'ISO-8859-1'),
-                'zip'       => array('zip'           , 'ISO-8859-1'),
-                'riff'      => array('riff'          , 'ISO-8859-1'),
-                'lyrics3'   => array('lyrics3'       , 'ISO-8859-1'),
-                'id3v1'     => array('id3v1'         , $this->encoding_id3v1),
-                'id3v2'     => array('id3v2'         , 'UTF-8'), // not according to the specs (every frame can have a different encoding), but getID3() force-converts all encodings to UTF-8
-                'ape'       => array('ape'           , 'UTF-8'),
-                'cue'       => array('cue'           , 'ISO-8859-1'),
-                'matroska'  => array('matroska'      , 'UTF-8'),
-                'flac'      => array('vorbiscomment' , 'UTF-8'),
-                'divxtag'   => array('divx'          , 'ISO-8859-1'),
-                'iptc'      => array('iptc'          , 'ISO-8859-1'),
-            );
+            $tags = [
+                'asf'       => ['asf'           , 'UTF-16LE'],
+                'midi'      => ['midi'          , 'ISO-8859-1'],
+                'nsv'       => ['nsv'           , 'ISO-8859-1'],
+                'ogg'       => ['vorbiscomment' , 'UTF-8'],
+                'png'       => ['png'           , 'UTF-8'],
+                'tiff'      => ['tiff'          , 'ISO-8859-1'],
+                'quicktime' => ['quicktime'     , 'UTF-8'],
+                'real'      => ['real'          , 'ISO-8859-1'],
+                'vqf'       => ['vqf'           , 'ISO-8859-1'],
+                'zip'       => ['zip'           , 'ISO-8859-1'],
+                'riff'      => ['riff'          , 'ISO-8859-1'],
+                'lyrics3'   => ['lyrics3'       , 'ISO-8859-1'],
+                'id3v1'     => ['id3v1'         , $this->encoding_id3v1],
+                'id3v2'     => ['id3v2'         , 'UTF-8'], // not according to the specs (every frame can have a different encoding), but getID3() force-converts all encodings to UTF-8
+                'ape'       => ['ape'           , 'UTF-8'],
+                'cue'       => ['cue'           , 'ISO-8859-1'],
+                'matroska'  => ['matroska'      , 'UTF-8'],
+                'flac'      => ['vorbiscomment' , 'UTF-8'],
+                'divxtag'   => ['divx'          , 'ISO-8859-1'],
+                'iptc'      => ['iptc'          , 'ISO-8859-1'],
+            ];
         }
 
         // loop through comments array
@@ -1250,7 +1250,7 @@ class getID3
                             foreach ($this->info['tags'][$tag_name] as $tag_key => $valuearray) {
                                 foreach ($valuearray as $key => $value) {
                                     if (preg_match('#^[\\x80-\\xFF]+$#', $value)) {
-                                        foreach (array('windows-1251', 'KOI8-R') as $id3v1_bad_encoding) {
+                                        foreach (['windows-1251', 'KOI8-R'] as $id3v1_bad_encoding) {
                                             if (@iconv($id3v1_bad_encoding, $id3v1_bad_encoding, $value) === $value) {
                                                 $encoding = $id3v1_bad_encoding;
                                                 break 3;
@@ -1271,7 +1271,7 @@ class getID3
         // pictures can take up a lot of space, and we don't need multiple copies of them
         // let there be a single copy in [comments][picture], and not elsewhere
         if (!empty($this->info['tags'])) {
-            $unset_keys = array('tags', 'tags_html');
+            $unset_keys = ['tags', 'tags_html'];
             foreach ($this->info['tags'] as $tagtype => $tagarray) {
                 foreach ($tagarray as $tagname => $tagdata) {
                     if ($tagname == 'picture') {
@@ -1769,7 +1769,7 @@ abstract class getid3_handler
             // assume directory path is given
             } else {
                 // set up destination path
-                $dir = rtrim(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $this->getid3->option_save_attachments), DIRECTORY_SEPARATOR);
+                $dir = rtrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $this->getid3->option_save_attachments), DIRECTORY_SEPARATOR);
                 if (!is_dir($dir) || !is_writable($dir)) { // check supplied directory
                     throw new Exception('supplied path ('.$dir.') does not exist, or is not writable');
                 }

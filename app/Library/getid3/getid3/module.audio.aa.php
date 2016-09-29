@@ -32,7 +32,7 @@ class getid3_aa extends getid3_handler
         }
 
         // shortcut
-        $info['aa'] = array();
+        $info['aa'] = [];
         $thisfile_aa = &$info['aa'];
 
         $info['fileformat']            = 'aa';

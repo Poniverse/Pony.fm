@@ -48,16 +48,16 @@ if (!file_exists($getid3PHP_filename) || !include_once($getid3PHP_filename)) {
 }
 // Initialize getID3 engine
 $getID3 = new getID3;
-$getID3->setOption(array(
+$getID3->setOption([
     'option_md5_data' => $getid3_demo_mysql_md5_data,
     'encoding'        => $getid3_demo_mysql_encoding,
-));
+]);
 
 
 function RemoveAccents($string)
 {
     // Revised version by markstewardØhotmail*com
-    return strtr(strtr($string, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy'), array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', '' => 'OE', '' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'));
+    return strtr(strtr($string, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy'), ['Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', '' => 'OE', '' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u']);
 }
 
 function BitrateColor($bitrate, $BitrateMaxScale = 768)
@@ -174,32 +174,32 @@ function mysql_table_exists($tablename)
 
 function AcceptableExtensions($fileformat, $audio_dataformat = '', $video_dataformat = '')
 {
-    static $AcceptableExtensionsAudio = array();
+    static $AcceptableExtensionsAudio = [];
     if (empty($AcceptableExtensionsAudio)) {
-        $AcceptableExtensionsAudio['mp3']['mp3']  = array('mp3');
-        $AcceptableExtensionsAudio['mp2']['mp2']  = array('mp2');
-        $AcceptableExtensionsAudio['mp1']['mp1']  = array('mp1');
-        $AcceptableExtensionsAudio['asf']['asf']  = array('asf');
-        $AcceptableExtensionsAudio['asf']['wma']  = array('wma');
-        $AcceptableExtensionsAudio['riff']['mp3'] = array('wav');
-        $AcceptableExtensionsAudio['riff']['wav'] = array('wav');
+        $AcceptableExtensionsAudio['mp3']['mp3']  = ['mp3'];
+        $AcceptableExtensionsAudio['mp2']['mp2']  = ['mp2'];
+        $AcceptableExtensionsAudio['mp1']['mp1']  = ['mp1'];
+        $AcceptableExtensionsAudio['asf']['asf']  = ['asf'];
+        $AcceptableExtensionsAudio['asf']['wma']  = ['wma'];
+        $AcceptableExtensionsAudio['riff']['mp3'] = ['wav'];
+        $AcceptableExtensionsAudio['riff']['wav'] = ['wav'];
     }
-    static $AcceptableExtensionsVideo = array();
+    static $AcceptableExtensionsVideo = [];
     if (empty($AcceptableExtensionsVideo)) {
-        $AcceptableExtensionsVideo['mp3']['mp3']  = array('mp3');
-        $AcceptableExtensionsVideo['mp2']['mp2']  = array('mp2');
-        $AcceptableExtensionsVideo['mp1']['mp1']  = array('mp1');
-        $AcceptableExtensionsVideo['asf']['asf']  = array('asf');
-        $AcceptableExtensionsVideo['asf']['wmv']  = array('wmv');
-        $AcceptableExtensionsVideo['gif']['gif']  = array('gif');
-        $AcceptableExtensionsVideo['jpg']['jpg']  = array('jpg');
-        $AcceptableExtensionsVideo['png']['png']  = array('png');
-        $AcceptableExtensionsVideo['bmp']['bmp']  = array('bmp');
+        $AcceptableExtensionsVideo['mp3']['mp3']  = ['mp3'];
+        $AcceptableExtensionsVideo['mp2']['mp2']  = ['mp2'];
+        $AcceptableExtensionsVideo['mp1']['mp1']  = ['mp1'];
+        $AcceptableExtensionsVideo['asf']['asf']  = ['asf'];
+        $AcceptableExtensionsVideo['asf']['wmv']  = ['wmv'];
+        $AcceptableExtensionsVideo['gif']['gif']  = ['gif'];
+        $AcceptableExtensionsVideo['jpg']['jpg']  = ['jpg'];
+        $AcceptableExtensionsVideo['png']['png']  = ['png'];
+        $AcceptableExtensionsVideo['bmp']['bmp']  = ['bmp'];
     }
     if (!empty($video_dataformat)) {
-        return (isset($AcceptableExtensionsVideo[$fileformat][$video_dataformat]) ? $AcceptableExtensionsVideo[$fileformat][$video_dataformat] : array());
+        return (isset($AcceptableExtensionsVideo[$fileformat][$video_dataformat]) ? $AcceptableExtensionsVideo[$fileformat][$video_dataformat] : []);
     } else {
-        return (isset($AcceptableExtensionsAudio[$fileformat][$audio_dataformat]) ? $AcceptableExtensionsAudio[$fileformat][$audio_dataformat] : array());
+        return (isset($AcceptableExtensionsAudio[$fileformat][$audio_dataformat]) ? $AcceptableExtensionsAudio[$fileformat][$audio_dataformat] : []);
     }
 }
 
@@ -248,7 +248,7 @@ if (!mysql_table_exists(GETID3_DB_TABLE)) {
     mysql_query_safe($SQLquery);
 }
 
-$ExistingTableFields = array();
+$ExistingTableFields = [];
 $result = mysql_query_safe('DESCRIBE `'.mysql_real_escape_string(GETID3_DB_TABLE).'`');
 while ($row = mysql_fetch_array($result)) {
     $ExistingTableFields[$row['Field']] = $row;
@@ -298,9 +298,9 @@ function SynchronizeAllTags($filename, $synchronizefrom = 'all', $synchronizeto 
     getid3_lib::CopyTagsToComments($ThisFileInfo);
 
     if ($synchronizefrom == 'all') {
-        $SourceArray = (!empty($ThisFileInfo['comments']) ? $ThisFileInfo['comments'] : array());
+        $SourceArray = (!empty($ThisFileInfo['comments']) ? $ThisFileInfo['comments'] : []);
     } elseif (!empty($ThisFileInfo['tags'][$synchronizefrom])) {
-        $SourceArray = (!empty($ThisFileInfo['tags'][$synchronizefrom]) ? $ThisFileInfo['tags'][$synchronizefrom] : array());
+        $SourceArray = (!empty($ThisFileInfo['tags'][$synchronizefrom]) ? $ThisFileInfo['tags'][$synchronizefrom] : []);
     } else {
         die('ERROR: $ThisFileInfo[tags]['.$synchronizefrom.'] does not exist');
     }
@@ -310,7 +310,7 @@ function SynchronizeAllTags($filename, $synchronizefrom = 'all', $synchronizeto 
     mysql_query_safe($SQLquery);
 
 
-    $TagFormatsToWrite = array();
+    $TagFormatsToWrite = [];
     if ((strpos($synchronizeto, '2') !== false) && ($synchronizefrom != 'id3v2')) {
         $TagFormatsToWrite[] = 'id3v2.3';
     }
@@ -340,14 +340,14 @@ function SynchronizeAllTags($filename, $synchronizefrom = 'all', $synchronizeto 
     return false;
 }
 
-$IgnoreNoTagFormats = array('', 'png', 'jpg', 'gif', 'bmp', 'swf', 'pdf', 'zip', 'rar', 'mid', 'mod', 'xm', 'it', 's3m');
+$IgnoreNoTagFormats = ['', 'png', 'jpg', 'gif', 'bmp', 'swf', 'pdf', 'zip', 'rar', 'mid', 'mod', 'xm', 'it', 's3m'];
 
 if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUEST['rescanerrors'])) {
     $SQLquery  = 'DELETE from `'.mysql_real_escape_string(GETID3_DB_TABLE).'`';
     $SQLquery .= ' WHERE (`fileformat` = "")';
     mysql_query_safe($SQLquery);
 
-    $FilesInDir = array();
+    $FilesInDir = [];
 
     if (!empty($_REQUEST['rescanerrors'])) {
         echo '<a href="'.htmlentities($_SERVER['PHP_SELF']).'">abort</a><hr>';
@@ -394,7 +394,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
         }
 
         if (!empty($_REQUEST['newscan'])) {
-            $AlreadyInDatabase = array();
+            $AlreadyInDatabase = [];
             set_time_limit(60);
             $SQLquery  = 'SELECT `filename`';
             $SQLquery .= ' FROM `'.mysql_real_escape_string(GETID3_DB_TABLE).'`';
@@ -406,8 +406,8 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
             }
         }
 
-        $DirectoriesToScan  = array(!empty($_REQUEST['scan']) ? $_REQUEST['scan'] : $_REQUEST['newscan']);
-        $DirectoriesScanned = array();
+        $DirectoriesToScan  = [!empty($_REQUEST['scan']) ? $_REQUEST['scan'] : $_REQUEST['newscan']];
+        $DirectoriesScanned = [];
         while (count($DirectoriesToScan) > 0) {
             foreach ($DirectoriesToScan as $DirectoryKey => $startingdir) {
                 if ($dir = opendir($startingdir)) {
@@ -498,7 +498,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
                 }
             }
 
-            $ParenthesesPairs = array('()', '[]', '{}');
+            $ParenthesesPairs = ['()', '[]', '{}'];
             foreach ($ParenthesesPairs as $pair) {
                 if (preg_match_all('/(.*) '.preg_quote($pair{0}).'(([^'.preg_quote($pair).']*[\- '.preg_quote($pair{0}).'])?(cut|dub|edit|version|live|reprise|[a-z]*mix))'.preg_quote($pair{1}).'/iU', $this_track_title, $matches)) {
                     $this_track_title = $matches[1][0];
@@ -720,7 +720,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
         $SQLquery .= ' FROM `'.mysql_real_escape_string(GETID3_DB_TABLE).'`';
         $SQLquery .= ' ORDER BY (`encoder_options` LIKE "LAME%") DESC, (`encoder_options` LIKE "CBR%") DESC';
         $result = mysql_query_safe($SQLquery);
-        $EncodedBy = array();
+        $EncodedBy = [];
         while ($row = mysql_fetch_array($result)) {
             set_time_limit(30);
             $CommentArray = unserialize($row['comments_id3v2']);
@@ -749,7 +749,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
     }
 } elseif (!empty($_REQUEST['audiobitrates'])) {
     getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio.mp3.php', __FILE__, true);
-    $BitrateDistribution = array();
+    $BitrateDistribution = [];
     $SQLquery  = 'SELECT ROUND(audio_bitrate / 1000) AS `RoundBitrate`, COUNT(*) AS `num`';
     $SQLquery .= ' FROM `'.mysql_real_escape_string(GETID3_DB_TABLE).'`';
     $SQLquery .= ' WHERE (`audio_bitrate` > 0)';
@@ -938,7 +938,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
     }
 } elseif (!empty($_REQUEST['synchronizetagsfrom']) && !empty($_REQUEST['filename'])) {
     echo 'Applying new tags from <b>'.$_REQUEST['synchronizetagsfrom'].'</b> in <b>'.htmlentities($_REQUEST['filename']).'</b><ul>';
-    $errors = array();
+    $errors = [];
     if (SynchronizeAllTags($_REQUEST['filename'], $_REQUEST['synchronizetagsfrom'], 'A12', $errors)) {
         echo '<li>Sucessfully wrote tags</li>';
     } else {
@@ -948,9 +948,9 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
 } elseif (!empty($_REQUEST['unsynchronizedtags'])) {
     $NotOKfiles        = 0;
     $Autofixedfiles    = 0;
-    $FieldsToCompare   = array('title', 'artist', 'album', 'year', 'genre', 'comment', 'track');
-    $TagsToCompare     = array('id3v2'=>false, 'ape'=>false, 'lyrics3'=>false, 'id3v1'=>false);
-    $ID3v1FieldLengths = array('title'=>30, 'artist'=>30, 'album'=>30, 'year'=>4, 'genre'=>99, 'comment'=>28);
+    $FieldsToCompare   = ['title', 'artist', 'album', 'year', 'genre', 'comment', 'track'];
+    $TagsToCompare     = ['id3v2'=>false, 'ape'=>false, 'lyrics3'=>false, 'id3v1'=>false];
+    $ID3v1FieldLengths = ['title'=>30, 'artist'=>30, 'album'=>30, 'year'=>4, 'genre'=>99, 'comment'=>28];
     if (strpos($_REQUEST['unsynchronizedtags'], '2') !== false) {
         $TagsToCompare['id3v2'] = true;
     }
@@ -991,7 +991,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
     $SQLquery .= ' ORDER BY `filename` ASC';
     $result = mysql_query_safe($SQLquery);
     $lastdir = '';
-    $serializedCommentsFields = array('all', 'id3v2', 'ape', 'lyrics3', 'id3v1');
+    $serializedCommentsFields = ['all', 'id3v2', 'ape', 'lyrics3', 'id3v1'];
     while ($row = mysql_fetch_array($result)) {
         set_time_limit(30);
         if ($lastdir != dirname($row['filename'])) {
@@ -1000,12 +1000,12 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
         }
 
         $FileOK      = true;
-        $Mismatched  = array('id3v2'=>false, 'ape'=>false, 'lyrics3'=>false, 'id3v1'=>false);
-        $SemiMatched = array('id3v2'=>false, 'ape'=>false, 'lyrics3'=>false, 'id3v1'=>false);
-        $EmptyTags   = array('id3v2'=>true,  'ape'=>true,  'lyrics3'=>true,  'id3v1'=>true);
+        $Mismatched  = ['id3v2'=>false, 'ape'=>false, 'lyrics3'=>false, 'id3v1'=>false];
+        $SemiMatched = ['id3v2'=>false, 'ape'=>false, 'lyrics3'=>false, 'id3v1'=>false];
+        $EmptyTags   = ['id3v2'=>true,  'ape'=>true,  'lyrics3'=>true,  'id3v1'=>true];
 
         foreach ($serializedCommentsFields as $field) {
-            $Comments[$field] = array();
+            $Comments[$field] = [];
             ob_start();
             if ($unserialized = unserialize($row['comments_'.$field])) {
                 $Comments[$field] = $unserialized;
@@ -1033,7 +1033,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
                     $besttrack = $value;
                 }
             }
-            $Comments['all']['track'] = array(0=>$besttrack);
+            $Comments['all']['track'] = [0=>$besttrack];
         }
 
         $ThisLine  = '<tr>';
@@ -1199,7 +1199,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
                     $autofixforcesource = (!empty($_REQUEST['autofixforcesource']) ? $_REQUEST['autofixforcesource'] : 'all');
                     $TagsToSynch        = (!empty($_REQUEST['autofixforcedest'])   ? $_REQUEST['autofixforcedest']   : $TagsToSynch);
 
-                    $errors = array();
+                    $errors = [];
                     if (SynchronizeAllTags($row['filename'], $autofixforcesource, $TagsToSynch, $errors)) {
                         $Autofixedfiles++;
                         echo '<tr bgcolor="#00CC00">';
@@ -1272,7 +1272,7 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
         $PatternFilename = str_replace('  ', ' ', $PatternFilename);
 
 
-        $ParenthesesPairs = array('()', '[]', '{}');
+        $ParenthesesPairs = ['()', '[]', '{}'];
         foreach ($ParenthesesPairs as $pair) {
             // multiple remixes are stored tab-seperated in the database.
             // change "{2000 Version\tSomebody Remix}" into "{2000 Version} {Somebody Remix}"
@@ -1452,9 +1452,9 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
     while (($row = mysql_fetch_array($result)) && ($row['num'] > 1)) {
         set_time_limit(30);
 
-        $filenames = array();
-        $tags      = array();
-        $md5_data  = array();
+        $filenames = [];
+        $tags      = [];
+        $md5_data  = [];
         $SQLquery  = 'SELECT `fileformat`, `filename`, `tags`';
         $SQLquery .= ' FROM `'.mysql_real_escape_string(GETID3_DB_TABLE).'`';
         $SQLquery .= ' WHERE (`md5_data` = "'.mysql_real_escape_string($row['md5_data']).'")';
@@ -1537,12 +1537,12 @@ if (!empty($_REQUEST['scan']) || !empty($_REQUEST['newscan']) || !empty($_REQUES
             $uniquetitles++;
             set_time_limit(30);
 
-            $filenames = array();
-            $artists   = array();
-            $titles    = array();
-            $remixes   = array();
-            $bitrates  = array();
-            $playtimes = array();
+            $filenames = [];
+            $artists   = [];
+            $titles    = [];
+            $remixes   = [];
+            $bitrates  = [];
+            $playtimes = [];
             $SQLquery  = 'SELECT `filename`, `artist`, `title`, `remix`, `audio_bitrate`, `vbr_method`, `playtime_seconds`, `encoder_options`';
             $SQLquery .= ' FROM `'.mysql_real_escape_string(GETID3_DB_TABLE).'`';
             $SQLquery .= ' WHERE (`artist` = "'.mysql_real_escape_string($row['artist']).'")';
@@ -1926,10 +1926,10 @@ function BetterUCwords($string)
         }
     }
 
-    static $LowerCaseWords = array('vs.', 'feat.');
-    static $UpperCaseWords = array('DJ', 'USA', 'II', 'MC', 'CD', 'TV', '\'N\'');
+    static $LowerCaseWords = ['vs.', 'feat.'];
+    static $UpperCaseWords = ['DJ', 'USA', 'II', 'MC', 'CD', 'TV', '\'N\''];
 
-    $OutputListOfWords = array();
+    $OutputListOfWords = [];
     $ListOfWords = explode(' ', $string);
     foreach ($ListOfWords as $ThisWord) {
         if (in_array(strtolower(str_replace('(', '', $ThisWord)), $LowerCaseWords)) {

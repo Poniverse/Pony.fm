@@ -68,7 +68,7 @@ class getid3_quicktime extends getid3_handler
                 // to read user data atoms, you should allow for the terminating 0.
                 break;
             }
-            $atomHierarchy = array();
+            $atomHierarchy = [];
             $info['quicktime'][$atomname] = $this->QuicktimeParseAtom($atomname, $atomsize, $this->fread(min($atomsize, $atom_data_read_buffer_size)), $offset, $atomHierarchy, $this->ParseAllPossibleAtoms);
 
             $offset += $atomsize;
@@ -85,7 +85,7 @@ class getid3_quicktime extends getid3_handler
         if (!empty($info['quicktime']['comments']['chapters']) && is_array($info['quicktime']['comments']['chapters']) && (count($info['quicktime']['comments']['chapters']) > 0)) {
             $durations = $this->quicktime_time_to_sample_table($info);
             for ($i = 0; $i < count($info['quicktime']['comments']['chapters']); $i++) {
-                $bookmark = array();
+                $bookmark = [];
                 $bookmark['title'] = $info['quicktime']['comments']['chapters'][$i];
                 if (isset($durations[$i])) {
                     $bookmark['duration_sample'] = $durations[$i]['sample_duration'];
@@ -236,7 +236,7 @@ class getid3_quicktime extends getid3_handler
                         }
                     }
                     if ($allnumericnames) {
-                        $newData = array();
+                        $newData = [];
                         foreach ($atom_structure['subatoms'] as $subatomarray) {
                             foreach ($subatomarray['subatoms'] as $newData_subatomarray) {
                                 unset($newData_subatomarray['hierarchy'], $newData_subatomarray['name']);
@@ -1501,7 +1501,7 @@ class getid3_quicktime extends getid3_handler
                     $atom_structure['data'] = $atom_data;
                     $atom_structure['image_mime'] = 'image/jpeg';
                     $atom_structure['description'] = (($atomname == 'NCTH') ? 'Nikon Camera Thumbnail Image' : (($atomname == 'NCVW') ? 'Nikon Camera Preview Image' : 'Nikon preview image'));
-                    $info['quicktime']['comments']['picture'][] = array('image_mime'=>$atom_structure['image_mime'], 'data'=>$atom_data, 'description'=>$atom_structure['description']);
+                    $info['quicktime']['comments']['picture'][] = ['image_mime'=>$atom_structure['image_mime'], 'data'=>$atom_data, 'description'=>$atom_structure['description']];
                 }
                 break;
             case 'NCTG': // Nikon - http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Nikon.html#NCTG
@@ -1621,7 +1621,7 @@ class getid3_quicktime extends getid3_handler
     public function QuicktimeLanguageLookup($languageid)
     {
         // http://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap4/qtff4.html#//apple_ref/doc/uid/TP40000939-CH206-34353
-        static $QuicktimeLanguageLookup = array();
+        static $QuicktimeLanguageLookup = [];
         if (empty($QuicktimeLanguageLookup)) {
             $QuicktimeLanguageLookup[0]     = 'English';
             $QuicktimeLanguageLookup[1]     = 'French';
@@ -1758,7 +1758,7 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeVideoCodecLookup($codecid)
     {
-        static $QuicktimeVideoCodecLookup = array();
+        static $QuicktimeVideoCodecLookup = [];
         if (empty($QuicktimeVideoCodecLookup)) {
             $QuicktimeVideoCodecLookup['.SGI'] = 'SGI';
             $QuicktimeVideoCodecLookup['3IV1'] = '3ivx MPEG-4 v1';
@@ -1818,7 +1818,7 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeAudioCodecLookup($codecid)
     {
-        static $QuicktimeAudioCodecLookup = array();
+        static $QuicktimeAudioCodecLookup = [];
         if (empty($QuicktimeAudioCodecLookup)) {
             $QuicktimeAudioCodecLookup['.mp3']          = 'Fraunhofer MPEG Layer-III alias';
             $QuicktimeAudioCodecLookup['aac ']          = 'ISO/IEC 14496-3 AAC';
@@ -1864,7 +1864,7 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeDCOMLookup($compressionid)
     {
-        static $QuicktimeDCOMLookup = array();
+        static $QuicktimeDCOMLookup = [];
         if (empty($QuicktimeDCOMLookup)) {
             $QuicktimeDCOMLookup['zlib'] = 'ZLib Deflate';
             $QuicktimeDCOMLookup['adec'] = 'Apple Compression';
@@ -1874,7 +1874,7 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeColorNameLookup($colordepthid)
     {
-        static $QuicktimeColorNameLookup = array();
+        static $QuicktimeColorNameLookup = [];
         if (empty($QuicktimeColorNameLookup)) {
             $QuicktimeColorNameLookup[1]  = '2-color (monochrome)';
             $QuicktimeColorNameLookup[2]  = '4-color';
@@ -1893,7 +1893,7 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeSTIKLookup($stik)
     {
-        static $QuicktimeSTIKLookup = array();
+        static $QuicktimeSTIKLookup = [];
         if (empty($QuicktimeSTIKLookup)) {
             $QuicktimeSTIKLookup[0]  = 'Movie';
             $QuicktimeSTIKLookup[1]  = 'Normal';
@@ -1911,9 +1911,9 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeIODSaudioProfileName($audio_profile_id)
     {
-        static $QuicktimeIODSaudioProfileNameLookup = array();
+        static $QuicktimeIODSaudioProfileNameLookup = [];
         if (empty($QuicktimeIODSaudioProfileNameLookup)) {
-            $QuicktimeIODSaudioProfileNameLookup = array(
+            $QuicktimeIODSaudioProfileNameLookup = [
                 0x00 => 'ISO Reserved (0x00)',
                 0x01 => 'Main Audio Profile @ Level 1',
                 0x02 => 'Main Audio Profile @ Level 2',
@@ -1964,7 +1964,7 @@ class getid3_quicktime extends getid3_handler
                 0x2F => 'High Efficiency AAC Profile @ Level 5',
                 0xFE => 'Not part of MPEG-4 audio profiles',
                 0xFF => 'No audio capability required',
-            );
+            ];
         }
         return (isset($QuicktimeIODSaudioProfileNameLookup[$audio_profile_id]) ? $QuicktimeIODSaudioProfileNameLookup[$audio_profile_id] : 'ISO Reserved / User Private');
     }
@@ -1972,9 +1972,9 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeIODSvideoProfileName($video_profile_id)
     {
-        static $QuicktimeIODSvideoProfileNameLookup = array();
+        static $QuicktimeIODSvideoProfileNameLookup = [];
         if (empty($QuicktimeIODSvideoProfileNameLookup)) {
-            $QuicktimeIODSvideoProfileNameLookup = array(
+            $QuicktimeIODSvideoProfileNameLookup = [
                 0x00 => 'Reserved (0x00) Profile',
                 0x01 => 'Simple Profile @ Level 1',
                 0x02 => 'Simple Profile @ Level 2',
@@ -2037,7 +2037,7 @@ class getid3_quicktime extends getid3_handler
                 0xFD => 'Fine Granularity Scalable Profile @ Level 5',
                 0xFE => 'Not part of MPEG-4 Visual profiles',
                 0xFF => 'No visual capability required',
-            );
+            ];
         }
         return (isset($QuicktimeIODSvideoProfileNameLookup[$video_profile_id]) ? $QuicktimeIODSvideoProfileNameLookup[$video_profile_id] : 'ISO Reserved Profile');
     }
@@ -2045,7 +2045,7 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeContentRatingLookup($rtng)
     {
-        static $QuicktimeContentRatingLookup = array();
+        static $QuicktimeContentRatingLookup = [];
         if (empty($QuicktimeContentRatingLookup)) {
             $QuicktimeContentRatingLookup[0]  = 'None';
             $QuicktimeContentRatingLookup[2]  = 'Clean';
@@ -2056,7 +2056,7 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeStoreAccountTypeLookup($akid)
     {
-        static $QuicktimeStoreAccountTypeLookup = array();
+        static $QuicktimeStoreAccountTypeLookup = [];
         if (empty($QuicktimeStoreAccountTypeLookup)) {
             $QuicktimeStoreAccountTypeLookup[0] = 'iTunes';
             $QuicktimeStoreAccountTypeLookup[1] = 'AOL';
@@ -2066,7 +2066,7 @@ class getid3_quicktime extends getid3_handler
 
     public function QuicktimeStoreFrontCodeLookup($sfid)
     {
-        static $QuicktimeStoreFrontCodeLookup = array();
+        static $QuicktimeStoreFrontCodeLookup = [];
         if (empty($QuicktimeStoreFrontCodeLookup)) {
             $QuicktimeStoreFrontCodeLookup[143460] = 'Australia';
             $QuicktimeStoreFrontCodeLookup[143445] = 'Austria';
@@ -2112,7 +2112,7 @@ class getid3_quicktime extends getid3_handler
         // * ? bytes data (string data may be null-padded; datestamp fields are in the format "2011:05:25 20:24:15")
         // all integers are stored BigEndian
 
-        $NCTGtagName = array(
+        $NCTGtagName = [
             0x00000001 => 'Make',
             0x00000002 => 'Model',
             0x00000003 => 'Software',
@@ -2134,11 +2134,11 @@ class getid3_quicktime extends getid3_handler
             0x02000032 => 'UnknownInfo',
             0x02000083 => 'LensType',
             0x02000084 => 'Lens',
-        );
+        ];
 
         $offset = 0;
         $datalength = strlen($atom_data);
-        $parsed = array();
+        $parsed = [];
         while ($offset < $datalength) {
 //echo getid3_lib::PrintHexBytes(substr($atom_data, $offset, 4)).'<br>';
             $record_type       = getid3_lib::BigEndian2Int(substr($atom_data, $offset, 4));
@@ -2174,7 +2174,7 @@ class getid3_quicktime extends getid3_handler
                     $offset += ($data_size * 4);
                     break;
                 case 0x0005: // 0x0005 = float  (size field *= 8-byte), values are stored aaaabbbb where value is aaaa/bbbb; possibly multiple sets of values appended together
-                    $data = array();
+                    $data = [];
                     for ($i = 0; $i < $data_size; $i++) {
                         $numerator    = getid3_lib::BigEndian2Int(substr($atom_data, $offset + ($i * 8) + 0, 4));
                         $denomninator = getid3_lib::BigEndian2Int(substr($atom_data, $offset + ($i * 8) + 4, 4));
@@ -2218,10 +2218,10 @@ class getid3_quicktime extends getid3_handler
                     }
                     break;
                 case 0x02000023: // PictureControlData
-                    $PictureControlAdjust = array(0=>'default', 1=>'quick', 2=>'full');
-                    $FilterEffect = array(0x80=>'off', 0x81=>'yellow', 0x82=>'orange',    0x83=>'red', 0x84=>'green',  0xff=>'n/a');
-                    $ToningEffect = array(0x80=>'b&w', 0x81=>'sepia',  0x82=>'cyanotype', 0x83=>'red', 0x84=>'yellow', 0x85=>'green', 0x86=>'blue-green', 0x87=>'blue', 0x88=>'purple-blue', 0x89=>'red-purple', 0xff=>'n/a');
-                    $data = array(
+                    $PictureControlAdjust = [0=>'default', 1=>'quick', 2=>'full'];
+                    $FilterEffect = [0x80=>'off', 0x81=>'yellow', 0x82=>'orange',    0x83=>'red', 0x84=>'green',  0xff=>'n/a'];
+                    $ToningEffect = [0x80=>'b&w', 0x81=>'sepia',  0x82=>'cyanotype', 0x83=>'red', 0x84=>'yellow', 0x85=>'green', 0x86=>'blue-green', 0x87=>'blue', 0x88=>'purple-blue', 0x89=>'red-purple', 0xff=>'n/a'];
+                    $data = [
                         'PictureControlVersion'     =>                           substr($data, 0, 4),
                         'PictureControlName'        =>                     rtrim(substr($data, 4, 20), "\x00"),
                         'PictureControlBase'        =>                     rtrim(substr($data, 24, 20), "\x00"),
@@ -2236,7 +2236,7 @@ class getid3_quicktime extends getid3_handler
                         'FilterEffect'              =>         $FilterEffect[ord(substr($data, 55, 1))],
                         'ToningEffect'              =>         $ToningEffect[ord(substr($data, 56, 1))],
                         'ToningSaturation'          =>                       ord(substr($data, 57, 1)),
-                    );
+                    ];
                     break;
                 case 0x02000024: // WorldTime
                     // http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Nikon.html#WorldTime
@@ -2261,16 +2261,16 @@ class getid3_quicktime extends getid3_handler
                             break;
                     }
 
-                    $data = array('timezone'=>floatval($timezone), 'dst'=>$dst, 'display'=>$datedisplayformat);
+                    $data = ['timezone'=>floatval($timezone), 'dst'=>$dst, 'display'=>$datedisplayformat];
                     break;
                 case 0x02000083: // LensType
-                    $data = array(
+                    $data = [
                         //'_'  => $data,
                         'mf' => (bool) ($data & 0x01),
                         'd'  => (bool) ($data & 0x02),
                         'g'  => (bool) ($data & 0x04),
                         'vr' => (bool) ($data & 0x08),
-                    );
+                    ];
                     break;
             }
             $tag_name = (isset($NCTGtagName[$record_type]) ? $NCTGtagName[$record_type] : '0x'.str_pad(dechex($record_type), 8, '0', STR_PAD_LEFT));
@@ -2282,7 +2282,7 @@ class getid3_quicktime extends getid3_handler
 
     public function CopyToAppropriateCommentsSection($keyname, $data, $boxname = '')
     {
-        static $handyatomtranslatorarray = array();
+        static $handyatomtranslatorarray = [];
         if (empty($handyatomtranslatorarray)) {
             // http://www.geocities.com/xhelmboyx/quicktime/formats/qtm-layout.txt
             // http://www.geocities.com/xhelmboyx/quicktime/formats/mp4-layout.txt
@@ -2401,10 +2401,10 @@ class getid3_quicktime extends getid3_handler
                     } elseif (preg_match('#^BM#', $data)) {
                         $image_mime = 'image/bmp';
                     }
-                    $data = array('data'=>$data, 'image_mime'=>$image_mime);
+                    $data = ['data'=>$data, 'image_mime'=>$image_mime];
                 }
             }
-            $gooddata = array($data);
+            $gooddata = [$data];
             if ($comment_key == 'genre') {
                 // some other taggers separate multiple genres with semicolon, e.g. "Heavy Metal;Thrash Metal;Metal"
                 $gooddata = explode(';', $data);
@@ -2441,7 +2441,7 @@ class getid3_quicktime extends getid3_handler
         foreach ($info as $key => $value) {
             $key_history = $history.'/'.$key;
             if ($key === $tag) {
-                $result[] = array($key_history, $info);
+                $result[] = [$key_history, $info];
             } else {
                 if (is_array($value)) {
                     $this->search_tag_by_key($value, $tag, $key_history, $result);
@@ -2455,7 +2455,7 @@ class getid3_quicktime extends getid3_handler
         foreach ($info as $key => $value) {
             $key_history = $history.'/'.$key;
             if (($key === $k) && ($value === $v)) {
-                $result[] = array($key_history, $info);
+                $result[] = [$key_history, $info];
             } else {
                 if (is_array($value)) {
                     $this->search_tag_by_pair($value, $k, $v, $key_history, $result);
@@ -2466,33 +2466,33 @@ class getid3_quicktime extends getid3_handler
 
     public function quicktime_time_to_sample_table($info)
     {
-        $res = array();
+        $res = [];
         $this->search_tag_by_pair($info['quicktime']['moov'], 'name', 'stbl', 'quicktime/moov', $res);
         foreach ($res as $value) {
-            $stbl_res = array();
+            $stbl_res = [];
             $this->search_tag_by_pair($value[1], 'data_format', 'text', $value[0], $stbl_res);
             if (count($stbl_res) > 0) {
-                $stts_res = array();
+                $stts_res = [];
                 $this->search_tag_by_key($value[1], 'time_to_sample_table', $value[0], $stts_res);
                 if (count($stts_res) > 0) {
                     return $stts_res[0][1]['time_to_sample_table'];
                 }
             }
         }
-        return array();
+        return [];
     }
 
     function quicktime_bookmark_time_scale($info)
     {
         $time_scale = '';
         $ts_prefix_len = 0;
-        $res = array();
+        $res = [];
         $this->search_tag_by_pair($info['quicktime']['moov'], 'name', 'stbl', 'quicktime/moov', $res);
         foreach ($res as $value) {
-            $stbl_res = array();
+            $stbl_res = [];
             $this->search_tag_by_pair($value[1], 'data_format', 'text', $value[0], $stbl_res);
             if (count($stbl_res) > 0) {
-                $ts_res = array();
+                $ts_res = [];
                 $this->search_tag_by_key($info['quicktime']['moov'], 'time_scale', 'quicktime/moov', $ts_res);
                 foreach ($ts_res as $value) {
                     $prefix = substr($value[0], 0, -12);

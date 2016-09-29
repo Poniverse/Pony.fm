@@ -548,7 +548,7 @@ class getid3_ogg extends getid3_handler
         $commentdataoffset += 4;
         $info['avdataoffset'] = $CommentStartOffset + $commentdataoffset;
 
-        $basicfields = array('TITLE', 'ARTIST', 'ALBUM', 'TRACKNUMBER', 'GENRE', 'DATE', 'DESCRIPTION', 'COMMENT');
+        $basicfields = ['TITLE', 'ARTIST', 'ALBUM', 'TRACKNUMBER', 'GENRE', 'DATE', 'DESCRIPTION', 'COMMENT'];
         $ThisFileInfo_ogg_comments_raw = &$info['ogg']['comments_raw'];
         for ($i = 0; $i < $CommentsCount; $i++) {
             if ($i >= 10000) {
@@ -659,14 +659,14 @@ class getid3_ogg extends getid3_handler
 
                     $ogg = new self($this->getid3);
                     $ogg->setStringMode($data);
-                    $info['ogg']['comments']['picture'][] = array(
+                    $info['ogg']['comments']['picture'][] = [
                         'image_mime'   => $imageinfo['mime'],
                         'datalength'   => strlen($data),
                         'picturetype'  => 'cover art',
                         'image_height' => $imageinfo['height'],
                         'image_width'  => $imageinfo['width'],
                         'data'         => $ogg->saveAttachment('coverart', 0, strlen($data), $imageinfo['mime']),
-                    );
+                    ];
                     unset($ogg);
                 } else {
                     $info['ogg']['comments'][strtolower($ThisFileInfo_ogg_comments_raw[$i]['key'])][] = $ThisFileInfo_ogg_comments_raw[$i]['value'];
@@ -726,7 +726,7 @@ class getid3_ogg extends getid3_handler
 
     public static function SpeexBandModeLookup($mode)
     {
-        static $SpeexBandModeLookup = array();
+        static $SpeexBandModeLookup = [];
         if (empty($SpeexBandModeLookup)) {
             $SpeexBandModeLookup[0] = 'narrow';
             $SpeexBandModeLookup[1] = 'wide';
@@ -778,7 +778,7 @@ class getid3_ogg extends getid3_handler
     public static function TheoraColorSpace($colorspace_id)
     {
         // http://www.theora.org/doc/Theora.pdf (table 6.3)
-        static $TheoraColorSpaceLookup = array();
+        static $TheoraColorSpaceLookup = [];
         if (empty($TheoraColorSpaceLookup)) {
             $TheoraColorSpaceLookup[0] = 'Undefined';
             $TheoraColorSpaceLookup[1] = 'Rec. 470M';
@@ -791,7 +791,7 @@ class getid3_ogg extends getid3_handler
     public static function TheoraPixelFormat($pixelformat_id)
     {
         // http://www.theora.org/doc/Theora.pdf (table 6.4)
-        static $TheoraPixelFormatLookup = array();
+        static $TheoraPixelFormatLookup = [];
         if (empty($TheoraPixelFormatLookup)) {
             $TheoraPixelFormatLookup[0] = '4:2:0';
             $TheoraPixelFormatLookup[1] = 'Reserved';

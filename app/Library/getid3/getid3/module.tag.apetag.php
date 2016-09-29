@@ -102,7 +102,7 @@ class getid3_apetag extends getid3_handler
         }
 
         // shortcut
-        $info['replay_gain'] = array();
+        $info['replay_gain'] = [];
         $thisfile_replaygain = &$info['replay_gain'];
 
         for ($i = 0; $i < $thisfile_ape['footer']['raw']['tag_items']; $i++) {
@@ -118,7 +118,7 @@ class getid3_apetag extends getid3_handler
             $item_key      = strtolower(substr($APEtagData, $offset, $ItemKeyLength));
 
             // shortcut
-            $thisfile_ape['items'][$item_key] = array();
+            $thisfile_ape['items'][$item_key] = [];
             $thisfile_ape_items_current = &$thisfile_ape['items'][$item_key];
 
             $thisfile_ape_items_current['offset'] = $thisfile_ape['tag_offset_start'] + $offset;
@@ -254,7 +254,7 @@ class getid3_apetag extends getid3_handler
 
                     do {
                         $thisfile_ape_items_current['image_mime'] = '';
-                        $imageinfo = array();
+                        $imageinfo = [];
                         $imagechunkcheck = getid3_lib::GetDataImageSize($thisfile_ape_items_current['data'], $imageinfo);
                         if (($imagechunkcheck === false) || !isset($imagechunkcheck[2])) {
                             $info['warning'][] = 'APEtag "'.$item_key.'" contains invalid image data';
@@ -277,7 +277,7 @@ class getid3_apetag extends getid3_handler
                                 break;
                             }
                         } elseif (is_string($this->inline_attachments)) {
-                            $this->inline_attachments = rtrim(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $this->inline_attachments), DIRECTORY_SEPARATOR);
+                            $this->inline_attachments = rtrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $this->inline_attachments), DIRECTORY_SEPARATOR);
                             if (!is_dir($this->inline_attachments) || !is_writable($this->inline_attachments)) {
                                 // cannot write, skip
                                 $info['warning'][] = 'attachment at '.$thisfile_ape_items_current['offset'].' cannot be saved to "'.$this->inline_attachments.'" (not writable)';
@@ -297,10 +297,10 @@ class getid3_apetag extends getid3_handler
                             unset($thisfile_ape_items_current['data']);
                         } else {
                             if (!isset($info['ape']['comments']['picture'])) {
-                                $info['ape']['comments']['picture'] = array();
+                                $info['ape']['comments']['picture'] = [];
                             }
-                            $comments_picture_data = array();
-                            foreach (array('data', 'image_mime', 'image_width', 'image_height', 'imagetype', 'picturetype', 'description', 'datalength') as $picture_key) {
+                            $comments_picture_data = [];
+                            foreach (['data', 'image_mime', 'image_width', 'image_height', 'imagetype', 'picturetype', 'description', 'datalength'] as $picture_key) {
                                 if (isset($thisfile_ape_items_current[$picture_key])) {
                                     $comments_picture_data[$picture_key] = $thisfile_ape_items_current[$picture_key];
                                 }
@@ -331,7 +331,7 @@ class getid3_apetag extends getid3_handler
         // http://www.uni-jena.de/~pfk/mpp/sv8/apeheader.html
 
         // shortcut
-        $headerfooterinfo['raw'] = array();
+        $headerfooterinfo['raw'] = [];
         $headerfooterinfo_raw = &$headerfooterinfo['raw'];
 
         $headerfooterinfo_raw['footer_tag']   =                  substr($APEheaderFooterData, 0, 8);
@@ -369,18 +369,18 @@ class getid3_apetag extends getid3_handler
 
     public function APEcontentTypeFlagLookup($contenttypeid)
     {
-        static $APEcontentTypeFlagLookup = array(
+        static $APEcontentTypeFlagLookup = [
             0 => 'utf-8',
             1 => 'binary',
             2 => 'external',
             3 => 'reserved'
-        );
+        ];
         return (isset($APEcontentTypeFlagLookup[$contenttypeid]) ? $APEcontentTypeFlagLookup[$contenttypeid] : 'invalid');
     }
 
     public function APEtagItemIsUTF8Lookup($itemkey)
     {
-        static $APEtagItemIsUTF8Lookup = array(
+        static $APEtagItemIsUTF8Lookup = [
             'title',
             'subtitle',
             'artist',
@@ -404,7 +404,7 @@ class getid3_apetag extends getid3_handler
             'abstract',
             'language',
             'bibliography'
-        );
+        ];
         return in_array(strtolower($itemkey), $APEtagItemIsUTF8Lookup);
     }
 }

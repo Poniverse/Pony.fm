@@ -47,7 +47,7 @@ class MysqlToPostgres extends Migration
 
     private function execRunWithCallback($command)
     {
-        $array = array();
+        $array = [];
         exec($command, $array);
 
         if (!empty($array)) {

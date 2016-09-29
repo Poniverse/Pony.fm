@@ -27,8 +27,8 @@ class getid3_write_id3v2
     public $merge_existing_data         = false;    // if true, merge new data with existing tags; if false, delete old tag data and only write new tags
     public $id3v2_default_encodingid    = 0;        // default text encoding (ISO-8859-1) if not explicitly passed
     public $id3v2_use_unsynchronisation = false;    // the specs say it should be TRUE, but most other ID3v2-aware programs are broken if unsynchronization is used, so by default don't use it.
-    public $warnings                    = array();  // any non-critical errors will be stored here
-    public $errors                      = array();  // any critical errors will be stored here
+    public $warnings                    = [];  // any non-critical errors will be stored here
+    public $errors                      = [];  // any critical errors will be stored here
 
     public function __construct()
     {
@@ -1156,12 +1156,12 @@ class getid3_write_id3v2
 
     public function ID3v2FrameIsAllowed($frame_name, $source_data_array)
     {
-        static $PreviousFrames = array();
+        static $PreviousFrames = [];
 
         if ($frame_name === null) {
             // if the writing functions are called multiple times, the static array needs to be
             // cleared - this can be done by calling $this->ID3v2FrameIsAllowed(null, '')
-            $PreviousFrames = array();
+            $PreviousFrames = [];
             return true;
         }
 
@@ -1614,7 +1614,7 @@ class getid3_write_id3v2
             $tagheader  = 'ID3';
             $tagheader .= chr($this->majorversion);
             $tagheader .= chr($this->minorversion);
-            $tagheader .= $this->GenerateID3v2TagFlags(array('unsynchronisation'=>$TagUnsynchronisation));
+            $tagheader .= $this->GenerateID3v2TagFlags(['unsynchronisation'=>$TagUnsynchronisation]);
             $tagheader .= getid3_lib::BigEndian2String(strlen($tagstring), 4, true);
 
             return $tagheader.$tagstring;
@@ -1753,11 +1753,11 @@ class getid3_write_id3v2
         // 1 = UTF-16 with BOM
         // 2 = UTF-16BE without BOM
         // 3 = UTF-8
-        static $ID3v2IsValidTextEncoding_cache = array(
-            2 => array(true, true),              // ID3v2.2 - allow 0=ISO-8859-1, 1=UTF-16
-            3 => array(true, true),              // ID3v2.3 - allow 0=ISO-8859-1, 1=UTF-16
-            4 => array(true, true, true, true),  // ID3v2.4 - allow 0=ISO-8859-1, 1=UTF-16, 2=UTF-16BE, 3=UTF-8
-        );
+        static $ID3v2IsValidTextEncoding_cache = [
+            2 => [true, true],              // ID3v2.2 - allow 0=ISO-8859-1, 1=UTF-16
+            3 => [true, true],              // ID3v2.3 - allow 0=ISO-8859-1, 1=UTF-16
+            4 => [true, true, true, true],  // ID3v2.4 - allow 0=ISO-8859-1, 1=UTF-16, 2=UTF-16BE, 3=UTF-8
+        ];
         return isset($ID3v2IsValidTextEncoding_cache[$this->majorversion][$textencodingbyte]);
     }
 
@@ -1814,7 +1814,7 @@ class getid3_write_id3v2
         // taken from http://www.php.net/manual/en/function.array-merge-recursive.php
         if (is_array($arr1) && is_array($arr2)) {
             // the same -> merge
-            $new_array = array();
+            $new_array = [];
 
             if ($this->is_hash($arr1) && $this->is_hash($arr2)) {
                 // hashes -> merge based on keys
@@ -1902,7 +1902,7 @@ class getid3_write_id3v2
     public static function ID3v2ShortFrameNameLookup($majorversion, $long_description)
     {
         $long_description = str_replace(' ', '_', strtolower(trim($long_description)));
-        static $ID3v2ShortFrameNameLookup = array();
+        static $ID3v2ShortFrameNameLookup = [];
         if (empty($ID3v2ShortFrameNameLookup)) {
             // The following are unique to ID3v2.2
             $ID3v2ShortFrameNameLookup[2]['comment']                                          = 'COM';

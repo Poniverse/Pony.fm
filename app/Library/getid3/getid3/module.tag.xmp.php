@@ -45,7 +45,7 @@ class Image_XMP
     * The XMP fields that were extracted from the image or updated by this class.
     * @see getAllTags()
     */
-    public $_aXMP = array();
+    public $_aXMP = [];
 
     /**
     * @var boolean
@@ -144,12 +144,12 @@ class Image_XMP
                 $segdata = fread($filehnd, $decodedsize['size'] - 2);
 
                 // Store the segment information in the output array
-                $headerdata[] = array(
+                $headerdata[] = [
                     'SegType'      => ord($data{1}),
                     'SegName'      => $GLOBALS['JPEG_Segment_Names'][ord($data{1})],
                     'SegDataStart' => $segdatastart,
                     'SegData'      => $segdata,
-                );
+                ];
             }
 
             // If this is a SOS (Start Of Scan) segment, then there is no more header data - the compressed image data follows
@@ -257,7 +257,7 @@ class Image_XMP
         xml_parser_free($xml_parser);
 
         // Clear the output array
-        $xmp_array = array();
+        $xmp_array = [];
 
         // The XMP data has now been parsed into an array ...
 
@@ -667,7 +667,7 @@ $GLOBALS['XMP_tag_captions'] = array(
 *
 * The names of the JPEG segment markers, indexed by their marker number
 */
-$GLOBALS['JPEG_Segment_Names'] = array(
+$GLOBALS['JPEG_Segment_Names'] = [
     0x01 => 'TEM',
     0x02 => 'RES',
     0xC0 => 'SOF0',
@@ -733,4 +733,4 @@ $GLOBALS['JPEG_Segment_Names'] = array(
     0xFC => 'JPG12',
     0xFD => 'JPG13',
     0xFE => 'COM',
-);
+];

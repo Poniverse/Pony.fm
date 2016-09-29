@@ -30,12 +30,12 @@ class Request
 
     public $uri,
            $method                  = Http::GET,
-           $headers                 = array(),
+           $headers                 = [],
            $raw_headers             = '',
            $strict_ssl              = false,
            $content_type,
            $expected_type,
-           $additional_curl_opts    = array(),
+           $additional_curl_opts    = [],
            $auto_parse              = true,
            $serialize_payload_method = self::SERIALIZE_PAYLOAD_SMART,
            $username,
@@ -46,7 +46,7 @@ class Request
            $error_callback,
            $follow_redirects        = false,
            $max_redirects           = self::MAX_REDIRECTS_DEFAULT,
-           $payload_serializers     = array();
+           $payload_serializers     = [];
 
     // Options
     // private $_options = array(
@@ -434,7 +434,7 @@ class Request
     public function useProxy($proxy_host, $proxy_port = 80, $auth_type = null, $auth_username = null, $auth_password = null)
     {
         $this->addOnCurlOption(CURLOPT_PROXY, "{$proxy_host}:{$proxy_port}");
-        if (in_array($auth_type, array(CURLAUTH_BASIC,CURLAUTH_NTLM))) {
+        if (in_array($auth_type, [CURLAUTH_BASIC,CURLAUTH_NTLM])) {
             $this->addOnCurlOption(CURLOPT_PROXYAUTH, $auth_type)
                 ->addOnCurlOption(CURLOPT_PROXYUSERPWD, "{$auth_username}:{$auth_password}");
         }
@@ -697,7 +697,7 @@ class Request
         // recusion.  Do not use this syntax elsewhere.
         // It goes against the whole readability
         // and transparency idea.
-        self::$_template = new Request(array('method' => Http::GET));
+        self::$_template = new Request(['method' => Http::GET]);
 
         // This is more like it...
         self::$_template
@@ -813,7 +813,7 @@ class Request
             $this->headers['Content-Length'] = strlen($this->serialized_payload);
         }
 
-        $headers = array();
+        $headers = [];
         // https://github.com/nategood/httpful/issues/37
         // Except header removes any HTTP 1.1 Continue from response headers
         $headers[] = 'Expect:';

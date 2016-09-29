@@ -61,7 +61,7 @@ class getid3_real extends getid3_handler
             }
 
             // shortcut
-            $info['real']['chunks'][$ChunkCounter] = array();
+            $info['real']['chunks'][$ChunkCounter] = [];
             $thisfile_real_chunks_currentchunk = &$info['real']['chunks'][$ChunkCounter];
 
             $thisfile_real_chunks_currentchunk['name']   = $ChunkName;
@@ -177,7 +177,7 @@ class getid3_real extends getid3_handler
                                 // http://www.freelists.org/archives/matroska-devel/07-2003/msg00010.html
 
                                 // shortcut
-                                $thisfile_real_chunks_currentchunk['video_info'] = array();
+                                $thisfile_real_chunks_currentchunk['video_info'] = [];
                                 $thisfile_real_chunks_currentchunk_videoinfo     = &$thisfile_real_chunks_currentchunk['video_info'];
 
                                 $thisfile_real_chunks_currentchunk_videoinfo['dwSize']            = getid3_lib::BigEndian2Int(substr($thisfile_real_chunks_currentchunk_typespecificdata, 0, 4));
@@ -224,7 +224,7 @@ class getid3_real extends getid3_handler
 
                             case 'logical-fileinfo':
                                 // shortcut
-                                $thisfile_real_chunks_currentchunk['logical_fileinfo'] = array();
+                                $thisfile_real_chunks_currentchunk['logical_fileinfo'] = [];
                                 $thisfile_real_chunks_currentchunk_logicalfileinfo     = &$thisfile_real_chunks_currentchunk['logical_fileinfo'];
 
                                 $thisfile_real_chunks_currentchunk_logicalfileinfo_offset = 0;
@@ -310,7 +310,7 @@ class getid3_real extends getid3_handler
                         $offset += $thisfile_real_chunks_currentchunk['comment_len'];
 
 
-                        $commentkeystocopy = array('title'=>'title', 'artist'=>'artist', 'copyright'=>'copyright', 'comment'=>'comment');
+                        $commentkeystocopy = ['title'=>'title', 'artist'=>'artist', 'copyright'=>'copyright', 'comment'=>'comment'];
                         foreach ($commentkeystocopy as $key => $val) {
                             if ($thisfile_real_chunks_currentchunk[$key]) {
                                 $info['real']['comments'][$val][] = trim($thisfile_real_chunks_currentchunk[$key]);
@@ -367,7 +367,7 @@ class getid3_real extends getid3_handler
     {
         // http://www.freelists.org/archives/matroska-devel/07-2003/msg00010.html
 
-        $ParsedArray = array();
+        $ParsedArray = [];
         $ParsedArray['magic'] = substr($OldRAheaderData, 0, 4);
         if ($ParsedArray['magic'] != '.ra'."\xFD") {
             return false;
@@ -457,7 +457,7 @@ class getid3_real extends getid3_handler
                     $ParsedArray['channels']         = getid3_lib::BigEndian2Int(substr($OldRAheaderData, 60, 2));
                     $ParsedArray['genr']             =                           substr($OldRAheaderData, 62, 4);
                     $ParsedArray['fourcc3']          =                           substr($OldRAheaderData, 66, 4);
-                    $ParsedArray['comments']         = array();
+                    $ParsedArray['comments']         = [];
                     break;
             }
             $ParsedArray['fourcc'] = $ParsedArray['fourcc3'];
@@ -473,7 +473,7 @@ class getid3_real extends getid3_handler
 
     public function RealAudioCodecFourCClookup($fourcc, $bitrate)
     {
-        static $RealAudioCodecFourCClookup = array();
+        static $RealAudioCodecFourCClookup = [];
         if (empty($RealAudioCodecFourCClookup)) {
             // http://www.its.msstate.edu/net/real/reports/config/tags.stats
             // http://www.freelists.org/archives/matroska-devel/06-2003/fullthread18.html

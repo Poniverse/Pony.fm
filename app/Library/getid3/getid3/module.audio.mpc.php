@@ -22,7 +22,7 @@ class getid3_mpc extends getid3_handler
     {
         $info = &$this->getid3->info;
 
-        $info['mpc']['header'] = array();
+        $info['mpc']['header'] = [];
         $thisfile_mpc_header   = &$info['mpc']['header'];
 
         $info['fileformat']               = 'mpc';
@@ -66,7 +66,7 @@ class getid3_mpc extends getid3_handler
 
         $offset = $this->ftell();
         while ($offset < $info['avdataend']) {
-            $thisPacket = array();
+            $thisPacket = [];
             $thisPacket['offset'] = $offset;
             $packet_offset = 0;
 
@@ -193,7 +193,7 @@ class getid3_mpc extends getid3_handler
                 case 'SE': // Stream End
                 case 'AP': // Audio Data
                     // nothing useful here, just skip this packet
-                    $thisPacket = array();
+                    $thisPacket = [];
                     break;
 
                 default:
@@ -405,7 +405,7 @@ class getid3_mpc extends getid3_handler
 
     public function MPCprofileNameLookup($profileid)
     {
-        static $MPCprofileNameLookup = array(
+        static $MPCprofileNameLookup = [
             0  => 'no profile',
             1  => 'Experimental',
             2  => 'unused',
@@ -422,18 +422,18 @@ class getid3_mpc extends getid3_handler
             13 => 'BrainDead (q = 8.0)',
             14 => 'above BrainDead (q = 9.0)',
             15 => 'above BrainDead (q = 10.0)'
-        );
+        ];
         return (isset($MPCprofileNameLookup[$profileid]) ? $MPCprofileNameLookup[$profileid] : 'invalid');
     }
 
     public function MPCfrequencyLookup($frequencyid)
     {
-        static $MPCfrequencyLookup = array(
+        static $MPCfrequencyLookup = [
             0 => 44100,
             1 => 48000,
             2 => 37800,
             3 => 32000
-        );
+        ];
         return (isset($MPCfrequencyLookup[$frequencyid]) ? $MPCfrequencyLookup[$frequencyid] : 'invalid');
     }
 
@@ -496,9 +496,9 @@ class getid3_mpc extends getid3_handler
 
     public function MPCsv8PacketName($packetKey)
     {
-        static $MPCsv8PacketName = array();
+        static $MPCsv8PacketName = [];
         if (empty($MPCsv8PacketName)) {
-            $MPCsv8PacketName = array(
+            $MPCsv8PacketName = [
                 'AP' => 'Audio Packet',
                 'CT' => 'Chapter Tag',
                 'EI' => 'Encoder Info',
@@ -507,7 +507,7 @@ class getid3_mpc extends getid3_handler
                 'SH' => 'Stream Header',
                 'SO' => 'Seek Table Offset',
                 'ST' => 'Seek Table',
-            );
+            ];
         }
         return (isset($MPCsv8PacketName[$packetKey]) ? $MPCsv8PacketName[$packetKey] : $packetKey);
     }

@@ -23,7 +23,7 @@ class XmlHandler extends MimeHandlerAdapter
     /**
      * @param array $conf sets configuration options
      */
-    public function __construct(array $conf = array())
+    public function __construct(array $conf = [])
     {
         $this->namespace =      isset($conf['namespace']) ? $conf['namespace'] : '';
         $this->libxml_opts =    isset($conf['libxml_opts']) ? $conf['libxml_opts'] : 0;
@@ -86,7 +86,7 @@ class XmlHandler extends MimeHandlerAdapter
         } else {
             $node->appendChild($dom->createTextNode($value));
         }
-        return array($node, $dom);
+        return [$node, $dom];
     }
     /**
      * @author Zack Douglas <zack@zackerydouglas.info>
@@ -102,7 +102,7 @@ class XmlHandler extends MimeHandlerAdapter
             $parent->appendChild($el);
             $this->_future_serializeAsXml($v, $el, $dom);
         }
-        return array($parent, $dom);
+        return [$parent, $dom];
     }
     /**
      * @author Zack Douglas <zack@zackerydouglas.info>
@@ -117,6 +117,6 @@ class XmlHandler extends MimeHandlerAdapter
                 $this->_future_serializeAsXml($pr->getValue($value), $el, $dom);
             }
         }
-        return array($parent, $dom);
+        return [$parent, $dom];
     }
 }

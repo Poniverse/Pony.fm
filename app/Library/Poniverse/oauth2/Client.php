@@ -135,7 +135,7 @@ class Client
      *
      * @var array
      */
-    protected $curl_options = array();
+    protected $curl_options = [];
 
     /**
      * Construct
@@ -189,13 +189,13 @@ class Client
      * @param array  $extra_parameters  Array of extra parameters like scope or state (Ex: array('scope' => null, 'state' => ''))
      * @return string URL used for authentication
      */
-    public function getAuthenticationUrl($auth_endpoint, $redirect_uri, array $extra_parameters = array())
+    public function getAuthenticationUrl($auth_endpoint, $redirect_uri, array $extra_parameters = [])
     {
-        $parameters = array_merge(array(
+        $parameters = array_merge([
             'response_type' => 'code',
             'client_id'     => $this->client_id,
             'redirect_uri'  => $redirect_uri
-        ), $extra_parameters);
+        ], $extra_parameters);
         return $auth_endpoint . '?' . http_build_query($parameters, null, '&');
     }
 
@@ -224,7 +224,7 @@ class Client
             throw new Exception('Unknown constant GRANT_TYPE for class ' . $grantTypeClassName, Exception::GRANT_TYPE_ERROR);
         }
         $parameters['grant_type'] = $grantTypeClass::GRANT_TYPE;
-        $http_headers = array();
+        $http_headers = [];
         switch ($this->client_auth) {
             case self::AUTH_TYPE_URI:
             case self::AUTH_TYPE_FORM:
@@ -313,7 +313,7 @@ class Client
      * @param int    $form_content_type HTTP form content type to use
      * @return array
      */
-    public function fetch($protected_resource_url, $parameters = array(), $http_method = self::HTTP_METHOD_GET, array $http_headers = array(), $form_content_type = self::HTTP_FORM_CONTENT_TYPE_MULTIPART)
+    public function fetch($protected_resource_url, $parameters = [], $http_method = self::HTTP_METHOD_GET, array $http_headers = [], $form_content_type = self::HTTP_FORM_CONTENT_TYPE_MULTIPART)
     {
         if ($this->access_token) {
             switch ($this->access_token_type) {
@@ -393,13 +393,13 @@ class Client
      * @param int    $form_content_type HTTP form content type to use
      * @return array
      */
-    private function executeRequest($url, $parameters = array(), $http_method = self::HTTP_METHOD_GET, array $http_headers = null, $form_content_type = self::HTTP_FORM_CONTENT_TYPE_MULTIPART)
+    private function executeRequest($url, $parameters = [], $http_method = self::HTTP_METHOD_GET, array $http_headers = null, $form_content_type = self::HTTP_FORM_CONTENT_TYPE_MULTIPART)
     {
-        $curl_options = array(
+        $curl_options = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_CUSTOMREQUEST  => $http_method
-        );
+        ];
 
         switch ($http_method) {
             case self::HTTP_METHOD_POST:
@@ -435,7 +435,7 @@ class Client
         $curl_options[CURLOPT_URL] = $url;
 
         if (is_array($http_headers)) {
-            $header = array();
+            $header = [];
             foreach ($http_headers as $key => $parsed_urlvalue) {
                 $header[] = "$key: $parsed_urlvalue";
             }
@@ -467,11 +467,11 @@ class Client
         }
         curl_close($ch);
 
-        return array(
+        return [
             'result' => (null === $json_decode) ? $result : $json_decode,
             'code' => $http_code,
             'content_type' => $content_type
-        );
+        ];
     }
 
     /**

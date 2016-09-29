@@ -63,7 +63,7 @@ class getid3_flac extends getid3_handler
                 break;
             }
 
-            $info['flac'][$BlockTypeText]['raw'] = array();
+            $info['flac'][$BlockTypeText]['raw'] = [];
             $BlockTypeText_raw = &$info['flac'][$BlockTypeText]['raw'];
 
             $BlockTypeText_raw['offset']          = $BlockOffset;
@@ -137,10 +137,10 @@ class getid3_flac extends getid3_handler
             foreach ($info['flac']['PICTURE'] as $entry) {
                 if (!empty($entry['data'])) {
                     if (!isset($info['flac']['comments']['picture'])) {
-                        $info['flac']['comments']['picture'] = array();
+                        $info['flac']['comments']['picture'] = [];
                     }
-                    $comments_picture_data = array();
-                    foreach (array('data', 'image_mime', 'image_width', 'image_height', 'imagetype', 'picturetype', 'description', 'datalength') as $picture_key) {
+                    $comments_picture_data = [];
+                    foreach (['data', 'image_mime', 'image_width', 'image_height', 'imagetype', 'picturetype', 'description', 'datalength'] as $picture_key) {
                         if (isset($entry[$picture_key])) {
                             $comments_picture_data[$picture_key] = $entry[$picture_key];
                         }
@@ -197,7 +197,7 @@ class getid3_flac extends getid3_handler
     {
         $info = &$this->getid3->info;
 
-        $info['flac']['STREAMINFO'] = array();
+        $info['flac']['STREAMINFO'] = [];
         $streaminfo = &$info['flac']['STREAMINFO'];
 
         $streaminfo['min_block_size']  = getid3_lib::BigEndian2Int(substr($BlockData, 0, 2));
@@ -381,7 +381,7 @@ class getid3_flac extends getid3_handler
 
     public static function metaBlockTypeLookup($blocktype)
     {
-        static $lookup = array(
+        static $lookup = [
             0 => 'STREAMINFO',
             1 => 'PADDING',
             2 => 'APPLICATION',
@@ -389,14 +389,14 @@ class getid3_flac extends getid3_handler
             4 => 'VORBIS_COMMENT',
             5 => 'CUESHEET',
             6 => 'PICTURE',
-        );
+        ];
         return (isset($lookup[$blocktype]) ? $lookup[$blocktype] : 'reserved');
     }
 
     public static function applicationIDLookup($applicationid)
     {
         // http://flac.sourceforge.net/id.html
-        static $lookup = array(
+        static $lookup = [
             0x41544348 => 'FlacFile',                                                                           // "ATCH"
             0x42534F4C => 'beSolo',                                                                             // "BSOL"
             0x42554753 => 'Bugs Player',                                                                        // "BUGS"
@@ -420,13 +420,13 @@ class getid3_flac extends getid3_handler
             0x74756E65 => 'TagTuner',                                                                           // "tune"
             0x78626174 => 'XBAT',                                                                               // "xbat"
             0x786D6364 => 'xmcd',                                                                               // "xmcd"
-        );
+        ];
         return (isset($lookup[$applicationid]) ? $lookup[$applicationid] : 'reserved');
     }
 
     public static function pictureTypeLookup($type_id)
     {
-        static $lookup = array (
+        static $lookup =  [
              0 => 'Other',
              1 => '32x32 pixels \'file icon\' (PNG only)',
              2 => 'Other file icon',
@@ -448,7 +448,7 @@ class getid3_flac extends getid3_handler
             18 => 'Illustration',
             19 => 'Band/artist logotype',
             20 => 'Publisher/Studio logotype',
-        );
+        ];
         return (isset($lookup[$type_id]) ? $lookup[$type_id] : 'reserved');
     }
 }

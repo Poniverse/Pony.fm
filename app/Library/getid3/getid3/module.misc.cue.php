@@ -33,7 +33,7 @@
  */
 class getid3_cue extends getid3_handler
 {
-    public $cuesheet = array();
+    public $cuesheet = [];
 
     public function Analyze()
     {
@@ -59,7 +59,7 @@ class getid3_cue extends getid3_handler
     */
     public function readCueSheet(&$filedata)
     {
-        $cue_lines = array();
+        $cue_lines = [];
         foreach (explode("\n", str_replace("\r", null, $filedata)) as $line) {
             if ((strlen($line) > 0) && ($line[0] != '#')) {
                 $cue_lines[] = trim($line);
@@ -160,7 +160,7 @@ class getid3_cue extends getid3_handler
         //if quotes around it, remove them.
         $line = trim($line, '"');
 
-        return array('filename'=>$line, 'type'=>$type);
+        return ['filename'=>$line, 'type'=>$type];
     }
 
     /**
@@ -176,13 +176,13 @@ class getid3_cue extends getid3_handler
                 switch ($type) {
                     case 'flags':
                         // first entry in this line
-                        $this->cuesheet['tracks'][$track_on]['flags'] = array(
+                        $this->cuesheet['tracks'][$track_on]['flags'] = [
                             '4ch'  => false,
                             'data' => false,
                             'dcp'  => false,
                             'pre'  => false,
                             'scms' => false,
-                            );
+                            ];
                         break;
                     case 'data':
                     case 'dcp':
@@ -240,11 +240,11 @@ class getid3_cue extends getid3_handler
 
         switch ($type) {
             case 'index':
-                $this->cuesheet['tracks'][$track_on][$type][$number] = array('minutes'=>intval($minutes), 'seconds'=>intval($seconds), 'frames'=>intval($frames));
+                $this->cuesheet['tracks'][$track_on][$type][$number] = ['minutes'=>intval($minutes), 'seconds'=>intval($seconds), 'frames'=>intval($frames)];
                 break;
             case 'pregap':
             case 'postgap':
-                $this->cuesheet['tracks'][$track_on][$type]          = array('minutes'=>intval($minutes), 'seconds'=>intval($seconds), 'frames'=>intval($frames));
+                $this->cuesheet['tracks'][$track_on][$type]          = ['minutes'=>intval($minutes), 'seconds'=>intval($seconds), 'frames'=>intval($frames)];
                 break;
         }
     }
@@ -289,6 +289,6 @@ class getid3_cue extends getid3_handler
         //find the data type.
         $datatype = strtolower(substr($line, strpos($line, ' ') + 1));
 
-        $this->cuesheet['tracks'][$track_on] = array('track_number'=>$track, 'datatype'=>$datatype);
+        $this->cuesheet['tracks'][$track_on] = ['track_number'=>$track, 'datatype'=>$datatype];
     }
 }

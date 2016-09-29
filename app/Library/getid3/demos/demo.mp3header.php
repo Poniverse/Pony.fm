@@ -43,7 +43,7 @@ if (!function_exists('table_var_dump')) {
                     }
                     if (($key == 'data') && isset($variable['image_mime']) && isset($variable['dataoffset'])) {
                         require_once(GETID3_INCLUDEPATH.'getid3.getimagesize.php');
-                        $imageinfo = array();
+                        $imageinfo = [];
                         if ($imagechunkcheck = GetDataImageSize($value, $imageinfo)) {
                             $DumpedImageSRC = (!empty($_REQUEST['filename']) ? $_REQUEST['filename'] : '.getid3').'.'.$variable['dataoffset'].'.'.ImageTypesLookup($imagechunkcheck[2]);
                             if ($tempimagefile = fopen($DumpedImageSRC, 'wb')) {
@@ -91,7 +91,7 @@ if (!function_exists('table_var_dump')) {
 
             default:
                 require_once(GETID3_INCLUDEPATH.'getid3.getimagesize.php');
-                $imageinfo = array();
+                $imageinfo = [];
                 if (($imagechunkcheck = GetDataImageSize(substr($variable, 0, 32768), $imageinfo)) && ($imagechunkcheck[2] >= 1) && ($imagechunkcheck[2] <= 3)) {
                     $returnstring .= '<table border="1" cellspacing="0" cellpadding="2">';
                     $returnstring .= '<tr><td><b>type</b></td><td>'.ImageTypesLookup($imagechunkcheck[2]).'</td></tr>';
@@ -144,7 +144,7 @@ if (!function_exists('RemoveAccents')) {
     {
         // return strtr($string, '¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ', 'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy');
         // Revised version by marksteward@hotmail.com
-        return strtr(strtr($string, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy'), array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', '' => 'OE', '' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'));
+        return strtr(strtr($string, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy'), ['Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', '' => 'OE', '' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u']);
     }
 }
 
@@ -168,7 +168,7 @@ if (!function_exists('MoreNaturalSort')) {
         }
         $ar1 = RemoveAccents(strtolower(trim($ar1)));
         $ar2 = RemoveAccents(strtolower(trim($ar2)));
-        $translatearray = array('\''=>'', '"'=>'', '_'=>' ', '('=>'', ')'=>'', '-'=>' ', '  '=>' ', '.'=>'', ','=>'');
+        $translatearray = ['\''=>'', '"'=>'', '_'=>' ', '('=>'', ')'=>'', '-'=>' ', '  '=>' ', '.'=>'', ','=>''];
         foreach ($translatearray as $key => $val) {
             $ar1 = str_replace($key, $val, $ar1);
             $ar2 = str_replace($key, $val, $ar2);
@@ -259,7 +259,7 @@ if (!function_exists('NormalizeBinaryPoint')) {
             }
         }
         $binarypointnumber = str_pad(substr($binarypointnumber, 0, $maxbits + 2), $maxbits + 2, '0', STR_PAD_RIGHT);
-        return array('normalized'=>$binarypointnumber, 'exponent'=>(int) $exponent);
+        return ['normalized'=>$binarypointnumber, 'exponent'=>(int) $exponent];
     }
 }
 
@@ -619,7 +619,7 @@ if (!function_exists('array_join_merge')) {
         // taken from http://www.php.net/manual/en/function.array-merge-recursive.php
         if (is_array($arr1) && is_array($arr2)) {
             // the same -> merge
-            $new_array = array();
+            $new_array = [];
 
             if (is_hash($arr1) && is_hash($arr2)) {
                 // hashes -> merge based on keys
@@ -783,7 +783,7 @@ if (!function_exists('ID3v1matchesID3v2')) {
     function ID3v1matchesID3v2($id3v1, $id3v2)
     {
 
-        $requiredindices = array('title', 'artist', 'album', 'year', 'genre', 'comment');
+        $requiredindices = ['title', 'artist', 'album', 'year', 'genre', 'comment'];
         foreach ($requiredindices as $requiredindex) {
             if (!isset($id3v1["$requiredindex"])) {
                 $id3v1["$requiredindex"] = '';
@@ -937,7 +937,7 @@ if (!function_exists('image_type_to_mime_type')) {
     function image_type_to_mime_type($imagetypeid)
     {
         // only available in PHP v4.3.0+
-        static $image_type_to_mime_type = array();
+        static $image_type_to_mime_type = [];
         if (empty($image_type_to_mime_type)) {
             $image_type_to_mime_type[1]  = 'image/gif';                     // GIF
             $image_type_to_mime_type[2]  = 'image/jpeg';                    // JPEG
@@ -1412,20 +1412,20 @@ echo '<form action="'.htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES).'" METHOD="
 echo 'Generate a MPEG-audio 4-byte header from these values:<BR>';
 echo '<table border="0">';
 
-$MPEGgenerateValues = array(
-                                'version'=>array('1', '2', '2.5'),
-                                'layer'=>array('I', 'II', 'III'),
-                                'protection'=>array('Y', 'N'),
-                                'bitrate'=>array('free', '8', '16', '24', '32', '40', '48', '56', '64', '80', '96', '112', '128', '144', '160', '176', '192', '224', '256', '288', '320', '352', '384', '416', '448'),
-                                'frequency'=>array('8000', '11025', '12000', '16000', '22050', '24000', '32000', '44100', '48000'),
-                                'padding'=>array('Y', 'N'),
-                                'private'=>array('Y', 'N'),
-                                'channelmode'=>array('stereo', 'joint stereo', 'dual channel', 'mono'),
-                                'modeextension'=>array('none', 'IS', 'MS', 'IS+MS', '4-31', '8-31', '12-31', '16-31'),
-                                'copyright'=>array('Y', 'N'),
-                                'original'=>array('Y', 'N'),
-                                'emphasis'=>array('none', '50/15ms', 'CCIT J.17')
-                            );
+$MPEGgenerateValues = [
+                                'version'=>['1', '2', '2.5'],
+                                'layer'=>['I', 'II', 'III'],
+                                'protection'=>['Y', 'N'],
+                                'bitrate'=>['free', '8', '16', '24', '32', '40', '48', '56', '64', '80', '96', '112', '128', '144', '160', '176', '192', '224', '256', '288', '320', '352', '384', '416', '448'],
+                                'frequency'=>['8000', '11025', '12000', '16000', '22050', '24000', '32000', '44100', '48000'],
+                                'padding'=>['Y', 'N'],
+                                'private'=>['Y', 'N'],
+                                'channelmode'=>['stereo', 'joint stereo', 'dual channel', 'mono'],
+                                'modeextension'=>['none', 'IS', 'MS', 'IS+MS', '4-31', '8-31', '12-31', '16-31'],
+                                'copyright'=>['Y', 'N'],
+                                'original'=>['Y', 'N'],
+                                'emphasis'=>['none', '50/15ms', 'CCIT J.17']
+                            ];
 
 foreach ($MPEGgenerateValues as $name => $dataarray) {
     echo '<tr><th>'.$name.':</th><td><select name="'.$name.'">';
@@ -1498,19 +1498,19 @@ if (isset($_POST['Analyze']) && $_POST['HeaderHexBytes']) {
 
     $headerbitstream  = '11111111111';                               // A - Frame sync (all bits set)
 
-    $MPEGversionLookup = array('2.5'=>'00', '2'=>'10', '1'=>'11');
+    $MPEGversionLookup = ['2.5'=>'00', '2'=>'10', '1'=>'11'];
     $headerbitstream .= $MPEGversionLookup[$_POST['version']];       // B - MPEG Audio version ID
 
-    $MPEGlayerLookup = array('III'=>'01', 'II'=>'10', 'I'=>'11');
+    $MPEGlayerLookup = ['III'=>'01', 'II'=>'10', 'I'=>'11'];
     $headerbitstream .= $MPEGlayerLookup[$_POST['layer']];           // C - Layer description
 
     $headerbitstream .= (($_POST['protection'] == 'Y') ? '0' : '1'); // D - Protection bit
 
-    $MPEGaudioBitrateLookup['1']['I']     = array('free'=>'0000', '32'=>'0001', '64'=>'0010', '96'=>'0011', '128'=>'0100', '160'=>'0101', '192'=>'0110', '224'=>'0111', '256'=>'1000', '288'=>'1001', '320'=>'1010', '352'=>'1011', '384'=>'1100', '416'=>'1101', '448'=>'1110');
-    $MPEGaudioBitrateLookup['1']['II']    = array('free'=>'0000', '32'=>'0001', '48'=>'0010', '56'=>'0011',  '64'=>'0100',  '80'=>'0101',  '96'=>'0110', '112'=>'0111', '128'=>'1000', '160'=>'1001', '192'=>'1010', '224'=>'1011', '256'=>'1100', '320'=>'1101', '384'=>'1110');
-    $MPEGaudioBitrateLookup['1']['III']   = array('free'=>'0000', '32'=>'0001', '40'=>'0010', '48'=>'0011',  '56'=>'0100',  '64'=>'0101',  '80'=>'0110',  '96'=>'0111', '112'=>'1000', '128'=>'1001', '160'=>'1010', '192'=>'1011', '224'=>'1100', '256'=>'1101', '320'=>'1110');
-    $MPEGaudioBitrateLookup['2']['I']     = array('free'=>'0000', '32'=>'0001', '48'=>'0010', '56'=>'0011',  '64'=>'0100',  '80'=>'0101',  '96'=>'0110', '112'=>'0111', '128'=>'1000', '144'=>'1001', '160'=>'1010', '176'=>'1011', '192'=>'1100', '224'=>'1101', '256'=>'1110');
-    $MPEGaudioBitrateLookup['2']['II']    = array('free'=>'0000',  '8'=>'0001', '16'=>'0010', '24'=>'0011',  '32'=>'0100',  '40'=>'0101',  '48'=>'0110',  '56'=>'0111',  '64'=>'1000',  '80'=>'1001',  '96'=>'1010', '112'=>'1011', '128'=>'1100', '144'=>'1101', '160'=>'1110');
+    $MPEGaudioBitrateLookup['1']['I']     = ['free'=>'0000', '32'=>'0001', '64'=>'0010', '96'=>'0011', '128'=>'0100', '160'=>'0101', '192'=>'0110', '224'=>'0111', '256'=>'1000', '288'=>'1001', '320'=>'1010', '352'=>'1011', '384'=>'1100', '416'=>'1101', '448'=>'1110'];
+    $MPEGaudioBitrateLookup['1']['II']    = ['free'=>'0000', '32'=>'0001', '48'=>'0010', '56'=>'0011',  '64'=>'0100',  '80'=>'0101',  '96'=>'0110', '112'=>'0111', '128'=>'1000', '160'=>'1001', '192'=>'1010', '224'=>'1011', '256'=>'1100', '320'=>'1101', '384'=>'1110'];
+    $MPEGaudioBitrateLookup['1']['III']   = ['free'=>'0000', '32'=>'0001', '40'=>'0010', '48'=>'0011',  '56'=>'0100',  '64'=>'0101',  '80'=>'0110',  '96'=>'0111', '112'=>'1000', '128'=>'1001', '160'=>'1010', '192'=>'1011', '224'=>'1100', '256'=>'1101', '320'=>'1110'];
+    $MPEGaudioBitrateLookup['2']['I']     = ['free'=>'0000', '32'=>'0001', '48'=>'0010', '56'=>'0011',  '64'=>'0100',  '80'=>'0101',  '96'=>'0110', '112'=>'0111', '128'=>'1000', '144'=>'1001', '160'=>'1010', '176'=>'1011', '192'=>'1100', '224'=>'1101', '256'=>'1110'];
+    $MPEGaudioBitrateLookup['2']['II']    = ['free'=>'0000',  '8'=>'0001', '16'=>'0010', '24'=>'0011',  '32'=>'0100',  '40'=>'0101',  '48'=>'0110',  '56'=>'0111',  '64'=>'1000',  '80'=>'1001',  '96'=>'1010', '112'=>'1011', '128'=>'1100', '144'=>'1101', '160'=>'1110'];
     $MPEGaudioBitrateLookup['2']['III']   = $MPEGaudioBitrateLookup['2']['II'];
     $MPEGaudioBitrateLookup['2.5']['I']   = $MPEGaudioBitrateLookup['2']['I'];
     $MPEGaudioBitrateLookup['2.5']['II']  = $MPEGaudioBitrateLookup['2']['II'];
@@ -1521,9 +1521,9 @@ if (isset($_POST['Analyze']) && $_POST['HeaderHexBytes']) {
         die('Invalid <B>Bitrate</B>');
     }
 
-    $MPEGaudioFrequencyLookup['1']   = array('44100'=>'00', '48000'=>'01', '32000'=>'10');
-    $MPEGaudioFrequencyLookup['2']   = array('22050'=>'00', '24000'=>'01', '16000'=>'10');
-    $MPEGaudioFrequencyLookup['2.5'] = array('11025'=>'00', '12000'=>'01', '8000'=>'10');
+    $MPEGaudioFrequencyLookup['1']   = ['44100'=>'00', '48000'=>'01', '32000'=>'10'];
+    $MPEGaudioFrequencyLookup['2']   = ['22050'=>'00', '24000'=>'01', '16000'=>'10'];
+    $MPEGaudioFrequencyLookup['2.5'] = ['11025'=>'00', '12000'=>'01', '8000'=>'10'];
     if (isset($MPEGaudioFrequencyLookup[$_POST['version']][$_POST['frequency']])) {
         $headerbitstream .= $MPEGaudioFrequencyLookup[$_POST['version']][$_POST['frequency']];  // F - Sampling rate frequency index
     } else {
@@ -1534,12 +1534,12 @@ if (isset($_POST['Analyze']) && $_POST['HeaderHexBytes']) {
 
     $headerbitstream .= (($_POST['private'] == 'Y') ? '1' : '0');            // H - Private bit
 
-    $MPEGaudioChannelModeLookup = array('stereo'=>'00', 'joint stereo'=>'01', 'dual channel'=>'10', 'mono'=>'11');
+    $MPEGaudioChannelModeLookup = ['stereo'=>'00', 'joint stereo'=>'01', 'dual channel'=>'10', 'mono'=>'11'];
     $headerbitstream .= $MPEGaudioChannelModeLookup[$_POST['channelmode']];  // I - Channel Mode
 
-    $MPEGaudioModeExtensionLookup['I']   = array('4-31'=>'00', '8-31'=>'01', '12-31'=>'10', '16-31'=>'11');
+    $MPEGaudioModeExtensionLookup['I']   = ['4-31'=>'00', '8-31'=>'01', '12-31'=>'10', '16-31'=>'11'];
     $MPEGaudioModeExtensionLookup['II']  = $MPEGaudioModeExtensionLookup['I'];
-    $MPEGaudioModeExtensionLookup['III'] = array('none'=>'00',   'IS'=>'01',    'MS'=>'10', 'IS+MS'=>'11');
+    $MPEGaudioModeExtensionLookup['III'] = ['none'=>'00',   'IS'=>'01',    'MS'=>'10', 'IS+MS'=>'11'];
     if ($_POST['channelmode'] != 'joint stereo') {
         $headerbitstream .= '00';
     } elseif (isset($MPEGaudioModeExtensionLookup[$_POST['layer']][$_POST['modeextension']])) {
@@ -1552,7 +1552,7 @@ if (isset($_POST['Analyze']) && $_POST['HeaderHexBytes']) {
 
     $headerbitstream .= (($_POST['original']  == 'Y') ? '1' : '0');          // L - Original
 
-    $MPEGaudioEmphasisLookup = array('none'=>'00', '50/15ms'=>'01', 'CCIT J.17'=>'11');
+    $MPEGaudioEmphasisLookup = ['none'=>'00', '50/15ms'=>'01', 'CCIT J.17'=>'11'];
     if (isset($MPEGaudioEmphasisLookup[$_POST['emphasis']])) {
         $headerbitstream .= $MPEGaudioEmphasisLookup[$_POST['emphasis']];    // M - Emphasis
     } else {
@@ -1567,13 +1567,13 @@ if (isset($_POST['Analyze']) && $_POST['HeaderHexBytes']) {
 
 function MPEGaudioVersionLookup($rawversion)
 {
-    $MPEGaudioVersionLookup = array('2.5', false, '2', '1');
+    $MPEGaudioVersionLookup = ['2.5', false, '2', '1'];
     return (isset($MPEGaudioVersionLookup["$rawversion"]) ? $MPEGaudioVersionLookup["$rawversion"] : false);
 }
 
 function MPEGaudioLayerLookup($rawlayer)
 {
-    $MPEGaudioLayerLookup = array(false, 'III', 'II', 'I');
+    $MPEGaudioLayerLookup = [false, 'III', 'II', 'I'];
     return (isset($MPEGaudioLayerLookup["$rawlayer"]) ? $MPEGaudioLayerLookup["$rawlayer"] : false);
 }
 
@@ -1597,21 +1597,21 @@ function MPEGaudioFrequencyLookup($version, $rawfrequency)
 
 function MPEGaudioChannelModeLookup($rawchannelmode)
 {
-    $MPEGaudioChannelModeLookup = array('stereo', 'joint stereo', 'dual channel', 'mono');
+    $MPEGaudioChannelModeLookup = ['stereo', 'joint stereo', 'dual channel', 'mono'];
     return (isset($MPEGaudioChannelModeLookup["$rawchannelmode"]) ? $MPEGaudioChannelModeLookup["$rawchannelmode"] : false);
 }
 
 function MPEGaudioModeExtensionLookup($layer, $rawmodeextension)
 {
-    $MPEGaudioModeExtensionLookup['I']   = array('4-31', '8-31', '12-31', '16-31');
-    $MPEGaudioModeExtensionLookup['II']  = array('4-31', '8-31', '12-31', '16-31');
-    $MPEGaudioModeExtensionLookup['III'] = array('', 'IS', 'MS', 'IS+MS');
+    $MPEGaudioModeExtensionLookup['I']   = ['4-31', '8-31', '12-31', '16-31'];
+    $MPEGaudioModeExtensionLookup['II']  = ['4-31', '8-31', '12-31', '16-31'];
+    $MPEGaudioModeExtensionLookup['III'] = ['', 'IS', 'MS', 'IS+MS'];
     return (isset($MPEGaudioModeExtensionLookup["$layer"]["$rawmodeextension"]) ? $MPEGaudioModeExtensionLookup["$layer"]["$rawmodeextension"] : false);
 }
 
 function MPEGaudioEmphasisLookup($rawemphasis)
 {
-    $MPEGaudioEmphasisLookup = array('none', '50/15ms', false, 'CCIT J.17');
+    $MPEGaudioEmphasisLookup = ['none', '50/15ms', false, 'CCIT J.17'];
     return (isset($MPEGaudioEmphasisLookup["$rawemphasis"]) ? $MPEGaudioEmphasisLookup["$rawemphasis"] : false);
 }
 
@@ -1752,7 +1752,7 @@ function decodeMPEGaudioHeader($fd, $offset, &$ThisFileInfo, $recursivesearch = 
 
     $head4 = substr($headerstring, 0, 4);
 
-    static $MPEGaudioHeaderDecodeCache = array();
+    static $MPEGaudioHeaderDecodeCache = [];
     if (isset($MPEGaudioHeaderDecodeCache[$head4])) {
         $MPEGheaderRawArray = $MPEGaudioHeaderDecodeCache[$head4];
     } else {
@@ -1760,7 +1760,7 @@ function decodeMPEGaudioHeader($fd, $offset, &$ThisFileInfo, $recursivesearch = 
         $MPEGaudioHeaderDecodeCache[$head4] = $MPEGheaderRawArray;
     }
 
-    static $MPEGaudioHeaderValidCache = array();
+    static $MPEGaudioHeaderValidCache = [];
 
     // Not in cache
     if (!isset($MPEGaudioHeaderValidCache[$head4])) {
@@ -2286,7 +2286,7 @@ function RecursiveFrameScanning(&$fd, &$ThisFileInfo, &$offset, &$nextframetesto
             return true;
         }
 
-        $nextframetestarray = array('error'=>'', 'warning'=>'', 'avdataend'=>$ThisFileInfo['avdataend'], 'avdataoffset'=>$ThisFileInfo['avdataoffset']);
+        $nextframetestarray = ['error'=>'', 'warning'=>'', 'avdataend'=>$ThisFileInfo['avdataend'], 'avdataoffset'=>$ThisFileInfo['avdataoffset']];
         if (decodeMPEGaudioHeader($fd, $nextframetestoffset, $nextframetestarray, false)) {
             if ($ScanAsCBR) {
                 // force CBR mode, used for trying to pick out invalid audio streams with
@@ -2359,7 +2359,7 @@ function FreeFormatFrameLength($fd, $offset, &$ThisFileInfo, $deepscan = false)
     }
 
     if ($deepscan) {
-        $ActualFrameLengthValues = array();
+        $ActualFrameLengthValues = [];
         $nextoffset = $offset + $framelength;
         while ($nextoffset < ($ThisFileInfo['avdataend'] - 6)) {
             fseek($fd, $nextoffset - 1, SEEK_SET);
@@ -2502,24 +2502,24 @@ function getOnlyMPEGaudioInfo($fd, &$ThisFileInfo, $avdataoffset, $BitrateHistog
                 }
 
                 if ($BitrateHistogram) {
-                    $ThisFileInfo['mpeg']['audio']['stereo_distribution']  = array('stereo'=>0, 'joint stereo'=>0, 'dual channel'=>0, 'mono'=>0);
-                    $ThisFileInfo['mpeg']['audio']['version_distribution'] = array('1'=>0, '2'=>0, '2.5'=>0);
+                    $ThisFileInfo['mpeg']['audio']['stereo_distribution']  = ['stereo'=>0, 'joint stereo'=>0, 'dual channel'=>0, 'mono'=>0];
+                    $ThisFileInfo['mpeg']['audio']['version_distribution'] = ['1'=>0, '2'=>0, '2.5'=>0];
 
                     if ($ThisFileInfo['mpeg']['audio']['version'] == '1') {
                         if ($ThisFileInfo['mpeg']['audio']['layer'] == 'III') {
-                            $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = array('free'=>0, 32=>0, 40=>0, 48=>0, 56=>0, 64=>0, 80=>0, 96=>0, 112=>0, 128=>0, 160=>0, 192=>0, 224=>0, 256=>0, 320=>0);
+                            $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = ['free'=>0, 32=>0, 40=>0, 48=>0, 56=>0, 64=>0, 80=>0, 96=>0, 112=>0, 128=>0, 160=>0, 192=>0, 224=>0, 256=>0, 320=>0];
                         } elseif ($ThisFileInfo['mpeg']['audio']['layer'] == 'II') {
-                            $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = array('free'=>0, 32=>0, 48=>0, 56=>0, 64=>0, 80=>0, 96=>0, 112=>0, 128=>0, 160=>0, 192=>0, 224=>0, 256=>0, 320=>0, 384=>0);
+                            $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = ['free'=>0, 32=>0, 48=>0, 56=>0, 64=>0, 80=>0, 96=>0, 112=>0, 128=>0, 160=>0, 192=>0, 224=>0, 256=>0, 320=>0, 384=>0];
                         } elseif ($ThisFileInfo['mpeg']['audio']['layer'] == 'I') {
-                            $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = array('free'=>0, 32=>0, 64=>0, 96=>0, 128=>0, 160=>0, 192=>0, 224=>0, 256=>0, 288=>0, 320=>0, 352=>0, 384=>0, 416=>0, 448=>0);
+                            $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = ['free'=>0, 32=>0, 64=>0, 96=>0, 128=>0, 160=>0, 192=>0, 224=>0, 256=>0, 288=>0, 320=>0, 352=>0, 384=>0, 416=>0, 448=>0];
                         }
                     } elseif ($ThisFileInfo['mpeg']['audio']['layer'] == 'I') {
-                        $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = array('free'=>0, 32=>0, 48=>0, 56=>0, 64=>0, 80=>0, 96=>0, 112=>0, 128=>0, 144=>0, 160=>0, 176=>0, 192=>0, 224=>0, 256=>0);
+                        $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = ['free'=>0, 32=>0, 48=>0, 56=>0, 64=>0, 80=>0, 96=>0, 112=>0, 128=>0, 144=>0, 160=>0, 176=>0, 192=>0, 224=>0, 256=>0];
                     } else {
-                        $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = array('free'=>0, 8=>0, 16=>0, 24=>0, 32=>0, 40=>0, 48=>0, 56=>0, 64=>0, 80=>0, 96=>0, 112=>0, 128=>0, 144=>0, 160=>0);
+                        $ThisFileInfo['mpeg']['audio']['bitrate_distribution'] = ['free'=>0, 8=>0, 16=>0, 24=>0, 32=>0, 40=>0, 48=>0, 56=>0, 64=>0, 80=>0, 96=>0, 112=>0, 128=>0, 144=>0, 160=>0];
                     }
 
-                    $dummy = array('error'=>$ThisFileInfo['error'], 'warning'=>$ThisFileInfo['warning'], 'avdataend'=>$ThisFileInfo['avdataend'], 'avdataoffset'=>$ThisFileInfo['avdataoffset']);
+                    $dummy = ['error'=>$ThisFileInfo['error'], 'warning'=>$ThisFileInfo['warning'], 'avdataend'=>$ThisFileInfo['avdataend'], 'avdataoffset'=>$ThisFileInfo['avdataoffset']];
                     $synchstartoffset = $ThisFileInfo['avdataoffset'];
 
                     $FastMode = false;
@@ -2605,13 +2605,13 @@ function getOnlyMPEGaudioInfo($fd, &$ThisFileInfo, $avdataoffset, $BitrateHistog
 
 function MPEGaudioVersionArray()
 {
-    static $MPEGaudioVersion = array('2.5', false, '2', '1');
+    static $MPEGaudioVersion = ['2.5', false, '2', '1'];
     return $MPEGaudioVersion;
 }
 
 function MPEGaudioLayerArray()
 {
-    static $MPEGaudioLayer = array(false, 'III', 'II', 'I');
+    static $MPEGaudioLayer = [false, 'III', 'II', 'I'];
     return $MPEGaudioLayer;
 }
 
@@ -2619,11 +2619,11 @@ function MPEGaudioBitrateArray()
 {
     static $MPEGaudioBitrate;
     if (empty($MPEGaudioBitrate)) {
-        $MPEGaudioBitrate['1']['I']     = array('free', 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448);
-        $MPEGaudioBitrate['1']['II']    = array('free', 32, 48, 56,  64,  80,  96, 112, 128, 160, 192, 224, 256, 320, 384);
-        $MPEGaudioBitrate['1']['III']   = array('free', 32, 40, 48,  56,  64,  80,  96, 112, 128, 160, 192, 224, 256, 320);
-        $MPEGaudioBitrate['2']['I']     = array('free', 32, 48, 56,  64,  80,  96, 112, 128, 144, 160, 176, 192, 224, 256);
-        $MPEGaudioBitrate['2']['II']    = array('free',  8, 16, 24,  32,  40,  48,  56,  64,  80,  96, 112, 128, 144, 160);
+        $MPEGaudioBitrate['1']['I']     = ['free', 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448];
+        $MPEGaudioBitrate['1']['II']    = ['free', 32, 48, 56,  64,  80,  96, 112, 128, 160, 192, 224, 256, 320, 384];
+        $MPEGaudioBitrate['1']['III']   = ['free', 32, 40, 48,  56,  64,  80,  96, 112, 128, 160, 192, 224, 256, 320];
+        $MPEGaudioBitrate['2']['I']     = ['free', 32, 48, 56,  64,  80,  96, 112, 128, 144, 160, 176, 192, 224, 256];
+        $MPEGaudioBitrate['2']['II']    = ['free',  8, 16, 24,  32,  40,  48,  56,  64,  80,  96, 112, 128, 144, 160];
         $MPEGaudioBitrate['2']['III']   = $MPEGaudioBitrate['2']['II'];
         $MPEGaudioBitrate['2.5']['I']   = $MPEGaudioBitrate['2']['I'];
         $MPEGaudioBitrate['2.5']['II']  = $MPEGaudioBitrate['2']['II'];
@@ -2636,16 +2636,16 @@ function MPEGaudioFrequencyArray()
 {
     static $MPEGaudioFrequency;
     if (empty($MPEGaudioFrequency)) {
-        $MPEGaudioFrequency['1']   = array(44100, 48000, 32000);
-        $MPEGaudioFrequency['2']   = array(22050, 24000, 16000);
-        $MPEGaudioFrequency['2.5'] = array(11025, 12000,  8000);
+        $MPEGaudioFrequency['1']   = [44100, 48000, 32000];
+        $MPEGaudioFrequency['2']   = [22050, 24000, 16000];
+        $MPEGaudioFrequency['2.5'] = [11025, 12000,  8000];
     }
     return $MPEGaudioFrequency;
 }
 
 function MPEGaudioChannelModeArray()
 {
-    static $MPEGaudioChannelMode = array('stereo', 'joint stereo', 'dual channel', 'mono');
+    static $MPEGaudioChannelMode = ['stereo', 'joint stereo', 'dual channel', 'mono'];
     return $MPEGaudioChannelMode;
 }
 
@@ -2653,16 +2653,16 @@ function MPEGaudioModeExtensionArray()
 {
     static $MPEGaudioModeExtension;
     if (empty($MPEGaudioModeExtension)) {
-        $MPEGaudioModeExtension['I']   = array('4-31', '8-31', '12-31', '16-31');
-        $MPEGaudioModeExtension['II']  = array('4-31', '8-31', '12-31', '16-31');
-        $MPEGaudioModeExtension['III'] = array('', 'IS', 'MS', 'IS+MS');
+        $MPEGaudioModeExtension['I']   = ['4-31', '8-31', '12-31', '16-31'];
+        $MPEGaudioModeExtension['II']  = ['4-31', '8-31', '12-31', '16-31'];
+        $MPEGaudioModeExtension['III'] = ['', 'IS', 'MS', 'IS+MS'];
     }
     return $MPEGaudioModeExtension;
 }
 
 function MPEGaudioEmphasisArray()
 {
-    static $MPEGaudioEmphasis = array('none', '50/15ms', false, 'CCIT J.17');
+    static $MPEGaudioEmphasis = ['none', '50/15ms', false, 'CCIT J.17'];
     return $MPEGaudioEmphasis;
 }
 
@@ -2797,7 +2797,7 @@ function MPEGaudioHeaderDecode($Header4Bytes)
 
 function MPEGaudioFrameLength(&$bitrate, &$version, &$layer, $padding, &$samplerate)
 {
-    static $AudioFrameLengthCache = array();
+    static $AudioFrameLengthCache = [];
 
     if (!isset($AudioFrameLengthCache[$bitrate][$version][$layer][$padding][$samplerate])) {
         $AudioFrameLengthCache[$bitrate][$version][$layer][$padding][$samplerate] = false;
@@ -2849,7 +2849,7 @@ function MPEGaudioFrameLength(&$bitrate, &$version, &$layer, $padding, &$sampler
 
 function LAMEvbrMethodLookup($VBRmethodID)
 {
-    static $LAMEvbrMethodLookup = array();
+    static $LAMEvbrMethodLookup = [];
     if (empty($LAMEvbrMethodLookup)) {
         $LAMEvbrMethodLookup[0x00] = 'unknown';
         $LAMEvbrMethodLookup[0x01] = 'cbr';
@@ -2863,7 +2863,7 @@ function LAMEvbrMethodLookup($VBRmethodID)
 
 function LAMEmiscStereoModeLookup($StereoModeID)
 {
-    static $LAMEmiscStereoModeLookup = array();
+    static $LAMEmiscStereoModeLookup = [];
     if (empty($LAMEmiscStereoModeLookup)) {
         $LAMEmiscStereoModeLookup[0] = 'mono';
         $LAMEmiscStereoModeLookup[1] = 'stereo';
@@ -2879,7 +2879,7 @@ function LAMEmiscStereoModeLookup($StereoModeID)
 
 function LAMEmiscSourceSampleFrequencyLookup($SourceSampleFrequencyID)
 {
-    static $LAMEmiscSourceSampleFrequencyLookup = array();
+    static $LAMEmiscSourceSampleFrequencyLookup = [];
     if (empty($LAMEmiscSourceSampleFrequencyLookup)) {
         $LAMEmiscSourceSampleFrequencyLookup[0] = '<= 32 kHz';
         $LAMEmiscSourceSampleFrequencyLookup[1] = '44.1 kHz';
@@ -2891,7 +2891,7 @@ function LAMEmiscSourceSampleFrequencyLookup($SourceSampleFrequencyID)
 
 function LAMEsurroundInfoLookup($SurroundInfoID)
 {
-    static $LAMEsurroundInfoLookup = array();
+    static $LAMEsurroundInfoLookup = [];
     if (empty($LAMEsurroundInfoLookup)) {
         $LAMEsurroundInfoLookup[0] = 'no surround info';
         $LAMEsurroundInfoLookup[1] = 'DPL encoding';

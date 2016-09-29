@@ -36,7 +36,7 @@ class ZipStream
     private $zipMemoryThreshold = 1048576; // Autocreate tempfile if the zip data exceeds 1048576 bytes (1 MB)
 
     private $zipComment = null;
-    private $cdRec = array(); // central directory
+    private $cdRec = []; // central directory
     private $offset = 0;
     private $isFinalized = false;
     private $addExtraField = true;
@@ -199,7 +199,7 @@ class ZipStream
      *                               If you start the function by parsing an array, the array will be populated with the realPath
      *                               and zipPath kay/value pairs added to the archive by the function.
      */
-    public function addDirectoryContent($realPath, $zipPath, $recursive = true, $followSymlinks = true, &$addedFiles = array())
+    public function addDirectoryContent($realPath, $zipPath, $recursive = true, $followSymlinks = true, &$addedFiles = [])
     {
         if (file_exists($realPath) && !isset($addedFiles[realpath($realPath)])) {
             if (is_dir($realPath)) {
@@ -566,7 +566,7 @@ class ZipStream
             $dirs = array_splice($dirs, 1);
         }
 
-        $newDirs = array();
+        $newDirs = [];
         foreach ($dirs as $dir) {
             if ($dir !== "..") {
                 $subOffset--;

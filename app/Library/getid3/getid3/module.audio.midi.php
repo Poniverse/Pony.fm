@@ -26,7 +26,7 @@ class getid3_midi extends getid3_handler
         $info = &$this->getid3->info;
 
         // shortcut
-        $info['midi']['raw'] = array();
+        $info['midi']['raw'] = [];
         $thisfile_midi               = &$info['midi'];
         $thisfile_midi_raw           = &$thisfile_midi['raw'];
 
@@ -88,7 +88,7 @@ class getid3_midi extends getid3_handler
             $info['playtime_seconds'] = 0;
             $CurrentMicroSecondsPerBeat       = 500000; // 120 beats per minute;  60,000,000 microseconds per minute -> 500,000 microseconds per beat
             $CurrentBeatsPerMinute            = 120;    // 120 beats per minute;  60,000,000 microseconds per minute -> 500,000 microseconds per beat
-            $MicroSecondsPerQuarterNoteAfter  = array ();
+            $MicroSecondsPerQuarterNoteAfter  =  [];
 
             foreach ($trackdataarray as $tracknumber => $trackdata) {
                 $eventsoffset               = 0;
@@ -246,7 +246,7 @@ class getid3_midi extends getid3_handler
                                 }
 
                                 $keysig_majorminor  = getid3_lib::BigEndian2Int($METAeventData{1}); // 0 -> major, 1 -> minor
-                                $keysigs = array(-7=>'Cb', -6=>'Gb', -5=>'Db', -4=>'Ab', -3=>'Eb', -2=>'Bb', -1=>'F', 0=>'C', 1=>'G', 2=>'D', 3=>'A', 4=>'E', 5=>'B', 6=>'F#', 7=>'C#');
+                                $keysigs = [-7=>'Cb', -6=>'Gb', -5=>'Db', -4=>'Ab', -3=>'Eb', -2=>'Bb', -1=>'F', 0=>'C', 1=>'G', 2=>'D', 3=>'A', 4=>'E', 5=>'B', 6=>'F#', 7=>'C#'];
                                 //$thisfile_midi_raw['events'][$tracknumber][$eventid]['keysig_sharps'] = (($keysig_sharpsflats > 0) ? abs($keysig_sharpsflats) : 0);
                                 //$thisfile_midi_raw['events'][$tracknumber][$eventid]['keysig_flats']  = (($keysig_sharpsflats < 0) ? abs($keysig_sharpsflats) : 0);
                                 //$thisfile_midi_raw['events'][$tracknumber][$eventid]['keysig_minor']  = (bool) $keysig_majorminor;

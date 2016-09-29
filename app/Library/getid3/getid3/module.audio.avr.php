@@ -98,7 +98,7 @@ class getid3_avr extends getid3_handler
         $info['avr']['flags']['signed'] = (($info['avr']['raw']['signed'] == 0) ? false : true);
         $info['avr']['flags']['loop']   = (($info['avr']['raw']['loop']   == 0) ? false : true);
 
-        $info['avr']['midi_notes'] = array();
+        $info['avr']['midi_notes'] = [];
         if (($info['avr']['raw']['midi'] & 0xFF00) != 0xFF00) {
             $info['avr']['midi_notes'][] = ($info['avr']['raw']['midi'] & 0xFF00) >> 8;
         }

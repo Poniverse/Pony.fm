@@ -226,7 +226,7 @@ class getID3_cached_sqlite3 extends getID3
     public function get_cached_dir($dir)
     {
         $db = $this->db;
-        $rows = array();
+        $rows = [];
         $sql = $this->get_cached_dir;
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':dirname', $dir, SQLITE3_TEXT);

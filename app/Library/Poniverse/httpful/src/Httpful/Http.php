@@ -21,7 +21,7 @@ class Http
      */
     public static function safeMethods()
     {
-        return array(self::HEAD, self::GET, self::OPTIONS, self::TRACE);
+        return [self::HEAD, self::GET, self::OPTIONS, self::TRACE];
     }
 
     /**
@@ -50,7 +50,7 @@ class Http
         // Though it is possible to be idempotent, POST
         // is not guarunteed to be, and more often than
         // not, it is not.
-        return array(self::HEAD, self::GET, self::PUT, self::DELETE, self::OPTIONS, self::TRACE, self::PATCH);
+        return [self::HEAD, self::GET, self::PUT, self::DELETE, self::OPTIONS, self::TRACE, self::PATCH];
     }
 
     /**
@@ -80,6 +80,6 @@ class Http
      */
     public static function canHaveBody()
     {
-        return array(self::POST, self::PUT, self::PATCH, self::OPTIONS);
+        return [self::POST, self::PUT, self::PATCH, self::OPTIONS];
     }
 }

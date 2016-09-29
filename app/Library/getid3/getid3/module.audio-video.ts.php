@@ -80,7 +80,7 @@ class getid3_ts extends getid3_handler
 
     public function TSscramblingControlLookup($raw)
     {
-        $TSscramblingControlLookup = array(0x00=>'not scrambled', 0x01=>'reserved', 0x02=>'scrambled, even key', 0x03=>'scrambled, odd key');
+        $TSscramblingControlLookup = [0x00=>'not scrambled', 0x01=>'reserved', 0x02=>'scrambled, even key', 0x03=>'scrambled, odd key'];
         return (isset($TSscramblingControlLookup[$raw]) ? $TSscramblingControlLookup[$raw] : 'invalid');
     }
 }

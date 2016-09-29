@@ -40,9 +40,9 @@ class NativeDriver extends AbstractDriver
     private function pushNotifications(Activity $activity, $recipients)
     {
         if (Config::get('ponyfm.gcm_key') != 'default') {
-            $apiKeys = array(
+            $apiKeys = [
                 'GCM' => Config::get('ponyfm.gcm_key'),
-            );
+            ];
 
             $webPush = new WebPush($apiKeys);
 

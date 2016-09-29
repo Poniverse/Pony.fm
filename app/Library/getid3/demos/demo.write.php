@@ -25,7 +25,7 @@ echo '<html><head><title>getID3() - Sample tag writer</title></head><style type=
 require_once('../getid3/getid3.php');
 // Initialize getID3 engine
 $getID3 = new getID3;
-$getID3->setOption(array('encoding'=>$TaggingFormat));
+$getID3->setOption(['encoding'=>$TaggingFormat]);
 
 getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.php', __FILE__, true);
 
@@ -36,7 +36,7 @@ $Filename = (isset($_REQUEST['Filename']) ? $_REQUEST['Filename'] : '');
 
 
 if (isset($_POST['WriteTags'])) {
-    $TagFormatsToWrite = (isset($_POST['TagFormatsToWrite']) ? $_POST['TagFormatsToWrite'] : array());
+    $TagFormatsToWrite = (isset($_POST['TagFormatsToWrite']) ? $_POST['TagFormatsToWrite'] : []);
     if (!empty($TagFormatsToWrite)) {
         echo 'starting to write tag(s)<BR>';
 
@@ -49,7 +49,7 @@ if (isset($_POST['WriteTags'])) {
             $tagwriter->remove_other_tags = true;
         }
 
-        $commonkeysarray = array('Title', 'Artist', 'Album', 'Year', 'Comment');
+        $commonkeysarray = ['Title', 'Artist', 'Album', 'Year', 'Comment'];
         foreach ($commonkeysarray as $key) {
             if (!empty($_POST[$key])) {
                 $TagData[strtolower($key)][] = $_POST[$key];
@@ -75,7 +75,7 @@ if (isset($_POST['WriteTags'])) {
                         fclose($fd);
 
                         list($APIC_width, $APIC_height, $APIC_imageTypeID) = GetImageSize($_FILES['userfile']['tmp_name']);
-                        $imagetypes = array(1=>'gif', 2=>'jpeg', 3=>'png');
+                        $imagetypes = [1=>'gif', 2=>'jpeg', 3=>'png'];
                         if (isset($imagetypes[$APIC_imageTypeID])) {
                             $TagData['attached_picture'][0]['data']          = $APICdata;
                             $TagData['attached_picture'][0]['picturetypeid'] = $_POST['APICpictureType'];
@@ -130,33 +130,33 @@ if (!empty($Filename)) {
             case 'mp3':
             case 'mp2':
             case 'mp1':
-                $ValidTagTypes = array('id3v1', 'id3v2.3', 'ape');
+                $ValidTagTypes = ['id3v1', 'id3v2.3', 'ape'];
                 break;
 
             case 'mpc':
-                $ValidTagTypes = array('ape');
+                $ValidTagTypes = ['ape'];
                 break;
 
             case 'ogg':
                 if (!empty($OldThisFileInfo['audio']['dataformat']) && ($OldThisFileInfo['audio']['dataformat'] == 'flac')) {
                     //$ValidTagTypes = array('metaflac');
                     // metaflac doesn't (yet) work with OggFLAC files
-                    $ValidTagTypes = array();
+                    $ValidTagTypes = [];
                 } else {
-                    $ValidTagTypes = array('vorbiscomment');
+                    $ValidTagTypes = ['vorbiscomment'];
                 }
                 break;
 
             case 'flac':
-                $ValidTagTypes = array('metaflac');
+                $ValidTagTypes = ['metaflac'];
                 break;
 
             case 'real':
-                $ValidTagTypes = array('real');
+                $ValidTagTypes = ['real'];
                 break;
 
             default:
-                $ValidTagTypes = array();
+                $ValidTagTypes = [];
                 break;
         }
         echo '<tr><td align="right"><b>Title</b></td> <td><input type="text" size="40" name="Title"  value="'.htmlentities((!empty($OldThisFileInfo['comments']['title'])  ? implode(', ', $OldThisFileInfo['comments']['title']) : ''), ENT_QUOTES).'"></td></tr>';
@@ -171,7 +171,7 @@ if (!empty($Filename)) {
         } elseif (!empty($OldThisFileInfo['comments']['track']) && is_array($OldThisFileInfo['comments']['track'])) {
             $RawTrackNumberArray = $OldThisFileInfo['comments']['track'];
         } else {
-            $RawTrackNumberArray = array();
+            $RawTrackNumberArray = [];
         }
         foreach ($RawTrackNumberArray as $key => $value) {
             if (strlen($value) > strlen($TrackNumber)) {
@@ -197,7 +197,7 @@ if (!empty($Filename)) {
         $ArrayOfGenres['Remix'] = '-Remix-';
         asort($ArrayOfGenres);                                // sort into alphabetical order
         echo '<tr><th align="right">Genre</th><td><select name="Genre">';
-        $AllGenresArray = (!empty($OldThisFileInfo['comments']['genre']) ? $OldThisFileInfo['comments']['genre'] : array());
+        $AllGenresArray = (!empty($OldThisFileInfo['comments']['genre']) ? $OldThisFileInfo['comments']['genre'] : []);
         foreach ($ArrayOfGenres as $key => $value) {
             echo '<option value="'.htmlentities($key, ENT_QUOTES).'"';
             if (in_array($key, $AllGenresArray)) {

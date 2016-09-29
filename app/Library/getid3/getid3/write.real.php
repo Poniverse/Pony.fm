@@ -17,10 +17,10 @@
 class getid3_write_real
 {
     public $filename;
-    public $tag_data          = array();
+    public $tag_data          = [];
     public $fread_buffer_size = 32768;   // read buffer size in bytes
-    public $warnings          = array(); // any non-critical errors will be stored here
-    public $errors            = array(); // any critical errors will be stored here
+    public $warnings          = []; // any non-critical errors will be stored here
+    public $errors            = []; // any critical errors will be stored here
     public $paddedlength      = 512;     // minimum length of CONT tag in bytes
 
     public function __construct()

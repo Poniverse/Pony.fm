@@ -30,7 +30,7 @@ class getid3_monkey extends getid3_handler
         $info['audio']['bitrate_mode'] = 'vbr';
         $info['audio']['lossless']     = true;
 
-        $info['monkeys_audio']['raw'] = array();
+        $info['monkeys_audio']['raw'] = [];
         $thisfile_monkeysaudio                = &$info['monkeys_audio'];
         $thisfile_monkeysaudio_raw            = &$thisfile_monkeysaudio['raw'];
 
@@ -180,14 +180,14 @@ class getid3_monkey extends getid3_handler
 
     public function MonkeyCompressionLevelNameLookup($compressionlevel)
     {
-        static $MonkeyCompressionLevelNameLookup = array(
+        static $MonkeyCompressionLevelNameLookup = [
             0     => 'unknown',
             1000  => 'fast',
             2000  => 'normal',
             3000  => 'high',
             4000  => 'extra-high',
             5000  => 'insane'
-        );
+        ];
         return (isset($MonkeyCompressionLevelNameLookup[$compressionlevel]) ? $MonkeyCompressionLevelNameLookup[$compressionlevel] : 'invalid');
     }
 

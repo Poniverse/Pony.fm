@@ -16,7 +16,7 @@ final class Headers implements \ArrayAccess, \Countable
     {
         $lines = preg_split("/(\r|\n)+/", $string, -1, PREG_SPLIT_NO_EMPTY);
         array_shift($lines); // HTTP HEADER
-        $headers = array();
+        $headers = [];
         foreach ($lines as $line) {
             list($name, $value) = explode(':', $line, 2);
             $headers[strtolower(trim($name))] = trim($value);

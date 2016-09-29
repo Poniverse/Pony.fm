@@ -5,7 +5,7 @@ require(__DIR__ . '/../bootstrap.php');
 // a parser with different configuration options for a particular mime type
 
 // Example setting a namespace for the XMLHandler parser
-$conf = array('namespace' => 'http://example.com');
+$conf = ['namespace' => 'http://example.com'];
 \Httpful\Httpful::register(\Httpful\Mime::XML, new \Httpful\Handlers\XmlHandler($conf));
 
 // We can also add the parsers with our own...

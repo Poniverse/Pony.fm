@@ -87,11 +87,11 @@ class AudioInfo
 
         // Exit here on error
         if (isset($this->info['error'])) {
-            return array ('error' => $this->info['error']);
+            return  ['error' => $this->info['error']];
         }
 
         // Init wrapper object
-        $this->result = array();
+        $this->result = [];
         $this->result['format_name']     = (isset($this->info['fileformat']) ? $this->info['fileformat'] : '').'/'.(isset($this->info['audio']['dataformat']) ? $this->info['audio']['dataformat'] : '').(isset($this->info['video']['dataformat']) ? '/'.$this->info['video']['dataformat'] : '');
         $this->result['encoder_version'] = (isset($this->info['audio']['encoder'])         ? $this->info['audio']['encoder']         : '');
         $this->result['encoder_options'] = (isset($this->info['audio']['encoder_options']) ? $this->info['audio']['encoder_options'] : '');

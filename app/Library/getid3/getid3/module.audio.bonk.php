@@ -22,7 +22,7 @@ class getid3_bonk extends getid3_handler
         $info = &$this->getid3->info;
 
         // shortcut
-        $info['bonk'] = array();
+        $info['bonk'] = [];
         $thisfile_bonk        = &$info['bonk'];
 
         $thisfile_bonk['dataoffset'] = $info['avdataoffset'];
@@ -210,7 +210,7 @@ class getid3_bonk extends getid3_handler
 
     public static function BonkIsValidTagName($PossibleBonkTag, $ignorecase = false)
     {
-        static $BonkIsValidTagName = array('BONK', 'INFO', ' ID3', 'META');
+        static $BonkIsValidTagName = ['BONK', 'INFO', ' ID3', 'META'];
         foreach ($BonkIsValidTagName as $validtagname) {
             if ($validtagname == $PossibleBonkTag) {
                 return true;

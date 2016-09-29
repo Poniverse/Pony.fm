@@ -32,7 +32,7 @@ class getid3_jpg extends getid3_handler
 
         $this->fseek($info['avdataoffset']);
 
-        $imageinfo = array();
+        $imageinfo = [];
         //list($width, $height, $type) = getid3_lib::GetDataImageSize($this->fread($info['filesize']), $imageinfo);
         list($width, $height, $type) = getimagesize($info['filenamepath'], $imageinfo); // http://www.getid3.org/phpBB3/viewtopic.php?t=1474
 
@@ -51,7 +51,7 @@ class getid3_jpg extends getid3_handler
                         if (isset($info['iptc']['comments'][$IPTCrecordName][$IPTCrecordTagName])) {
                             $info['iptc']['comments'][$IPTCrecordName][$IPTCrecordTagName][] = $value;
                         } else {
-                            $info['iptc']['comments'][$IPTCrecordName][$IPTCrecordTagName] = array($value);
+                            $info['iptc']['comments'][$IPTCrecordName][$IPTCrecordTagName] = [$value];
                         }
                     }
                 }
@@ -85,7 +85,7 @@ class getid3_jpg extends getid3_handler
         }
 
 
-        $cast_as_appropriate_keys = array('EXIF', 'IFD0', 'THUMBNAIL');
+        $cast_as_appropriate_keys = ['EXIF', 'IFD0', 'THUMBNAIL'];
         foreach ($cast_as_appropriate_keys as $exif_key) {
             if (isset($info['jpg']['exif'][$exif_key])) {
                 foreach ($info['jpg']['exif'][$exif_key] as $key => $value) {
@@ -109,7 +109,7 @@ class getid3_jpg extends getid3_handler
                 $computed_time[3] = (isset($explodedGPSDateStamp[1]) ? $explodedGPSDateStamp[1] : '');
                 $computed_time[4] = (isset($explodedGPSDateStamp[2]) ? $explodedGPSDateStamp[2] : '');
 
-                $computed_time = array(0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0);
+                $computed_time = [0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0];
                 if (isset($info['jpg']['exif']['GPS']['GPSTimeStamp']) && is_array($info['jpg']['exif']['GPS']['GPSTimeStamp'])) {
                     foreach ($info['jpg']['exif']['GPS']['GPSTimeStamp'] as $key => $value) {
                         $computed_time[$key] = getid3_lib::DecimalizeFraction($value);
@@ -183,16 +183,16 @@ class getid3_jpg extends getid3_handler
     public function IPTCrecordName($iptc_record)
     {
         // http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html
-        static $IPTCrecordName = array();
+        static $IPTCrecordName = [];
         if (empty($IPTCrecordName)) {
-            $IPTCrecordName = array(
+            $IPTCrecordName = [
                 1 => 'IPTCEnvelope',
                 2 => 'IPTCApplication',
                 3 => 'IPTCNewsPhoto',
                 7 => 'IPTCPreObjectData',
                 8 => 'IPTCObjectData',
                 9 => 'IPTCPostObjectData',
-            );
+            ];
         }
         return (isset($IPTCrecordName[$iptc_record]) ? $IPTCrecordName[$iptc_record] : '');
     }
@@ -201,10 +201,10 @@ class getid3_jpg extends getid3_handler
     public function IPTCrecordTagName($iptc_record, $iptc_tagkey)
     {
         // http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/IPTC.html
-        static $IPTCrecordTagName = array();
+        static $IPTCrecordTagName = [];
         if (empty($IPTCrecordTagName)) {
-            $IPTCrecordTagName = array(
-                1 => array( // IPTC EnvelopeRecord Tags
+            $IPTCrecordTagName = [
+                1 => [ // IPTC EnvelopeRecord Tags
                     0   => 'EnvelopeRecordVersion',
                     5   => 'Destination',
                     20  => 'FileFormat',
@@ -219,8 +219,8 @@ class getid3_jpg extends getid3_handler
                     100 => 'UniqueObjectName',
                     120 => 'ARMIdentifier',
                     122 => 'ARMVersion',
-                ),
-                2 => array( // IPTC ApplicationRecord Tags
+                ],
+                2 => [ // IPTC ApplicationRecord Tags
                     0   => 'ApplicationRecordVersion',
                     3   => 'ObjectTypeReference',
                     4   => 'ObjectAttributeReference',
@@ -290,8 +290,8 @@ class getid3_jpg extends getid3_handler
                     230 => 'DocumentNotes',
                     231 => 'DocumentHistory',
                     232 => 'ExifCameraInfo',
-                ),
-                3 => array( // IPTC NewsPhoto Tags
+                ],
+                3 => [ // IPTC NewsPhoto Tags
                     0   => 'NewsPhotoVersion',
                     10  => 'IPTCPictureNumber',
                     20  => 'IPTCImageWidth',
@@ -318,20 +318,20 @@ class getid3_jpg extends getid3_handler
                     135 => 'BitsPerComponent',
                     140 => 'MaximumDensityRange',
                     145 => 'GammaCompensatedValue',
-                ),
-                7 => array( // IPTC PreObjectData Tags
+                ],
+                7 => [ // IPTC PreObjectData Tags
                     10  => 'SizeMode',
                     20  => 'MaxSubfileSize',
                     90  => 'ObjectSizeAnnounced',
                     95  => 'MaximumObjectSize',
-                ),
-                8 => array( // IPTC ObjectData Tags
+                ],
+                8 => [ // IPTC ObjectData Tags
                     10  => 'SubFile',
-                ),
-                9 => array( // IPTC PostObjectData Tags
+                ],
+                9 => [ // IPTC PostObjectData Tags
                     10  => 'ConfirmedObjectSize',
-                ),
-            );
+                ],
+            ];
         }
         return (isset($IPTCrecordTagName[$iptc_record][$iptc_tagkey]) ? $IPTCrecordTagName[$iptc_record][$iptc_tagkey] : $iptc_tagkey);
     }

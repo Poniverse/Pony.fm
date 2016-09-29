@@ -20,8 +20,8 @@ class getid3_write_vorbiscomment
 
     public $filename;
     public $tag_data;
-    public $warnings = array(); // any non-critical errors will be stored here
-    public $errors   = array(); // any critical errors will be stored here
+    public $warnings = []; // any non-critical errors will be stored here
+    public $errors   = []; // any critical errors will be stored here
 
     public function __construct()
     {
@@ -96,7 +96,7 @@ class getid3_write_vorbiscomment
 
     public function DeleteVorbisComment()
     {
-        $this->tag_data = array(array());
+        $this->tag_data = [[]];
         return $this->WriteVorbisComment();
     }
 

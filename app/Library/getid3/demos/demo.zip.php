@@ -15,8 +15,8 @@
 
 function UnzipFileContents($filename, &$errors)
 {
-    $errors = array();
-    $DecompressedFileContents = array();
+    $errors = [];
+    $DecompressedFileContents = [];
     if (!class_exists('getID3')) {
         $errors[] = 'class getID3 not defined, please include getid3.php';
     } elseif (include_once('module.archive.zip.php')) {

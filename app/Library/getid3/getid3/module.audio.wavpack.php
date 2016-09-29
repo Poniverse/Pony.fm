@@ -144,7 +144,7 @@ class getid3_wavpack extends getid3_handler
             }
 
             while (!feof($this->getid3->fp) && ($this->ftell() < ($blockheader_offset + $blockheader_size + 8))) {
-                $metablock = array('offset'=>$this->ftell());
+                $metablock = ['offset'=>$this->ftell()];
                 $metablockheader = $this->fread(2);
                 if (feof($this->getid3->fp)) {
                     break;
@@ -361,7 +361,7 @@ class getid3_wavpack extends getid3_handler
 
     public function WavPackMetablockNameLookup(&$id)
     {
-        static $WavPackMetablockNameLookup = array(
+        static $WavPackMetablockNameLookup = [
             0x00 => 'Dummy',
             0x01 => 'Encoder Info',
             0x02 => 'Decorrelation Terms',
@@ -382,7 +382,7 @@ class getid3_wavpack extends getid3_handler
             0x24 => 'Cuesheet',
             0x25 => 'Config Block',
             0x26 => 'MD5 Checksum',
-        );
+        ];
         return (isset($WavPackMetablockNameLookup[$id]) ? $WavPackMetablockNameLookup[$id] : '');
     }
 }

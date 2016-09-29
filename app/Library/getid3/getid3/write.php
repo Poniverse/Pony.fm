@@ -49,8 +49,8 @@ class getid3_writetags
 {
     // public
     public $filename;                            // absolute filename of file to write tags to
-    public $tagformats         = array();        // array of tag formats to write ('id3v1', 'id3v2.2', 'id2v2.3', 'id3v2.4', 'ape', 'vorbiscomment', 'metaflac', 'real')
-    public $tag_data           = array(array()); // 2-dimensional array of tag data (ex: $data['ARTIST'][0] = 'Elvis')
+    public $tagformats         = [];        // array of tag formats to write ('id3v1', 'id3v2.2', 'id2v2.3', 'id3v2.4', 'ape', 'vorbiscomment', 'metaflac', 'real')
+    public $tag_data           = [[]]; // 2-dimensional array of tag data (ex: $data['ARTIST'][0] = 'Elvis')
     public $tag_encoding       = 'ISO-8859-1';   // text encoding used for tag data ('ISO-8859-1', 'UTF-8', 'UTF-16', 'UTF-16LE', 'UTF-16BE', )
     public $overwrite_tags     = true;          // if true will erase existing tag data and write only passed data; if false will merge passed data with existing tag data
     public $remove_other_tags  = false;          // if true will erase remove all existing tags and only write those passed in $tagformats; if false will ignore any tags not mentioned in $tagformats
@@ -58,8 +58,8 @@ class getid3_writetags
     public $id3v2_tag_language = 'eng';          // ISO-639-2 3-character language code needed for some ID3v2 frames (http://www.id3.org/iso639-2.html)
     public $id3v2_paddedlength = 4096;           // minimum length of ID3v2 tags (will be padded to this length if tag data is shorter)
 
-    public $warnings           = array();        // any non-critical errors will be stored here
-    public $errors             = array();        // any critical errors will be stored here
+    public $warnings           = [];        // any non-critical errors will be stored here
+    public $errors             = [];        // any critical errors will be stored here
 
     // private
     private $ThisFileInfo; // analysis of file before writing
@@ -86,12 +86,12 @@ class getid3_writetags
             return false;
         }
 
-        $TagFormatsToRemove = array();
+        $TagFormatsToRemove = [];
         if (filesize($this->filename) == 0) {
             // empty file special case - allow any tag format, don't check existing format
             // could be useful if you want to generate tag data for a non-existant file
-            $this->ThisFileInfo = array('fileformat'=>'');
-            $AllowedTagFormats = array('id3v1', 'id3v2.2', 'id3v2.3', 'id3v2.4', 'ape', 'lyrics3');
+            $this->ThisFileInfo = ['fileformat'=>''];
+            $AllowedTagFormats = ['id3v1', 'id3v2.2', 'id3v2.3', 'id3v2.4', 'ape', 'lyrics3'];
         } else {
             $getID3 = new getID3;
             $getID3->encoding = $this->tag_encoding;
@@ -103,19 +103,19 @@ class getid3_writetags
                 case 'mp2':
                 case 'mp1':
                 case 'riff': // maybe not officially, but people do it anyway
-                    $AllowedTagFormats = array('id3v1', 'id3v2.2', 'id3v2.3', 'id3v2.4', 'ape', 'lyrics3');
+                    $AllowedTagFormats = ['id3v1', 'id3v2.2', 'id3v2.3', 'id3v2.4', 'ape', 'lyrics3'];
                     break;
 
                 case 'mpc':
-                    $AllowedTagFormats = array('ape');
+                    $AllowedTagFormats = ['ape'];
                     break;
 
                 case 'flac':
-                    $AllowedTagFormats = array('metaflac');
+                    $AllowedTagFormats = ['metaflac'];
                     break;
 
                 case 'real':
-                    $AllowedTagFormats = array('real');
+                    $AllowedTagFormats = ['real'];
                     break;
 
                 case 'ogg':
@@ -126,7 +126,7 @@ class getid3_writetags
                             return false;
                             break;
                         case 'vorbis':
-                            $AllowedTagFormats = array('vorbiscomment');
+                            $AllowedTagFormats = ['vorbiscomment'];
                             break;
                         default:
                             $this->errors[] = 'metaflac is not (yet) compatible with Ogg files other than OggVorbis';
@@ -136,7 +136,7 @@ class getid3_writetags
                     break;
 
                 default:
-                    $AllowedTagFormats = array();
+                    $AllowedTagFormats = [];
                     break;
             }
             foreach ($this->tagformats as $requested_tag_format) {
@@ -424,7 +424,7 @@ class getid3_writetags
 
     public function FormatDataForAPE()
     {
-        $ape_tag_data = array();
+        $ape_tag_data = [];
         foreach ($this->tag_data as $tag_key => $valuearray) {
             switch ($tag_key) {
                 case 'ATTACHED_PICTURE':
@@ -461,12 +461,12 @@ class getid3_writetags
                 }
             }
         }
-        $tag_data_id3v1['title']   =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['TITLE']) ? $this->tag_data['TITLE']       : array())));
-        $tag_data_id3v1['artist']  =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['ARTIST']) ? $this->tag_data['ARTIST']      : array())));
-        $tag_data_id3v1['album']   =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['ALBUM']) ? $this->tag_data['ALBUM']       : array())));
-        $tag_data_id3v1['year']    =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['YEAR']) ? $this->tag_data['YEAR']        : array())));
-        $tag_data_id3v1['comment'] =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['COMMENT']) ? $this->tag_data['COMMENT']     : array())));
-        $tag_data_id3v1['track']   = intval(getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['TRACKNUMBER']) ? $this->tag_data['TRACKNUMBER'] : array()))));
+        $tag_data_id3v1['title']   =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['TITLE']) ? $this->tag_data['TITLE']       : [])));
+        $tag_data_id3v1['artist']  =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['ARTIST']) ? $this->tag_data['ARTIST']      : [])));
+        $tag_data_id3v1['album']   =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['ALBUM']) ? $this->tag_data['ALBUM']       : [])));
+        $tag_data_id3v1['year']    =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['YEAR']) ? $this->tag_data['YEAR']        : [])));
+        $tag_data_id3v1['comment'] =        getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['COMMENT']) ? $this->tag_data['COMMENT']     : [])));
+        $tag_data_id3v1['track']   = intval(getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['TRACKNUMBER']) ? $this->tag_data['TRACKNUMBER'] : []))));
         if ($tag_data_id3v1['track'] <= 0) {
             $tag_data_id3v1['track'] = '';
         }
@@ -477,11 +477,11 @@ class getid3_writetags
 
     public function FormatDataForID3v2($id3v2_majorversion)
     {
-        $tag_data_id3v2 = array();
+        $tag_data_id3v2 = [];
 
-        $ID3v2_text_encoding_lookup[2] = array('ISO-8859-1'=>0, 'UTF-16'=>1);
-        $ID3v2_text_encoding_lookup[3] = array('ISO-8859-1'=>0, 'UTF-16'=>1);
-        $ID3v2_text_encoding_lookup[4] = array('ISO-8859-1'=>0, 'UTF-16'=>1, 'UTF-16BE'=>2, 'UTF-8'=>3);
+        $ID3v2_text_encoding_lookup[2] = ['ISO-8859-1'=>0, 'UTF-16'=>1];
+        $ID3v2_text_encoding_lookup[3] = ['ISO-8859-1'=>0, 'UTF-16'=>1];
+        $ID3v2_text_encoding_lookup[4] = ['ISO-8859-1'=>0, 'UTF-16'=>1, 'UTF-16BE'=>2, 'UTF-8'=>3];
         foreach ($this->tag_data as $tag_key => $valuearray) {
             $ID3v2_framename = getid3_write_id3v2::ID3v2ShortFrameNameLookup($id3v2_majorversion, $tag_key);
             switch ($ID3v2_framename) {
@@ -600,10 +600,10 @@ class getid3_writetags
 
     public function FormatDataForReal()
     {
-        $tag_data_real['title']     = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['TITLE']) ? $this->tag_data['TITLE']     : array())));
-        $tag_data_real['artist']    = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['ARTIST']) ? $this->tag_data['ARTIST']    : array())));
-        $tag_data_real['copyright'] = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['COPYRIGHT']) ? $this->tag_data['COPYRIGHT'] : array())));
-        $tag_data_real['comment']   = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['COMMENT']) ? $this->tag_data['COMMENT']   : array())));
+        $tag_data_real['title']     = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['TITLE']) ? $this->tag_data['TITLE']     : [])));
+        $tag_data_real['artist']    = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['ARTIST']) ? $this->tag_data['ARTIST']    : [])));
+        $tag_data_real['copyright'] = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['COPYRIGHT']) ? $this->tag_data['COPYRIGHT'] : [])));
+        $tag_data_real['comment']   = getid3_lib::iconv_fallback($this->tag_encoding, 'ISO-8859-1', implode(' ', (isset($this->tag_data['COMMENT']) ? $this->tag_data['COMMENT']   : [])));
 
         $this->MergeExistingTagData('real', $tag_data_real);
         return $tag_data_real;

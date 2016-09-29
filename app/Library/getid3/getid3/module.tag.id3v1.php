@@ -111,7 +111,7 @@ class getid3_id3v1 extends getid3_handler
 
     public static function ArrayOfGenres($allowSCMPXextended = false)
     {
-        static $GenreLookup = array(
+        static $GenreLookup = [
             0    => 'Blues',
             1    => 'Classic Rock',
             2    => 'Country',
@@ -265,9 +265,9 @@ class getid3_id3v1 extends getid3_handler
 
             'CR' => 'Cover',
             'RX' => 'Remix'
-        );
+        ];
 
-        static $GenreLookupSCMPX = array();
+        static $GenreLookupSCMPX = [];
         if ($allowSCMPXextended && empty($GenreLookupSCMPX)) {
             $GenreLookupSCMPX = $GenreLookup;
             // http://www.geocities.co.jp/SiliconValley-Oakland/3664/alittle.html#GenreExtended

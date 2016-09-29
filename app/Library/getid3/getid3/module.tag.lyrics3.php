@@ -175,7 +175,7 @@ class getid3_lyrics3 extends getid3_handler
 
                     if (isset($ParsedLyrics3['raw']['IND'])) {
                         $i = 0;
-                        $flagnames = array('lyrics', 'timestamps', 'inhibitrandom');
+                        $flagnames = ['lyrics', 'timestamps', 'inhibitrandom'];
                         foreach ($flagnames as $flagname) {
                             if (strlen($ParsedLyrics3['raw']['IND']) > $i++) {
                                 $ParsedLyrics3['flags'][$flagname] = $this->IntString2Bool(substr($ParsedLyrics3['raw']['IND'], $i, 1 - 1));
@@ -183,7 +183,7 @@ class getid3_lyrics3 extends getid3_handler
                         }
                     }
 
-                    $fieldnametranslation = array('ETT'=>'title', 'EAR'=>'artist', 'EAL'=>'album', 'INF'=>'comment', 'AUT'=>'author');
+                    $fieldnametranslation = ['ETT'=>'title', 'EAR'=>'artist', 'EAL'=>'album', 'INF'=>'comment', 'AUT'=>'author'];
                     foreach ($fieldnametranslation as $key => $value) {
                         if (isset($ParsedLyrics3['raw'][$key])) {
                             $ParsedLyrics3['comments'][$value][] = trim($ParsedLyrics3['raw'][$key]);
@@ -246,7 +246,7 @@ class getid3_lyrics3 extends getid3_handler
     {
         $lyricsarray = explode("\r\n", $Lyrics3data['raw']['LYR']);
         foreach ($lyricsarray as $key => $lyricline) {
-            $regs = array();
+            $regs = [];
             unset($thislinetimestamps);
             while (preg_match('#^(\\[[0-9]{2}:[0-9]{2}\\])#', $lyricline, $regs)) {
                 $thislinetimestamps[] = $this->Lyrics3Timestamp2Seconds($regs[0]);

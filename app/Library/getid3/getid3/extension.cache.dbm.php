@@ -129,7 +129,7 @@ class getID3_cached_dbm extends getID3
         $this->dbm_filename = $dbm_filename;
 
         // Register destructor
-        register_shutdown_function(array($this, '__destruct'));
+        register_shutdown_function([$this, '__destruct']);
 
         // Check version number and clear cache if changed
         if (dba_fetch(getID3::VERSION, $this->dba) != getID3::VERSION) {
@@ -175,7 +175,7 @@ class getID3_cached_dbm extends getID3
         dba_insert(getID3::VERSION, getID3::VERSION, $this->dba);
 
         // Re-register shutdown function
-        register_shutdown_function(array($this, '__destruct'));
+        register_shutdown_function([$this, '__destruct']);
     }
 
 

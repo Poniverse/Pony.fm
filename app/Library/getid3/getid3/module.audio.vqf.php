@@ -30,7 +30,7 @@ class getid3_vqf extends getid3_handler
         $info['audio']['lossless']     = false;
 
         // shortcut
-        $info['vqf']['raw'] = array();
+        $info['vqf']['raw'] = [];
         $thisfile_vqf               = &$info['vqf'];
         $thisfile_vqf_raw           = &$thisfile_vqf['raw'];
 
@@ -75,7 +75,7 @@ class getid3_vqf extends getid3_handler
             switch ($ChunkName) {
                 case 'COMM':
                     // shortcut
-                    $thisfile_vqf['COMM'] = array();
+                    $thisfile_vqf['COMM'] = [];
                     $thisfile_vqf_COMM    = &$thisfile_vqf['COMM'];
 
                     $thisfile_vqf_COMM['channel_mode']   = getid3_lib::BigEndian2Int(substr($ChunkData, $chunkoffset, 4));
@@ -138,24 +138,24 @@ class getid3_vqf extends getid3_handler
 
     public function VQFchannelFrequencyLookup($frequencyid)
     {
-        static $VQFchannelFrequencyLookup = array(
+        static $VQFchannelFrequencyLookup = [
             11 => 11025,
             22 => 22050,
             44 => 44100
-        );
+        ];
         return (isset($VQFchannelFrequencyLookup[$frequencyid]) ? $VQFchannelFrequencyLookup[$frequencyid] : $frequencyid * 1000);
     }
 
     public function VQFcommentNiceNameLookup($shortname)
     {
-        static $VQFcommentNiceNameLookup = array(
+        static $VQFcommentNiceNameLookup = [
             'NAME' => 'title',
             'AUTH' => 'artist',
             '(c) ' => 'copyright',
             'FILE' => 'filename',
             'COMT' => 'comment',
             'ALBM' => 'album'
-        );
+        ];
         return (isset($VQFcommentNiceNameLookup[$shortname]) ? $VQFcommentNiceNameLookup[$shortname] : $shortname);
     }
 }

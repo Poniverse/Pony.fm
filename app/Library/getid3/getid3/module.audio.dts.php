@@ -30,11 +30,11 @@ class getid3_dts extends getid3_handler
     /**
     * Possible syncwords indicating bitstream encoding
     */
-    public static $syncwords = array(
+    public static $syncwords = [
         0 => "\x7F\xFE\x80\x01",  // raw big-endian
         1 => "\xFE\x7F\x01\x80",  // raw little-endian
         2 => "\x1F\xFF\xE8\x00",  // 14-bit big-endian
-        3 => "\xFF\x1F\x00\xE8"); // 14-bit little-endian
+        3 => "\xFF\x1F\x00\xE8"]; // 14-bit little-endian
 
     public function Analyze()
     {
@@ -144,7 +144,7 @@ class getid3_dts extends getid3_handler
 
     public static function bitrateLookup($index)
     {
-        static $lookup = array(
+        static $lookup = [
             0  => 32000,
             1  => 56000,
             2  => 64000,
@@ -177,13 +177,13 @@ class getid3_dts extends getid3_handler
             29 => 'open',
             30 => 'variable',
             31 => 'lossless',
-        );
+        ];
         return (isset($lookup[$index]) ? $lookup[$index] : false);
     }
 
     public static function sampleRateLookup($index)
     {
-        static $lookup = array(
+        static $lookup = [
             0  => 'invalid',
             1  => 8000,
             2  => 16000,
@@ -200,18 +200,18 @@ class getid3_dts extends getid3_handler
             13 => 48000,
             14 => 'invalid',
             15 => 'invalid',
-        );
+        ];
         return (isset($lookup[$index]) ? $lookup[$index] : false);
     }
 
     public static function bitPerSampleLookup($index)
     {
-        static $lookup = array(
+        static $lookup = [
             0  => 16,
             1  => 20,
             2  => 24,
             3  => 24,
-        );
+        ];
         return (isset($lookup[$index]) ? $lookup[$index] : false);
     }
 
@@ -256,7 +256,7 @@ class getid3_dts extends getid3_handler
 
     public static function channelArrangementLookup($index)
     {
-        static $lookup = array(
+        static $lookup = [
             0  => 'A',
             1  => 'A + B (dual mono)',
             2  => 'L + R (stereo)',
@@ -273,7 +273,7 @@ class getid3_dts extends getid3_handler
             13 => 'CL + C + CR + L + R + SL + SR',
             14 => 'CL + CR + L + R + SL1 + SL2 + SR1 + SR2',
             15 => 'CL + C+ CR + L + R + SL + S + SR',
-        );
+        ];
         return (isset($lookup[$index]) ? $lookup[$index] : 'user-defined');
     }
 

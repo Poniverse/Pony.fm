@@ -10,7 +10,7 @@ namespace Httpful\Handlers;
 
 class MimeHandlerAdapter
 {
-    public function __construct(array $args = array())
+    public function __construct(array $args = [])
     {
         $this->init($args);
     }

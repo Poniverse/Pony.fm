@@ -42,7 +42,7 @@ require_once('../getid3/getid3.php');
 
 // Initialize getID3 engine
 $getID3 = new getID3;
-$getID3->setOption(array('encoding' => $PageEncoding));
+$getID3->setOption(['encoding' => $PageEncoding]);
 
 $getID3checkColor_Head           = 'CCCCDD';
 $getID3checkColor_DirectoryLight = 'FFCCCC';
@@ -179,7 +179,7 @@ if (isset($_REQUEST['filename'])) {
             if ($TargetObjectType == 'dir') {
                 $DirectoryContents[$currentfulldir]['dir'][$file]['filename'] = $file;
             } elseif ($TargetObjectType == 'file') {
-                $getID3->setOption(array('option_md5_data' => (isset($_REQUEST['ShowMD5']) && GETID3_DEMO_BROWSE_ALLOW_MD5_LINK)));
+                $getID3->setOption(['option_md5_data' => (isset($_REQUEST['ShowMD5']) && GETID3_DEMO_BROWSE_ALLOW_MD5_LINK)]);
                 $fileinformation = $getID3->analyze($currentfilename);
 
                 getid3_lib::CopyTagsToComments($fileinformation);
@@ -408,7 +408,7 @@ function RemoveAccents($string)
             "\x8A\x8E\x9A\x9E\x9F\xC0\xC1\xC2\xC3\xC4\xC5\xC7\xC8\xC9\xCA\xCB\xCC\xCD\xCE\xCF\xD1\xD2\xD3\xD4\xD5\xD6\xD8\xD9\xDA\xDB\xDC\xDD\xE0\xE1\xE2\xE3\xE4\xE5\xE7\xE8\xE9\xEA\xEB\xEC\xED\xEE\xEF\xF1\xF2\xF3\xF4\xF5\xF6\xF8\xF9\xFA\xFB\xFC\xFD\xFF",
             'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy'
         ),
-        array(
+        [
             "\xDE" => 'TH',
             "\xFE" => 'th',
             "\xD0" => 'DH',
@@ -419,7 +419,7 @@ function RemoveAccents($string)
             "\xC6" => 'AE',
             "\xE6" => 'ae',
             "\xB5" => 'u'
-        )
+        ]
     );
 }
 
@@ -477,7 +477,7 @@ function table_var_dump($variable, $wrap_in_td = false, $encoding = 'ISO-8859-1'
                 }
                 //if (($key == 'data') && isset($variable['image_mime']) && isset($variable['dataoffset'])) {
                 if (($key == 'data') && isset($variable['image_mime'])) {
-                    $imageinfo = array();
+                    $imageinfo = [];
                     if ($imagechunkcheck = getid3_lib::GetDataImageSize($value, $imageinfo)) {
                         $returnstring .= '</td>'."\n".'<td><img src="data:'.$variable['image_mime'].';base64,'.base64_encode($value).'" width="'.$imagechunkcheck[0].'" height="'.$imagechunkcheck[1].'"></td></tr>'."\n";
                     } else {
@@ -515,7 +515,7 @@ function table_var_dump($variable, $wrap_in_td = false, $encoding = 'ISO-8859-1'
             break;
 
         default:
-            $imageinfo = array();
+            $imageinfo = [];
             if (($imagechunkcheck = getid3_lib::GetDataImageSize($variable, $imageinfo)) && ($imagechunkcheck[2] >= 1) && ($imagechunkcheck[2] <= 3)) {
                 $returnstring .= ($wrap_in_td ? '<td>' : '');
                 $returnstring .= '<table class="dump" cellspacing="0" cellpadding="2">';
@@ -589,7 +589,7 @@ function MoreNaturalSort($ar1, $ar2)
     }
     $ar1 = RemoveAccents(strtolower(trim($ar1)));
     $ar2 = RemoveAccents(strtolower(trim($ar2)));
-    $translatearray = array('\''=>'', '"'=>'', '_'=>' ', '('=>'', ')'=>'', '-'=>' ', '  '=>' ', '.'=>'', ','=>'');
+    $translatearray = ['\''=>'', '"'=>'', '_'=>' ', '('=>'', ')'=>'', '-'=>' ', '  '=>' ', '.'=>'', ','=>''];
     foreach ($translatearray as $key => $val) {
         $ar1 = str_replace($key, $val, $ar1);
         $ar2 = str_replace($key, $val, $ar2);

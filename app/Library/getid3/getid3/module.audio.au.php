@@ -32,7 +32,7 @@ class getid3_au extends getid3_handler
         }
 
         // shortcut
-        $info['au'] = array();
+        $info['au'] = [];
         $thisfile_au        = &$info['au'];
 
         $info['fileformat']            = 'au';
@@ -73,7 +73,7 @@ class getid3_au extends getid3_handler
 
     public function AUdataFormatNameLookup($id)
     {
-        static $AUdataFormatNameLookup = array(
+        static $AUdataFormatNameLookup = [
             0  => 'unspecified format',
             1  => '8-bit mu-law',
             2  => '8-bit linear',
@@ -102,13 +102,13 @@ class getid3_au extends getid3_handler
             25 => 'CCITT g.723 3-bit ADPCM',
             26 => 'CCITT g.723 5-bit ADPCM',
             27 => 'A-Law 8-bit'
-        );
+        ];
         return (isset($AUdataFormatNameLookup[$id]) ? $AUdataFormatNameLookup[$id] : false);
     }
 
     public function AUdataFormatBitsPerSampleLookup($id)
     {
-        static $AUdataFormatBitsPerSampleLookup = array(
+        static $AUdataFormatBitsPerSampleLookup = [
             1  => 8,
             2  => 8,
             3  => 16,
@@ -131,13 +131,13 @@ class getid3_au extends getid3_handler
             25 => 16,
             26 => 16,
             27 => 8
-        );
+        ];
         return (isset($AUdataFormatBitsPerSampleLookup[$id]) ? $AUdataFormatBitsPerSampleLookup[$id] : false);
     }
 
     public function AUdataFormatUsedBitsPerSampleLookup($id)
     {
-        static $AUdataFormatUsedBitsPerSampleLookup = array(
+        static $AUdataFormatUsedBitsPerSampleLookup = [
             1  => 8,
             2  => 8,
             3  => 16,
@@ -160,7 +160,7 @@ class getid3_au extends getid3_handler
             25 => 3,
             26 => 5,
             27 => 8,
-        );
+        ];
         return (isset($AUdataFormatUsedBitsPerSampleLookup[$id]) ? $AUdataFormatUsedBitsPerSampleLookup[$id] : false);
     }
 }

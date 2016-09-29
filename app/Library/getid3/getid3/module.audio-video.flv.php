@@ -114,7 +114,7 @@ class getid3_flv extends getid3_handler
         $found_meta  = false;
         $found_valid_meta_playtime = false;
         $tagParseCount = 0;
-        $info['flv']['framecount'] = array('total'=>0, 'audio'=>0, 'video'=>0);
+        $info['flv']['framecount'] = ['total'=>0, 'audio'=>0, 'video'=>0];
         $flv_framecount = &$info['flv']['framecount'];
         while ((($this->ftell() + 16) < $info['avdataend']) && (($tagParseCount++ <= $this->max_frames) || !$found_valid_meta_playtime)) {
             $ThisTagHeader = $this->fread(16);
@@ -262,7 +262,7 @@ class getid3_flv extends getid3_handler
                         $info['flv']['meta'][$eventName] = $reader->readData();
                         unset($reader);
 
-                        $copykeys = array('framerate'=>'frame_rate', 'width'=>'resolution_x', 'height'=>'resolution_y', 'audiodatarate'=>'bitrate', 'videodatarate'=>'bitrate');
+                        $copykeys = ['framerate'=>'frame_rate', 'width'=>'resolution_x', 'height'=>'resolution_y', 'audiodatarate'=>'bitrate', 'videodatarate'=>'bitrate'];
                         foreach ($copykeys as $sourcekey => $destkey) {
                             if (isset($info['flv']['meta']['onMetaData'][$sourcekey])) {
                                 switch ($sourcekey) {
@@ -331,7 +331,7 @@ class getid3_flv extends getid3_handler
 
     public static function audioFormatLookup($id)
     {
-        static $lookup = array(
+        static $lookup = [
             0  => 'Linear PCM, platform endian',
             1  => 'ADPCM',
             2  => 'mp3',
@@ -348,40 +348,40 @@ class getid3_flv extends getid3_handler
             13 => false, // unknown?
             14 => 'mp3 8kHz',
             15 => 'Device-specific sound',
-        );
+        ];
         return (isset($lookup[$id]) ? $lookup[$id] : false);
     }
 
     public static function audioRateLookup($id)
     {
-        static $lookup = array(
+        static $lookup = [
             0 =>  5500,
             1 => 11025,
             2 => 22050,
             3 => 44100,
-        );
+        ];
         return (isset($lookup[$id]) ? $lookup[$id] : false);
     }
 
     public static function audioBitDepthLookup($id)
     {
-        static $lookup = array(
+        static $lookup = [
             0 =>  8,
             1 => 16,
-        );
+        ];
         return (isset($lookup[$id]) ? $lookup[$id] : false);
     }
 
     public static function videoCodecLookup($id)
     {
-        static $lookup = array(
+        static $lookup = [
             GETID3_FLV_VIDEO_H263         => 'Sorenson H.263',
             GETID3_FLV_VIDEO_SCREEN       => 'Screen video',
             GETID3_FLV_VIDEO_VP6FLV       => 'On2 VP6',
             GETID3_FLV_VIDEO_VP6FLV_ALPHA => 'On2 VP6 with alpha channel',
             GETID3_FLV_VIDEO_SCREENV2     => 'Screen video v2',
             GETID3_FLV_VIDEO_H264         => 'Sorenson H.264',
-        );
+        ];
         return (isset($lookup[$id]) ? $lookup[$id] : false);
     }
 }
@@ -584,7 +584,7 @@ class AMFReader
         // Get highest numerical index - ignored
 //		$highestIndex = $this->stream->readLong();
 
-        $data = array();
+        $data = [];
 
         while ($key = $this->stream->readUTF()) {
             $data[$key] = $this->readData();
@@ -602,7 +602,7 @@ class AMFReader
         // Get highest numerical index - ignored
         $highestIndex = $this->stream->readLong();
 
-        $data = array();
+        $data = [];
 
         while ($key = $this->stream->readUTF()) {
             if (is_numeric($key)) {
@@ -622,7 +622,7 @@ class AMFReader
     public function readArray()
     {
         $length = $this->stream->readLong();
-        $data = array();
+        $data = [];
 
         for ($i = 0; $i < $length; $i++) {
             $data[] = $this->readData();

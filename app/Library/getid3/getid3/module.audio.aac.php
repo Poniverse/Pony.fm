@@ -293,7 +293,7 @@ class getid3_aac extends getid3_handler
         $framenumber = 0;
 
         // Init bit pattern array
-        static $decbin = array();
+        static $decbin = [];
 
         // Populate $bindec
         for ($i = 0; $i < 256; $i++) {
@@ -301,7 +301,7 @@ class getid3_aac extends getid3_handler
         }
 
         // used to calculate bitrate below
-        $BitrateCache = array();
+        $BitrateCache = [];
 
 
         while (true) {
@@ -439,7 +439,7 @@ class getid3_aac extends getid3_handler
 
     public static function AACsampleRateLookup($samplerateid)
     {
-        static $AACsampleRateLookup = array();
+        static $AACsampleRateLookup = [];
         if (empty($AACsampleRateLookup)) {
             $AACsampleRateLookup[0]  = 96000;
             $AACsampleRateLookup[1]  = 88200;
@@ -463,7 +463,7 @@ class getid3_aac extends getid3_handler
 
     public static function AACprofileLookup($profileid, $mpegversion)
     {
-        static $AACprofileLookup = array();
+        static $AACprofileLookup = [];
         if (empty($AACprofileLookup)) {
             $AACprofileLookup[2][0]  = 'Main profile';
             $AACprofileLookup[2][1]  = 'Low Complexity profile (LC)';

@@ -48,8 +48,8 @@ $database['hide']=true;
 
 */
 $dir      = $_SERVER['PWD'];
-$media    = array('mp4', 'm4v', 'mov', 'mp3', 'm4a', 'jpg', 'png', 'gif');
-$database = array();
+$media    = ['mp4', 'm4v', 'mov', 'mp3', 'm4a', 'jpg', 'png', 'gif'];
+$database = [];
 /**
 * configure the database bellow
 */
@@ -92,9 +92,9 @@ class dirscan
     * @param mixed cvs list of extentions or an array
     * @return string or null if checks fail
     */
-    private function type_brace($dir, $search = array())
+    private function type_brace($dir, $search = [])
     {
-        $dir = str_replace(array('///', '//'), array('/', '/'), $dir);
+        $dir = str_replace(['///', '//'], ['/', '/'], $dir);
         if (!is_dir($dir)) {
             return null;
         }
@@ -105,7 +105,7 @@ class dirscan
         } else {
             $e = $search;
         }
-        $ext = array();
+        $ext = [];
         foreach ($e as $new) {
             $ext[] = strtolower(trim($new));
             $ext[] = strtoupper(trim($new));
@@ -146,7 +146,7 @@ class dirscan
                 break;
         }
         if (count($dirs) < 1) {
-            $dirs = array($root);
+            $dirs = [$root];
         }
         return $dirs;
     }
@@ -159,10 +159,10 @@ class dirscan
     */
     private function file_check($search)
     {
-        $t = array();
+        $t = [];
         $s = glob($search, GLOB_BRACE);
         foreach ($s as $file) {
-            $t[] = str_replace(array('///', '//'), array('/', '/'), $file);
+            $t[] = str_replace(['///', '//'], ['/', '/'], $file);
         }
         if (count($t) > 0) {
             return $t;
@@ -186,7 +186,7 @@ class dirscan
     * @param type $cache caching extention, select one of sqlite3, mysql, dbm
     * @param array $opt database options,
     */
-    function scan_files($dir, $match, $cache = 'sqlite3', $opt = array('table'=>'getid3_cache', 'hide'=>true))
+    function scan_files($dir, $match, $cache = 'sqlite3', $opt = ['table'=>'getid3_cache', 'hide'=>true])
     {
         $Start = self::getTime();
         switch ($cache) { // load the caching module
@@ -213,7 +213,7 @@ class dirscan
                 die(' You have selected an Invalid cache type, only "sqlite3" and "mysql" are valid'."\n");
                 break;
         }
-        $count = array('dir'=>0, 'file'=>0);
+        $count = ['dir'=>0, 'file'=>0];
         $dirs = self::getDirs($dir);
         if ($dirs !== null) {
             foreach ($dirs as $d) {
