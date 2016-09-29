@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
-use GrahamCampbell\Exceptions\ExceptionHandler as ExceptionHandler;
+use GrahamCampbell\Exceptions\NewExceptionHandler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
