@@ -1,12 +1,17 @@
 {
     "name": "poniverse/pony.fm",
     "description": "A community for pony fan music.",
-    "keywords": ["music", "pony", "php", "laravel"],
+    "keywords": [
+        "music",
+        "pony",
+        "php",
+        "laravel"
+    ],
     "license": "AGPL",
     "type": "project",
     "require": {
         "php": ">=7.0.1",
-        "laravel/framework": "5.1.*",
+        "laravel/framework": "5.2.*",
         "codescale/ffmpeg-php": "2.7.0",
         "intouch/laravel-newrelic": "*",
         "barryvdh/laravel-ide-helper": "^2.1",
@@ -26,7 +31,9 @@
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~4.1",
         "phpspec/phpspec": "~2.1",
-        "filp/whoops": "^2.1"
+        "filp/whoops": "^2.1",
+        "symfony/dom-crawler": "~3.0",
+        "symfony/css-selector": "~3.0"
     },
     "autoload": {
         "classmap": [
@@ -46,14 +53,11 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "php artisan clear-compiled",
+            "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "php artisan optimize"
         ],
-        "pre-update-cmd": [
-            "php artisan clear-compiled"
-        ],
         "post-update-cmd": [
-            "php artisan clear-compiled",
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "php artisan ide-helper:generate",
             "php artisan optimize"
         ],
