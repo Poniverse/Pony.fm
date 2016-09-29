@@ -11,7 +11,7 @@
     "type": "project",
     "require": {
         "php": ">=7.0.1",
-        "laravel/framework": "5.2.*",
+        "laravel/framework": "5.3.*",
         "codescale/ffmpeg-php": "2.7.0",
         "intouch/laravel-newrelic": "*",
         "barryvdh/laravel-ide-helper": "^2.1",
