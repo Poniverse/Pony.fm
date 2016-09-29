@@ -23,6 +23,7 @@ namespace Poniverse\Ponyfm\Providers;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Laravel\LegacyEncrypter\McryptEncrypter;
 use PfmValidator;
 use Poniverse;
 use Validator;
@@ -48,6 +49,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // TODO: Migrate from Mcrypt
+        $this->app->singleton('encrypter', function ($app) {
+            $config = $app->make('config')->get('app');
+
+            $key = $config['key'];
+
+            return new McryptEncrypter($key, $config['cipher']);
+        });
+
         $this->app->bind(Poniverse::class, function (Application $app) {
             return new Poniverse($app['config']->get('poniverse.client_id'), $app['config']->get('poniverse.secret'));
         });
