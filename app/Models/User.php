@@ -75,6 +75,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
 {
+use Notifiable;
     use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'user';
