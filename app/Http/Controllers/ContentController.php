@@ -34,7 +34,7 @@ class ContentController extends Controller
         return View::make('shared.null');
     }
 
-    public function getPlaylists()
+    public function getPlaylist()
     {
         return View::make('shared.null');
     }

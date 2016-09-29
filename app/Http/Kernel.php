@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Poniverse\Ponyfm\Http\Middleware\VerifyCsrfToken::class,
             \Poniverse\Ponyfm\Http\Middleware\DisabledAccountCheck::class,
         ]
@@ -51,7 +52,8 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \Poniverse\Ponyfm\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'auth.oauth' => \Poniverse\Ponyfm\Http\Middleware\AuthenticateOAuth::class,
 //        'can' => \Poniverse\Ponyfm\Http\Middleware\Authorize::class,
         'json-exceptions' => \Poniverse\Ponyfm\Http\Middleware\JsonExceptions::class,

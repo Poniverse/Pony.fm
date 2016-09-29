@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Poniverse\Ponyfm\Models\Album;
@@ -51,27 +52,26 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register any application authentication / authorization services.
      *
-     * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
      * @return void
      */
-    public function boot(GateContract $gate)
+    public function boot()
     {
-        $gate->define('access-admin-area', function (User $user) {
+        Gate::define('access-admin-area', function (User $user) {
             return $user->hasRole('admin');
         });
 
-        $gate->define('create-genre', function (User $user) {
+        Gate::define('create-genre', function (User $user) {
             return $user->hasRole('admin');
         });
 
-        $gate->define('create-show-song', function (User $user) {
+        Gate::define('create-show-song', function (User $user) {
             return $user->hasRole('admin');
         });
 
-        $gate->define('create-user', function (User $user) {
+        Gate::define('create-user', function (User $user) {
             return $user->hasRole('admin');
         });
 
-        $this->registerPolicies($gate);
+        $this->registerPolicies();
     }
 }
