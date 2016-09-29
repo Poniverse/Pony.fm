@@ -31,12 +31,17 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \Poniverse\Ponyfm\Http\Middleware\EncryptCookies::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \Poniverse\Ponyfm\Http\Middleware\VerifyCsrfToken::class,
-        \Poniverse\Ponyfm\Http\Middleware\DisabledAccountCheck::class,
+    ];
+
+    protected $middlewareGroups = [
+        'web' => [
+            \Poniverse\Ponyfm\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Poniverse\Ponyfm\Http\Middleware\VerifyCsrfToken::class,
+            \Poniverse\Ponyfm\Http\Middleware\DisabledAccountCheck::class,
+        ]
     ];
 
     /**
@@ -48,7 +53,7 @@ class Kernel extends HttpKernel
         'auth' => \Poniverse\Ponyfm\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.oauth' => \Poniverse\Ponyfm\Http\Middleware\AuthenticateOAuth::class,
-        'can' => \Poniverse\Ponyfm\Http\Middleware\Authorize::class,
+//        'can' => \Poniverse\Ponyfm\Http\Middleware\Authorize::class,
         'json-exceptions' => \Poniverse\Ponyfm\Http\Middleware\JsonExceptions::class,
         'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
         'guest' => \Poniverse\Ponyfm\Http\Middleware\RedirectIfAuthenticated::class,
