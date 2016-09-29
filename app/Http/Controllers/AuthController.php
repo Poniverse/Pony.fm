@@ -24,7 +24,7 @@ use Poniverse\Ponyfm\Models\User;
 use Auth;
 use Config;
 use DB;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse;
 use Redirect;
 
@@ -60,7 +60,7 @@ class AuthController extends Controller
             Config::get('poniverse.urls')['token'],
             'authorization_code',
             [
-                'code' => Input::query('code'),
+                'code' => Request::query('code'),
                 'redirect_uri' => action('AuthController@getOAuth')
             ]
         );

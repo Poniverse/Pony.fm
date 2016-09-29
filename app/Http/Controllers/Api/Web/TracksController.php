@@ -23,7 +23,7 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 use Auth;
 use File;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Commands\DeleteTrackCommand;
 use Poniverse\Ponyfm\Commands\EditTrackCommand;
 use Poniverse\Ponyfm\Commands\GenerateTrackFilesCommand;
@@ -70,7 +70,7 @@ class TracksController extends ApiControllerBase
 
     public function postEdit($id)
     {
-        return $this->execute(new EditTrackCommand($id, Input::all()));
+        return $this->execute(new EditTrackCommand($id, Request::all()));
     }
 
     public function postUploadNewVersion($trackId)
@@ -147,7 +147,7 @@ class TracksController extends ApiControllerBase
             return $this->notFound('Track not found!');
         }
 
-        if (Input::get('log')) {
+        if (Request::get('log')) {
             ResourceLogItem::logItem('track', $id, ResourceLogItem::VIEW);
             $track->view_count++;
         }
@@ -205,8 +205,8 @@ class TracksController extends ApiControllerBase
         $page = 1;
         $perPage = 45;
 
-        if (Input::has('page')) {
-            $page = Input::get('page');
+        if (Request::has('page')) {
+            $page = Request::get('page');
         }
 
         if ($all) {
@@ -291,8 +291,8 @@ class TracksController extends ApiControllerBase
      */
     private function applyOrdering($query)
     {
-        if (Input::has('order')) {
-            $order = \Input::get('order');
+        if (Request::has('order')) {
+            $order = \Request::get('order');
             $parts = explode(',', $order);
             $query->orderBy($parts[0], $parts[1]);
         }
@@ -308,8 +308,8 @@ class TracksController extends ApiControllerBase
      */
     private function applyFilters($query, $unknown = false)
     {
-        if (Input::has('is_vocal')) {
-            $isVocal = \Input::get('is_vocal');
+        if (Request::has('is_vocal')) {
+            $isVocal = \Request::get('is_vocal');
             if ($isVocal == 'true') {
                 $query->whereIsVocal(true);
             } else {
@@ -317,20 +317,20 @@ class TracksController extends ApiControllerBase
             }
         }
 
-        if (Input::has('in_album')) {
-            if (Input::get('in_album') == 'true') {
+        if (Request::has('in_album')) {
+            if (Request::get('in_album') == 'true') {
                 $query->whereNotNull('album_id');
             } else {
                 $query->whereNull('album_id');
             }
         }
 
-        if (Input::has('genres')) {
-            $query->whereIn('genre_id', Input::get('genres'));
+        if (Request::has('genres')) {
+            $query->whereIn('genre_id', Request::get('genres'));
         }
 
-        if (Input::has('types') && !$unknown) {
-            $query->whereIn('track_type_id', Input::get('types'));
+        if (Request::has('types') && !$unknown) {
+            $query->whereIn('track_type_id', Request::get('types'));
         }
 
         if ($unknown) {
@@ -347,14 +347,14 @@ class TracksController extends ApiControllerBase
             $query->join('mlpma_tracks', 'tracks.id', '=', 'mlpma_tracks.track_id');
         }
 
-        if (Input::has('songs')) {
+        if (Request::has('songs')) {
             // DISTINCT is needed here to avoid duplicate results
             // when a track is associated with multiple show songs.
             $query->distinct();
             $query->join('show_song_track', function ($join) {
                 $join->on('tracks.id', '=', 'show_song_track.track_id');
             });
-            $query->whereIn('show_song_track.show_song_id', Input::get('songs'));
+            $query->whereIn('show_song_track.show_song_id', Request::get('songs'));
         }
 
         return $query;

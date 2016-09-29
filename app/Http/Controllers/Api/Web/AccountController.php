@@ -26,7 +26,7 @@ use Poniverse\Ponyfm\Commands\SaveAccountSettingsCommand;
 use Poniverse\Ponyfm\Models\User;
 use Gate;
 use Auth;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Response;
 
 class AccountController extends ApiControllerBase
@@ -77,6 +77,6 @@ class AccountController extends ApiControllerBase
 
     public function postSave(User $user)
     {
-        return $this->execute(new SaveAccountSettingsCommand(Input::all(), $user));
+        return $this->execute(new SaveAccountSettingsCommand(Request::all(), $user));
     }
 }

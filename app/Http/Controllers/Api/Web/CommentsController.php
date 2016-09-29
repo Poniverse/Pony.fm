@@ -24,14 +24,14 @@ use App;
 use Poniverse\Ponyfm\Commands\CreateCommentCommand;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Response;
 
 class CommentsController extends ApiControllerBase
 {
     public function postCreate($type, $id)
     {
-        return $this->execute(new CreateCommentCommand($type, $id, Input::all()));
+        return $this->execute(new CreateCommentCommand($type, $id, Request::all()));
     }
 
     public function getIndex($type, $id)

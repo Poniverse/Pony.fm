@@ -30,7 +30,7 @@ use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Auth;
 use Gate;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Models\User;
 use Response;
 use Poniverse\Ponyfm\Models\Track;
@@ -39,12 +39,12 @@ class AlbumsController extends ApiControllerBase
 {
     public function postCreate()
     {
-        return $this->execute(new CreateAlbumCommand(Input::all()));
+        return $this->execute(new CreateAlbumCommand(Request::all()));
     }
 
     public function postEdit($id)
     {
-        return $this->execute(new EditAlbumCommand($id, Input::all()));
+        return $this->execute(new EditAlbumCommand($id, Request::all()));
     }
 
     public function postDelete($id)
@@ -75,7 +75,7 @@ class AlbumsController extends ApiControllerBase
             App::abort(404);
         }
 
-        if (Input::get('log')) {
+        if (Request::get('log')) {
             ResourceLogItem::logItem('album', $id, ResourceLogItem::VIEW);
             $album->view_count++;
         }
@@ -120,8 +120,8 @@ class AlbumsController extends ApiControllerBase
     public function getIndex()
     {
         $page = 1;
-        if (Input::has('page')) {
-            $page = Input::get('page');
+        if (Request::has('page')) {
+            $page = Request::get('page');
         }
 
         $query = Album::summary()

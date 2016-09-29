@@ -21,7 +21,7 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Auth;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Notification;
 use Poniverse\Ponyfm\Models\Subscription;
@@ -56,7 +56,7 @@ class NotificationsController extends ApiControllerBase
      */
     public function putMarkAsRead()
     {
-        $notificationIds = Input::json('notification_ids');
+        $notificationIds = Request::json('notification_ids');
         $numberOfUpdatedRows = Auth::user()
             ->notifications()
             ->whereIn('id', $notificationIds)
@@ -74,7 +74,7 @@ class NotificationsController extends ApiControllerBase
      */
     public function postSubscribe()
     {
-        $input = json_decode(Input::json('subscription'));
+        $input = json_decode(Request::json('subscription'));
         if ($input != 'null') {
             $existing = Subscription::where('endpoint', '=', $input->endpoint)
                 ->where('user_id', '=', Auth::user()->id)
@@ -104,7 +104,7 @@ class NotificationsController extends ApiControllerBase
      */
     public function postUnsubscribe()
     {
-        $input = json_decode(Input::json('subscription'));
+        $input = json_decode(Request::json('subscription'));
 
         $existing = Subscription::where('endpoint', '=', $input->endpoint)
             ->where('user_id', '=', Auth::user()->id)

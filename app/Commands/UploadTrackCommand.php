@@ -25,7 +25,7 @@ use Carbon\Carbon;
 use Config;
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 use Validator;
@@ -73,7 +73,7 @@ class UploadTrackCommand extends CommandBase
         int $version = 1,
         $track = null
     ) {
-        $userSlug = Input::get('user_slug', null);
+        $userSlug = Request::get('user_slug', null);
         $this->_artist =
             $userSlug !== null
             ? User::where('slug', $userSlug)->first()
@@ -94,9 +94,9 @@ class UploadTrackCommand extends CommandBase
      */
     public function execute()
     {
-        $trackFile = Input::file('track', null);
+        $trackFile = Request::file('track', null);
         if (!$this->_isReplacingTrack) {
-            $coverFile = Input::file('cover', null);
+            $coverFile = Request::file('cover', null);
         }
 
         if (null === $trackFile) {
@@ -114,7 +114,7 @@ class UploadTrackCommand extends CommandBase
             $this->_track->user_id = $this->_artist->id;
             // The title set here is a placeholder; it'll be replaced by ParseTrackTagsCommand
             // if the file contains a title tag.
-            $this->_track->title = Input::get('title', pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME));
+            $this->_track->title = Request::get('title', pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME));
             // The duration/version of the track cannot be changed until the encoding is successful
             $this->_track->duration = $audio->getDuration();
             $this->_track->current_version = $this->_version;
@@ -131,7 +131,7 @@ class UploadTrackCommand extends CommandBase
         }
         $trackFile = $trackFile->move(Config::get('ponyfm.files_directory').'/queued-tracks', $this->_track->id . 'v' . $this->_version);
 
-        $input = Input::all();
+        $input = Request::all();
         $input['track'] = $trackFile;
         if (!$this->_isReplacingTrack) {
             $input['cover'] = $coverFile;
@@ -180,7 +180,7 @@ class UploadTrackCommand extends CommandBase
         if (!$this->_isReplacingTrack) {
             // If json_decode() isn't called here, Laravel will surround the JSON
             // string with quotes when storing it in the database, which breaks things.
-            $this->_track->metadata = json_decode(Input::get('metadata', null));
+            $this->_track->metadata = json_decode(Request::get('metadata', null));
         }
         $autoPublish = (bool)($input['auto_publish'] ?? $this->_autoPublishByDefault);
         $this->_track->source = $this->_customTrackSource ?? 'direct_upload';

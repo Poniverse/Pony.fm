@@ -257,7 +257,7 @@ class PfmValidator extends Illuminate\Validation\Validator
     /** OLD CODE
      * public function validate_required_when($attribute, $value, $parameters)
      * {
-     * if ( Input::get($parameters[0]) === $parameters[1] && static::required($attribute, $value) ){
+     * if ( Request::get($parameters[0]) === $parameters[1] && static::required($attribute, $value) ){
      * return true;
      *
      * } else {
@@ -269,7 +269,7 @@ class PfmValidator extends Illuminate\Validation\Validator
     // custom required_when validator
     public function validateRequiredWhen($attribute, $value, $parameters)
     {
-        if (Input::get($parameters[0]) == $parameters[1]) {
+        if (Request::get($parameters[0]) == $parameters[1]) {
             return $this->validate_required($attribute, $value);
         }
 

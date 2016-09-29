@@ -31,7 +31,7 @@ use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Auth;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Models\User;
 use Response;
 use Poniverse\Ponyfm\Models\Track;
@@ -40,12 +40,12 @@ class PlaylistsController extends ApiControllerBase
 {
     public function postCreate()
     {
-        return $this->execute(new CreatePlaylistCommand(Input::all()));
+        return $this->execute(new CreatePlaylistCommand(Request::all()));
     }
 
     public function postEdit($id)
     {
-        return $this->execute(new EditPlaylistCommand($id, Input::all()));
+        return $this->execute(new EditPlaylistCommand($id, Request::all()));
     }
 
     public function postDelete($id)
@@ -55,17 +55,17 @@ class PlaylistsController extends ApiControllerBase
 
     public function postAddTrack($id)
     {
-        return $this->execute(new AddTrackToPlaylistCommand($id, Input::get('track_id')));
+        return $this->execute(new AddTrackToPlaylistCommand($id, Request::get('track_id')));
     }
 
     public function postRemoveTrack($id)
     {
-        return $this->execute(new RemoveTrackFromPlaylistCommand($id, Input::get('track_id')));
+        return $this->execute(new RemoveTrackFromPlaylistCommand($id, Request::get('track_id')));
     }
 
     public function getIndex()
     {
-        $page = Input::has('page') ? Input::get('page') : 1;
+        $page = Request::has('page') ? Request::get('page') : 1;
 
         $query = Playlist::summary()
             ->with(
@@ -119,7 +119,7 @@ class PlaylistsController extends ApiControllerBase
             App::abort('404');
         }
 
-        if (Input::get('log')) {
+        if (Request::get('log')) {
             ResourceLogItem::logItem('playlist', $id, ResourceLogItem::VIEW);
             $playlist->view_count++;
         }
@@ -223,8 +223,8 @@ class PlaylistsController extends ApiControllerBase
      */
     private function applyOrdering($query)
     {
-        if (Input::has('order')) {
-            $order = \Input::get('order');
+        if (Request::has('order')) {
+            $order = \Request::get('order');
             $parts = explode(',', $order);
             $query->orderBy($parts[0], $parts[1]);
         }

@@ -22,12 +22,12 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Poniverse\Ponyfm\Commands\ToggleFollowingCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Input;
+use Illuminate\Support\Facades\Request;
 
 class FollowController extends ApiControllerBase
 {
     public function postToggle()
     {
-        return $this->execute(new ToggleFollowingCommand(Input::get('type'), Input::get('id')));
+        return $this->execute(new ToggleFollowingCommand(Request::get('type'), Request::get('id')));
     }
 }

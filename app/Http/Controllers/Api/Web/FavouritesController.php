@@ -27,14 +27,14 @@ use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
 use Auth;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Response;
 
 class FavouritesController extends ApiControllerBase
 {
     public function postToggle()
     {
-        return $this->execute(new ToggleFavouriteCommand(Input::get('type'), Input::get('id')));
+        return $this->execute(new ToggleFavouriteCommand(Request::get('type'), Request::get('id')));
     }
 
     public function getTracks()
