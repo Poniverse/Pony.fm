@@ -123,7 +123,7 @@ class Search
 
         $tracks = $this->transformTracks($results['responses'][0]['hits']['hits']);
         $albums = $this->transformAlbums($results['responses'][1]['hits']['hits']);
-        $playlists = $this->transformPlaypluck($results['responses'][2]['hits']['hits']);
+        $playlists = $this->transformPlaylist($results['responses'][2]['hits']['hits']);
         $users = $this->transformUsers($results['responses'][3]['hits']['hits']);
 
         return [
@@ -152,7 +152,7 @@ class Search
         return $albums;
     }
 
-    protected function transformPlaypluck(array $searchHits)
+    protected function transformPlaylist(array $searchHits)
     {
         $playlists = $this->transformToEloquent(Playlist::class, $searchHits);
         $playlists = $playlists->map(function (Playlist $playlist) {
