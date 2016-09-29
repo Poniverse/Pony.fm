@@ -53,7 +53,8 @@ class Genre extends Model
 
     use SlugTrait, SoftDeletes, RevisionableTrait;
 
-    public function tracks() {
+    public function tracks()
+    {
         return $this->hasMany(Track::class, 'genre_id');
     }
 
@@ -65,7 +66,8 @@ class Genre extends Model
      *
      * @return Relation
      */
-    public function trackCountRelation() {
+    public function trackCountRelation()
+    {
         return $this->hasOne(Track::class)
             ->select(['genre_id', DB::raw('count(*) as track_count')])
             ->groupBy('genre_id');
@@ -76,7 +78,8 @@ class Genre extends Model
      *
      * @return int
      */
-    public function getTrackCountAttribute() {
+    public function getTrackCountAttribute()
+    {
         if (!$this->relationLoaded('trackCountRelation')) {
             $this->load('trackCountRelation');
         }
@@ -87,7 +90,8 @@ class Genre extends Model
     /**
      * @return string relative, Angular-friendly URL to this genre
      */
-    public function getUrlAttribute() {
+    public function getUrlAttribute()
+    {
         return route('tracks.discover', ['filter' => "genres-{$this->id}"], false);
     }
 }

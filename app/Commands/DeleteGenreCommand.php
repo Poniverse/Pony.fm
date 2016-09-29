@@ -35,7 +35,8 @@ class DeleteGenreCommand extends CommandBase
     private $_genreToDelete;
     private $_destinationGenre;
 
-    public function __construct($genreId, $destinationGenreId) {
+    public function __construct($genreId, $destinationGenreId)
+    {
         $this->_genreToDelete = Genre::find($genreId);
         $this->_destinationGenre = Genre::find($destinationGenreId);
     }
@@ -43,7 +44,8 @@ class DeleteGenreCommand extends CommandBase
     /**
      * @return bool
      */
-    public function authorize() {
+    public function authorize()
+    {
         return Gate::allows('delete', $this->_genreToDelete);
     }
 
@@ -51,7 +53,8 @@ class DeleteGenreCommand extends CommandBase
      * @throws \Exception
      * @return CommandResponse
      */
-    public function execute() {
+    public function execute()
+    {
         $rules = [
             'genre_to_delete'    => 'required',
             'destination_genre'  => 'required',

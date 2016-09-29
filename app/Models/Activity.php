@@ -39,7 +39,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read mixed $thumbnail_url
  * @property-read mixed $text
  */
-class Activity extends Model {
+class Activity extends Model
+{
     use SoftDeletes;
 
     public $timestamps = false;
@@ -80,27 +81,33 @@ class Activity extends Model {
     const TARGET_PLAYLIST = 4;
     const TARGET_COMMENT = 5;
 
-    public function initiatingUser() {
+    public function initiatingUser()
+    {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function notifications() {
+    public function notifications()
+    {
         return $this->hasMany(Notification::class, 'activity_id', 'id');
     }
     
-    public function notificationRecipients() {
+    public function notificationRecipients()
+    {
         return $this->hasManyThrough(User::class, Notification::class, 'activity_id', 'user_id', 'id');
     }
 
-    public function resource() {
+    public function resource()
+    {
         return $this->morphTo('resource', 'resource_type', 'resource_id');
     }
 
-    public function getUrlAttribute() {
+    public function getUrlAttribute()
+    {
         return $this->resource->url;
     }
     
-    public function getResourceTypeAttribute($value) {
+    public function getResourceTypeAttribute($value)
+    {
         switch ($value) {
             case static::TARGET_USER:
                 return User::class;
@@ -120,12 +127,12 @@ class Activity extends Model {
             default:
                 // Null must be returned here for Eloquent's eager-loading
                 // of the polymorphic relation to work.
-                return NULL;
-                
+                return null;
         }
     }
 
-    public function setResourceTypeAttribute($value) {
+    public function setResourceTypeAttribute($value)
+    {
         switch ($value) {
             case User::class:
                 $this->attributes['resource_type'] = static::TARGET_USER;
@@ -168,9 +175,10 @@ class Activity extends Model {
         }
     }
 
-    public function getTitleFromActivityType() {
+    public function getTitleFromActivityType()
+    {
 
-        switch($this->activity_type) {
+        switch ($this->activity_type) {
             case static::TYPE_PUBLISHED_TRACK:
                 return "Pony.fm - New track";
             case static::TYPE_PUBLISHED_PLAYLIST:

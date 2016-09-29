@@ -55,10 +55,8 @@ class TracksController extends ApiControllerBase
 
         if ($track->status === Track::STATUS_PROCESSING) {
             return Response::json(['message' => 'Processing...'], 202);
-
         } elseif ($track->status === Track::STATUS_COMPLETE) {
             return Response::json(['message' => 'Processing complete!'], 201);
-
         } else {
             // something went wrong
             return Response::json(['error' => 'Processing failed!'], 500);
@@ -97,10 +95,8 @@ class TracksController extends ApiControllerBase
 
         if ($track->version_upload_status === Track::STATUS_PROCESSING) {
             return Response::json(['message' => 'Processing...'], 202);
-
         } elseif ($track->version_upload_status === Track::STATUS_COMPLETE) {
             return Response::json(['message' => 'Processing complete!'], 201);
-
         } else {
             // something went wrong
             return Response::json(['error' => 'Processing failed!'], 500);
@@ -114,7 +110,7 @@ class TracksController extends ApiControllerBase
 
         $versions = [];
         $trackFiles = $track->trackFilesForAllVersions()->where('is_master', 'true')->get();
-        foreach($trackFiles as $trackFile) {
+        foreach ($trackFiles as $trackFile) {
             $versions[] = [
                 'version' => $trackFile->version,
                 'url' => '/tracks/' . $track->id . '/version-change/' . $trackFile->version,
@@ -338,7 +334,7 @@ class TracksController extends ApiControllerBase
         }
 
         if ($unknown) {
-            $query->where(function($q) {
+            $query->where(function ($q) {
                 $unknownGenre = Genre::where('name', 'Unknown')->first();
 
                 $q->where('track_type_id', TrackType::UNCLASSIFIED_TRACK);

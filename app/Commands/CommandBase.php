@@ -47,5 +47,5 @@ abstract class CommandBase
     /**
      * @return CommandResponse
      */
-    public abstract function execute();
+    abstract public function execute();
 }

@@ -29,11 +29,13 @@ use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 
-class Search {
+class Search
+{
     protected $elasticsearch;
     protected $index;
 
-    public function __construct(Client $connection, string $indexName) {
+    public function __construct(Client $connection, string $indexName)
+    {
         $this->elasticsearch = $connection;
         $this->index = $indexName;
     }
@@ -43,7 +45,8 @@ class Search {
      * @param int $resultsPerContentType
      * @return array
      */
-    public function searchAllContent(string $query) {
+    public function searchAllContent(string $query)
+    {
         $results = $this->elasticsearch->msearch([
             'index' => $this->index,
             'body' => [
@@ -131,7 +134,8 @@ class Search {
         ];
     }
 
-    protected function transformTracks(array $searchHits) {
+    protected function transformTracks(array $searchHits)
+    {
         $tracks = $this->transformToEloquent(Track::class, $searchHits);
         $tracks = $tracks->map(function (Track $track) {
             return Track::mapPublicTrackSummary($track);
@@ -139,7 +143,8 @@ class Search {
         return $tracks;
     }
 
-    protected function transformAlbums(array $searchHits) {
+    protected function transformAlbums(array $searchHits)
+    {
         $albums = $this->transformToEloquent(Album::class, $searchHits);
         $albums = $albums->map(function (Album $album) {
             return Album::mapPublicAlbumSummary($album);
@@ -147,7 +152,8 @@ class Search {
         return $albums;
     }
 
-    protected function transformPlaylists(array $searchHits) {
+    protected function transformPlaylists(array $searchHits)
+    {
         $playlists = $this->transformToEloquent(Playlist::class, $searchHits);
         $playlists = $playlists->map(function (Playlist $playlist) {
             return Playlist::mapPublicPlaylistSummary($playlist);
@@ -155,7 +161,8 @@ class Search {
         return $playlists;
     }
 
-    protected function transformUsers(array $searchHits) {
+    protected function transformUsers(array $searchHits)
+    {
         $users = $this->transformToEloquent(User::class, $searchHits);
         $users = $users->map(function (User $user) {
             return User::mapPublicUserSummary($user);
@@ -173,7 +180,8 @@ class Search {
      * @param array $searchHits
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    protected function transformToEloquent(string $modelClass, array $searchHits) {
+    protected function transformToEloquent(string $modelClass, array $searchHits)
+    {
         if (empty($searchHits)) {
             return new Collection();
         }

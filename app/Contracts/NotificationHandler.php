@@ -28,12 +28,13 @@ use Poniverse\Ponyfm\Models\User;
 /**
  * Interface NotificationHandler
  * @package Poniverse\Ponyfm\Contracts
- * 
+ *
  * Each method in this interface represents a type of notification. To add a new
  * type of notification, add a method for it to this interface and every class
  * that implements it. Your IDE should be able to help with this.
  */
-interface NotificationHandler {
+interface NotificationHandler
+{
     /**
      * @param Track $track
      * @return void

@@ -28,7 +28,8 @@ use Response;
 
 class TracksController extends ApiControllerBase
 {
-    public function postUploadTrack() {
+    public function postUploadTrack()
+    {
         session_write_close();
 
         $response = $this->execute(new UploadTrackCommand(true, true, session('api_client_id'), true));
@@ -53,13 +54,13 @@ class TracksController extends ApiControllerBase
     }
 
 
-    public function getUploadStatus($trackId) {
+    public function getUploadStatus($trackId)
+    {
         $track = Track::findOrFail($trackId);
         $this->authorize('edit', $track);
 
         if ($track->status === Track::STATUS_PROCESSING) {
             return Response::json(['message' => 'Processing...'], 202);
-
         } elseif ($track->status === Track::STATUS_COMPLETE) {
             return Response::json([
                 'message' => $track->published_at
@@ -68,7 +69,6 @@ class TracksController extends ApiControllerBase
                 'edit_url' => action('ContentController@getTracks', ['id' => $trackId]),
                 'track_url' => $track->url
             ], 201);
-
         } else {
             // something went wrong
             return Response::json(['error' => 'Processing failed! Please contact logic@pony.fm to figure out what went wrong.'], 500);

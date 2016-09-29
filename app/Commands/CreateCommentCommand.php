@@ -100,16 +100,12 @@ class CreateCommentCommand extends CommandBase
         // Recount the track's comments, if this is a track comment
         if ($this->_type === 'track') {
             $entity = Track::find($this->_id);
-
         } elseif ($this->_type === 'album') {
             $entity = Album::find($this->_id);
-
         } elseif ($this->_type === 'playlist') {
             $entity = Playlist::find($this->_id);
-
         } elseif ($this->_type === 'user') {
             $entity = User::find($this->_id);
-
         } else {
             App::abort(400, 'This comment is being added to an invalid entity!');
         }

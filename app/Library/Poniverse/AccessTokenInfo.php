@@ -28,7 +28,8 @@ namespace Poniverse;
  * @link https://tools.ietf.org/html/draft-richer-oauth-introspection-06
  * @package Poniverse
  */
-class AccessTokenInfo {
+class AccessTokenInfo
+{
     protected $token;
 
     protected $isActive;
@@ -42,21 +43,24 @@ class AccessTokenInfo {
     protected $issuer;
     protected $tokenType;
 
-    public function __construct($accessToken) {
+    public function __construct($accessToken)
+    {
         $this->token = $accessToken;
     }
 
     /**
      * @return mixed
      */
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 
     /**
      * @return bool
      */
-    public function getIsActive() {
+    public function getIsActive()
+    {
         return $this->isActive;
     }
 
@@ -64,7 +68,8 @@ class AccessTokenInfo {
      * @param bool $isActive
      * @return AccessTokenInfo
      */
-    public function setIsActive($isActive) {
+    public function setIsActive($isActive)
+    {
         $this->isActive = $isActive;
         return $this;
     }
@@ -72,7 +77,8 @@ class AccessTokenInfo {
     /**
      * @return mixed
      */
-    public function getExpiresAt() {
+    public function getExpiresAt()
+    {
         return $this->expiresAt;
     }
 
@@ -80,7 +86,8 @@ class AccessTokenInfo {
      * @param mixed $expiresAt
      * @return AccessTokenInfo
      */
-    public function setExpiresAt($expiresAt) {
+    public function setExpiresAt($expiresAt)
+    {
         $this->expiresAt = $expiresAt;
         return $this;
     }
@@ -88,7 +95,8 @@ class AccessTokenInfo {
     /**
      * @return mixed
      */
-    public function getIssuedAt() {
+    public function getIssuedAt()
+    {
         return $this->issuedAt;
     }
 
@@ -96,7 +104,8 @@ class AccessTokenInfo {
      * @param mixed $issuedAt
      * @return AccessTokenInfo
      */
-    public function setIssuedAt($issuedAt) {
+    public function setIssuedAt($issuedAt)
+    {
         $this->issuedAt = $issuedAt;
         return $this;
     }
@@ -104,7 +113,8 @@ class AccessTokenInfo {
     /**
      * @return array
      */
-    public function getScopes() {
+    public function getScopes()
+    {
         return $this->scopes;
     }
 
@@ -112,7 +122,8 @@ class AccessTokenInfo {
      * @param array|string $scopes
      * @return AccessTokenInfo
      */
-    public function setScopes($scopes) {
+    public function setScopes($scopes)
+    {
         if (is_array($scopes)) {
             $this->scopes = $scopes;
         } else {
@@ -125,7 +136,8 @@ class AccessTokenInfo {
     /**
      * @return mixed
      */
-    public function getClientId() {
+    public function getClientId()
+    {
         return $this->clientId;
     }
 
@@ -133,7 +145,8 @@ class AccessTokenInfo {
      * @param mixed $clientId
      * @return AccessTokenInfo
      */
-    public function setClientId($clientId) {
+    public function setClientId($clientId)
+    {
         $this->clientId = $clientId;
         return $this;
     }
@@ -141,7 +154,8 @@ class AccessTokenInfo {
     /**
      * @return mixed
      */
-    public function getSub() {
+    public function getSub()
+    {
         return $this->sub;
     }
 
@@ -149,7 +163,8 @@ class AccessTokenInfo {
      * @param mixed $sub
      * @return AccessTokenInfo
      */
-    public function setSub($sub) {
+    public function setSub($sub)
+    {
         $this->sub = $sub;
         return $this;
     }
@@ -157,7 +172,8 @@ class AccessTokenInfo {
     /**
      * @return mixed
      */
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->userId;
     }
 
@@ -165,7 +181,8 @@ class AccessTokenInfo {
      * @param mixed $userId
      * @return AccessTokenInfo
      */
-    public function setUserId($userId) {
+    public function setUserId($userId)
+    {
         $this->userId = $userId;
         return $this;
     }
@@ -173,7 +190,8 @@ class AccessTokenInfo {
     /**
      * @return mixed
      */
-    public function getIntendedAudience() {
+    public function getIntendedAudience()
+    {
         return $this->intendedAudience;
     }
 
@@ -181,7 +199,8 @@ class AccessTokenInfo {
      * @param mixed $intendedAudience
      * @return AccessTokenInfo
      */
-    public function setIntendedAudience($intendedAudience) {
+    public function setIntendedAudience($intendedAudience)
+    {
         $this->intendedAudience = $intendedAudience;
         return $this;
     }
@@ -189,7 +208,8 @@ class AccessTokenInfo {
     /**
      * @return mixed
      */
-    public function getIssuer() {
+    public function getIssuer()
+    {
         return $this->issuer;
     }
 
@@ -197,7 +217,8 @@ class AccessTokenInfo {
      * @param mixed $issuer
      * @return AccessTokenInfo
      */
-    public function setIssuer($issuer) {
+    public function setIssuer($issuer)
+    {
         $this->issuer = $issuer;
         return $this;
     }
@@ -205,7 +226,8 @@ class AccessTokenInfo {
     /**
      * @return mixed
      */
-    public function getTokenType() {
+    public function getTokenType()
+    {
         return $this->tokenType;
     }
 
@@ -213,7 +235,8 @@ class AccessTokenInfo {
      * @param mixed $tokenType
      * @return AccessTokenInfo
      */
-    public function setTokenType($tokenType) {
+    public function setTokenType($tokenType)
+    {
         $this->tokenType = $tokenType;
         return $this;
     }

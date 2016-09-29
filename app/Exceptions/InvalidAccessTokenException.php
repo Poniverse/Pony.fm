@@ -29,4 +29,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * This exception indicates that an access token we attempted to introspect
  * through the Poniverse API is expired or otherwise unusable.
  */
-class InvalidAccessTokenException extends AccessDeniedHttpException {};
+class InvalidAccessTokenException extends AccessDeniedHttpException
+{
+};

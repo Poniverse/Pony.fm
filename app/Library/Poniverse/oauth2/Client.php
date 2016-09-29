@@ -283,7 +283,7 @@ class Client
      * @param array $options An array specifying which options to set and their values
      * @return void
      */
-    public function setCurlOptions($options) 
+    public function setCurlOptions($options)
     {
         $this->curl_options = array_merge($this->curl_options, $options);
     }
@@ -357,8 +357,7 @@ class Client
         $timestamp = time();
         $nonce = uniqid();
         $parsed_url = parse_url($url);
-        if (!isset($parsed_url['port']))
-        {
+        if (!isset($parsed_url['port'])) {
             $parsed_url['port'] = ($parsed_url['scheme'] == 'https') ? 443 : 80;
         }
         if ($http_method == self::HTTP_METHOD_GET) {
@@ -369,14 +368,17 @@ class Client
             }
         }
 
-        $signature = base64_encode(hash_hmac($this->access_token_algorithm,
-                    $timestamp . "\n"
+        $signature = base64_encode(hash_hmac(
+            $this->access_token_algorithm,
+            $timestamp . "\n"
                     . $nonce . "\n"
                     . $http_method . "\n"
                     . $parsed_url['path'] . "\n"
                     . $parsed_url['host'] . "\n"
-                    . $parsed_url['port'] . "\n\n"
-                    , $this->access_token_secret, true));
+                    . $parsed_url['port'] . "\n\n",
+            $this->access_token_secret,
+            true
+        ));
 
         return 'id="' . $this->access_token . '", ts="' . $timestamp . '", nonce="' . $nonce . '", mac="' . $signature . '"';
     }
@@ -399,19 +401,18 @@ class Client
             CURLOPT_CUSTOMREQUEST  => $http_method
         );
 
-        switch($http_method) {
+        switch ($http_method) {
             case self::HTTP_METHOD_POST:
                 $curl_options[CURLOPT_POST] = true;
                 /* No break */
             case self::HTTP_METHOD_PUT:
             case self::HTTP_METHOD_PATCH:
-
                 /**
                  * Passing an array to CURLOPT_POSTFIELDS will encode the data as multipart/form-data,
                  * while passing a URL-encoded string will encode the data as application/x-www-form-urlencoded.
                  * http://php.net/manual/en/function.curl-setopt.php
                  */
-                if(is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
+                if (is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
                     $parameters = http_build_query($parameters, null, '&');
                 }
                 $curl_options[CURLOPT_POSTFIELDS] = $parameters;
@@ -435,7 +436,7 @@ class Client
 
         if (is_array($http_headers)) {
             $header = array();
-            foreach($http_headers as $key => $parsed_urlvalue) {
+            foreach ($http_headers as $key => $parsed_urlvalue) {
                 $header[] = "$key: $parsed_urlvalue";
             }
             $curl_options[CURLOPT_HTTPHEADER] = $header;
@@ -493,7 +494,9 @@ class Client
     private function convertToCamelCase($grant_type)
     {
         $parts = explode('_', $grant_type);
-        array_walk($parts, function(&$item) { $item = ucfirst($item);});
+        array_walk($parts, function (&$item) {
+            $item = ucfirst($item);
+        });
         return implode('', $parts);
     }
 }

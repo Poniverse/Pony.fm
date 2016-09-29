@@ -32,7 +32,8 @@ use Carbon\Carbon;
 
 class StatsController extends ApiControllerBase
 {
-    private function getStatsData($id, $hourly = false) {
+    private function getStatsData($id, $hourly = false)
+    {
         $playRange = "'1 MONTH'";
 
         if ($hourly) {
@@ -51,7 +52,8 @@ class StatsController extends ApiControllerBase
         return $statQuery;
     }
 
-    private function sortTrackStatsArray($query, $hourly = false) {
+    private function sortTrackStatsArray($query, $hourly = false)
+    {
         $now = Carbon::now();
         $playsArray = [];
         $output = [];
@@ -104,8 +106,9 @@ class StatsController extends ApiControllerBase
         }
     }
 
-    public function getTrackStats($id) {
-        $cachedOutput = Cache::remember('track_stats'.$id, 5, function() use ($id) {
+    public function getTrackStats($id)
+    {
+        $cachedOutput = Cache::remember('track_stats'.$id, 5, function () use ($id) {
             try {
                 $track = Track::published()->findOrFail($id);
             } catch (ModelNotFoundException $e) {

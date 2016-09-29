@@ -91,15 +91,27 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public static function summary()
     {
-        return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'is_public', 'description', 'comment_count',
-            'download_count', 'view_count', 'favourite_count', 'track_count');
+        return self::select(
+            'id',
+            'title',
+            'user_id',
+            'slug',
+            'created_at',
+            'is_public',
+            'description',
+            'comment_count',
+            'download_count',
+            'view_count',
+            'favourite_count',
+            'track_count'
+        );
     }
 
     public function scopeUserDetails($query)
     {
         if (Auth::check()) {
             $query->with([
-                'users' => function($query) {
+                'users' => function ($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
             ]);
@@ -244,7 +256,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         return $this->hasMany(PinnedPlaylist::class);
     }
 
-    public function favourites():HasMany {
+    public function favourites():HasMany
+    {
         return $this->hasMany(Favourite::class);
     }
 
@@ -253,7 +266,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         return $this->belongsTo(User::class);
     }
 
-    public function activities():MorphMany {
+    public function activities():MorphMany
+    {
         return $this->morphMany(Activity::class, 'resource');
     }
 
@@ -305,7 +319,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         return 'playlist-'.$this->id.'-'.$key;
     }
 
-    public function delete() {
+    public function delete()
+    {
         DB::transaction(function () {
             $this->activities()->delete();
             parent::delete();
@@ -318,7 +333,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
      *
      * @return array
      */
-    public function toElasticsearch():array {
+    public function toElasticsearch():array
+    {
         return [
             'title'     => $this->title,
             'curator'   => $this->user->display_name,
@@ -329,7 +345,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     /**
      * @inheritdoc
      */
-    public function shouldBeIndexed():bool {
+    public function shouldBeIndexed():bool
+    {
         return $this->is_public &&
                $this->track_count > 0 &&
                !$this->trashed();
@@ -338,7 +355,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     /**
      * @inheritdoc
      */
-    public function getResourceType():string {
+    public function getResourceType():string
+    {
         return 'playlist';
     }
 }

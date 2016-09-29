@@ -100,7 +100,7 @@ class Response
                 : $this->parent_type;
         }
 
-       return Httpful::get($parse_with)->parse($body);
+        return Httpful::get($parse_with)->parse($body);
     }
 
     /**

@@ -19,7 +19,8 @@
  * @link https://github.com/Grandt/PHPZip
  * @version 1.37
  */
-class ZipStream {
+class ZipStream
+{
     const VERSION = 1.37;
 
     const ZIP_LOCAL_FILE_HEADER = "\x50\x4b\x03\x04"; // Local file header signature
@@ -37,8 +38,8 @@ class ZipStream {
     private $zipComment = null;
     private $cdRec = array(); // central directory
     private $offset = 0;
-    private $isFinalized = FALSE;
-    private $addExtraField = TRUE;
+    private $isFinalized = false;
+    private $addExtraField = true;
 
     private $streamChunkSize = 16384; // 65536;
     private $streamFilePath = null;
@@ -54,15 +55,16 @@ class ZipStream {
      * @param String $archiveName Name to send to the HTTP client.
      * @param String $contentType Content mime type. Optional, defaults to "application/zip".
      */
-    function __construct($archiveName = "", $contentType = "application/zip") {
+    function __construct($archiveName = "", $contentType = "application/zip")
+    {
         if (!function_exists('sys_get_temp_dir')) {
-            die ("ERROR: ZipStream " . self::VERSION . " requires PHP version 5.2.1 or above.");
+            die("ERROR: ZipStream " . self::VERSION . " requires PHP version 5.2.1 or above.");
         }
 
         $headerFile = null;
         $headerLine = null;
         if (!headers_sent($headerFile, $headerLine) or die("<p><strong>Error:</strong> Unable to send file $archiveName. HTML Headers have already been sent from <strong>$headerFile</strong> in line <strong>$headerLine</strong></p>")) {
-            if ((ob_get_contents() === FALSE || ob_get_contents() == '') or die("\n<p><strong>Error:</strong> Unable to send file <strong>$archiveName.epub</strong>. Output buffer contains the following text (typically warnings or errors):<br>" . ob_get_contents() . "</p>")) {
+            if ((ob_get_contents() === false || ob_get_contents() == '') or die("\n<p><strong>Error:</strong> Unable to send file <strong>$archiveName.epub</strong>. Output buffer contains the following text (typically warnings or errors):<br>" . ob_get_contents() . "</p>")) {
                 if (ini_get('zlib.output_compression')) {
                     ini_set('zlib.output_compression', 'Off');
                 }
@@ -80,8 +82,9 @@ class ZipStream {
         }
     }
 
-    function __destruct() {
-        $this->isFinalized = TRUE;
+    function __destruct()
+    {
+        $this->isFinalized = true;
         $this->cdRec = null;
         exit;
     }
@@ -92,8 +95,9 @@ class ZipStream {
      *
      * @param bool $setExtraField TRUE (default) will enable adding of extra fields, anything else will disable it.
      */
-    function setExtraField($setExtraField = TRUE) {
-        $this->addExtraField = ($setExtraField === TRUE);
+    function setExtraField($setExtraField = true)
+    {
+        $this->addExtraField = ($setExtraField === true);
     }
 
     /**
@@ -102,13 +106,14 @@ class ZipStream {
      * @param string $newComment New comment. null to clear.
      * @return bool $success
      */
-    public function setComment($newComment = null) {
+    public function setComment($newComment = null)
+    {
         if ($this->isFinalized) {
-            return FALSE;
+            return false;
         }
         $this->zipComment = $newComment;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -120,9 +125,10 @@ class ZipStream {
      * @param string $fileComment    (Optional) Comment to be added to the archive for this directory. To use fileComment, timestamp must be given.
      * @return bool $success
      */
-    public function addDirectory($directoryPath, $timestamp = 0, $fileComment = null) {
+    public function addDirectory($directoryPath, $timestamp = 0, $fileComment = null)
+    {
         if ($this->isFinalized) {
-            return FALSE;
+            return false;
         }
 
         $directoryPath = str_replace("\\", "/", $directoryPath);
@@ -130,9 +136,9 @@ class ZipStream {
 
         if (strlen($directoryPath) > 0) {
             $this->buildZipEntry($directoryPath.'/', $fileComment, "\x00\x00", "\x00\x00", $timestamp, "\x00\x00\x00\x00", 0, 0, self::EXT_FILE_ATTR_DIR);
-            return TRUE;
+            return true;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -144,14 +150,15 @@ class ZipStream {
      * @param string $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment, timestamp must be given.
      * @return bool $success
      */
-    public function addFile($data, $filePath, $timestamp = 0, $fileComment = null)   {
+    public function addFile($data, $filePath, $timestamp = 0, $fileComment = null)
+    {
         if ($this->isFinalized) {
-            return FALSE;
+            return false;
         }
 
         if (is_resource($data) && get_resource_type($data) == "stream") {
             $this->addLargeFile($data, $filePath, $timestamp, $fileComment);
-            return FALSE;
+            return false;
         }
 
         $gzType = "\x08\x00"; // Compression type 8 = deflate
@@ -175,7 +182,7 @@ class ZipStream {
 
         print ($gzData);
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -192,7 +199,8 @@ class ZipStream {
      *                               If you start the function by parsing an array, the array will be populated with the realPath
      *                               and zipPath kay/value pairs added to the archive by the function.
      */
-    public function addDirectoryContent($realPath, $zipPath, $recursive = TRUE, $followSymlinks = TRUE, &$addedFiles = array()) {
+    public function addDirectoryContent($realPath, $zipPath, $recursive = true, $followSymlinks = true, &$addedFiles = array())
+    {
         if (file_exists($realPath) && !isset($addedFiles[realpath($realPath)])) {
             if (is_dir($realPath)) {
                 $this->addDirectory($zipPath);
@@ -208,11 +216,11 @@ class ZipStream {
                 $newRealPath = $file->getPathname();
                 $newZipPath = self::pathJoin($zipPath, $file->getFilename());
 
-                if (file_exists($newRealPath) && ($followSymlinks === TRUE || !is_link($newRealPath))) {
+                if (file_exists($newRealPath) && ($followSymlinks === true || !is_link($newRealPath))) {
                     if ($file->isFile()) {
                         $addedFiles[realpath($newRealPath)] = $newZipPath;
                         $this->addLargeFile($newRealPath, $newZipPath);
-                    } else if ($recursive === TRUE) {
+                    } else if ($recursive === true) {
                         $this->addDirectoryContent($newRealPath, $newZipPath, $recursive);
                     } else {
                         $this->addDirectory($zipPath);
@@ -231,9 +239,10 @@ class ZipStream {
      * @param string $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment, timestamp must be given.
      * @return bool $success
      */
-    public function addLargeFile($dataFile, $filePath, $timestamp = 0, $fileComment = null)   {
+    public function addLargeFile($dataFile, $filePath, $timestamp = 0, $fileComment = null)
+    {
         if ($this->isFinalized) {
-            return FALSE;
+            return false;
         }
 
         if (is_string($dataFile) && is_file($dataFile)) {
@@ -247,7 +256,7 @@ class ZipStream {
             }
             $this->closeStream($this->addExtraField);
         }
-        return TRUE;
+        return true;
     }
 
     /**
@@ -258,13 +267,14 @@ class ZipStream {
      * @param string $fileComment (Optional) Comment to be added to the archive for this file. To use fileComment, timestamp must be given.
      * @return bool $success
      */
-    public function openStream($filePath, $timestamp = 0, $fileComment = null)   {
+    public function openStream($filePath, $timestamp = 0, $fileComment = null)
+    {
         if (!function_exists('sys_get_temp_dir')) {
-            die ("ERROR: Zip " . self::VERSION . " requires PHP version 5.2.1 or above if large files are used.");
+            die("ERROR: Zip " . self::VERSION . " requires PHP version 5.2.1 or above if large files are used.");
         }
 
         if ($this->isFinalized) {
-            return FALSE;
+            return false;
         }
 
         if (strlen($this->streamFilePath) > 0) {
@@ -278,7 +288,7 @@ class ZipStream {
         $this->streamFileComment = $fileComment;
         $this->streamFileLength = 0;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -287,14 +297,15 @@ class ZipStream {
      * @param String $data
      * @return $length bytes added or FALSE if the archive is finalized or there are no open stream.
      */
-    public function addStreamData($data) {
+    public function addStreamData($data)
+    {
         if ($this->isFinalized || strlen($this->streamFilePath) == 0) {
-            return FALSE;
+            return false;
         }
 
         $length = fwrite($this->streamData, $data, strlen($data));
         if ($length != strlen($data)) {
-            die ("<p>Length mismatch</p>\n");
+            die("<p>Length mismatch</p>\n");
         }
         $this->streamFileLength += $length;
 
@@ -306,9 +317,10 @@ class ZipStream {
      *
      * @return bool $success
      */
-    public function closeStream() {
+    public function closeStream()
+    {
         if ($this->isFinalized || strlen($this->streamFilePath) == 0) {
-            return FALSE;
+            return false;
         }
 
         fflush($this->streamData);
@@ -327,18 +339,19 @@ class ZipStream {
 
         $this->streamFile = null;
 
-        return TRUE;
+        return true;
     }
 
-    private function processFile($dataFile, $filePath, $timestamp = 0, $fileComment = null) {
+    private function processFile($dataFile, $filePath, $timestamp = 0, $fileComment = null)
+    {
         if ($this->isFinalized) {
-            return FALSE;
+            return false;
         }
 
         $tempzip = tempnam(sys_get_temp_dir(), 'ZipStream');
 
         $zip = new ZipArchive;
-        if ($zip->open($tempzip) === TRUE) {
+        if ($zip->open($tempzip) === true) {
             $zip->addFile($dataFile, 'file');
             $zip->close();
         }
@@ -382,7 +395,8 @@ class ZipStream {
      * A closed archive can no longer have new files added to it.
      * @return bool $success
      */
-    public function finalize() {
+    public function finalize()
+    {
         if (!$this->isFinalized) {
             if (strlen($this->streamFilePath) > 0) {
                 $this->closeStream();
@@ -404,13 +418,13 @@ class ZipStream {
 
             flush();
 
-            $this->isFinalized = TRUE;
+            $this->isFinalized = true;
             $cd = null;
             $this->cdRec = null;
 
-            return TRUE;
+            return true;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -419,7 +433,8 @@ class ZipStream {
      * @param int $timestamp
      * @return 2-byte encoded DOS Date
      */
-    private function getDosTime($timestamp = 0) {
+    private function getDosTime($timestamp = 0)
+    {
         $timestamp = (int)$timestamp;
         $oldTZ = @date_default_timezone_get();
         date_default_timezone_set('UTC');
@@ -445,7 +460,8 @@ class ZipStream {
      * @param int $dataLength
      * @param integer $extFileAttr Use self::EXT_FILE_ATTR_FILE for files, self::EXT_FILE_ATTR_DIR for Directories.
      */
-    private function buildZipEntry($filePath, $fileComment, $gpFlags, $gzType, $timestamp, $fileCRC32, $gzLength, $dataLength, $extFileAttr) {
+    private function buildZipEntry($filePath, $fileComment, $gpFlags, $gzType, $timestamp, $fileCRC32, $gzLength, $dataLength, $extFileAttr)
+    {
         $filePath = str_replace("\\", "/", $filePath);
         $fileCommentLength = (empty($fileComment) ? 0 : strlen($fileComment));
         $timestamp = (int)$timestamp;
@@ -516,7 +532,8 @@ class ZipStream {
      * @param String $dir
      * @param String $file
      */
-    public static function pathJoin($dir, $file) {
+    public static function pathJoin($dir, $file)
+    {
         if (empty($dir) || empty($file)) {
             return self::getRelativePath($dir . $file);
         }
@@ -531,7 +548,8 @@ class ZipStream {
      * @param String $path The path to clean up
      * @return String the clean path
      */
-    public static function getRelativePath($path) {
+    public static function getRelativePath($path)
+    {
         $path = preg_replace("#/+\.?/+#", "/", str_replace("\\", "/", $path));
         $dirs = explode("/", rtrim(preg_replace('#^(?:\./)+#', '', $path), '/'));
 
@@ -570,4 +588,3 @@ class ZipStream {
         return $root . implode("/", array_slice($newDirs, 0, $offset));
     }
 }
-?>

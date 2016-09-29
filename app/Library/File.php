@@ -28,5 +28,4 @@ class File extends \Illuminate\Support\Facades\File
 
         return $response;
     }
-
 }

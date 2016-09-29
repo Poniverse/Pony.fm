@@ -94,10 +94,8 @@ class SaveAccountSettingsCommand extends CommandBase
 
             if (isset($this->_input['avatar_id'])) {
                 $this->_user->avatar_id = $this->_input['avatar_id'];
-
             } elseif (isset($this->_input['avatar'])) {
                 $this->_user->avatar_id = Image::upload($this->_input['avatar'], $this->_user)->id;
-
             } else {
                 $this->_user->avatar_id = null;
             }

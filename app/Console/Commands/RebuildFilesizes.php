@@ -59,11 +59,12 @@ class RebuildFilesizes extends Command
     {
         $this->info('This will only rebuild the cache for track files which exist on disk; non-existent files will be skipped.');
 
-        if ($this->option('force') || $this->confirm('Are you sure you want to rebuild the filesize cache? [y|N]',
-                false)
+        if ($this->option('force') || $this->confirm(
+            'Are you sure you want to rebuild the filesize cache? [y|N]',
+            false
+        )
         ) {
-
-            TrackFile::chunk(200, function($trackFiles) {
+            TrackFile::chunk(200, function ($trackFiles) {
 
                 $this->info('========== Start Chunk ==========');
 
@@ -79,11 +80,9 @@ class RebuildFilesizes extends Command
                 }
 
                 $this->info('=========== End Chunk ===========');
-
             });
 
             $this->info('Rebuild complete. Exiting.');
-
         } else {
             $this->info('Rebuild cancelled. Exiting.');
         }

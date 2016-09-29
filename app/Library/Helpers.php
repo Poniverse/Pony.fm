@@ -82,7 +82,8 @@ class Helpers
      * @param array[int] $rgb RGB values in an array
      * @return string
      */
-    public static function rgb2hex($rgb) {
+    public static function rgb2hex($rgb)
+    {
         $hex = "#";
         $hex .= str_pad(dechex($rgb[0]), 2, "0", STR_PAD_LEFT);
         $hex .= str_pad(dechex($rgb[1]), 2, "0", STR_PAD_LEFT);

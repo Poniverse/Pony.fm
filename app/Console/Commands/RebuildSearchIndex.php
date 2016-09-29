@@ -66,7 +66,7 @@ class RebuildSearchIndex extends Command
 
         $trackProgress = $this->output->createProgressBar($totalTracks);
         $this->info("Processing tracks...");
-        Track::withTrashed()->chunk(200, function(Collection $tracks) use ($trackProgress) {
+        Track::withTrashed()->chunk(200, function (Collection $tracks) use ($trackProgress) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
                 $trackProgress->advance();
@@ -79,7 +79,7 @@ class RebuildSearchIndex extends Command
 
         $albumProgress = $this->output->createProgressBar($totalAlbums);
         $this->info("Processing albums...");
-        Album::withTrashed()->chunk(200, function(Collection $albums) use ($albumProgress) {
+        Album::withTrashed()->chunk(200, function (Collection $albums) use ($albumProgress) {
             foreach ($albums as $album) {
                 /** @var Album $album */
                 $albumProgress->advance();
@@ -92,7 +92,7 @@ class RebuildSearchIndex extends Command
 
         $playlistProgress = $this->output->createProgressBar($totalPlaylists);
         $this->info("Processing playlists...");
-        Playlist::withTrashed()->chunk(200, function(Collection $playlists) use ($playlistProgress) {
+        Playlist::withTrashed()->chunk(200, function (Collection $playlists) use ($playlistProgress) {
             foreach ($playlists as $playlist) {
                 /** @var Playlist $playlist */
                 $playlistProgress->advance();
@@ -105,7 +105,7 @@ class RebuildSearchIndex extends Command
 
         $userProgress = $this->output->createProgressBar($totalUsers);
         $this->info("Processing users...");
-        User::chunk(200, function(Collection $users) use ($userProgress) {
+        User::chunk(200, function (Collection $users) use ($userProgress) {
             foreach ($users as $user) {
                 /** @var User $user */
                 $userProgress->advance();

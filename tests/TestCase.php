@@ -54,7 +54,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     /**
      * @before
      */
-    public function initializeTestFiles() {
+    public function initializeTestFiles()
+    {
         // Ensure we have the Pony.fm test files
         if (!static::$initializedFiles) {
             Storage::disk('local')->makeDirectory('test-files');
@@ -69,8 +70,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
             ];
 
             foreach ($files as $filename => $lastModifiedTimestamp) {
-                if (
-                    !$storage->has($filename) ||
+                if (!$storage->has($filename) ||
                     $storage->lastModified($filename) < $lastModifiedTimestamp
                 ) {
                     echo "Downloading test file: ${filename}...".PHP_EOL;
@@ -98,10 +98,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
             static::$initializedFiles = true;
         }
-
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         Storage::disk('local')->deleteDirectory('testing-datastore');
         parent::tearDown();
     }
@@ -118,7 +118,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      * @param $filename
      * @return \Symfony\Component\HttpFoundation\File\UploadedFile
      */
-    public function getTestFileForUpload($filename) {
+    public function getTestFileForUpload($filename)
+    {
         Storage::disk('local')->makeDirectory('testing-datastore/tmp');
         Storage::disk('local')->copy("test-files/${filename}", "testing-datastore/tmp/${filename}");
 
@@ -131,7 +132,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      * @param array $parameters
      * @param array $files
      */
-    protected function callUploadWithParameters(array $parameters, array $files = []) {
+    protected function callUploadWithParameters(array $parameters, array $files = [])
+    {
         $this->expectsJobs([
             Poniverse\Ponyfm\Jobs\EncodeTrackFile::class,
             Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity::class

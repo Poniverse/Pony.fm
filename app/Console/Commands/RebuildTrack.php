@@ -66,7 +66,7 @@ class RebuildTrack extends Command
         $track = Track::with('trackFiles')->withTrashed()->find((int) $this->argument('trackId'));
         $this->printTrackInfo($track);
 
-        if($this->option('upload')) {
+        if ($this->option('upload')) {
             // The track would've been deleted if its original upload failed.
             // It should be restored so the user can publish the track!
             $track->restore();
@@ -81,7 +81,6 @@ class RebuildTrack extends Command
                 $this->error("Something went wrong!");
                 print_r($result->getMessages());
             }
-
         } else {
             $this->info("Re-encoding this track's files - there should be a line of output for each format!");
 
@@ -94,7 +93,8 @@ class RebuildTrack extends Command
         }
     }
 
-    private function printTrackInfo(Track $track) {
+    private function printTrackInfo(Track $track)
+    {
         $this->comment("Track info:");
         $this->comment("  Title: {$track->title}");
         $this->comment("  Uploaded at: {$track->created_at}");

@@ -23,15 +23,12 @@ class Password implements IGrantType
      */
     public function validateParameters(&$parameters)
     {
-        if (!isset($parameters['username']))
-        {
+        if (!isset($parameters['username'])) {
             throw new InvalidArgumentException(
                 'The \'username\' parameter must be defined for the Password grant type',
                 InvalidArgumentException::MISSING_PARAMETER
             );
-        }
-        elseif (!isset($parameters['password']))
-        {
+        } elseif (!isset($parameters['password'])) {
             throw new InvalidArgumentException(
                 'The \'password\' parameter must be defined for the Password grant type',
                 InvalidArgumentException::MISSING_PARAMETER

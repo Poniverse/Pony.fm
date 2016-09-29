@@ -20,7 +20,6 @@
 
 namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
 
-
 use ArrayAccess;
 use Carbon\Carbon;
 use Poniverse\Ponyfm\Contracts\Favouritable;
@@ -31,14 +30,16 @@ use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 
-class PonyfmDriver extends AbstractDriver {
+class PonyfmDriver extends AbstractDriver
+{
     /**
      * A helper method for bulk insertion of notification records.
      *
      * @param int $activityId
      * @param User[] $recipients collection of {@link User} objects
      */
-    private function insertNotifications(int $activityId, $recipients) {
+    private function insertNotifications(int $activityId, $recipients)
+    {
         $notifications = [];
         foreach ($recipients as $recipient) {
             $notifications[] = [
@@ -52,7 +53,8 @@ class PonyfmDriver extends AbstractDriver {
     /**
      * @inheritdoc
      */
-    public function publishedNewTrack(Track $track) {
+    public function publishedNewTrack(Track $track)
+    {
         $activity = Activity::create([
             'created_at'    => Carbon::now(),
             'user_id'       => $track->user_id,
@@ -67,7 +69,8 @@ class PonyfmDriver extends AbstractDriver {
     /**
      * @inheritdoc
      */
-    public function publishedNewPlaylist(Playlist $playlist) {
+    public function publishedNewPlaylist(Playlist $playlist)
+    {
         $activity = Activity::create([
             'created_at' => Carbon::now(),
             'user_id' => $playlist->user_id,
@@ -79,7 +82,8 @@ class PonyfmDriver extends AbstractDriver {
         $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
     }
 
-    public function newFollower(User $userBeingFollowed, User $follower) {
+    public function newFollower(User $userBeingFollowed, User $follower)
+    {
         $activity = Activity::create([
             'created_at' => Carbon::now(),
             'user_id' => $follower->id,
@@ -94,7 +98,8 @@ class PonyfmDriver extends AbstractDriver {
     /**
      * @inheritdoc
      */
-    public function newComment(Comment $comment) {
+    public function newComment(Comment $comment)
+    {
         $activity = Activity::create([
             'created_at' => Carbon::now(),
             'user_id' => $comment->user_id,
@@ -109,7 +114,8 @@ class PonyfmDriver extends AbstractDriver {
     /**
      * @inheritdoc
      */
-    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter) {
+    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter)
+    {
         $activity = Activity::create([
             'created_at' => Carbon::now(),
             'user_id' => $favouriter->id,

@@ -97,7 +97,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         if (Auth::check()) {
             $query->with([
-                'users' => function($query) {
+                'users' => function ($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
             ]);
@@ -113,7 +113,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @param string $name
      * @return string a unique slug
      */
-    private static function getUniqueSlugForName(string $name):string {
+    private static function getUniqueSlugForName(string $name):string
+    {
         $baseSlug = Str::slug($name);
 
         // Ensure that the slug we generate is long enough.
@@ -132,7 +133,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
                 $slugBeingTried = "{$baseSlug}-{$counter}";
                 $counter++;
                 continue;
-
             } else {
                 break;
             }
@@ -162,7 +162,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         if (null !== $user) {
             return $user;
-
         } else {
             $user = new User;
 
@@ -305,18 +304,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return "remember_token";
     }
 
-    public function getUserAttribute():User {
+    public function getUserAttribute():User
+    {
         return $this;
     }
 
     /**
      * @inheritdoc
      */
-    public function getResourceType():string {
+    public function getResourceType():string
+    {
         return 'profile';
     }
 
-    public function activities():MorphMany {
+    public function activities():MorphMany
+    {
         return $this->morphMany(Activity::class, 'resource');
     }
 
@@ -337,7 +339,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return false;
     }
 
-    public static function mapPublicUserSummary(User $user) {
+    public static function mapPublicUserSummary(User $user)
+    {
         return [
             'id' => $user->id,
             'name' => $user->display_name,
@@ -358,7 +361,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return array
      */
-    public function toElasticsearch():array {
+    public function toElasticsearch():array
+    {
         return [
             'username'      => $this->username,
             'display_name'  => $this->display_name,
@@ -369,7 +373,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * @inheritdoc
      */
-    public function shouldBeIndexed():bool {
+    public function shouldBeIndexed():bool
+    {
         return $this->disabled_at === null;
     }
 }

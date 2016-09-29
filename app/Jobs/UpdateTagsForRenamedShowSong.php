@@ -76,13 +76,12 @@ class UpdateTagsForRenamedShowSong extends Job implements SelfHandling, ShouldQu
             Log::info("Tag updates for the \"{$this->songThatWasRenamed->title}\" song are currently in progress! Will try again in 30 seconds.");
             $this->release(30);
             return;
-
         } else {
             Cache::forever($this->lockKey, true);
         }
 
 
-        $this->songThatWasRenamed->tracks()->chunk(200, function($tracks) {
+        $this->songThatWasRenamed->tracks()->chunk(200, function ($tracks) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
                 $track->updateTags();

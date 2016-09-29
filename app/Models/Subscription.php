@@ -32,7 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $auth
  * @property-read \Poniverse\Ponyfm\Models\User $user
  */
-class Subscription extends Model {
+class Subscription extends Model
+{
     public $timestamps = false;
     protected $fillable = ['user_id', 'endpoint', 'p256dh', 'auth'];
     protected $casts = [
@@ -43,7 +44,8 @@ class Subscription extends Model {
         'auth'        => 'string'
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

@@ -44,7 +44,6 @@ class CommandResponse
         if (is_array($validatorOrMessages)) {
             $response->_messages = $validatorOrMessages;
             $response->_validator = null;
-
         } else {
             $response->_validator = $validatorOrMessages;
         }
@@ -102,7 +101,6 @@ class CommandResponse
     {
         if ($this->_validator !== null) {
             return $this->_validator->messages()->getMessages();
-
         } else {
             return $this->_messages;
         }

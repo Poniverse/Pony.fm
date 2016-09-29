@@ -44,7 +44,8 @@ abstract class Job
      * method. It ensures that we don't lose the in-memory database during
      * testing by disconnecting from it - which causes tests to fail.
      */
-    protected function beforeHandle() {
+    protected function beforeHandle()
+    {
         if (App::environment() !== 'testing') {
             DB::reconnect();
         }

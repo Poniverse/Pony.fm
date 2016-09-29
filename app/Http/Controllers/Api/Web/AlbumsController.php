@@ -55,7 +55,7 @@ class AlbumsController extends ApiControllerBase
     public function getShow($id)
     {
         $album = Album::with([
-            'tracks' => function($query) {
+            'tracks' => function ($query) {
                 $query->userDetails();
             },
             'tracks.cover',
@@ -96,7 +96,6 @@ class AlbumsController extends ApiControllerBase
         try {
             /** @var Album $album */
             $album = Album::with('tracks.trackFiles')->findOrFail($id);
-
         } catch (ModelNotFoundException $e) {
             return $this->notFound('Album not found!');
         }
@@ -144,8 +143,10 @@ class AlbumsController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($album);
         }
 
-        return Response::json(["albums" => $albums, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
-            200);
+        return Response::json(
+            ["albums" => $albums, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
+            200
+        );
     }
 
     public function getOwned(User $user)

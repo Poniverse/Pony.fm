@@ -84,13 +84,10 @@ class GenerateTrackFilesCommand extends CommandBase
             if ($isLossyUpload) {
                 if ($codecString === 'mp3') {
                     $masterFormat = 'MP3';
-
                 } else if (Str::startsWith($codecString, 'aac')) {
                     $masterFormat = 'AAC';
-
                 } else if ($codecString === 'vorbis') {
                     $masterFormat = 'OGG Vorbis';
-
                 } else {
                     $this->track->delete();
                     return CommandResponse::fail(['track' => "The track does not contain audio in a known lossy format. The format read from the file is: {$codecString}"]);
@@ -156,7 +153,6 @@ class GenerateTrackFilesCommand extends CommandBase
                     }
                     $this->dispatch(new EncodeTrackFile($trackFile, false, false, $this->isForUpload, $this->isReplacingTrack));
                 }
-
             } catch (InvalidEncodeOptionsException $e) {
                 // Only delete the track if the track is not being replaced
                 if ($this->isReplacingTrack) {
@@ -167,7 +163,6 @@ class GenerateTrackFilesCommand extends CommandBase
                 }
                 return CommandResponse::fail(['track' => [$e->getMessage()]]);
             }
-
         } catch (\Exception $e) {
             if ($this->isReplacingTrack) {
                 $this->track->version_upload_status = Track::STATUS_ERROR;

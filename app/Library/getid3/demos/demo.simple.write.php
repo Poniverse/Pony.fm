@@ -38,23 +38,23 @@ $tagwriter->remove_other_tags = true;
 
 // populate data array
 $TagData = array(
-	'title'         => array('My Song'),
-	'artist'        => array('The Artist'),
-	'album'         => array('Greatest Hits'),
-	'year'          => array('2004'),
-	'genre'         => array('Rock'),
-	'comment'       => array('excellent!'),
-	'track'         => array('04/16'),
-	'popularimeter' => array('email'=>'user@example.net', 'rating'=>128, 'data'=>0),
+    'title'         => array('My Song'),
+    'artist'        => array('The Artist'),
+    'album'         => array('Greatest Hits'),
+    'year'          => array('2004'),
+    'genre'         => array('Rock'),
+    'comment'       => array('excellent!'),
+    'track'         => array('04/16'),
+    'popularimeter' => array('email'=>'user@example.net', 'rating'=>128, 'data'=>0),
 );
 $tagwriter->tag_data = $TagData;
 
 // write tags
 if ($tagwriter->WriteTags()) {
-	echo 'Successfully wrote tags<br>';
-	if (!empty($tagwriter->warnings)) {
-		echo 'There were some warnings:<br>'.implode('<br><br>', $tagwriter->warnings);
-	}
+    echo 'Successfully wrote tags<br>';
+    if (!empty($tagwriter->warnings)) {
+        echo 'There were some warnings:<br>'.implode('<br><br>', $tagwriter->warnings);
+    }
 } else {
-	echo 'Failed to write tags!<br>'.implode('<br><br>', $tagwriter->errors);
+    echo 'Failed to write tags!<br>'.implode('<br><br>', $tagwriter->errors);
 }

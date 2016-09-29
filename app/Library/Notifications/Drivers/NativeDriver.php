@@ -20,7 +20,6 @@
 
 namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
 
-
 use Config;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Models\Activity;
@@ -30,7 +29,8 @@ use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 use Minishlink\WebPush\WebPush;
 
-class NativeDriver extends AbstractDriver {    
+class NativeDriver extends AbstractDriver
+{
     /**
      * Method for sending notifications to devices
      *
@@ -72,7 +72,8 @@ class NativeDriver extends AbstractDriver {
     /**
      * @inheritdoc
      */
-    public function publishedNewTrack(Track $track) {
+    public function publishedNewTrack(Track $track)
+    {
         $activity = Activity::where('user_id', $track->user_id)
             ->where('activity_type', Activity::TYPE_PUBLISHED_TRACK)
             ->where('resource_id', $track->id)
@@ -85,7 +86,8 @@ class NativeDriver extends AbstractDriver {
     /**
      * @inheritdoc
      */
-    public function publishedNewPlaylist(Playlist $playlist) {
+    public function publishedNewPlaylist(Playlist $playlist)
+    {
         $activity = Activity::where('user_id', $playlist->user_id)
             ->where('activity_type', Activity::TYPE_PUBLISHED_PLAYLIST)
             ->where('resource_id', $playlist->id)
@@ -94,7 +96,8 @@ class NativeDriver extends AbstractDriver {
         $this->pushNotifications($activity, $this->getRecipients(__FUNCTION__, func_get_args()));
     }
 
-    public function newFollower(User $userBeingFollowed, User $follower) {
+    public function newFollower(User $userBeingFollowed, User $follower)
+    {
         $activity = Activity::where('user_id', $follower->id)
             ->where('activity_type', Activity::TYPE_NEW_FOLLOWER)
             ->where('resource_id', $userBeingFollowed->id)
@@ -106,7 +109,8 @@ class NativeDriver extends AbstractDriver {
     /**
      * @inheritdoc
      */
-    public function newComment(Comment $comment) {
+    public function newComment(Comment $comment)
+    {
         $activity = Activity::where('user_id', $comment->user_id)
             ->where('activity_type', Activity::TYPE_NEW_COMMENT)
             ->where('resource_id', $comment->id)
@@ -118,7 +122,8 @@ class NativeDriver extends AbstractDriver {
     /**
      * @inheritdoc
      */
-    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter) {
+    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter)
+    {
         $activity = Activity::where('user_id', $favouriter->id)
             ->where('activity_type', Activity::TYPE_CONTENT_FAVOURITED)
             ->where('resource_id', $entityBeingFavourited->id)

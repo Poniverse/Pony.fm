@@ -153,12 +153,16 @@ class TracksController extends Controller
 
         if (Config::get('app.sendfile')) {
             $response->header('X-Sendfile', $filename);
-            $response->header('Content-Disposition',
-                'attachment; filename="'.$trackFile->getDownloadFilename().'"');
+            $response->header(
+                'Content-Disposition',
+                'attachment; filename="'.$trackFile->getDownloadFilename().'"'
+            );
         } else {
             $response->header('X-Accel-Redirect', $filename);
-            $response->header('Content-Disposition',
-                'attachment; filename="'.$trackFile->getDownloadFilename().'"');
+            $response->header(
+                'Content-Disposition',
+                'attachment; filename="'.$trackFile->getDownloadFilename().'"'
+            );
         }
 
         $time = gmdate(filemtime($filename));

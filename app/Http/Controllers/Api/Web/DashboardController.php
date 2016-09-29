@@ -39,7 +39,7 @@ class DashboardController extends ApiControllerBase
             ->orderBy('published_at', 'desc')
             ->take(30);
 
-        $recentQuery->whereHas('user', function($q) {
+        $recentQuery->whereHas('user', function ($q) {
             $q->whereIsArchived(false);
         });
 

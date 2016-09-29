@@ -23,11 +23,13 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 
-class ApiTest extends TestCase {
+class ApiTest extends TestCase
+{
     use DatabaseMigrations;
     use WithoutMiddleware;
 
-    public function testUploadWithoutFile() {
+    public function testUploadWithoutFile()
+    {
         $user = factory(User::class)->create();
 
         $this->actingAs($user)
@@ -41,7 +43,8 @@ class ApiTest extends TestCase {
         $this->assertResponseStatus(400);
     }
 
-    public function testUploadWithFileWithoutAutoPublish() {
+    public function testUploadWithFileWithoutAutoPublish()
+    {
         $this->callUploadWithParameters([
             'auto_publish' => false
         ]);
@@ -54,7 +57,8 @@ class ApiTest extends TestCase {
             ]);
     }
 
-    public function testUploadWithFileWithAutoPublish() {
+    public function testUploadWithFileWithAutoPublish()
+    {
         $this->callUploadWithParameters([]);
 
         $this->seeJsonEquals([
@@ -68,7 +72,8 @@ class ApiTest extends TestCase {
         $this->assertResponseStatus(200);
     }
 
-    public function testUploadWithOptionalData() {
+    public function testUploadWithOptionalData()
+    {
         $track = factory(Track::class)->make();
 
         $this->callUploadWithParameters([

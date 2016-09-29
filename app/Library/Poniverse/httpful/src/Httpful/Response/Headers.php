@@ -2,7 +2,8 @@
 
 namespace Httpful\Response;
 
-final class Headers implements \ArrayAccess, \Countable {
+final class Headers implements \ArrayAccess, \Countable
+{
 
     private $headers;
 
@@ -54,5 +55,4 @@ final class Headers implements \ArrayAccess, \Countable {
     {
         return $this->headers;
     }
-
 }

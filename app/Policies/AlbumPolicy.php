@@ -25,11 +25,13 @@ use Poniverse\Ponyfm\Models\User;
 
 class AlbumPolicy
 {
-    public function edit(User $user, Album $album) {
+    public function edit(User $user, Album $album)
+    {
         return $user->id === $album->user_id || $user->hasRole('admin');
     }
 
-    public function delete(User $user, Album $album) {
+    public function delete(User $user, Album $album)
+    {
         return $user->id === $album->user_id || $user->hasRole('admin');
     }
 }

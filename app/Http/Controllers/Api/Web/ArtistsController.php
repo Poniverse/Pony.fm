@@ -63,7 +63,7 @@ class ArtistsController extends ApiControllerBase
             'album' => function ($query) {
                 $query->userDetails();
             }
-        ])->get();
+            ])->get();
 
         $tracks = [];
         $albums = [];
@@ -227,11 +227,14 @@ class ArtistsController extends ApiControllerBase
             $users[] = User::mapPublicUserSummary($user);
         }
 
-        return Response::json(["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
-            200);
+        return Response::json(
+            ["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
+            200
+        );
     }
 
-    public function postIndex() {
+    public function postIndex()
+    {
         $name = Input::json('username');
         return $this->execute(new CreateUserCommand($name, $name, null, true));
     }

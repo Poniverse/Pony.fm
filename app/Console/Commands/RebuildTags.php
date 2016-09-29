@@ -59,7 +59,6 @@ class RebuildTags extends Command
         if ($this->argument('trackId')) {
             $track = Track::findOrFail($this->argument('trackId'));
             $tracks = [$track];
-
         } else {
             $tracks = Track::whereNotNull('published_at')->withTrashed()->orderBy('id', 'asc')->get();
         }
@@ -69,7 +68,7 @@ class RebuildTags extends Command
         $this->info("Updating tags for ${numberOfTracks} tracks...");
         $bar = $this->output->createProgressBar($numberOfTracks);
 
-        foreach($tracks as $track) {
+        foreach ($tracks as $track) {
             /** @var $track Track */
             $track->updateTags();
             $bar->advance();

@@ -108,8 +108,12 @@ class ClassifyMLPMA extends Command
             if (Str::contains(Str::lower($track->filename), 'ingram')) {
                 $this->info('This is an official song remix!');
 
-                list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, true,
-                    $parsedTags);
+                list($trackType, $linkedSongIds) = $this->classifyTrack(
+                    $track->filename,
+                    $officialSongs,
+                    true,
+                    $parsedTags
+                );
 
 
                 // If it has "remix" in the name, it's definitely a remix.
@@ -117,13 +121,21 @@ class ClassifyMLPMA extends Command
                 if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
                     $this->info('This is some kind of remix!');
 
-                    list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, false,
-                        $parsedTags);
+                    list($trackType, $linkedSongIds) = $this->classifyTrack(
+                        $track->filename,
+                        $officialSongs,
+                        false,
+                        $parsedTags
+                    );
 
                     // No idea what this is. Have the pony at the terminal figure it out!
                 } else {
-                    list($trackType, $linkedSongIds) = $this->classifyTrack($track->filename, $officialSongs, false,
-                        $parsedTags);
+                    list($trackType, $linkedSongIds) = $this->classifyTrack(
+                        $track->filename,
+                        $officialSongs,
+                        false,
+                        $parsedTags
+                    );
                 }
             }
 
@@ -144,7 +156,6 @@ class ClassifyMLPMA extends Command
 
             echo PHP_EOL;
         }
-
     }
 
     /**
@@ -169,19 +180,15 @@ class ClassifyMLPMA extends Command
 
         if ($isRemixOfOfficialTrack && sizeof($officialSongs) === 1) {
             $linkedSongIds = [$officialSongs[0]->id];
-
         } else {
             if ($isRemixOfOfficialTrack && sizeof($officialSongs) > 1) {
                 $this->question('Multiple official songs matched! Please enter the ID of the correct one.');
-
             } else {
                 if (sizeof($officialSongs) > 0) {
                     $this->question('This looks like a remix of an official song!');
                     $this->question('Press "r" if the match above is right!');
-
                 } else {
                     $this->question('Exactly what kind of track is this?');
-
                 }
             }
             $this->question('If this is a medley, multiple song ID\'s can be separated by commas. ');
@@ -228,7 +235,7 @@ class ClassifyMLPMA extends Command
                 default:
                     $trackTypeId = TrackType::OFFICIAL_TRACK_REMIX;
                     $linkedSongIds = explode(',', $input);
-                    $linkedSongIds = array_map(function($item) {
+                    $linkedSongIds = array_map(function ($item) {
                         return (int) $item;
                     }, $linkedSongIds);
             }

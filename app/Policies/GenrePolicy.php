@@ -25,11 +25,13 @@ use Poniverse\Ponyfm\Models\User;
 
 class GenrePolicy
 {
-    public function rename(User $user, Genre $genre) {
+    public function rename(User $user, Genre $genre)
+    {
         return $user->hasRole('admin');
     }
 
-    public function delete(User $user, Genre $genre) {
+    public function delete(User $user, Genre $genre)
+    {
         return $user->hasRole('admin');
     }
 }

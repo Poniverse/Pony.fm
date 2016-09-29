@@ -20,7 +20,6 @@
 
 namespace Poniverse\Ponyfm\Library\Notifications;
 
-
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\NotificationHandler;
@@ -39,45 +38,52 @@ use Poniverse\Ponyfm\Models\User;
  * All the heavy lifting happens asynchronously in the {@link SendNotifications}
  * job and the notification drivers.
  */
-class NotificationManager implements NotificationHandler {
+class NotificationManager implements NotificationHandler
+{
     use DispatchesJobs;
 
-    private function dispatchNotification(string $notificationType, array $notificationData) {
-        $this->dispatch( (new SendNotifications($notificationType, $notificationData))->onQueue('notifications') );
+    private function dispatchNotification(string $notificationType, array $notificationData)
+    {
+        $this->dispatch((new SendNotifications($notificationType, $notificationData))->onQueue('notifications'));
     }
 
     /**
      * @inheritdoc
      */
-    public function publishedNewTrack(Track $track) {
+    public function publishedNewTrack(Track $track)
+    {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 
     /**
      * @inheritdoc
      */
-    public function publishedNewPlaylist(Playlist $playlist) {
+    public function publishedNewPlaylist(Playlist $playlist)
+    {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 
     /**
      * @inheritdoc
      */
-    public function newFollower(User $userBeingFollowed, User $follower) {
+    public function newFollower(User $userBeingFollowed, User $follower)
+    {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 
     /**
      * @inheritdoc
      */
-    public function newComment(Comment $comment) {
+    public function newComment(Comment $comment)
+    {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 
     /**
      * @inheritdoc
      */
-    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter) {
+    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter)
+    {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
 }

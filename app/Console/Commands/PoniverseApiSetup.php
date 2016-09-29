@@ -76,12 +76,10 @@ class PoniverseApiSetup extends Command
                 'auth' => [$username, $password],
                 'query' => ['app' => 'Pony.fm']
             ]);
-
         } catch (ClientException $e) {
             if ($e->getResponse()->getStatusCode() === 401) {
                 $this->error('Incorrect username or password! Please try again.');
                 exit();
-
             } else {
                 var_dump($e->getResponse()->getBody());
                 throw $e;
@@ -100,16 +98,20 @@ class PoniverseApiSetup extends Command
     }
 
 
-    protected function setEnvironmentVariable($key, $oldValue, $newValue) {
+    protected function setEnvironmentVariable($key, $oldValue, $newValue)
+    {
         $path = base_path('.env');
 
         // Detect the specific "null" value.
-        if ($oldValue === null)
+        if ($oldValue === null) {
             $oldValue = 'null';
+        }
 
         if (file_exists($path)) {
             file_put_contents($path, str_replace(
-                "$key=".$oldValue, "$key=".$newValue, file_get_contents($path)
+                "$key=".$oldValue,
+                "$key=".$newValue,
+                file_get_contents($path)
             ));
         } else {
             $this->error('Please run `vagrant up`!');

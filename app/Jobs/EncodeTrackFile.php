@@ -70,8 +70,7 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
      */
     public function __construct(TrackFile $trackFile, $isExpirable, $autoPublish = false, $isForUpload = false, $isReplacingTrack = false)
     {
-        if (
-            (!$isForUpload && $trackFile->is_master) ||
+        if ((!$isForUpload && $trackFile->is_master) ||
             ($isForUpload && $trackFile->is_master && !$trackFile->getFormat()['is_lossless'])
         ) {
             throw new InvalidEncodeOptionsException("Master files cannot be encoded unless we're generating a lossless master file during the upload process.");
@@ -97,7 +96,6 @@ class EncodeTrackFile extends Job implements SelfHandling, ShouldQueue
         if ($this->trackFile->status === TrackFile::STATUS_PROCESSING) {
             Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is already being processed!');
             return;
-
         } elseif (!$this->trackFile->is_expired && File::exists($this->trackFile->getFile())) {
             Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is still valid! No need to re-encode it.');
             return;

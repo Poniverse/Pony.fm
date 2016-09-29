@@ -51,7 +51,7 @@ class MergeAccountsCommand extends CommandBase
      */
     public function execute()
     {
-        DB::transaction(function() {
+        DB::transaction(function () {
             $accountIds = [$this->sourceAccount->id];
 
             foreach (Album::whereIn('user_id', $accountIds)->get() as $album) {

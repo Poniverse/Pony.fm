@@ -68,14 +68,16 @@ class PlaylistsController extends ApiControllerBase
         $page = Input::has('page') ? Input::get('page') : 1;
 
         $query = Playlist::summary()
-            ->with('user',
+            ->with(
+                'user',
                 'user.avatar',
                 'tracks',
                 'tracks.cover',
                 'tracks.user',
                 'tracks.user.avatar',
                 'tracks.album',
-                'tracks.album.user')
+                'tracks.album.user'
+            )
             ->userDetails()
             // A playlist with only one track is not much of a list.
             ->where('track_count', '>', 1)
@@ -106,7 +108,7 @@ class PlaylistsController extends ApiControllerBase
             'tracks.genre',
             'tracks.cover',
             'tracks.album',
-            'tracks' => function($query) {
+            'tracks' => function ($query) {
                 $query->userDetails();
             },
             'tracks.trackFiles',
@@ -161,7 +163,7 @@ class PlaylistsController extends ApiControllerBase
         $query = Playlist
             ::userDetails()
             ->with('tracks', 'tracks.cover', 'tracks.user', 'user')
-            ->join('pinned_playlists', function($join) {
+            ->join('pinned_playlists', function ($join) {
                 $join->on('playlist_id', '=', 'playlists.id');
             })
             ->where('pinned_playlists.user_id', '=', Auth::user()->id)

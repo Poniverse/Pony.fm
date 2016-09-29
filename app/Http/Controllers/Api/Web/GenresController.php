@@ -28,14 +28,13 @@ use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Response;
 
-
 class GenresController extends ApiControllerBase
 {
     public function getIndex()
     {
         $this->authorize('access-admin-area');
 
-        $genres = Genre::with(['trackCountRelation' => function($query) {
+        $genres = Genre::with(['trackCountRelation' => function ($query) {
             $query->withTrashed();
         }])
             ->orderBy('name', 'asc')

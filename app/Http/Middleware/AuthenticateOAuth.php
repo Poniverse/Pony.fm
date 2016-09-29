@@ -46,7 +46,8 @@ class AuthenticateOAuth
      */
     private $session;
 
-    public function __construct(Poniverse $poniverse, Guard $auth, Store $session) {
+    public function __construct(Poniverse $poniverse, Guard $auth, Store $session)
+    {
         $this->poniverse = $poniverse;
         $this->auth = $auth;
         $this->session = $session;

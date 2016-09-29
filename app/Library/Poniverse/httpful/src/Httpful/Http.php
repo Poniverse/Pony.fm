@@ -82,5 +82,4 @@ class Http
     {
         return array(self::POST, self::PUT, self::PATCH, self::OPTIONS);
     }
-
 }

@@ -28,14 +28,13 @@ use Poniverse\Ponyfm\Models\ShowSong;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Response;
 
-
 class ShowSongsController extends ApiControllerBase
 {
     public function getIndex()
     {
         $this->authorize('access-admin-area');
 
-        $songs = ShowSong::with(['trackCountRelation' => function($query) {
+        $songs = ShowSong::with(['trackCountRelation' => function ($query) {
             $query->withTrashed();
         }])
             ->orderBy('title', 'asc')

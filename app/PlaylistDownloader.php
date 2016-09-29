@@ -45,7 +45,7 @@ class PlaylistDownloader
     public function download()
     {
         // Check whether the format is lossless yet not all master files are lossless
-        $isLosslessFormatWithLossyTracks =  in_array($this->_format, Track::$LosslessFormats) 
+        $isLosslessFormatWithLossyTracks =  in_array($this->_format, Track::$LosslessFormats)
             && !$this->_playlist->hasLosslessTracksOnly()
             && $this->_playlist->hasLosslessTracks();
 
