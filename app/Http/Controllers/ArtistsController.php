@@ -32,11 +32,13 @@ class ArtistsController extends Controller
         return View::make('artists.index');
     }
 
-    public function getFavourites($slug) {
+    public function getFavourites($slug)
+    {
         return $this->getProfile($slug);
     }
 
-    public function getContent($slug) {
+    public function getContent($slug)
+    {
         return $this->getProfile($slug);
     }
 
@@ -53,7 +55,7 @@ class ArtistsController extends Controller
     public function getShortlink($id)
     {
         $user = User::find($id);
-        if (!$user || $user->disabled_at !== NULL) {
+        if (!$user || $user->disabled_at !== null) {
             App::abort('404');
         }
 

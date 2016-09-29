@@ -27,7 +27,8 @@ use Illuminate\Contracts\Database\ModelIdentifier;
  *
  * @link https://github.com/laravel/framework/issues/9347#issuecomment-120803564
  */
-trait SerializesModels {
+trait SerializesModels
+{
     use \Illuminate\Queue\SerializesModels;
 
     /**
@@ -36,7 +37,8 @@ trait SerializesModels {
      * @param  mixed $value
      * @return mixed
      */
-    protected function getRestoredPropertyValue($value) {
+    protected function getRestoredPropertyValue($value)
+    {
         if ($value instanceof ModelIdentifier) {
             return method_exists($value->class, 'withTrashed')
                 ? (new $value->class)->withTrashed()->findOrFail($value->id)

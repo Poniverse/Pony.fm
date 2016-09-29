@@ -20,7 +20,7 @@
 
 class AudioCache
 {
-    private static $_movieCache = array();
+    private static $_movieCache = [];
 
     public static function get(string $filename):FFmpegMovie
     {

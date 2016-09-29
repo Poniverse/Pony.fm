@@ -28,7 +28,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @package Poniverse\Ponyfm\Contracts
  */
-interface Commentable extends GeneratesNotifications {
+interface Commentable extends GeneratesNotifications
+{
     /**
      * This method returns an Eloquent relation to the entity's comments.
      *

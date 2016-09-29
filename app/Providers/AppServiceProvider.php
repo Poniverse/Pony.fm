@@ -36,8 +36,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Validator::resolver(function($translator, $data, $rules, $messages)
-        {
+        Validator::resolver(function ($translator, $data, $rules, $messages) {
             return new PfmValidator($translator, $data, $rules, $messages);
         });
     }
@@ -49,11 +48,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(Poniverse::class, function(Application $app) {
+        $this->app->bind(Poniverse::class, function (Application $app) {
             return new Poniverse($app['config']->get('poniverse.client_id'), $app['config']->get('poniverse.secret'));
         });
 
-        $this->app->bind(Poniverse\Ponyfm\Library\Search::class, function(Application $app) {
+        $this->app->bind(Poniverse\Ponyfm\Library\Search::class, function (Application $app) {
             return new Poniverse\Ponyfm\Library\Search(
                 \Elasticsearch::connection(),
                 $app['config']->get('ponyfm.elasticsearch_index')

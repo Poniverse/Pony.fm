@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Commands\CreateGenreCommand;
 use Poniverse\Ponyfm\Commands\DeleteGenreCommand;
 use Poniverse\Ponyfm\Commands\RenameGenreCommand;
@@ -28,14 +28,13 @@ use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Response;
 
-
 class GenresController extends ApiControllerBase
 {
     public function getIndex()
     {
         $this->authorize('access-admin-area');
 
-        $genres = Genre::with(['trackCountRelation' => function($query) {
+        $genres = Genre::with(['trackCountRelation' => function ($query) {
             $query->withTrashed();
         }])
             ->orderBy('name', 'asc')
@@ -48,20 +47,20 @@ class GenresController extends ApiControllerBase
 
     public function postCreate()
     {
-        $command = new CreateGenreCommand(Input::get('name'));
+        $command = new CreateGenreCommand(Request::get('name'));
         return $this->execute($command);
     }
 
     public function putRename($genreId)
     {
-        $command = new RenameGenreCommand($genreId, Input::get('name'));
+        $command = new RenameGenreCommand($genreId, Request::get('name'));
         return $this->execute($command);
     }
 
 
     public function deleteGenre($genreId)
     {
-        $command = new DeleteGenreCommand($genreId, Input::get('destination_genre_id'));
+        $command = new DeleteGenreCommand($genreId, Request::get('destination_genre_id'));
         return $this->execute($command);
     }
 }

@@ -22,6 +22,8 @@ namespace Poniverse\Ponyfm\Exceptions;
 
 use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\ValidationException;
 use GrahamCampbell\Exceptions\ExceptionHandler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -32,6 +34,8 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
+        AuthorizationException::class,
+        ValidationException::class,
         HttpException::class,
     ];
 
@@ -45,7 +49,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        return parent::report($e);
+        parent::report($e);
     }
 
     /**

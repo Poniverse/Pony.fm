@@ -35,7 +35,6 @@ use Poniverse\Ponyfm\Models\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-
 class ParseTrackTagsCommand extends CommandBase
 {
     private $track;
@@ -107,7 +106,8 @@ class ParseTrackTagsCommand extends CommandBase
      * @param Track
      * @return Track
     */
-    private function unsetNullVariables($track) {
+    private function unsetNullVariables($track)
+    {
         $vars = $track->getAttributes();
 
         foreach ($vars as $key => $value) {
@@ -125,7 +125,8 @@ class ParseTrackTagsCommand extends CommandBase
      * @param string $genreName
      * @return int
      */
-    protected function getGenreId(string $genreName) {
+    protected function getGenreId(string $genreName)
+    {
         $existingGenre = Genre::withTrashed()
                             ->where('name', $genreName)->first();
 
@@ -165,7 +166,8 @@ class ParseTrackTagsCommand extends CommandBase
      * @param integer|null $coverId
      * @return int|null
      */
-    protected function getAlbumId(int $artistId, $albumName, $coverId = null) {
+    protected function getAlbumId(int $artistId, $albumName, $coverId = null)
+    {
         if (null !== $albumName) {
             $album = Album::firstOrNew([
                 'user_id' => $artistId,
@@ -194,7 +196,8 @@ class ParseTrackTagsCommand extends CommandBase
      * @return array the "processed" and raw tags extracted from the file
      * @throws \Exception
      */
-    protected function parseOriginalTags(\Symfony\Component\HttpFoundation\File\File $file, User $artist, string $audioCodec) {
+    protected function parseOriginalTags(\Symfony\Component\HttpFoundation\File\File $file, User $artist, string $audioCodec)
+    {
         //==========================================================================================================
         // Extract the original tags.
         //==========================================================================================================
@@ -208,16 +211,12 @@ class ParseTrackTagsCommand extends CommandBase
 
         if ($audioCodec === 'mp3') {
             list($parsedTags, $rawTags) = $this->getId3Tags($allTags);
-
         } elseif (Str::startsWith($audioCodec, ['aac', 'alac'])) {
             list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
-
         } elseif (in_array($audioCodec, ['vorbis', 'flac'])) {
             list($parsedTags, $rawTags) = $this->getVorbisTags($allTags);
-
         } elseif (Str::startsWith($audioCodec, ['pcm', 'adpcm'])) {
             list($parsedTags, $rawTags) = $this->getAtomTags($allTags);
-
         } else {
             // Assume the file is untagged if it's in an unknown format.
             $parsedTags = [
@@ -255,7 +254,6 @@ class ParseTrackTagsCommand extends CommandBase
 
         if ($genreName !== null) {
             $parsedTags['genre_id'] = $this->getGenreId($genreName);
-
         } else {
             $parsedTags['genre_id'] = null;
         }
@@ -270,10 +268,8 @@ class ParseTrackTagsCommand extends CommandBase
 
             if ($image['image_mime'] === 'image/png') {
                 $extension = 'png';
-
             } elseif ($image['image_mime'] === 'image/jpeg') {
                 $extension = 'jpg';
-
             } else {
                 throw new BadRequestHttpException('Unknown cover format embedded in the track file!');
             }
@@ -289,7 +285,6 @@ class ParseTrackTagsCommand extends CommandBase
 
             $cover = Image::upload($imageFile, $artist);
             $coverId = $cover->id;
-
         } else {
             // no cover art was found - carry on
         }
@@ -318,7 +313,8 @@ class ParseTrackTagsCommand extends CommandBase
      * @param array $rawTags
      * @return array
      */
-    protected function getId3Tags($rawTags) {
+    protected function getId3Tags($rawTags)
+    {
         if (array_key_exists('tags', $rawTags) && array_key_exists('id3v2', $rawTags['tags'])) {
             $tags = $rawTags['tags']['id3v2'];
         } elseif (array_key_exists('tags', $rawTags) && array_key_exists('id3v1', $rawTags['tags'])) {
@@ -364,7 +360,8 @@ class ParseTrackTagsCommand extends CommandBase
      * @param array $rawTags
      * @return array
      */
-    protected function getAtomTags($rawTags) {
+    protected function getAtomTags($rawTags)
+    {
         if (array_key_exists('tags', $rawTags) && array_key_exists('quicktime', $rawTags['tags'])) {
             $tags = $rawTags['tags']['quicktime'];
         } else {
@@ -379,7 +376,6 @@ class ParseTrackTagsCommand extends CommandBase
 
         if (isset($tags['release_date'])) {
             $releaseDate = $this->parseDateString($tags['release_date'][0]);
-
         } elseif (isset($tags['creation_date'])) {
             $releaseDate = $this->parseDateString($tags['creation_date'][0]);
         } else {
@@ -408,7 +404,8 @@ class ParseTrackTagsCommand extends CommandBase
      * @param array $rawTags
      * @return array
      */
-    protected function getVorbisTags($rawTags) {
+    protected function getVorbisTags($rawTags)
+    {
         if (array_key_exists('tags', $rawTags) && array_key_exists('vorbiscomment', $rawTags['tags'])) {
             $tags = $rawTags['tags']['vorbiscomment'];
         } else {
@@ -452,7 +449,8 @@ class ParseTrackTagsCommand extends CommandBase
      * @param string $dateString
      * @return null|Carbon
      */
-    protected function parseDateString(string $dateString) {
+    protected function parseDateString(string $dateString)
+    {
         switch (Str::length($dateString)) {
             // YYYY
             case 4:
@@ -475,7 +473,6 @@ class ParseTrackTagsCommand extends CommandBase
                 // If not, give up.
                 try {
                     return Carbon::createFromFormat(Carbon::ISO8601, $dateString);
-
                 } catch (\InvalidArgumentException $e) {
                     return null;
                 }

@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Commands;
 
 abstract class CommandBase
 {
-    private $_listeners = array();
+    private $_listeners = [];
 
     public function listen($listener)
     {
@@ -47,5 +47,5 @@ abstract class CommandBase
     /**
      * @return CommandResponse
      */
-    public abstract function execute();
+    abstract public function execute();
 }

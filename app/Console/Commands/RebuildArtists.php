@@ -59,7 +59,7 @@ class RebuildArtists extends Command
 
         $bar = $this->output->createProgressBar($numberOfUsers);
 
-        foreach(User::with(['tracks' => function($query) {
+        foreach (User::with(['tracks' => function ($query) {
             $query->published()->listed();
         }])->get() as $user) {
             $bar->advance();

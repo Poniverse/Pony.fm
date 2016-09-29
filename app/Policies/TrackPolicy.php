@@ -25,11 +25,13 @@ use Poniverse\Ponyfm\Models\User;
 
 class TrackPolicy
 {
-    public function edit(User $user, Track $track) {
+    public function edit(User $user, Track $track)
+    {
         return $user->id === $track->user_id || $user->hasRole('admin');
     }
 
-    public function delete(User $user, Track $track) {
+    public function delete(User $user, Track $track)
+    {
         return $user->id === $track->user_id || $user->hasRole('admin');
     }
 }

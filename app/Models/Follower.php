@@ -41,11 +41,13 @@ class Follower extends Model
     public $timestamps = false;
 
 
-    public function follower():BelongsTo {
+    public function follower():BelongsTo
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function artist():BelongsTo {
+    public function artist():BelongsTo
+    {
         return $this->belongsTo(User::class, 'artist_id');
     }
 }

@@ -34,7 +34,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Poniverse\Ponyfm\Models\User $recipient
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification forUser($user)
  */
-class Notification extends Model {
+class Notification extends Model
+{
     public $timestamps = false;
     protected $fillable = ['activity_id', 'user_id'];
     protected $casts = [
@@ -44,11 +45,13 @@ class Notification extends Model {
         'is_read'       => 'boolean',
     ];
 
-    public function activity() {
+    public function activity()
+    {
         return $this->belongsTo(Activity::class, 'activity_id', 'id');
     }
     
-    public function recipient() {
+    public function recipient()
+    {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
@@ -59,7 +62,8 @@ class Notification extends Model {
      * @param User $user
      * @return Builder
      */
-    public function scopeForUser(Builder $query, User $user) {
+    public function scopeForUser(Builder $query, User $user)
+    {
         $result = $query->with([
             'activity',
             'activity.initiatingUser',
@@ -75,7 +79,8 @@ class Notification extends Model {
         return $result;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         if (is_null($this->activity->resource)) {
             return '';
         }

@@ -31,7 +31,7 @@ use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 use Poniverse\Ponyfm\Models\Follower;
 use App;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Response;
 use ColorThief\ColorThief;
 use Helpers;
@@ -63,7 +63,7 @@ class ArtistsController extends ApiControllerBase
             'album' => function ($query) {
                 $query->userDetails();
             }
-        ])->get();
+            ])->get();
 
         $tracks = [];
         $albums = [];
@@ -209,8 +209,8 @@ class ArtistsController extends ApiControllerBase
     public function getIndex()
     {
         $page = 1;
-        if (Input::has('page')) {
-            $page = Input::get('page');
+        if (Request::has('page')) {
+            $page = Request::get('page');
         }
 
         $query = User::where('track_count', '>', 0);
@@ -227,12 +227,15 @@ class ArtistsController extends ApiControllerBase
             $users[] = User::mapPublicUserSummary($user);
         }
 
-        return Response::json(["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
-            200);
+        return Response::json(
+            ["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
+            200
+        );
     }
 
-    public function postIndex() {
-        $name = Input::json('username');
+    public function postIndex()
+    {
+        $name = Request::json('username');
         return $this->execute(new CreateUserCommand($name, $name, null, true));
     }
 }

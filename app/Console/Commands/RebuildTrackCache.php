@@ -67,10 +67,11 @@ class RebuildTrackCache extends Command
         $this->info('If this is your first time running this command, it is *highly* recommended that you ensure the file sizes for all track files have been populated.');
         $this->info('***');
 
-        if ($this->option('force') || $this->confirm('Are you sure you want to delete all to-be-cached track files and encode missing non-cached track files?',
-                false)
+        if ($this->option('force') || $this->confirm(
+            'Are you sure you want to delete all to-be-cached track files and encode missing non-cached track files?',
+            false
+        )
         ) {
-
             //==========================================================================================================
             // Delete previously cached track files
             //==========================================================================================================
@@ -83,7 +84,7 @@ class RebuildTrackCache extends Command
             // Chunk track files which are cacheable and NOT master
             TrackFile::where('is_cacheable', true)
                 ->where('is_master', false)
-                ->chunk(200, function($trackFiles) use (&$count) {
+                ->chunk(200, function ($trackFiles) use (&$count) {
                     // Delete chunked track files
                     foreach ($trackFiles as $trackFile) {
                         // Clear expiration so will be re-cached on next request
@@ -115,7 +116,7 @@ class RebuildTrackCache extends Command
             TrackFile::where('is_cacheable', false)
                 ->whereIn('format', Track::$CacheableFormats)
                 ->where('is_master', false)
-                ->chunk(200, function($trackFiles) use (&$trackFileCount, &$formats) {
+                ->chunk(200, function ($trackFiles) use (&$trackFileCount, &$formats) {
                     $this->output->newLine(1);
                     $this->info('---------- Start Chunk ----------');
 
@@ -150,7 +151,7 @@ class RebuildTrackCache extends Command
             // Chunk track files which are NOT meant to be cacheable, but currently cacheable
             TrackFile::where('is_cacheable', true)
                 ->whereNotIn('format', Track::$CacheableFormats)
-                ->chunk(200, function($trackFiles) use (&$trackFileCount, &$formats) {
+                ->chunk(200, function ($trackFiles) use (&$trackFileCount, &$formats) {
                     $this->output->newLine(1);
                     $this->info('---------- Start Chunk ----------');
 
@@ -188,7 +189,7 @@ class RebuildTrackCache extends Command
             // Find track files which are cacheable and NOT master
             TrackFile::whereIn('format', Track::$CacheableFormats)
                 ->where('is_master', false)
-                ->chunk(200, function($trackFiles) use (&$count, &$trackFileCount) {
+                ->chunk(200, function ($trackFiles) use (&$count, &$trackFileCount) {
                     $this->output->newLine(1);
                     $this->info('---------- Start Chunk ----------');
 
@@ -223,36 +224,35 @@ class RebuildTrackCache extends Command
             // Chunk non-cacheable track files
             TrackFile::where('is_cacheable', false)
                 ->where('is_master', false)
-                ->chunk(200, function($trackFiles) use (&$count) {
-                $this->output->newLine(1);
-                $this->info('---------- Start Chunk ----------');
+                ->chunk(200, function ($trackFiles) use (&$count) {
+                    $this->output->newLine(1);
+                    $this->info('---------- Start Chunk ----------');
 
                 // Record the track files which do not exist (i.e., have not been encoded yet)
-                $emptyTrackFiles = [];
+                    $emptyTrackFiles = [];
 
-                foreach ($trackFiles as $trackFile) {
-                    if (!File::exists($trackFile->getFile())) {
-                        $count++;
-                        $emptyTrackFiles[] = $trackFile;
+                    foreach ($trackFiles as $trackFile) {
+                        if (!File::exists($trackFile->getFile())) {
+                            $count++;
+                            $emptyTrackFiles[] = $trackFile;
+                        }
                     }
-                }
 
                 // Encode recorded track files
-                foreach ($emptyTrackFiles as $emptyTrackFile) {
-                    $this->info("Started encoding track file ID {$emptyTrackFile->id}");
-                    $this->dispatch(new EncodeTrackFile($emptyTrackFile, false));
-                }
+                    foreach ($emptyTrackFiles as $emptyTrackFile) {
+                        $this->info("Started encoding track file ID {$emptyTrackFile->id}");
+                        $this->dispatch(new EncodeTrackFile($emptyTrackFile, false));
+                    }
 
-                $this->info('----------- End Chunk -----------');
-                $this->output->newLine(1);
-            });
+                    $this->info('----------- End Chunk -----------');
+                    $this->output->newLine(1);
+                });
 
 
             $this->info($count.' track files encoded.');
             $this->output->newLine(1);
 
             $this->info('Rebuild complete. Exiting.');
-
         } else {
             $this->info('Rebuild cancelled. Exiting.');
         }

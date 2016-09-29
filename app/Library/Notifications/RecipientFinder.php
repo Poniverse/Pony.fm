@@ -20,7 +20,6 @@
 
 namespace Poniverse\Ponyfm\Library\Notifications;
 
-
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\NotificationHandler;
@@ -36,28 +35,32 @@ use Poniverse\Ponyfm\Models\User;
 /**
  * Class RecipientFinder
  * @package Poniverse\Ponyfm\Library\Notifications
- * 
+ *
  * This class returns a list of users who are to receive a particular notification.
  * It is instantiated on a per-driver basis.
  */
-class RecipientFinder implements NotificationHandler {
+class RecipientFinder implements NotificationHandler
+{
     /**
      * @var string class name of a notification driver
      */
     private $notificationDriver;
     
-    public function __construct(string $notificationDriver) {
+    public function __construct(string $notificationDriver)
+    {
         $this->notificationDriver = $notificationDriver;
     }
 
-    private function fail() {
+    private function fail()
+    {
         throw new \InvalidArgumentException("Unknown notification driver given: {$this->notificationDriver}");
     }
 
     /**
      * @inheritdoc
      */
-    public function publishedNewTrack(Track $track) {
+    public function publishedNewTrack(Track $track)
+    {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
                 return $track->user->followers;
@@ -84,7 +87,8 @@ class RecipientFinder implements NotificationHandler {
     /**
      * @inheritdoc
      */
-    public function publishedNewPlaylist(Playlist $playlist) {
+    public function publishedNewPlaylist(Playlist $playlist)
+    {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
                 return $playlist->user->followers;
@@ -111,7 +115,8 @@ class RecipientFinder implements NotificationHandler {
     /**
      * @inheritdoc
      */
-    public function newFollower(User $userBeingFollowed, User $follower) {
+    public function newFollower(User $userBeingFollowed, User $follower)
+    {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
                 return [$userBeingFollowed];
@@ -125,7 +130,8 @@ class RecipientFinder implements NotificationHandler {
     /**
      * @inheritdoc
      */
-    public function newComment(Comment $comment) {
+    public function newComment(Comment $comment)
+    {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
                 return
@@ -142,7 +148,8 @@ class RecipientFinder implements NotificationHandler {
     /**
      * @inheritdoc
      */
-    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter) {
+    public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter)
+    {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
                 return

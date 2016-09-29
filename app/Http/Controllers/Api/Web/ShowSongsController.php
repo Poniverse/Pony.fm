@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Commands\CreateShowSongCommand;
 use Poniverse\Ponyfm\Commands\DeleteShowSongCommand;
 use Poniverse\Ponyfm\Commands\RenameShowSongCommand;
@@ -28,14 +28,13 @@ use Poniverse\Ponyfm\Models\ShowSong;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Response;
 
-
 class ShowSongsController extends ApiControllerBase
 {
     public function getIndex()
     {
         $this->authorize('access-admin-area');
 
-        $songs = ShowSong::with(['trackCountRelation' => function($query) {
+        $songs = ShowSong::with(['trackCountRelation' => function ($query) {
             $query->withTrashed();
         }])
             ->orderBy('title', 'asc')
@@ -49,20 +48,20 @@ class ShowSongsController extends ApiControllerBase
 
     public function postCreate()
     {
-        $command = new CreateShowSongCommand(Input::get('title'));
+        $command = new CreateShowSongCommand(Request::get('title'));
         return $this->execute($command);
     }
 
     public function putRename($songId)
     {
-        $command = new RenameShowSongCommand($songId, Input::get('title'));
+        $command = new RenameShowSongCommand($songId, Request::get('title'));
         return $this->execute($command);
     }
 
 
     public function deleteSong($songId)
     {
-        $command = new DeleteShowSongCommand($songId, Input::get('destination_song_id'));
+        $command = new DeleteShowSongCommand($songId, Request::get('destination_song_id'));
         return $this->execute($command);
     }
 }

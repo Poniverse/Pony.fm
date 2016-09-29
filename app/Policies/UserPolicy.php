@@ -24,23 +24,28 @@ use Poniverse\Ponyfm\Models\User;
 
 class UserPolicy
 {
-    public function createAlbum(User $userToAuthorize, User $user) {
+    public function createAlbum(User $userToAuthorize, User $user)
+    {
         return $userToAuthorize->id === $user->id || $userToAuthorize->hasRole('admin');
     }
 
-    public function createTrack(User $userToAuthorize, User $user) {
+    public function createTrack(User $userToAuthorize, User $user)
+    {
         return $userToAuthorize->id === $user->id || $userToAuthorize->hasRole('admin');
     }
 
-    public function getAlbums(User $userToAuthorize, User $user) {
+    public function getAlbums(User $userToAuthorize, User $user)
+    {
         return $userToAuthorize->id === $user->id || $userToAuthorize->hasRole('admin');
     }
 
-    public function getImages(User $userToAuthorize, User $user) {
+    public function getImages(User $userToAuthorize, User $user)
+    {
         return $userToAuthorize->id === $user->id || $userToAuthorize->hasRole('admin');
     }
 
-    public function edit(User $userToAuthorize, User $user) {
+    public function edit(User $userToAuthorize, User $user)
+    {
         return $userToAuthorize->id === $user->id || $userToAuthorize->hasRole('admin');
     }
 }

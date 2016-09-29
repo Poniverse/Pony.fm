@@ -46,12 +46,13 @@ trait IndexedInElasticsearchTrait
 
 
     // Laravel automatically runs this method based on the trait's name. #magic
-    public static function bootIndexedInElasticsearchTrait() {
-        static::saved(function(Searchable $entity) {
+    public static function bootIndexedInElasticsearchTrait()
+    {
+        static::saved(function (Searchable $entity) {
             $entity->updateElasticsearchEntry();
         });
 
-        static::deleted(function(Searchable $entity) {
+        static::deleted(function (Searchable $entity) {
             $entity->updateElasticsearchEntry();
         });
     }
@@ -60,7 +61,8 @@ trait IndexedInElasticsearchTrait
      * @param bool $includeBody set to false when deleting documents
      * @return array
      */
-    private function getElasticsearchParameters(bool $includeBody = true) {
+    private function getElasticsearchParameters(bool $includeBody = true)
+    {
         $parameters = [
             'index' => Config::get('ponyfm.elasticsearch_index'),
             'type'  => $this->elasticsearchType,
@@ -74,14 +76,15 @@ trait IndexedInElasticsearchTrait
         return $parameters;
     }
 
-    private function createOrUpdateElasticsearchEntry() {
+    private function createOrUpdateElasticsearchEntry()
+    {
         Elasticsearch::connection()->index($this->getElasticsearchParameters());
     }
 
-    private function deleteElasticsearchEntry() {
+    private function deleteElasticsearchEntry()
+    {
         try {
             Elasticsearch::connection()->delete($this->getElasticsearchParameters(false));
-
         } catch (Missing404Exception $e) {
             // If the entity we're trying to delete isn't indexed in Elasticsearch,
             // that's fine.
@@ -92,7 +95,8 @@ trait IndexedInElasticsearchTrait
      * Asynchronously updates the Elasticsearch entry.
      * When in doubt, this is the method to use.
      */
-    public function updateElasticsearchEntry() {
+    public function updateElasticsearchEntry()
+    {
         $job = (new UpdateSearchIndexForEntity($this))->onQueue(Config::get('ponyfm.indexing_queue'));
         $this->dispatch($job);
     }
@@ -101,7 +105,8 @@ trait IndexedInElasticsearchTrait
      * Synchronously updates the Elasticsearch entry. This should only be
      * called from the UpdateSearchIndexForEntity job.
      */
-    public function updateElasticsearchEntrySynchronously() {
+    public function updateElasticsearchEntrySynchronously()
+    {
         if ($this->shouldBeIndexed()) {
             $this->createOrUpdateElasticsearchEntry();
         } else {

@@ -20,7 +20,8 @@
 
 namespace Poniverse\Ponyfm\Contracts;
 
-interface Searchable {
+interface Searchable
+{
     /**
      * Returns this model in Elasticsearch-friendly form. The array returned by
      * this method should match the current mapping for this model's ES type.

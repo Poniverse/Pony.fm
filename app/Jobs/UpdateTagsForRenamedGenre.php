@@ -26,7 +26,6 @@ use DB;
 use Log;
 use Poniverse\Ponyfm\Models\Genre;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
@@ -39,7 +38,7 @@ use SerializesModels;
  *
  * @package Poniverse\Ponyfm\Jobs
  */
-class UpdateTagsForRenamedGenre extends Job implements SelfHandling, ShouldQueue
+class UpdateTagsForRenamedGenre extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
@@ -77,13 +76,12 @@ class UpdateTagsForRenamedGenre extends Job implements SelfHandling, ShouldQueue
             Log::info("Tag updates for the \"{$this->genreThatWasRenamed->name}\" genre are currently in progress! Will try again in 30 seconds.");
             $this->release(30);
             return;
-
         } else {
             Cache::forever($this->lockKey, true);
         }
 
 
-        $this->genreThatWasRenamed->tracks()->chunk(200, function($tracks) {
+        $this->genreThatWasRenamed->tracks()->chunk(200, function ($tracks) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
                 $track->updateTags();

@@ -28,7 +28,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @package Poniverse\Ponyfm\Contracts
  */
-interface Favouritable extends GeneratesNotifications {
+interface Favouritable extends GeneratesNotifications
+{
     /**
      * This method returns an Eloquent relation to the entity's favourites.
      *

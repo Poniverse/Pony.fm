@@ -22,7 +22,7 @@ class Mime
      * Map short name for a mime type
      * to a full proper mime type
      */
-    public static $mimes = array(
+    public static $mimes = [
         'json'      => self::JSON,
         'xml'       => self::XML,
         'form'      => self::FORM,
@@ -34,7 +34,7 @@ class Mime
         'javascript'=> self::JS,
         'yaml'      => self::YAML,
         'csv'       => self::CSV,
-    );
+    ];
 
     /**
      * Get the full Mime Type name from a "short name".

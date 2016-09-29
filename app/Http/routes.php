@@ -37,15 +37,15 @@ Route::get('/tracks/random', 'TracksController@getIndex');
 Route::get('tracks/{id}-{slug}', 'TracksController@getTrack');
 Route::get('tracks/{id}-{slug}/edit', 'TracksController@getEdit');
 Route::get('tracks/{id}-{slug}/stats', 'StatsController@getIndex');
-Route::get('t{id}', 'TracksController@getShortlink' )->where('id', '\d+');
-Route::get('t{id}/embed', 'TracksController@getEmbed' );
-Route::get('t{id}/stream.{extension}', 'TracksController@getStream' );
-Route::get('t{id}/dl.{extension}', 'TracksController@getDownload' );
+Route::get('t{id}', 'TracksController@getShortlink')->where('id', '\d+');
+Route::get('t{id}/embed', 'TracksController@getEmbed');
+Route::get('t{id}/stream.{extension}', 'TracksController@getStream');
+Route::get('t{id}/dl.{extension}', 'TracksController@getDownload');
 
 Route::get('albums', 'AlbumsController@getIndex');
 Route::get('albums/{id}-{slug}', 'AlbumsController@getShow');
 Route::get('a{id}', 'AlbumsController@getShortlink')->where('id', '\d+');
-Route::get('a{id}/dl.{extension}', 'AlbumsController@getDownload' );
+Route::get('a{id}/dl.{extension}', 'AlbumsController@getDownload');
 
 Route::get('artists', 'ArtistsController@getIndex');
 Route::get('playlists', 'PlaylistsController@getIndex');
@@ -55,9 +55,15 @@ Route::get('/login', 'AuthController@getLogin');
 Route::post('/auth/logout', 'AuthController@postLogout');
 Route::get('/auth/oauth', 'AuthController@getOAuth');
 
-Route::get('/about', function() { return View::make('pages.about'); });
-Route::get('/faq', function() { return View::make('pages.faq'); });
-Route::get('/mlpforums-advertising-program', function() { return View::make('pages.mlpforums-advertising-program'); });
+Route::get('/about', function () {
+    return View::make('pages.about');
+});
+Route::get('/faq', function () {
+    return View::make('pages.faq');
+});
+Route::get('/mlpforums-advertising-program', function () {
+    return View::make('pages.mlpforums-advertising-program');
+});
 
 Route::get('i{id}/{type}.{extension}', 'ImagesController@getImage')->where('id', '\d+');
 
@@ -69,18 +75,18 @@ Route::get('notifications', 'AccountController@getNotifications');
 
 
 
-Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function() {
+Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function () {
     Route::get('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
     Route::post('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
 
-    Route::group(['middleware' => 'auth.oauth:ponyfm:tracks:upload'], function() {
+    Route::group(['middleware' => 'auth.oauth:ponyfm:tracks:upload'], function () {
         Route::post('tracks', 'Api\V1\TracksController@postUploadTrack');
         Route::get('/tracks/{id}/upload-status', 'Api\V1\TracksController@getUploadStatus');
     });
 });
 
 
-Route::group(['prefix' => 'api/web'], function() {
+Route::group(['prefix' => 'api/web'], function () {
     Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
     Route::get('/search', 'Api\Web\SearchController@getSearch');
 
@@ -108,7 +114,7 @@ Route::group(['prefix' => 'api/web'], function() {
 
     Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 
-    Route::group(['middleware' => 'auth'], function() {
+    Route::group(['middleware' => 'auth'], function () {
         Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
         Route::get('/tracks/{id}/upload-status', 'Api\Web\TracksController@getUploadStatus');
         Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
@@ -170,7 +176,7 @@ Route::group(['prefix' => 'api/web'], function() {
         Route::get('/favourites/playlists', 'Api\Web\FavouritesController@getPlaylists');
     });
 
-    Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
+    Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function () {
         Route::get('/genres', 'Api\Web\GenresController@getIndex');
         Route::post('/genres', 'Api\Web\GenresController@postCreate');
         Route::put('/genres/{id}', 'Api\Web\GenresController@putRename')->where('id', '\d+');
@@ -189,7 +195,7 @@ Route::group(['prefix' => 'api/web'], function() {
 });
 
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function () {
     Route::get('/genres', 'AdminController@getGenres');
     Route::get('/tracks', 'AdminController@getTracks');
     Route::get('/tracks/unclassified', 'AdminController@getClassifierQueue');
@@ -202,13 +208,13 @@ Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
 
 
-Route::group(['prefix' => '{slug}'], function() {
+Route::group(['prefix' => '{slug}'], function () {
     Route::get('/', 'ArtistsController@getProfile');
     Route::get('/content', 'ArtistsController@getContent');
     Route::get('/favourites', 'ArtistsController@getFavourites');
 
 
-    Route::group(['prefix' => 'account', 'middleware' => 'auth'], function() {
+    Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
         Route::get('/tracks', 'ContentController@getTracks');
         Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
         Route::get('/albums', 'ContentController@getAlbums');
@@ -224,7 +230,7 @@ Route::group(['prefix' => '{slug}'], function() {
 
 Route::get('/', 'HomeController@getIndex');
 
-Route::group(['domain' => 'api.pony.fm'], function() {
+Route::group(['domain' => 'api.pony.fm'], function () {
     Route::get('tracks/latest', ['uses' => 'Api\Mobile\TracksController@latest']);
     Route::get('tracks/popular', [ 'uses' => 'Api\Mobile\TracksController@popular']);
 });

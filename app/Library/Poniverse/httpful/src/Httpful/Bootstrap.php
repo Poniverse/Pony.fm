@@ -21,7 +21,7 @@ class Bootstrap
      */
     public static function init()
     {
-        spl_autoload_register(array('\Httpful\Bootstrap', 'autoload'));
+        spl_autoload_register(['\Httpful\Bootstrap', 'autoload']);
         self::registerHandlers();
     }
 
@@ -40,7 +40,7 @@ class Bootstrap
      */
     public static function pharInit()
     {
-        spl_autoload_register(array('\Httpful\Bootstrap', 'pharAutoload'));
+        spl_autoload_register(['\Httpful\Bootstrap', 'pharAutoload']);
         self::registerHandlers();
     }
 
@@ -78,17 +78,18 @@ class Bootstrap
 
         // @todo check a conf file to load from that instead of
         // hardcoding into the library?
-        $handlers = array(
+        $handlers = [
             \Httpful\Mime::JSON => new \Httpful\Handlers\JsonHandler(),
             \Httpful\Mime::XML  => new \Httpful\Handlers\XmlHandler(),
             \Httpful\Mime::FORM => new \Httpful\Handlers\FormHandler(),
             \Httpful\Mime::CSV  => new \Httpful\Handlers\CsvHandler(),
-        );
+        ];
 
         foreach ($handlers as $mime => $handler) {
             // Don't overwrite if the handler has already been registered
-            if (Httpful::hasParserRegistered($mime))
+            if (Httpful::hasParserRegistered($mime)) {
                 continue;
+            }
             Httpful::register($mime, $handler);
         }
 

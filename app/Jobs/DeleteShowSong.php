@@ -24,12 +24,11 @@ use Auth;
 use DB;
 use Poniverse\Ponyfm\Models\ShowSong;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
 
-class DeleteShowSong extends Job implements SelfHandling, ShouldQueue
+class DeleteShowSong extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
@@ -64,7 +63,7 @@ class DeleteShowSong extends Job implements SelfHandling, ShouldQueue
 
         // This is done instead of a single UPDATE query in order to
         // generate revision logs for the change.
-        $this->songToDelete->tracks()->chunk(200, function($tracks) {
+        $this->songToDelete->tracks()->chunk(200, function ($tracks) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
                 $oldSongs = $track->showSongs;

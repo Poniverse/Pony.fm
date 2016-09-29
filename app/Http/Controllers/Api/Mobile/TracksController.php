@@ -35,7 +35,7 @@ class TracksController extends Controller
             ->published()
             ->with('user', 'genre', 'cover', 'album', 'album.user')->take(10)->get();
 
-        $tracks = $tracks->map(function(Track $track) {
+        $tracks = $tracks->map(function (Track $track) {
             return Track::mapPublicTrackSummary($track);
         });
 

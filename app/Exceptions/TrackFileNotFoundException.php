@@ -31,4 +31,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  * contain tracks for which no lossless master is available (and thus, lossless
  * `TrackFiles` don't exist for).
  */
-class TrackFileNotFoundException extends ModelNotFoundException {}
+class TrackFileNotFoundException extends ModelNotFoundException
+{
+}

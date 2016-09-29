@@ -100,7 +100,7 @@ class EditAlbumCommand extends CommandBase
             $newid = User::where('username', $this->_input['username'])->first()->id;
 
             if ($this->_album->user_id != $newid) {
-            $this->_album->user_id = $newid;
+                $this->_album->user_id = $newid;
             }
         }
 

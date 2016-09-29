@@ -23,7 +23,8 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Poniverse\Ponyfm\Models\User;
 
-class ApiAuthTest extends TestCase {
+class ApiAuthTest extends TestCase
+{
     use DatabaseMigrations;
 
     /**
@@ -31,7 +32,8 @@ class ApiAuthTest extends TestCase {
      * logged into Pony.fm before, a Pony.fm account is created for them using
      * their Poniverse details.
      */
-    public function testApiCreatesNewUser() {
+    public function testApiCreatesNewUser()
+    {
         $user = factory(User::class)->make();
         $accessTokenInfo = new \Poniverse\AccessTokenInfo('nonsense-token');
         $accessTokenInfo->setIsActive(true);
@@ -56,7 +58,8 @@ class ApiAuthTest extends TestCase {
         $this->seeInDatabase('users', ['username' => $user->username]);
     }
 
-    public function testApiClientIdIsRecordedWhenUploadingTrack() {
+    public function testApiClientIdIsRecordedWhenUploadingTrack()
+    {
         $user = factory(User::class)->make();
         $accessTokenInfo = new \Poniverse\AccessTokenInfo('nonsense-token');
         $accessTokenInfo->setIsActive(true);

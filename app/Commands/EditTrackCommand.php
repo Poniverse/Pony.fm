@@ -159,8 +159,8 @@ class EditTrackCommand extends CommandBase
             $newid = User::where('username', $this->_input['username'])->first()->id;
 
             if ($track->user_id != $newid) {
-            $oldid = $track->user_id;
-            $track->user_id = $newid;
+                $oldid = $track->user_id;
+                $track->user_id = $newid;
             }
         }
 

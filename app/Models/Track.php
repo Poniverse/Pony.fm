@@ -212,10 +212,27 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     public static function summary()
     {
-        return self::select('tracks.id', 'title', 'user_id', 'slug', 'is_vocal', 'is_explicit', 'created_at',
+        return self::select(
+            'tracks.id',
+            'title',
+            'user_id',
+            'slug',
+            'is_vocal',
+            'is_explicit',
+            'created_at',
             'published_at',
-            'duration', 'is_downloadable', 'genre_id', 'track_type_id', 'cover_id', 'album_id', 'comment_count',
-            'download_count', 'view_count', 'play_count', 'favourite_count')
+            'duration',
+            'is_downloadable',
+            'genre_id',
+            'track_type_id',
+            'cover_id',
+            'album_id',
+            'comment_count',
+            'download_count',
+            'view_count',
+            'play_count',
+            'favourite_count'
+        )
             ->with('user', 'cover', 'album');
     }
 
@@ -223,7 +240,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     {
         if (Auth::check()) {
             $query->with([
-                'users' => function($query) {
+                'users' => function ($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
             ]);
@@ -250,7 +267,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     public function scopeWithComments($query)
     {
         $query->with([
-            'comments' => function($query) {
+            'comments' => function ($query) {
                 $query->with('user');
             }
         ]);
@@ -272,17 +289,23 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public static function popular($count, $allowExplicit = false)
     {
-        $trackIds = Cache::remember('popular_tracks'.$count.'-'.($allowExplicit ? 'explicit' : 'safe'), 5,
-            function() use ($allowExplicit, $count) {
+        $trackIds = Cache::remember(
+            'popular_tracks'.$count.'-'.($allowExplicit ? 'explicit' : 'safe'),
+            5,
+            function () use ($allowExplicit, $count) {
                 $query = static
                     ::published()
                     ->listed()
-                    ->join(DB::raw('(
+                    ->join(
+                        DB::raw('(
                             SELECT "track_id"
                             FROM "resource_log_items"
                             WHERE track_id IS NOT NULL AND log_type = 3 AND "created_at" > now() - INTERVAL \'1\' DAY
                         ) ranged_plays'),
-                        'tracks.id', '=', 'ranged_plays.track_id')
+                        'tracks.id',
+                        '=',
+                        'ranged_plays.track_id'
+                    )
                     ->groupBy(['id', 'track_id'])
                     ->orderBy('plays', 'desc')
                     ->take($count);
@@ -556,7 +579,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $this->morphMany(Activity::class, 'notification_type');
     }
 
-    public function activities():MorphMany {
+    public function activities():MorphMany
+    {
         return $this->morphMany(Activity::class, 'resource');
     }
 
@@ -567,7 +591,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     public function setTitleAttribute($value)
     {
-        $this->setTitleAttributeSlug($value); ;
+        $this->setTitleAttributeSlug($value);
+        ;
         $this->updateHash();
     }
 
@@ -737,7 +762,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * @param int $version
      * @return string
      */
-    public function getTemporarySourceFileForVersion(int $version):string {
+    public function getTemporarySourceFileForVersion(int $version):string
+    {
         return Config::get('ponyfm.files_directory').'/queued-tracks/'.$this->id.'v'.$version;
     }
 
@@ -757,22 +783,18 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     /**
      * @return string one of the Track::STATUS_* values, indicating whether this track is currently being processed
      */
-    public function getStatusAttribute() {
-        return $this->trackFiles->reduce(function($carry, $trackFile) {
+    public function getStatusAttribute()
+    {
+        return $this->trackFiles->reduce(function ($carry, $trackFile) {
             if ((int) $trackFile->status === TrackFile::STATUS_PROCESSING_ERROR) {
                 return static::STATUS_ERROR;
-
-            } elseif (
-                $carry !== static::STATUS_ERROR &&
+            } elseif ($carry !== static::STATUS_ERROR &&
                 in_array($trackFile->status, [TrackFile::STATUS_PROCESSING, TrackFile::STATUS_PROCESSING_PENDING])) {
                 return static::STATUS_PROCESSING;
-
-            } elseif (
-                !in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING, TrackFile::STATUS_PROCESSING_PENDING]) &&
+            } elseif (!in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING, TrackFile::STATUS_PROCESSING_PENDING]) &&
                 (int) $trackFile->status === TrackFile::STATUS_NOT_BEING_PROCESSED
             ) {
                 return static::STATUS_COMPLETE;
-
             } else {
                 return $carry;
             }
@@ -797,7 +819,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
-    private function updateTagsForTrackFile(TrackFile $trackFile) {
+    private function updateTagsForTrackFile(TrackFile $trackFile)
+    {
         $trackFile->touch();
 
         if (\File::exists($trackFile->getFile())) {
@@ -879,12 +902,16 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
         if ($tagWriter->WriteTags()) {
             if (!empty($tagWriter->warnings)) {
-                Log::warning('Track #'.$this->id.': There were some warnings:<br />'.implode('<br /><br />',
-                        $tagWriter->warnings));
+                Log::warning('Track #'.$this->id.': There were some warnings:<br />'.implode(
+                    '<br /><br />',
+                    $tagWriter->warnings
+                ));
             }
         } else {
-            Log::error('Track #'.$this->id.': Failed to write tags!<br />'.implode('<br /><br />',
-                    $tagWriter->errors));
+            Log::error('Track #'.$this->id.': Failed to write tags!<br />'.implode(
+                '<br /><br />',
+                $tagWriter->errors
+            ));
         }
     }
 
@@ -893,7 +920,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return 'track-'.$this->id.'-'.$key;
     }
 
-    public function delete() {
+    public function delete()
+    {
         DB::transaction(function () {
             $this->activities()->delete();
             parent::delete();
@@ -903,7 +931,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     /**
      * @inheritdoc
      */
-    public function shouldBeIndexed():bool {
+    public function shouldBeIndexed():bool
+    {
         return $this->is_listed &&
                $this->published_at !== null &&
                !$this->trashed();
@@ -912,7 +941,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     /**
      * @inheritdoc
      */
-    public function toElasticsearch():array {
+    public function toElasticsearch():array
+    {
         return [
             'title'         => $this->title,
             'artist'        => $this->user->display_name,
@@ -923,7 +953,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         ];
     }
 
-    public function getResourceType():string {
+    public function getResourceType():string
+    {
         return 'track';
     }
 

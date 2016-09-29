@@ -25,7 +25,6 @@ use Cache;
 use Log;
 use Poniverse\Ponyfm\Models\ShowSong;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
@@ -38,7 +37,7 @@ use SerializesModels;
  *
  * @package Poniverse\Ponyfm\Jobs
  */
-class UpdateTagsForRenamedShowSong extends Job implements SelfHandling, ShouldQueue
+class UpdateTagsForRenamedShowSong extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
@@ -76,13 +75,12 @@ class UpdateTagsForRenamedShowSong extends Job implements SelfHandling, ShouldQu
             Log::info("Tag updates for the \"{$this->songThatWasRenamed->title}\" song are currently in progress! Will try again in 30 seconds.");
             $this->release(30);
             return;
-
         } else {
             Cache::forever($this->lockKey, true);
         }
 
 
-        $this->songThatWasRenamed->tracks()->chunk(200, function($tracks) {
+        $this->songThatWasRenamed->tracks()->chunk(200, function ($tracks) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
                 $track->updateTags();

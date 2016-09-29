@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Elasticsearch;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Input;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Library\Search;
 use Response;
 
@@ -30,7 +30,7 @@ class SearchController extends ApiControllerBase
 {
     public function getSearch(Search $search)
     {
-        $results = $search->searchAllContent(Input::query('query'));
+        $results = $search->searchAllContent(Request::query('query'));
 
         return Response::json([
             'results' => $results,

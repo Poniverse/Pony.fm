@@ -101,8 +101,10 @@ class MigrateOldData extends Command
             if (!$user->uses_gravatar) {
                 try {
                     $coverFile = $this->getIdDirectory('users', $user->id).'/'.$user->id.'_.png';
-                    $coverId = Image::upload(new UploadedFile($coverFile,
-                        $user->id.'_.png'), $user->id)->id;
+                    $coverId = Image::upload(new UploadedFile(
+                        $coverFile,
+                        $user->id.'_.png'
+                    ), $user->id)->id;
                     DB::table('users')->where('id', $user->id)->update(['avatar_id' => $coverId]);
                 } catch (\Exception $e) {
                     $this->error('Could copy user avatar '.$user->id.' because '.$e->getMessage());
@@ -176,10 +178,14 @@ class MigrateOldData extends Command
             $coverId = null;
             if ($track->cover) {
                 try {
-                    $coverFile = $this->getIdDirectory('tracks',
-                            $track->id).'/'.$track->id.'_'.$track->cover.'.png';
-                    $coverId = Image::upload(new UploadedFile($coverFile,
-                        $track->id.'_'.$track->cover.'.png'), $track->user_id)->id;
+                    $coverFile = $this->getIdDirectory(
+                        'tracks',
+                        $track->id
+                    ).'/'.$track->id.'_'.$track->cover.'.png';
+                    $coverId = Image::upload(new UploadedFile(
+                        $coverFile,
+                        $track->id.'_'.$track->cover.'.png'
+                    ), $track->user_id)->id;
                 } catch (\Exception $e) {
                     $this->error('Could copy track cover '.$track->id.' because '.$e->getMessage());
                 }
@@ -396,5 +402,4 @@ class MigrateOldData extends Command
 
         return \Config::get('ponyfm.files_directory').'/'.$type.'/'.$dir;
     }
-
 }

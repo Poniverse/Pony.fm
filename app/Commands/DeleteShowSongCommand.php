@@ -35,7 +35,8 @@ class DeleteShowSongCommand extends CommandBase
     private $_songToDelete;
     private $_destinationSong;
 
-    public function __construct($songId, $destinationSongId) {
+    public function __construct($songId, $destinationSongId)
+    {
         $this->_songToDelete = ShowSong::find($songId);
         $this->_destinationSong = ShowSong::find($destinationSongId);
     }
@@ -43,7 +44,8 @@ class DeleteShowSongCommand extends CommandBase
     /**
      * @return bool
      */
-    public function authorize() {
+    public function authorize()
+    {
         return Gate::allows('delete', $this->_destinationSong);
     }
 
@@ -51,7 +53,8 @@ class DeleteShowSongCommand extends CommandBase
      * @throws \Exception
      * @return CommandResponse
      */
-    public function execute() {
+    public function execute()
+    {
         $rules = [
             'song_to_delete'    => 'required',
             'destination_song'  => 'required',

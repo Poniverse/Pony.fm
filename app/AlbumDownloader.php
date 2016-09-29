@@ -45,7 +45,7 @@ class AlbumDownloader
     public function download()
     {
         // Check whether the format is lossless yet not all master files are lossless
-        $isLosslessFormatWithLossyTracks =  in_array($this->_format, Track::$LosslessFormats) 
+        $isLosslessFormatWithLossyTracks =  in_array($this->_format, Track::$LosslessFormats)
             && !$this->_album->hasLosslessTracksOnly()
             && $this->_album->hasLosslessTracks();
 
@@ -77,11 +77,15 @@ class AlbumDownloader
 
             if ($isLosslessFormatWithLossyTracks && $track->isMasterLossy()) {
                 $masterFormatName = $track->getMasterFormatName();
-                $zip->addLargeFile($track->getFileFor($masterFormatName),
-                    $directory . $track->getDownloadFilenameFor($masterFormatName));
+                $zip->addLargeFile(
+                    $track->getFileFor($masterFormatName),
+                    $directory . $track->getDownloadFilenameFor($masterFormatName)
+                );
             } else {
-                $zip->addLargeFile($track->getFileFor($this->_format),
-                    $directory . $track->getDownloadFilenameFor($this->_format));
+                $zip->addLargeFile(
+                    $track->getFileFor($this->_format),
+                    $directory . $track->getDownloadFilenameFor($this->_format)
+                );
             }
 
             $notes .=

@@ -20,7 +20,8 @@
 
 class Assets
 {
-    public static function scriptIncludes(string $area) {
+    public static function scriptIncludes(string $area)
+    {
         $scriptTags = '';
 
         if ('app' === $area) {

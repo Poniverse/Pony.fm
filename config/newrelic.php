@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -39,4 +39,4 @@ return array(
      */
     'throw_if_not_installed' => false,
 
-);
+];

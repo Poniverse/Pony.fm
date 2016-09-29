@@ -61,7 +61,6 @@ class VersionFiles extends Command
         $this->info('This will only version track files which exist on disk; non-existent files will be skipped.');
 
         if ($this->option('force') || $this->confirm('Are you sure you want to rename all unversioned track files? [y|N]', false)) {
-
             TrackFile::chunk(200, function ($trackFiles) {
 
                 $this->info('========== Start Chunk ==========');
@@ -81,15 +80,12 @@ class VersionFiles extends Command
                     } else {
                         $this->error('ID ' . $trackFile->id . ' was unable to be renamed');
                     }
-
                 }
 
                 $this->info('=========== End Chunk ===========');
-
             });
 
             $this->info('Rebuild complete. Exiting.');
-
         } else {
             $this->info('Rebuild cancelled. Exiting.');
         }

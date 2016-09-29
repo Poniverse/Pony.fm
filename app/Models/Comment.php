@@ -132,7 +132,8 @@ class Comment extends Model
         }
     }
 
-    public function delete() {
+    public function delete()
+    {
         DB::transaction(function () {
             $this->activities()->delete();
             parent::delete();

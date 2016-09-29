@@ -22,4 +22,6 @@ namespace Poniverse\Ponyfm\Exceptions;
 
 use InvalidArgumentException;
 
-class InvalidEncodeOptionsException extends InvalidArgumentException {}
+class InvalidEncodeOptionsException extends InvalidArgumentException
+{
+}

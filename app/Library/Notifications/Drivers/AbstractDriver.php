@@ -25,10 +25,12 @@ use Poniverse\Ponyfm\Contracts\NotificationHandler;
 use Poniverse\Ponyfm\Library\Notifications\RecipientFinder;
 use Poniverse\Ponyfm\Models\User;
 
-abstract class AbstractDriver implements NotificationHandler {
+abstract class AbstractDriver implements NotificationHandler
+{
     private $recipientFinder;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->recipientFinder = new RecipientFinder(get_class($this));
     }
 
@@ -41,7 +43,8 @@ abstract class AbstractDriver implements NotificationHandler {
      * @param array $notificationData
      * @return User[] collection of {@link User} objects
      */
-    protected function getRecipients(string $notificationType, array $notificationData) {
+    protected function getRecipients(string $notificationType, array $notificationData)
+    {
         return call_user_func_array([$this->recipientFinder, $notificationType], $notificationData);
     }
 }

@@ -89,7 +89,7 @@ class Image extends Model
                 $filenames = scandir($image->getDirectory());
                 $imagePrefix = $image->id.'_';
 
-                $filenames = array_filter($filenames, function(string $filename) use ($imagePrefix) {
+                $filenames = array_filter($filenames, function (string $filename) use ($imagePrefix) {
                     return Str::startsWith($filename, $imagePrefix);
                 });
 
@@ -116,14 +116,12 @@ class Image extends Model
             foreach (self::$ImageTypes as $coverType) {
                 if ($coverType['id'] === self::ORIGINAL && $image->mime === 'image/jpeg') {
                     $command = 'cp "'.$file->getPathname().'" '.$image->getFile($coverType['id']);
-
                 } else {
                     // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
                     $command = 'convert 2>&1 "'.$file->getPathname().'" -background white -alpha remove -alpha off -strip';
 
                     if ($image->mime === 'image/jpeg') {
                         $command .= ' -quality 100 -format jpeg';
-
                     } else {
                         $command .= ' -quality 95 -format png';
                     }

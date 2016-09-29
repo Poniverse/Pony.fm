@@ -144,7 +144,6 @@ class FixMLPMAImages extends Command
                 $imageFile = new UploadedFile($imageFilePath, $imageFilename, $image['image_mime']);
                 $cover = Image::upload($imageFile, $artistId, true);
                 $coverId = $cover->id;
-
             } else {
                 $this->comment('No cover art found!');
             }

@@ -28,7 +28,8 @@ use Poniverse\Ponyfm\Exceptions\InvalidAccessTokenException;
  * this class is going to be a simple flat api class.
  */
 
-class Poniverse {
+class Poniverse
+{
     protected $clientId;
     protected $clientSecret;
     protected $accessToken;
@@ -108,7 +109,7 @@ class Poniverse {
      */
     public function getUser()
     {
-        $data = \Httpful\Request::get($this->urls['api'] . "users?access_token=" . $this->accessToken );
+        $data = \Httpful\Request::get($this->urls['api'] . "users?access_token=" . $this->accessToken);
 
         $result = $data->addHeader('Accept', 'application/json')->send();
 

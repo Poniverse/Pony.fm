@@ -135,7 +135,7 @@ class Client
      *
      * @var array
      */
-    protected $curl_options = array();
+    protected $curl_options = [];
 
     /**
      * Construct
@@ -189,13 +189,13 @@ class Client
      * @param array  $extra_parameters  Array of extra parameters like scope or state (Ex: array('scope' => null, 'state' => ''))
      * @return string URL used for authentication
      */
-    public function getAuthenticationUrl($auth_endpoint, $redirect_uri, array $extra_parameters = array())
+    public function getAuthenticationUrl($auth_endpoint, $redirect_uri, array $extra_parameters = [])
     {
-        $parameters = array_merge(array(
+        $parameters = array_merge([
             'response_type' => 'code',
             'client_id'     => $this->client_id,
             'redirect_uri'  => $redirect_uri
-        ), $extra_parameters);
+        ], $extra_parameters);
         return $auth_endpoint . '?' . http_build_query($parameters, null, '&');
     }
 
@@ -224,7 +224,7 @@ class Client
             throw new Exception('Unknown constant GRANT_TYPE for class ' . $grantTypeClassName, Exception::GRANT_TYPE_ERROR);
         }
         $parameters['grant_type'] = $grantTypeClass::GRANT_TYPE;
-        $http_headers = array();
+        $http_headers = [];
         switch ($this->client_auth) {
             case self::AUTH_TYPE_URI:
             case self::AUTH_TYPE_FORM:
@@ -283,7 +283,7 @@ class Client
      * @param array $options An array specifying which options to set and their values
      * @return void
      */
-    public function setCurlOptions($options) 
+    public function setCurlOptions($options)
     {
         $this->curl_options = array_merge($this->curl_options, $options);
     }
@@ -313,7 +313,7 @@ class Client
      * @param int    $form_content_type HTTP form content type to use
      * @return array
      */
-    public function fetch($protected_resource_url, $parameters = array(), $http_method = self::HTTP_METHOD_GET, array $http_headers = array(), $form_content_type = self::HTTP_FORM_CONTENT_TYPE_MULTIPART)
+    public function fetch($protected_resource_url, $parameters = [], $http_method = self::HTTP_METHOD_GET, array $http_headers = [], $form_content_type = self::HTTP_FORM_CONTENT_TYPE_MULTIPART)
     {
         if ($this->access_token) {
             switch ($this->access_token_type) {
@@ -357,8 +357,7 @@ class Client
         $timestamp = time();
         $nonce = uniqid();
         $parsed_url = parse_url($url);
-        if (!isset($parsed_url['port']))
-        {
+        if (!isset($parsed_url['port'])) {
             $parsed_url['port'] = ($parsed_url['scheme'] == 'https') ? 443 : 80;
         }
         if ($http_method == self::HTTP_METHOD_GET) {
@@ -369,14 +368,17 @@ class Client
             }
         }
 
-        $signature = base64_encode(hash_hmac($this->access_token_algorithm,
-                    $timestamp . "\n"
+        $signature = base64_encode(hash_hmac(
+            $this->access_token_algorithm,
+            $timestamp . "\n"
                     . $nonce . "\n"
                     . $http_method . "\n"
                     . $parsed_url['path'] . "\n"
                     . $parsed_url['host'] . "\n"
-                    . $parsed_url['port'] . "\n\n"
-                    , $this->access_token_secret, true));
+                    . $parsed_url['port'] . "\n\n",
+            $this->access_token_secret,
+            true
+        ));
 
         return 'id="' . $this->access_token . '", ts="' . $timestamp . '", nonce="' . $nonce . '", mac="' . $signature . '"';
     }
@@ -391,27 +393,26 @@ class Client
      * @param int    $form_content_type HTTP form content type to use
      * @return array
      */
-    private function executeRequest($url, $parameters = array(), $http_method = self::HTTP_METHOD_GET, array $http_headers = null, $form_content_type = self::HTTP_FORM_CONTENT_TYPE_MULTIPART)
+    private function executeRequest($url, $parameters = [], $http_method = self::HTTP_METHOD_GET, array $http_headers = null, $form_content_type = self::HTTP_FORM_CONTENT_TYPE_MULTIPART)
     {
-        $curl_options = array(
+        $curl_options = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_CUSTOMREQUEST  => $http_method
-        );
+        ];
 
-        switch($http_method) {
+        switch ($http_method) {
             case self::HTTP_METHOD_POST:
                 $curl_options[CURLOPT_POST] = true;
                 /* No break */
             case self::HTTP_METHOD_PUT:
             case self::HTTP_METHOD_PATCH:
-
                 /**
                  * Passing an array to CURLOPT_POSTFIELDS will encode the data as multipart/form-data,
                  * while passing a URL-encoded string will encode the data as application/x-www-form-urlencoded.
                  * http://php.net/manual/en/function.curl-setopt.php
                  */
-                if(is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
+                if (is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
                     $parameters = http_build_query($parameters, null, '&');
                 }
                 $curl_options[CURLOPT_POSTFIELDS] = $parameters;
@@ -434,8 +435,8 @@ class Client
         $curl_options[CURLOPT_URL] = $url;
 
         if (is_array($http_headers)) {
-            $header = array();
-            foreach($http_headers as $key => $parsed_urlvalue) {
+            $header = [];
+            foreach ($http_headers as $key => $parsed_urlvalue) {
                 $header[] = "$key: $parsed_urlvalue";
             }
             $curl_options[CURLOPT_HTTPHEADER] = $header;
@@ -466,11 +467,11 @@ class Client
         }
         curl_close($ch);
 
-        return array(
+        return [
             'result' => (null === $json_decode) ? $result : $json_decode,
             'code' => $http_code,
             'content_type' => $content_type
-        );
+        ];
     }
 
     /**
@@ -493,7 +494,9 @@ class Client
     private function convertToCamelCase($grant_type)
     {
         $parts = explode('_', $grant_type);
-        array_walk($parts, function(&$item) { $item = ucfirst($item);});
+        array_walk($parts, function (&$item) {
+            $item = ucfirst($item);
+        });
         return implode('', $parts);
     }
 }

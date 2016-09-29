@@ -30,12 +30,12 @@ class Request
 
     public $uri,
            $method                  = Http::GET,
-           $headers                 = array(),
+           $headers                 = [],
            $raw_headers             = '',
            $strict_ssl              = false,
            $content_type,
            $expected_type,
-           $additional_curl_opts    = array(),
+           $additional_curl_opts    = [],
            $auto_parse              = true,
            $serialize_payload_method = self::SERIALIZE_PAYLOAD_SMART,
            $username,
@@ -46,7 +46,7 @@ class Request
            $error_callback,
            $follow_redirects        = false,
            $max_redirects           = self::MAX_REDIRECTS_DEFAULT,
-           $payload_serializers     = array();
+           $payload_serializers     = [];
 
     // Options
     // private $_options = array(
@@ -70,7 +70,9 @@ class Request
      */
     private function __construct($attrs = null)
     {
-        if (!is_array($attrs)) return;
+        if (!is_array($attrs)) {
+            return;
+        }
         foreach ($attrs as $attr => $value) {
             $this->$attr = $value;
         }
@@ -195,8 +197,9 @@ class Request
      */
     public function send()
     {
-        if (!$this->hasBeenInitialized())
+        if (!$this->hasBeenInitialized()) {
             $this->_curlPrep();
+        }
 
         $result = curl_exec($this->_ch);
 
@@ -275,7 +278,8 @@ class Request
     /**
      * @return is this request setup for client side cert?
      */
-    public function hasClientSideCert() {
+    public function hasClientSideCert()
+    {
         return isset($this->client_cert) && isset($this->client_key);
     }
 
@@ -326,7 +330,9 @@ class Request
      */
     public function mime($mime)
     {
-        if (empty($mime)) return $this;
+        if (empty($mime)) {
+            return $this;
+        }
         $this->content_type = $this->expected_type = Mime::getFullMime($mime);
         return $this;
     }
@@ -349,7 +355,9 @@ class Request
      */
     public function method($method)
     {
-        if (empty($method)) return $this;
+        if (empty($method)) {
+            return $this;
+        }
         $this->method = $method;
         return $this;
     }
@@ -360,7 +368,9 @@ class Request
      */
     public function expects($mime)
     {
-        if (empty($mime)) return $this;
+        if (empty($mime)) {
+            return $this;
+        }
         $this->expected_type = Mime::getFullMime($mime);
         return $this;
     }
@@ -376,7 +386,9 @@ class Request
      */
     public function contentType($mime)
     {
-        if (empty($mime)) return $this;
+        if (empty($mime)) {
+            return $this;
+        }
         $this->content_type  = Mime::getFullMime($mime);
         return $this;
     }
@@ -419,9 +431,10 @@ class Request
      * @param string $auth_username Authentication username. Default null
      * @param string $auth_password Authentication password. Default null
      */
-    public function useProxy($proxy_host, $proxy_port = 80, $auth_type = null, $auth_username = null, $auth_password = null){
+    public function useProxy($proxy_host, $proxy_port = 80, $auth_type = null, $auth_username = null, $auth_password = null)
+    {
         $this->addOnCurlOption(CURLOPT_PROXY, "{$proxy_host}:{$proxy_port}");
-        if(in_array($auth_type, array(CURLAUTH_BASIC,CURLAUTH_NTLM)) ){
+        if (in_array($auth_type, [CURLAUTH_BASIC,CURLAUTH_NTLM])) {
             $this->addOnCurlOption(CURLOPT_PROXYAUTH, $auth_type)
                 ->addOnCurlOption(CURLOPT_PROXYUSERPWD, "{$auth_username}:{$auth_password}");
         }
@@ -431,7 +444,8 @@ class Request
     /**
      * @return is this request setup for using proxy?
      */
-    public function hasProxy(){
+    public function hasProxy()
+    {
         return is_string($this->additional_curl_opts[CURLOPT_PROXY]);
     }
 
@@ -646,15 +660,17 @@ class Request
 
         // This method also adds the custom header support as described in the
         // method comments
-        if (count($args) === 0)
+        if (count($args) === 0) {
             return;
+        }
 
         // Strip the sugar.  If it leads with "with", strip.
         // This is okay because: No defined HTTP headers begin with with,
         // and if you are defining a custom header, the standard is to prefix it
         // with an "X-", so that should take care of any collisions.
-        if (substr($method, 0, 4) === 'with')
+        if (substr($method, 0, 4) === 'with') {
             $method = substr($method, 4);
+        }
 
         // Precede upper case letters with dashes, uppercase the first letter of method
         $header = ucwords(implode('-', preg_split('/([A-Z][^A-Z]*)/', $method, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY)));
@@ -681,7 +697,7 @@ class Request
         // recusion.  Do not use this syntax elsewhere.
         // It goes against the whole readability
         // and transparency idea.
-        self::$_template = new Request(array('method' => Http::GET));
+        self::$_template = new Request(['method' => Http::GET]);
 
         // This is more like it...
         self::$_template
@@ -695,11 +711,13 @@ class Request
      */
     private function _setDefaults()
     {
-        if (!isset(self::$_template))
+        if (!isset(self::$_template)) {
             self::_initializeDefaults();
-        foreach (self::$_template as $k=>$v) {
-            if ($k[0] != '_')
+        }
+        foreach (self::$_template as $k => $v) {
+            if ($k[0] != '_') {
                 $this->$k = $v;
+            }
         }
         return $this;
     }
@@ -725,8 +743,9 @@ class Request
         Bootstrap::init();
 
         // Setup the default template if need be
-        if (!isset(self::$_template))
+        if (!isset(self::$_template)) {
             self::_initializeDefaults();
+        }
 
         $request = new Request();
         return $request
@@ -745,8 +764,9 @@ class Request
     public function _curlPrep()
     {
         // Check for required stuff
-        if (!isset($this->uri))
+        if (!isset($this->uri)) {
             throw new \Exception('Attempting to send a request before defining a URI endpoint.');
+        }
 
         $ch = curl_init($this->uri);
 
@@ -757,18 +777,19 @@ class Request
         }
 
         if ($this->hasClientSideCert()) {
-
-            if (!file_exists($this->client_key))
+            if (!file_exists($this->client_key)) {
                 throw new \Exception('Could not read Client Key');
+            }
 
-            if (!file_exists($this->client_cert))
+            if (!file_exists($this->client_cert)) {
                 throw new \Exception('Could not read Client Certificate');
+            }
 
-            curl_setopt($ch, CURLOPT_SSLCERTTYPE,   $this->client_encoding);
-            curl_setopt($ch, CURLOPT_SSLKEYTYPE,    $this->client_encoding);
-            curl_setopt($ch, CURLOPT_SSLCERT,       $this->client_cert);
-            curl_setopt($ch, CURLOPT_SSLKEY,        $this->client_key);
-            curl_setopt($ch, CURLOPT_SSLKEYPASSWD,  $this->client_passphrase);
+            curl_setopt($ch, CURLOPT_SSLCERTTYPE, $this->client_encoding);
+            curl_setopt($ch, CURLOPT_SSLKEYTYPE, $this->client_encoding);
+            curl_setopt($ch, CURLOPT_SSLCERT, $this->client_cert);
+            curl_setopt($ch, CURLOPT_SSLKEY, $this->client_key);
+            curl_setopt($ch, CURLOPT_SSLKEYPASSWD, $this->client_passphrase);
             // curl_setopt($ch, CURLOPT_SSLCERTPASSWD,  $this->client_cert_passphrase);
         }
 
@@ -792,7 +813,7 @@ class Request
             $this->headers['Content-Length'] = strlen($this->serialized_payload);
         }
 
-        $headers = array();
+        $headers = [];
         // https://github.com/nategood/httpful/issues/37
         // Except header removes any HTTP 1.1 Continue from response headers
         $headers[] = 'Expect:';
@@ -851,7 +872,8 @@ class Request
         return $this;
     }
 
-    public function buildUserAgent() {
+    public function buildUserAgent()
+    {
         $user_agent = 'User-Agent: Httpful/' . Httpful::VERSION . ' (cURL/';
         $curl = \curl_version();
 
@@ -864,8 +886,11 @@ class Request
         $user_agent .= ' PHP/'. PHP_VERSION . ' (' . PHP_OS . ')';
 
         if (isset($_SERVER['SERVER_SOFTWARE'])) {
-            $user_agent .= ' ' . \preg_replace('~PHP/[\d\.]+~U', '',
-                $_SERVER['SERVER_SOFTWARE']);
+            $user_agent .= ' ' . \preg_replace(
+                '~PHP/[\d\.]+~U',
+                '',
+                $_SERVER['SERVER_SOFTWARE']
+            );
         } else {
             if (isset($_SERVER['TERM_PROGRAM'])) {
                 $user_agent .= " {$_SERVER['TERM_PROGRAM']}";
@@ -915,12 +940,14 @@ class Request
      */
     private function _serializePayload($payload)
     {
-        if (empty($payload) || $this->serialize_payload_method === self::SERIALIZE_PAYLOAD_NEVER)
+        if (empty($payload) || $this->serialize_payload_method === self::SERIALIZE_PAYLOAD_NEVER) {
             return $payload;
+        }
 
         // When we are in "smart" mode, don't serialize strings/scalars, assume they are already serialized
-        if ($this->serialize_payload_method === self::SERIALIZE_PAYLOAD_SMART && is_scalar($payload))
+        if ($this->serialize_payload_method === self::SERIALIZE_PAYLOAD_SMART && is_scalar($payload)) {
             return $payload;
+        }
 
         // Use a custom serializer if one is registered for this mime type
         if (isset($this->payload_serializers['*']) || isset($this->payload_serializers[$this->content_type])) {

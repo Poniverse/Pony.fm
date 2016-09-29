@@ -78,15 +78,25 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public static function summary()
     {
-        return self::select('id', 'title', 'user_id', 'slug', 'created_at', 'cover_id', 'comment_count',
-            'download_count', 'view_count', 'favourite_count');
+        return self::select(
+            'id',
+            'title',
+            'user_id',
+            'slug',
+            'created_at',
+            'cover_id',
+            'comment_count',
+            'download_count',
+            'view_count',
+            'favourite_count'
+        );
     }
 
     public function scopeUserDetails($query)
     {
         if (Auth::check()) {
             $query->with([
-                'users' => function($query) {
+                'users' => function ($query) {
                     $query->whereUserId(Auth::user()->id);
                 }
             ]);
@@ -122,7 +132,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         return $this->hasMany(Track::class)->orderBy('track_number', 'asc');
     }
 
-    public function trackFiles() {
+    public function trackFiles()
+    {
         $trackIds = $this->tracks->lists('id');
         return TrackFile::join('tracks', 'tracks.current_version', '=', 'track_files.version')->whereIn('track_id', $trackIds);
     }
@@ -132,7 +143,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
     }
 
-    public function activities():MorphMany {
+    public function activities():MorphMany
+    {
         return $this->morphMany(Activity::class, 'resource');
     }
 
@@ -392,19 +404,22 @@ class Album extends Model implements Searchable, Commentable, Favouritable
      * @param array $options
      * @return bool
      */
-    public function save(array $options = []) {
+    public function save(array $options = [])
+    {
         $this->recountTracks();
         return parent::save($options);
     }
 
-    public function delete() {
+    public function delete()
+    {
         DB::transaction(function () {
             $this->activities()->delete();
             parent::delete();
         });
     }
 
-    protected function recountTracks() {
+    protected function recountTracks()
+    {
         $this->track_count = $this->tracks->count();
     }
 
@@ -414,7 +429,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
      *
      * @return array
      */
-    public function toElasticsearch():array {
+    public function toElasticsearch():array
+    {
         return [
             'title' => $this->title,
             'artist' => $this->user->display_name,
@@ -425,7 +441,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
     /**
      * @inheritdoc
      */
-    public function shouldBeIndexed():bool {
+    public function shouldBeIndexed():bool
+    {
         return $this->track_count > 0 && !$this->trashed();
     }
 
@@ -435,7 +452,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
      *
      * @return string
      */
-    public function getResourceType():string {
+    public function getResourceType():string
+    {
         return 'album';
     }
 }

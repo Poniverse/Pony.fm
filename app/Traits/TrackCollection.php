@@ -21,7 +21,6 @@
 
 namespace Poniverse\Ponyfm\Traits;
 
-
 use File;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +29,6 @@ use Illuminate\Support\Facades\Cache;
 use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackFile;
-
 
 /**
  * Class TrackCollection
@@ -63,7 +61,8 @@ trait TrackCollection
      * @param string $format
      * @return int the number of downloadable tracks in this collection
      */
-    public function countDownloadableTracks($format) {
+    public function countDownloadableTracks($format)
+    {
         return $this->downloadableTrackFiles($format)->count();
     }
 
@@ -75,15 +74,15 @@ trait TrackCollection
      * @param string $format
      * @return int
      */
-    public function countAvailableTrackFiles($format) {
+    public function countAvailableTrackFiles($format)
+    {
         $trackFiles = $this->downloadableTrackFiles($format);
         $availableCount = 0;
 
         foreach ($trackFiles as $trackFile) {
             /** @var TrackFile $trackFile */
 
-            if (
-                $trackFile->is_master ||
+            if ($trackFile->is_master ||
                 ($trackFile->expires_at != null && File::exists($trackFile->getFile()))
             ) {
                 $availableCount++;
@@ -100,7 +99,8 @@ trait TrackCollection
      *
      * @param $format
      */
-    public function encodeCacheableTrackFiles($format) {
+    public function encodeCacheableTrackFiles($format)
+    {
         $trackFiles = $this->downloadableTrackFiles($format);
 
         foreach ($trackFiles as $trackFile) {
@@ -119,9 +119,10 @@ trait TrackCollection
      * @param $format
      * @return Collection
      */
-    protected function downloadableTrackFiles($format) {
+    protected function downloadableTrackFiles($format)
+    {
         return $this->trackFiles()->with([
-            'track' => function($query) {
+            'track' => function ($query) {
                 $query->where('is_downloadable', true);
             }
         ])->where('format', $format)->get();
@@ -142,7 +143,7 @@ trait TrackCollection
                 break;
             }
         }
-        return $hasLosslessTracks;  
+        return $hasLosslessTracks;
     }
 
     /**
@@ -151,7 +152,7 @@ trait TrackCollection
      *
      * @return bool
      */
-    public function hasLosslessTracksOnly() : bool 
+    public function hasLosslessTracksOnly() : bool
     {
         $hasLosslessTracksOnly = true;
         foreach ($this->tracks as $track) {
@@ -176,11 +177,11 @@ trait TrackCollection
             return 0;
         }
 
-        return Cache::remember($this->getCacheKey('filesize-'.$format), 1440, function() use ($tracks, $format) {
+        return Cache::remember($this->getCacheKey('filesize-'.$format), 1440, function () use ($tracks, $format) {
             $size = 0;
 
             // Check whether the format is lossless yet not all master files are lossless
-            $isLosslessFormatWithLossyTracks =  in_array($format, Track::$LosslessFormats) 
+            $isLosslessFormatWithLossyTracks =  in_array($format, Track::$LosslessFormats)
                 && !$this->hasLosslessTracksOnly()
                 && $this->hasLosslessTracks();
             
@@ -199,7 +200,6 @@ trait TrackCollection
                     } else {
                         $size += $track->getFilesize($format);
                     }
-
                 } catch (TrackFileNotFoundException $e) {
                     // do nothing - this track won't be included in the download
                 }

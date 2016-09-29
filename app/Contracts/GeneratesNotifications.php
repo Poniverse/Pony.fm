@@ -29,11 +29,12 @@ use Poniverse\Ponyfm\Models\User;
  *
  * @package Poniverse\Ponyfm\Contracts
  */
-interface GeneratesNotifications {
+interface GeneratesNotifications
+{
     /**
      * Returns a human-friendly string (lowercase & singular) representing this
      * type of resource.
-     * 
+     *
      * @return string
      */
     public function getResourceType():string;

@@ -76,13 +76,10 @@ class ClearTrackCache extends Command
         if (count($trackFiles) === 0) {
             $this->info('No tracks found. Exiting.');
         } else {
-
             if ($this->option('force') || $this->confirm(count($trackFiles) . ' cacheable track files found. Proceed to delete their files if they exist? [y|N]', false)) {
-
                 $count = 0;
 
                 foreach ($trackFiles as $trackFile) {
-
                     // Set expiration to null (so can be re-cached upon request)
                     $trackFile->expires_at = null;
                     $trackFile->update();
@@ -94,14 +91,11 @@ class ClearTrackCache extends Command
 
                         $this->info('Deleted ' . $trackFile->getFile());
                     }
-
                 }
                 $this->info($count . ' files deleted. Deletion complete. Exiting.');
             } else {
                 $this->info('Deletion cancelled. Exiting.');
             }
-
         }
     }
-
 }
