@@ -39,7 +39,7 @@ return [
             'driver' => 'beanstalkd',
             'host'   => 'localhost',
             'queue'  => 'default',
-            'ttr'    => 60,
+            'retry_after'    => 60,
         ],
 
     ],
