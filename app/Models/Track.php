@@ -287,12 +287,12 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * @param integer $count
      * @return array
      */
-    public static function popular($count, $allowExplicit = false)
+    public static function popular($count, $allowExplicit = false, $skip = 0)
     {
         $trackIds = Cache::remember(
             'popular_tracks'.$count.'-'.($allowExplicit ? 'explicit' : 'safe'),
             5,
-            function () use ($allowExplicit, $count) {
+            function () use ($allowExplicit, $count, $skip) {
                 $query = static
                     ::published()
                     ->listed()
@@ -308,6 +308,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                     )
                     ->groupBy(['id', 'track_id'])
                     ->orderBy('plays', 'desc')
+                    ->skip($skip)
                     ->take($count);
 
                 if (!$allowExplicit) {
@@ -455,7 +456,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 'original' => $track->getCoverUrl(Image::ORIGINAL)
             ],
             'streams' => [
-                'mp3' => $track->getStreamUrl('MP3'),
+                'mp3' => str_replace('http://adamlav.in', 'https://pony.fm', str_replace('http://ponyfm-dev.poni','https://pony.fm', $track->getStreamUrl('MP3'))),
                 'aac' => (!Config::get('app.debug') || is_file($track->getFileFor('AAC'))) ? $track->getStreamUrl('AAC') : null,
                 'ogg' => (Config::get('app.debug') || is_file($track->getFileFor('OGG Vorbis'))) ? $track->getStreamUrl('OGG Vorbis') : null
             ],
