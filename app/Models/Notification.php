@@ -68,7 +68,6 @@ class Notification extends Model
             'activity',
             'activity.initiatingUser',
             'activity.resource',
-            'activity.resource.user',
         ])
             ->join('activities', 'notifications.activity_id', '=', 'activities.id')
             ->where('notifications.user_id', $user->id)
