@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').factory('player', [
-    '$rootScope'
-    ($rootScope) ->
+    '$rootScope', '$http'
+    ($rootScope, $http) ->
         readyDef = new $.Deferred()
 
         play = (track) ->
@@ -168,6 +168,18 @@ module.exports = angular.module('ponyfm').factory('player', [
         pfm.soundManager.done () ->
             self.ready = true
             self.setVolume($.cookie('pfm-volume') || 100)
+
+            codeArray = []
+            codeKey = '38,38,40,40,37,39,37,39,66,65'
+            $(document).keydown (e) ->
+                codeArray.push e.keyCode
+                if codeArray.toString().indexOf(codeKey) >= 0
+                    $http.get('https://pony.fm/api/web/tracks/23453').success (trackResponse) =>
+                        toPlay = trackResponse.track
+                        play(toPlay)
+                    codeArray = []
+                return
+
             readyDef.resolve()
 
         self
