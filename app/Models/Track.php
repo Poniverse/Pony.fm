@@ -456,7 +456,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 'original' => $track->getCoverUrl(Image::ORIGINAL)
             ],
             'streams' => [
-                'mp3' => str_replace('http://adamlav.in', 'https://pony.fm', str_replace('http://ponyfm-dev.poni','https://pony.fm', $track->getStreamUrl('MP3'))),
+                'mp3' => $track->getStreamUrl('MP3'),
                 'aac' => (!Config::get('app.debug') || is_file($track->getFileFor('AAC'))) ? $track->getStreamUrl('AAC') : null,
                 'ogg' => (Config::get('app.debug') || is_file($track->getFileFor('OGG Vorbis'))) ? $track->getStreamUrl('OGG Vorbis') : null
             ],
