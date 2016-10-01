@@ -114,10 +114,15 @@ class TracksController extends Controller
         }
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
-        ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $trackFile->getFormat()['index']);
 
         $response = Response::make('', 200);
         $filename = $trackFile->getFile();
+
+        if (!file_exists($filename)) {
+            App::abort(418);
+        }
+
+        ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $trackFile->getFormat()['index']);
 
         if (Config::get('app.sendfile')) {
             $response->header('X-Sendfile', $filename);

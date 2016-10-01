@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').factory('player', [
-    '$rootScope', '$http'
-    ($rootScope, $http) ->
+    '$rootScope', '$http', '$modal'
+    ($rootScope, $http, $modal) ->
         readyDef = new $.Deferred()
 
         play = (track) ->
@@ -42,6 +42,13 @@ module.exports = angular.module('ponyfm').factory('player', [
                 whileplaying: () -> $rootScope.safeApply ->
                     track.progressSeconds = self.currentSound.position / 1000
                     track.progress = (self.currentSound.position / (track.duration * 1000)) * 100
+
+                onload: (res) -> $rootScope.safeApply ->
+                    if !res
+                        # Track failed to load
+                        dialog = $modal
+                            templateUrl: '/templates/partials/track-load-fail-dialog.html',
+                            show: true
 
                 onfinish: () -> $rootScope.safeApply ->
                     if self.repeatState == 2
@@ -169,18 +176,18 @@ module.exports = angular.module('ponyfm').factory('player', [
             self.ready = true
             self.setVolume($.cookie('pfm-volume') || 100)
 
-            codeArray = []
-            codeKey = '38,38,40,40,37,39,37,39,66,65'
-            $(document).keydown (e) ->
-                codeArray.push e.keyCode
-                if codeArray.toString().indexOf(codeKey) >= 0
-                    $http.get('https://pony.fm/api/web/tracks/23453').success (trackResponse) =>
-                        toPlay = trackResponse.track
-                        play(toPlay)
-                    codeArray = []
-                return
-
             readyDef.resolve()
+
+        codeArray = []
+        codeKey = '38,38,40,40,37,39,37,39,66,65'
+        $(document).keydown (e) ->
+            codeArray.push e.keyCode
+            if codeArray.toString().indexOf(codeKey) >= 0
+                $http.get('https://pony.fm/api/web/tracks/23453').success (trackResponse) =>
+                    toPlay = trackResponse.track
+                    self.playTracks [toPlay], 0
+                codeArray = []
+            return
 
         self
 ])
