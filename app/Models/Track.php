@@ -341,7 +341,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                     '.$explicitFilter.'
                     GROUP BY track_id
                     ORDER BY weight DESC
-                    LIMIT 30;';
+                    LIMIT '.$count;
 
                 $countQuery = DB::select(DB::raw($queryText));
 
