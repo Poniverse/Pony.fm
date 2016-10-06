@@ -31,6 +31,7 @@ use Poniverse\Ponyfm\Contracts\Commentable;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\SlugTrait;
 use Exception;
@@ -289,11 +290,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public static function popular($count, $allowExplicit = false, $skip = 0)
     {
-        $trackIds = Cache::remember(
+        $trackData = Cache::remember(
             'popular_tracks'.$count.'-'.($allowExplicit ? 'explicit' : 'safe'),
             5,
             function () use ($allowExplicit, $count, $skip) {
-                $query = static
+                /*$query = static
                     ::published()
                     ->listed()
                     ->join(
@@ -315,15 +316,55 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                     $query->where('is_explicit', false);
                 }
 
-                $results = [];
-
                 foreach ($query->get(['*', DB::raw('count(*) as plays')]) as $track) {
                     $results[] = $track->id;
+                }*/
+
+                $explicitFilter = '
+                    AND NOT EXISTS (
+                        SELECT id, is_explicit FROM tracks
+                        WHERE track_id = id AND is_explicit = TRUE
+                    )';
+
+                if ($allowExplicit) {
+                    $explicitFilter = '';
+                }
+
+                $queryText = '
+                    SELECT track_id,
+                    SUM(CASE WHEN log_type = 1 THEN 0.1
+                        WHEN log_type = 3 THEN 1
+                        WHEN log_type = 2 THEN 2
+                        ELSE 0 END) AS weight
+                    FROM "resource_log_items"
+                    WHERE track_id IS NOT NULL AND log_type IS NOT NULL AND "created_at" > now() - INTERVAL \'1\' DAY
+                    '.$explicitFilter.'
+                    GROUP BY track_id
+                    ORDER BY weight DESC
+                    LIMIT 30;';
+
+                $countQuery = DB::select(DB::raw($queryText));
+
+                $results = [];
+
+                foreach ($countQuery as $track) {
+                    $results[] = [
+                        'id' => $track->track_id,
+                        'weight' => $track->weight
+                    ];
                 }
 
                 return $results;
             }
         );
+
+        $trackIds = [];
+        $trackWeights = [];
+
+        foreach ($trackData as $track) {
+            $trackIds[] = $track['id'];
+            $trackWeights[$track['id']] = $track['weight'];
+        }
 
         if (!count($trackIds)) {
             return [];
@@ -338,12 +379,16 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
         $processed = [];
         foreach ($tracks->get() as $track) {
-            $processed[] = Track::mapPublicTrackSummary($track);
+            $trackModel = Track::mapPublicTrackSummary($track);
+            $trackModel['weight'] = $trackWeights[$track->id];
+            $processed[] = $trackModel;
         }
 
-        // Songs that get played more should drop down
-        // in the list so they don't hog the top spots.
-        array_reverse($processed);
+        usort($processed, function($a, $b) {
+            return $a['weight'] <=> $b['weight'];
+        });
+
+        $processed = array_reverse($processed);
 
         return $processed;
     }
