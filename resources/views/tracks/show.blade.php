@@ -24,7 +24,7 @@
 @section('metadata')
     <meta property="og:title" content="{{ $track->title }}" />
     <meta property="og:type" content="music.song" />
-    <meta property="og:url" content="https://pony.fm/tracks/{{ $track->id }}-{{ $track->slug }}" />
+    <meta property="og:url" content="{{ url('tracks/' . $track->id . '-' . $track->slug) }}" />
     <meta property="og:image" content="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::NORMAL) }}" />
     <meta property="og:image:width" content="350" />
     <meta property="og:image:height" content="350" />
@@ -40,7 +40,7 @@
     <meta name="twitter:title" content="{{ $track->title }}" />
     <meta name="twitter:description" content="{{ str_limit($track->description, $limit = 200, $end = '...') }}" />
     <meta name="twitter:image" content="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::NORMAL) }}" />
-    <meta name="twitter:player" content="https://pony.fm/t{{ $track->id }}/embed?twitter" />
+    <meta name="twitter:player" content="{{ url('t' . $track->id . '/embed?twitter') }}" />
     <meta name="twitter:player:width" content="480" />
     <meta name="twitter:player:height" content="130" />
     <meta name="twitter:player:stream" content="{{ $track->getStreamUrl('MP3') }}" />
@@ -53,9 +53,9 @@
             <div class="hidden-xs single-player">
                 <img src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL) }}" style="opacity: 1;">
             </div>
-            <h1 class="ng-binding">Boooring!</h1>
+            <h1>{{ $track->title }}</h1>
             <h2>
-                by: <a ng-href="http://ponyfm-dev.poni/logicdev" class="ng-binding" href="http://ponyfm-dev.poni/logicdev">LogicDev</a>
+                by: <a href="{{ url($track->user->slug) }}">{{ $track->user->display_name }}</a>
             </h2>
         </header>
 
