@@ -31,6 +31,7 @@
     <meta property="og:description" content="{{ str_limit($track->description, $limit = 200, $end = '...') }}">
     <meta property="og:site_name" content="Pony.fm" />
     <meta property="og:audio" content="{{ $track->getStreamUrl('MP3') }}" />
+    <meta property="og:audio:secure_url" content="{{ $track->getStreamUrl('MP3') }}" />
     <meta property="og:audio:type" content="audio/mpeg" />
     <meta property="music:duration" content="{{ round($track->duration) }}" />
     <meta property="fb:admins" content="1165335382" />
