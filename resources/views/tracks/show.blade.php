@@ -18,7 +18,65 @@
 
 @extends('shared._app_layout')
 
+@section('title'){{ $track->title }} - {{ $track->user->display_name }} | @endsection
+@section('description'){{ str_limit($track->description, $limit = 200, $end = '...') }}@endsection
+
+@section('metadata')
+    <meta property="og:title" content="{{ $track->title }}" />
+    <meta property="og:type" content="music.song" />
+    <meta property="og:url" content="https://pony.fm/tracks/{{ $track->id }}-{{ $track->slug }}" />
+    <meta property="og:image" content="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::NORMAL) }}" />
+    <meta property="og:image:width" content="350" />
+    <meta property="og:image:height" content="350" />
+    <meta property="og:description" content="{{ str_limit($track->description, $limit = 200, $end = '...') }}">
+    <meta property="og:site_name" content="Pony.fm" />
+    <meta property="og:audio" content="{{ $track->getStreamUrl('MP3') }}" />
+    <meta property="og:audio:type" content="audio/mpeg" />
+    <meta property="music:duration" content="{{ round($track->duration) }}" />
+    <meta property="fb:admins" content="1165335382" />
+
+    <meta name="twitter:card" content="player" />
+    <meta name="twitter:site" content="@ponyfm" />
+    <meta name="twitter:title" content="{{ $track->title }}" />
+    <meta name="twitter:description" content="{{ str_limit($track->description, $limit = 200, $end = '...') }}" />
+    <meta name="twitter:image" content="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::NORMAL) }}" />
+    <meta name="twitter:player" content="https://pony.fm/t{{ $track->id }}/embed?twitter" />
+    <meta name="twitter:player:width" content="480" />
+    <meta name="twitter:player:height" content="130" />
+    <meta name="twitter:player:stream" content="{{ $track->getStreamUrl('MP3') }}" />
+    <meta name="twitter:player:stream:content_type" content="audio/mpeg" />
+@endsection
+
 @section('app_content')
-    <h1>Track Listing!</h1>
-    <p>This page should be what search engines see</p>
+    <div class="resource-details track-details">
+        <header>
+            <div class="hidden-xs single-player">
+                <img src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL) }}" style="opacity: 1;">
+            </div>
+            <h1 class="ng-binding">Boooring!</h1>
+            <h2>
+                by: <a ng-href="http://ponyfm-dev.poni/logicdev" class="ng-binding" href="http://ponyfm-dev.poni/logicdev">LogicDev</a>
+            </h2>
+        </header>
+
+        <div class="stretch-to-bottom details-columns">
+            <div class="right">
+                <img class="cover" src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::NORMAL) }}"/>
+
+                <ul class="stats">
+                    <li>Published: <strong>{!! Helpers::timestamp($track->published_at) !!}</strong></li>
+                    <li>Views: <strong>{{ $track->view_count }}</strong></li>
+                    <li>Plays: <strong>{{ $track->play_count }}</strong></li>
+                    <li>Downloads: <strong>{{ $track->download_count }}</strong></li>
+                    <li>Favourites: <strong>{{ $track->favourite_count }}</strong></li>
+                </ul>
+            </div>
+            <div class="left">
+                <div class="description">
+                    <h2>Description</h2>
+                    <p>{{ $track->description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

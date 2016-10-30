@@ -19,13 +19,13 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title ng-bind="title">Pony.fm</title>
-        <meta name="description" content="@{{ description }}" />
+        <title ng-bind="title">@yield('title')Pony.fm</title>
+        <meta name="description" content="@yield('description')" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta name="theme-color" content="#84528A" />
         <link rel="manifest" href="/manifest.json">
         <base href="/" />
-
+        @yield('metadata')
         @yield('styles')
     </head>
     <body ng-controller="application" class="{{Auth::check() ? 'is-logged' : ''}}">

@@ -88,7 +88,7 @@ class TracksController extends Controller
             return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
         }
 
-        return View::make('tracks.show');
+        return View::make('tracks.show', ['track' => $track]);
     }
 
     public function getEdit($id, $slug)
