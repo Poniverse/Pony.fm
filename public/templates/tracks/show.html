@@ -17,7 +17,7 @@
         </div>
 
         <ul class="stats">
-            <li>Published: <strong>{{::track.published_at}}</strong></li>
+            <li>Published: <strong>{{formatPublishedDate(track)}}</strong></li>
             <li>Views: <strong>{{::track.stats.views}}</strong></li>
             <li>Plays: <strong>{{::track.stats.plays}}</strong></li>
             <li>Downloads: <strong>{{::track.stats.downloads}}</strong></li>

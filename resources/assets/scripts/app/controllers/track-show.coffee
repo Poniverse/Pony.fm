@@ -23,4 +23,8 @@ window.pfm.preloaders['track-show'] = [
 module.exports = angular.module('ponyfm').controller "track-show", [
   '$scope', 'tracks', '$state', 'playlists', 'auth', 'favourites', '$modal'
   ($scope, tracks, $state, playlists, auth, favourites, $modal) ->
+      $scope.formatPublishedDate = (track) ->
+          locale = window.navigator.userLanguage || window.navigator.language
+          moment.locale(locale)
+          return moment(track.published_at).format('LLL')
 ]
