@@ -94,6 +94,113 @@
     width: 37.5%;
   }
 
+  .announce-wrapper {
+    width: 100%;
+    margin-bottom: 5px;
+    
+    &.disabled {
+      margin: 0;
+      display: none;
+    }
+
+    #announcement {
+      width: 100%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 2px 3px rgba(0,0,0,0.24);
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+
+      .announce-content {
+        padding: 10px;
+        overflow: hidden;
+
+        @media (max-width: 720px) {
+          padding-left: 10px !important;
+        }
+      }
+
+      .announce-actions {
+        padding: 5px 15px 15px;
+        position: relative;
+        background: inherit;
+        z-index: 2;
+
+        &.border {
+          border-top: 1px solid rgba(160,160,160,0.2);
+        }
+
+        a {
+          margin-right: 20px;
+          font-weight: bold;
+        }
+      }
+
+      &.simple-announce {
+        .announce-content {
+          padding-left: 75px;
+        }
+      }
+
+      &.alert-announce, &.serious-alert-announce {
+        .announce-content {
+          padding-left: 95px;
+        }
+      }
+
+      &.alert-announce {
+        background: #f57f17;
+      }
+
+      &.serious-alert-announce {
+        background: #d84315
+      }
+      
+      &.simple-announce {
+        background: #894d8f;
+      }
+
+      &.disabled {
+        display: none;
+      }
+
+      .dismiss-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 6px 20px;
+        font-size: 22px;
+      }
+
+      h2, p, a {
+        color: #fff;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .announce-bg-icon {
+        color: #fff;
+        opacity: 0.6;
+        top: -13px;
+        left: -20px;
+        position: absolute;
+        font-size: 100px;
+        transform: rotate(-9deg);
+        z-index: 1;
+
+        @media (max-width: 720px) {
+          opacity: 0.1;
+          right: 0;
+          left: auto;
+        }
+      }
+    }
+  }
+
   .news {
     width: 25%;
 

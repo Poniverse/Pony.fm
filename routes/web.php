@@ -116,6 +116,8 @@ Route::group(['prefix' => 'api/web'], function () {
 
     Route::get('/dashboard', 'Api\Web\DashboardController@getIndex');
 
+    Route::get('/announcements', 'Api\Web\AnnouncementsController@getIndex');
+
     Route::group(['middleware' => 'auth'], function () {
         Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
         Route::get('/tracks/{id}/upload-status', 'Api\Web\TracksController@getUploadStatus');
