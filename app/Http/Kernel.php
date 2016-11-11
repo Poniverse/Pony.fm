@@ -55,9 +55,9 @@ class Kernel extends HttpKernel
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'auth.oauth' => \Poniverse\Ponyfm\Http\Middleware\AuthenticateOAuth::class,
-//        'can' => \Poniverse\Ponyfm\Http\Middleware\Authorize::class,
+        'can' => \Poniverse\Ponyfm\Http\Middleware\Authorize::class,
         'json-exceptions' => \Poniverse\Ponyfm\Http\Middleware\JsonExceptions::class,
-        'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
+        //'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
         'guest' => \Poniverse\Ponyfm\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
