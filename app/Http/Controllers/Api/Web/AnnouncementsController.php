@@ -21,8 +21,10 @@
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
 use Carbon\Carbon;
+use Poniverse\Ponyfm\Commands\CreateAnnouncementCommand;
 use Poniverse\Ponyfm\Http\Controllers\Controller;
 use Poniverse\Ponyfm\Models\Announcement;
+use Request;
 use Response;
 
 class AnnouncementsController extends Controller {
@@ -41,5 +43,35 @@ class AnnouncementsController extends Controller {
             ["announcement" => $announcement],
             200
         );
+    }
+
+    public function getAdminIndex() {
+        $this->authorize('access-admin-area');
+
+        $announcements = Announcement::orderBy('start_time', 'desc')
+            ->get();
+
+        return Response::json([
+            'announcements' => $announcements->toArray()
+        ], 200);
+    }
+
+    public function getItemById($genreId) {
+        $this->authorize('access-admin-area');
+
+        $query = Announcement::where('id', '=', $genreId)
+            ->orderBy('start_time', 'desc');
+
+        $announcement = $query->first();
+
+        return Response::json(
+            ["announcement" => $announcement],
+            200
+        );
+    }
+
+    public function postCreate() {
+        $command = new CreateAnnouncementCommand(Request::get('name'));
+        return $this->execute($command);
     }
 }

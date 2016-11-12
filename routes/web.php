@@ -193,6 +193,12 @@ Route::group(['prefix' => 'api/web'], function () {
 
         Route::get('/tracks', 'Api\Web\TracksController@getAllTracks');
         Route::get('/tracks/unclassified', 'Api\Web\TracksController@getClassifierQueue');
+
+        Route::get('/announcements', 'Api\Web\AnnouncementsController@getAdminIndex');
+        Route::get('/announcements/{id}', 'Api\Web\AnnouncementsController@getItemById')->where('id', '\d+');
+        Route::post('/announcements', 'Api\Web\AnnouncementsController@postCreate');
+        Route::put('/announcements/{id}', 'Api\Web\AnnouncementsController@putUpdate')->where('id', '\d+');
+        Route::delete('/announcements/{id}', 'Api\Web\AnnouncementsController@deleteItem')->where('id', '\d+');
     });
 
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
@@ -205,6 +211,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-ar
     Route::get('/tracks/unclassified', 'AdminController@getClassifierQueue');
     Route::get('/show-songs', 'AdminController@getShowSongs');
     Route::get('/users', 'AdminController@getUsers');
+    Route::get('/announcements', 'AdminController@getAnnouncements');
     Route::get('/', 'AdminController@getIndex');
 });
 

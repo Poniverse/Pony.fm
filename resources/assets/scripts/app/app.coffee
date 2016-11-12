@@ -293,6 +293,16 @@ ponyfm.config [
             controller: 'admin-users'
             templateUrl: '/templates/admin/users.html'
 
+        state.state 'admin.announcements',
+            url: '/announcements'
+            controller: 'admin-announcements'
+            templateUrl: '/templates/admin/announcements.html'
+
+        state.state 'admin.announcement',
+            url: '/announcements/{id:[^\-]+}-{slug}'
+            templateUrl: '/templates/admin/announcement-show.html'
+            controller: 'admin-announcement-edit'
+
         # Homepage
 
         if window.pfm.auth.isLogged

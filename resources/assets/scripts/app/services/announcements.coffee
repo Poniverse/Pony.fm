@@ -28,5 +28,11 @@ module.exports = angular.module('ponyfm').factory('announcements', [
                     def.resolve(announcementResponse.announcement)
                 def.promise()
 
+            getAdminList: () ->
+                def = new $.Deferred()
+                $http.get('/api/web/admin/announcements').success (announcementResponse) ->
+                    def.resolve(announcementResponse.announcements)
+                def.promise()
+
         self
 ])

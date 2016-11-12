@@ -53,4 +53,9 @@ class AdminController extends Controller
     {
         return View::make('shared.null');
     }
+
+    public function getAnnouncements()
+    {
+        return View::make('shared.null');
+    }
 }
