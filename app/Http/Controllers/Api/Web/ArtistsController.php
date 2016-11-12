@@ -172,8 +172,18 @@ class ArtistsController extends ApiControllerBase
             ];
         }
 
-        $palette = ColorThief::getPalette($user->getAvatarUrl(Image::SMALL), 2);
-        $formatted_palette = array_map("Helpers::rgb2hex", $palette);
+        $formatted_palette = [
+            "#ffffff",
+            "#ffffff",
+            "#ffffff"
+        ];
+
+        try {
+            $palette = ColorThief::getPalette($user->getAvatarUrl(Image::SMALL), 2);
+            $formatted_palette = array_map("Helpers::rgb2hex", $palette);
+        } catch (Exception $e) {
+            // We failed to get the image, oh well
+        }
 
         $followers = Follower::where('artist_id', $user->id)
             ->count();
