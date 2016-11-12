@@ -3,9 +3,7 @@
     <p marked="announcement.text_content"></p>
 </div>
 <div class="announce-actions">
-    <span ng-repeat="link in announcement.links">
-        <a ng-href="{{ ::link.url }}" target="_blank">{{ ::link.title }}</a>
-    </span>
+    <a ng-repeat="link in announcement.links" ng-href="{{ ::link.url }}" target="_blank">{{ ::link.title }}</a>
     <a href="#" ng-click="announcement.dontShowAgain()">Don't show again</a>
 </div>
 <a href="#" class="dismiss-button" ng-click="announcement.dismiss()"><i class="fa fa-times"></i></a>
