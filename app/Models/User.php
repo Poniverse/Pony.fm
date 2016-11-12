@@ -273,6 +273,25 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return Gravatar::getUrl($email, Image::$ImageTypes[$type]['width']);
     }
 
+    public function getAvatarUrlLocal($type = Image::NORMAL)
+    {
+        if (!$this->uses_gravatar && $this->avatar !== null) {
+            return $this->avatar->getFile($type);
+        }
+
+        if ($this->email == "redacted@example.net") {
+            return Gravatar::getUrl($this->id."", Image::$ImageTypes[$type]['width'], "identicon");
+        }
+
+        $email = $this->gravatar;
+
+        if (!strlen($email)) {
+            $email = $this->email;
+        }
+
+        return Gravatar::getUrl($email, Image::$ImageTypes[$type]['width']);
+    }
+
     /**
      * Get the token value for the "remember me" session.
      *
