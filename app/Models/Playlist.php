@@ -134,7 +134,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             if (in_array($name, Track::$LosslessFormats) && !$playlist->hasLosslessTracksOnly() && !$playlist->hasLosslessTracks()) {
                 continue;
             }
-            
+
             $formats[] = [
                 'name' => $name,
                 'extension' => $format['extension'],
@@ -284,7 +284,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public function canView($user)
     {
-        return $this->is_public || ($user != null && $user->id == $this->user_id);
+        return $this->is_public || ($user != null && $user->id == $this->user_id) || ($user != null && $user->hasRole('admin'));
     }
 
     public function getUrlAttribute()

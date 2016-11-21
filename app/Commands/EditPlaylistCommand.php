@@ -45,7 +45,7 @@ class EditPlaylistCommand extends CommandBase
     {
         $user = Auth::user();
 
-        return $this->_playlist && $user != null && $this->_playlist->user_id == $user->id;
+        return $this->_playlist && $user != null && ($this->_playlist->user_id == $user->id || $user->hasRole('admin'));
     }
 
     /**
