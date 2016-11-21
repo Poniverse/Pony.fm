@@ -99,14 +99,17 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4 form-row">
+            <div class="col-md-3 form-row">
                 <label for="is_explicit"><input ng-disabled="isSaving" ng-change="touchModel()" id="is_explicit" type="checkbox" ng-model="track.is_explicit" /> Contains Explicit Content</label>
             </div>
-            <div class="col-md-4 form-row">
+            <div class="col-md-3 form-row">
                 <label for="is_downloadable"><input ng-disabled="isSaving" ng-change="touchModel()" id="is_downloadable" type="checkbox" ng-model="track.is_downloadable" /> Is Downloadable</label>
             </div>
-            <div class="col-md-4 form-row">
+            <div class="col-md-3 form-row">
                 <label for="is_listed"><input ng-disabled="isSaving" ng-change="touchModel()" id="is_listed" type="checkbox" ng-model="track.is_listed" /> Is Listed</label>
+            </div>
+            <div class="col-md-3 form-row">
+                <label for="hwc_submit"><input ng-disabled="isSaving" ng-change="touchModel()" id="hwc_submit" type="checkbox" ng-model="track.hwc_submit" /> Submit to <a href="https://mlpforums.com/topic/159868-ponyfms-hearths-warming-contest/">Hearth's Warming Contest</a></label>
             </div>
         </div>
         <div class="row" ng-show="isAdmin">

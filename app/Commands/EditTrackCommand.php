@@ -27,6 +27,7 @@ use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackType;
 use Poniverse\Ponyfm\Models\User;
+use Poniverse\Ponyfm\Models\Playlist;
 use DB;
 
 class EditTrackCommand extends CommandBase
@@ -136,7 +137,7 @@ class EditTrackCommand extends CommandBase
 
             DB::table('tracks')->whereUserId($track->user_id)->update(['is_latest' => false]);
             $track->is_latest = true;
-            
+
             Notification::publishedNewTrack($track);
         }
 
@@ -175,6 +176,22 @@ class EditTrackCommand extends CommandBase
             User::whereId($oldid)->update([
                 'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = ' . $oldid . ')')
             ]);
+        }
+
+        if (isset($this->_input['hwc_submit']) && new \DateTime() < new \DateTime("2016-12-18 00:00:00")) {
+            $playlist = Playlist::where('user_id', 22549)->first();
+
+            if ($this->_input['hwc_submit'] === true) {
+                if (!$playlist->tracks()->get()->contains($track)) {
+                    $songIndex = $playlist->trackCount() + 1;
+                    $playlist->tracks()->attach($track, ['position' => $songIndex]);
+                    $playlist->touch();
+
+                    Playlist::where('id', $playlist->id)->update([
+                        'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$playlist->id.')')
+                    ]);
+                }
+            }
         }
 
         return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);

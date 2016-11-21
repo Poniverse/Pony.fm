@@ -250,6 +250,10 @@ ponyfm.config [
             url: '/mlpforums-advertising-program'
             templateUrl: '/templates/pages/mlpforums-advertising-program.html'
 
+        state.state 'pages.hwc-terms',
+            url: '/hwc2016-rules'
+            templateUrl: '/templates/pages/hwc-terms.html'
+
         # Auth
 
         state.state 'login',

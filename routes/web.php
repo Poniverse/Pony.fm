@@ -65,6 +65,10 @@ Route::get('/mlpforums-advertising-program', function () {
     return View::make('pages.mlpforums-advertising-program');
 });
 
+Route::get('/hwc2016-rules', function () {
+    return View::make('pages.hwc-terms');
+});
+
 Route::get('i{id}/{type}.{extension}', 'ImagesController@getImage')->where('id', '\d+');
 
 Route::get('playlist/{id}-{slug}', 'PlaylistsController@getPlaylist');

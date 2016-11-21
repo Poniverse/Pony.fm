@@ -175,6 +175,8 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
                         album_id: track.album_id
                         is_published: track.is_published
                         is_listed: track.is_listed
+                        # Seasonal
+                        hwc_submit: track.hwc_submit
 
                     $scope.selectedSongs = {}
                     $scope.selectedSongs[song.id] = song for song in track.show_songs

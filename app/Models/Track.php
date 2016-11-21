@@ -533,6 +533,9 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         $returnValue['license_id'] = $track->license_id != null ? $track->license_id : 3;
         $returnValue['username'] = User::whereId($track->user_id)->first()->username;
 
+        // Seasonal
+        $returnValue['hwc_submit'] = Playlist::where('user_id', 22549)->first()->tracks()->get()->contains($track);
+
         return $returnValue;
     }
 
@@ -731,7 +734,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     {
         return $this->getMasterTrackFile()->isLossy();
     }
-    
+
     public function getCoverUrl($type = Image::NORMAL)
     {
         if (!$this->hasCover()) {
