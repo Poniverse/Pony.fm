@@ -179,7 +179,7 @@ class EditTrackCommand extends CommandBase
         }
 
         if (isset($this->_input['hwc_submit']) && new \DateTime() < new \DateTime("2016-12-18 00:00:00")) {
-            $playlist = Playlist::where('user_id', 22549)->first();
+            $playlist = Playlist::where('id', 658)->first();
 
             if ($this->_input['hwc_submit'] === true) {
                 if (!$playlist->tracks()->get()->contains($track)) {
