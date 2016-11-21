@@ -179,15 +179,23 @@ class EditTrackCommand extends CommandBase
         }
 
         if (isset($this->_input['hwc_submit']) && new \DateTime() < new \DateTime("2016-12-18 00:00:00")) {
-            $playlist = Playlist::where('id', 658)->first();
+            $playlist = Playlist::where('user_id', 22549)->first();
 
-            if ($this->_input['hwc_submit'] === true) {
+            if ($this->_input['hwc_submit'] == true) {
                 if (!$playlist->tracks()->get()->contains($track)) {
                     $songIndex = $playlist->trackCount() + 1;
                     $playlist->tracks()->attach($track, ['position' => $songIndex]);
                     $playlist->touch();
 
                     Playlist::where('id', $playlist->id)->update([
+                        'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$playlist->id.')')
+                    ]);
+                }
+            } else {
+                if ($playlist->tracks()->get()->contains($track)) {
+                    $playlist->tracks()->detach($track);
+
+                    Playlist::whereId($playlist->id)->update([
                         'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$playlist->id.')')
                     ]);
                 }
