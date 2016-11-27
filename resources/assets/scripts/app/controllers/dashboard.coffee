@@ -62,7 +62,8 @@ module.exports = angular.module('ponyfm').controller "dashboard", [
                             $scope.announceWrapperClass = null
                             $scope.loadAnnouncementTemplate('partials/alert-announcement.html')
                         when 4
+                            console.log $scope.announcement.template_file
                             $scope.announcementClass = $scope.announcement.css_class
                             $scope.announceWrapperClass = null
-                            $scope.loadAnnouncementTemplate($scope.announcement.template_url)
+                            $scope.loadAnnouncementTemplate($scope.announcement.template_file)
 ]
