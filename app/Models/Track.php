@@ -534,7 +534,9 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         $returnValue['username'] = User::whereId($track->user_id)->first()->username;
 
         // Seasonal
-        $returnValue['hwc_submit'] = Playlist::where('user_id', 22549)->first()->tracks()->get()->contains($track);
+        if (Playlist::where('user_id', 22549)->first()) {
+            $returnValue['hwc_submit'] = Playlist::where('user_id', 22549)->first()->tracks()->get()->contains($track);
+        }
 
         return $returnValue;
     }

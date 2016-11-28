@@ -118,6 +118,19 @@
                 <input ng-disabled="isSaving" ng-change="touchModel()" placeholder="Username" type="text" id="username" ng-model="track.username" />
                 <div class="error">{{errors.username}}</div>
             </div>
+
+            <div class="col-sm-6 form-row">
+                <label for="title" class="strong">Upload new version</label>
+                <input type="file" name="file" onchange="angular.element(this).scope().fileChanged(this)" ng-model="file" />
+            </div>
+
+            <span ng-repeat="upload in data.queue track by $index" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isProcessing || (upload.progress >= 100 && upload.error == null)}" ng-show="!upload.success">
+                <strong ng-show="upload.isUploading && upload.error == null && upload.progress < 100">Uploading&hellip;</strong>
+                <strong ng-show="upload.isProcessing || (upload.isUploading && upload.progress >= 100)">Processing&hellip;</strong>
+                <strong ng-show="upload.error != null">Error</strong>
+                {{::upload.name}} -
+                <strong ng-show="upload.error != null">{{upload.error}}</strong>
+            </span>
         </div>
         <div class="form-row">
             <label class="strong">Choose a License:</label>

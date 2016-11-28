@@ -21,8 +21,8 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
         trackId: '=trackId'
 
     controller: [
-        '$scope', '$modal', 'auth', 'account-tracks', 'account-albums', 'taxonomies', 'images'
-        ($scope, $modal, auth, tracks, albums, taxonomies, images) ->
+        '$scope', '$modal', 'auth', 'account-tracks', 'account-albums', 'taxonomies', 'images', '$state', 'upload'
+        ($scope, $modal, auth, tracks, albums, taxonomies, images, $state, upload) ->
             $scope.isDirty = false
             $scope.isSaving = false
             $scope.taxonomies = taxonomies
@@ -32,6 +32,13 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             $scope.selectedAlbum = null
             $scope.isAdmin = auth.data.isAdmin
             albumsDb = {}
+
+            $scope.data = upload
+            $scope.userSlug = $state.params.slug
+
+            $scope.fileChanged = (e) ->
+                files = e.files
+                $scope.$apply -> upload.uploadNewVersion(files[0], $scope.userSlug, $scope.trackId)
 
             $scope.$watch 'trackId', (newValue, oldValue) ->
                 $scope.updateUI()

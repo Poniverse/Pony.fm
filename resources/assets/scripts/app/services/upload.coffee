@@ -20,18 +20,23 @@ module.exports = angular.module('ponyfm').factory('upload', [
         self =
             queue: []
 
-            finishUploadWrapper: (upload)->
+            finishUploadWrapper: (upload, versionUpdate)->
                 ()->
-                    self.finishUpload(upload)
+                    self.finishUpload(upload, versionUpdate)
 
             # Polls for the upload's status
-            finishUpload: (upload) ->
+            finishUpload: (upload, versionUpdate) ->
                 # TODO: update upload status
-                $http.get("/api/web/tracks/#{upload.trackId}/upload-status").then(
+                endpoint = "/api/web/tracks/#{upload.trackId}/upload-status"
+
+                if versionUpdate
+                    endpoint = "/api/web/tracks/#{upload.trackId}/version-upload-status"
+
+                $http.get(endpoint).then(
                     # handle success or still-processing
                     (response)->
                         if response.status == 202
-                            $timeout(self.finishUploadWrapper(upload), 5000)
+                            $timeout(self.finishUploadWrapper(upload, versionUpdate), 5000)
 
                         else if response.status == 201
                             upload.isProcessing = false
@@ -46,7 +51,73 @@ module.exports = angular.module('ponyfm').factory('upload', [
                             upload.error = 'There was an unknown error!'
             )
 
+            uploadProcess: (upload, formData, trackId) ->
+                versionUpdate = false
+                if trackId > 0
+                    versionUpdate = true
 
+                xhr = new XMLHttpRequest()
+                xhr.upload.onprogress = (e) ->
+                    $rootScope.$apply ->
+                        upload.uploadedSize = e.loaded
+                        upload.progress = e.loaded / upload.size * 100
+                        $rootScope.$broadcast 'upload-progress', upload
+
+                # TODO: Implement polling here
+                # event listener
+                xhr.onload = -> $rootScope.$apply ->
+                    upload.isUploading = false
+                    upload.isProcessing = true
+
+                    if xhr.status == 200
+                        # kick off polling
+                        upload.trackId = $.parseJSON(xhr.responseText).id
+                        self.finishUpload(upload, versionUpdate)
+
+                    else
+                        error =
+                            if xhr.getResponseHeader('content-type') == 'application/json'
+                                'Error: ' + $.parseJSON(xhr.responseText)?.errors?.track?.join ', '
+                            else
+                                'There was an unknown error!'
+
+                        upload.isProcessing = false
+                        upload.error = error
+                        $rootScope.$broadcast 'upload-error', [upload, error]
+
+                    accountTracks.refresh(null, true)
+                        .done($rootScope.$broadcast('upload-finished', upload))
+
+                endpoint = '/api/web/tracks/upload'
+
+                if versionUpdate
+                    endpoint = '/api/web/tracks/' + trackId + '/version-upload'
+
+                xhr.open 'POST', endpoint, true
+                xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')
+                xhr.send formData
+
+            uploadNewVersion: (file, userSlug, trackId) ->
+                upload =
+                    name: file.name
+                    progress: 0
+                    uploadedSize: 0
+                    size: file.size
+                    index: 0
+                    isUploading: true
+                    isProcessing: false
+                    trackId: trackId
+                    success: false
+                    error: null
+
+                self.queue.push upload
+                $rootScope.$broadcast 'upload-added', upload
+
+                formData = new FormData()
+                formData.append('track', file)
+                formData.append('user_slug', userSlug)
+
+                self.uploadProcess(upload, formData, trackId)
 
             upload: (files, userSlug) ->
                 _.each files, (file) ->
@@ -65,44 +136,9 @@ module.exports = angular.module('ponyfm').factory('upload', [
                     self.queue.push upload
                     $rootScope.$broadcast 'upload-added', upload
 
-                    xhr = new XMLHttpRequest()
-                    xhr.upload.onprogress = (e) ->
-                        $rootScope.$apply ->
-                            upload.uploadedSize = e.loaded
-                            upload.progress = e.loaded / upload.size * 100
-                            $rootScope.$broadcast 'upload-progress', upload
-
-                    # TODO: Implement polling here
-                    # event listener
-                    xhr.onload = -> $rootScope.$apply ->
-                        upload.isUploading = false
-                        upload.isProcessing = true
-
-                        if xhr.status == 200
-                            # kick off polling
-                            upload.trackId = $.parseJSON(xhr.responseText).id
-                            self.finishUpload(upload)
-
-                        else
-                            error =
-                                if xhr.getResponseHeader('content-type') == 'application/json'
-                                    'Error: ' + $.parseJSON(xhr.responseText)?.errors?.track?.join ', '
-                                else
-                                    'There was an unknown error!'
-
-                            upload.isProcessing = false
-                            upload.error = error
-                            $rootScope.$broadcast 'upload-error', [upload, error]
-
-                        accountTracks.refresh(null, true)
-                            .done($rootScope.$broadcast('upload-finished', upload))
-
-                    # send the track to the server
                     formData = new FormData()
                     formData.append('track', file)
                     formData.append('user_slug', userSlug)
 
-                    xhr.open 'POST', '/api/web/tracks/upload', true
-                    xhr.setRequestHeader 'X-XSRF-TOKEN', $.cookie('XSRF-TOKEN')
-                    xhr.send formData
+                    self.uploadProcess(upload, formData, 0)
 ])
