@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
     node.vm.hostname = 'ponyfm-dev.poni'
     node.vm.network :private_network, ip: "192.168.33.11"
     node.vm.network "forwarded_port", guest: 80, host: 8080
+    node.vm.network "forwarded_port", guest: 5432, host: 5432
     node.hostmanager.aliases = %w(api.ponyfm-dev.poni)
   end
 
