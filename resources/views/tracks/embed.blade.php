@@ -46,7 +46,7 @@
             </div>
             <div class="meta">
                 @if (Auth::check())
-                    <a href="#" class="favourite"><i title="Favourite this track!" class="favourite-icon fa-star-o"></i></a>
+                    <a href="#" class="favourite"><i title="Favourite this track!" class="favourite-icon fa fa-star-o"></i></a>
                 @endif
                 <div class="progressbar">
                     <div class="loader"></div>
