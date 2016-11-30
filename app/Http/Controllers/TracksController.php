@@ -85,7 +85,7 @@ class TracksController extends Controller
         }
 
         $parsedUrl = parse_url($request->input('url'));
-        $id = preg_match('(\d+)', $parsedUrl['path']);
+        $id = explode('-', explode('/', $parsedUrl['path'])[2])[0];
 
         $track = Track
             ::whereId($id)
