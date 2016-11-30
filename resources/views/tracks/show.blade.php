@@ -46,6 +46,8 @@
     <meta name="twitter:player:height" content="130" />
     <meta name="twitter:player:stream" content="{{ $track->getStreamUrl('MP3') }}" />
     <meta name="twitter:player:stream:content_type" content="audio/mpeg" />
+
+    <link rel="alternate" type="application/json+oembed" href="{{ url('/oembed?url=') . url('tracks/' . $track->id . '-' . $track->slug) }}" title="{{ $track->title }}" />
 @endsection
 
 @section('app_content')

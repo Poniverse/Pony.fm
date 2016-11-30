@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackFile;
@@ -75,6 +76,41 @@ class TracksController extends Controller
         }
 
         return View::make('tracks.embed', ['track' => $track, 'user' => $userData]);
+    }
+
+    public function getOembed(Request $request)
+    {
+        if (!$request->has('url')) {
+            App::abort(404);
+        }
+
+        $parsedUrl = parse_url($request->input('url'));
+        $id = preg_match('(\d+)', $parsedUrl['path']);
+
+        $track = Track
+            ::whereId($id)
+            ->published()
+            ->userDetails()
+            ->first();
+
+        if (!$track || !$track->canView(Auth::user())) {
+            App::abort(404);
+        }
+
+        $output = [
+            'version' => '1.0',
+            'type' => 'rich',
+            'provider_name' => 'Pony.fm',
+            'provider_url' => 'https://pony.fm',
+            'width' => 480,
+            'height' => 130,
+            'title' => $track->title,
+            'author_name' => $track->user->display_name,
+            'author_url' => $track->user->url,
+            'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>'
+        ];
+
+        return Response::json($output);
     }
 
     public function getTrack($id, $slug)
