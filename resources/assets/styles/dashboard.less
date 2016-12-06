@@ -224,6 +224,32 @@
           }
         }
       }
+      
+      &.secret-santa-announce {
+        height: 150px;
+        background-color: #68a1ee;
+        background-image: url(http://i.imgur.com/dSCXyGx.jpg);
+        background-size: 300px;
+        background-repeat: no-repeat;
+        background-position: left center;
+
+        @media (max-width: 720px) {
+          height: auto;
+          background-image: none;
+        }
+
+        .announce-actions {
+          background: none;
+        }
+
+        .announce-actions, .announce-content {
+          padding-left: 300px;
+
+          @media (max-width: 720px) {
+            padding-left: 15px;
+          }
+        }
+      }
     }
   }
 
