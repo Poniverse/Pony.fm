@@ -73,6 +73,8 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read mixed $user
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $notificationActivities
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Email[] $emails
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\EmailSubscription[] $emailSubscriptions
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereDisplayName($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereUsername($value)
@@ -91,6 +93,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereRememberToken($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereIsArchived($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereDisabledAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User withEmailSubscriptionFor($activityType)
  * @mixin \Eloquent
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
@@ -124,6 +127,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         return !$query;
+    }
+
+    /**
+     * Returns users with an email subscription to the given activity type.
+     *
+     * @param $query
+     * @param int $activityType one of the TYPE_* constants in the Activity class
+     * @return mixed
+     */
+    public function scopeWithEmailSubscriptionFor($query, int $activityType) {
+        return $query->whereHas('emailSubscriptions', function ($query) use ($activityType) {
+            $query->where('activity_type', $activityType);
+        });
     }
 
     /**
@@ -237,6 +253,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function notificationActivities()
     {
         return $this->hasManyThrough(Activity::class, Notification::class, 'user_id', 'notification_id', 'id');
+    }
+
+    public function emails()
+    {
+        return $this->hasManyThrough(Email::class, Notification::class, 'user_id', 'notification_id', 'id');
+    }
+
+    public function emailSubscriptions()
+    {
+        return $this->hasMany(EmailSubscription::class, 'user_id', 'id');
     }
 
     public function getIsArchivedAttribute()

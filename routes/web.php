@@ -77,6 +77,10 @@ Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload');
 
 Route::get('notifications', 'AccountController@getNotifications');
 
+Route::get('notifications/email/unsubscribe/{subscriptionKey}', 'NotificationsController@getEmailUnsubscribe')->name('email:unsubscribe');
+Route::get('notifications/email/click/{emailKey}', 'NotificationsController@getEmailClick')->name('email:click');
+
+
 Route::get('oembed', 'TracksController@getOembed');
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function () {

@@ -66,6 +66,11 @@ class Activity extends Model
         'resource_id'   => 'integer',
     ];
 
+    /**
+     * These constants are stored in the "activity_types" table for the purpose
+     * of referential data integrity. Any additions or changes to them MUST
+     * include a database migration to apply the changes to that table as well.
+     */
     const TYPE_NEWS = 1;
     const TYPE_PUBLISHED_TRACK = 2;
     const TYPE_PUBLISHED_ALBUM = 3;

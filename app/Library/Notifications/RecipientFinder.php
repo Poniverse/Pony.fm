@@ -24,8 +24,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\NotificationHandler;
 use Poniverse\Ponyfm\Jobs\SendNotifications;
+use Poniverse\Ponyfm\Library\Notifications\Drivers\EmailDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\NativeDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
+use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Subscription;
@@ -63,7 +65,13 @@ class RecipientFinder implements NotificationHandler
     {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
-                return $track->user->followers;
+                return $track->user->followers();
+
+            case EmailDriver::class:
+                return $track->user->followers()->whereHas('emailSubscriptions', function($query) {
+                    $query->where('activity_type', Activity::TYPE_PUBLISHED_TRACK);
+                })->get();
+
             case NativeDriver::class:
                 $followerIds = [];
                 $subIds = [];
@@ -119,6 +127,7 @@ class RecipientFinder implements NotificationHandler
     {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
+            case EmailDriver::class:
                 return [$userBeingFollowed];
             case NativeDriver::class:
                 return Subscription::where('user_id', '=', $userBeingFollowed->id)->get();

@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $user_id
  * @property boolean $is_read
  * @property-read \Poniverse\Ponyfm\Models\Activity $activity
+ * @property-read \Poniverse\Ponyfm\Models\Email $email
  * @property-read \Poniverse\Ponyfm\Models\User $recipient
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification forUser($user)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereId($value)
@@ -58,6 +59,11 @@ class Notification extends Model
     public function recipient()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function email()
+    {
+        return $this->hasOne(Email::class, 'notification_id', 'id');
     }
 
     /**
