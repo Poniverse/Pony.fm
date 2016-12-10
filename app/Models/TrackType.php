@@ -28,6 +28,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property string $title
  * @property string $editor_title
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackType whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackType whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackType whereEditorTitle($value)
+ * @mixin \Eloquent
  */
 class TrackType extends Model
 {

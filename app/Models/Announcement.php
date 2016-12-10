@@ -22,6 +22,31 @@ namespace Poniverse\Ponyfm\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Poniverse\Ponyfm\Models\Announcement
+ *
+ * @property integer $id
+ * @property string $title
+ * @property string $text_content
+ * @property integer $announcement_type_id
+ * @property mixed $links
+ * @property mixed $tracks
+ * @property string $css_class
+ * @property string $template_file
+ * @property string $start_time
+ * @property string $end_time
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereTextContent($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereAnnouncementTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereLinks($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereTracks($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereCssClass($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereTemplateFile($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereStartTime($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereEndTime($value)
+ * @mixin \Eloquent
+ */
 class Announcement extends Model {
     protected $table = 'announcements';
 

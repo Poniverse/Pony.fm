@@ -66,6 +66,22 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist userDetails()
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Favourite[] $favourites
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereIsPublic($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereTrackCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereViewCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereDownloadCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereFavouriteCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereFollowCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereCommentCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class Playlist extends Model implements Searchable, Commentable, Favouritable
 {

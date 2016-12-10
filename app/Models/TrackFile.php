@@ -44,6 +44,19 @@ use File;
  * @property-read mixed $url
  * @property-read mixed $size
  * @property-read mixed $is_expired
+ * @property integer $version
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereTrackId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereIsMaster($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereFormat($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereIsCacheable($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereStatus($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereExpiresAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereFilesize($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereVersion($value)
+ * @mixin \Eloquent
  */
 class TrackFile extends Model
 {

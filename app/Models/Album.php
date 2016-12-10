@@ -66,6 +66,21 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album userDetails()
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereCoverId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereTrackCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereViewCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereDownloadCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereFavouriteCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereCommentCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class Album extends Model implements Searchable, Commentable, Favouritable
 {

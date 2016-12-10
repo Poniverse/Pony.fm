@@ -38,6 +38,16 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @property integer $uploaded_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereFilename($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereMime($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereExtension($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereSize($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereHash($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereUploadedBy($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Image extends Model
 {

@@ -38,6 +38,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read mixed $url
  * @property-read mixed $thumbnail_url
  * @property-read mixed $text
+ * @property string $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\User[] $notificationRecipients
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereActivityType($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereResourceType($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereResourceId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class Activity extends Model
 {

@@ -31,6 +31,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $affiliate_distribution
  * @property boolean $open_distribution
  * @property boolean $remix
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereAffiliateDistribution($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereOpenDistribution($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereRemix($value)
+ * @mixin \Eloquent
  */
 class License extends Model
 {

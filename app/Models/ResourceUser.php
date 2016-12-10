@@ -37,6 +37,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $view_count
  * @property integer $play_count
  * @property integer $download_count
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereTrackId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereAlbumId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereArtistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereIsFollowed($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereIsFavourited($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereIsPinned($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereViewCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser wherePlayCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereDownloadCount($value)
+ * @mixin \Eloquent
  */
 class ResourceUser extends Model
 {

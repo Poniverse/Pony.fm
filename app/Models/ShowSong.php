@@ -30,6 +30,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $lyrics
  * @property string $slug
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $trackCountRelation
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereLyrics($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class ShowSong extends Model
 {

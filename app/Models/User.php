@@ -72,6 +72,26 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\User[] $followers
  * @property-read mixed $user
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $notificationActivities
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereDisplayName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereUsername($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereSyncNames($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereGravatar($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereUsesGravatar($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereCanSeeExplicitContent($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereBio($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereTrackCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereCommentCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereAvatarId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereIsArchived($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereDisabledAt($value)
+ * @mixin \Eloquent
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
 {

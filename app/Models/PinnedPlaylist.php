@@ -32,6 +32,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $updated_at
  * @property-read \Poniverse\Ponyfm\Models\User $user
  * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class PinnedPlaylist extends Model
 {

@@ -31,6 +31,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $p256dh
  * @property string $auth
  * @property-read \Poniverse\Ponyfm\Models\User $user
+ * @property string $created_at
+ * @property string $updated_at
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereEndpoint($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereP256dh($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereAuth($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Subscription extends Model
 {

@@ -37,6 +37,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
  * @property-read mixed $resource
  * @property-read mixed $type
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereTrackId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereAlbumId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereCreatedAt($value)
+ * @mixin \Eloquent
  */
 class Favourite extends Model
 {

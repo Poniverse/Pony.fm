@@ -33,6 +33,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Poniverse\Ponyfm\Models\Activity $activity
  * @property-read \Poniverse\Ponyfm\Models\User $recipient
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification forUser($user)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereActivityId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereIsRead($value)
+ * @mixin \Eloquent
  */
 class Notification extends Model
 {

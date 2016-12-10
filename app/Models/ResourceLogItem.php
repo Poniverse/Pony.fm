@@ -38,6 +38,16 @@ use Request;
  * @property integer $album_id
  * @property integer $playlist_id
  * @property \Carbon\Carbon $created_at
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereLogType($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereIpAddress($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereTrackFormatId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereTrackId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereAlbumId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereCreatedAt($value)
+ * @mixin \Eloquent
  */
 class ResourceLogItem extends Model
 {

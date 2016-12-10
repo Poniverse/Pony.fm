@@ -33,6 +33,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $created_at
  * @property-read \Poniverse\Ponyfm\Models\User $follower
  * @property-read \Poniverse\Ponyfm\Models\User $artist
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower whereArtistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower whereCreatedAt($value)
+ * @mixin \Eloquent
  */
 class Follower extends Model
 {
