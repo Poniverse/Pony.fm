@@ -50,7 +50,7 @@ To begin development, do the following:
 
 6. Follow the instructions in the "Asset pipeline" section below to set that up.
 
-Once everything is up and running, you'll be able to access the site at [http://ponyfm-dev.poni/](http://ponyfm-dev.poni/). You can access the MySQL database by logging into **ponyfm-dev.poni:3306** with the username **homestead** and the password **secret**. Pony.fm's database is named **homestead**.
+Once everything is up and running, you'll be able to access the site at [http://ponyfm-dev.poni/](http://ponyfm-dev.poni/). You can access the PostgreSQL database by logging into **ponyfm-dev.poni:5432** with the username **homestead** and the password **secret**. Pony.fm's database is named **homestead**.
 
 Asset pipeline
 --------------
@@ -72,6 +72,6 @@ Finally, to compile and serve the assets in real time, run the following (and le
 Configuring the servers
 -----------------------
 
-Pony.fm uses nginx, php-fpm, redis, and MySQL. You can modify the configuration of these services by locating the appropriate config file in the `vagrant` folder. Once modified, you must reload the configuration by running the appropriate shell script (`reload-config.sh`) or bat files (`reload-config.bat` and `reload-config.vmware.bat`). These scripts simply tell Vagrant to run `copy-and-restart-config.sh` on the VM.
+Pony.fm uses nginx, php-fpm, redis, and PostgreSQL. You can modify the configuration of these services by locating the appropriate config file in the `vagrant` folder. Once modified, you must reload the configuration by running the appropriate shell script (`reload-config.sh`) or bat files (`reload-config.bat` and `reload-config.vmware.bat`). These scripts simply tell Vagrant to run `copy-and-restart-config.sh` on the VM.
 
 If you need to change any other configuration file on the VM - copy the entire file over into the vagrant folder, make your changes, and update the `copy-and-restart-config.sh` script to copy the modified config back into the proper folder. All potential configuration requirements should be represented in the `vagrant` folder **and never only on the VM itself** as changes will not be preserved.
