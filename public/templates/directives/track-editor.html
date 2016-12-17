@@ -108,7 +108,7 @@
             <div class="col-md-3 form-row">
                 <label for="is_listed"><input ng-disabled="isSaving" ng-change="touchModel()" id="is_listed" type="checkbox" ng-model="track.is_listed" /> Is Listed</label>
             </div>
-            <div class="col-md-3 form-row">
+            <div class="col-md-3 form-row" ng-hide="disableHwc">
                 <label for="hwc_submit"><input ng-disabled="isSaving" ng-change="touchModel()" id="hwc_submit" type="checkbox" ng-model="track.hwc_submit" /> Submit to <a href="https://mlpforums.com/topic/159868-ponyfms-hearths-warming-contest/">Hearth's Warming Contest</a></label>
             </div>
         </div>
