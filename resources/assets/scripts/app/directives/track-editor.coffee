@@ -33,7 +33,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             $scope.isAdmin = auth.data.isAdmin
             albumsDb = {}
 
-            $scope.disableHwc = new Date < new Date('2016-12-20 23:59:59')
+            $scope.disableHwc = new Date > new Date('2016-12-20 23:59:59')
 
             $scope.data = upload
             $scope.userSlug = $state.params.slug
