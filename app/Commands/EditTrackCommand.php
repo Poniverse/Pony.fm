@@ -109,13 +109,7 @@ class EditTrackCommand extends CommandBase
             }
 
             if ($track->album_id != $this->_input['album_id']) {
-                $album = Album::find($this->_input['album_id']);
-                $track->track_number = $album->tracks()->count() + 1;
-                $track->album_id = $this->_input['album_id'];
-
-                Album::whereId($album->id)->update([
-                    'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = ' . $album->id . ')')
-                ]);
+                $this->addTrackToAlbum($track, $this->_input['album_id']);
             }
         } else {
             if ($track->album_id != null) {
@@ -222,7 +216,22 @@ class EditTrackCommand extends CommandBase
         }
 
         Album::whereId($album->id)->update([
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = ' . $album->id . ')')
+            'track_count' => DB::table('tracks')->where('album_id', '=', $album->id)->count()
+        ]);
+    }
+
+    private function addTrackToAlbum(Track $track, $album_id)
+    {
+        $album = Album::whereId($album_id)->first();
+
+        $count = $album->track_count + 1;
+        $track->track_number = $count;
+        $track->album_id = $album->id;
+        $track->updateTags();
+        $track->save();
+
+        $album->update([
+            'track_count' => DB::table('tracks')->where('album_id', '=', $album->id)->count()
         ]);
     }
 }
