@@ -33,7 +33,7 @@ module.exports = angular.module('ponyfm').directive 'pfmTrackEditor', () ->
             $scope.isAdmin = auth.data.isAdmin
             albumsDb = {}
             
-            $scope.disableHwc = false
+            $scope.disableHwc = true
 
             $scope.data = upload
             $scope.userSlug = $state.params.slug
