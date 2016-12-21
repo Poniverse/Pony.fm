@@ -63,7 +63,7 @@ class PlaylistsController extends Controller
     public function getDownload($id, $extension)
     {
         $playlist = Playlist::with('tracks', 'tracks.trackFiles', 'user', 'tracks.album')->find($id);
-        if (!$playlist || (!$playlist->is_public && !Auth::check()) || !$playlist->canView(Auth::user()) || (!$playlist->is_public && ($playlist->user_id !== Auth::user()->id))) {
+        if (!$playlist || !$playlist->canView(Auth::user())) {
             App::abort(404);
         }
 
