@@ -22,6 +22,7 @@ namespace Poniverse\Ponyfm;
 
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
+use Poniverse\Ponyfm\Models\User;
 use ZipStream;
 
 class PlaylistDownloader
@@ -42,7 +43,7 @@ class PlaylistDownloader
         $this->_format = $format;
     }
 
-    public function download()
+    public function download(User $user)
     {
         // Check whether the format is lossless yet not all master files are lossless
         $isLosslessFormatWithLossyTracks =  in_array($this->_format, Track::$LosslessFormats)
@@ -71,7 +72,7 @@ class PlaylistDownloader
         $m3u = '';
         $index = 1;
         foreach ($this->_playlist->tracks as $track) {
-            if (!$track->is_downloadable) {
+            if (!$track->is_downloadable && !$user->hasRole('admin')) {
                 continue;
             }
 
