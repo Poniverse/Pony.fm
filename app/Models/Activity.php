@@ -66,6 +66,11 @@ class Activity extends Model
         'resource_id'   => 'integer',
     ];
 
+    /**
+     * These constants are stored in the "activity_types" table for the purpose
+     * of referential data integrity. Any additions or changes to them MUST
+     * include a database migration to apply the changes to that table as well.
+     */
     const TYPE_NEWS = 1;
     const TYPE_PUBLISHED_TRACK = 2;
     const TYPE_PUBLISHED_ALBUM = 3;
@@ -206,6 +211,39 @@ class Activity extends Model
     }
 
     /**
+     * Returns a string representing the type of resource this activity is about
+     * for use in human-facing notification text.
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getResourceTypeString():string
+    {
+        switch($this->activity_type) {
+            case static::TYPE_NEW_COMMENT:
+                if ($this->isProfileComment()) {
+                    return $this->resource->getResourceType();
+                } else {
+                    return $this->resource->resource->getResourceType();
+                }
+            case static::TYPE_CONTENT_FAVOURITED:
+                return $this->resource->getResourceType();
+        }
+        throw new \Exception("Unknown activity type {$this->activity_type} - cannot determine resource type.");
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProfileComment():bool {
+        return static::TYPE_NEW_COMMENT === $this->activity_type &&
+               User::class === $this->resource->getResourceClass();
+    }
+
+    /**
+     * The string this method generates is used for email subject lines as well
+     * as on-site notifications.
+     *
      * @return string human-readable Markdown string describing this notification
      * @throws \Exception
      */
@@ -226,17 +264,16 @@ class Activity extends Model
                 return "{$this->initiatingUser->display_name} is now following you!";
 
             case static::TYPE_NEW_COMMENT:
-                // Is this a profile comment?
-                if ($this->resource_type === User::class) {
+                if ($this->isProfileComment()) {
                     return "{$this->initiatingUser->display_name} left a comment on your profile!";
 
-                // Must be a content comment.
+                // If it's not a profile comment, it must be a content comment.
                 } else {
-                    return "{$this->initiatingUser->display_name} left a comment on your {$this->resource->resource->getResourceType()}, {$this->resource->resource->title}!";
+                    return "{$this->initiatingUser->display_name} left a comment on your {$this->getResourceTypeString()}, \"{$this->resource->resource->title}\"!";
                 }
             
             case static::TYPE_CONTENT_FAVOURITED:
-                return "{$this->initiatingUser->display_name} favourited your {$this->resource->getResourceType()}, {$this->resource->title}!";
+                return "{$this->initiatingUser->display_name} favourited your {$this->getResourceTypeString()}, \"{$this->resource->title}\"!";
 
             default:
                 throw new \Exception('This activity\'s activity type is unknown!');

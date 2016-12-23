@@ -20,12 +20,14 @@
 
 namespace Poniverse\Ponyfm\Library\Notifications;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\NotificationHandler;
 use Poniverse\Ponyfm\Jobs\SendNotifications;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\NativeDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
+use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Subscription;
@@ -37,7 +39,8 @@ use Poniverse\Ponyfm\Models\User;
  * @package Poniverse\Ponyfm\Library\Notifications
  *
  * This class returns a list of users who are to receive a particular notification.
- * It is instantiated on a per-driver basis.
+ * It is instantiated on a per-driver basis. Its methods return Eloquent query
+ * objects for the PonyfmDriver.
  */
 class RecipientFinder implements NotificationHandler
 {
@@ -63,7 +66,8 @@ class RecipientFinder implements NotificationHandler
     {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
-                return $track->user->followers;
+                return $track->user->followers();
+
             case NativeDriver::class:
                 $followerIds = [];
                 $subIds = [];
@@ -91,7 +95,8 @@ class RecipientFinder implements NotificationHandler
     {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
-                return $playlist->user->followers;
+                return $playlist->user->followers();
+
             case NativeDriver::class:
                 $followerIds = [];
                 $subIds = [];
@@ -119,7 +124,8 @@ class RecipientFinder implements NotificationHandler
     {
         switch ($this->notificationDriver) {
             case PonyfmDriver::class:
-                return [$userBeingFollowed];
+                return $this->queryForUser($userBeingFollowed);
+
             case NativeDriver::class:
                 return Subscription::where('user_id', '=', $userBeingFollowed->id)->get();
             default:
@@ -136,8 +142,8 @@ class RecipientFinder implements NotificationHandler
             case PonyfmDriver::class:
                 return
                     $comment->user->id === $comment->resource->user->id
-                        ? []
-                        : [$comment->resource->user];
+                        ? NULL
+                        : $this->queryForUser($comment->resource->user);
             case NativeDriver::class:
                 return Subscription::where('user_id', '=', $comment->resource->user->id)->get();
             default:
@@ -154,12 +160,23 @@ class RecipientFinder implements NotificationHandler
             case PonyfmDriver::class:
                 return
                     $favouriter->id === $entityBeingFavourited->user->id
-                        ? []
-                        : [$entityBeingFavourited->user];
+                        ? NULL
+                        : $this->queryForUser($entityBeingFavourited->user);
             case NativeDriver::class:
                 return Subscription::where('user_id', '=', $entityBeingFavourited->user->id)->get();
             default:
                 return $this->fail();
         }
+    }
+
+    /**
+     * Helper function that returns an Eloquent query instance that will return
+     * a specific user when executed.
+     *
+     * @param User $user
+     * @return \Eloquent|Builder
+     */
+    private function queryForUser(User $user):Builder {
+        return User::where('id', '=', $user->id);
     }
 }

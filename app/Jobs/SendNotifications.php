@@ -24,6 +24,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Poniverse\Ponyfm\Jobs\Job;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\AbstractDriver;
+use Poniverse\Ponyfm\Library\Notifications\Drivers\EmailDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\NativeDriver;
 use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
 use Poniverse\Ponyfm\Models\User;
@@ -63,6 +64,9 @@ class SendNotifications extends Job implements ShouldQueue
             PonyfmDriver::class,
             //NativeDriver::class
         ];
+
+        // NOTE: PonyfmDriver MUST execute before any other drivers; it creates
+        //       the Notification records that the other drivers depend on!
 
         foreach ($drivers as $driver) {
             /** @var $driver AbstractDriver */

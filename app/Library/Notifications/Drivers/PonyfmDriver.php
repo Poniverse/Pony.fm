@@ -20,11 +20,14 @@
 
 namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
 
-use ArrayAccess;
 use Carbon\Carbon;
+use Log;
+use Mail;
 use Poniverse\Ponyfm\Contracts\Favouritable;
+use Poniverse\Ponyfm\Mail\BaseNotification;
 use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\Comment;
+use Poniverse\Ponyfm\Models\Email;
 use Poniverse\Ponyfm\Models\Notification;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
@@ -35,19 +38,37 @@ class PonyfmDriver extends AbstractDriver
     /**
      * A helper method for bulk insertion of notification records.
      *
-     * @param int $activityId
+     * @param Activity $activity
      * @param User[] $recipients collection of {@link User} objects
      */
-    private function insertNotifications(int $activityId, $recipients)
+    private function insertNotifications(Activity $activity, $recipients)
     {
         $notifications = [];
         foreach ($recipients as $recipient) {
             $notifications[] = [
-                'activity_id'   => $activityId,
+                'activity_id'   => $activity->id,
                 'user_id'       => $recipient->id
             ];
         }
         Notification::insert($notifications);
+    }
+
+    /**
+     * Sends out an email about the given activity to the given set of users.
+     *
+     * @param Activity $activity
+     * @param User[] $recipients collection of {@link User} objects
+     */
+    private function sendEmails(Activity $activity, $recipients) {
+        foreach ($recipients as $recipient) {
+            /** @var Notification $notification */
+            $notification = $activity->notifications->where('user_id', $recipient->id)->first();
+            /** @var Email $email */
+            $email = $notification->email()->create([]);
+
+            Log::debug("Attempting to send an email about notification {$notification->id} to {$recipient->email}.");
+            Mail::to($recipient->email)->queue(BaseNotification::factory($activity, $email));
+        }
     }
 
     /**
@@ -63,7 +84,11 @@ class PonyfmDriver extends AbstractDriver
             'resource_id'   => $track->id,
         ]);
 
-        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
+        $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_PUBLISHED_TRACK)->get());
+        }
     }
 
     /**
@@ -79,9 +104,16 @@ class PonyfmDriver extends AbstractDriver
             'resource_id' => $playlist->id,
         ]);
 
-        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
+        $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_PUBLISHED_PLAYLIST)->get());
+        }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function newFollower(User $userBeingFollowed, User $follower)
     {
         $activity = Activity::create([
@@ -92,7 +124,11 @@ class PonyfmDriver extends AbstractDriver
             'resource_id' => $userBeingFollowed->id,
         ]);
 
-        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
+        $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_NEW_FOLLOWER)->get());
+        }
     }
 
     /**
@@ -108,7 +144,11 @@ class PonyfmDriver extends AbstractDriver
             'resource_id' => $comment->id,
         ]);
 
-        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
+        $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_NEW_COMMENT)->get());
+        }
     }
 
     /**
@@ -124,6 +164,10 @@ class PonyfmDriver extends AbstractDriver
             'resource_id' => $entityBeingFavourited->id,
         ]);
 
-        $this->insertNotifications($activity->id, $this->getRecipients(__FUNCTION__, func_get_args()));
+        $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_CONTENT_FAVOURITED)->get());
+        }
     }
 }

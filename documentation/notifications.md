@@ -17,12 +17,12 @@ The `Notification` facade is used to send notifications as follows:
 ```php
 use Notification;
 
-// Something happens, like a  newtrack getting published.
+// Something happens, like a  new track getting published.
 $track = new Track();
 ...
 
 // The "something" is done happening! Time to send a notification.
-Notification::publishedTrack($track);
+Notification::publishedNewTrack($track);
 ```
 
 This facade has a method for every notification type, drawn from the
@@ -45,10 +45,18 @@ Adding new notification types
    - [`RecipientFinder`](../app/Library/Notifications/RecipientFinder.php)
    - [`PonyfmDriver`](../app/Library/Notifications/PonyfmDriver.php)
 
-3. Call the new method on the `Notification` facade from wherever the
+3. Create a migration to add the new notification type to the `activity_types`
+   table. Add a constant for it to the [`Activity`](../app/Models/Activity.php)
+   class.
+
+3. Ensure you create HTML and plaintext templates, as well as a subclass of
+   [`BaseNotification`](../app/Mail/BaseNotification.php) for the email version
+   of the notification.
+
+4. Call the new method on the `Notification` facade from wherever the
    new notification gets triggered.
    
-4. Implement any necessary logic for the new notification type in the
+5. Implement any necessary logic for the new notification type in the
    [`Activity`](../app/Models/Activity.php) model.
 
 
@@ -92,3 +100,25 @@ There's one exception to the use of `NotificationHandler` - the
 data we store about an activity in the database to a notification's API
 representation had to go somewhere, and using the `NotificationHandler`
 interface here would have made this logic a lot more obtuse.
+
+### Data flow
+
+1. Some action that triggers a notification calls the `NotificationManager`
+   facade.
+   
+2. An asynchronous job is kicked off that figures out how to send the
+   notification.
+
+3. An `Activity` record is created for the action.
+
+4. A `Notification` record is created for every user who is to receive a
+   notification about that activity. These records act as Pony.fm's on-site
+   notifications and cannot be disabled.
+
+5. Depending on subscription preferences, push and email notifications will be
+   sent out as well, each creating their own respective database records. These
+   are linked to a `Notification` record for unified read/unread tracking.
+
+6. A `Notification` record is marked read when it is viewed on-site or any other
+   notification type associated with it (like an email or push notification) is
+   clicked.

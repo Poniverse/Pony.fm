@@ -31,7 +31,16 @@ abstract class AbstractDriver implements NotificationHandler
 
     public function __construct()
     {
-        $this->recipientFinder = new RecipientFinder(get_class($this));
+        $notificationDriverClass = get_class($this);
+
+        switch ($notificationDriverClass) {
+            case EmailDriver::class:
+            case PonyfmDriver::class:
+                $this->recipientFinder = new RecipientFinder(get_class($this));
+                break;
+            default:
+                throw new \Exception("Invalid notification driver!");
+        }
     }
 
     /**
