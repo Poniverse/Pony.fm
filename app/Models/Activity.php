@@ -221,11 +221,7 @@ class Activity extends Model
     {
         switch($this->activity_type) {
             case static::TYPE_NEW_COMMENT:
-                if ($this->isProfileComment()) {
-                    return $this->resource->getResourceType();
-                } else {
-                    return $this->resource->resource->getResourceType();
-                }
+                return $this->resource->resource->getResourceType();
             case static::TYPE_CONTENT_FAVOURITED:
                 return $this->resource->getResourceType();
         }
