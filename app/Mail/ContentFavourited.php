@@ -32,9 +32,9 @@ class ContentFavourited extends BaseNotification
         return $this->renderEmail(
             'content-favourited',
             $this->activityRecord->text, [
-                'creatorName' => $creatorName,
-                'resourceType' => $this->activityRecord->getResourceType(),
-                'resourceTitle' => $this->activityRecord->resource->resource->title,
+            'creatorName' => $creatorName,
+            'resourceType' => $this->activityRecord->getResourceTypeString(),
+            'resourceTitle' => $this->activityRecord->resource->title,
         ]);
     }
 }

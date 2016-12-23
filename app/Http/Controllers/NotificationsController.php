@@ -20,12 +20,17 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
+use App;
 use DB;
 use Poniverse\Ponyfm\Models\Email;
 use Poniverse\Ponyfm\Models\EmailSubscription;
 
+// TODO: #25 - finish these endpoints and secure them properly
+
 class NotificationsController extends Controller {
     public function getEmailClick($emailKey) {
+        App::abort(403, "This isn't implemented yet!");
+
         $emailKey = decrypt($emailKey);
         /** @var Email $email */
         $email = Email::findOrFail($emailKey);
@@ -40,6 +45,8 @@ class NotificationsController extends Controller {
     }
 
     public function getEmailUnsubscribe($subscriptionKey) {
+        App::abort(403, "This isn't implemented yet!");
+
         $subscriptionId = decrypt($subscriptionKey);
         $subscription = EmailSubscription::findOrFail($subscriptionId);
 

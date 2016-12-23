@@ -144,6 +144,15 @@ class Comment extends Model
         }
     }
 
+    /**
+     * Returns the class name of the object that this is a comment on.
+     *
+     * @return string
+     */
+    public function getResourceClass():string {
+        return get_class($this->resource);
+    }
+
     public function delete()
     {
         DB::transaction(function () {

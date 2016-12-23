@@ -33,7 +33,7 @@ class NewComment extends BaseNotification
 
         // Profile comments get a different template and subject line from
         // other types of comments.
-        if ($this->activityRecord->getResourceType() === User::class) {
+        if ($this->activityRecord->getResourceTypeString() === User::class) {
             return $this->renderEmail(
                 'new-comment-profile',
                 $this->activityRecord->text, [
@@ -43,9 +43,9 @@ class NewComment extends BaseNotification
             return $this->renderEmail(
                 'new-comment-content',
                 $this->activityRecord->text, [
-                    'creatorName' => $creatorName,
-                    'resourceType' => $this->activityRecord->getResourceType(),
-                    'resourceTitle' => $this->activityRecord->resource->resource->title,
+                'creatorName' => $creatorName,
+                'resourceType' => $this->activityRecord->getResourceTypeString(),
+                'resourceTitle' => $this->activityRecord->resource->resource->title,
             ]);
         }
 

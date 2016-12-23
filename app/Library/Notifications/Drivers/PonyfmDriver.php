@@ -25,11 +25,6 @@ use Log;
 use Mail;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Mail\BaseNotification;
-use Poniverse\Ponyfm\Mail\ContentFavourited;
-use Poniverse\Ponyfm\Mail\NewComment;
-use Poniverse\Ponyfm\Mail\NewFollower;
-use Poniverse\Ponyfm\Mail\NewPlaylist;
-use Poniverse\Ponyfm\Mail\NewTrack;
 use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Email;
@@ -66,7 +61,9 @@ class PonyfmDriver extends AbstractDriver
      */
     private function sendEmails(Activity $activity, $recipients) {
         foreach ($recipients as $recipient) {
+            /** @var Notification $notification */
             $notification = $activity->notifications->where('user_id', $recipient->id)->first();
+            /** @var Email $email */
             $email = $notification->email()->create([]);
 
             Log::debug("Attempting to send an email about notification {$notification->id} to {$recipient->email}.");
@@ -88,8 +85,10 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        $this->insertNotifications($activity, $recipientsQuery->get());
-        $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_PUBLISHED_TRACK)->get());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_PUBLISHED_TRACK)->get());
+        }
     }
 
     /**
@@ -106,10 +105,15 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        $this->insertNotifications($activity, $recipientsQuery->get());
-        $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_PUBLISHED_PLAYLIST)->get());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_PUBLISHED_PLAYLIST)->get());
+        }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function newFollower(User $userBeingFollowed, User $follower)
     {
         $activity = Activity::create([
@@ -121,8 +125,10 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        $this->insertNotifications($activity, $recipientsQuery->get());
-        $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_NEW_FOLLOWER)->get());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_NEW_FOLLOWER)->get());
+        }
     }
 
     /**
@@ -139,8 +145,10 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        $this->insertNotifications($activity, $recipientsQuery->get());
-        $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_NEW_COMMENT)->get());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_NEW_COMMENT)->get());
+        }
     }
 
     /**
@@ -157,7 +165,9 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        $this->insertNotifications($activity, $recipientsQuery->get());
-        $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_CONTENT_FAVOURITED)->get());
+        if (NULL !== $recipientsQuery) {
+            $this->insertNotifications($activity, $recipientsQuery->get());
+            $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_CONTENT_FAVOURITED)->get());
+        }
     }
 }
