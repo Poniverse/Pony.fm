@@ -20,10 +20,9 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
+use DB;
 use Poniverse\Ponyfm\Models\Email;
-use Poniverse\Ponyfm\Models\EmailClick;
 use Poniverse\Ponyfm\Models\EmailSubscription;
-use View;
 
 class NotificationsController extends Controller {
     public function getEmailClick($emailKey) {
@@ -31,7 +30,11 @@ class NotificationsController extends Controller {
         /** @var Email $email */
         $email = Email::findOrFail($emailKey);
 
-        $email->emailClicks()->create(['ip_address' => \Request::ip()]);
+        DB::transaction(function() use ($email) {
+            $email->emailClicks()->create(['ip_address' => \Request::ip()]);
+            $email->notification->is_read = true;
+            $email->notification->save();
+        });
 
         return redirect($email->getActivity()->url);
     }

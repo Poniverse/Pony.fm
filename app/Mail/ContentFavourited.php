@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Mail;
 
-class NewTrack extends BaseNotification
+class ContentFavourited extends BaseNotification
 {
     /**
      * @inheritdoc
@@ -28,14 +28,13 @@ class NewTrack extends BaseNotification
     public function build()
     {
         $creatorName = $this->initiatingUser->display_name;
-        $trackTitle = $this->activityRecord->resource->title;
 
         return $this->renderEmail(
-            'new-track',
-            "{$creatorName} published \"{$trackTitle}\"!",
-            [
+            'content-favourited',
+            $this->activityRecord->text, [
                 'creatorName' => $creatorName,
-                'trackTitle' => $trackTitle,
-            ]);
+                'resourceType' => $this->activityRecord->getResourceType(),
+                'resourceTitle' => $this->activityRecord->resource->resource->title,
+        ]);
     }
 }

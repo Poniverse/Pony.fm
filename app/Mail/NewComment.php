@@ -20,7 +20,9 @@
 
 namespace Poniverse\Ponyfm\Mail;
 
-class NewTrack extends BaseNotification
+use Poniverse\Ponyfm\Models\User;
+
+class NewComment extends BaseNotification
 {
     /**
      * @inheritdoc
@@ -28,14 +30,24 @@ class NewTrack extends BaseNotification
     public function build()
     {
         $creatorName = $this->initiatingUser->display_name;
-        $trackTitle = $this->activityRecord->resource->title;
 
-        return $this->renderEmail(
-            'new-track',
-            "{$creatorName} published \"{$trackTitle}\"!",
-            [
-                'creatorName' => $creatorName,
-                'trackTitle' => $trackTitle,
+        // Profile comments get a different template and subject line from
+        // other types of comments.
+        if ($this->activityRecord->getResourceType() === User::class) {
+            return $this->renderEmail(
+                'new-comment-profile',
+                $this->activityRecord->text, [
+                    'creatorName' => $creatorName,
             ]);
+        } else {
+            return $this->renderEmail(
+                'new-comment-content',
+                $this->activityRecord->text, [
+                    'creatorName' => $creatorName,
+                    'resourceType' => $this->activityRecord->getResourceType(),
+                    'resourceTitle' => $this->activityRecord->resource->resource->title,
+            ]);
+        }
+
     }
 }

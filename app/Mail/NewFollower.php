@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Mail;
 
-class NewTrack extends BaseNotification
+class NewFollower extends BaseNotification
 {
     /**
      * @inheritdoc
@@ -28,14 +28,12 @@ class NewTrack extends BaseNotification
     public function build()
     {
         $creatorName = $this->initiatingUser->display_name;
-        $trackTitle = $this->activityRecord->resource->title;
 
         return $this->renderEmail(
-            'new-track',
-            "{$creatorName} published \"{$trackTitle}\"!",
+            'new-follower',
+            "{$creatorName} is now following you on Pony.fm!",
             [
                 'creatorName' => $creatorName,
-                'trackTitle' => $trackTitle,
             ]);
     }
 }

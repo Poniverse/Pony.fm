@@ -17,12 +17,12 @@ The `Notification` facade is used to send notifications as follows:
 ```php
 use Notification;
 
-// Something happens, like a  newtrack getting published.
+// Something happens, like a  new track getting published.
 $track = new Track();
 ...
 
 // The "something" is done happening! Time to send a notification.
-Notification::publishedTrack($track);
+Notification::publishedNewTrack($track);
 ```
 
 This facade has a method for every notification type, drawn from the
@@ -44,9 +44,14 @@ Adding new notification types
    - [`NotificationManager`](../app/Library/Notifications/NotificationManager.php)
    - [`RecipientFinder`](../app/Library/Notifications/RecipientFinder.php)
    - [`PonyfmDriver`](../app/Library/Notifications/PonyfmDriver.php)
- 
-3. Ensure you create HTML and plaintext templates for the email version of the
-   notification.
+
+3. Create a migration to add the new notification type to the `activity_types`
+   table. Add a constant for it to the [`Activity`](../app/Models/Activity.php)
+   class.
+
+3. Ensure you create HTML and plaintext templates, as well as a subclass of
+   [`BaseNotification`](../app/Mail/BaseNotification.php) for the email version
+   of the notification.
 
 4. Call the new method on the `Notification` facade from wherever the
    new notification gets triggered.

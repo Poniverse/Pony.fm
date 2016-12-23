@@ -23,6 +23,7 @@ namespace Poniverse\Ponyfm\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\Email;
 
 abstract class BaseNotification extends Mailable {
@@ -53,6 +54,36 @@ abstract class BaseNotification extends Mailable {
     }
 
     /**
+     * Factory method that instantiates the appropriate {@link BaseNotification}
+     * subclass for the given activity type and {@link Email} record.
+     *
+     * @param Activity $activity
+     * @param Email $email
+     * @return BaseNotification
+     */
+    static public function factory(Activity $activity, Email $email): BaseNotification {
+        switch ($activity->activity_type) {
+            case Activity::TYPE_NEWS:
+                break;
+            case Activity::TYPE_PUBLISHED_TRACK:
+                return new NewTrack($email);
+            case Activity::TYPE_PUBLISHED_ALBUM:
+                break;
+            case Activity::TYPE_PUBLISHED_PLAYLIST:
+                return new NewPlaylist($email);
+            case Activity::TYPE_NEW_FOLLOWER:
+                return new NewFollower($email);
+            case Activity::TYPE_NEW_COMMENT:
+                return new NewComment($email);
+            case Activity::TYPE_CONTENT_FAVOURITED:
+                return new ContentFavourited($email);
+            default:
+                break;
+        }
+        throw new \InvalidArgumentException("Email notifications for activity type {$activity->activity_type} are not implemented!");
+    }
+
+    /**
      * Build the message.
      *
      * @return $this
@@ -80,8 +111,11 @@ abstract class BaseNotification extends Mailable {
     }
 
     /**
-     * Helper method to eliminate duplication between different types of notifications.
-     * Use it inside the build() method on this class's children.
+     * Helper method to eliminate duplication between different types of
+     * notifications. Use it inside the build() method on this class's children.
+     *
+     * Note that data common to all notification types is merged into the
+     * template variable array.
      *
      * @param string $templateName
      * @param string $subject
@@ -91,8 +125,8 @@ abstract class BaseNotification extends Mailable {
     protected function renderEmail(string $templateName, string $subject, array $extraVariables) {
         return $this
             ->subject($subject)
-            ->view("emails.{$templateName}")
-            ->text("emails.{$templateName}_plaintext")
+            ->view("emails.notifications.{$templateName}")
+            ->text("emails.notifications.{$templateName}_plaintext")
             ->with(array_merge($extraVariables, [
                 'notificationUrl' => $this->generateNotificationUrl(),
                 'unsubscribeUrl' => $this->generateUnsubscribeUrl()

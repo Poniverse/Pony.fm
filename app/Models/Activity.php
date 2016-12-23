@@ -211,6 +211,31 @@ class Activity extends Model
     }
 
     /**
+     * Returns a string representing the type of resource this activity is about
+     * for use in human-facing notification text.
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getResourceType():string
+    {
+        switch($this->activity_type) {
+            case static::TYPE_NEW_COMMENT:
+                if ($this->resource_type === User::class) {
+                    return $this->resource->getResourceType();
+                } else {
+                    return $this->resource->resource->getResourceType();
+                }
+            case static::TYPE_CONTENT_FAVOURITED:
+                return $this->resource->getResourceType();
+        }
+        throw new \Exception("Unknown activity type {$this->activity_type} - cannot determine resource type.");
+    }
+
+    /**
+     * The string this method generates is used for email subject lines as well
+     * as on-site notifications.
+     *
      * @return string human-readable Markdown string describing this notification
      * @throws \Exception
      */
@@ -237,11 +262,11 @@ class Activity extends Model
 
                 // Must be a content comment.
                 } else {
-                    return "{$this->initiatingUser->display_name} left a comment on your {$this->resource->resource->getResourceType()}, {$this->resource->resource->title}!";
+                    return "{$this->initiatingUser->display_name} left a comment on your {$this->getResourceType()}, {$this->resource->resource->title}!";
                 }
             
             case static::TYPE_CONTENT_FAVOURITED:
-                return "{$this->initiatingUser->display_name} favourited your {$this->resource->getResourceType()}, {$this->resource->title}!";
+                return "{$this->initiatingUser->display_name} favourited your {$this->getResourceType()}, {$this->resource->title}!";
 
             default:
                 throw new \Exception('This activity\'s activity type is unknown!');
