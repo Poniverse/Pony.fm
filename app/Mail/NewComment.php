@@ -20,7 +20,6 @@
 
 namespace Poniverse\Ponyfm\Mail;
 
-use Poniverse\Ponyfm\Models\User;
 
 class NewComment extends BaseNotification
 {
@@ -33,7 +32,7 @@ class NewComment extends BaseNotification
 
         // Profile comments get a different template and subject line from
         // other types of comments.
-        if ($this->activityRecord->getResourceTypeString() === User::class) {
+        if ($this->activityRecord->isProfileComment()) {
             return $this->renderEmail(
                 'new-comment-profile',
                 $this->activityRecord->text, [

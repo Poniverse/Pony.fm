@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d6931f271706348a79f32feeab1c9902",
-    "content-hash": "bf3d7332057e254a4b97b1916782e6bb",
+    "hash": "9b2297ef01f39e9d732b9ff50dc60203",
+    "content-hash": "4b9f2079d6a15098a09e1546396ac762",
     "packages": [
         {
             "name": "alsofronie/eloquent-uuid",
@@ -1846,53 +1846,6 @@
                 "laravel"
             ],
             "time": "2016-09-29 22:13:17"
-        },
-        {
-            "name": "laravel/legacy-encrypter",
-            "version": "v1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/legacy-encrypter.git",
-                "reference": "4047fc1e6a9346501ba48ba3f79509534875dea3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/legacy-encrypter/zipball/4047fc1e6a9346501ba48ba3f79509534875dea3",
-                "reference": "4047fc1e6a9346501ba48ba3f79509534875dea3",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "ext-openssl": "*",
-                "illuminate/contracts": "5.3.*",
-                "illuminate/support": "5.3.*",
-                "paragonie/random_compat": "~1.4|~2.0",
-                "php": ">=5.5.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laravel\\LegacyEncrypter\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "The legacy version of the Laravel mcrypt encrypter.",
-            "homepage": "http://laravel.com",
-            "time": "2016-08-03 21:22:03"
         },
         {
             "name": "league/flysystem",
