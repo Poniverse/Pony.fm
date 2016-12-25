@@ -20,13 +20,12 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
-use Carbon\Carbon;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Commands\SaveAccountSettingsCommand;
 use Poniverse\Ponyfm\Models\User;
 use Gate;
 use Auth;
-use Illuminate\Support\Facades\Request;
+use Request;
 use Response;
 
 class AccountController extends ApiControllerBase
@@ -71,7 +70,8 @@ class AccountController extends ApiControllerBase
             'username' => $user->username,
             'gravatar' => $user->gravatar ? $user->gravatar : $user->email,
             'avatar_url' => !$user->uses_gravatar ? $user->getAvatarUrl() : null,
-            'uses_gravatar' => $user->uses_gravatar == 1
+            'uses_gravatar' => $user->uses_gravatar == 1,
+            'notifications' => $user->getNotificationSettings()
         ], 200);
     }
 

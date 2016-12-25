@@ -96,8 +96,7 @@ abstract class BaseNotification extends Mailable {
      * @return string
      */
     protected function generateUnsubscribeUrl() {
-        $subscriptionKey = encrypt($this->emailRecord->getSubscription()->id);
-        return route('email:unsubscribe', ['subscriptionKey' => $subscriptionKey]);
+        return route('email:unsubscribe', ['subscriptionKey' => $this->emailRecord->getSubscription()->id]);
     }
 
     /**
@@ -106,8 +105,7 @@ abstract class BaseNotification extends Mailable {
      * @return string
      */
     protected function generateNotificationUrl() {
-        $emailKey = encrypt($this->emailRecord->id);
-        return route('email:click', ['emailKey' => $emailKey]);
+        return route('email:click', ['emailKey' => $this->emailRecord->id]);
     }
 
     /**

@@ -81,6 +81,8 @@ module.exports = angular.module('ponyfm').controller "account-settings", [
                     return if value == null
                     if typeof(value) == 'object'
                         formData.append name, value, value.name
+                else if name == 'notifications'
+                    formData.append name, JSON.stringify(value)
                 else
                     formData.append name, value
 

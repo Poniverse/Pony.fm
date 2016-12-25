@@ -42,6 +42,8 @@ use Poniverse\Ponyfm\Models\Notification;
 class Email extends Model
 {
     use UuidModelTrait;
+    // Non-sequential UUID's are desirable for this model.
+    protected $uuidVersion = 4;
 
     public function notification() {
         return $this->belongsTo(Notification::class, 'notification_id', 'id', 'notifications');

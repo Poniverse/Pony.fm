@@ -421,6 +421,38 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * Helper method that returns a row for every type of notifiable activity.
+     * It's meant to be used for the notification settings screen.
+     *
+     * @return array
+     */
+    private function emailSubscriptionsJoined() {
+        return DB::select('
+            SELECT "subscriptions".*, "activity_types".* FROM
+              (SELECT * FROM "email_subscriptions"
+              WHERE "email_subscriptions"."deleted_at" IS NULL
+              AND "email_subscriptions"."user_id" = ?) as "subscriptions"
+            RIGHT JOIN "activity_types"
+              ON "subscriptions"."activity_type" = "activity_types"."activity_type"
+            ', [$this->id]);
+    }
+
+    public function getNotificationSettings() {
+        $settings = [];
+        $emailSubscriptions = $this->emailSubscriptionsJoined();
+
+        foreach($emailSubscriptions as $subscription) {
+            $settings[] = [
+                'description' => $subscription->description,
+                'activity_type' => $subscription->activity_type,
+                'receive_emails' => $subscription->id !== NULL
+            ];
+        }
+
+        return $settings;
+    }
+
+    /**
      * Returns this model in Elasticsearch-friendly form. The array returned by
      * this method should match the current mapping for this model's ES type.
      *

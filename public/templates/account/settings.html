@@ -7,38 +7,59 @@
             </button>
         </li>
     </ul>
-    <div class="stretch-to-bottom">
-        <div class="form-row" ng-class="{'has-error': errors.display_name != null}">
-            <label class="strong" for="display_name">Display Name</label>
-            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" placeholder="Display Name" id="display_name" ng-model="settings.display_name" />
-            <div class="error">{{errors.display_name}}</div>
-        </div>
-
-        <div class="form-row" ng-class="{'has-error': errors.slug != null}">
-            <label class="strong" for="slug">Slug (your profile URL: https://pony.fm/{{settings.slug}})</label>
-            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" placeholder="slug" id="slug" ng-model="settings.slug" />
-            <div class="error">{{errors.slug}}</div>
-        </div>
-
-        <div class="form-row">
-            <label for="can_see_explicit_content" class="strong"><input ng-change="touchModel()" ng-disabled="isLoading" id="can_see_explicit_content" type="checkbox" ng-model="settings.can_see_explicit_content" /> Can See Explicit Content</label>
-        </div>
-
-        <div class="form-row" ng-class="{'has-error': errors.bio != null}">
-            <label class="strong" for="bio">Bio</label>
-            <textarea id="bio" placeholder="bio (optional)" ng-model="settings.bio" ng-disabled="isLoading" ng-change="touchModel()"></textarea>
-            <div class="error">{{errors.description}}</div>
-        </div>
-
-        <div class="form-row" ng-class="{'has-error': errors.avatar != null || errors.gravatar != null}">
-            <label for="uses_gravatar" class="strong">
-                <input ng-change="touchModel()" ng-disabled="isLoading" id="uses_gravatar" type="checkbox" ng-model="settings.uses_gravatar" /> Use Gravatar
-            </label>
-            <div ng-show="!settings.uses_gravatar">
-                <pfm-image-upload set-image="setAvatar" image="settings.avatar_url" user-id="settings.id"></pfm-image-upload>
+    <div class="stretch-to-bottom row">
+        <div class="col-md-4">
+            <div class="form-row" ng-class="{'has-error': errors.display_name != null}">
+                <label class="strong" for="display_name">Display Name</label>
+                <input type="text" ng-disabled="isSaving" ng-change="touchModel()" placeholder="Display Name" id="display_name" ng-model="settings.display_name" />
+                <div class="error">{{errors.display_name}}</div>
             </div>
-            <input type="text" ng-disabled="isSaving" ng-change="touchModel()" ng-show="settings.uses_gravatar" placeholder="Gravatar Email" ng-model="settings.gravatar" />
-            <div class="error" ng-show="errors.avatar != null">{{errors.avatar}}</div>
-            <div class="error" ng-show="errors.gravatar != null">{{errors.gravatar}}</div>
+
+            <div class="form-row" ng-class="{'has-error': errors.slug != null}">
+                <label class="strong" for="slug">Slug (your profile URL: https://pony.fm/{{settings.slug}})</label>
+                <input type="text" ng-disabled="isSaving" ng-change="touchModel()" placeholder="slug" id="slug" ng-model="settings.slug" />
+                <div class="error">{{errors.slug}}</div>
+            </div>
+
+            <div class="form-row">
+                <label for="can_see_explicit_content" class="strong"><input ng-change="touchModel()" ng-disabled="isLoading" id="can_see_explicit_content" type="checkbox" ng-model="settings.can_see_explicit_content" /> Can See Explicit Content</label>
+            </div>
+
+            <div class="form-row" ng-class="{'has-error': errors.bio != null}">
+                <label class="strong" for="bio">Bio</label>
+                <textarea id="bio" placeholder="bio (optional)" ng-model="settings.bio" ng-disabled="isLoading" ng-change="touchModel()"></textarea>
+                <div class="error">{{errors.description}}</div>
+            </div>
+
+            <div class="form-row" ng-class="{'has-error': errors.avatar != null || errors.gravatar != null}">
+                <label for="uses_gravatar" class="strong">
+                    <input ng-change="touchModel()" ng-disabled="isLoading" id="uses_gravatar" type="checkbox" ng-model="settings.uses_gravatar" /> Use Gravatar
+                </label>
+                <div ng-show="!settings.uses_gravatar">
+                    <pfm-image-upload set-image="setAvatar" image="settings.avatar_url" user-id="settings.id"></pfm-image-upload>
+                </div>
+                <input type="text" ng-disabled="isSaving" ng-change="touchModel()" ng-show="settings.uses_gravatar" placeholder="Gravatar Email" ng-model="settings.gravatar" />
+                <div class="error" ng-show="errors.avatar != null">{{errors.avatar}}</div>
+                <div class="error" ng-show="errors.gravatar != null">{{errors.gravatar}}</div>
+            </div>
         </div>
+        <div class="col-md-8">
+            <h3>Notification settings</h3>
+            <p>On-site notifications are always on. That way, you can always see
+            what you&#39;ve missed whenever you log on to Pony.fm!</p>
+
+            <table class="table table-hover">
+                <thead>
+                    <th></th>
+                    <th>Email me!</th>
+                    <th>Give me a push notification!</th>
+                </thead>
+                <tr ng-repeat="notification in ::settings.notifications track by notification.activity_type">
+                    <td><label>{{ ::notification.description }}</label></td>
+                    <td><input type="checkbox" ng-change="touchModel()" ng-model="notification.receive_emails" /></td>
+                    <td>Coming soon!</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </form>

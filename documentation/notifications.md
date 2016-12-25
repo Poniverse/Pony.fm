@@ -1,9 +1,8 @@
 Developing notifications for Pony.fm
 ====================================
 
-Pony.fm's notification system is designed around "drivers" for various
-notification delivery methods. The types of notification one can receive
-are defined in the
+Pony.fm's notification system is designed to support various notification
+delivery methods. The types of notification one can receive are defined in the
 [`NotificationHandler`](app/Contracts/NotificationHandler.php)
 interface, which is implemented by every class that needs to know about
 the various notification types.
@@ -60,20 +59,15 @@ Adding new notification types
    [`Activity`](../app/Models/Activity.php) model.
 
 
-Adding new notification drivers
--------------------------------
+Adding new notification delivery methods
+----------------------------------------
 
-1. Create a new class for the driver that implements the
-   [`NotificationHandler`](../app/Contracts/NotificationHandler.php)
-   interface.
+1. Implement a method for sending notifications via the new delivery method in
+   the [`PonyfmDriver`](../app/Library/Notifications/PonyfmDriver.php) class.
+   Use how email delivery is implemented as a guide.
 
-2. Make each method from the above interface send the corresponding type
-   of notification to everyone who is to receive it via that driver.
-   Implement UI and API integrations as needed.
-   
-3. Modify the
-   [`RecipientFinder`](../app/Library/Notifications/RecipientFinder.php)
-   class to build recipient lists for the new driver.
+2. Add UI for subscribing and unsubscribing to the delivery method to the
+   [`account settings area`](../public/templates/account/settings.html).
    
 
 Architectural notes
@@ -86,14 +80,19 @@ notifications asynchronously.
 To that end, the
 [`NotificationManager`](../app/Library/Notifications/NotificationManager.php)
 class is a thin wrapper around the `SendNotifications` job. The job
-calls the notification drivers asynchronously to actually send the
-notifications. This job should run on a dedicated queue in production.
+calls the notification logic asynchronously to actually send notifications. This
+job should run on a dedicated queue in production.
 
 The [`NotificationHandler`](../app/Contracts/NotificationHandler.php)
-interface is key to maintaining type safety - it ensures that drivers
-and `NotificationManager` all support every type of notification. All
-classes that have logic specific to a notification type implement this
-interface to ensure that all notification types are handled.
+interface is key to maintaining type safety - it ensures that many classes
+associated with notifications all support every type of notification. Classes
+that have logic specific to a notification type implement this interface to
+ensure that all notification types are handled.
+
+Furthermore, the `activity_types` table is used to provide referential data
+integrity in the database - all notifications are linked to an activity record,
+and each activity record must correspond to a valid activity type. This table is
+also used for validation of users' subscription preferences.
 
 There's one exception to the use of `NotificationHandler` - the 
 [`Activity`](../app/Models/Activity.php) model. The logic for mapping the
@@ -112,7 +111,7 @@ interface here would have made this logic a lot more obtuse.
 3. An `Activity` record is created for the action.
 
 4. A `Notification` record is created for every user who is to receive a
-   notification about that activity. These records act as Pony.fm's on-site
+   notification about that activity. These records double as Pony.fm's on-site
    notifications and cannot be disabled.
 
 5. Depending on subscription preferences, push and email notifications will be

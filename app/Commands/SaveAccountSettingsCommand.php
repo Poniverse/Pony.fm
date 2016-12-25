@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use DB;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\User;
 use Gate;
@@ -53,6 +54,8 @@ class SaveAccountSettingsCommand extends CommandBase
      */
     public function execute()
     {
+        $this->_input['notifications'] = json_decode($this->_input['notifications'], true);
+
         $rules = [
             'display_name'  => 'required|min:3|max:26',
             'bio'           => 'textarea_length:250',
@@ -62,7 +65,9 @@ class SaveAccountSettingsCommand extends CommandBase
                 'min:'.config('ponyfm.user_slug_minimum_length'),
                 'regex:/^[a-z\d-]+$/',
                 'is_not_reserved_slug'
-            ]
+            ],
+            'notifications.*.activity_type' => 'required|exists:activity_types,activity_type',
+            'notifications.*.receive_emails'    => 'present|boolean',
         ];
 
         if ($this->_input['uses_gravatar'] == 'true') {
@@ -79,6 +84,7 @@ class SaveAccountSettingsCommand extends CommandBase
         if ($validator->fails()) {
             return CommandResponse::fail($validator);
         }
+
 
         $this->_user->bio = $this->_input['bio'];
         $this->_user->display_name = $this->_input['display_name'];
@@ -101,7 +107,27 @@ class SaveAccountSettingsCommand extends CommandBase
             }
         }
 
-        $this->_user->save();
+        DB::transaction(function() {
+            $this->_user->save();
+
+            // Sync email subscriptions
+            $emailSubscriptions = $this->_user->emailSubscriptions->keyBy('activity_type');
+            foreach ($this->_input['notifications'] as $notificationSetting) {
+
+                if (
+                    $notificationSetting['receive_emails'] &&
+                    !$emailSubscriptions->offsetExists($notificationSetting['activity_type'])
+                ) {
+                    $this->_user->emailSubscriptions()->create(['activity_type' => $notificationSetting['activity_type']]);
+
+                } elseif (
+                    !$notificationSetting['receive_emails'] &&
+                    $emailSubscriptions->offsetExists($notificationSetting['activity_type'])
+                ) {
+                    $emailSubscriptions->get($notificationSetting['activity_type'])->delete();
+                }
+            }
+        });
 
         return CommandResponse::succeed();
     }

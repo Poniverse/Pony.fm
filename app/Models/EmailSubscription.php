@@ -46,6 +46,10 @@ use Poniverse\Ponyfm\Models\User;
 class EmailSubscription extends Model
 {
     use UuidModelTrait, SoftDeletes;
+    // Non-sequential UUID's are desirable for this model.
+    protected $uuidVersion = 4;
+
+    protected $fillable = ['activity_type'];
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'id', 'users');
