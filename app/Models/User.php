@@ -437,16 +437,25 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             ', [$this->id]);
     }
 
+    /**
+     * Generates an array of the user's notification settings. It's meant to be
+     * used for the notification settings screen.
+     *
+     * @return array
+     */
     public function getNotificationSettings() {
         $settings = [];
         $emailSubscriptions = $this->emailSubscriptionsJoined();
 
         foreach($emailSubscriptions as $subscription) {
-            $settings[] = [
-                'description' => $subscription->description,
-                'activity_type' => $subscription->activity_type,
-                'receive_emails' => $subscription->id !== NULL
-            ];
+            // TODO: remove this check when news and album notifications are implemented
+            if (!in_array($subscription->activity_type, [Activity::TYPE_NEWS, Activity::TYPE_PUBLISHED_ALBUM])) {
+                $settings[] = [
+                    'description' => $subscription->description,
+                    'activity_type' => $subscription->activity_type,
+                    'receive_emails' => $subscription->id !== NULL
+                ];
+            }
         }
 
         return $settings;

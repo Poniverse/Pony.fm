@@ -20,7 +20,7 @@
 
 namespace Poniverse\Ponyfm\Providers;
 
-use Illuminate\Support\Facades\Gate;
+use Gate;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Poniverse\Ponyfm\Models\Album;
@@ -73,6 +73,11 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('create-announcement', function (User $user) {
+            return $user->hasRole('admin');
+        });
+
+        // TODO: [#25] Remove this when email notifications are rolled out to everyone.
+        Gate::define('receive-email-notifications', function (User $user) {
             return $user->hasRole('admin');
         });
 

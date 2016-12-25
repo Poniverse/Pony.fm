@@ -43,7 +43,7 @@
                 <div class="error" ng-show="errors.gravatar != null">{{errors.gravatar}}</div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8" ng-if="::settings.can_manage_notifications">
             <h3>Notification settings</h3>
             <p>On-site notifications are always on. That way, you can always see
             what you&#39;ve missed whenever you log on to Pony.fm!</p>
