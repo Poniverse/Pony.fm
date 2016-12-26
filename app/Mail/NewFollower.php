@@ -34,6 +34,7 @@ class NewFollower extends BaseNotification
             "{$creatorName} is now following you on Pony.fm!",
             [
                 'creatorName' => $creatorName,
+                'creatorBio' => $this->initiatingUser->bio,
             ]);
     }
 }

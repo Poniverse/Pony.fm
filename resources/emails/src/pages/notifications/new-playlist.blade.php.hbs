@@ -1,0 +1,30 @@
+---
+layout: notification
+---
+
+<container>
+  <row>
+    <columns>
+      <p>\{{ $creatorName }} created a new playlist on Pony.fm!</p>
+    </columns>
+  </row>
+
+  <a href="\{{ $notificationUrl }}" target="_blank">
+    <row>
+      <columns small="4" large="2" class="large-offset-2">
+        <img src="\{{ $message->embed($thumbnailUrl) }}" />
+      </columns>
+      <columns small="8">
+        <p>\{{ $playlistTitle }}</p>
+        <p><small>by: \{{ $creatorName }}</small></p>
+      </columns>
+    </row>
+    <row>
+      <columns>
+        <center>
+          <button href="\{{ $notificationUrl }}" class="small-expanded">Check it out</button>
+        </center>
+      </columns>
+    </row>
+  </a>
+</container>

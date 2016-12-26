@@ -76,6 +76,11 @@ class PonyfmDriver extends AbstractDriver
      */
     public function publishedNewTrack(Track $track)
     {
+        // Grabbing a fresh copy of the track here ensures that, if cover art
+        // was changed from the default, that the updated cover art is used
+        // in notification emails.
+        $track = $track->fresh();
+
         $activity = Activity::create([
             'created_at'    => Carbon::now(),
             'user_id'       => $track->user_id,

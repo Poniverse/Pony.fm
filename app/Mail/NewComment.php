@@ -37,6 +37,7 @@ class NewComment extends BaseNotification
                 'new-comment-profile',
                 $this->activityRecord->text, [
                     'creatorName' => $creatorName,
+                    'comment' => $this->activityRecord->resource->content,
             ]);
         } else {
             return $this->renderEmail(
@@ -45,6 +46,7 @@ class NewComment extends BaseNotification
                 'creatorName' => $creatorName,
                 'resourceType' => $this->activityRecord->getResourceTypeString(),
                 'resourceTitle' => $this->activityRecord->resource->resource->title,
+                'comment' => $this->activityRecord->resource->content,
             ]);
         }
 

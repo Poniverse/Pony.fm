@@ -70,17 +70,28 @@ Finally, to compile and serve the assets in real time, run the following (and le
     gulp watch
 
 
-### Email templates
+### Developing email templates
 
 Pony.fm's email templates are based on the Sass version of
-[ZURB's Foundation for Emails](http://foundation.zurb.com/emails/docs/index.html).
-framework. This framework takes most of the pain out of HTML email markup - see
-their site for the full documentation.
+[ZURB's Foundation for Emails](http://foundation.zurb.com/emails/docs/index.html)
+framework, including their "Inky" markup language. This tooling takes  the pain
+out of HTML email markup - see their site for the full documentation.
 
-Email templates live in [the `resources/emails/src` directory](resources/emails/src).
-Note that they are Handlebars templates which compile into Blade templates -
+Email templates live in two directories:
+
+- [`resources/emails/src`](resources/emails/src), for HTML emails
+- [`resources/views/emails/plaintext`](resources/views/emails/plaintext), for plaintext emails
+
+**Be aware that plaintext emails are vanilla Blade templates!** Foundation is only used for HTML emails.
+
+HTML emails are marked up as Handlebars templates which compile into Blade templates -
 Pony.fm's asset pipeline automatically does this for you. Variables meant for
 Blade need to be escaped with a backslash in the `.hbs` files (like so: `\{{ $myVariableName }}`).
+
+During development, email templates will also be written to `public/build/emails`
+to save you from resending emails to see how they look. For example, if you're
+working on the "new track notification" template, you'll be able to view it in your browser at
+[http://ponyfm-dev.poni/build/emails/notifications/new-track.blade.php.html](http://ponyfm-dev.poni/build/emails/notifications/new-track.blade.php.html).
 
 
 Configuring the servers

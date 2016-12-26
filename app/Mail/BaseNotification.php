@@ -123,11 +123,12 @@ abstract class BaseNotification extends Mailable {
     protected function renderEmail(string $templateName, string $subject, array $extraVariables) {
         return $this
             ->subject($subject)
-            ->view("emails.notifications.{$templateName}")
-            ->text("emails.notifications.{$templateName}_plaintext")
+            ->view("emails.html.notifications.{$templateName}")
+            ->text("emails.plaintext.notifications.{$templateName}")
             ->with(array_merge($extraVariables, [
                 'notificationUrl' => $this->generateNotificationUrl(),
-                'unsubscribeUrl' => $this->generateUnsubscribeUrl()
+                'unsubscribeUrl' => $this->generateUnsubscribeUrl(),
+                'thumbnailUrl'   => $this->activityRecord->thumbnail_url
             ]));
     }
 }

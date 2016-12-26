@@ -173,20 +173,24 @@ class Activity extends Model
 
     public function getThumbnailUrlAttribute()
     {
-        switch ($this->resource_type) {
-            case User::class:
-                return $this->resource->getAvatarUrl(Image::THUMBNAIL);
+        if (static::TYPE_CONTENT_FAVOURITED === $this->activity_type) {
+            return $this->initiatingUser->getAvatarUrl(Image::SMALL);
+        } else {
+            switch ($this->resource_type) {
+                case User::class:
+                    return $this->resource->getAvatarUrl(Image::SMALL);
 
-            case Track::class:
-            case Album::class:
-            case Playlist::class:
-                return $this->resource->getCoverUrl(Image::THUMBNAIL);
+                case Track::class:
+                case Album::class:
+                case Playlist::class:
+                    return $this->resource->getCoverUrl(Image::SMALL);
 
-            case Comment::class:
-                return $this->resource->user->getAvatarUrl(Image::THUMBNAIL);
+                case Comment::class:
+                    return $this->resource->user->getAvatarUrl(Image::SMALL);
 
-            default:
-                throw new \Exception('This activity\'s resource is of an unknown type!');
+                default:
+                    throw new \Exception('This activity\'s resource is of an unknown type!');
+            }
         }
     }
 

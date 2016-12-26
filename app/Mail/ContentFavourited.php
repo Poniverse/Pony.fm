@@ -33,6 +33,8 @@ class ContentFavourited extends BaseNotification
             'content-favourited',
             $this->activityRecord->text, [
             'creatorName' => $creatorName,
+            'creatorBio' => $this->initiatingUser->bio,
+            'creatorUrl' => $this->initiatingUser->url,
             'resourceType' => $this->activityRecord->getResourceTypeString(),
             'resourceTitle' => $this->activityRecord->resource->title,
         ]);

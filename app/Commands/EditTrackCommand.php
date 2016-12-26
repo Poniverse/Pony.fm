@@ -195,7 +195,6 @@ class EditTrackCommand extends CommandBase
                 }
             }
         }
-
         return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);
     }
 

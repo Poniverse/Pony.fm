@@ -28,13 +28,13 @@ var gulp = require("gulp"),
     webpackStream = require('webpack-stream'),
     _ = require("underscore"),
     runSequence = require("run-sequence"),
-    rimraf = require("rimraf"),
     panini = require("panini"),
     inky = require("inky"),
     fs = require("fs"),
     siphon = require('siphon-media-query'),
     lazypipe = require('lazypipe'),
-    ext_replace = require('gulp-ext-replace');
+    ext_replace = require('gulp-ext-replace'),
+    del = require('del');
 
 var plumberOptions = {
     errorHandler: plug.notify.onError("Error: <%= error.message %>")
@@ -185,10 +185,13 @@ gulp.task('copy:templates', function () {
 // They have been modified for ES5, Gulp 3 compatibility, and namespaced with "email-"
 // to avoid collisions with Pony.fm's other Gulp tasks.
 
-// Delete the "resources/views/emails/build" folder
+// Delete the "resources/views/emails/html" folder
 // This happens every time a build starts
-gulp.task("email-clean", function emailClean(done) {
-    rimraf('resources/views/emails/build', done);
+gulp.task("email-clean", function emailClean() {
+    return del([
+        'resources/views/emails/html',
+        'public/build/emails'
+    ]);
 });
 
 // Compile layouts, pages, and partials into flat HTML files
@@ -203,7 +206,11 @@ gulp.task("email-pages", function emailPages() {
         }))
         .pipe(inky())
         .pipe(ext_replace('.blade.php', '.blade.php.hbs'))
-        .pipe(gulp.dest('resources/views/emails/build'));
+        .pipe(gulp.dest('resources/views/emails/html'))
+        // If this is the dev environment, write the templates to the "public"
+        // directory as well.
+        .pipe(plug.if(!PRODUCTION, ext_replace('.blade.php.html', '.blade.php')))
+        .pipe(plug.if(!PRODUCTION, gulp.dest('public/build/emails')));
 });
 
 // Reset Panini's cache of layouts and partials
@@ -220,46 +227,19 @@ gulp.task("email-sass", function emailSass() {
             includePaths: ['node_modules/foundation-emails/scss']
         }).on('error', plug.sass.logError))
         .pipe(plug.if(PRODUCTION, plug.uncss(
-            {
-                html: ['resources/views/emails/build/**/*.blade.php']
-            })))
+            {html: ['resources/views/emails/html/**/*.blade.php']})))
         .pipe(plug.if(!PRODUCTION, plug.sourcemaps.write()))
-        .pipe(gulp.dest('resources/views/emails/build/css'));
+        // If this is the dev environment, write the CSS to the "public"
+        // directory as well.
+        .pipe(gulp.dest('resources/views/emails/html/css'))
+        .pipe(plug.if(!PRODUCTION, gulp.dest('public/build/emails/css')));
 });
 
 // Copy and compress images
 gulp.task("email-images", function emailImages() {
     return gulp.src('resources/emails/src/assets/img/**/*')
         .pipe(plug.imagemin())
-        .pipe(gulp.dest('./resources/views/emails/build/assets/img'));
-});
-
-// Inline CSS and minify HTML
-gulp.task("email-inline", function emailInline() {
-    return gulp.src('resources/views/emails/build/**/*.blade.php')
-        .pipe(plug.if(PRODUCTION, emailInliner('resources/views/emails/build/css/app.css')))
-        .pipe(gulp.dest('resources/views/emails/build'));
-});
-
-
-// Helper tasks for email watchers
-gulp.task("email-rebuild-handlebars", function(callback){
-    runSequence("email-pages", "email-inline", callback);
-});
-gulp.task("email-rebuild-layouts", function(callback){
-    runSequence("email-reset-pages", "email-pages", "email-inline", callback);
-});
-gulp.task("email-rebuild-sass", function(callback){
-    runSequence("email-reset-pages", "email-sass", "email-pages", "email-inline", callback)
-});
-
-// Watch for file changes
-gulp.task("email-watch", function (callback) {
-    gulp.watch('resources/emails/src/pages/**/*.blade.php.hbs', ["email-rebuild-handlebars"]);
-    gulp.watch(['resources/emails/src/layouts/**/*', 'resources/emails/src/partials/**/*'], ["email-rebuild-layouts"]);
-    gulp.watch(['resources/emails/src/assets/scss/**/*.scss'], ["email-rebuild-sass"]);
-    gulp.watch('resources/emails/src/assets/img/**/*', ["email-images"]);
-    callback();
+        .pipe(gulp.dest('./resources/views/emails/html/assets/img'));
 });
 
 
@@ -283,7 +263,35 @@ function emailInliner(css) {
         });
 }
 
-// Build the "resources/views/emails/build" folder by running all of the above tasks
+// Inline CSS and minify HTML
+gulp.task("email-inline", function emailInline() {
+    return gulp.src('resources/views/emails/html/**/*.blade.php')
+        .pipe(emailInliner('resources/views/emails/html/css/app.css')())
+        .pipe(gulp.dest('resources/views/emails/html'));
+});
+
+
+// Helper tasks for email watchers
+gulp.task("email-rebuild-handlebars", function(callback){
+    runSequence("email-pages", "email-inline", callback);
+});
+gulp.task("email-rebuild-layouts", function(callback){
+    runSequence("email-reset-pages", "email-pages", "email-inline", callback);
+});
+gulp.task("email-rebuild-sass", function(callback){
+    runSequence("email-reset-pages", "email-sass", "email-pages", "email-inline", callback)
+});
+
+// Watch for file changes
+gulp.task("email-watch", function (callback) {
+    gulp.watch('resources/emails/src/pages/**/*.blade.php.hbs', ["email-rebuild-handlebars"]);
+    gulp.watch(['resources/emails/src/layouts/**/*', 'resources/emails/src/partials/**/*'], ["email-rebuild-layouts"]);
+    gulp.watch(['resources/emails/src/assets/scss/**/*.scss'], ["email-rebuild-sass"]);
+    gulp.watch('resources/emails/src/assets/img/**/*', ["email-images"]);
+    callback();
+});
+
+// Build the "resources/views/emails/html" folder by running all of the above tasks
 gulp.task('email-build', function(callback){
     runSequence("email-clean", "email-pages", "email-sass", "email-images", "email-inline", callback);
 });

@@ -1,4 +1,4 @@
-@extends('emails.notifications._layout_plaintext')
+@extends('emails.plaintext.notifications._layout')
 
 @section('content')
 Congrats! {{ $creatorName }} is now following you on Pony.fm!

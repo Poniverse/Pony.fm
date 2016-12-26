@@ -1,0 +1,32 @@
+---
+layout: notification
+---
+
+<container>
+  <row>
+    <columns>
+      <p>\{{ $creatorName }} favourited your \{{ $resourceType }},
+        <a href="\{{ $notificationUrl }}" target="_blank"><em>\{{ $resourceTitle }}</em></a>!
+      Yay!</p>
+    </columns>
+  </row>
+
+  <a href="\{{ $creatorUrl }}" target="_blank">
+    <row>
+      <columns small="4" large="2" class="large-offset-1">
+        <img src="\{{ $message->embed($thumbnailUrl) }}" />
+      </columns>
+      <columns small="8">
+        <p>\{{ $creatorName }}</p>
+        <p><small>\{{ $creatorBio }}</small></p>
+      </columns>
+    </row>
+    <row>
+      <columns>
+        <center>
+          <button href="\{{ $creatorUrl }}" target="_blank" class="small-expanded">Visit \{{ $creatorName }}&#39;s profile</button>
+        </center>
+      </columns>
+    </row>
+  </a>
+</container>

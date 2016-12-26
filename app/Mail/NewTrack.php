@@ -36,6 +36,7 @@ class NewTrack extends BaseNotification
             [
                 'creatorName' => $creatorName,
                 'trackTitle' => $trackTitle,
+                'genreTitle' => $this->activityRecord->resource->genre->name
             ]);
     }
 }

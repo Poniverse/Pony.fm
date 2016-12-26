@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="{{root}}css/app.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>{{subject}}</title>
+    <!-- <style> -->
+  </head>
+  <body>
+    <span class="preheader">{{description}}</span>
+    <table class="body">
+      <tr>
+        <td class="center" align="center" valign="top">
+          <center>
+            <container>
+              <row>
+                <columns>
+                  <h1>Pony.fm</h1>
+                </columns>
+              </row>
+              {{!-- Pages you create in the src/pages/ folder are inserted here when the flattened emails are created. --}}
+              {{> body}}
+              <row>
+                <columns large="6">
+                  <h6>What&#39;s this?</h6>
+                  <p><small>Pony.fm can now send you notifications via email! You can control what you get email notifications for in your <a href="#">account settings</a>.</small></p>
+                  <p><small><a href="\{{ $unsubscribeUrl }}" target="_blank">Unsubscribe from this kind of email</a></small></p>
+                </columns>
+                <columns large="6">
+                  <br>
+                  <p><small>
+                    Sent with &#9829;<br>
+                    <br>
+                    Poniverse<br>
+                    248-1641 Lonsdale Avenue<br>
+                    North Vancouver<br>
+                    BC V7M 2J5<br>
+                    Canada
+                  </small></p>
+                </columns>
+              </row>
+            </container>
+          </center>
+        </td>
+      </tr>
+    </table>
+    <!-- prevent Gmail on iOS font size manipulation -->
+   <div style="display:none; white-space:nowrap; font:15px courier; line-height:0;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
+  </body>
+</html>
