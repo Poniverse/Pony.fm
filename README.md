@@ -69,6 +69,20 @@ Finally, to compile and serve the assets in real time, run the following (and le
 
     gulp watch
 
+
+### Email templates
+
+Pony.fm's email templates are based on the Sass version of
+[ZURB's Foundation for Emails](http://foundation.zurb.com/emails/docs/index.html).
+framework. This framework takes most of the pain out of HTML email markup - see
+their site for the full documentation.
+
+Email templates live in [the `resources/emails/src` directory](resources/emails/src).
+Note that they are Handlebars templates which compile into Blade templates -
+Pony.fm's asset pipeline automatically does this for you. Variables meant for
+Blade need to be escaped with a backslash in the `.hbs` files (like so: `\{{ $myVariableName }}`).
+
+
 Configuring the servers
 -----------------------
 
