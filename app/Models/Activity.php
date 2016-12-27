@@ -173,7 +173,10 @@ class Activity extends Model
 
     public function getThumbnailUrlAttribute()
     {
-        if (static::TYPE_CONTENT_FAVOURITED === $this->activity_type) {
+        if (
+            in_array($this->activity_type,
+                [static::TYPE_CONTENT_FAVOURITED, static::TYPE_NEW_FOLLOWER])
+        ) {
             return $this->initiatingUser->getAvatarUrl(Image::SMALL);
         } else {
             switch ($this->resource_type) {
