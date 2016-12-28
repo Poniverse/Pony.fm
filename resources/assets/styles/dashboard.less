@@ -200,7 +200,7 @@
       }
 
       &.hwc-announce {
-        height: 150px;
+        height: 160px;
         background-color: #68a1ee;
         background-image: url(/images/hwc/hwc-announcement.jpg);
         background-size: 300px;
@@ -216,11 +216,34 @@
           background: none;
         }
 
-        .announce-actions, .announce-content {
+        .announce-actions, .announce-content, .announce-tracks {
           padding-left: 300px;
 
           @media (max-width: 1200px) {
             padding-left: 15px;
+          }
+        }
+
+        .announce-tracks {
+          li {
+            width: 33%;
+            float: left;
+
+            .title {
+              color: #fff;
+            }
+
+            .artist {
+              color: #eee;
+            }
+
+            &:hover {
+              background: rgba(0,0,0,0.2);
+            }
+
+            &.is-playing {
+              background: rgba(0,0,0,0.1);
+            }
           }
         }
       }

@@ -20,18 +20,29 @@ window.pfm.preloaders['dashboard'] = [
 ]
 
 module.exports = angular.module('ponyfm').controller "dashboard", [
-    '$scope', 'dashboard', 'auth', '$http', 'announcements', '$compile'
-    ($scope, dashboard, auth, $http, announcements, $compile) ->
+    '$scope', 'dashboard', 'auth', '$http', 'announcements', '$compile', 'tracks', 'player'
+    ($scope, dashboard, auth, $http, announcements, $compile, tracks, player) ->
 
         $scope.recentTracks = null
         $scope.popularTracks = null
         $scope.announcementClass = 'disabled'
         $scope.announceWrapperClass = 'disabled'
 
+        $scope.play = (track) ->
+            index = _.indexOf $scope.announcement.parsedTracks, (t) -> t.id == track.id
+            player.playTracks $scope.announcement.parsedTracks, index
+
         $scope.loadAnnouncementTemplate = (url) ->
             $http.get('/templates/' + url).success (templateContent) ->
                 compiledHtml = $compile(templateContent)($scope)
                 $('#announcement').append(compiledHtml)
+                if $scope.announcement.tracks.length > 0
+                    console.log($scope.announcement.tracks)
+                    $scope.announcement.parsedTracks = []
+                    for track in $scope.announcement.tracks
+                        tracks.fetch(track, false).done (trackResponse) ->
+                            $scope.announcement.parsedTracks.push(trackResponse.track)
+                            console.log(trackResponse)
 
         dashboard.refresh().done (res) ->
             $scope.recentTracks = res.recent_tracks
