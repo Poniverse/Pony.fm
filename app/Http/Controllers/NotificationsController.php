@@ -21,9 +21,11 @@
 namespace Poniverse\Ponyfm\Http\Controllers;
 
 use App;
+use Auth;
 use DB;
 use Poniverse\Ponyfm\Models\Email;
 use Poniverse\Ponyfm\Models\EmailSubscription;
+use View;
 
 
 class NotificationsController extends Controller {
@@ -45,9 +47,24 @@ class NotificationsController extends Controller {
     }
 
     public function getEmailUnsubscribe($subscriptionKey) {
+        /** @var EmailSubscription $subscription */
         $subscription = EmailSubscription::findOrFail($subscriptionKey);
         $subscription->delete();
 
-        return 'Unsubscribed!';
+        if (Auth::check() && $subscription->user->id === Auth::user()->id) {
+            return redirect(route('account:settings', [
+                'slug' => $subscription->user->slug,
+                'unsubscribedMessageKey' => $subscription->activity_type
+            ]), 303);
+        } else {
+            return redirect(route('email:confirm-unsubscribed', [
+                'unsubscribedUser' => $subscription->user->display_name,
+                'unsubscribedMessageKey' => $subscription->activity_type
+            ]), 303);
+        }
+    }
+
+    public function getEmailUnsubscribePage() {
+        return View::make('shared.null');
     }
 }

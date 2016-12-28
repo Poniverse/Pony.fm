@@ -307,8 +307,12 @@ ponyfm.config [
             templateUrl: '/templates/admin/announcement-show.html'
             controller: 'admin-announcement-edit'
 
-        # Homepage
+        state.state 'notifications-email-unsubscribed',
+            url: '/notifications/email/unsubscribed',
+            controller: 'notifications-email-unsubscribed',
+            templateUrl: '/templates/home/email-unsubscribed.html'
 
+        # Homepage
         if window.pfm.auth.isLogged
             state.state 'home',
                 url: '/'

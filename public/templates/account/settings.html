@@ -44,6 +44,10 @@
             </div>
         </div>
         <div class="col-md-8" ng-if="::settings.can_manage_notifications">
+            <div class="alert alert-warning" ng-if="unsubscribeMessage">
+                <p>{{ ::unsubscribeMessage }}</p>
+            </div>
+
             <h3>Notification settings</h3>
             <p>On-site notifications are always on. That way, you can always see
             what you&#39;ve missed whenever you log on to Pony.fm!</p>

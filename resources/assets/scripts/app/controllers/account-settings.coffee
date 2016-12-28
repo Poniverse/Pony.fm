@@ -15,11 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module.exports = angular.module('ponyfm').controller "account-settings", [
-    '$scope', 'auth', '$state'
-    ($scope, auth, $state) ->
+    '$scope', 'auth', '$state', 'activity-types',
+    ($scope, auth, $state, activityTypes) ->
         $scope.settings = {}
         $scope.errors = {}
         $scope.isDirty = false
+        $scope.unsubscribeMessage = activityTypes.getUnsubscribeMessage()
 
         $scope.touchModel = () ->
             $scope.isDirty = true

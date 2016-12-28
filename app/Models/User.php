@@ -338,6 +338,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return Gravatar::getUrl($email, Image::$ImageTypes[$type]['width']);
     }
 
+    public function getSettingsUrl()
+    {
+        return route('account:settings', ['slug' => $this->slug]);
+    }
+
     /**
      * Get the token value for the "remember me" session.
      *

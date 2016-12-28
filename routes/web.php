@@ -80,6 +80,7 @@ Route::get('notifications', 'AccountController@getNotifications');
 
 Route::group(['prefix' => 'notifications/email'], function() {
     Route::get('/unsubscribe/{subscriptionKey}', 'NotificationsController@getEmailUnsubscribe')->name('email:unsubscribe');
+    Route::get('/unsubscribed', 'NotificationsController@getEmailUnsubscribePage')->name('email:confirm-unsubscribed');
     Route::get('/click/{emailKey}', 'NotificationsController@getEmailClick')->name('email:click');
 });
 
@@ -246,7 +247,7 @@ Route::group(['prefix' => '{slug}'], function () {
 
         Route::get('/uploader', 'UploaderController@getIndex');
 
-        Route::get('/', 'AccountController@getIndex');
+        Route::get('/', 'AccountController@getIndex')->name('account:settings');
     });
 });
 

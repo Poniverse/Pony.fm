@@ -127,8 +127,10 @@ abstract class BaseNotification extends Mailable {
             ->text("emails.plaintext.notifications.{$templateName}")
             ->with(array_merge($extraVariables, [
                 'notificationUrl' => $this->generateNotificationUrl(),
-                'unsubscribeUrl' => $this->generateUnsubscribeUrl(),
-                'thumbnailUrl'   => $this->activityRecord->thumbnail_url
+                'unsubscribeUrl'  => $this->generateUnsubscribeUrl(),
+                'thumbnailUrl'    => $this->activityRecord->thumbnail_url,
+                'recipientName'   => $this->emailRecord->getUser()->display_name,
+                'accountSettingsUrl'   => $this->emailRecord->getUser()->getSettingsUrl(),
             ]));
     }
 }
