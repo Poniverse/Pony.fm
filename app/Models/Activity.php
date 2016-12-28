@@ -118,7 +118,11 @@ class Activity extends Model
 
     public function getUrlAttribute()
     {
-        return $this->resource->url;
+        if (static::TYPE_NEW_FOLLOWER === $this->activity_type) {
+            return $this->initiatingUser->url;
+        } else {
+            return $this->resource->url;
+        }
     }
     
     public function getResourceTypeAttribute($value)
