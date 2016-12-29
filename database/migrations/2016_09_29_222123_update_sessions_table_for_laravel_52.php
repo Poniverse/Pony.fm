@@ -27,9 +27,7 @@ class UpdateSessionsTableForLaravel52 extends Migration
     public function down()
     {
         Schema::table('sessions', function(Blueprint $table) {
-            $table->dropColumn('user_id');
-            $table->dropColumn('ip_address');
-            $table->dropColumn('user_agent');
+            $table->dropColumn(['user_id', 'ip_address', 'user_agent']);
         });
     }
 }

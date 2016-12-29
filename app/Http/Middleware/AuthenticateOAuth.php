@@ -21,18 +21,19 @@
 namespace Poniverse\Ponyfm\Http\Middleware;
 
 use Closure;
-use GuzzleHttp;
-use Illuminate\Auth\Guard;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
+use League\OAuth2\Client\Token\AccessToken;
 use Poniverse;
+use Poniverse\Lib\Client;
 use Poniverse\Ponyfm\Models\User;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class AuthenticateOAuth
 {
     /**
-     * @var Poniverse
+     * @var Client
      */
     private $poniverse;
 
@@ -46,9 +47,9 @@ class AuthenticateOAuth
      */
     private $session;
 
-    public function __construct(Poniverse $poniverse, Guard $auth, Store $session)
+    public function __construct(Guard $auth, Store $session)
     {
-        $this->poniverse = $poniverse;
+        $this->poniverse = new Client(config('poniverse.client_id'), config('poniverse.secret'), new \GuzzleHttp\Client());
         $this->auth = $auth;
         $this->session = $session;
     }
@@ -60,7 +61,7 @@ class AuthenticateOAuth
      * @param  \Closure $next
      * @param  string $requiredScope
      * @return mixed
-     * @throws \OAuth2\Exception
+     * @throws Poniverse\Lib\Errors\ApiException
      */
     public function handle(Request $request, Closure $next, $requiredScope)
     {
@@ -68,7 +69,7 @@ class AuthenticateOAuth
         $accessToken = $this->determineAccessToken($request, false);
 
         // check that access token is valid at Poniverse.net
-        $accessTokenInfo = $this->poniverse->getAccessTokenInfo($accessToken);
+        $accessTokenInfo = $this->poniverse->poniverse()->accessTokenInfo()->introspect($accessToken);
 
         if (!$accessTokenInfo->getIsActive()) {
             throw new AccessDeniedHttpException('This access token is expired or invalid!');
@@ -79,13 +80,14 @@ class AuthenticateOAuth
         }
 
         // Log in as the given user, creating the account if necessary.
-        $this->poniverse->setAccessToken($accessToken);
+        $this->poniverse->setAccessToken(new AccessToken(['access_token' => $accessToken]));
         $this->session->put('api_client_id', $accessTokenInfo->getClientId());
 
-        $poniverseUser = $this->poniverse->getUser();
+        /** @var Poniverse\Lib\Entity\Poniverse\User $poniverseUser */
+        $poniverseUser = $this->poniverse->getOAuthProvider()->getResourceOwner($accessToken);
 
-        $user = User::findOrCreate($poniverseUser['username'], $poniverseUser['display_name'], $poniverseUser['email']);
-        $this->auth->onceUsingId($user);
+        $user = User::findOrCreate($poniverseUser->username, $poniverseUser->display_name, $poniverseUser->email);
+        $this->auth->setUser($user);
 
         return $next($request);
     }

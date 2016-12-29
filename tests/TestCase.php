@@ -123,7 +123,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         Storage::disk('local')->makeDirectory('testing-datastore/tmp');
         Storage::disk('local')->copy("test-files/${filename}", "testing-datastore/tmp/${filename}");
 
-        return new \Symfony\Component\HttpFoundation\File\UploadedFile(storage_path("app/testing-datastore/tmp/${filename}"), $filename, null, null, null, true);
+        return new \Illuminate\Http\UploadedFile(storage_path("app/testing-datastore/tmp/${filename}"), $filename, null, null, null, true);
     }
 
     /**

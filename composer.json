@@ -25,7 +25,8 @@
         "ksubileau/color-thief-php": "^1.3",
         "graham-campbell/exceptions": "^9.1",
         "minishlink/web-push": "^1.0",
-        "alsofronie/eloquent-uuid": "^1.0"
+        "alsofronie/eloquent-uuid": "^1.0",
+        "poniverse/api": "dev-rewrite"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

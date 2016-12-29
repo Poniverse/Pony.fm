@@ -643,7 +643,6 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     public function setTitleAttribute($value)
     {
         $this->setTitleAttributeSlug($value);
-        ;
         $this->updateHash();
     }
 

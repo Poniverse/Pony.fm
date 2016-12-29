@@ -21,6 +21,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Poniverse\Lib\AccessToken;
 use Poniverse\Ponyfm\Models\User;
 
 class ApiAuthTest extends TestCase
@@ -35,22 +36,22 @@ class ApiAuthTest extends TestCase
     public function testApiCreatesNewUser()
     {
         $user = factory(User::class)->make();
-        $accessTokenInfo = new \Poniverse\AccessTokenInfo('nonsense-token');
+        $accessTokenInfo = new AccessToken('nonsense-token');
         $accessTokenInfo->setIsActive(true);
         $accessTokenInfo->setScopes(['basic', 'ponyfm:tracks:upload']);
 
-        $poniverse = Mockery::mock('overload:Poniverse');
-        $poniverse->shouldReceive('getUser')
-            ->andReturn([
+        $poniverse = Mockery::mock('overload:Poniverse\Lib\OAuth2\PoniverseProvider');
+        $poniverse->shouldReceive('getResourceOwner')
+            ->andReturn(new \Poniverse\Lib\Entity\Poniverse\User([
+                'id' => $user->id,
                 'username' => $user->username,
                 'display_name' => $user->display_name,
                 'email' => $user->email,
-            ]);
-
+            ]));
         $poniverse->shouldReceive('setAccessToken');
 
-        $poniverse
-            ->shouldReceive('getAccessTokenInfo')
+        $accessTokenService = Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\AccessTokenInfo');
+        $accessTokenService->shouldReceive('introspect')
             ->andReturn($accessTokenInfo);
 
         $this->dontSeeInDatabase('users', ['username' => $user->username]);
@@ -61,23 +62,25 @@ class ApiAuthTest extends TestCase
     public function testApiClientIdIsRecordedWhenUploadingTrack()
     {
         $user = factory(User::class)->make();
-        $accessTokenInfo = new \Poniverse\AccessTokenInfo('nonsense-token');
+
+        $accessTokenInfo = new AccessToken('nonsense-token');
         $accessTokenInfo->setIsActive(true);
         $accessTokenInfo->setClientId('Unicorns and rainbows');
         $accessTokenInfo->setScopes(['basic', 'ponyfm:tracks:upload']);
 
-        $poniverse = Mockery::mock('overload:Poniverse');
-        $poniverse->shouldReceive('getUser')
-                  ->andReturn([
+        $poniverse = Mockery::mock('overload:Poniverse\Lib\OAuth2\PoniverseProvider');
+        $poniverse->shouldReceive('getResourceOwner')
+                  ->andReturn(new \Poniverse\Lib\Entity\Poniverse\User([
+                      'id' => $user->id,
                       'username' => $user->username,
                       'display_name' => $user->display_name,
                       'email' => $user->email,
-                  ]);
-
+                  ]));
         $poniverse->shouldReceive('setAccessToken');
 
-        $poniverse
-            ->shouldReceive('getAccessTokenInfo')
+        $accessTokenService = Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\AccessTokenInfo');
+        $accessTokenService
+            ->shouldReceive('introspect')
             ->andReturn($accessTokenInfo);
 
         $this->callUploadWithParameters(['access_token' => $accessTokenInfo->getToken()]);

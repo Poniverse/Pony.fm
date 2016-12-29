@@ -20,12 +20,16 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Input;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use Log;
+use Poniverse\Lib\Client;
 use Poniverse\Ponyfm\Models\User;
 use Auth;
 use Config;
 use DB;
-use Illuminate\Support\Facades\Request;
-use Poniverse;
+use Request;
 use Redirect;
 
 class AuthController extends Controller
@@ -34,14 +38,16 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->poniverse = new Poniverse(Config::get('poniverse.client_id'), Config::get('poniverse.secret'));
-        $this->poniverse->setRedirectUri(action('AuthController@getOAuth'));
+        $this->poniverse = new Client(config('poniverse.client_id'), config('poniverse.secret'), new \GuzzleHttp\Client());
     }
 
     public function getLogin()
     {
         if (Auth::guest()) {
-            return Redirect::to($this->poniverse->getAuthenticationUrl('login'));
+            return Redirect::to(
+                $this->poniverse
+                    ->getOAuthProvider(['redirectUri' => action('AuthController@getOAuth')])
+                    ->getAuthorizationUrl());
         }
 
         return Redirect::to('/');
@@ -50,25 +56,22 @@ class AuthController extends Controller
     public function postLogout()
     {
         Auth::logout();
-
         return Redirect::to('/');
     }
 
     public function getOAuth()
     {
-        $code = $this->poniverse->getClient()->getAccessToken(
-            Config::get('poniverse.urls')['token'],
-            'authorization_code',
-            [
+        $oauthProvider = $this->poniverse->getOAuthProvider();
+
+        try {
+            $accessToken = $oauthProvider->getAccessToken('authorization_code', [
                 'code' => Request::query('code'),
                 'redirect_uri' => action('AuthController@getOAuth')
-            ]
-        );
-
-        if ($code['code'] != 200) {
-            if ($code['code'] == 400 && $code['result']['error_description'] == 'The authorization code has expired' && !isset($this->request['login_attempt'])) {
-                return Redirect::to($this->poniverse->getAuthenticationUrl('login_attempt'));
-            }
+            ]);
+            $this->poniverse->setAccessToken($accessToken);
+            $resourceOwner = $oauthProvider->getResourceOwner($accessToken);
+        } catch (IdentityProviderException $e) {
+            Log::error($e);
 
             return Redirect::to('/')->with(
                 'message',
@@ -76,47 +79,44 @@ class AuthController extends Controller
             );
         }
 
-            $this->poniverse->setAccessToken($code['result']['access_token']);
-            $poniverseUser = $this->poniverse->getUser();
-            $token = DB::table('oauth2_tokens')->where('external_user_id', '=', $poniverseUser['id'])->where(
-                'service',
-                '=',
-                'poniverse'
-            )->first();
+        /** @var \Poniverse\Lib\Entity\Poniverse\User $poniverseUser */
+        $poniverseUser = $resourceOwner;
 
-            $setData = [
-            'access_token' => $code['result']['access_token'],
-            'expires' => date('Y-m-d H:i:s', strtotime("+".$code['result']['expires_in']." Seconds", time())),
-            'type' => $code['result']['token_type'],
-            ];
+        $token = DB::table('oauth2_tokens')
+            ->where('external_user_id', '=', $poniverseUser->id)
+            ->where('service', '=', 'poniverse')
+            ->first();
 
-            if (isset($code['result']['refresh_token']) && !empty($code['result']['refresh_token'])) {
-                $setData['refresh_token'] = $code['result']['refresh_token'];
-            }
+        $setData = [
+            'access_token' => $accessToken,
+            'expires' => Carbon::createFromTimestampUTC($accessToken->getExpires()),
+            'type' => 'Bearer',
+        ];
 
-            if ($token) {
-                //User already exists, update access token and refresh token if provided.
-                DB::table('oauth2_tokens')->where('id', '=', $token->id)->update($setData);
+        if (!empty($accessToken->getRefreshToken())) {
+            $setData['refresh_token'] = $accessToken->getRefreshToken();
+        }
 
-                return $this->loginRedirect(User::find($token->user_id));
-            }
+        if ($token) {
+            //User already exists, update access token and refresh token if provided.
+            DB::table('oauth2_tokens')->where('id', '=', $token->id)->update($setData);
+            return $this->loginRedirect(User::find($token->user_id));
+        }
 
         // Check by login name to see if they already have an account
-            $user = User::findOrCreate($poniverseUser['username'], $poniverseUser['display_name'], $poniverseUser['email']);
+        $user = User::findOrCreate($poniverseUser->username, $poniverseUser->display_name, $poniverseUser->email);
 
-            if ($user->wasRecentlyCreated) {
-                return $this->loginRedirect($user);
-            }
-
-        // We need to insert a new token row :O
-
+        if (!$user->wasRecentlyCreated) {
+            // We need to insert a new token row :O
             $setData['user_id'] = $user->id;
-            $setData['external_user_id'] = $poniverseUser['id'];
+            $setData['external_user_id'] = $poniverseUser->id;
             $setData['service'] = 'poniverse';
-
             DB::table('oauth2_tokens')->insert($setData);
+        }
 
-            return $this->loginRedirect($user);
+
+        return $this->loginRedirect($user);
+    }
     }
 
     protected function loginRedirect($user, $rememberMe = true)

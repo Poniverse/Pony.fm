@@ -111,7 +111,7 @@ class ParseTrackTagsCommand extends CommandBase
         $vars = $track->getAttributes();
 
         foreach ($vars as $key => $value) {
-            if ($value == null) {
+            if ($value === null) {
                 unset($track->{"$key"});
             }
         }

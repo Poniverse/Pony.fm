@@ -173,6 +173,9 @@ class GenerateTrackFilesCommand extends CommandBase
             throw $e;
         }
 
+        // This ensures that any updates to the track record, like from parsed
+        // tags, are reflected in the command's response.
+        $this->track = $this->track->fresh();
         return CommandResponse::succeed([
             'id' => $this->track->id,
             'name' => $this->track->name,

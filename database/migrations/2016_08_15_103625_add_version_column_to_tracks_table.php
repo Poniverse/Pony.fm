@@ -26,8 +26,7 @@ class AddVersionColumnToTracksTable extends Migration
     public function down()
     {
         Schema::table('tracks', function (Blueprint $table) {
-            $table->dropColumn('current_version');
-            $table->dropColumn('version_upload_status');
+            $table->dropColumn(['current_version', 'version_upload_status']);
         });
     }
 }

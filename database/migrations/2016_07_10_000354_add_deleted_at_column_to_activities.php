@@ -35,34 +35,36 @@ class AddDeletedAtColumnToActivities extends Migration
                 $table->softDeletes()->index();
             });
 
-            // Retroactively fix activities that should be marked as deleted.
-            // Tracks
-            DB::table('activities')
-                ->where('resource_type', 2)
-                ->join('tracks', 'activities.resource_id', '=', 'tracks.id')
-                ->whereNotNull('tracks.deleted_at')
-                ->update(['deleted_at' => DB::raw('tracks.deleted_at')]);
+            if ('sqlite' !== DB::getDriverName()) {
+                // Retroactively fix activities that should be marked as deleted.
+                // Tracks
+                DB::table('activities')
+                  ->where('resource_type', 2)
+                  ->join('tracks', 'activities.resource_id', '=', 'tracks.id')
+                  ->whereNotNull('tracks.deleted_at')
+                  ->update(['deleted_at' => DB::raw('tracks.deleted_at')]);
 
-            // Albums
-            DB::table('activities')
-                ->where('resource_type', 3)
-                ->join('albums', 'activities.resource_id', '=', 'albums.id')
-                ->whereNotNull('albums.deleted_at')
-                ->update(['deleted_at' => DB::raw('albums.deleted_at')]);
+                // Albums
+                DB::table('activities')
+                  ->where('resource_type', 3)
+                  ->join('albums', 'activities.resource_id', '=', 'albums.id')
+                  ->whereNotNull('albums.deleted_at')
+                  ->update(['deleted_at' => DB::raw('albums.deleted_at')]);
 
-            // Playlists
-            DB::table('activities')
-                ->where('resource_type', 4)
-                ->join('playlists', 'activities.resource_id', '=', 'playlists.id')
-                ->whereNotNull('playlists.deleted_at')
-                ->update(['deleted_at' => DB::raw('playlists.deleted_at')]);
+                // Playlists
+                DB::table('activities')
+                  ->where('resource_type', 4)
+                  ->join('playlists', 'activities.resource_id', '=', 'playlists.id')
+                  ->whereNotNull('playlists.deleted_at')
+                  ->update(['deleted_at' => DB::raw('playlists.deleted_at')]);
 
-            // Comments
-            DB::table('activities')
-                ->where('resource_type', 5)
-                ->join('comments', 'activities.resource_id', '=', 'comments.id')
-                ->whereNotNull('comments.deleted_at')
-                ->update(['deleted_at' => DB::raw('comments.deleted_at')]);
+                // Comments
+                DB::table('activities')
+                  ->where('resource_type', 5)
+                  ->join('comments', 'activities.resource_id', '=', 'comments.id')
+                  ->whereNotNull('comments.deleted_at')
+                  ->update(['deleted_at' => DB::raw('comments.deleted_at')]);
+            }
         }
     }
 
