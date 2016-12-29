@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use Carbon\Carbon;
 use DB;
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
@@ -168,7 +169,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return new AccessToken([
             'access_token'      => $accessTokenRecord->access_token,
             'refresh_token'     => $accessTokenRecord->refresh_token,
-            'expires'           => $accessTokenRecord->expires,
+            'expires'           => Carbon::createFromFormat('Y-m-d H:i:s', $accessTokenRecord->expires)->timestamp,
             'resource_owner_id' => $accessTokenRecord->external_user_id,
         ]);
     }
@@ -184,8 +185,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             ->update([
                 'access_token' => $accessToken->getToken(),
                 'refresh_token' => $accessToken->getRefreshToken(),
-                'expires' => $accessToken->getExpires(),
-                'resource_owner_id' => $accessToken->getResourceOwnerId(),
+                'expires' => Carbon::createFromTimestampUTC($accessToken->getExpires()),
+                // NOTE: external_user_id does not get updated!
             ]);
     }
 
