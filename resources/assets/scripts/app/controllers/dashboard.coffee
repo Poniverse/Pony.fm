@@ -39,10 +39,27 @@ module.exports = angular.module('ponyfm').controller "dashboard", [
                 if $scope.announcement.tracks.length > 0
                     console.log($scope.announcement.tracks)
                     $scope.announcement.parsedTracks = []
-                    for track in $scope.announcement.tracks
+                    tempTracks = []
+
+                    # Not the greatest, but sod it
+                    for track, i in $scope.announcement.tracks
+                        console.log(i)
                         tracks.fetch(track, false).done (trackResponse) ->
-                            $scope.announcement.parsedTracks.push(trackResponse.track)
-                            console.log(trackResponse)
+                            theTrack = trackResponse.track
+                            $scope.announcement.tracks.map((obj, index) ->
+                                if obj == theTrack.id
+                                    theTrack.place = index
+                            )
+                            tempTracks.push(theTrack)
+
+                            console.log(tempTracks)
+                            if tempTracks.length == $scope.announcement.tracks.length
+                                tempTracks.sort((a,b) ->
+                                    return a.place - b.place
+                                )
+                                $scope.announcement.parsedTracks = tempTracks
+
+
 
         dashboard.refresh().done (res) ->
             $scope.recentTracks = res.recent_tracks

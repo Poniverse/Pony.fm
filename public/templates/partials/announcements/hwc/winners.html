@@ -4,7 +4,7 @@
 </div>
 <div class="announce-tracks">
     <ul class="tracks-listing">
-        <li ng-repeat="track in announcement.parsedTracks track by track.id" ng-class="{'can-favourite': auth.isLogged, 'is-favourited': auth.isLogged && track.user_data.is_favourited, 'is-playing': track.isPlaying, 'has-played': auth.isLogged && track.user_data.views}">
+        <li ng-repeat="track in announcement.parsedTracks track by track.place" ng-class="{'can-favourite': auth.isLogged, 'is-favourited': auth.isLogged && track.user_data.is_favourited, 'is-playing': track.isPlaying, 'has-played': auth.isLogged && track.user_data.views}">
             <div class="image">
                 <a href="#" class="play-button" pfm-eat-click ng-click="play(track)">
                     <i class="fa fa-play" ng-if="!track.isPlaying"></i>
