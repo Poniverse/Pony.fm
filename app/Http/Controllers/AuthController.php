@@ -23,11 +23,11 @@ namespace Poniverse\Ponyfm\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Token\AccessToken;
 use Log;
 use Poniverse\Lib\Client;
 use Poniverse\Ponyfm\Models\User;
 use Auth;
-use Config;
 use DB;
 use Request;
 use Redirect;
@@ -117,6 +117,38 @@ class AuthController extends Controller
 
         return $this->loginRedirect($user);
     }
+
+    /**
+     * Processes requests to update a user's Poniverse information.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postPoniverseAccountSync()
+    {
+        $poniverseId = Input::get('id');
+        $updatedAttribute = Input::get('attribute');
+
+        // Only email address updates are supported at this time.
+        if ('email' !== $updatedAttribute) {
+            return \Response::json(['message' => 'Unsupported Poniverse account attribute.'], 400);
+        }
+
+        $user = User::wherePoniverseId($poniverseId)->first();
+        /** @var AccessToken $accessToken */
+        $accessToken = $user->getAccessToken();
+
+        if ($accessToken->hasExpired()) {
+            $accessToken = $this->poniverse->getOAuthProvider()->getAccessToken('refresh_token', ['refresh_token' => $accessToken->getRefreshToken()]);
+            $user->setAccessToken($accessToken);
+        }
+
+        /** @var \Poniverse\Lib\Entity\Poniverse\User $newUserData */
+        $newUserData = $this->poniverse->getOAuthProvider()->getResourceOwner($accessToken);
+
+        $user->{$updatedAttribute} = $newUserData->{$updatedAttribute};
+        $user->save();
+
+        return \Response::json(['message' => 'Successfully updated this user!'], 200);
     }
 
     protected function loginRedirect($user, $rememberMe = true)

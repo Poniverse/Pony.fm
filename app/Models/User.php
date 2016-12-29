@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Auth;
 use Illuminate\Support\Str;
+use League\OAuth2\Client\Token\AccessToken;
 use Poniverse\Ponyfm\Contracts\Commentable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
@@ -95,6 +96,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereDisabledAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User withEmailSubscriptionFor($activityType)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User wherePoniverseId($poniverseId)
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
 {
@@ -140,6 +142,51 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $query->whereHas('emailSubscriptions', function ($query) use ($activityType) {
             $query->where('activity_type', $activityType);
         });
+    }
+
+    /**
+     * Finds a user by their Poniverse account ID.
+     *
+     * @param $query
+     * @param int $poniverseId
+     * @return mixed
+     */
+    public function scopeWherePoniverseId($query, int $poniverseId) {
+        return $query
+            ->join('oauth2_tokens', 'users.id', '=', 'oauth2_tokens.user_id')
+            ->select('users.*', 'oauth2_tokens.external_user_id')
+            ->where('oauth2_tokens.external_user_id', '=', $poniverseId);
+    }
+
+    /**
+     * Gets this user's OAuth access token record.
+     *
+     * @return AccessToken
+     */
+    public function getAccessToken():AccessToken {
+        $accessTokenRecord = DB::table('oauth2_tokens')->where('user_id', '=', $this->id)->first();
+        return new AccessToken([
+            'access_token'      => $accessTokenRecord->access_token,
+            'refresh_token'     => $accessTokenRecord->refresh_token,
+            'expires'           => $accessTokenRecord->expires,
+            'resource_owner_id' => $accessTokenRecord->external_user_id,
+        ]);
+    }
+
+    /**
+     * Updates this user's access token record.
+     *
+     * @param AccessToken $accessToken
+     */
+    public function setAccessToken(AccessToken $accessToken) {
+        DB::table('oauth2_tokens')
+            ->where('user_id', '=', $this->id)
+            ->update([
+                'access_token' => $accessToken->getToken(),
+                'refresh_token' => $accessToken->getRefreshToken(),
+                'expires' => $accessToken->getExpires(),
+                'resource_owner_id' => $accessToken->getResourceOwnerId(),
+            ]);
     }
 
     /**
