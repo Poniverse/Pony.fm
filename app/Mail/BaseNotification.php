@@ -20,6 +20,7 @@
 
 namespace Poniverse\Ponyfm\Mail;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -126,11 +127,13 @@ abstract class BaseNotification extends Mailable {
             ->view("emails.html.notifications.{$templateName}")
             ->text("emails.plaintext.notifications.{$templateName}")
             ->with(array_merge($extraVariables, [
-                'notificationUrl' => $this->generateNotificationUrl(),
-                'unsubscribeUrl'  => $this->generateUnsubscribeUrl(),
-                'thumbnailUrl'    => $this->activityRecord->thumbnail_url,
-                'recipientName'   => $this->emailRecord->getUser()->display_name,
-                'accountSettingsUrl'   => $this->emailRecord->getUser()->getSettingsUrl(),
+                'notificationUrl'       => $this->generateNotificationUrl(),
+                'unsubscribeUrl'        => $this->generateUnsubscribeUrl(),
+                'thumbnailUrl'          => $this->activityRecord->thumbnail_url,
+                'recipientName'         => $this->emailRecord->getUser()->display_name,
+                'accountSettingsUrl'    => $this->emailRecord->getUser()->getSettingsUrl(),
+                'replyEmailAddress'     => config('mail.from.address'),
+                'currentYear'           => Carbon::now()->year,
             ]));
     }
 }

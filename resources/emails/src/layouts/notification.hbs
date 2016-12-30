@@ -16,28 +16,33 @@
             <container>
               <row>
                 <columns>
-                  <h1>Pony.fm</h1>
+                  <center><h1><img src="\{{ $message->embed(resource_path('emails/src/assets/img/email-header.jpg')) }}"  alt="Pony.fm - Unlimited Pony Music"/></h1></center>
                 </columns>
               </row>
               {{!-- Pages you create in the src/pages/ folder are inserted here when the flattened emails are created. --}}
               {{> body}}
+              <row><columns></columns></row>
               <row>
-                <columns large="6">
-                  <h6>What&#39;s this?</h6>
-                  <p><small>Pony.fm can now send you notifications via email! You can control what you get email notifications for in your <a href="\{{ $accountSettingsUrl }}">account settings</a>.</small></p>
-                  <p><small><a href="\{{ $unsubscribeUrl }}" target="_blank">Unsubscribe from this kind of email</a></small></p>
+                <columns large="7">
+                  <h4><small>Why did I get this email?</small></h4>
+                  <p><small>Pony.fm can now email your notifications to you! Change what
+                    you get email notifications for in your <a href="\{{ $accountSettingsUrl }}">account settings</a>.
+                    You can also <a href="\{{ $unsubscribeUrl }}" target="_blank">unsubscribe</a> from this kind of email.</small></p>
                 </columns>
-                <columns large="6">
+                <columns large="5">
                   <br>
-                  <p><small>
-                    Sent with &#9829; to \{{ $recipientName }}<br>
-                    <br>
-                    Poniverse<br>
-                    248-1641 Lonsdale Avenue<br>
-                    North Vancouver<br>
-                    BC V7M 2J5<br>
-                    Canada
-                  </small></p>
+                  <p>
+                    <small><strong>Any questions?</strong> Reply to this email
+                      or hit us up at <a href="\{{ $replyEmailAddress }}">\{{ $replyEmailAddress }}</a>!
+                    </small>
+                  </p>
+                  <p><small>Sent with &#9829; to \{{ $recipientName }}</small></p>
+                </columns>
+              </row>
+              <row>
+                <columns>
+                  <p class="text-center"><small>Pony.fm, a Poniverse project<br>
+                    248-1641 Lonsdale Avenue, North Vancouver, BC V7M 2J5, Canada</small></p>
                 </columns>
               </row>
             </container>
