@@ -169,7 +169,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return new AccessToken([
             'access_token'      => $accessTokenRecord->access_token,
             'refresh_token'     => $accessTokenRecord->refresh_token,
-            'expires'           => Carbon::createFromFormat('Y-m-d H:i:s', $accessTokenRecord->expires)->timestamp,
+            'expires'           => Carbon::parse($accessTokenRecord->expires)->timestamp,
             'resource_owner_id' => $accessTokenRecord->external_user_id,
         ]);
     }
