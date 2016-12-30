@@ -26,6 +26,7 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Log;
 use Poniverse\Lib\Client;
+use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\User;
 use Auth;
 use DB;
@@ -106,12 +107,17 @@ class AuthController extends Controller
         // Check by login name to see if they already have an account
         $user = User::findOrCreate($poniverseUser->username, $poniverseUser->display_name, $poniverseUser->email);
 
-        if (!$user->wasRecentlyCreated) {
+        if ($user->wasRecentlyCreated) {
             // We need to insert a new token row :O
             $setData['user_id'] = $user->id;
             $setData['external_user_id'] = $poniverseUser->id;
             $setData['service'] = 'poniverse';
             DB::table('oauth2_tokens')->insert($setData);
+
+            // Subscribe the user to default email notifications
+            foreach (Activity::DEFAULT_EMAIL_TYPES as $activityType) {
+                $user->emailSubscriptions()->create(['activity_type' => $activityType]);
+            }
         }
 
 

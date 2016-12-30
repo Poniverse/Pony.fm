@@ -80,6 +80,18 @@ class Activity extends Model
     const TYPE_CONTENT_FAVOURITED = 7;
 
     /**
+     * Activity types to subscribe new users to email notifications for.
+     */
+    const DEFAULT_EMAIL_TYPES = [
+        Activity::TYPE_PUBLISHED_TRACK,
+        Activity::TYPE_PUBLISHED_ALBUM,
+        Activity::TYPE_PUBLISHED_PLAYLIST,
+        Activity::TYPE_NEW_FOLLOWER,
+        Activity::TYPE_NEW_COMMENT,
+        Activity::TYPE_CONTENT_FAVOURITED,
+    ];
+
+    /**
      * These "target" constants are an implementation detail of this model and
      * should not be used directly in other classes. They're used to efficiently
      * store the type of resource this notification is about in the database.
