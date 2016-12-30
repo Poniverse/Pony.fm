@@ -22,6 +22,7 @@ namespace Poniverse\Ponyfm\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Log;
 
 class DisabledAccountCheck
 {
@@ -60,6 +61,7 @@ class DisabledAccountCheck
             && $this->auth->user()->disabled_at !== null
             && !($request->getMethod() === 'POST' && $request->getRequestUri() == '/auth/logout')
         ) {
+            Log::info("A login was attempted to a disabled account, user ID #{$this->auth->user()->id}.");
             $this->auth->logout();
         }
 
