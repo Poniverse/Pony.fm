@@ -50,7 +50,7 @@ class ApiAuthTest extends TestCase
             ]));
         $poniverse->shouldReceive('setAccessToken');
 
-        $accessTokenService = Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\AccessTokenInfo');
+        $accessTokenService = Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\Meta');
         $accessTokenService->shouldReceive('introspect')
             ->andReturn($accessTokenInfo);
 
@@ -78,7 +78,7 @@ class ApiAuthTest extends TestCase
                   ]));
         $poniverse->shouldReceive('setAccessToken');
 
-        $accessTokenService = Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\AccessTokenInfo');
+        $accessTokenService = Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\Meta');
         $accessTokenService
             ->shouldReceive('introspect')
             ->andReturn($accessTokenInfo);

@@ -69,7 +69,7 @@ class AuthenticateOAuth
         $accessToken = $this->determineAccessToken($request, false);
 
         // check that access token is valid at Poniverse.net
-        $accessTokenInfo = $this->poniverse->poniverse()->accessTokenInfo()->introspect($accessToken);
+        $accessTokenInfo = $this->poniverse->poniverse()->meta()->introspect($accessToken);
 
         if (!$accessTokenInfo->getIsActive()) {
             throw new AccessDeniedHttpException('This access token is expired or invalid!');

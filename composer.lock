@@ -2597,12 +2597,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Poniverse/poniverse-php.git",
-                "reference": "851f9ea1495142dcbf0307d48131cedc70d4e44e"
+                "reference": "241c32e32076eaa4c0cf4d2a33cddcda006f2ba8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Poniverse/poniverse-php/zipball/851f9ea1495142dcbf0307d48131cedc70d4e44e",
-                "reference": "851f9ea1495142dcbf0307d48131cedc70d4e44e",
+                "url": "https://api.github.com/repos/Poniverse/poniverse-php/zipball/241c32e32076eaa4c0cf4d2a33cddcda006f2ba8",
+                "reference": "241c32e32076eaa4c0cf4d2a33cddcda006f2ba8",
                 "shasum": ""
             },
             "require": {
@@ -2638,7 +2638,7 @@
                 "laravel",
                 "laravel4"
             ],
-            "time": "2016-12-29 16:04:47"
+            "time": "2016-12-30 16:09:52"
         },
         {
             "name": "predis/predis",

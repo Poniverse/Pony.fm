@@ -44,6 +44,7 @@ class Kernel extends ConsoleKernel
         \Poniverse\Ponyfm\Console\Commands\RebuildFilesizes::class,
         \Poniverse\Ponyfm\Console\Commands\RebuildSearchIndex::class,
         \Poniverse\Ponyfm\Console\Commands\MergeAccounts::class,
+        \Poniverse\Ponyfm\Console\Commands\SyncPoniverseAccounts::class,
         \Poniverse\Ponyfm\Console\Commands\FixMLPMAImages::class,
         \Poniverse\Ponyfm\Console\Commands\VersionFiles::class
     ];

@@ -98,6 +98,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User withEmailSubscriptionFor($activityType)
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User wherePoniverseId($poniverseId)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereLinkedToPoniverse()
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
 {
@@ -154,9 +155,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function scopeWherePoniverseId($query, int $poniverseId) {
         return $query
-            ->join('oauth2_tokens', 'users.id', '=', 'oauth2_tokens.user_id')
-            ->select('users.*', 'oauth2_tokens.external_user_id')
+            ->whereLinkedToPoniverse($query)
             ->where('oauth2_tokens.external_user_id', '=', $poniverseId);
+    }
+
+    /**
+     * Filters the list of users to those who have a linked Poniverse account.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWhereLinkedToPoniverse($query) {
+        return $query
+            ->join('oauth2_tokens', 'users.id', '=', 'oauth2_tokens.user_id')
+            ->select('users.*', 'oauth2_tokens.external_user_id');
     }
 
     /**
