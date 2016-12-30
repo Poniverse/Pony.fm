@@ -77,9 +77,30 @@ class MergeAccounts extends Command
         $sourceAccount = User::find($sourceAccountId);
         $destinationAccount = User::find($destinationAccountId);
 
+        // Sanity checks
+        if (null !== $sourceAccount->getAccessToken()) {
+            $this->warn("WARNING: The source account (ID {$sourceAccountId}) is linked to a Poniverse account! Normally, the destination account should be the one that's linked to a Poniverse account as that's the one that the artist will be logging into.");
+            $this->line('');
+            $this->warn("If you continue with this merge, the Poniverse account linked to the source Pony.fm account will no longer be able to log into Pony.fm.");
+            if (!$this->confirm('Continue merging this set of source and destination accounts?')){
+                $this->error('Merge aborted.');
+                return 1;
+            }
+        }
+
+        if (null === $destinationAccount->getAccessToken()) {
+            $this->warn("WARNING: The destination account (ID {$destinationAccountId}) is not linked to a Poniverse account!");
+            $this->warn("This is normal if you're merging two archived profiles but not if you're helping an artist claim their profile.");
+            if (!$this->confirm('Continue merging this set of source and destination accounts?')){
+                $this->error('Merge aborted.');
+                return 1;
+            }
+        }
+
         $this->info("Merging {$sourceAccount->display_name} ({$sourceAccountId}) into {$destinationAccount->display_name} ({$destinationAccountId})...");
 
         $command = new MergeAccountsCommand($sourceAccount, $destinationAccount);
         $command->execute();
+        return 0;
     }
 }

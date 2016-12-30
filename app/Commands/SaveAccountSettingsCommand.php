@@ -110,23 +110,20 @@ class SaveAccountSettingsCommand extends CommandBase
             $this->_user->save();
 
             // Sync email subscriptions
-            // TODO: [#25] Remove this when email notifications are rolled out to everyone.
-            if (Gate::forUser($this->_user)->allows('receive-email-notifications')) {
-                $emailSubscriptions = $this->_user->emailSubscriptions->keyBy('activity_type');
-                foreach ($this->_input['notifications'] as $notificationSetting) {
+            $emailSubscriptions = $this->_user->emailSubscriptions->keyBy('activity_type');
+            foreach ($this->_input['notifications'] as $notificationSetting) {
 
-                    if (
-                        $notificationSetting['receive_emails'] &&
-                        !$emailSubscriptions->offsetExists($notificationSetting['activity_type'])
-                    ) {
-                        $this->_user->emailSubscriptions()->create(['activity_type' => $notificationSetting['activity_type']]);
+                if (
+                    $notificationSetting['receive_emails'] &&
+                    !$emailSubscriptions->offsetExists($notificationSetting['activity_type'])
+                ) {
+                    $this->_user->emailSubscriptions()->create(['activity_type' => $notificationSetting['activity_type']]);
 
-                    } elseif (
-                        !$notificationSetting['receive_emails'] &&
-                        $emailSubscriptions->offsetExists($notificationSetting['activity_type'])
-                    ) {
-                        $emailSubscriptions->get($notificationSetting['activity_type'])->delete();
-                    }
+                } elseif (
+                    !$notificationSetting['receive_emails'] &&
+                    $emailSubscriptions->offsetExists($notificationSetting['activity_type'])
+                ) {
+                    $emailSubscriptions->get($notificationSetting['activity_type'])->delete();
                 }
             }
         });

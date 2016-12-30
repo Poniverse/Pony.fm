@@ -43,7 +43,7 @@
                 <div class="error" ng-show="errors.gravatar != null">{{errors.gravatar}}</div>
             </div>
         </div>
-        <div class="col-md-8" ng-if="::settings.can_manage_notifications">
+        <div class="col-md-8">
             <div class="alert alert-warning" ng-if="unsubscribeMessage">
                 <p>{{ ::unsubscribeMessage }}</p>
             </div>
@@ -52,15 +52,18 @@
             <p>On-site notifications are always on. That way, you can always see
             what you&#39;ve missed whenever you log on to Pony.fm!</p>
 
+            <p>Email notifications will be sent to <strong>{{ ::settings.notification_email }}</strong>.
+                You can change this address in your <a href="https://poniverse.net/account" target="_blank">Poniverse account settings</a>.</p>
+
             <table class="table table-hover">
                 <thead>
-                    <th></th>
+                    <th>When&hellip;</th>
                     <th>Email me!</th>
                     <th>Give me a push notification!</th>
                 </thead>
                 <tr ng-repeat="notification in ::settings.notifications track by notification.activity_type">
-                    <td><label>{{ ::notification.description }}</label></td>
-                    <td><input type="checkbox" ng-change="touchModel()" ng-model="notification.receive_emails" /></td>
+                    <td><label>&hellip;{{ ::notification.description }}:</label></td>
+                    <td><input title="Email me when {{ ::notification.description }}" type="checkbox" ng-change="touchModel()" ng-model="notification.receive_emails" /></td>
                     <td>Coming soon!</td>
                 </tr>
             </table>

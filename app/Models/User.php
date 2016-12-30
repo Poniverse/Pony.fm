@@ -174,16 +174,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * Gets this user's OAuth access token record.
      *
-     * @return AccessToken
+     * @return AccessToken|null
      */
-    public function getAccessToken():AccessToken {
+    public function getAccessToken() {
         $accessTokenRecord = DB::table('oauth2_tokens')->where('user_id', '=', $this->id)->first();
-        return new AccessToken([
-            'access_token'      => $accessTokenRecord->access_token,
-            'refresh_token'     => $accessTokenRecord->refresh_token,
-            'expires'           => Carbon::parse($accessTokenRecord->expires)->timestamp,
-            'resource_owner_id' => $accessTokenRecord->external_user_id,
-        ]);
+
+        if ($accessTokenRecord === null) {
+            return null;
+        } else {
+            return new AccessToken([
+                'access_token'      => $accessTokenRecord->access_token,
+                'refresh_token'     => $accessTokenRecord->refresh_token,
+                'expires'           => Carbon::parse($accessTokenRecord->expires)->timestamp,
+                'resource_owner_id' => $accessTokenRecord->external_user_id,
+            ]);
+        }
     }
 
     /**

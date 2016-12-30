@@ -71,8 +71,7 @@ class AccountController extends ApiControllerBase
             'gravatar' => $user->gravatar ? $user->gravatar : $user->email,
             'avatar_url' => !$user->uses_gravatar ? $user->getAvatarUrl() : null,
             'uses_gravatar' => $user->uses_gravatar == 1,
-            // TODO: [#25] Remove this when email notifications are rolled out to everyone.
-            'can_manage_notifications' => Gate::forUser($user)->allows('receive-email-notifications'),
+            'notification_email' => $user->email,
             'notifications' => $user->getNotificationSettings()
         ], 200);
     }

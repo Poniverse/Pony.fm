@@ -24,9 +24,11 @@ use Carbon\Carbon;
 use DB;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Comment;
+use Poniverse\Ponyfm\Models\EmailSubscription;
 use Poniverse\Ponyfm\Models\Favourite;
 use Poniverse\Ponyfm\Models\Follower;
 use Poniverse\Ponyfm\Models\Image;
+use Poniverse\Ponyfm\Models\Notification;
 use Poniverse\Ponyfm\Models\PinnedPlaylist;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
@@ -46,6 +48,10 @@ class MergeAccountsCommand extends CommandBase
     }
 
     /**
+     * Note: OAuth tokens are intentionally left untouched by the merge process.
+     * The Artisan script performs some sanity checks to alert the admin to the
+     * consequences of this.
+     *
      * @throws \Exception
      * @return CommandResponse
      */
@@ -84,8 +90,6 @@ class MergeAccountsCommand extends CommandBase
                 $image->save();
             }
 
-            DB::table('oauth2_tokens')->whereIn('user_id', $accountIds)->update(['user_id' => $this->destinationAccount->id]);
-
             foreach (PinnedPlaylist::whereIn('user_id', $accountIds)->get() as $playlist) {
                 $playlist->user_id = $this->destinationAccount->id;
                 $playlist->save();
@@ -106,9 +110,22 @@ class MergeAccountsCommand extends CommandBase
                 $item->save();
             }
 
+            /** @var Track $track */
             foreach (Track::whereIn('user_id', $accountIds)->get() as $track) {
                 $track->user_id = $this->destinationAccount->id;
                 $track->save();
+            }
+
+            /** @var EmailSubscription $emailSubscription */
+            foreach($this->sourceAccount->emailSubscriptions()->withTrashed()->get() as $emailSubscription) {
+                // This keeps emails from being sent to disabled accounts.
+                $emailSubscription->delete();
+            }
+
+            /** @var Notification $notification */
+            foreach ($this->sourceAccount->notifications()->get() as $notification) {
+                $notification->user_id = $this->destinationAccount->id;
+                $notification->save();
             }
 
             $this->sourceAccount->disabled_at = Carbon::now();

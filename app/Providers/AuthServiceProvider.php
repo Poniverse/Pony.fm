@@ -76,11 +76,6 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasRole('admin');
         });
 
-        // TODO: [#25] Remove this when email notifications are rolled out to everyone.
-        Gate::define('receive-email-notifications', function (User $user) {
-            return $user->hasRole('admin');
-        });
-
         $this->registerPolicies();
     }
 }
