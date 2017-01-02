@@ -23,6 +23,7 @@ namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Commands\SaveAccountSettingsCommand;
 use Poniverse\Ponyfm\Models\User;
+use Poniverse\Ponyfm\Models\Image;
 use Gate;
 use Auth;
 use Request;
@@ -37,6 +38,33 @@ class AccountController extends ApiControllerBase
         return Response::json([
             'user' => $user->toArray()
         ]);
+    }
+
+    public function getCurrentUser() {
+        $current_user = Auth::user();
+
+        if ($current_user != null) {
+            $user = User::where('id', $current_user->id)->whereNull('disabled_at')->first();
+
+            if ($user == null) {
+                return Response::json(['error' => 'You are not logged in'], 404);
+            }
+
+            return Response::json([
+                'id' => $user->id,
+                'name' => $user->display_name,
+                'slug' => $user->slug,
+                'url' => $user->url,
+                'is_archived' => $user->is_archived,
+                'avatars' => [
+                    'small' => $user->getAvatarUrl(Image::SMALL),
+                    'normal' => $user->getAvatarUrl(Image::NORMAL)
+                ],
+                'created_at' => $user->created_at
+            ], 200);
+        } else {
+            return Response::json(['error' => 'You are not logged in'], 404);
+        }
     }
 
     public function getSettings($slug)

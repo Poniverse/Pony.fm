@@ -214,6 +214,7 @@ Route::group(['prefix' => 'api/web'], function () {
         Route::delete('/announcements/{id}', 'Api\Web\AnnouncementsController@deleteItem')->where('id', '\d+');
     });
 
+    Route::get('/auth/current', 'Api\Web\AccountController@getCurrentUser');
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
 });
 
