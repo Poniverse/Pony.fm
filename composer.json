@@ -26,7 +26,8 @@
         "graham-campbell/exceptions": "^9.1",
         "minishlink/web-push": "^1.0",
         "alsofronie/eloquent-uuid": "^1.0",
-        "poniverse/api": "dev-rewrite"
+        "poniverse/api": "dev-rewrite",
+        "barryvdh/laravel-cors": "^0.8.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

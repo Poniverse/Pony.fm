@@ -57,7 +57,6 @@ class Kernel extends HttpKernel
         'can' => \Poniverse\Ponyfm\Http\Middleware\Authorize::class,
         'json-exceptions' => \Poniverse\Ponyfm\Http\Middleware\JsonExceptions::class,
         'guest' => \Poniverse\Ponyfm\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'cors' => \Poniverse\Ponyfm\Http\Middleware\Cors::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class
     ];
 }

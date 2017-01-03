@@ -168,8 +168,8 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Cviebrock\LaravelElasticsearch\ServiceProvider::class,
         GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
-        Poniverse\Lib\PoniverseServiceProvider::class
-
+        Poniverse\Lib\PoniverseServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
     ],
 
     /*
