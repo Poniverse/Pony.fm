@@ -25,7 +25,7 @@ echo "Installing tagging tools & other dependencies..."
 sudo apt-get -qq install -y AtomicParsley flac vorbis-tools imagemagick oracle-java8-installer elasticsearch pkg-config yasm libfaac-dev libmp3lame-dev libvorbis-dev libtheora-dev
 
 echo "Installing PHP extensions"
-sudo apt-get -qq install -y libgmp-dev php-gmp
+sudo apt-get -qq install -y libgmp-dev php-gmp php7.0-gmp
 
 echo "Installing Postgres migration tool"
 sudo apt-get -qq install -y pgloader
