@@ -80,7 +80,7 @@ class ParseTrackTagsCommand extends CommandBase
             $this->track->track_number = null;
         } else {
             $this->track->track_number = filter_var($this->input['track_number'] ?? $parsedTags['track_number'], FILTER_SANITIZE_NUMBER_INT);
-            if ($this->track->track_number == null) {
+            if ($this->track->track_number === null) {
                 $this->track->track_number = 1;
             }
         }
@@ -463,18 +463,30 @@ class ParseTrackTagsCommand extends CommandBase
         switch (Str::length($dateString)) {
             // YYYY
             case 4:
-                return Carbon::createFromFormat('Y', $dateString)
-                    ->month(1)
-                    ->day(1);
+                try {
+                    return Carbon::createFromFormat('Y', $dateString)
+                        ->month(1)
+                        ->day(1);
+                } catch (\InvalidArgumentException $e) {
+                    return null;
+                }
 
             // YYYY-MM
             case 7:
-                return Carbon::createFromFormat('Y m', str_replace("-", " ", $dateString))
-                    ->day(1);
+                try {
+                    return Carbon::createFromFormat('Y m', str_replace("-", " ", $dateString))
+                        ->day(1);
+                } catch (\InvalidArgumentException $e) {
+                    return null;
+                }
 
             // YYYY-MM-DD
             case 10:
-                return Carbon::createFromFormat('Y m d', str_replace("-", " ", $dateString));
+                try {
+                    return Carbon::createFromFormat('Y m d', str_replace("-", " ", $dateString));
+                } catch (\InvalidArgumentException $e) {
+                    return null;
+                }
                 break;
 
             default:
