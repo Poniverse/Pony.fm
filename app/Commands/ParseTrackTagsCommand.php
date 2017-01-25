@@ -80,6 +80,9 @@ class ParseTrackTagsCommand extends CommandBase
             $this->track->track_number = null;
         } else {
             $this->track->track_number = filter_var($this->input['track_number'] ?? $parsedTags['track_number'], FILTER_SANITIZE_NUMBER_INT);
+            if ($this->track->track_number == null) {
+                $this->track->track_number = 1;
+            }
         }
 
         $this->track->released_at = isset($this->input['released_at'])
@@ -339,13 +342,19 @@ class ParseTrackTagsCommand extends CommandBase
             $tags['comment'][0] = $comment;
         }
 
+        $trackNumber = 1;
+        if (isset($tags['track_number'])) {
+            $trackNumberComponents = explode('/', $tags['track_number'][0]);
+            $trackNumber = $trackNumberComponents[0];
+        }
+
         return [
             [
                 'title' => isset($tags['title']) ? $tags['title'][0] : null,
                 'artist' => isset($tags['artist']) ? $tags['artist'][0] : null,
                 'band' => isset($tags['band']) ? $tags['band'][0] : null,
                 'genre' => isset($tags['genre']) ? $tags['genre'][0] : null,
-                'track_number' => isset($tags['track_number']) ? $tags['track_number'][0] : null,
+                'track_number' => $trackNumber,
                 'album' => isset($tags['album']) ? $tags['album'][0] : null,
                 'year' => isset($tags['year']) ? (int) $tags['year'][0] : null,
                 'release_date' => isset($tags['release_date']) ? $this->parseDateString($tags['release_date'][0]) : null,
@@ -368,7 +377,7 @@ class ParseTrackTagsCommand extends CommandBase
             $tags = [];
         }
 
-        $trackNumber = null;
+        $trackNumber = 1;
         if (isset($tags['track_number'])) {
             $trackNumberComponents = explode('/', $tags['track_number'][0]);
             $trackNumber = $trackNumberComponents[0];
@@ -412,7 +421,7 @@ class ParseTrackTagsCommand extends CommandBase
             $tags = [];
         }
 
-        $trackNumber = null;
+        $trackNumber = 1;
         if (isset($tags['track_number'])) {
             $trackNumberComponents = explode('/', $tags['track_number'][0]);
             $trackNumber = $trackNumberComponents[0];
@@ -460,12 +469,12 @@ class ParseTrackTagsCommand extends CommandBase
 
             // YYYY-MM
             case 7:
-                return Carbon::createFromFormat('Y-m', $dateString)
+                return Carbon::createFromFormat('Y m', str_replace("-", " ", $dateString))
                     ->day(1);
 
             // YYYY-MM-DD
             case 10:
-                return Carbon::createFromFormat('Y-m-d', $dateString);
+                return Carbon::createFromFormat('Y m d', str_replace("-", " ", $dateString));
                 break;
 
             default:
