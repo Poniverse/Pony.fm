@@ -43,6 +43,8 @@ class UploadTrackCommand extends CommandBase
     private $_version;
     private $_isReplacingTrack;
 
+    public $_file;
+
     /**
      * @return bool
      */
@@ -94,7 +96,16 @@ class UploadTrackCommand extends CommandBase
      */
     public function execute()
     {
-        $trackFile = Request::file('track', null);
+        $trackFile = null;
+        $source = 'direct_upload';
+
+        if ($this->_file !== null) {
+            $trackFile = $this->_file;
+            $source = 'ponify';
+        } else {
+            $trackFile = Request::file('track', null);
+        }
+
         if (!$this->_isReplacingTrack) {
             $coverFile = Request::file('cover', null);
         }
@@ -114,7 +125,7 @@ class UploadTrackCommand extends CommandBase
             $this->_track->user_id = $this->_artist->id;
             // The title set here is a placeholder; it'll be replaced by ParseTrackTagsCommand
             // if the file contains a title tag.
-            $this->_track->title = Request::get('title', pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME));
+            $this->_track->title = mb_strimwidth(Request::get('title', pathinfo($trackFile->getClientOriginalName(), PATHINFO_FILENAME)), 0, 100, '...');
             // The duration/version of the track cannot be changed until the encoding is successful
             $this->_track->duration = $audio->getDuration();
             $this->_track->current_version = $this->_version;
@@ -129,7 +140,8 @@ class UploadTrackCommand extends CommandBase
         if (!is_dir(Config::get('ponyfm.files_directory').'/queued-tracks')) {
             mkdir(Config::get('ponyfm.files_directory').'/queued-tracks', 0755, true);
         }
-        $trackFile = $trackFile->move(Config::get('ponyfm.files_directory').'/queued-tracks', $this->_track->id . 'v' . $this->_version);
+
+        $trackFile = $trackFile->move(Config::get('ponyfm.files_directory') . '/queued-tracks', $this->_track->id . 'v' . $this->_version);
 
         $input = Request::all();
         $input['track'] = $trackFile;
@@ -183,7 +195,7 @@ class UploadTrackCommand extends CommandBase
             $this->_track->metadata = json_decode(Request::get('metadata', null));
         }
         $autoPublish = (bool)($input['auto_publish'] ?? $this->_autoPublishByDefault);
-        $this->_track->source = $this->_customTrackSource ?? 'direct_upload';
+        $this->_track->source = $this->_customTrackSource ?? $source;
         $this->_track->save();
 
         if (!$this->_isReplacingTrack) {
