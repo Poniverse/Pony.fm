@@ -140,10 +140,6 @@ class ImportPonify extends Command
 
             $getId3 = new getID3;
 
-            // Enable file hashing
-            $getId3->option_md5_data = true;
-            $getId3->option_md5_data_source = true;
-
             // all tags read by getID3, including the cover art
             $allTags = $getId3->analyze($file->getPathname());
 
@@ -153,7 +149,11 @@ class ImportPonify extends Command
             // normalized tags used by Pony.fm
             $parsedTags = [];
 
-            list($parsedTags, $rawTags) = $this->parseTags($file);
+            list($parsedTags, $rawTags) = $this->parseTags($file, $allTags);
+
+            $imageFilename = $file->getFilename() . ".tags.txt";
+            $imageFilePath = "$tmpPath/" . $imageFilename;
+            File::put($imageFilePath, print_r($allTags, true));
 
             //==========================================================================================================
             // Check to see if we have this track already, if so, compare hashes of the two files
@@ -194,18 +194,46 @@ class ImportPonify extends Command
 
                 if ($existingFile === null) {
                     // Can't find a matching format
-                    // Check to see if we have a better quality file
+                    // Before we do anything, was this from MLPMA?
+                    $mlpmaTrack = DB::table('mlpma_tracks')->where('track_id', '=', $existingTrack->id)->first();
+
+                    if (!is_null($mlpmaTrack)) {
+                        // This was from the archive
+                        // See if we have a higher quality source file
+                        if (Track::$Formats[$importFormat]['is_lossless']) {
+                            // Source is lossless, is the existing track lossy?
+                            if ($existingFile->isMasterLossy()) {
+                                // Cool! Let's replace it
+                                $this->comment('Replacing (' . $existingTrack->id . ') ' . $existingTrack->title);
+
+                                $this->replaceTrack($file, $existingTrack, $artist, $allTags['mime_type']);
+
+                                continue;
+                            }
+                        }
+                    }
+
+                    continue;
 
                 } else {
                     $this->comment("Found existing file");
 
                     // Found a matching format, are they the same?
+                    // Before we check it, see if it came from MLPMA
+                    // We're only replacing tracks with the same format if they're archived
+                    $getId3_source = new getID3;
+
+                    $getId3_source->option_md5_data = true;
+                    $getId3_source->option_md5_data_source = true;
+
+                    $sourceWithMd5 = $getId3_source->analyze($file->getPathname());
+
                     $getId3_existing = new getID3;
                     $getId3_existing->option_md5_data = true;
                     $getId3_existing->option_md5_data_source = true;
-                    $existingFileTags = $getId3->analyze($existingFile->getFile());
+                    $existingFileTags = $getId3_existing->analyze($existingFile->getFile());
 
-                    $importHash = array_key_exists('md5_data_source', $allTags) ? $allTags['md5_data_source'] : $allTags['md5_data'];
+                    $importHash = array_key_exists('md5_data_source', $sourceWithMd5) ? $sourceWithMd5['md5_data_source'] : $sourceWithMd5['md5_data'];
                     $targetHash = array_key_exists('md5_data_source', $existingFileTags) ? $existingFileTags['md5_data_source'] : $existingFileTags['md5_data'];
 
                     $this->info("Archive hash: " . $importHash);
@@ -218,8 +246,12 @@ class ImportPonify extends Command
                         $this->comment("Versions are the same. Skipping...\n");
                         continue;
                     } else {
-                        // Audio is different. Replace if it came from MLPMA
-                        // TODO: Replace file
+                        // Audio is different, let's replace it
+                        $this->comment('Replacing (' . $existingTrack->id . ') ' . $existingTrack->title);
+
+                        $this->replaceTrack($file, $existingTrack, $artist, $allTags['mime_type']);
+
+                        continue;
                     }
                 }
             } else {
@@ -253,9 +285,15 @@ class ImportPonify extends Command
 
             $this->comment('Extracting cover art!');
             $coverId = null;
+            $image = null;
+
             if (array_key_exists('comments', $allTags) && array_key_exists('picture', $allTags['comments'])) {
                 $image = $allTags['comments']['picture'][0];
+            } else if (array_key_exists('id3v2', $allTags) && array_key_exists('APIC', $allTags['id3v2'])) {
+                $image = $allTags['id3v2']['APIC'][0];
+            }
 
+            if ($image !== null) {
                 if ($image['image_mime'] === 'image/png') {
                     $extension = 'png';
                 } else {
@@ -300,6 +338,7 @@ class ImportPonify extends Command
                 $this->error(json_encode($result->getValidator()->messages()->getMessages(), JSON_PRETTY_PRINT));
             } else {
                 $track = Track::find($result->getResponse()['id']);
+                $track->cover_id = $coverId;
                 $track->license_id = 2;
                 $track->save();
             }
@@ -324,17 +363,13 @@ class ImportPonify extends Command
         return null;
     }
 
-    public function parseTags($file)
+    public function parseTags($file, $allTags)
     {
         $audioCodec = $file->getExtension();
 
         //==========================================================================================================
         // Extract the original tags.
         //==========================================================================================================
-        $getId3 = new getID3;
-
-        // all tags read by getID3, including the cover art
-        $allTags = $getId3->analyze($file->getPathname());
 
         // $rawTags => tags specific to a file format (ID3 or Atom), pre-normalization but with cover art removed
         // $parsedTags => normalized tags used by Pony.fm
@@ -375,6 +410,8 @@ class ImportPonify extends Command
     protected function getId3Tags($rawTags)
     {
         if (array_key_exists('tags', $rawTags) && array_key_exists('id3v2', $rawTags['tags'])) {
+            $tags = $rawTags['tags']['id3v2'];
+        } elseif (array_key_exists('id3v2', $rawTags)) {
             $tags = $rawTags['tags']['id3v2'];
         } elseif (array_key_exists('tags', $rawTags) && array_key_exists('id3v1', $rawTags['tags'])) {
             $tags = $rawTags['tags']['id3v1'];
@@ -553,6 +590,24 @@ class ImportPonify extends Command
                 } catch (\InvalidArgumentException $e) {
                     return null;
                 }
+        }
+    }
+
+    protected function replaceTrack($toBeUploaded, $targetTrack, $artist, $mime) {
+        Auth::loginUsingId($artist->id);
+
+        $trackFile = new UploadedFile($toBeUploaded->getPathname(), $toBeUploaded->getFilename(), $mime, null, null, true);
+
+        $upload = new UploadTrackCommand(true, false, null, false, $targetTrack->getNextVersion(), $targetTrack);
+        $upload->_file = $trackFile;
+        $result = $upload->execute();
+
+        if ($result->didFail()) {
+            $this->error(json_encode($result->getValidator()->messages()->getMessages(), JSON_PRETTY_PRINT));
+        } else {
+            $track = Track::find($result->getResponse()['id']);
+            $track->license_id = 2;
+            $track->save();
         }
     }
 }
