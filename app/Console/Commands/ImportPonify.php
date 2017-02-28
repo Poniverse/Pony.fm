@@ -194,22 +194,16 @@ class ImportPonify extends Command
 
                 if ($existingFile === null) {
                     // Can't find a matching format
-                    // Before we do anything, was this from MLPMA?
-                    $mlpmaTrack = DB::table('mlpma_tracks')->where('track_id', '=', $existingTrack->id)->first();
+                    // See if we have a higher quality source file
+                    if (Track::$Formats[$importFormat]['is_lossless']) {
+                        // Source is lossless, is the existing track lossy?
+                        if ($existingFile->isMasterLossy()) {
+                            // Cool! Let's replace it
+                            $this->comment('Replacing (' . $existingTrack->id . ') ' . $existingTrack->title);
 
-                    if (!is_null($mlpmaTrack)) {
-                        // This was from the archive
-                        // See if we have a higher quality source file
-                        if (Track::$Formats[$importFormat]['is_lossless']) {
-                            // Source is lossless, is the existing track lossy?
-                            if ($existingFile->isMasterLossy()) {
-                                // Cool! Let's replace it
-                                $this->comment('Replacing (' . $existingTrack->id . ') ' . $existingTrack->title);
+                            $this->replaceTrack($file, $existingTrack, $artist, $allTags['mime_type']);
 
-                                $this->replaceTrack($file, $existingTrack, $artist, $allTags['mime_type']);
-
-                                continue;
-                            }
+                            continue;
                         }
                     }
 
@@ -221,36 +215,75 @@ class ImportPonify extends Command
                     // Found a matching format, are they the same?
                     // Before we check it, see if it came from MLPMA
                     // We're only replacing tracks with the same format if they're archived
-                    $getId3_source = new getID3;
+                    $mlpmaTrack = DB::table('mlpma_tracks')->where('track_id', '=', $existingTrack->id)->first();
 
-                    $getId3_source->option_md5_data = true;
-                    $getId3_source->option_md5_data_source = true;
+                    if (!is_null($mlpmaTrack)) {
+                        $getId3_source = new getID3;
 
-                    $sourceWithMd5 = $getId3_source->analyze($file->getPathname());
+                        $getId3_source->option_md5_data = true;
+                        $getId3_source->option_md5_data_source = true;
 
-                    $getId3_existing = new getID3;
-                    $getId3_existing->option_md5_data = true;
-                    $getId3_existing->option_md5_data_source = true;
-                    $existingFileTags = $getId3_existing->analyze($existingFile->getFile());
+                        $sourceWithMd5 = $getId3_source->analyze($file->getPathname());
 
-                    $importHash = array_key_exists('md5_data_source', $sourceWithMd5) ? $sourceWithMd5['md5_data_source'] : $sourceWithMd5['md5_data'];
-                    $targetHash = array_key_exists('md5_data_source', $existingFileTags) ? $existingFileTags['md5_data_source'] : $existingFileTags['md5_data'];
+                        $getId3_existing = new getID3;
+                        $getId3_existing->option_md5_data = true;
+                        $getId3_existing->option_md5_data_source = true;
+                        $existingFileTags = $getId3_existing->analyze($existingFile->getFile());
 
-                    $this->info("Archive hash: " . $importHash);
-                    $this->info("Pony.fm hash: " . $targetHash);
+                        $importHash = array_key_exists('md5_data_source', $sourceWithMd5) ? $sourceWithMd5['md5_data_source'] : $sourceWithMd5['md5_data'];
+                        $targetHash = array_key_exists('md5_data_source', $existingFileTags) ? $existingFileTags['md5_data_source'] : $existingFileTags['md5_data'];
 
-                    if ($importHash == $targetHash) {
-                        // Audio is identical, no need to reupload
-                        // We can update the metadata though
-                        // TODO: Update metadata
-                        $this->comment("Versions are the same. Skipping...\n");
-                        continue;
+                        $this->info("Archive hash: " . $importHash);
+                        $this->info("Pony.fm hash: " . $targetHash);
+
+                        if ($importHash == $targetHash) {
+                            // Audio is identical, no need to reupload
+                            // We can update the metadata though
+                            $this->comment("Versions are the same. Updating metadata...\n");
+                            $changedMetadata = false;
+
+                            if (strlen($existingTrack->description) < strlen($parsedTags['comments'])) {
+                                $existingTrack->description = $parsedTags['comments'];
+                                $changedMetadata = true;
+                                $this->comment("Updated description");
+                            }
+
+                            if (strlen($existingTrack->lyrics) < strlen($parsedTags['lyrics'])) {
+                                $existingTrack->lyrics = $parsedTags['lyrics'];
+                                $changedMetadata = true;
+                                $this->comment("Updated lyrics");
+                            }
+
+                            if ($changedMetadata) $existingTrack->save();
+
+                            continue;
+                        } else {
+                            // Audio is different, let's replace it
+                            $this->comment('Replacing (' . $existingTrack->id . ') ' . $existingTrack->title);
+
+                            $this->replaceTrack($file, $existingTrack, $artist, $allTags['mime_type']);
+
+                            continue;
+                        }
                     } else {
-                        // Audio is different, let's replace it
-                        $this->comment('Replacing (' . $existingTrack->id . ') ' . $existingTrack->title);
+                        $this->comment("Not replacing, user uploaded");
 
-                        $this->replaceTrack($file, $existingTrack, $artist, $allTags['mime_type']);
+                        // We can update the metadata though
+                        $changedMetadata = false;
 
+                        if (strlen($existingTrack->description) < strlen($parsedTags['comments'])) {
+                            $existingTrack->description = $parsedTags['comments'];
+                            $changedMetadata = true;
+                            $this->comment("Updated description");
+                        }
+
+                        if (strlen($existingTrack->lyrics) < strlen($parsedTags['lyrics'])) {
+                            $existingTrack->lyrics = $parsedTags['lyrics'];
+                            $changedMetadata = true;
+                            $this->comment("Updated lyrics");
+                        }
+
+                        if ($changedMetadata) $existingTrack->save();
                         continue;
                     }
                 }
@@ -341,6 +374,18 @@ class ImportPonify extends Command
                 $track->cover_id = $coverId;
                 $track->license_id = 2;
                 $track->save();
+
+                // If we made it to here, the track is intact! Log the import.
+                DB::table('ponify_tracks')
+                    ->insert([
+                        'track_id' => $result->getResponse()['id'],
+                        'path' => $file->getRelativePath(),
+                        'filename' => $file->getFilename(),
+                        'extension' => $file->getExtension(),
+                        'imported_at' => Carbon::now(),
+                        'parsed_tags' => json_encode($parsedTags),
+                        'raw_tags' => json_encode($rawTags),
+                    ]);
             }
 
             echo PHP_EOL . PHP_EOL;
