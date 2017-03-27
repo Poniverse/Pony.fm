@@ -456,7 +456,7 @@ class ImportPonify extends Command
     {
         if (array_key_exists('tags', $rawTags) && array_key_exists('id3v2', $rawTags['tags'])) {
             $tags = $rawTags['tags']['id3v2'];
-        } elseif (array_key_exists('id3v2', $rawTags)) {
+        } elseif (array_key_exists('id3v2', $rawTags['tags'])) {
             $tags = $rawTags['tags']['id3v2'];
         } elseif (array_key_exists('tags', $rawTags) && array_key_exists('id3v1', $rawTags['tags'])) {
             $tags = $rawTags['tags']['id3v1'];
