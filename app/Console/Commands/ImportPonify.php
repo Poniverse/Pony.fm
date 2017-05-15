@@ -471,11 +471,17 @@ class ImportPonify extends Command
 				$track->genre_id = $genreId;
 				$track->track_number = $parsedTags['track_number'];
 				$track->released_at = $releasedAt;
-				$track->description = $parsedTags['comments'];
 				$track->is_downloadable = true;
-				$track->lyrics = $parsedTags['lyrics'];
 				$track->is_vocal = $isVocal;
 				$track->license_id = 2;
+
+                if (!is_null($parsedTags['comments'])) {
+                    $track->title = $parsedTags['comments'];
+                }
+
+                if (!is_null($parsedTags['lyrics'])) {
+                    $track->title = $parsedTags['lyrics'];
+                }
 
                 if (!is_null($parsedTags['title'])) {
                     $track->title = $parsedTags['title'];
