@@ -162,6 +162,15 @@ class ImportPonify extends Command
             //$imageFilePath = "$tmpPath/" . $imageFilename;
             //File::put($imageFilePath, print_r($allTags, true));
 
+            // Parse out the hyphen in the file name
+            $hyphen = ' - ';
+            if (is_null($parsedTags['title'])) {
+                $fileName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+                $parsedTags['title'] = substr($fileName, strpos($fileName, $hyphen) + strlen($hyphen));
+            }
+
+            $this->info('Title: ' . $parsedTags['title']);
+
             //==========================================================================================================
 			// Determine the release date.
 			//==========================================================================================================
@@ -467,6 +476,11 @@ class ImportPonify extends Command
 				$track->lyrics = $parsedTags['lyrics'];
 				$track->is_vocal = $isVocal;
 				$track->license_id = 2;
+
+                if (!is_null($parsedTags['title'])) {
+                    $track->title = $parsedTags['title'];
+                }
+
                 $track->save();
 
                 // If we made it to here, the track is intact! Log the import.
@@ -542,46 +556,6 @@ class ImportPonify extends Command
         return [$parsedTags, $rawTags];
     }
 
-    protected function parseId3v2Tags($tags) {
-        $parsedTags = [];
-
-        if (array_key_exists('TIT2', $tags)) {
-            $parsedTags['title'] = $tags['TIT2'][0]['data'];
-        }
-
-        if (array_key_exists('TPE1', $tags)) {
-            $parsedTags['artist'] = $tags['TPE1'][0]['data'];
-        }
-
-        if (array_key_exists('TPE2', $tags)) {
-            $parsedTags['band'] = $tags['TPE2'][0]['data'];
-        }
-
-        if (array_key_exists('TRCK', $tags)) {
-            $parsedTags['track_number'] = $tags['TRCK'][0]['data'];
-        }
-
-        if (array_key_exists('TALB', $tags)) {
-            $parsedTags['album'] = $tags['TALB'][0]['data'];
-        }
-
-        if (array_key_exists('TYER', $tags)) {
-            $parsedTags['year'] = $tags['TYER'][0]['data'];
-        }
-
-        if (array_key_exists('COMM', $tags)) {
-            $parsedTags['comments'] = $tags['COMM'][0]['data'];
-        }
-
-        if (array_key_exists('TDAT', $tags)) {
-            $parsedTags['release_date'] = $tags['TDAT'][0]['data'];
-        }
-
-        if (array_key_exists('USLT', $tags)) {
-            $parsedTags['unsynchronised_lyric'] = $tags['USLT'][0]['data'];
-        }
-    }
-
     /**
      * @param array $rawTags
      * @return array
@@ -590,9 +564,7 @@ class ImportPonify extends Command
     {
         $tags = [];
 
-        if (array_key_exists('id3v2', $rawTags)) {
-            $tags = $this->parseId3v2Tags($rawTags['id3v2']);
-        } elseif (array_key_exists('tags', $rawTags)) {
+        if (array_key_exists('tags', $rawTags)) {
             if (array_key_exists('id3v2', $rawTags['tags'])) {
                 $tags = $rawTags['tags']['id3v2'];
             } elseif (array_key_exists('id3v1', $rawTags['tags'])) {
