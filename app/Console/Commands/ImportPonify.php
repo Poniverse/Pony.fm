@@ -92,9 +92,9 @@ class ImportPonify extends Command
         }
 
         $UNKNOWN_GENRE = Genre::firstOrCreate([
-			'name' => 'Unknown',
-			'slug' => 'unknown'
-		]);
+            'name' => 'Unknown',
+            'slug' => 'unknown'
+        ]);
 
         //==========================================================================================================
         // Get the list of files and artists
@@ -172,58 +172,58 @@ class ImportPonify extends Command
             $this->info('Title: ' . $parsedTags['title']);
 
             //==========================================================================================================
-			// Determine the release date.
-			//==========================================================================================================
-			$modifiedDate = Carbon::createFromTimeStampUTC(File::lastModified($file->getPathname()));
-			$taggedYear = $parsedTags['year'];
+            // Determine the release date.
+            //==========================================================================================================
+            $modifiedDate = Carbon::createFromTimeStampUTC(File::lastModified($file->getPathname()));
+            $taggedYear = $parsedTags['year'];
 
-			$this->info('Modification year: '.$modifiedDate->year);
-			$this->info('Tagged year: '.$taggedYear);
+            $this->info('Modification year: '.$modifiedDate->year);
+            $this->info('Tagged year: '.$taggedYear);
 
-			if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
-				$releasedAt = $modifiedDate;
+            if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
+                $releasedAt = $modifiedDate;
 
-			} else if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
-				$this->error('Release years don\'t match! Using the tagged year...');
-				$releasedAt = Carbon::create($taggedYear);
+            } else if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
+                $this->error('Release years don\'t match! Using the tagged year...');
+                $releasedAt = Carbon::create($taggedYear);
 
-			} else {
-				// $taggedYear is null
-				$this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
-				$releasedAt = $modifiedDate;
-			}
+            } else {
+                // $taggedYear is null
+                $this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
+                $releasedAt = $modifiedDate;
+            }
 
-			// This is later used by the classification/publishing script to determine the publication date.
-			$parsedTags['released_at'] = $releasedAt->toDateTimeString();
+            // This is later used by the classification/publishing script to determine the publication date.
+            $parsedTags['released_at'] = $releasedAt->toDateTimeString();
 
             //==========================================================================================================
-			// Does this track have vocals?
-			//==========================================================================================================
-			$isVocal = $parsedTags['lyrics'] !== null;
+            // Does this track have vocals?
+            //==========================================================================================================
+            $isVocal = $parsedTags['lyrics'] !== null;
 
             //==========================================================================================================
-			// Determine the genre
-			//==========================================================================================================
-			$genreName = $parsedTags['genre'];
-			$this->info('Genre: '.$genreName);
+            // Determine the genre
+            //==========================================================================================================
+            $genreName = $parsedTags['genre'];
+            $this->info('Genre: '.$genreName);
 
-			if ($genreName) {
-				$genre = Genre::where('name', '=', $genreName)->first();
-				if ($genre) {
-					$genreId = $genre->id;
+            if ($genreName) {
+                $genre = Genre::where('name', '=', $genreName)->first();
+                if ($genre) {
+                    $genreId = $genre->id;
 
-				} else {
-					$genre = new Genre();
-					$genre->name = $genreName;
-					$genre->slug = Str::slug($genreName);
-					$genre->save();
-					$genreId = $genre->id;
-					$this->comment('Created a new genre!');
-				}
+                } else {
+                    $genre = new Genre();
+                    $genre->name = $genreName;
+                    $genre->slug = Str::slug($genreName);
+                    $genre->save();
+                    $genreId = $genre->id;
+                    $this->comment('Created a new genre!');
+                }
 
-			} else {
-				$genreId = $UNKNOWN_GENRE->id; // "Unknown" genre ID
-			}           
+            } else {
+                $genreId = $UNKNOWN_GENRE->id; // "Unknown" genre ID
+            }           
 
             //==========================================================================================================
             // Check to see if we have this track already, if so, compare hashes of the two files
@@ -423,28 +423,29 @@ class ImportPonify extends Command
             }
 
             //==========================================================================================================
-			// Is this part of an album?
-			//==========================================================================================================
-			$albumId = null;
-			$albumName = $parsedTags['album'];
+            // Is this part of an album?
+            //==========================================================================================================
+            $albumId = null;
+            $albumName = $parsedTags['album'];
 
-			if ($albumName !== null) {
-				$album = Album::where('user_id', '=', $artist->id)
-					->where('title', '=', $albumName)
-					->first();
+            if ($albumName !== null) {
+                $album = Album::where('user_id', '=', $artist->id)
+                    ->where('title', '=', $albumName)
+                    ->first();
 
-				if (!$album) {
-					$album = new Album;
+                if (!$album) {
+                    $album = new Album;
 
-					$album->title = $albumName;
-					$album->user_id = $artist->id;
-					$album->cover_id = $coverId;
+                    $album->title = $albumName;
+                    $album->user_id = $artist->id;
+                    $album->cover_id = $coverId;
+                    $album->description = "";
 
-					$album->save();
-				}
+                    $album->save();
+                }
 
-				$albumId = $album->id;
-			}
+                $albumId = $album->id;
+            }
 
             //==========================================================================================================
             // Send the track into the upload system like a user just uploaded a track
@@ -468,12 +469,14 @@ class ImportPonify extends Command
                 $track = Track::find($result->getResponse()['id']);
                 $track->cover_id = $coverId;
                 $track->album_id = $albumId;
-				$track->genre_id = $genreId;
-				$track->track_number = $parsedTags['track_number'];
-				$track->released_at = $releasedAt;
-				$track->is_downloadable = true;
-				$track->is_vocal = $isVocal;
-				$track->license_id = 2;
+                $track->genre_id = $genreId;
+                $track->track_number = $parsedTags['track_number'];
+                $track->released_at = $releasedAt;
+                $track->is_downloadable = true;
+                $track->is_vocal = $isVocal;
+                $track->license_id = 2;
+                $track->description = "";
+                $track->lyrics = "";
 
                 if (!is_null($parsedTags['comments'])) {
                     $track->description = $parsedTags['comments'];
