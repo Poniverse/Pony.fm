@@ -208,8 +208,11 @@ class ImportPonify extends Command
             $this->info('Genre: '.$genreName);
 
             if ($genreName) {
-                $genre = Genre::where('name', '=', $genreName)->first();
+                $genre = Genre::withTrashed()->where('name', '=', $genreName)->first();
                 if ($genre) {
+                    if ($genre->deleted_at == null) {
+                        $genre->restore();
+                    }
                     $genreId = $genre->id;
 
                 } else {
