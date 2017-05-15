@@ -12,6 +12,8 @@ use getID3;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
+use Poniverse\Ponyfm\Models\Genre;
+use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Commands\UploadTrackCommand;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -89,6 +91,11 @@ class ImportPonify extends Command
             File::makeDirectory($tmpPath);
         }
 
+        $UNKNOWN_GENRE = Genre::firstOrCreate([
+			'name' => 'Unknown',
+			'slug' => 'unknown'
+		]);
+
         //==========================================================================================================
         // Get the list of files and artists
         //==========================================================================================================
@@ -151,9 +158,63 @@ class ImportPonify extends Command
 
             list($parsedTags, $rawTags) = $this->parseTags($file, $allTags);
 
-            $imageFilename = $file->getFilename() . ".tags.txt";
-            $imageFilePath = "$tmpPath/" . $imageFilename;
-            File::put($imageFilePath, print_r($allTags, true));
+            //$imageFilename = $file->getFilename() . ".tags.txt";
+            //$imageFilePath = "$tmpPath/" . $imageFilename;
+            //File::put($imageFilePath, print_r($allTags, true));
+
+            //==========================================================================================================
+			// Determine the release date.
+			//==========================================================================================================
+			$modifiedDate = Carbon::createFromTimeStampUTC(File::lastModified($file->getPathname()));
+			$taggedYear = $parsedTags['year'];
+
+			$this->info('Modification year: '.$modifiedDate->year);
+			$this->info('Tagged year: '.$taggedYear);
+
+			if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
+				$releasedAt = $modifiedDate;
+
+			} else if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
+				$this->error('Release years don\'t match! Using the tagged year...');
+				$releasedAt = Carbon::create($taggedYear);
+
+			} else {
+				// $taggedYear is null
+				$this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
+				$releasedAt = $modifiedDate;
+			}
+
+			// This is later used by the classification/publishing script to determine the publication date.
+			$parsedTags['released_at'] = $releasedAt->toDateTimeString();
+
+            //==========================================================================================================
+			// Does this track have vocals?
+			//==========================================================================================================
+			$isVocal = $parsedTags['lyrics'] !== null;
+
+            //==========================================================================================================
+			// Determine the genre
+			//==========================================================================================================
+			$genreName = $parsedTags['genre'];
+			$this->info('Genre: '.$genreName);
+
+			if ($genreName) {
+				$genre = Genre::where('name', '=', $genreName)->first();
+				if ($genre) {
+					$genreId = $genre->id;
+
+				} else {
+					$genre = new Genre();
+					$genre->name = $genreName;
+					$genre->slug = Str::slug($genreName);
+					$genre->save();
+					$genreId = $genre->id;
+					$this->comment('Created a new genre!');
+				}
+
+			} else {
+				$genreId = $UNKNOWN_GENRE->id; // "Unknown" genre ID
+			}           
 
             //==========================================================================================================
             // Check to see if we have this track already, if so, compare hashes of the two files
@@ -353,6 +414,30 @@ class ImportPonify extends Command
             }
 
             //==========================================================================================================
+			// Is this part of an album?
+			//==========================================================================================================
+			$albumId = null;
+			$albumName = $parsedTags['album'];
+
+			if ($albumName !== null) {
+				$album = Album::where('user_id', '=', $artist->id)
+					->where('title', '=', $albumName)
+					->first();
+
+				if (!$album) {
+					$album = new Album;
+
+					$album->title = $albumName;
+					$album->user_id = $artist->id;
+					$album->cover_id = $coverId;
+
+					$album->save();
+				}
+
+				$albumId = $album->id;
+			}
+
+            //==========================================================================================================
             // Send the track into the upload system like a user just uploaded a track
             //==========================================================================================================
 
@@ -361,7 +446,8 @@ class ImportPonify extends Command
 
             $mime = $allTags['mime_type'];
 
-            $trackFile = new UploadedFile($file->getPathname(), $file->getFilename(), $mime, null, null, true);
+            File::copy($file->getPathname(), "$tmpPath/" . $file->getFilename());
+            $trackFile = new UploadedFile("$tmpPath/" . $file->getFilename(), $file->getFilename(), $mime, null, null, true);
 
             $upload = new UploadTrackCommand(true);
             $upload->_file = $trackFile;
@@ -372,7 +458,15 @@ class ImportPonify extends Command
             } else {
                 $track = Track::find($result->getResponse()['id']);
                 $track->cover_id = $coverId;
-                $track->license_id = 2;
+                $track->album_id = $albumId;
+				$track->genre_id = $genreId;
+				$track->track_number = $parsedTags['track_number'];
+				$track->released_at = $releasedAt;
+				$track->description = $parsedTags['comments'];
+				$track->is_downloadable = true;
+				$track->lyrics = $parsedTags['lyrics'];
+				$track->is_vocal = $isVocal;
+				$track->license_id = 2;
                 $track->save();
 
                 // If we made it to here, the track is intact! Log the import.
@@ -448,22 +542,67 @@ class ImportPonify extends Command
         return [$parsedTags, $rawTags];
     }
 
+    protected function parseId3v2Tags($tags) {
+        $parsedTags = [];
+
+        if (array_key_exists('TIT2', $tags)) {
+            $parsedTags['title'] = $tags['TIT2'][0]['data'];
+        }
+
+        if (array_key_exists('TPE1', $tags)) {
+            $parsedTags['artist'] = $tags['TPE1'][0]['data'];
+        }
+
+        if (array_key_exists('TPE2', $tags)) {
+            $parsedTags['band'] = $tags['TPE2'][0]['data'];
+        }
+
+        if (array_key_exists('TRCK', $tags)) {
+            $parsedTags['track_number'] = $tags['TRCK'][0]['data'];
+        }
+
+        if (array_key_exists('TALB', $tags)) {
+            $parsedTags['album'] = $tags['TALB'][0]['data'];
+        }
+
+        if (array_key_exists('TYER', $tags)) {
+            $parsedTags['year'] = $tags['TYER'][0]['data'];
+        }
+
+        if (array_key_exists('COMM', $tags)) {
+            $parsedTags['comments'] = $tags['COMM'][0]['data'];
+        }
+
+        if (array_key_exists('TDAT', $tags)) {
+            $parsedTags['release_date'] = $tags['TDAT'][0]['data'];
+        }
+
+        if (array_key_exists('USLT', $tags)) {
+            $parsedTags['unsynchronised_lyric'] = $tags['USLT'][0]['data'];
+        }
+    }
+
     /**
      * @param array $rawTags
      * @return array
      */
     protected function getId3Tags($rawTags)
     {
-        if (array_key_exists('tags', $rawTags) && array_key_exists('id3v2', $rawTags['tags'])) {
-            $tags = $rawTags['tags']['id3v2'];
-        } elseif (array_key_exists('id3v2', $rawTags['tags'])) {
-            $tags = $rawTags['tags']['id3v2'];
-        } elseif (array_key_exists('tags', $rawTags) && array_key_exists('id3v1', $rawTags['tags'])) {
-            $tags = $rawTags['tags']['id3v1'];
+        $tags = [];
+
+        if (array_key_exists('id3v2', $rawTags)) {
+            $tags = $this->parseId3v2Tags($rawTags['id3v2']);
+        } elseif (array_key_exists('tags', $rawTags)) {
+            if (array_key_exists('id3v2', $rawTags['tags'])) {
+                $tags = $rawTags['tags']['id3v2'];
+            } elseif (array_key_exists('id3v1', $rawTags['tags'])) {
+                $tags = $rawTags['tags']['id3v1'];
+            } else {
+                $tags = [];
+            }
         } else {
             $tags = [];
         }
-
 
         $comment = null;
 
