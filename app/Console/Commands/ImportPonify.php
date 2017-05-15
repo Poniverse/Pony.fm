@@ -41,7 +41,7 @@ class ImportPonify extends Command
      *
      * @var array
      */
-    protected $ignoredExtensions = ['db', 'jpg', 'png'];
+    protected $allowedExtensions = ['mp3', 'aif', 'aiff', 'wav', 'flac', 'm4a', 'ogg'];
     /**
      * Used to stop the import process when a SIGINT is received.
      *
@@ -128,7 +128,7 @@ class ImportPonify extends Command
 
             $this->comment('[' . $this->currentFile . '/' . $totalFiles . '] Importing track [' . $file->getFilename() . ']...');
 
-            if (in_array($file->getExtension(), $this->ignoredExtensions)) {
+            if (!in_array($file->getExtension(), $this->allowedExtensions)) {
                 $this->comment('This is not an audio file! Skipping...' . PHP_EOL);
                 continue;
             }
