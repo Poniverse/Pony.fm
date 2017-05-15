@@ -476,11 +476,11 @@ class ImportPonify extends Command
 				$track->license_id = 2;
 
                 if (!is_null($parsedTags['comments'])) {
-                    $track->title = $parsedTags['comments'];
+                    $track->description = $parsedTags['comments'];
                 }
 
                 if (!is_null($parsedTags['lyrics'])) {
-                    $track->title = $parsedTags['lyrics'];
+                    $track->lyrics = $parsedTags['lyrics'];
                 }
 
                 if (!is_null($parsedTags['title'])) {
