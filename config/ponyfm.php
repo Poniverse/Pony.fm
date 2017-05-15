@@ -13,6 +13,7 @@ return [
     */
 
     'files_directory' => env('PONYFM_DATASTORE'),
+    'ponify_directory' => env('PONIFY_DIRECTORY'),
 
     /*
     |--------------------------------------------------------------------------

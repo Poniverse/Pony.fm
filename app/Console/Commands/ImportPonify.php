@@ -82,7 +82,7 @@ class ImportPonify extends Command
 
         pcntl_signal(SIGINT, [$this, 'handleInterrupt']);
 
-        $ponifyPath = Config::get('ponyfm.files_directory').'/ponify';
+        $ponifyPath = Config::get('ponyfm.ponify_directory');
         $tmpPath = Config::get('ponyfm.files_directory').'/tmp';
 
         if (!File::exists($tmpPath)) {
