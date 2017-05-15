@@ -184,12 +184,12 @@ class ImportPonify extends Command
                 $releasedAt = $modifiedDate;
 
             } else if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
-                $this->error('Release years don\'t match! Using the tagged year...');
+                $this->warn('Release years don\'t match! Using the tagged year...');
                 $releasedAt = Carbon::create($taggedYear);
 
             } else {
                 // $taggedYear is null
-                $this->error('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
+                $this->warn('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
                 $releasedAt = $modifiedDate;
             }
 
