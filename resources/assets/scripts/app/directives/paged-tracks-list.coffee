@@ -23,85 +23,87 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
         class: '@class'
         clickOverride: '&'
         hasOverride: '@'
+        admin: '@'
 
     controller: [
         '$scope', 'tracks', '$state', '$location'
         ($scope, tracks, $state, $location) ->
-            tracks.loadFilters().then(->
-                $scope.filters = tracks.filters
-                $scope.query = tracks.mainQuery
+
+            $scope.filters = tracks.filters
+            $scope.query = tracks.mainQuery
+            tracks.mainQuery.fromFilterString($state.params.filter)
+            tracks.mainQuery.setPage $state.params.page || 1
+            tracks.mainQuery.setAdmin $scope.admin || false
+
+            $scope.toggleListFilter = (filter, id) ->
+                $scope.query.toggleListFilter filter, id
+                $state.transitionTo $state.current.name, {filter: $scope.query.toFilterString()}
+
+            $scope.setFilter = (filter, value) ->
+                $scope.query.setFilter filter, value
+                $state.transitionTo $state.current.name, {filter: $scope.query.toFilterString()}
+
+            $scope.setListFilter = (filter, id) ->
+                $scope.query.setListFilter filter, id
+                $state.transitionTo $state.current.name, {filter: $scope.query.toFilterString()}
+
+            $scope.clearFilter = (filter) ->
+                $scope.query.clearFilter filter
+                $state.transitionTo $state.current.name, {filter: $scope.query.toFilterString()}
+
+            $scope.newClickOverride = (id) ->
+                $scope.clickOverride({id: id})
+
+            tracks.loadFilters().then(
                 tracks.mainQuery.fromFilterString($state.params.filter)
+            )
 
-                $scope.toggleListFilter = (filter, id) ->
-                    $scope.query.toggleListFilter filter, id
-                    $state.transitionTo $state.current.name, {filter: $scope.query.toFilterString()}
+            typeEnum = switch
+                when $scope.type == 'normal' then tracks.FetchType.NORMAL
+                when $scope.type == 'all' then tracks.FetchType.ALL
+                when $scope.type == 'unclassified' then tracks.FetchType.UNCLASSIFIED
+                else tracks.FetchType.NORMAL
 
-                $scope.setFilter = (filter, value) ->
-                    $scope.query.setFilter filter, value
-                    $state.transitionTo $state.current.name, {filter: $scope.query.toFilterString()}
+            tracks.mainQuery.fetch(typeEnum).done (searchResults) ->
+                $scope.tracks = searchResults.tracks
 
-                $scope.setListFilter = (filter, id) ->
-                    $scope.query.setListFilter filter, id
-                    $state.transitionTo $state.current.name, {filter: $scope.query.toFilterString()}
+                $scope.currentPage = parseInt(searchResults.current_page)
+                $scope.totalPages = parseInt(searchResults.total_pages)
+                delete $scope.nextPage
+                delete $scope.prevPage
 
-                $scope.clearFilter = (filter) ->
-                    $scope.query.clearFilter filter
-                    $state.transitionTo $state.current.name, {filter: $scope.query.toFilterString()}
+                $scope.nextPage = $scope.currentPage + 1 if $scope.currentPage < $scope.totalPages
+                $scope.prevPage = $scope.currentPage - 1 if $scope.currentPage > 1
+                $scope.allPages = [1..$scope.totalPages]
 
-                $scope.newClickOverride = (id) ->
-                    $scope.clickOverride({id: id})
+                # The actual first page will always be in the paginator.
+                $scope.pages = [1]
 
-                tracks.loadFilters().then(
-                    tracks.mainQuery.fromFilterString($state.params.filter)
-                )
+                # This logic determines how many pages to add prior to the current page, if any.
+                firstPage = Math.max(2, $scope.currentPage-3)
+                $scope.pages = $scope.pages.concat [firstPage..$scope.currentPage] unless $scope.currentPage == 1
 
-                typeEnum = switch
-                    when $scope.type == 'normal' then tracks.FetchType.NORMAL
-                    when $scope.type == 'all' then tracks.FetchType.ALL
-                    when $scope.type == 'unclassified' then tracks.FetchType.UNCLASSIFIED
-                    else tracks.FetchType.NORMAL
+                pagesLeftToAdd = 8-$scope.pages.length
 
-                tracks.mainQuery.fetch(typeEnum).done (searchResults) ->
-                    $scope.tracks = searchResults.tracks
+                lastPage = Math.min($scope.totalPages - 1, $scope.currentPage+1+pagesLeftToAdd)
+                $scope.pages = $scope.pages.concat([$scope.currentPage+1..lastPage]) unless $scope.currentPage >= lastPage
 
-                    $scope.currentPage = parseInt(searchResults.current_page)
-                    $scope.totalPages = parseInt(searchResults.total_pages)
-                    delete $scope.nextPage
-                    delete $scope.prevPage
+                # The actual last page will always be in the paginator.
+                $scope.pages.push($scope.totalPages) unless $scope.totalPages in $scope.pages
 
-                    $scope.nextPage = $scope.currentPage + 1 if $scope.currentPage < $scope.totalPages
-                    $scope.prevPage = $scope.currentPage - 1 if $scope.currentPage > 1
-                    $scope.allPages = [1..$scope.totalPages]
+            $scope.pageSelectorShown = false
 
-                    # The actual first page will always be in the paginator.
-                    $scope.pages = [1]
+            $scope.gotoPage = (page) ->
+                #$scope.$emit 'pageChange', {filter: $state.params.filter, page: page}
+                $state.go '.', {filter: $state.params.filter, page: page}
 
-                    # This logic determines how many pages to add prior to the current page, if any.
-                    firstPage = Math.max(2, $scope.currentPage-3)
-                    $scope.pages = $scope.pages.concat [firstPage..$scope.currentPage] unless $scope.currentPage == 1
+            $scope.showPageSelector = () ->
+                $scope.pageSelectorShown = true
+                focus('#pagination-jump-destination')
 
-                    pagesLeftToAdd = 8-$scope.pages.length
-
-                    lastPage = Math.min($scope.totalPages - 1, $scope.currentPage+1+pagesLeftToAdd)
-                    $scope.pages = $scope.pages.concat([$scope.currentPage+1..lastPage]) unless $scope.currentPage >= lastPage
-
-                    # The actual last page will always be in the paginator.
-                    $scope.pages.push($scope.totalPages) unless $scope.totalPages in $scope.pages
-
+            $scope.hidePageSelector = () ->
                 $scope.pageSelectorShown = false
 
-                $scope.gotoPage = (page) ->
-                    #$scope.$emit 'pageChange', {filter: $state.params.filter, page: page}
-                    $state.go '.', {filter: $state.params.filter, page: page}
-
-                $scope.showPageSelector = () ->
-                    $scope.pageSelectorShown = true
-                    focus('#pagination-jump-destination')
-
-                $scope.hidePageSelector = () ->
-                    $scope.pageSelectorShown = false
-
-                $scope.jumpToPage = (inputPageNumber) ->
-                    $scope.gotoPage(inputPageNumber)
-            )
+            $scope.jumpToPage = (inputPageNumber) ->
+                $scope.gotoPage(inputPageNumber)
     ]
