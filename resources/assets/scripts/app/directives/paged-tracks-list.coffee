@@ -54,10 +54,6 @@ module.exports = angular.module('ponyfm').directive 'pfmPagedTracksList', () ->
             $scope.newClickOverride = (id) ->
                 $scope.clickOverride({id: id})
 
-            tracks.loadFilters().then(
-                tracks.mainQuery.fromFilterString($state.params.filter)
-            )
-
             typeEnum = switch
                 when $scope.type == 'normal' then tracks.FetchType.NORMAL
                 when $scope.type == 'all' then tracks.FetchType.ALL
