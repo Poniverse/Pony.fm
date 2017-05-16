@@ -63,6 +63,17 @@
             </li>
         </ul>
     </li>
+    <li class="dropdown" ng-class="{'has-filter': !query.filters.archive.isDefault}">
+        <a class="dropdown-toggle btn btn-default" bs-dropdown>
+            Archive: <strong>{{query.filters.archive.title}}</strong>
+        </a>
+        <a class="btn btn-default" pfm-eat-click ng-click="clearFilter('archive')"><i class="fa fa-remove"></i></a>
+        <ul class="dropdown-menu">
+            <li ng-repeat="filter in ::filters.archive.values track by $index" ng-class="{selected: filter == query.filters.archive}">
+                <a pfm-eat-click href="#" ng-click="setFilter('archive', filter)">{{::filter.title}}</a>
+            </li>
+        </ul>
+    </li>
 </ul>
 
 <div class="pagination" ng-if="totalPages > 1">

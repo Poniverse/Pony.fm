@@ -357,6 +357,11 @@ class TracksController extends ApiControllerBase
             $query->whereIn('show_song_track.show_song_id', Request::get('songs'));
         }
 
+        if (Request::has('archive')) {
+            // Select which archive to view
+            $query->where('source', Request::get('archive'));
+        }
+
         return $query;
     }
 }

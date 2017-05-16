@@ -238,6 +238,15 @@ module.exports = angular.module('ponyfm').factory('tracks', [
                     name: 'songs'
                     values: []
                     filterName: 'songs'
+                
+                self.filters.archive =
+                    type: 'single'
+                    name: 'archive'
+                    values: [
+                        {title: 'None', query: '', isDefault: true, filter: ''}
+                        {title: 'MLP Music Archive', query: 'mlpma', isDefault: false, filter: 'archive=mlpma'}
+                        {title: 'Ponify', query: 'ponify', isDefault: false, filter: 'archive=ponify'}
+                    ]
 
                 taxonomies.refresh().done (taxes) ->
                     for genre in taxes.genresWithTracks
