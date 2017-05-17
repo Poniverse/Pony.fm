@@ -47,10 +47,6 @@ class DeleteGenre extends Job implements ShouldQueue
         $this->executingUser = Auth::user();
         $this->genreToDelete = $genreToDelete;
         $this->destinationGenre = $destinationGenre;
-
-        // The genre is deleted synchronously before the job is executed in
-        // order to prevent race conditions.
-        $this->genreToDelete->delete();
     }
 
     /**
@@ -67,14 +63,17 @@ class DeleteGenre extends Job implements ShouldQueue
 
         // This is done instead of a single UPDATE query in order to
         // generate revision logs for the change.
-        $this->genreToDelete->tracks()->chunk(200, function ($tracks) {
-            foreach ($tracks as $track) {
-                /** @var Track $track */
+        $tracks = Track::whereGenreId($this->genreToDelete->id)->get();
 
+        $this->genreToDelete->delete();
+        $chunks = $tracks->chunk(200);
+
+        foreach ($chunks as $chunk) {
+            foreach ($chunk as $track) {
                 $track->genre_id = $this->destinationGenre->id;
                 $track->save();
                 $track->updateTags();
             }
-        });
+        }
     }
 }
