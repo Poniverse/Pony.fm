@@ -333,6 +333,14 @@ class TracksController extends ApiControllerBase
             $query->whereIn('track_type_id', Request::get('types'));
         }
 
+        $archive = null;
+
+        if (Request::has('archive')) {
+            // Select which archive to view
+            $archive = Request::get('archive');
+            $query->where('source', $archive);
+        }
+
         if ($unknown) {
             $query->where(function ($q) {
                 $unknownGenre = Genre::where('name', 'Unknown')->first();
@@ -344,7 +352,11 @@ class TracksController extends ApiControllerBase
                 }
             });
 
-            $query->join('mlpma_tracks', 'tracks.id', '=', 'mlpma_tracks.track_id');
+            if ($archive == "mlpma") {
+                $query->join('mlpma_tracks', 'tracks.id', '=', 'mlpma_tracks.track_id');
+            } elseif ($archive == "ponify") {
+                $query->join('ponify_tracks', 'tracks.id', '=', 'ponify_tracks.track_id');
+            }
         }
 
         if (Request::has('songs')) {
@@ -355,11 +367,6 @@ class TracksController extends ApiControllerBase
                 $join->on('tracks.id', '=', 'show_song_track.track_id');
             });
             $query->whereIn('show_song_track.show_song_id', Request::get('songs'));
-        }
-
-        if (Request::has('archive')) {
-            // Select which archive to view
-            $query->where('source', Request::get('archive'));
         }
 
         return $query;
