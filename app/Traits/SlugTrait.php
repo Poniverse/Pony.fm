@@ -26,7 +26,15 @@ trait SlugTrait
 {
     public function setTitleAttribute($value)
     {
-        $this->slug = Str::slug($value);
+        $this->slug = self::makeNonemptySlug($value);
         $this->attributes['title'] = $value;
+    }
+
+    private static function makeNonemptySlug($title) {
+        $slug = Str::slug($title);
+        if ($slug === '') {
+            $slug = '-';
+        }
+        return $slug;
     }
 }
