@@ -281,6 +281,10 @@ class TracksController extends ApiControllerBase
         return Response::json(Track::mapPrivateTrackShow($track), 200);
     }
 
+    public function postReport() {
+
+    }
+
     /**
      * To be run after aggregating the total number of tracks for a given query.
      * This is separated from applyFilters() because Postgres doesn't allow

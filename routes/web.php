@@ -191,6 +191,8 @@ Route::group(['prefix' => 'api/web', 'middleware' => 'cors'], function () {
         Route::get('/favourites/tracks', 'Api\Web\FavouritesController@getTracks');
         Route::get('/favourites/albums', 'Api\Web\FavouritesController@getAlbums');
         Route::get('/favourites/playlists', 'Api\Web\FavouritesController@getPlaylists');
+
+        Route::get('/report/categories/{type}', 'Api\Web\ReportController@getReportCategories');
     });
 
     Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function () {
@@ -212,6 +214,8 @@ Route::group(['prefix' => 'api/web', 'middleware' => 'cors'], function () {
         Route::post('/announcements', 'Api\Web\AnnouncementsController@postCreate');
         Route::put('/announcements/{id}', 'Api\Web\AnnouncementsController@putUpdate')->where('id', '\d+');
         Route::delete('/announcements/{id}', 'Api\Web\AnnouncementsController@deleteItem')->where('id', '\d+');
+
+        Route::get('/reports', 'Api\Web\ReportController@getReports');
     });
 
     Route::get('/auth/current', 'Api\Web\AccountController@getCurrentUser');
