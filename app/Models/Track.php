@@ -500,6 +500,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 'normal' => $track->getCoverUrl(Image::NORMAL),
                 'original' => $track->getCoverUrl(Image::ORIGINAL)
             ],
+            'cover_colors' => $track->cover->getPalette(),
             'streams' => [
                 'mp3' => $track->getStreamUrl('MP3'),
                 'aac' => (!Config::get('app.debug') || is_file($track->getFileFor('AAC'))) ? $track->getStreamUrl('AAC') : null,

@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
 use Config;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use ColorThief\ColorThief;
+use Helpers;
 
 /**
  * Poniverse\Ponyfm\Models\Image
@@ -36,6 +38,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @property integer $size
  * @property string $hash
  * @property integer $uploaded_by
+ * @property string $palette
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereId($value)
@@ -190,5 +193,16 @@ class Image extends Model
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
+    }
+
+    public function getPalette() {
+        if ($this->palette === null) {
+            $palette = ColorThief::getPalette($this->getFile(Image::NORMAL), 2);
+            $formatted_palette = array_map("Helpers::rgb2hex", $palette);
+            $this->palette = json_encode($formatted_palette);
+            $this->save();
+        }
+
+        return json_decode($this->palette);
     }
 }
