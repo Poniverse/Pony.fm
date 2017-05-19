@@ -81,8 +81,8 @@ ponyfm.run [
 ]
 
 ponyfm.config [
-    '$locationProvider', '$stateProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider'
-    (location, state, analytics, $httpProvider, $sceDelegateProvider, markedProvider) ->
+    '$locationProvider', '$stateProvider', 'AngularyticsProvider', '$httpProvider', '$sceDelegateProvider', 'markedProvider', '$urlMatcherFactoryProvider'
+    (location, state, analytics, $httpProvider, $sceDelegateProvider, markedProvider, $urlMatcherFactoryProvider) ->
 
         if window.pfm.environment == 'local'
             $httpProvider.interceptors.push [
@@ -127,6 +127,7 @@ ponyfm.config [
             del: (text) ->
                 text
 
+        $urlMatcherFactoryProvider.strictMode(false)
 
         # Errors
         state.state 'errors-404',
