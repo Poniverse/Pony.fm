@@ -13,6 +13,8 @@ taxonomies.
 
 Contributing
 ------------
+
+[![Join the chat at https://gitter.im/Poniverse/Pony.fm](https://badges.gitter.im/Poniverse/Pony.fm.svg)](https://gitter.im/Poniverse/Pony.fm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 If you've run across a bug or have a feature request,
 [open an issue](https://github.com/Poniverse/Pony.fm/issues/new)
 for it.
