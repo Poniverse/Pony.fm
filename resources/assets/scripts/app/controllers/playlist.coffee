@@ -58,6 +58,19 @@ module.exports = angular.module('ponyfm').controller 'playlist', [
                     , 5000)
                 else
                     $scope.isInProgress = false
-                    $window.open $scope.playlistUrl
+
+                    # Use a hidden iframe to trigger a cross-browser-friendly
+                    # download
+                    # Based on: https://stackoverflow.com/a/3069972
+                    iframe = document.createElement('iframe');
+                    iframe.style.display = "none";
+                    iframe.src = $scope.playlistUrl;
+                    document.body.appendChild(iframe);
+
+                    # Clean up the iframe after the download has had time to begin
+                    $timeout(
+                        () ->
+                            iframe.outerHTML = ""
+                    , 10000)
                     $scope.checkMixedLosslessness(format)
 ]

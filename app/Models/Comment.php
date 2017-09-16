@@ -123,6 +123,9 @@ class Comment extends Model
         ];
     }
 
+    /**
+     * @return Commentable
+     */
     public function getResourceAttribute():Commentable
     {
         if ($this->track_id !== null) {

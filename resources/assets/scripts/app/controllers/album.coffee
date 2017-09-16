@@ -64,6 +64,20 @@ module.exports = angular.module('ponyfm').controller "album", [
                     , 5000)
                 else
                     $scope.isInProgress = false
-                    $window.open $scope.albumUrl
+
+                    # Use a hidden iframe to trigger a cross-browser-friendly
+                    # download
+                    # Based on: https://stackoverflow.com/a/3069972
+                    iframe = document.createElement('iframe');
+                    iframe.style.display = "none";
+                    iframe.src = $scope.albumUrl;
+                    document.body.appendChild(iframe);
+
+                    # Clean up the iframe after the download has had time to begin
+                    $timeout(
+                        () ->
+                            iframe.outerHTML = ""
+                    , 10000)
+
                     $scope.checkMixedLosslessness(format)
 ]
