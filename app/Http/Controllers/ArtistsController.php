@@ -44,8 +44,17 @@ class ArtistsController extends Controller
 
     public function getProfile($slug)
     {
-        $user = User::whereSlug($slug)->whereNull('disabled_at')->first();
-        if (!$user) {
+        $user = User::whereSlug($slug)->first();
+
+        if ($user->redirect_to) {
+            $newUser = User::find($user->redirect_to)->first();
+
+            if ($newUser) {
+                return Redirect::action('ArtistsController@getProfile', [$newUser->slug]);
+            }
+        }
+
+        if ($user->disabled_at) {
             App::abort('404');
         }
 

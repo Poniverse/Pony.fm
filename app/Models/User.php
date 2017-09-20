@@ -116,6 +116,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'comment_count'             => 'integer',
         'avatar_id'                 => 'integer',
         'is_archived'               => 'boolean',
+        'redirect_to'               => 'integer'
     ];
     protected $dates = ['created_at', 'updated_at', 'disabled_at'];
     protected $hidden = ['disabled_at', 'remember_token'];

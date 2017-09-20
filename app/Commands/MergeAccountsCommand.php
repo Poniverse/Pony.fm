@@ -129,6 +129,7 @@ class MergeAccountsCommand extends CommandBase
             }
 
             $this->sourceAccount->disabled_at = Carbon::now();
+            $this->sourceAccount->redirect_to = $this->destinationAccount->id;
             $this->sourceAccount->save();
         });
 
