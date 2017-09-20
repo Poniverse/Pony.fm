@@ -47,7 +47,7 @@ class ArtistsController extends Controller
         $user = User::whereSlug($slug)->first();
 
         if ($user->redirect_to) {
-            $newUser = User::find($user->redirect_to)->first();
+            $newUser = User::find($user->redirect_to);
 
             if ($newUser) {
                 return Redirect::action('ArtistsController@getProfile', [$newUser->slug]);
