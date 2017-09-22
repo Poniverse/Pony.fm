@@ -135,12 +135,16 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     use RevisionableTrait;
 
-    // Used for the track's upload status.
+    // Used for the track's post-upload status. See UploadTrackCommand.
     const STATUS_COMPLETE = 0;
     const STATUS_PROCESSING = 1;
     const STATUS_ERROR = 2;
 
-
+    /**
+     * All the information about how to encode files into Pony.fm's various formats
+     *
+     * @var array
+     */
     public static $Formats = [
         'FLAC' => [
             'index' => 0,
@@ -206,11 +210,27 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         'AAC'
     ];
 
+    /**
+     * Formats in this file are treated specially by Pony.fm as lossless when,
+     * for example, generating playlist and album downloads that contain a mix
+     * of lossy and lossless tracks.
+     *
+     * The strings in this array must match keys in the `Track::$Formats` array.
+     *
+     * @var array
+     */
     public static $LosslessFormats = [
         'FLAC',
         'ALAC'
     ];
 
+    /**
+     * Prepares a query builder object with typical fields used for a track
+     * "tile" around the site and eager-loaded relations that are almost always
+     * relevant.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public static function summary()
     {
         return self::select(
@@ -237,6 +257,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             ->with('user', 'cover', 'album');
     }
 
+    /**
+     * If a user is currently logged in, this scope eager-loads them.
+     *
+     * @param $query
+     */
     public function scopeUserDetails($query)
     {
         if (Auth::check()) {
@@ -248,16 +273,31 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
+    /**
+     * Limits the query scope to published tracks.
+     *
+     * @param $query
+     */
     public function scopePublished($query)
     {
         $query->whereNotNull('published_at');
     }
 
+    /**
+     * Limits the query scope to listed tracks.
+     *
+     * @param $query
+     */
     public function scopeListed($query)
     {
         $query->whereIsListed(true);
     }
 
+    /**
+     * Applies the NSFW filter: only allow explicit tracks to come back for
+     * this query if a user is logged in and has opted in to them.
+     * @param $query
+     */
     public function scopeExplicitFilter($query)
     {
         if (!Auth::check() || !Auth::user()->can_see_explicit_content) {
@@ -265,6 +305,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
+    /**
+     * Eager-loads track comments with this query.
+     *
+     * @param $query
+     */
     public function scopeWithComments($query)
     {
         $query->with([
@@ -285,7 +330,12 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     }
 
     /**
-     * @param integer $count
+     * The (messy) query used to generate the list of popular tracks on PFM's
+     * homepage.
+     *
+     * @param integer $count the number of tracks to return
+     * @param bool $allowExplicit whether to include explicit tracks in the results
+     * @param int $skip currently unused as of 2017-09-22
      * @return array
      */
     public static function popular($count, $allowExplicit = false, $skip = 0)
@@ -393,6 +443,13 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $processed;
     }
 
+    /**
+     * Brings together all the data displayed on a track page.
+     * The data structure this returns is what the web API spits out.
+     *
+     * @param Track $track
+     * @return array
+     */
     public static function mapPublicTrackShow(Track $track)
     {
         $returnValue = self::mapPublicTrackSummary($track);
@@ -440,6 +497,13 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $returnValue;
     }
 
+    /**
+     * Brings together all the data shown on "track tiles" throughout the site.
+     * The data structure this returns is what the web API spits out.
+     *
+     * @param Track $track
+     * @return array
+     */
     public static function mapPublicTrackSummary(Track $track)
     {
         $userData = [
@@ -513,6 +577,13 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         ];
     }
 
+    /**
+     * Brings together the data about a track used by the track editor.
+     * The data structure this returns is what the web API spits out.
+     *
+     * @param Track $track
+     * @return array
+     */
     public static function mapPrivateTrackShow(Track $track)
     {
         $showSongs = [];
@@ -541,6 +612,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $returnValue;
     }
 
+    /**
+     * Brings together the data shown for a "track tile" in a user's account
+     * area (where they'd manage unlisted and unpublished tracks and the admin
+     * area.
+     *
+     * The data structure this returns is what the web API spits out.
+     * @param Track $track
+     * @return array
+     */
     public static function mapPrivateTrackSummary(Track $track)
     {
         return [
@@ -664,6 +744,12 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
+    /**
+     * Returns true if the given user can view this track.
+     *
+     * @param $user
+     * @return bool
+     */
     public function canView($user)
     {
         if ($this->isPublished() || $user->hasRole('admin')) {
@@ -673,11 +759,24 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $this->user_id == $user->id;
     }
 
+    /**
+     * Magic method to create a "url" attribute on Track objects that contains
+     * the track's canonical URL.
+     *
+     * @return string
+     */
     public function getUrlAttribute()
     {
         return action('TracksController@getTrack', ['id' => $this->id, 'slug' => $this->slug]);
     }
 
+    /**
+     * Magic method to create a "downloadDirectory" attribute on Track objects
+     * that contains the directory path it should show up in inside downloaded
+     * TrackCollection zip files.
+     *
+     * @return string
+     */
     public function getDownloadDirectoryAttribute()
     {
         if ($this->album) {
@@ -687,6 +786,12 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $this->user->display_name;
     }
 
+    /**
+     * Returns a track's release date, heuristically generating a plausible one
+     * if it is unknown.
+     *
+     * @return \Carbon\Carbon|string
+     */
     public function getReleaseDate()
     {
         if ($this->released_at !== null) {
@@ -700,6 +805,10 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return Str::limit($this->attributes['created_at'], 10, '');
     }
 
+    /**
+     * Ensures that the numbered directory this track's files would be stored in
+     * server-side exists, creating it if needed.
+     */
     public function ensureDirectoryExists()
     {
         $destination = $this->getDirectory();
@@ -710,32 +819,58 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
-    public function hasCover()
+    /**
+     * @return bool True if the track has an associated cover file.
+     */
+    public function hasCover() : bool
     {
         return $this->cover_id != null;
     }
 
-    public function isPublished()
+    /**
+     * @return bool True if the track has been published and not deleted.
+     */
+    public function isPublished() : bool
     {
         return $this->published_at != null && $this->deleted_at == null;
     }
 
-
+    /**
+     * Returns the TrackFile object that represents the highest-fidelity version
+     * of this track, which is used as the source file for transcoding to other
+     * formats.
+     *
+     * @return TrackFile
+     */
     protected function getMasterTrackFile() : TrackFile
     {
         return $this->trackFiles()->where('is_master', true)->first();
     }
 
+    /**
+     * The key in `$Formats` above for the master file's format.
+     *
+     * @return string
+     */
     public function getMasterFormatName() : string
     {
         return $this->getMasterTrackFile()->format;
     }
 
+    /**
+     * @return bool True if this track's master file is a lossy one.
+     */
     public function isMasterLossy() : bool
     {
         return $this->getMasterTrackFile()->isLossy();
     }
 
+    /**
+     * Returns the URL to this track's cover art in the given size.
+     *
+     * @param int $type one of the image size constants in the `Image` class
+     * @return string
+     */
     public function getCoverUrl($type = Image::NORMAL)
     {
         if (!$this->hasCover()) {
@@ -749,11 +884,24 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return $this->cover->getUrl($type);
     }
 
+    /**
+     * Returns the "stream" URL for this track in the given format. This is to
+     * be used by the on-site player.
+     *
+     * @param string $format one of the format keys from the `$Formats` array
+     * @return string
+     */
     public function getStreamUrl($format = 'MP3')
     {
         return action('TracksController@getStream', ['id' => $this->id, 'extension' => self::$Formats[$format]['extension']]);
     }
 
+    /**
+     * Returns the absolute path to the server-side directory that this track's
+     * audio files are stored in.
+     *
+     * @return string
+     */
     public function getDirectory()
     {
         $dir = (string) (floor($this->id / 100) * 100);
@@ -766,7 +914,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return ['created_at', 'deleted_at', 'published_at', 'released_at'];
     }
 
-    public function getFilenameFor($format)
+    /**
+     * Returns the server-side filename (not path) that a current TrackFile in
+     * the given format would have.
+     *
+     * @param string $format one of the format keys from the `$Formats` array
+     * @return string a filename
+     * @throws Exception
+     */
+    public function getFilenameFor(string $format) : string
     {
         if (!isset(self::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
@@ -777,7 +933,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return "{$this->id}-v{$this->current_version}.{$format['extension']}";
     }
 
-    public function getDownloadFilenameFor($format)
+    /**
+     * Returns the filename that this track would have in the given format when
+     * downloaded by a user.
+     *
+     * @param string $format one of the format keys from the `$Formats` array
+     * @return string
+     * @throws Exception
+     */
+    public function getDownloadFilenameFor(string $format) : string
     {
         if (!isset(self::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
@@ -789,11 +953,13 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     }
 
     /**
-     * @param $format
-     * @return string
+     * Returns the absolute path to this track's file in a given format.
+     *
+     * @param string $format one of the format keys from the `$Formats` array
+     * @return string absolute path to a track file
      * @throws Exception
      */
-    public function getFileFor($format)
+    public function getFileFor(string $format) : string
     {
         if (!isset(self::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
@@ -817,8 +983,14 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return Config::get('ponyfm.files_directory').'/queued-tracks/'.$this->id.'v'.$version;
     }
 
-
-    public function getUrlFor($format)
+    /**
+     * Returns the URL to download a track file from in the given format.
+     *
+     * @param string $format one of the format keys from the `$Formats` array
+     * @return string
+     * @throws Exception
+     */
+    public function getUrlFor(string $format) : string
     {
         if (!isset(self::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
@@ -831,9 +1003,9 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
 
     /**
-     * @return string one of the Track::STATUS_* values, indicating whether this track is currently being processed
+     * @return int one of the Track::STATUS_* values, indicating whether this track is currently being processed
      */
-    public function getStatusAttribute()
+    public function getStatusAttribute():int
     {
         return $this->trackFiles->reduce(function ($carry, $trackFile) {
             if ((int) $trackFile->status === TrackFile::STATUS_PROCESSING_ERROR) {
@@ -851,12 +1023,20 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }, static::STATUS_COMPLETE);
     }
 
-
+    /**
+     * Updates this track's hash of the artist name and track title.
+     */
     public function updateHash()
     {
         $this->hash = md5(Helpers::sanitizeInputForHashing($this->user->display_name).' - '.Helpers::sanitizeInputForHashing($this->title));
     }
 
+    /**
+     * Ensures that the metadata for this track's file in the given format is
+     * up to date.
+     * @param string $trackFileFormat one of the format keys from the `$Formats` array OR
+     *                                'all' to indicate the operation should be performed on all formats
+     */
     public function updateTags($trackFileFormat = 'all')
     {
         if ($trackFileFormat === 'all') {
@@ -869,6 +1049,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
+    /**
+     * Runs the command to update the given TrackFile's metadata.
+     *
+     * @param TrackFile $trackFile
+     */
     private function updateTagsForTrackFile(TrackFile $trackFile)
     {
         $trackFile->touch();
@@ -881,8 +1066,14 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
-    /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function updateTagsWithAtomicParsley($format)
+    /**
+     * Writes a TrackFile's tags using AtomicParsley. This is useful for MP4
+     * files (AAC and ALAC). This function is called from updateTagsForTrackFile.
+     *
+     * @noinspection PhpUnusedPrivateMethodInspection
+     * @param string $format one of the format keys from the `$Formats` array
+     */
+    private function updateTagsWithAtomicParsley(string $format)
     {
         $command = 'AtomicParsley "'.$this->getFileFor($format).'" ';
         $command .= '--title '.escapeshellarg($this->title).' ';
@@ -907,8 +1098,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         External::execute($command);
     }
 
-    /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function updateTagsWithGetId3($format)
+
+    /**
+     * Writes a TrackFile's tags using getId3(). This is useful for MP3, FLAC,
+     * and OGG Vorbis files. This function is called from updateTagsForTrackFile.
+     *
+     * @noinspection PhpUnusedPrivateMethodInspection
+     * @param string $format one of the format keys from the `$Formats` array
+     */
+    private function updateTagsWithGetId3(string $format)
     {
         require_once(app_path().'/Library/getid3/getid3/getid3.php');
         require_once(app_path().'/Library/getid3/getid3/write.php');
@@ -965,11 +1163,14 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
     }
 
-    private function getCacheKey($key)
+    private function getCacheKey($key) : string
     {
         return 'track-'.$this->id.'-'.$key;
     }
 
+    /**
+     * Marks this track and associated notification records as deleted.
+     */
     public function delete()
     {
         DB::transaction(function () {
@@ -1003,12 +1204,21 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         ];
     }
 
+    /**
+     * Returns the word used to identify this "type" of content in notifications.
+     * @return string
+     */
     public function getResourceType():string
     {
         return 'track';
     }
 
-    public function getNextVersion()
+    /**
+     * Returns the next version after this track's current one.
+     *
+     * @return int
+     */
+    public function getNextVersion() : int
     {
         return $this->current_version + 1;
     }
