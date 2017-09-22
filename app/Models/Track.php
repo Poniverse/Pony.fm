@@ -555,7 +555,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 [
                     'id' => (int) $track->genre->id,
                     'slug' => $track->genre->slug,
-                    'name' => $track->genre->name
+                    'name' => $track->genre->name,
+                    'url'  => $track->genre->url,
                 ] : null,
             'track_type_id' => $track->track_type_id,
             'covers' => [

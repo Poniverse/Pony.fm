@@ -17,6 +17,8 @@
         </div>
 
         <ul class="stats">
+            <li ng-if="track.genre">Genre: <strong><a href="{{::track.genre.url}}">{{::track.genre.name}}</a></strong></li>
+            <li ng-if="!track.genre">Genre: <strong>Unknown</strong></li>
             <li>Published: <strong>{{formatPublishedDate(track)}}</strong></li>
             <li>Views: <strong>{{::track.stats.views}}</strong></li>
             <li>Plays: <strong>{{::track.stats.plays}}</strong></li>
