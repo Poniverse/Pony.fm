@@ -47,7 +47,7 @@ class Kernel extends ConsoleKernel
         \Poniverse\Ponyfm\Console\Commands\SyncPoniverseAccounts::class,
         \Poniverse\Ponyfm\Console\Commands\FixMLPMAImages::class,
         \Poniverse\Ponyfm\Console\Commands\VersionFiles::class,
-        \Poniverse\Ponyfm\Console\Commands\ImportPonify::class,
+        \Poniverse\Ponyfm\Console\Commands\ImportEQBeats::class,
     ];
 
     /**
