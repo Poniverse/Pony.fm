@@ -352,11 +352,11 @@ class TracksController extends ApiControllerBase
                 }
             });
 
-            if ($archive == "mlpma") {
-                $query->join('mlpma_tracks', 'tracks.id', '=', 'mlpma_tracks.track_id');
-            } elseif ($archive == "ponify") {
-                $query->join('ponify_tracks', 'tracks.id', '=', 'ponify_tracks.track_id');
-            }
+            $archives = ['mlpma', 'ponify', 'eqbeats'];
+            $akey = array_search($archive, $archives);
+
+            if (!$akey)
+                $query->join($archive . '_tracks', 'tracks.id', '=', $archive . 'tracks.track_id');
         }
 
         if (Request::has('songs')) {

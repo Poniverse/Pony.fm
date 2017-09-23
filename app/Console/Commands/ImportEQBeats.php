@@ -19,22 +19,23 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class ImportPonify extends Command
+class ImportEQBeats extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ponify:import
-                            {--startAt=1 : Track to start importing from. Useful for resuming an interrupted import.}';
+    protected $signature = 'eqbeats:import
+                            {--startAt=1 : Track to start importing from. Useful for resuming an interrupted import.}
+                            {archiveFolder : Absolute location of archive to import}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Imports the Ponify archive';
+    protected $description = 'Imports the EQBeats archive';
 
     /**
      * File extensions to ignore when importing the archive.
@@ -84,7 +85,7 @@ class ImportPonify extends Command
 
         pcntl_signal(SIGINT, [$this, 'handleInterrupt']);
 
-        $ponifyPath = Config::get('ponyfm.ponify_directory');
+        $archivePath = $this->argument('archiveFolder');
         $tmpPath = Config::get('ponyfm.files_directory').'/tmp';
 
         if (!File::exists($tmpPath)) {
@@ -99,12 +100,12 @@ class ImportPonify extends Command
         //==========================================================================================================
         // Get the list of files and artists
         //==========================================================================================================
-        $this->comment('Enumerating Ponify files...');
-        $files = File::allFiles($ponifyPath);
+        $this->comment('Enumerating files...');
+        $files = File::allFiles($archivePath);
         $this->info(sizeof($files) . ' files found!');
 
         $this->comment('Enumerating artists...');
-        $artists = File::directories($ponifyPath);
+        $artists = File::directories($archivePath);
         $this->info(sizeof($artists) . ' artists found!');
 
         $this->comment('Importing tracks...');
@@ -496,7 +497,7 @@ class ImportPonify extends Command
                 $track->save();
 
                 // If we made it to here, the track is intact! Log the import.
-                DB::table('ponify_tracks')
+                DB::table('eqbeats_tracks')
                     ->insert([
                         'track_id' => $result->getResponse()['id'],
                         'path' => $file->getRelativePath(),

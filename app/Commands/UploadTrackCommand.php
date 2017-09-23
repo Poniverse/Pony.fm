@@ -101,7 +101,7 @@ class UploadTrackCommand extends CommandBase
 
         if ($this->_file !== null) {
             $trackFile = $this->_file;
-            $source = 'ponify';
+            $source = 'eqbeats';
         } else {
             $trackFile = Request::file('track', null);
         }
