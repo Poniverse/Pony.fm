@@ -46,19 +46,23 @@ class ArtistsController extends Controller
     {
         $user = User::whereSlug($slug)->first();
 
-        if ($user->redirect_to) {
-            $newUser = User::find($user->redirect_to);
+        if ($user) {
+            if ($user->redirect_to) {
+                $newUser = User::find($user->redirect_to);
 
-            if ($newUser) {
-                return Redirect::action('ArtistsController@getProfile', [$newUser->slug]);
+                if ($newUser) {
+                    return Redirect::action('ArtistsController@getProfile', [$newUser->slug]);
+                }
             }
-        }
 
-        if ($user->disabled_at) {
+            if ($user->disabled_at) {
+                App::abort('404');
+            }
+
+            return View::make('artists.profile');
+        } else {
             App::abort('404');
         }
-
-        return View::make('artists.profile');
     }
 
     public function getShortlink($id)
