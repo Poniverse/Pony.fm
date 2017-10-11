@@ -501,7 +501,7 @@ class ImportEQBeats extends Command
                     ->insert([
                         'track_id' => $result->getResponse()['id'],
                         'path' => $file->getRelativePath(),
-                        'filename' => $file->getFilename(),
+                        'filename' => iconv("UTF-8", "ISO-8859-1//TRANSLIT", $file->getFilename()),
                         'extension' => $file->getExtension(),
                         'imported_at' => Carbon::now(),
                         'parsed_tags' => json_encode($parsedTags),
