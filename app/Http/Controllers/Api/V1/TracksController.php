@@ -94,7 +94,7 @@ class TracksController extends ApiControllerBase
             return Response::json(['message' => 'Track not found.'], 404);
         }
 
-        return Response::json(static::trackToJson($track, false, true), 200);
+        return Response::json(self::trackToJson($track, false, true), 200);
     }
 
     /**
@@ -116,7 +116,7 @@ class TracksController extends ApiControllerBase
             return Response::json(['message' => 'Track not found.'], 403);
         }
 
-        return Response::json(static::trackToJson($track, true, false), 200);
+        return Response::json(self::trackToJson($track, true, false), 200);
     }
 
     /**
@@ -172,7 +172,7 @@ class TracksController extends ApiControllerBase
             ],
 
             // As of 2017-10-28, this should be expected to produce
-            // "direct_upload", "mlpma", or "eqbeats" for all tracks.
+            // "direct_upload", "mlpma", "ponify", or "eqbeats" for all tracks.
             'source' => $track->source
         ];
 
