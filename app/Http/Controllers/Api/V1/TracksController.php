@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2015-2017 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -75,38 +75,59 @@ class TracksController extends ApiControllerBase
         }
     }
 
+    /**
+     * Returns a stable representation of a track for the API. This is very
+     * similar to the radio representation below but finds tracks by ID and is
+     * expected to be more stable.
+     *
+     * @param int $id track ID
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTrackDetails($id) {
+        /** @var Track|null $track */
+        $track = Track
+            ::with('user', 'album', 'user.avatar', 'cover', 'genre')
+            ->published()
+            ->where('id', $id)->first();
 
+        if (!$track) {
+            return Response::json(['message' => 'Track not found.'], 404);
+        }
+
+        return Response::json(static::trackToJson($track, false, true), 200);
+    }
+
+    /**
+     * Returns a serialized version of a track for use by radios.
+     *
+     * @deprecated in favour of getTrackDetails
+     * @param $hash
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getTrackRadioDetails($hash)
     {
+        /** @var Track|null $track */
         $track = Track
             ::with('user', 'album', 'user.avatar', 'cover', 'comments', 'genre')
             ->published()
-            ->whereHash($hash)->first();
+            ->where('hash', $hash)->first();
 
         if (!$track) {
             return Response::json(['message' => 'Track not found.'], 403);
         }
 
-        $comments = [];
-        foreach ($track->comments as $comment) {
-            $comments[] = [
-                'id' => $comment->id,
-                'created_at' => $comment->created_at,
-                'content' => $comment->content,
-                'user' => [
-                    'name' => $comment->user->display_name,
-                    'id' => $comment->user->id,
-                    'url' => $comment->user->url,
-                    'avatars' => [
-                        'normal' => $comment->user->getAvatarUrl(Image::NORMAL),
-                        'thumbnail' => $comment->user->getAvatarUrl(Image::THUMBNAIL),
-                        'small' => $comment->user->getAvatarUrl(Image::SMALL),
-                    ]
-                ]
-            ];
-        }
+        return Response::json(static::trackToJson($track, true, false), 200);
+    }
 
-        return Response::json([
+    /**
+     * Helper method to form the serialized version of a track for the V1 API.
+     *
+     * @param Track $track
+     * @param bool $includeComments if true, includes the track's comments in the serialization
+     * @return array serialized track
+     */
+    private static function trackToJson(Track $track, bool $includeComments, bool $includeStreamUrl) {
+        $trackResponse = [
             'id' => $track->id,
             'title' => $track->title,
             'description' => $track->description,
@@ -141,19 +162,52 @@ class TracksController extends ApiControllerBase
                     'name' => $track->genre->name
                 ] : null,
             'type' => [
-                'id' => $track->track_type->id,
-                'name' => $track->track_type->title
+                'id' => $track->trackType->id,
+                'name' => $track->trackType->title
             ],
             'covers' => [
                 'thumbnail' => $track->getCoverUrl(Image::THUMBNAIL),
                 'small' => $track->getCoverUrl(Image::SMALL),
                 'normal' => $track->getCoverUrl(Image::NORMAL)
             ],
-            'comments' => $comments,
 
-            // As of 2015-10-28, this should be expected to produce either
-            // "direct_upload" or "mlpma" for all tracks.
+            // As of 2017-10-28, this should be expected to produce
+            // "direct_upload", "mlpma", or "eqbeats" for all tracks.
             'source' => $track->source
-        ], 200);
+        ];
+
+        if ($includeComments) {
+            $comments = [];
+            foreach ($track->comments as $comment) {
+                $comments[] = [
+                    'id' => $comment->id,
+                    'created_at' => $comment->created_at,
+                    'content' => $comment->content,
+                    'user' => [
+                        'name' => $comment->user->display_name,
+                        'id' => $comment->user->id,
+                        'url' => $comment->user->url,
+                        'avatars' => [
+                            'normal' => $comment->user->getAvatarUrl(Image::NORMAL),
+                            'thumbnail' => $comment->user->getAvatarUrl(Image::THUMBNAIL),
+                            'small' => $comment->user->getAvatarUrl(Image::SMALL),
+                        ]
+                    ]
+                ];
+            }
+
+            $trackResponse['comments'] = $comments;
+        }
+
+        if ($includeStreamUrl) {
+            $trackResponse['streams'] = [
+                'mp3' => [
+                    'url'       => $track->getStreamUrl('MP3', session('api_client_id')),
+                    'mime_type' => Track::$Formats['MP3']['mime_type'],
+                ]
+            ];
+        }
+
+        return $trackResponse;
     }
 }

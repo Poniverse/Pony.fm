@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2015-2017 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 
@@ -74,13 +77,18 @@ class ApiTest extends TestCase
 
     public function testUploadWithOptionalData()
     {
+        /** @var Track $track */
         $track = factory(Track::class)->make();
+        /** @var Genre $genre */
+        $genre = factory(Genre::class)->make();
+        /** @var Album $album */
+        $album = factory(Album::class)->make();
 
         $this->callUploadWithParameters([
             'title'             => $track->title,
             'track_type_id'     => $track->track_type_id,
-            'genre'             => $track->genre,
-            'album'             => $track->album,
+            'genre'             => $genre->name,
+            'album'             => $album->title,
             'released_at'       => \Carbon\Carbon::create(2015, 1, 1, 1, 1, 1)->toIso8601String(),
             'description'       => $track->description,
             'lyrics'            => $track->lyrics,
@@ -94,11 +102,11 @@ class ApiTest extends TestCase
         ]);
 
         $this->seeInDatabase('genres', [
-            'name' => $track->genre
+            'name' => $genre->name
         ]);
 
         $this->seeInDatabase('albums', [
-            'title' => $track->album
+            'title' => $album->title
         ]);
 
         $this->seeInDatabase('images', [
@@ -120,5 +128,37 @@ class ApiTest extends TestCase
             'cover_id'          => 1,
             'metadata'          => $track->metadata
         ]);
+    }
+
+    public function testGetTrackDetails()
+    {
+        /** @var Track $track */
+        $track = factory(Track::class)->create();
+        /** @var Genre $genre */
+        $genre = factory(Genre::class)->create();
+
+        $track->genre()->associate($genre);
+        $this->seeInDatabase('tracks', ['id' => $track->id]);
+
+        $track->published_at = Carbon::now();
+        $track->save();
+
+
+        $response = $this
+            ->withSession(['api_client_id' => 'ponyponyponyponypony'])
+            ->get("/api/v1/tracks/{$track->id}");
+
+        $response
+            ->assertResponseStatus(200)
+            ->seeJsonSubset([
+                'title'         => $track->title,
+                'description'   => $track->description,
+                'streams'       => [
+                    'mp3'       => [
+                        'url'       => $track->getStreamUrl('MP3', 'ponyponyponyponypony'),
+                        'mime_type' => Track::$Formats['MP3']['mime_type']
+                    ]
+                ]
+            ]);
     }
 }

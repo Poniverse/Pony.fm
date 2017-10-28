@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2015-2017 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -890,11 +890,19 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * be used by the on-site player.
      *
      * @param string $format one of the format keys from the `$Formats` array
+     * @param string $apiClientId if a URL is being requested for the third-party
+     *                            API, this should be set to the requesting app's
+     *                            client ID.
      * @return string
      */
-    public function getStreamUrl($format = 'MP3')
+    public function getStreamUrl(string $format = 'MP3', string $apiClientId = null)
     {
-        return action('TracksController@getStream', ['id' => $this->id, 'extension' => self::$Formats[$format]['extension']]);
+        return action('TracksController@getStream',
+            [
+                'id' => $this->id,
+                'extension' => self::$Formats[$format]['extension']
+            ] + ($apiClientId !== null ? ['api_client_id' => $apiClientId] : [])
+        );
     }
 
     /**

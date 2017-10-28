@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2015-2017 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -89,12 +89,13 @@ Route::group(['prefix' => 'notifications/email'], function() {
 Route::get('oembed', 'TracksController@getOembed');
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function () {
-    Route::get('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
+    Route::get( '/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
     Route::post('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
+    Route::get( '/tracks/{id}', 'Api\V1\TracksController@getTrackDetails')->where('id', '\d+');
 
     Route::group(['middleware' => 'auth.oauth:ponyfm:tracks:upload'], function () {
         Route::post('tracks', 'Api\V1\TracksController@postUploadTrack');
-        Route::get('/tracks/{id}/upload-status', 'Api\V1\TracksController@getUploadStatus');
+        Route::get( '/tracks/{id}/upload-status', 'Api\V1\TracksController@getUploadStatus');
     });
 });
 

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2015-2017 Peter Deltchev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,9 +52,8 @@ $factory->define(\Poniverse\Ponyfm\Models\Track::class, function(\Faker\Generato
         'user_id'           => $user->id,
         'hash'              => $faker->md5,
         'title'             => $faker->sentence(5),
+        'slug'              => $faker->slug,
         'track_type_id'     => \Poniverse\Ponyfm\Models\TrackType::UNCLASSIFIED_TRACK,
-        'genre'             => $faker->word,
-        'album'             => $faker->sentence(5),
         'track_number'      => null,
         'description'       => $faker->paragraph(5),
         'lyrics'            => $faker->paragraph(5),
@@ -62,6 +61,39 @@ $factory->define(\Poniverse\Ponyfm\Models\Track::class, function(\Faker\Generato
         'is_explicit'       => false,
         'is_downloadable'   => true,
         'is_listed'         => true,
-        'metadata'          => '{"this":{"is":["very","random","metadata"]}}'
+        'metadata'          => '{"this":{"is":["very","random","metadata"]}}',
+        'duration'          => $faker->randomFloat(null, 30, 600)
+    ];
+});
+
+$factory->define(\Poniverse\Ponyfm\Models\Genre::class, function(\Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+        'slug' => $faker->slug,
+    ];
+});
+
+/**
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property string $title
+ * @property string $slug
+ * @property string $description
+ * @property integer $cover_id
+ * @property integer $track_count
+ * @property integer $view_count
+ * @property integer $download_count
+ * @property integer $favourite_count
+ * @property integer $comment_count
+ * @property \Carbon\Carbon $created_at
+ * @property string $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ */
+$factory->define(\Poniverse\Ponyfm\Models\Album::class, function(\Faker\Generator $faker) {
+    return [
+        'title'         => $faker->sentence(5),
+        'slug'          => $faker->slug,
+        'description'   => $faker->paragraph(5),
     ];
 });
