@@ -1,5 +1,5 @@
 # Pony.fm - A community for pony fan music.
-# Copyright (C) 2015 Peter Deltchev
+# Copyright (C) 2015-2017 Peter Deltchev
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -244,6 +244,7 @@ module.exports = angular.module('ponyfm').factory('tracks', [
                     name: 'archive'
                     values: [
                         {title: 'None', query: '', isDefault: true, filter: ''}
+                        {title: 'Equestrian Beats', query: 'eqbeats', isDefault: false, filter: 'archive=eqbeats'}
                         {title: 'MLP Music Archive', query: 'mlpma', isDefault: false, filter: 'archive=mlpma'}
                         {title: 'Ponify', query: 'ponify', isDefault: false, filter: 'archive=ponify'}
                     ]
