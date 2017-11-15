@@ -163,4 +163,19 @@ class Comment extends Model
             parent::delete();
         });
     }
+
+    /**
+     * Parses the comment for any mentioned comments (replies).
+     * For a reply to be valid, it must either be followed by whitespace or be at
+     * the very end of the comment body. It also must be at the beginning of the
+     * string or preceded by whitespace.
+     *
+     * @return int[]
+     */
+    public function getMentionedCommentIds():array {
+        $matches = [];
+        preg_match_all('/(\s|^)>c(?P<commentId>\d+)(\s|$)/', $this->content, $matches);
+
+        return array_map('intval', $matches['commentId']);
+    }
 }

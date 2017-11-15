@@ -73,23 +73,6 @@ $factory->define(\Poniverse\Ponyfm\Models\Genre::class, function(\Faker\Generato
     ];
 });
 
-/**
- *
- * @property integer $id
- * @property integer $user_id
- * @property string $title
- * @property string $slug
- * @property string $description
- * @property integer $cover_id
- * @property integer $track_count
- * @property integer $view_count
- * @property integer $download_count
- * @property integer $favourite_count
- * @property integer $comment_count
- * @property \Carbon\Carbon $created_at
- * @property string $updated_at
- * @property \Carbon\Carbon $deleted_at
- */
 $factory->define(\Poniverse\Ponyfm\Models\Album::class, function(\Faker\Generator $faker) {
     return [
         'title'         => $faker->sentence(5),
@@ -97,3 +80,11 @@ $factory->define(\Poniverse\Ponyfm\Models\Album::class, function(\Faker\Generato
         'description'   => $faker->paragraph(5),
     ];
 });
+
+$factory->define(\Poniverse\Ponyfm\Models\Comment::class, function(\Faker\Generator $faker) {
+    return [
+        'ip_address'    => $faker->ipv6,
+        'content'       => $faker->slug,
+    ];
+});
+

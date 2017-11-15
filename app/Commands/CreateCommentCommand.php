@@ -20,7 +20,10 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Notification;
+use Poniverse\Ponyfm\Contracts\Commentable;
+use Poniverse\Ponyfm\Jobs\ProcessComment;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Playlist;
@@ -31,6 +34,8 @@ use Validator;
 
 class CreateCommentCommand extends CommandBase
 {
+    use DispatchesJobs;
+
     private $_input;
     private $_id;
     private $_type;
@@ -110,10 +115,13 @@ class CreateCommentCommand extends CommandBase
             App::abort(400, 'This comment is being added to an invalid entity!');
         }
 
+        /** @var Commentable comment_count */
         $entity->comment_count = Comment::where($column, $this->_id)->count();
         $entity->save();
-        
+
+        // Sends notifications for the comment and its mentions.
         Notification::newComment($comment);
+        $this->dispatch(new ProcessComment($comment))->onQueue('notifications');
 
         return CommandResponse::succeed(Comment::mapPublic($comment));
     }

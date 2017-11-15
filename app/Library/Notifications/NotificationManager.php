@@ -86,4 +86,11 @@ class NotificationManager implements NotificationHandler
     {
         $this->dispatchNotification(__FUNCTION__, func_get_args());
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function newCommentReply(Comment $commentBeingRepliedTo, Comment $theReply) {
+        $this->dispatchNotification(__FUNCTION__, func_get_args());
+    }
 }

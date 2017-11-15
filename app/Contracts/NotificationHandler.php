@@ -66,4 +66,11 @@ interface NotificationHandler
      * @return void
      */
     public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter);
+
+    /**
+     * @param Comment $commentBeingRepliedTo
+     * @param Comment $theReply
+     * @return void
+     */
+    public function newCommentReply(Comment $commentBeingRepliedTo, Comment $theReply);
 }
