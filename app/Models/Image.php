@@ -137,7 +137,7 @@ class Image extends Model
                     }
 
                     if (isset($coverType['width']) && isset($coverType['height'])) {
-                        $command .= " -thumbnail ${coverType['width']}x${coverType['height']}^ -gravity center -extent ${coverType['width']}x${coverType['height']}";
+                        $command .= " -thumbnail ${coverType['width']}x${coverType['height']} -gravity center -extent ${coverType['width']}x${coverType['height']}";
                     }
 
                     $command .= ' "'.$image->getFile($coverType['id']).'"';
