@@ -57,10 +57,10 @@ class Image extends Model
     const SMALL = 4;
 
     public static $ImageTypes = [
-        self::NORMAL => ['id' => self::NORMAL, 'name' => 'normal', 'width' => 350, 'height' => 350],
-        self::ORIGINAL => ['id' => self::ORIGINAL, 'name' => 'original', 'width' => null, 'height' => null],
-        self::SMALL => ['id' => self::SMALL, 'name' => 'small', 'width' => 100, 'height' => 100],
-        self::THUMBNAIL => ['id' => self::THUMBNAIL, 'name' => 'thumbnail', 'width' => 50, 'height' => 50]
+        self::NORMAL => ['id' => self::NORMAL, 'name' => 'normal', 'width' => 350, 'height' => 350, 'geometry' => '350'],
+        self::ORIGINAL => ['id' => self::ORIGINAL, 'name' => 'original', 'width' => null, 'height' => null, 'geometry' => null],
+        self::SMALL => ['id' => self::SMALL, 'name' => 'small', 'width' => 100, 'height' => 100, 'geometry' => '100x100^'],
+        self::THUMBNAIL => ['id' => self::THUMBNAIL, 'name' => 'thumbnail', 'width' => 50, 'height' => 50, 'geometry' => '50x50^']
     ];
 
     public static function getImageTypeFromName($name)
@@ -136,8 +136,8 @@ class Image extends Model
                         $command .= ' -quality 95 -format png';
                     }
 
-                    if (isset($coverType['width']) && isset($coverType['height'])) {
-                        $command .= " -thumbnail ${coverType['width']}x${coverType['height']} -gravity center -extent ${coverType['width']}x${coverType['height']}";
+                    if (isset($coverType['geometry'])) {
+                        $command .= " -gravity center -thumbnail ${coverType['geometry']} -extent ${coverType['geometry']}";
                     }
 
                     $command .= ' "'.$image->getFile($coverType['id']).'"';
