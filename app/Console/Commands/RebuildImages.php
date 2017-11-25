@@ -41,7 +41,7 @@ class RebuildImages extends Command
     {
         $images = Image::all();
         foreach ($images as $image) {
-            $this->info("Regenerating images for ".$image->filename);
+            $this->info("Regenerating images for id:".$image->id. " (".$image->filename.")");
             $image->clearExisting();
 
             $originalFile = new File($image->getFile(Image::ORIGINAL));

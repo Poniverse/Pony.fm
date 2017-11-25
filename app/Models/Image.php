@@ -201,12 +201,10 @@ class Image extends Model
     public function clearExisting($includeOriginal = false) {
         $files = scandir($this->getDirectory());
         $filePrefix = $this->id.'_';
+        $originalName = $filePrefix.Image::$ImageTypes[Image::ORIGINAL]['name'];
 
-        $files = array_filter($files, function($file) use ($includeOriginal, $filePrefix) {
-            $originalName = Image::$ImageTypes[Image::ORIGINAL]['name'];
-
-            if ($file === $filePrefix.$originalName && !$includeOriginal)
-                return false;
+        $files = array_filter($files, function($file) use ($originalName, $includeOriginal, $filePrefix) {
+            if (Str::startsWith($file,$originalName) && !$includeOriginal) return false;
             else return (Str::startsWith($file, $filePrefix));
         });
 
