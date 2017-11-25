@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Poniverse\Ponyfm\Models\Image;
 use Symfony\Component\HttpFoundation\File\File;
 
-class ResizeImages extends Command
+class RebuildImages extends Command
 {
     /**
      * The name and signature of the console command.
