@@ -58,10 +58,10 @@ class Image extends Model
     const SMALL = 4;
 
     public static $ImageTypes = [
-        self::NORMAL => ['id' => self::NORMAL, 'name' => 'normal', 'width' => 350, 'height' => 350, 'geometry' => '350'],
-        self::ORIGINAL => ['id' => self::ORIGINAL, 'name' => 'original', 'width' => null, 'height' => null, 'geometry' => null],
-        self::SMALL => ['id' => self::SMALL, 'name' => 'small', 'width' => 100, 'height' => 100, 'geometry' => '100x100^'],
-        self::THUMBNAIL => ['id' => self::THUMBNAIL, 'name' => 'thumbnail', 'width' => 50, 'height' => 50, 'geometry' => '50x50^']
+        self::NORMAL =>     ['id' => self::NORMAL,      'name' => 'normal',     'width' => 350,     'height' => 350,    'geometry' => '350'],
+        self::ORIGINAL =>   ['id' => self::ORIGINAL,    'name' => 'original',   'width' => null,    'height' => null,   'geometry' => null],
+        self::SMALL =>      ['id' => self::SMALL,       'name' => 'small',      'width' => 100,     'height' => 100,    'geometry' => '100x100^'],
+        self::THUMBNAIL =>  ['id' => self::THUMBNAIL,   'name' => 'thumbnail',  'width' => 50,      'height' => 50,     'geometry' => '50x50^']
     ];
 
     public static function getImageTypeFromName($name)
@@ -96,17 +96,7 @@ class Image extends Model
 
         if ($image) {
             if ($forceReupload) {
-                // delete existing versions of the image
-                $filenames = scandir($image->getDirectory());
-                $imagePrefix = $image->id.'_';
-
-                $filenames = array_filter($filenames, function (string $filename) use ($imagePrefix) {
-                    return Str::startsWith($filename, $imagePrefix);
-                });
-
-                foreach ($filenames as $filename) {
-                    unlink($image->getDirectory().'/'.$filename);
-                }
+                $image->clearExisting(true);
             } else {
                 return $image;
             }
@@ -201,6 +191,27 @@ class Image extends Model
 
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
+        }
+    }
+
+    /**
+     * Deletes any generated files if they exist
+     * @param bool $includeOriginal Deletes
+     */
+    public function clearExisting($includeOriginal = false) {
+        $files = scandir($this->getDirectory());
+        $filePrefix = $this->id.'_';
+
+        $files = array_filter($files, function($file) use ($includeOriginal, $filePrefix) {
+            $originalName = Image::$ImageTypes[Image::ORIGINAL]['name'];
+
+            if ($file === $filePrefix.$originalName && !$includeOriginal)
+                return false;
+            else return (Str::startsWith($file, $filePrefix));
+        });
+
+        foreach ($files as $file) {
+            unlink($this->getDirectory().'/'.$file);
         }
     }
 }
