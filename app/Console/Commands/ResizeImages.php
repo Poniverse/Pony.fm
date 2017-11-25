@@ -3,6 +3,8 @@
 namespace Poniverse\Ponyfm\Console\Commands;
 
 use Illuminate\Console\Command;
+use Poniverse\Ponyfm\Models\Image;
+use Symfony\Component\HttpFoundation\File\File;
 
 class ResizeImages extends Command
 {
@@ -33,10 +35,19 @@ class ResizeImages extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
+        $images = Image::all();
+        foreach ($images as $image) {
+            $this->info("Regenerating images for ".$image->filename);
+            $image->clearExisting();
 
+            $originalFile = new File($image->getFile(Image::ORIGINAL));
+            foreach (Image::$ImageTypes as $imageType) {
+                Image::processFile($originalFile, $image->getFile($imageType['id']), $imageType);
+            }
+        }
     }
 }
