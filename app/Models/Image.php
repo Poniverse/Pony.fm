@@ -24,6 +24,7 @@ use External;
 use Illuminate\Database\Eloquent\Model;
 use Config;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -124,27 +125,7 @@ class Image extends Model
 
             $image->ensureDirectoryExists();
             foreach (self::$ImageTypes as $coverType) {
-                if ($coverType['id'] === self::ORIGINAL && $image->mime === 'image/jpeg') {
-                    $command = 'cp "'.$file->getPathname().'" '.$image->getFile($coverType['id']);
-                } else {
-                    // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
-                    $command = 'convert 2>&1 "'.$file->getPathname().'" -background white -alpha remove -alpha off -strip';
-
-                    if ($image->mime === 'image/jpeg') {
-                        $command .= ' -quality 100 -format jpeg';
-                    } else {
-                        $command .= ' -quality 95 -format png';
-                    }
-
-                    if (isset($coverType['geometry'])) {
-                        $command .= " -gravity center -thumbnail ${coverType['geometry']} -extent ${coverType['geometry']}";
-                    }
-
-                    $command .= ' "'.$image->getFile($coverType['id']).'"';
-                }
-
-                External::execute($command);
-                chmod($image->getFile($coverType['id']), 0644);
+                self::processFile($file, $image->getFile($coverType['id']), $coverType);
             }
 
             return $image;
@@ -155,18 +136,34 @@ class Image extends Model
     }
 
     /**
-     * Finds the names of all the original-sized images uploaded to the server
-     * @return string[]
+     * Converts the image into the specified cover type to the specified path.
+     *
+     * @param File $image The image file to be processed
+     * @param string $path The path to save the processed image file
+     * @param int $coverType The type to process the image to
      */
-    public static function getOriginalFiles() {
-        $rv = array();
+    public static function processFile(File $image, string $path, $coverType) {
+        if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === 'image/jpeg') {
+            $command = 'cp "'.$image->getPathname().'" '.$path;
+        } else {
+            // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
+            $command = 'convert 2>&1 "'.$image->getPathname().'" -background white -alpha remove -alpha off -strip';
 
-        //We use a cursor to cut down on memory
-        foreach (Image::cursor() as $image) {
-            $rv[] = $image->getFile(Image::ORIGINAL);
+            if ($image->getMimeType() === 'image/jpeg') {
+                $command .= ' -quality 100 -format jpeg';
+            } else {
+                $command .= ' -quality 95 -format png';
+            }
+
+            if (isset($coverType['geometry'])) {
+                $command .= " -gravity center -thumbnail ${coverType['geometry']} -extent ${coverType['geometry']}";
+            }
+
+            $command .= ' "'.$path.'"';
         }
 
-        return $rv;
+        External::execute($command);
+        chmod($path, 0644);
     }
 
     protected $table = 'images';
