@@ -154,6 +154,21 @@ class Image extends Model
         }
     }
 
+    /**
+     * Finds the names of all the original-sized images uploaded to the server
+     * @return string[]
+     */
+    public static function getOriginalFiles() {
+        $rv = array();
+
+        //We use a cursor to cut down on memory
+        foreach (Image::cursor() as $image) {
+            $rv[] = $image->getFile(Image::ORIGINAL);
+        }
+
+        return $rv;
+    }
+
     protected $table = 'images';
 
     public function getUrl($type = self::NORMAL)
