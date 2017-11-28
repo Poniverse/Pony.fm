@@ -1,4 +1,9 @@
 <?php
+
+namespace Tests;
+
+use Illuminate\Contracts\Console\Kernel;
+use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
 use Poniverse\Ponyfm\Models\User;
 
 /**
@@ -19,7 +24,7 @@ use Poniverse\Ponyfm\Models\User;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TestCase extends Illuminate\Foundation\Testing\TestCase
+class TestCase extends BaseTestCase
 {
     /**
      * The base URL to use while testing the application.
@@ -46,7 +51,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         $app = require __DIR__.'/../bootstrap/app.php';
 
-        $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        $app->make(Kernel::class)->bootstrap();
 
         return $app;
     }
@@ -58,8 +63,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         // Ensure we have the Pony.fm test files
         if (!static::$initializedFiles) {
-            Storage::disk('local')->makeDirectory('test-files');
-            $storage = Storage::disk('testing');
+            \Storage::disk('local')->makeDirectory('test-files');
+            $storage = \Storage::disk('testing');
 
             // To add new test files, upload them to poniverse.net/files
             // and add them here with their last-modified date as a Unix
@@ -102,7 +107,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     public function tearDown()
     {
-        Storage::disk('local')->deleteDirectory('testing-datastore');
+        \Storage::disk('local')->deleteDirectory('testing-datastore');
         parent::tearDown();
     }
 
@@ -120,8 +125,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     public function getTestFileForUpload($filename)
     {
-        Storage::disk('local')->makeDirectory('testing-datastore/tmp');
-        Storage::disk('local')->copy("test-files/${filename}", "testing-datastore/tmp/${filename}");
+        \Storage::disk('local')->makeDirectory('testing-datastore/tmp');
+        \Storage::disk('local')->copy("test-files/${filename}", "testing-datastore/tmp/${filename}");
 
         return new \Illuminate\Http\UploadedFile(storage_path("app/testing-datastore/tmp/${filename}"), $filename, null, null, null, true);
     }
@@ -135,8 +140,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected function callUploadWithParameters(array $parameters, array $files = [])
     {
         $this->expectsJobs([
-            Poniverse\Ponyfm\Jobs\EncodeTrackFile::class,
-            Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity::class
+            \Poniverse\Ponyfm\Jobs\EncodeTrackFile::class,
+            \Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity::class
         ]);
         $this->user = factory(User::class)->create();
 
