@@ -60,6 +60,11 @@ use Poniverse\Ponyfm\Contracts\Commentable;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereAlbumId($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment wherePlaylistId($value)
  * @mixin \Eloquent
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment withoutTrashed()
  */
 class Comment extends Model
 {

@@ -99,6 +99,8 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User wherePoniverseId($poniverseId)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereLinkedToPoniverse()
+ * @property int $redirect_to
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\User whereRedirectTo($value)
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
 {

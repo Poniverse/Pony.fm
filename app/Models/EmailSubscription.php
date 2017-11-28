@@ -42,6 +42,11 @@ use Poniverse\Ponyfm\Models\User;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription whereDeletedAt($value)
  * @mixin \Eloquent
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription withoutTrashed()
  */
 class EmailSubscription extends Model
 {

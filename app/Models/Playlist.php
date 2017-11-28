@@ -82,6 +82,11 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereDeletedAt($value)
  * @mixin \Eloquent
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist withoutTrashed()
  */
 class Playlist extends Model implements Searchable, Commentable, Favouritable
 {
