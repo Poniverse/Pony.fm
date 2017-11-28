@@ -21,6 +21,7 @@ namespace Poniverse\Ponyfm\Console\Commands;
 
 use Illuminate\Console\Command;
 use Poniverse\Ponyfm\Models\Image;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 
 class RebuildImages extends Command
@@ -61,11 +62,13 @@ class RebuildImages extends Command
 
         Image::chunk(1000, function($images) use ($progressBar) {
             foreach ($images as $image) {
-                $image->clearExisting();
+                try {
+                    $image->buildCovers();
+                } catch (FileNotFoundException $e) {
+                    $name = $image->filename;
+                    $id = $image->id;
 
-                $originalFile = new File($image->getFile(Image::ORIGINAL));
-                foreach (Image::$ImageTypes as $imageType) {
-                    Image::processFile($originalFile, $image->getFile($imageType['id']), $imageType);
+                    $this->error("Unable to process image $name (id: $id): ".$e->getMessage());
                 }
 
                 $progressBar->advance();

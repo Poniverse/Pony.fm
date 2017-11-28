@@ -24,6 +24,7 @@ use External;
 use Illuminate\Database\Eloquent\Model;
 use Config;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -63,6 +64,8 @@ class Image extends Model
         self::SMALL =>      ['id' => self::SMALL,       'name' => 'small',      'width' => 100,     'height' => 100,    'geometry' => '100x100^'],
         self::THUMBNAIL =>  ['id' => self::THUMBNAIL,   'name' => 'thumbnail',  'width' => 50,      'height' => 50,     'geometry' => '50x50^']
     ];
+
+    const MIME_JPEG = 'image/jpeg';
 
     public static function getImageTypeFromName($name)
     {
@@ -133,13 +136,13 @@ class Image extends Model
      * @param int $coverType The type to process the image to
      */
     public static function processFile(File $image, string $path, $coverType) {
-        if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === 'image/jpeg') {
+        if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === self::MIME_JPEG) {
             $command = 'cp "'.$image->getPathname().'" '.$path;
         } else {
             // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
             $command = 'convert 2>&1 "'.$image->getPathname().'" -background white -alpha remove -alpha off -strip';
 
-            if ($image->getMimeType() === 'image/jpeg') {
+            if ($image->getMimeType() === self::MIME_JPEG) {
                 $command .= ' -quality 100 -format jpeg';
             } else {
                 $command .= ' -quality 95 -format png';
@@ -214,6 +217,19 @@ class Image extends Model
 
         foreach ($files as $file) {
             unlink($this->getDirectory().'/'.$file);
+        }
+    }
+
+    /**
+     * Builds the cover images for the image, overwriting if needed.
+     *
+     * @throws FileNotFoundException If the original file cannot be found.
+     */
+    public function buildCovers() {
+        $originalFile = new File($this->getFile(self::ORIGINAL));
+
+        foreach (self::$ImageTypes as $imageType) {
+            self::processFile($originalFile, $this->getFile($imageType['id']), $imageType);
         }
     }
 }
