@@ -56,15 +56,20 @@ class RebuildImages extends Command
      */
     public function handle()
     {
-        $images = Image::all();
-        foreach ($images as $image) {
-            $this->info("Regenerating images for id:".$image->id. " (".$image->filename.")");
-            $image->clearExisting();
+        $this->info("Regenerating Images");
+        $progressBar = $this->output->createProgressBar(Image::count());
 
-            $originalFile = new File($image->getFile(Image::ORIGINAL));
-            foreach (Image::$ImageTypes as $imageType) {
-                Image::processFile($originalFile, $image->getFile($imageType['id']), $imageType);
+        Image::chunk(1000, function($images) use ($progressBar) {
+            foreach ($images as $image) {
+                $image->clearExisting();
+
+                $originalFile = new File($image->getFile(Image::ORIGINAL));
+                foreach (Image::$ImageTypes as $imageType) {
+                    Image::processFile($originalFile, $image->getFile($imageType['id']), $imageType);
+                }
+
+                $progressBar->advance();
             }
-        }
+        });
     }
 }

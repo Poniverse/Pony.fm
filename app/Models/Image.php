@@ -196,16 +196,20 @@ class Image extends Model
 
     /**
      * Deletes any generated files if they exist
-     * @param bool $includeOriginal Deletes
+     * @param bool $includeOriginal Set to true if the original image should be deleted as well.
      */
-    public function clearExisting($includeOriginal = false) {
+    public function clearExisting(bool $includeOriginal = false) {
         $files = scandir($this->getDirectory());
         $filePrefix = $this->id.'_';
         $originalName = $filePrefix.Image::$ImageTypes[Image::ORIGINAL]['name'];
 
         $files = array_filter($files, function($file) use ($originalName, $includeOriginal, $filePrefix) {
-            if (Str::startsWith($file,$originalName) && !$includeOriginal) return false;
-            else return (Str::startsWith($file, $filePrefix));
+            if (Str::startsWith($file,$originalName) && !$includeOriginal) {
+                return false;
+            }
+            else {
+                return (Str::startsWith($file, $filePrefix));
+            }
         });
 
         foreach ($files as $file) {
