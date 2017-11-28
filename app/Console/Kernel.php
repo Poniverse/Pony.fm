@@ -31,23 +31,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \Poniverse\Ponyfm\Console\Commands\MigrateOldData::class,
-        \Poniverse\Ponyfm\Console\Commands\RefreshCache::class,
-        \Poniverse\Ponyfm\Console\Commands\ClassifyMLPMA::class,
-        \Poniverse\Ponyfm\Console\Commands\RebuildTags::class,
-        \Poniverse\Ponyfm\Console\Commands\RebuildArtists::class,
-        \Poniverse\Ponyfm\Console\Commands\BootstrapLocalEnvironment::class,
-        \Poniverse\Ponyfm\Console\Commands\PoniverseApiSetup::class,
-        \Poniverse\Ponyfm\Console\Commands\ClearTrackCache::class,
-        \Poniverse\Ponyfm\Console\Commands\RebuildTrackCache::class,
-        \Poniverse\Ponyfm\Console\Commands\RebuildTrack::class,
-        \Poniverse\Ponyfm\Console\Commands\RebuildFilesizes::class,
-        \Poniverse\Ponyfm\Console\Commands\RebuildSearchIndex::class,
-        \Poniverse\Ponyfm\Console\Commands\MergeAccounts::class,
-        \Poniverse\Ponyfm\Console\Commands\SyncPoniverseAccounts::class,
-        \Poniverse\Ponyfm\Console\Commands\FixMLPMAImages::class,
-        \Poniverse\Ponyfm\Console\Commands\VersionFiles::class,
-        \Poniverse\Ponyfm\Console\Commands\ImportEQBeats::class,
+        //
     ];
 
     /**
@@ -58,7 +42,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // $schedule->command('inspire')
+        //          ->hourly();
     }
+
     /**
      * Register the Closure based commands for the application.
      *
@@ -66,6 +53,8 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
+        $this->load(__DIR__.'/Commands');
+
         require base_path('routes/console.php');
     }
 }

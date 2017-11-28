@@ -86,6 +86,9 @@ return [
     |
     */
 
-    'prefix' => 'ponyfm_',
+    'prefix' => env(
+        'CACHE_PREFIX',
+        'ponyfm_'
+    ),
 
 ];

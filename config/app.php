@@ -165,13 +165,9 @@ return [
         Poniverse\Ponyfm\Providers\AuthServiceProvider::class,
         Poniverse\Ponyfm\Providers\NotificationServiceProvider::class,
 
-        Laravel\Tinker\TinkerServiceProvider::class,
         Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Cviebrock\LaravelElasticsearch\ServiceProvider::class,
-        GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
         Poniverse\Lib\PoniverseServiceProvider::class,
-        Barryvdh\Cors\ServiceProvider::class,
     ],
 
     /*

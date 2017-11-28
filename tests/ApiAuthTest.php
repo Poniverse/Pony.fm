@@ -20,9 +20,7 @@ namespace Tests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Poniverse\Lib\AccessToken;
 use Poniverse\Ponyfm\Models\User;
 

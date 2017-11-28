@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Storage;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
 use Poniverse\Ponyfm\Models\User;
 
@@ -53,18 +54,17 @@ class TestCase extends BaseTestCase
 
         $app->make(Kernel::class)->bootstrap();
 
+        $this->getTestFiles();
+
         return $app;
     }
 
-    /**
-     * @before
-     */
-    public function initializeTestFiles()
+    public function getTestFiles()
     {
         // Ensure we have the Pony.fm test files
         if (!static::$initializedFiles) {
-            \Storage::disk('local')->makeDirectory('test-files');
-            $storage = \Storage::disk('testing');
+            Storage::disk('local')->makeDirectory('test-files');
+            $storage = Storage::disk('testing');
 
             // To add new test files, upload them to poniverse.net/files
             // and add them here with their last-modified date as a Unix
@@ -107,7 +107,7 @@ class TestCase extends BaseTestCase
 
     public function tearDown()
     {
-        \Storage::disk('local')->deleteDirectory('testing-datastore');
+        Storage::disk('local')->deleteDirectory('testing-datastore');
         parent::tearDown();
     }
 
@@ -125,8 +125,8 @@ class TestCase extends BaseTestCase
      */
     public function getTestFileForUpload($filename)
     {
-        \Storage::disk('local')->makeDirectory('testing-datastore/tmp');
-        \Storage::disk('local')->copy("test-files/${filename}", "testing-datastore/tmp/${filename}");
+        Storage::disk('local')->makeDirectory('testing-datastore/tmp');
+        Storage::disk('local')->copy("test-files/${filename}", "testing-datastore/tmp/${filename}");
 
         return new \Illuminate\Http\UploadedFile(storage_path("app/testing-datastore/tmp/${filename}"), $filename, null, null, null, true);
     }
