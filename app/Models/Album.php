@@ -122,7 +122,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
             ]);
         }
 
-        return !$query;
+        return $query;
     }
 
     protected $table = 'albums';

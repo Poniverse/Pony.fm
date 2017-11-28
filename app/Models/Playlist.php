@@ -138,7 +138,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             ]);
         }
 
-        return !$query;
+        return $query;
     }
 
     public static function mapPublicPlaylistShow(Playlist $playlist)
