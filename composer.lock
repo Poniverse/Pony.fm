@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad83dcf70b36ec2cf28d3a3efccf40d6",
+    "content-hash": "8e5f2fd6eef5bba7130d4355ab8c2f6e",
     "packages": [
         {
             "name": "alsofronie/eloquent-uuid",
@@ -2694,16 +2694,16 @@
         },
         {
             "name": "poniverse/api",
-            "version": "dev-patch-1",
+            "version": "dev-rewrite",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Lavoaster/poniverse-php.git",
-                "reference": "fe21f0345a9887376366939f7733f16d0ab0de7d"
+                "url": "https://github.com/Poniverse/poniverse-php.git",
+                "reference": "890eb1211ff06728d93626bd21d4bedd165bf9ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lavoaster/poniverse-php/zipball/fe21f0345a9887376366939f7733f16d0ab0de7d",
-                "reference": "fe21f0345a9887376366939f7733f16d0ab0de7d",
+                "url": "https://api.github.com/repos/Poniverse/poniverse-php/zipball/890eb1211ff06728d93626bd21d4bedd165bf9ec",
+                "reference": "890eb1211ff06728d93626bd21d4bedd165bf9ec",
                 "shasum": ""
             },
             "require": {
@@ -2723,6 +2723,7 @@
                     "Poniverse\\Lib\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2738,10 +2739,7 @@
                 "laravel",
                 "laravel4"
             ],
-            "support": {
-                "source": "https://github.com/Lavoaster/poniverse-php/tree/patch-1"
-            },
-            "time": "2017-11-28T05:55:33+00:00"
+            "time": "2017-11-29T04:45:11+00:00"
         },
         {
             "name": "predis/predis",
