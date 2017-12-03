@@ -23,6 +23,7 @@ namespace Poniverse\Ponyfm\Models;
 use External;
 use Illuminate\Database\Eloquent\Model;
 use Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -136,8 +137,12 @@ class Image extends Model
      * @param array $coverType The type to process the image to
      */
     private static function processFile(File $image, string $path, $coverType) {
-        if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === self::MIME_JPEG) {
-            $command = 'cp "'.$image->getPathname().'" '.$path;
+        if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === self::MIME_JPEG ){
+            if($image->getPathname() === $path) {
+                Log::warning("Attempted to copy an original file $path to itself.");
+            } else {
+                $command = 'cp "' . $image->getPathname() . '" ' . $path;
+            }
         } else {
             // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
             $command = 'convert 2>&1 "'.$image->getPathname().'" -background white -alpha remove -alpha off -strip';
@@ -229,6 +234,11 @@ class Image extends Model
         $originalFile = new File($this->getFile(self::ORIGINAL));
 
         foreach (self::$ImageTypes as $imageType) {
+            //Ignore original imagetype
+            if($imageType['id'] === self::ORIGINAL) {
+                continue;
+            }
+
             self::processFile($originalFile, $this->getFile($imageType['id']), $imageType);
         }
     }
