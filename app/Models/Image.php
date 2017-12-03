@@ -133,9 +133,9 @@ class Image extends Model
      *
      * @param File $image The image file to be processed
      * @param string $path The path to save the processed image file
-     * @param int $coverType The type to process the image to
+     * @param array $coverType The type to process the image to
      */
-    public static function processFile(File $image, string $path, $coverType) {
+    private static function processFile(File $image, string $path, $coverType) {
         if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === self::MIME_JPEG) {
             $command = 'cp "'.$image->getPathname().'" '.$path;
         } else {
