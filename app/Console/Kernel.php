@@ -48,6 +48,7 @@ class Kernel extends ConsoleKernel
         \Poniverse\Ponyfm\Console\Commands\FixMLPMAImages::class,
         \Poniverse\Ponyfm\Console\Commands\VersionFiles::class,
         \Poniverse\Ponyfm\Console\Commands\ImportEQBeats::class,
+        \Poniverse\Ponyfm\Console\Commands\RebuildImages::class
     ];
 
     /**

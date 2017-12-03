@@ -24,6 +24,8 @@ use External;
 use Illuminate\Database\Eloquent\Model;
 use Config;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -57,11 +59,13 @@ class Image extends Model
     const SMALL = 4;
 
     public static $ImageTypes = [
-        self::NORMAL => ['id' => self::NORMAL, 'name' => 'normal', 'width' => 350, 'height' => 350],
-        self::ORIGINAL => ['id' => self::ORIGINAL, 'name' => 'original', 'width' => null, 'height' => null],
-        self::SMALL => ['id' => self::SMALL, 'name' => 'small', 'width' => 100, 'height' => 100],
-        self::THUMBNAIL => ['id' => self::THUMBNAIL, 'name' => 'thumbnail', 'width' => 50, 'height' => 50]
+        self::NORMAL =>     ['id' => self::NORMAL,      'name' => 'normal',     'width' => 350,     'height' => 350,    'geometry' => '350'],
+        self::ORIGINAL =>   ['id' => self::ORIGINAL,    'name' => 'original',   'width' => null,    'height' => null,   'geometry' => null],
+        self::SMALL =>      ['id' => self::SMALL,       'name' => 'small',      'width' => 100,     'height' => 100,    'geometry' => '100x100^'],
+        self::THUMBNAIL =>  ['id' => self::THUMBNAIL,   'name' => 'thumbnail',  'width' => 50,      'height' => 50,     'geometry' => '50x50^']
     ];
+
+    const MIME_JPEG = 'image/jpeg';
 
     public static function getImageTypeFromName($name)
     {
@@ -95,17 +99,7 @@ class Image extends Model
 
         if ($image) {
             if ($forceReupload) {
-                // delete existing versions of the image
-                $filenames = scandir($image->getDirectory());
-                $imagePrefix = $image->id.'_';
-
-                $filenames = array_filter($filenames, function (string $filename) use ($imagePrefix) {
-                    return Str::startsWith($filename, $imagePrefix);
-                });
-
-                foreach ($filenames as $filename) {
-                    unlink($image->getDirectory().'/'.$filename);
-                }
+                $image->clearExisting(true);
             } else {
                 return $image;
             }
@@ -124,27 +118,7 @@ class Image extends Model
 
             $image->ensureDirectoryExists();
             foreach (self::$ImageTypes as $coverType) {
-                if ($coverType['id'] === self::ORIGINAL && $image->mime === 'image/jpeg') {
-                    $command = 'cp "'.$file->getPathname().'" '.$image->getFile($coverType['id']);
-                } else {
-                    // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
-                    $command = 'convert 2>&1 "'.$file->getPathname().'" -background white -alpha remove -alpha off -strip';
-
-                    if ($image->mime === 'image/jpeg') {
-                        $command .= ' -quality 100 -format jpeg';
-                    } else {
-                        $command .= ' -quality 95 -format png';
-                    }
-
-                    if (isset($coverType['width']) && isset($coverType['height'])) {
-                        $command .= " -thumbnail ${coverType['width']}x${coverType['height']}^ -gravity center -extent ${coverType['width']}x${coverType['height']}";
-                    }
-
-                    $command .= ' "'.$image->getFile($coverType['id']).'"';
-                }
-
-                External::execute($command);
-                chmod($image->getFile($coverType['id']), 0644);
+                self::processFile($file, $image->getFile($coverType['id']), $coverType);
             }
 
             return $image;
@@ -152,6 +126,37 @@ class Image extends Model
             $image->delete();
             throw $e;
         }
+    }
+
+    /**
+     * Converts the image into the specified cover type to the specified path.
+     *
+     * @param File $image The image file to be processed
+     * @param string $path The path to save the processed image file
+     * @param array $coverType The type to process the image to
+     */
+    private static function processFile(File $image, string $path, $coverType) {
+        if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === self::MIME_JPEG) {
+            $command = 'cp "'.$image->getPathname().'" '.$path;
+        } else {
+            // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
+            $command = 'convert 2>&1 "'.$image->getPathname().'" -background white -alpha remove -alpha off -strip';
+
+            if ($image->getMimeType() === self::MIME_JPEG) {
+                $command .= ' -quality 100 -format jpeg';
+            } else {
+                $command .= ' -quality 95 -format png';
+            }
+
+            if (isset($coverType['geometry'])) {
+                $command .= " -gravity center -thumbnail ${coverType['geometry']} -extent ${coverType['geometry']}";
+            }
+
+            $command .= ' "'.$path.'"';
+        }
+
+        External::execute($command);
+        chmod($path, 0644);
     }
 
     protected $table = 'images';
@@ -189,6 +194,42 @@ class Image extends Model
 
         if (!is_dir($destination)) {
             mkdir($destination, 0777, true);
+        }
+    }
+
+    /**
+     * Deletes any generated files if they exist
+     * @param bool $includeOriginal Set to true if the original image should be deleted as well.
+     */
+    public function clearExisting(bool $includeOriginal = false) {
+        $files = scandir($this->getDirectory());
+        $filePrefix = $this->id.'_';
+        $originalName = $filePrefix.Image::$ImageTypes[Image::ORIGINAL]['name'];
+
+        $files = array_filter($files, function($file) use ($originalName, $includeOriginal, $filePrefix) {
+            if (Str::startsWith($file,$originalName) && !$includeOriginal) {
+                return false;
+            }
+            else {
+                return (Str::startsWith($file, $filePrefix));
+            }
+        });
+
+        foreach ($files as $file) {
+            unlink($this->getDirectory().'/'.$file);
+        }
+    }
+
+    /**
+     * Builds the cover images for the image, overwriting if needed.
+     *
+     * @throws FileNotFoundException If the original file cannot be found.
+     */
+    public function buildCovers() {
+        $originalFile = new File($this->getFile(self::ORIGINAL));
+
+        foreach (self::$ImageTypes as $imageType) {
+            self::processFile($originalFile, $this->getFile($imageType['id']), $imageType);
         }
     }
 }
