@@ -145,7 +145,9 @@ class UploadTrackCommand extends CommandBase
 
         $input = Request::all();
         $input['track'] = $trackFile;
-        if (!$this->_isReplacingTrack) {
+
+        // Prevent the setting of the cover index for validation
+        if (!$this->_isReplacingTrack && isset($coverFile)) {
             $input['cover'] = $coverFile;
         }
 
@@ -159,7 +161,7 @@ class UploadTrackCommand extends CommandBase
                 . 'audio_channels:1,2',
         ];
         if (!$this->_isReplacingTrack) {
-            array_push($rules, [
+            array_merge($rules, [
                 'cover'             => 'image|mimes:png,jpeg|min_width:350|min_height:350',
                 'auto_publish'      => 'boolean',
                 'title'             => 'string',
@@ -197,6 +199,12 @@ class UploadTrackCommand extends CommandBase
         $autoPublish = (bool)($input['auto_publish'] ?? $this->_autoPublishByDefault);
         $this->_track->source = $this->_customTrackSource ?? $source;
         $this->_track->save();
+
+        // If the cover was null, and not included, add it back in as null so that
+        // other commands do not encounter a undefined index.
+        if (! isset($input['cover'])) {
+            $input['cover'] = null;
+        }
 
         if (!$this->_isReplacingTrack) {
             // Parse any tags in the uploaded files.
