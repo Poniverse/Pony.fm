@@ -28,7 +28,11 @@
         "alsofronie/eloquent-uuid": "^1.0",
         "poniverse/api": "dev-rewrite",
         "barryvdh/laravel-cors": "^0.10",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "doctrine/collections": "v1.4.*",
+        "doctrine/annotations": "v1.4.*",
+        "doctrine/cache": "v1.6.*",
+        "doctrine/instantiator": "1.0.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
