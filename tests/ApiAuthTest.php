@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 /**
  * Pony.fm - A community for pony fan music.
  * Copyright (C) 2015 Peter Deltchev
@@ -18,9 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Poniverse\Lib\AccessToken;
 use Poniverse\Ponyfm\Models\User;
 
@@ -40,7 +40,7 @@ class ApiAuthTest extends TestCase
         $accessTokenInfo->setIsActive(true);
         $accessTokenInfo->setScopes(['basic', 'ponyfm:tracks:upload']);
 
-        $poniverse = Mockery::mock('overload:Poniverse\Lib\OAuth2\PoniverseProvider');
+        $poniverse = \Mockery::mock('overload:Poniverse\Lib\OAuth2\PoniverseProvider');
         $poniverse->shouldReceive('getResourceOwner')
             ->andReturn(new \Poniverse\Lib\Entity\Poniverse\User([
                 'id' => $user->id,
@@ -50,7 +50,7 @@ class ApiAuthTest extends TestCase
             ]));
         $poniverse->shouldReceive('setAccessToken');
 
-        $accessTokenService = Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\Meta');
+        $accessTokenService = \Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\Meta');
         $accessTokenService->shouldReceive('introspect')
             ->andReturn($accessTokenInfo);
 
@@ -68,7 +68,7 @@ class ApiAuthTest extends TestCase
         $accessTokenInfo->setClientId('Unicorns and rainbows');
         $accessTokenInfo->setScopes(['basic', 'ponyfm:tracks:upload']);
 
-        $poniverse = Mockery::mock('overload:Poniverse\Lib\OAuth2\PoniverseProvider');
+        $poniverse = \Mockery::mock('overload:Poniverse\Lib\OAuth2\PoniverseProvider');
         $poniverse->shouldReceive('getResourceOwner')
                   ->andReturn(new \Poniverse\Lib\Entity\Poniverse\User([
                       'id' => $user->id,
@@ -78,7 +78,7 @@ class ApiAuthTest extends TestCase
                   ]));
         $poniverse->shouldReceive('setAccessToken');
 
-        $accessTokenService = Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\Meta');
+        $accessTokenService = \Mockery::mock('overload:Poniverse\Lib\Service\Poniverse\Meta');
         $accessTokenService
             ->shouldReceive('introspect')
             ->andReturn($accessTokenInfo);

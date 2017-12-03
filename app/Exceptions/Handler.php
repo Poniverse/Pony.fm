@@ -22,7 +22,7 @@ namespace Poniverse\Ponyfm\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
-use GrahamCampbell\Exceptions\NewExceptionHandler as ExceptionHandler;
+use GrahamCampbell\Exceptions\ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -32,11 +32,19 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        \Illuminate\Auth\AuthenticationException::class,
-        \Illuminate\Auth\Access\AuthorizationException::class,
-        \Illuminate\Validation\ValidationException::class,
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
+        //
     ];
+
+    /**
+     * A list of the inputs that are never flashed for validation exceptions.
+     *
+     * @var array
+     */
+    protected $dontFlash = [
+        'password',
+        'password_confirmation',
+    ];
+
 
     /**
      * Report or log an exception.
@@ -61,20 +69,5 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         return parent::render($request, $e);
-    }
-    /**
-     * Convert an authentication exception into an unauthenticated response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $e
-     * @return \Illuminate\Http\Response
-     */
-    protected function unauthenticated($request, AuthenticationException $e)
-    {
-        if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
-        } else {
-            return redirect()->guest('login');
-        }
     }
 }

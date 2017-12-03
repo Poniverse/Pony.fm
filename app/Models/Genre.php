@@ -49,6 +49,11 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre withoutTrashed()
  */
 class Genre extends Model
 {

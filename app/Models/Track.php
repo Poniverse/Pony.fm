@@ -102,6 +102,49 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track mlpma()
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
+ * @property int $current_version
+ * @property int|null $version_upload_status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\TrackFile[] $trackFilesForAllVersions
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereAlbumId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereCommentCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereCoverId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereCurrentVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereDownloadCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereFavouriteCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereGenreId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereIsDownloadable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereIsExplicit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereIsLatest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereIsListed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereIsVocal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereLicenseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereLyrics($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereMetadata($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereOriginalTags($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track wherePlayCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track wherePublishedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereReleasedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereTrackNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereTrackTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereVersionUploadStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\Track whereViewCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Track withoutTrashed()
+ * @mixin \Eloquent
  */
 class Track extends Model implements Searchable, Commentable, Favouritable
 {
@@ -703,7 +746,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     public function trackFilesForVersion(int $version)
     {
-        return $this->hasMany(TrackFile::class)->where('track_files.version', $version);
+        return $this->trackFilesForAllVersions()->where('track_files.version', $version);
     }
 
     public function notifications()

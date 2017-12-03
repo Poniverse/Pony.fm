@@ -12,7 +12,8 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'My Application',
+    'name' => env('APP_NAME', 'My Application'),
+
 
     'env' => env('APP_ENV', 'production'),
 
@@ -165,11 +166,8 @@ return [
         Poniverse\Ponyfm\Providers\NotificationServiceProvider::class,
 
         Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Cviebrock\LaravelElasticsearch\ServiceProvider::class,
-        GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
         Poniverse\Lib\PoniverseServiceProvider::class,
-        Barryvdh\Cors\ServiceProvider::class,
     ],
 
     /*

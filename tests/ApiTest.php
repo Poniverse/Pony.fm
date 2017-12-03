@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 /**
  * Pony.fm - A community for pony fan music.
  * Copyright (C) 2015-2017 Peter Deltchev

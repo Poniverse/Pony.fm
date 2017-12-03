@@ -1,4 +1,10 @@
 <?php
+
+namespace Tests;
+
+use Illuminate\Contracts\Console\Kernel;
+use Storage;
+use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
 use Poniverse\Ponyfm\Models\User;
 
 /**
@@ -19,7 +25,7 @@ use Poniverse\Ponyfm\Models\User;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TestCase extends Illuminate\Foundation\Testing\TestCase
+class TestCase extends BaseTestCase
 {
     /**
      * The base URL to use while testing the application.
@@ -46,15 +52,14 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         $app = require __DIR__.'/../bootstrap/app.php';
 
-        $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        $app->make(Kernel::class)->bootstrap();
+
+        $this->getTestFiles();
 
         return $app;
     }
 
-    /**
-     * @before
-     */
-    public function initializeTestFiles()
+    public function getTestFiles()
     {
         // Ensure we have the Pony.fm test files
         if (!static::$initializedFiles) {
@@ -135,8 +140,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     protected function callUploadWithParameters(array $parameters, array $files = [])
     {
         $this->expectsJobs([
-            Poniverse\Ponyfm\Jobs\EncodeTrackFile::class,
-            Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity::class
+            \Poniverse\Ponyfm\Jobs\EncodeTrackFile::class,
+            \Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity::class
         ]);
         $this->user = factory(User::class)->create();
 

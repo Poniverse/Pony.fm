@@ -80,7 +80,7 @@ class TracksController extends Controller
 
     public function getOembed(Request $request)
     {
-        if (!$request->has('url')) {
+        if (!$request->filled('url')) {
             App::abort(404);
         }
 
