@@ -13,7 +13,7 @@ class Laravel55Upgrade extends Migration
      */
     public function up()
     {
-        app()->call('cache:clear');
+        \Artisan::call('cache:clear');
     }
 
     /**
