@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Peter Deltchev
+ * Copyright (C) 2015 Feld0
  * Copyright (C) 2015 Kelvin Zhang
  *
  * This program is free software: you can redistribute it and/or modify
