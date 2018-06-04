@@ -17,9 +17,10 @@
     "coffee-loader": "0.7.2",
     "coffee-script": "1.10.0",
     "del": "^2.2.2",
+    "fancy-log": "^1.3.0",
     "foundation-emails": "^2.2.1",
     "fs": "0.0.1-security",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-angular-templatecache": "1.8.0",
     "gulp-autoprefixer": "3.1.0",
     "gulp-cached": "1.1.0",
@@ -41,11 +42,11 @@
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "1.6.0",
     "gulp-uncss": "^1.0.6",
-    "gulp-util": "3.0.7",
     "inky": "^1.3.7",
     "jquery": "2.2.4",
     "lazypipe": "^1.0.1",
     "panini": "^1.5.1",
+    "plugin-error": "^1.0.1",
     "run-sequence": "^1.2.2",
     "script-loader": "0.7.0",
     "siphon-media-query": "^1.0.0",
@@ -54,5 +55,10 @@
     "webpack-dev-server": "1.14.1",
     "webpack-stream": "3.2.0",
     "yargs": "4.7.1"
+  },
+  "engineStrict": true,
+  "engines": {
+    "npm": ">6.1.0",
+    "yarn": "Use npm instead!"
   }
 }

@@ -17,7 +17,8 @@
  */
 
 var gulp = require("gulp"),
-    gutil = require("gulp-util"),
+    PluginError = require("plugin-error"),
+    fancyLog = require("fancy-log"),
     plug = require("gulp-load-plugins")(),
     argv = require("yargs").argv,
     header = require("gulp-header"),
@@ -84,10 +85,10 @@ gulp.task("webpack-dev-server", function () {
         stats: 'minimal'
     }).listen(61999, "localhost", function (err) {
         if (err)
-            throw new gutil.PluginError("webpack-dev-server", err);
+            throw new PluginError("webpack-dev-server", err);
 
         // Server listening
-        gutil.log("[webpack-dev-server]", "http://localhost:61999/webpack-dev-server/index.html");
+        fancyLog("[webpack-dev-server]", "http://localhost:61999/webpack-dev-server/index.html");
     });
 });
 
@@ -305,19 +306,20 @@ gulp.task('email-default', function(callback) {
 
 //=============== END Zurb Foundation Email stack =================//
 
-gulp.task('build', [
+gulp.task('build', gulp.series(
     'webpack-build',
     'copy:templates',
     'styles-app',
     'styles-embed',
     'email-build'
-]);
+));
 
-gulp.task("watch-legacy", ["build"], function () {
+gulp.task("watch-legacy", gulp.series("build", function (callback) {
     gulp.watch("resources/assets/styles/**/*.{css,less}", ["styles-app"]);
-});
+    callback();
+}));
 
-gulp.task("watch", ["webpack-dev-server", "email-default", "watch-legacy"], function () {});
+gulp.task("watch", gulp.series("webpack-dev-server", "email-default", "watch-legacy"));
 
 
 function endsWith(str, suffix) {
