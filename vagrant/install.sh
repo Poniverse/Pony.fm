@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export DEBIAN_FRONTEND=noninteractive
+echo "debconf debconf/frontend select noninteractive" | sudo debconf-set-selections
 update-locale LANG=en_US.UTF-8
 locale-gen --purge en_US.UTF-8
 dpkg-reconfigure --frontend noninteractive locales
@@ -38,7 +38,6 @@ if ! package_installed php7.2-fpm; then
     echo "PHP repository added"
 fi
 
-
 if ! package_installed nginx; then
     add_key http://nginx.org/keys/nginx_signing.key
 	echo "deb http://nginx.org/packages/ubuntu/ xenial nginx" > /etc/apt/sources.list.d/nginx.list
@@ -46,7 +45,10 @@ if ! package_installed nginx; then
 fi
 
 echo "Running apt-get update..."
-sudo apt-get -qq update
+sudo apt-get -qq update >/dev/null
+
+echo "Running apt-get upgrade..."
+sudo apt-get -qq upgrade >/dev/null
 
 echo "Installing nginx, PHP and PostgreSQL..."
 install_packages php7.2-fpm nginx postgresql-10
@@ -73,6 +75,8 @@ echo "Installing tagging tools & other dependencies..."
 install_packages build-essential supervisor atomicparsley flac vorbis-tools imagemagick openjdk-8-jre pkg-config yasm \
 				 libfaac-dev libmp3lame-dev libvorbis-dev libtheora-dev redis-server beanstalkd curl unzip
 
+echo "debconf debconf/frontend select dialog" | sudo debconf-set-selections
+
 echo "Installing Composer..."
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -98,7 +102,7 @@ mkdir -p /vagrant/storage/logs/system
 cd /vagrant
 
 echo "Running composer install..."
-/usr/local/bin/composer install
+composer install
 
 cp -n "/vagrant/resources/environments/.env.local" "/vagrant/.env"
 
