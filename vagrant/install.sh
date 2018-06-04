@@ -22,8 +22,8 @@ install_packages(){
 }
 
 if ! package_installed elasticsearch; then
-    add_key https://artifacts.elastic.co/GPG-KEY-elasticsearch
-    echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" > /etc/apt/sources.list.d/elastic-6.x.list
+    add_key https://packages.elastic.co/GPG-KEY-elasticsearch
+    echo "deb https://packages.elastic.co/elasticsearch/2.x/debian stable main" > /etc/apt/sources.list.d/elasticsearch-2.x.list
     echo "ElasticSearch repository added"
 fi
 
@@ -67,9 +67,6 @@ sudo -u postgres psql -c "CREATE DATABASE homestead OWNER homestead;" >/dev/null
 
 echo "Installing Elasticsearch..."
 install_packages apt-transport-https && install_packages elasticsearch
-# Change memory limit to 128 MB
-sed -i -e 's/^\(-Xm[sx]\)1g/\1128m/' /etc/elasticsearch/jvm.options
-service elasticsearch start
 
 echo "Installing tagging tools & other dependencies..."
 install_packages build-essential supervisor atomicparsley flac vorbis-tools imagemagick openjdk-8-jre pkg-config yasm \
@@ -87,7 +84,7 @@ if type ffmpeg &>/dev/null; then
     echo "ffmpeg is installed!"
 else
     echo "ffmpeg is not installed; compiling..."
-    cd /usr/src
+    cd /usr/local/src
     wget -q "https://ffmpeg.org/releases/ffmpeg-2.6.3.tar.bz2"
     tar -xjf "ffmpeg-2.6.3.tar.bz2"
     cd "ffmpeg-2.6.3"

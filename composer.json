@@ -23,7 +23,7 @@
         "doctrine/dbal": "2.5.*",
         "venturecraft/revisionable": "^1.23",
         "pda/pheanstalk": "~3.0",
-        "cviebrock/laravel-elasticsearch": "^3.1.1",
+        "cviebrock/laravel-elasticsearch": "^1.0",
         "barryvdh/laravel-debugbar": "~2.4",
         "predis/predis": "^1.0",
         "ksubileau/color-thief-php": "^1.3",

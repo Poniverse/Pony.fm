@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba712950e0d27965e37b3183bd34e73c",
+    "content-hash": "a835eb9bb913e5c4cdb866f19874540f",
     "packages": [
         {
             "name": "alsofronie/eloquent-uuid",
@@ -326,43 +326,28 @@
         },
         {
             "name": "cviebrock/laravel-elasticsearch",
-            "version": "3.1.1",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cviebrock/laravel-elasticsearch.git",
-                "reference": "8eebf20cdfb76f95d1e781ff4291ec6b6695d45c"
+                "reference": "d51ed07b7d4d0fb45e803c1c6af0c148ad67e07d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cviebrock/laravel-elasticsearch/zipball/8eebf20cdfb76f95d1e781ff4291ec6b6695d45c",
-                "reference": "8eebf20cdfb76f95d1e781ff4291ec6b6695d45c",
+                "url": "https://api.github.com/repos/cviebrock/laravel-elasticsearch/zipball/d51ed07b7d4d0fb45e803c1c6af0c148ad67e07d",
+                "reference": "d51ed07b7d4d0fb45e803c1c6af0c148ad67e07d",
                 "shasum": ""
             },
             "require": {
-                "elasticsearch/elasticsearch": "^6.0",
-                "illuminate/support": "~5.5.0|~5.6.0",
-                "monolog/monolog": "^1.23",
-                "php": "^7.0"
-            },
-            "require-dev": {
-                "codedungeon/phpunit-result-printer": "^0.4.4|^0.6.0",
-                "orchestra/testbench": "~3.5.0|~3.6.0",
-                "phpunit/phpunit": "^6.2|^7.0"
+                "elasticsearch/elasticsearch": "^2.0",
+                "illuminate/support": "~5",
+                "monolog/monolog": "~1",
+                "php": ">=5.4.0"
             },
             "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Cviebrock\\LaravelElasticsearch\\ServiceProvider"
-                    ],
-                    "aliases": {
-                        "Elasticsearch": "Cviebrock\\LaravelElasticsearch\\Facade"
-                    }
-                }
-            },
             "autoload": {
                 "psr-4": {
-                    "Cviebrock\\LaravelElasticsearch\\": "src"
+                    "Cviebrock\\LaravelElasticsearch\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -373,17 +358,20 @@
                 {
                     "name": "Colin Viebrock",
                     "email": "colin@viebrock.ca"
+                },
+                {
+                    "name": "Brandon Martel",
+                    "email": "brandonmartel@gmail.com"
                 }
             ],
             "description": "An easy way to use the official PHP ElasticSearch client in your Laravel applications.",
-            "homepage": "https://github.com/cviebrock/laravel-elasticsearch",
             "keywords": [
                 "client",
                 "elasticsearch",
                 "laravel",
                 "search"
             ],
-            "time": "2018-03-01T04:52:55+00:00"
+            "time": "2017-02-17T13:24:59+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1001,33 +989,30 @@
         },
         {
             "name": "elasticsearch/elasticsearch",
-            "version": "v6.0.1",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elastic/elasticsearch-php.git",
-                "reference": "b8e3bc9d1fc54d6a18692df0b74956efe7fe241a"
+                "reference": "c57db9da04f4c54c2ca69a52bc618d9120b96d4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/b8e3bc9d1fc54d6a18692df0b74956efe7fe241a",
-                "reference": "b8e3bc9d1fc54d6a18692df0b74956efe7fe241a",
+                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/c57db9da04f4c54c2ca69a52bc618d9120b96d4d",
+                "reference": "c57db9da04f4c54c2ca69a52bc618d9120b96d4d",
                 "shasum": ""
             },
             "require": {
-                "ext-json": ">=1.3.7",
                 "guzzlehttp/ringphp": "~1.0",
-                "php": "^7.0",
+                "php": ">=5.4",
                 "psr/log": "~1.0"
             },
             "require-dev": {
                 "cpliakas/git-wrapper": "~1.0",
-                "doctrine/inflector": "^1.1",
                 "mockery/mockery": "0.9.4",
-                "phpstan/phpstan-shim": "0.8.3",
-                "phpunit/phpunit": "6.3.0",
-                "squizlabs/php_codesniffer": "3.0.2",
-                "symfony/finder": "^2.8",
-                "symfony/yaml": "^2.8"
+                "phpunit/phpunit": "~4.7",
+                "sami/sami": "~3.2",
+                "symfony/yaml": "2.4.3 as 2.4.2",
+                "twig/twig": "1.*"
             },
             "suggest": {
                 "ext-curl": "*",
@@ -1054,7 +1039,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2017-12-05T14:15:58+00:00"
+            "time": "2017-12-05T14:05:24+00:00"
         },
         {
             "name": "erusev/parsedown",
