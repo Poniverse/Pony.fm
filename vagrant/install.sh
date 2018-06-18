@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 echo "debconf debconf/frontend select noninteractive" | sudo debconf-set-selections
-update-locale LANG=en_US.UTF-8
-locale-gen --purge en_US.UTF-8
-dpkg-reconfigure --frontend noninteractive locales
+sed -i -e 's/\(AcceptEnv LANG LC_\*\)/#\1/' /etc/ssh/sshd_config
+service sshd restart
 
 package_installed(){
 	if dpkg-query -f '${binary:Package}\n' -W | grep "$1" &>/dev/null; then
