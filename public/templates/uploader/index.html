@@ -13,7 +13,7 @@
 
     <p>Note that you&#39;ll need to publish your tracks after uploading them before they&#39;ll become available to the public.</p>
 
-    <p>Contact <a href="mailto:logic@pony.fm">logic@pony.fm</a> if you run into any issues!</p>
+    <p>Contact <a href="mailto:support@pony.fm" target="_blank">Pony.fm Support</a> if you run into any issues!</p>
 
     <ul class="uploads">
         <li ng-repeat="upload in data.queue track by $index" ng-class="{'uploading': upload.isUploading, 'has-error': upload.error != null, 'is-processing': upload.isProcessing || (upload.progress >= 100 && upload.error == null)}" ng-animate="'upload-queue'">
