@@ -570,7 +570,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             ];
         }
 
-        return [
+        $data = [
             'id' => (int) $track->id,
             'title' => $track->title,
             'user' => [
@@ -619,6 +619,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 'edit' => Gate::allows('edit', $track)
             ]
         ];
+
+        if ($track->album_id != null) {
+            $data['album'] = [
+                'title' => $track->album->title,
+                'url' => $track->album->url,
+            ];
+        }
+
+        return $data;
     }
 
     /**
