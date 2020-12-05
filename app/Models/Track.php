@@ -506,14 +506,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
 
         $returnValue['comments'] = $comments;
-
-        if ($track->album_id != null) {
-            $returnValue['album'] = [
-                'title' => $track->album->title,
-                'url' => $track->album->url,
-            ];
-        }
-
+        
         $formats = [];
 
         foreach ($track->trackFiles as $trackFile) {
