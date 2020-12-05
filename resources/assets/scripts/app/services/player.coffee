@@ -84,7 +84,6 @@ module.exports = angular.module('ponyfm').factory('player', [
         
         broadcastMediaInfo = (track) ->
             if 'mediaSession' of navigator
-                console.log(track)
                 navigator.mediaSession.metadata = new MediaMetadata(
                     title: track['title']
                     artist: track.user.name
