@@ -57,6 +57,8 @@ Asset pipeline
 
 Pony.fm uses [gulp](http://gulpjs.com/) to mange its asset pipeline.
 
+**In macOS**, you must have XCode Command Line Tools installed. This may be downloaded at [https://developer.apple.com/download/more/?=command%20line%20tools](https://developer.apple.com/download/more/?=command%20line%20tools)
+
 **Important:** Run `npm` and `gulp` from your host machine and not within the VM. You must first have it installed globally:
 
     npm install -g gulp

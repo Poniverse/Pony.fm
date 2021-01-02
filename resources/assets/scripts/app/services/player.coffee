@@ -66,6 +66,7 @@ module.exports = angular.module('ponyfm').factory('player', [
 
                 onplay: () -> $rootScope.safeApply ->
                     track.isPlaying = true
+                    broadcastMediaInfo track
 
                 onresume: () -> $rootScope.safeApply ->
                     track.isPlaying = true
@@ -80,6 +81,32 @@ module.exports = angular.module('ponyfm').factory('player', [
         updateCanGo = () ->
             self.canGoNext = self.playlistIndex < self.playlist.length - 1
             self.canGoPrev = self.playlistIndex > 0
+        
+        broadcastMediaInfo = (track) ->
+            if 'mediaSession' of navigator
+                navigator.mediaSession.metadata = new MediaMetadata(
+                    title: track['title']
+                    artist: track.user.name
+                    album: if 'album' of track then  track.album.title else 'Unknown Album'
+                    artwork: [
+                        {src: track.covers.original, sizes: '350x350', type: 'image/png'},
+                        {src: track.covers.small, sizes: '100x100', type: 'image/png'}
+                        {src: track.covers.thumbnail, sizes: '50x50', type: 'image/png'}
+                    ]
+                    
+                    navigator.mediaSession.setActionHandler(
+                        'play'
+                        (() -> self.currentSound.play()))
+                    navigator.mediaSession.setActionHandler(
+                        'pause'
+                        (() -> self.currentSound.pause()))
+                    navigator.mediaSession.setActionHandler(
+                        'previoustrack'
+                        (() -> self.playPrev()))
+                    navigator.mediaSession.setActionHandler(
+                        'nexttrack'
+                        (() -> self.playNext()))
+                )
 
         self =
             ready: false

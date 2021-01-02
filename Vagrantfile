@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
   config.hostmanager.manage_host = true
 
   config.vm.box = 'laravel/homestead'
-  config.vm.box_version = '0.4.2'
+  config.vm.box_version = '10.1.1'
 
   config.vm.provider "virtualbox" do |v|
     v.cpus = 4

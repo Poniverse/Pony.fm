@@ -272,53 +272,50 @@ gulp.task("email-inline", function emailInline() {
 
 
 // Helper tasks for email watchers
-gulp.task("email-rebuild-handlebars", function(callback){
-    runSequence("email-pages", "email-inline", callback);
-});
-gulp.task("email-rebuild-layouts", function(callback){
-    runSequence("email-reset-pages", "email-pages", "email-inline", callback);
-});
-gulp.task("email-rebuild-sass", function(callback){
-    runSequence("email-reset-pages", "email-sass", "email-pages", "email-inline", callback)
-});
+gulp.task("email-rebuild-handlebars", gulp.series("email-pages", "email-inline", function(callback){
+    callback();
+}));
+gulp.task("email-rebuild-layouts", gulp.series("email-reset-pages", "email-pages", "email-inline", function(callback){
+    callback();
+}));
+gulp.task("email-rebuild-sass", gulp.series("email-reset-pages", "email-sass", "email-pages", "email-inline", function(callback){
+    callback();
+}));
 
 // Watch for file changes
 gulp.task("email-watch", function (callback) {
-    gulp.watch('resources/emails/src/pages/**/*.blade.php.hbs', ["email-rebuild-handlebars"]);
-    gulp.watch(['resources/emails/src/layouts/**/*', 'resources/emails/src/partials/**/*'], ["email-rebuild-layouts"]);
-    gulp.watch(['resources/emails/src/assets/scss/**/*.scss'], ["email-rebuild-sass"]);
-    gulp.watch('resources/emails/src/assets/img/**/*', ["email-images"]);
+    gulp.watch('resources/emails/src/pages/**/*.blade.php.hbs', gulp.parallel("email-rebuild-handlebars"));
+    gulp.watch(['resources/emails/src/layouts/**/*', 'resources/emails/src/partials/**/*'], gulp.parallel("email-rebuild-layouts"));
+    gulp.watch(['resources/emails/src/assets/scss/**/*.scss'], gulp.parallel("email-rebuild-sass"));
+    gulp.watch('resources/emails/src/assets/img/**/*', gulp.parallel("email-images"));
     callback();
 });
 
 // Build the "resources/views/emails/html" folder by running all of the above tasks
-gulp.task('email-build', function(callback){
-    runSequence("email-clean", "email-pages", "email-sass", "email-images", "email-inline", callback);
-});
+gulp.task('email-build', gulp.series(("email-clean", "email-pages", "email-sass", "email-images", "email-inline", function(callback){
+    callback();
+})));
 
 
 // Build emails, run the server, and watch for file changes
-gulp.task('email-default', function(callback) {
-    runSequence('email-build', "email-watch");
+gulp.task('email-default', gulp.series('email-build', "email-watch", function(callback) {
     callback();
-});
+}));
 
 //=============== END Zurb Foundation Email stack =================//
 
-gulp.task('build', [
-    'webpack-build',
+gulp.task('build', gulp.parallel('webpack-build',
     'copy:templates',
     'styles-app',
     'styles-embed',
-    'email-build'
-]);
+    'email-build'));
 
-gulp.task("watch-legacy", ["build"], function () {
-    gulp.watch("resources/assets/styles/**/*.{css,less}", ["styles-app"]);
-});
 
-gulp.task("watch", ["webpack-dev-server", "email-default", "watch-legacy"], function () {});
+gulp.task("watch-legacy", gulp.series(gulp.parallel("build"), function () {
+    gulp.watch("resources/assets/styles/**/*.{css,less}", gulp.parallel("styles-app"));
+}));
 
+gulp.task("watch", gulp.parallel("webpack-dev-server", "email-default", "watch-legacy"));
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
