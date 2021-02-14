@@ -35,7 +35,7 @@ class ApiTest extends TestCase
 
     public function testUploadWithoutFile()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)
              ->post('/api/v1/tracks', [])
@@ -80,11 +80,11 @@ class ApiTest extends TestCase
     public function testUploadWithOptionalData()
     {
         /** @var Track $track */
-        $track = factory(Track::class)->make();
+        $track = Track::factory()->make();
         /** @var Genre $genre */
-        $genre = factory(Genre::class)->make();
+        $genre = Genre::factory()->make();
         /** @var Album $album */
-        $album = factory(Album::class)->make();
+        $album = Album::factory()->make();
 
         $this->callUploadWithParameters([
             'title'             => $track->title,
@@ -135,9 +135,9 @@ class ApiTest extends TestCase
     public function testGetTrackDetails()
     {
         /** @var Track $track */
-        $track = factory(Track::class)->create();
+        $track = Track::factory()->create();
         /** @var Genre $genre */
-        $genre = factory(Genre::class)->create();
+        $genre = Genre::factory()->create();
 
         $track->genre()->associate($genre);
         $this->seeInDatabase('tracks', ['id' => $track->id]);

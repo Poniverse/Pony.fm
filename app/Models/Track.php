@@ -36,6 +36,7 @@ use External;
 use Gate;
 use getid3_writetags;
 use Helpers;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -148,6 +149,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class Track extends Model implements Searchable, Commentable, Favouritable
 {
+    use HasFactory;
     use SoftDeletes, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'track';
