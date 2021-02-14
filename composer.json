@@ -17,7 +17,7 @@
         "guzzlehttp/guzzle": "~6.0",
         "doctrine/dbal": "2.5.*",
         "venturecraft/revisionable": "^1.36",
-        "pda/pheanstalk": "~3.0",
+        "pda/pheanstalk": "~v4.0.0",
         "cviebrock/laravel-elasticsearch": "4.0.0",
         "barryvdh/laravel-debugbar": "~3.4",
         "predis/predis": "^1.0",
