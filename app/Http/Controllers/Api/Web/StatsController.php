@@ -109,7 +109,7 @@ class StatsController extends ApiControllerBase
 
     public function getTrackStats($id)
     {
-        $cachedOutput = Cache::remember('track_stats'.$id, 5, function () use ($id) {
+        $cachedOutput = Cache::remember('track_stats'.$id, 300, function () use ($id) {
             try {
                 $track = Track::published()->findOrFail($id);
             } catch (ModelNotFoundException $e) {

@@ -387,7 +387,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     {
         $trackData = Cache::remember(
             'popular_tracks'.$count.'-'.($allowExplicit ? 'explicit' : 'safe'),
-            5,
+            300,
             function () use ($allowExplicit, $count, $skip) {
                 /*$query = static
                     ::published()

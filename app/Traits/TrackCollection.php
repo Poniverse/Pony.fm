@@ -170,7 +170,7 @@ trait TrackCollection
             return 0;
         }
 
-        return Cache::remember($this->getCacheKey('filesize-'.$format), 1440, function () use ($tracks, $format) {
+        return Cache::remember($this->getCacheKey('filesize-'.$format), 86400, function () use ($tracks, $format) {
             $size = 0;
 
             // Check whether the format is lossless yet not all master files are lossless
