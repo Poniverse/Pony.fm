@@ -31,7 +31,7 @@
         "doctrine/collections": "v1.4.*",
         "doctrine/annotations": "v1.4.*",
         "doctrine/cache": "v1.6.*",
-        "doctrine/instantiator": "1.0.*",
+        "doctrine/instantiator": "^1.1",
         "fideloper/proxy": "^4.0"
     },
     "require-dev": {
