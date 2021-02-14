@@ -35,7 +35,7 @@ class TracksController extends Controller
 {
     public function getIndex()
     {
-        return View::make('tracks.index');
+        return view('tracks.index');
     }
 
     public function getEmbed($id)
@@ -51,7 +51,7 @@ class TracksController extends Controller
             )->first();
 
         if (! $track || ! $track->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         $userData = [
@@ -75,13 +75,13 @@ class TracksController extends Controller
             ];
         }
 
-        return View::make('tracks.embed', ['track' => $track, 'user' => $userData]);
+        return view('tracks.embed', ['track' => $track, 'user' => $userData]);
     }
 
     public function getOembed(Request $request)
     {
         if (! $request->filled('url')) {
-            App::abort(404);
+            abort(404);
         }
 
         $parsedUrl = parse_url($request->input('url'));
@@ -94,7 +94,7 @@ class TracksController extends Controller
             ->first();
 
         if (! $track || ! $track->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         $output = [
@@ -117,14 +117,14 @@ class TracksController extends Controller
     {
         $track = Track::find($id);
         if (! $track || ! $track->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         if ($track->slug != $slug) {
             return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
         }
 
-        return View::make('tracks.show', ['track' => $track]);
+        return view('tracks.show', ['track' => $track]);
     }
 
     public function getEdit($id, $slug)
@@ -136,7 +136,7 @@ class TracksController extends Controller
     {
         $track = Track::find($id);
         if (! $track || ! $track->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
@@ -146,21 +146,21 @@ class TracksController extends Controller
     {
         $track = Track::find($id);
         if (! $track || ! $track->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
 
-        $response = Response::make('', 200);
+        $response = response('', 200);
         $filename = $trackFile->getFile();
 
         if (! file_exists($filename)) {
-            App::abort(418);
+            abort(418);
         }
 
         ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $trackFile->getFormat()['index']);
 
-        if (Config::get('app.sendfile')) {
+        if (config('app.sendfile')) {
             $response->header('X-Sendfile', $filename);
         } else {
             $response->header('X-Accel-Redirect', $filename);
@@ -183,16 +183,16 @@ class TracksController extends Controller
     {
         $track = Track::find($id);
         if (! $track || ! $track->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
         ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $trackFile->getFormat()['index']);
 
-        $response = Response::make('', 200);
+        $response = response('', 200);
         $filename = $trackFile->getFile();
 
-        if (Config::get('app.sendfile')) {
+        if (config('app.sendfile')) {
             $response->header('X-Sendfile', $filename);
             $response->header(
                 'Content-Disposition',

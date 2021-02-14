@@ -62,7 +62,7 @@ trait IndexedInElasticsearchTrait
     private function getElasticsearchParameters(bool $includeBody = true)
     {
         $parameters = [
-            'index' => Config::get('ponyfm.elasticsearch_index'),
+            'index' => config('ponyfm.elasticsearch_index'),
             'type'  => $this->elasticsearchType,
             'id'    => $this->id,
         ];
@@ -95,7 +95,7 @@ trait IndexedInElasticsearchTrait
      */
     public function updateElasticsearchEntry()
     {
-        $job = (new UpdateSearchIndexForEntity($this))->onQueue(Config::get('ponyfm.indexing_queue'));
+        $job = (new UpdateSearchIndexForEntity($this))->onQueue(config('ponyfm.indexing_queue'));
         $this->dispatch($job);
     }
 

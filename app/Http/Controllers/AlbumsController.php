@@ -32,28 +32,28 @@ class AlbumsController extends Controller
 {
     public function getIndex()
     {
-        return View::make('albums.index');
+        return view('albums.index');
     }
 
     public function getShow($id, $slug)
     {
         $album = Album::find($id);
         if (! $album) {
-            App::abort(404);
+            abort(404);
         }
 
         if ($album->slug != $slug) {
             return Redirect::action('AlbumsController@getAlbum', [$id, $album->slug]);
         }
 
-        return View::make('albums.show');
+        return view('albums.show');
     }
 
     public function getShortlink($id)
     {
         $album = Album::find($id);
         if (! $album) {
-            App::abort(404);
+            abort(404);
         }
 
         return Redirect::action('AlbumsController@getShow', [$id, $album->slug]);
@@ -63,7 +63,7 @@ class AlbumsController extends Controller
     {
         $album = Album::with('tracks', 'tracks.trackFiles', 'user')->find($id);
         if (! $album) {
-            App::abort(404);
+            abort(404);
         }
 
         $format = null;
@@ -78,11 +78,11 @@ class AlbumsController extends Controller
         }
 
         if ($format == null) {
-            App::abort(404);
+            abort(404);
         }
 
         if (! $album->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
-            App::abort(404);
+            abort(404);
         }
 
         ResourceLogItem::logItem('album', $id, ResourceLogItem::DOWNLOAD, $format['index']);

@@ -116,7 +116,7 @@ class PlaylistsController extends ApiControllerBase
             'comments.user',
         ])->userDetails()->find($id);
         if (! $playlist || ! $playlist->canView(Auth::user())) {
-            App::abort('404');
+            abort('404');
         }
 
         if (Request::get('log')) {

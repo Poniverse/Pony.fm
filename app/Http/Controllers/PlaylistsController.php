@@ -33,28 +33,28 @@ class PlaylistsController extends Controller
 {
     public function getIndex()
     {
-        return View::make('playlists.index');
+        return view('playlists.index');
     }
 
     public function getPlaylist($id, $slug)
     {
         $playlist = Playlist::find($id);
         if (! $playlist || ! $playlist->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         if ($playlist->slug != $slug) {
             return Redirect::action('PlaylistsController@getPlaylist', [$id, $playlist->slug]);
         }
 
-        return View::make('playlists.show');
+        return view('playlists.show');
     }
 
     public function getShortlink($id)
     {
         $playlist = Playlist::find($id);
         if (! $playlist || ! $playlist->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         return Redirect::action('PlaylistsController@getPlaylist', [$id, $playlist->slug]);
@@ -64,7 +64,7 @@ class PlaylistsController extends Controller
     {
         $playlist = Playlist::with('tracks', 'tracks.trackFiles', 'user', 'tracks.album')->find($id);
         if (! $playlist || ! $playlist->canView(Auth::user())) {
-            App::abort(404);
+            abort(404);
         }
 
         $format = null;
@@ -79,11 +79,11 @@ class PlaylistsController extends Controller
         }
 
         if ($format == null) {
-            App::abort(404);
+            abort(404);
         }
 
         if (! $playlist->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
-            App::abort(404);
+            abort(404);
         }
 
         ResourceLogItem::logItem('playlist', $id, ResourceLogItem::DOWNLOAD, $format['index']);

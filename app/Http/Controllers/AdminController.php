@@ -26,36 +26,36 @@ class AdminController extends Controller
 {
     public function getIndex()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getGenres()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getTracks()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getShowSongs()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getUsers()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getClassifierQueue()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getAnnouncements()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 }

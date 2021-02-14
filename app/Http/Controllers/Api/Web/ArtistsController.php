@@ -42,7 +42,7 @@ class ArtistsController extends ApiControllerBase
     {
         $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
         if (! $user) {
-            App::abort(404);
+            abort(404);
         }
 
         $favs = Favourite::where('user_id', $user->id)
@@ -88,7 +88,7 @@ class ArtistsController extends ApiControllerBase
     {
         $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
         if (! $user) {
-            App::abort(404);
+            abort(404);
         }
 
         $query = Track::summary()
@@ -137,7 +137,7 @@ class ArtistsController extends ApiControllerBase
             ])
             ->first();
         if (! $user) {
-            App::abort(404);
+            abort(404);
         }
 
         $trackQuery = Track::summary()

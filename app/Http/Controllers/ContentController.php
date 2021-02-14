@@ -26,16 +26,16 @@ class ContentController extends Controller
 {
     public function getTracks()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getAlbums()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getPlaylist()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 }

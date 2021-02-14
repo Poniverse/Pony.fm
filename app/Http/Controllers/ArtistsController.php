@@ -29,7 +29,7 @@ class ArtistsController extends Controller
 {
     public function getIndex()
     {
-        return View::make('artists.index');
+        return view('artists.index');
     }
 
     public function getFavourites($slug)
@@ -56,12 +56,12 @@ class ArtistsController extends Controller
             }
 
             if ($user->disabled_at) {
-                App::abort('404');
+                abort('404');
             }
 
-            return View::make('artists.profile');
+            return view('artists.profile');
         } else {
-            App::abort('404');
+            abort('404');
         }
     }
 
@@ -69,7 +69,7 @@ class ArtistsController extends Controller
     {
         $user = User::find($id);
         if (! $user || $user->disabled_at !== null) {
-            App::abort('404');
+            abort('404');
         }
 
         return Redirect::action('ArtistsController@getProfile', [$user->slug]);

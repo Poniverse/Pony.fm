@@ -278,7 +278,7 @@ class ParseTrackTagsCommand extends CommandBase
             }
 
             // write temporary image file
-            $tmpPath = Config::get('ponyfm.files_directory').'/tmp';
+            $tmpPath = config('ponyfm.files_directory').'/tmp';
 
             $filename = $file->getFilename().".cover.${extension}";
             $imageFilePath = "${tmpPath}/${filename}";

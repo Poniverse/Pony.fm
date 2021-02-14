@@ -88,7 +88,7 @@ class CreateCommentCommand extends CommandBase
                     if ($this->_type == 'playlist') {
                         $column = 'playlist_id';
                     } else {
-                        App::abort(500);
+                        abort(500);
                     }
                 }
             }
@@ -107,7 +107,7 @@ class CreateCommentCommand extends CommandBase
         } elseif ($this->_type === 'user') {
             $entity = User::find($this->_id);
         } else {
-            App::abort(400, 'This comment is being added to an invalid entity!');
+            abort(400, 'This comment is being added to an invalid entity!');
         }
 
         $entity->comment_count = Comment::where($column, $this->_id)->count();

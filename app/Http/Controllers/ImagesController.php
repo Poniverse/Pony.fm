@@ -33,24 +33,24 @@ class ImagesController extends Controller
         $coverType = Image::getImageTypeFromName($type);
 
         if ($coverType == null) {
-            App::abort(404);
+            abort(404);
         }
 
         $image = Image::find($id);
         if (! $image) {
-            App::abort(404);
+            abort(404);
         }
 
-        $response = Response::make('', 200);
+        $response = response('', 200);
         $filename = $image->getFile($coverType['id']);
 
         if (! is_file($filename)) {
             $redirect = url('/images/icons/profile_'.Image::$ImageTypes[$coverType['id']]['name'].'.png');
 
-            return Redirect::to($redirect);
+            return redirect($redirect);
         }
 
-        if (Config::get('app.sendfile')) {
+        if (config('app.sendfile')) {
             $response->header('X-Sendfile', $filename);
         } else {
             $response->header('X-Accel-Redirect', $filename);

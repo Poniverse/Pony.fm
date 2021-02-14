@@ -32,14 +32,14 @@ class Assets
         }
 
         foreach ($scripts as $filename) {
-            if (Config::get('app.debug') && $filename !== 'templates.js') {
+            if (config('app.debug') && $filename !== 'templates.js') {
                 $scriptTags .= "<script src='http://localhost:61999/build/scripts/{$filename}'></script>";
             } else {
                 $scriptTags .= "<script src='/build/scripts/{$filename}?".filemtime(public_path("build/scripts/{$filename}"))."'></script>";
             }
         }
 
-        if (Config::get('app.debug')) {
+        if (config('app.debug')) {
             $scriptTags .= '<script src="http://localhost:61999/webpack-dev-server.js"></script>';
         }
 
@@ -48,7 +48,7 @@ class Assets
 
     public static function styleIncludes($area = 'app')
     {
-        if (! Config::get('app.debug')) {
+        if (! config('app.debug')) {
             return '<script>document.write(\'<link rel="stylesheet" href="build/styles/'.$area.'.css?'.
                    filemtime(public_path("/build/styles/${area}.css"))
                    .'" />\');</script>';
