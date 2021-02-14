@@ -36,7 +36,7 @@ class DashboardController extends ApiControllerBase
             ->userDetails()
             ->explicitFilter()
             ->published()
-            ->orderBy('published_at', 'desc')
+            ->orderByDesc('published_at')
             ->take(30);
 
         $recentQuery->whereHas('user', function ($q) {

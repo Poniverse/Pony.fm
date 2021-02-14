@@ -263,7 +263,7 @@ class TracksController extends ApiControllerBase
 
     public function getOwned(User $user)
     {
-        $query = Track::summary()->where('user_id', $user->id)->orderBy('created_at', 'desc');
+        $query = Track::summary()->where('user_id', $user->id)->orderByDesc('created_at');
 
         $tracks = [];
         foreach ($query->get() as $track) {

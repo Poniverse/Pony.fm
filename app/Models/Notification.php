@@ -84,7 +84,7 @@ class Notification extends Model
             ->where('notifications.user_id', $user->id)
             ->whereNull('activities.deleted_at')
             ->select('*', 'notifications.id as id')
-            ->orderBy('activities.created_at', 'DESC');
+            ->orderByDesc('activities.created_at');
 
         return $result;
     }

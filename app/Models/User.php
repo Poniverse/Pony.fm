@@ -312,7 +312,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function comments():HasMany
     {
-        return $this->hasMany(Comment::class, 'profile_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class, 'profile_id')->orderByDesc('created_at');
     }
 
     public function tracks()

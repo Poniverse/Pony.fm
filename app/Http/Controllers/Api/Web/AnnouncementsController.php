@@ -37,7 +37,7 @@ class AnnouncementsController extends Controller
             ->whereNotNull('end_time')
             ->where('start_time', '<', $currentDate)
             ->where('end_time', '>', $currentDate)
-            ->orderBy('start_time', 'desc');
+            ->orderByDesc('start_time');
 
         $announcement = $query->first();
 
@@ -51,7 +51,7 @@ class AnnouncementsController extends Controller
     {
         $this->authorize('access-admin-area');
 
-        $announcements = Announcement::orderBy('start_time', 'desc')
+        $announcements = Announcement::orderByDesc('start_time')
             ->get();
 
         return response()->json([
@@ -64,7 +64,7 @@ class AnnouncementsController extends Controller
         $this->authorize('access-admin-area');
 
         $query = Announcement::where('id', '=', $genreId)
-            ->orderBy('start_time', 'desc');
+            ->orderByDesc('start_time');
 
         $announcement = $query->first();
 

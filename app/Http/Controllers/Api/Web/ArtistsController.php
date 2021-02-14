@@ -112,7 +112,7 @@ class ArtistsController extends ApiControllerBase
 
         $query = Album::summary()
             ->with('user')
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->where('track_count', '>', 0)
             ->whereUserId($user->id);
 
@@ -148,7 +148,7 @@ class ArtistsController extends ApiControllerBase
             ->userDetails()
             ->whereUserId($user->id)
             ->whereNotNull('published_at')
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->take(20);
 
         $latestTracks = [];
@@ -218,7 +218,7 @@ class ArtistsController extends ApiControllerBase
 
         // The query results are ordered after they're counted
         // due to Postgres's behaviour when combining those two operations.
-        $query->orderBy('display_name', 'asc');
+        $query->orderBy('display_name');
         $perPage = 40;
         $query->skip(($page - 1) * $perPage)->take($perPage);
         $users = [];

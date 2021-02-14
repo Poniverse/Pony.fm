@@ -150,7 +150,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function tracks()
     {
-        return $this->hasMany(Track::class)->orderBy('track_number', 'asc');
+        return $this->hasMany(Track::class)->orderBy('track_number');
     }
 
     public function trackFiles()
@@ -162,7 +162,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function comments():HasMany
     {
-        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderByDesc('created_at');
     }
 
     public function activities():MorphMany

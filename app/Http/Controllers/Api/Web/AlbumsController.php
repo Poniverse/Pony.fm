@@ -134,7 +134,7 @@ class AlbumsController extends ApiControllerBase
         $perPage = 40;
 
         $query
-            ->orderBy('title', 'asc')
+            ->orderBy('title')
             ->skip(($page - 1) * $perPage)
             ->take($perPage);
         $albums = [];
@@ -156,7 +156,7 @@ class AlbumsController extends ApiControllerBase
         $query = Album::summary()
             ->with('cover', 'user.avatar')
             ->where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')->get();
+            ->orderByDesc('created_at')->get();
         $albums = [];
 
         foreach ($query as $album) {

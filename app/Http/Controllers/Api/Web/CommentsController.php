@@ -56,7 +56,7 @@ class CommentsController extends ApiControllerBase
             }
         }
 
-        $query = Comment::where($column, '=', $id)->orderBy('created_at', 'desc')->with('user');
+        $query = Comment::where($column, '=', $id)->orderByDesc('created_at')->with('user');
         $comments = [];
 
         foreach ($query->get() as $comment) {

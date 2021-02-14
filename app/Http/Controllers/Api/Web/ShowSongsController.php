@@ -37,7 +37,7 @@ class ShowSongsController extends ApiControllerBase
         $songs = ShowSong::with(['trackCountRelation' => function ($query) {
             $query->withTrashed();
         }])
-            ->orderBy('title', 'asc')
+            ->orderBy('title')
             ->select('id', 'title', 'slug')
             ->get();
 

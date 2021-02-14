@@ -244,7 +244,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             ->withTimestamps();
 
         if ($ordered) {
-            $query = $query->orderBy('position', 'asc');
+            $query = $query->orderBy('position');
         }
 
         return $query;
@@ -269,7 +269,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public function comments():HasMany
     {
-        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderByDesc('created_at');
     }
 
     public function pins()

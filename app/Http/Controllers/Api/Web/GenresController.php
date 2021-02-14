@@ -37,7 +37,7 @@ class GenresController extends ApiControllerBase
         $genres = Genre::with(['trackCountRelation' => function ($query) {
             $query->withTrashed();
         }])
-            ->orderBy('name', 'asc')
+            ->orderBy('name')
             ->get();
 
         return response()->json([

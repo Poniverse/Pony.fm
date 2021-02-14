@@ -167,7 +167,7 @@ class PlaylistsController extends ApiControllerBase
                 $join->on('playlist_id', '=', 'playlists.id');
             })
             ->where('pinned_playlists.user_id', '=', Auth::user()->id)
-            ->orderBy('title', 'asc')
+            ->orderBy('title')
             ->select('playlists.*')
             ->get();
 
@@ -187,7 +187,7 @@ class PlaylistsController extends ApiControllerBase
         $query = Playlist::summary()
             ->with('pins', 'tracks', 'tracks.cover')
             ->where('user_id', $user->id)
-            ->orderBy('title', 'asc')
+            ->orderBy('title')
             ->get();
 
         $playlists = [];
