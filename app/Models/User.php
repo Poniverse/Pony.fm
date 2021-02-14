@@ -20,6 +20,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Contracts\Commentable;
 use App\Contracts\Searchable;
 use App\Traits\IndexedInElasticsearchTrait;
@@ -104,6 +105,8 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
 {
+    use HasFactory;
+
     use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'user';

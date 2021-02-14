@@ -142,7 +142,7 @@ class TestCase extends BaseTestCase
             \App\Jobs\EncodeTrackFile::class,
             \App\Jobs\UpdateSearchIndexForEntity::class,
         ]);
-        $this->user = factory(User::class)->create();
+        $this->user = User::factory()->create();
 
         $file = $this->getTestFileForUpload('ponyfm-test.flac');
 

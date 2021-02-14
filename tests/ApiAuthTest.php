@@ -35,7 +35,7 @@ class ApiAuthTest extends TestCase
      */
     public function testApiCreatesNewUser()
     {
-        $user = factory(User::class)->make();
+        $user = User::factory()->make();
         $accessTokenInfo = new AccessToken('nonsense-token');
         $accessTokenInfo->setIsActive(true);
         $accessTokenInfo->setScopes(['basic', 'ponyfm:tracks:upload']);
@@ -61,7 +61,7 @@ class ApiAuthTest extends TestCase
 
     public function testApiClientIdIsRecordedWhenUploadingTrack()
     {
-        $user = factory(User::class)->make();
+        $user = User::factory()->make();
 
         $accessTokenInfo = new AccessToken('nonsense-token');
         $accessTokenInfo->setIsActive(true);
