@@ -28,6 +28,7 @@ use Cache;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Str;
 use Response;
 
 class StatsController extends ApiControllerBase
@@ -87,12 +88,12 @@ class StatsController extends ApiControllerBase
         foreach ($playsArray as $timeOffet => $plays) {
             if ($hourly) {
                 $set = [
-                    'hours' => $timeOffet.' '.str_plural('hour', $timeOffet),
+                    'hours' => $timeOffet.' '.Str::plural('hour', $timeOffet),
                     'plays' => $plays,
                 ];
             } else {
                 $set = [
-                    'days' => $timeOffet.' '.str_plural('day', $timeOffet),
+                    'days' => $timeOffet.' '.Str::plural('day', $timeOffet),
                     'plays' => $plays,
                 ];
             }
@@ -108,7 +109,7 @@ class StatsController extends ApiControllerBase
 
     public function getTrackStats($id)
     {
-        $cachedOutput = Cache::remember('track_stats'.$id, 5, function () use ($id) {
+        $cachedOutput = Cache::remember('track_stats'.$id, 300, function () use ($id) {
             try {
                 $track = Track::published()->findOrFail($id);
             } catch (ModelNotFoundException $e) {

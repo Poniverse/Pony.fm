@@ -104,7 +104,7 @@ class TestCase extends BaseTestCase
         }
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         Storage::disk('local')->deleteDirectory('testing-datastore');
         parent::tearDown();

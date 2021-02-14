@@ -152,7 +152,9 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     protected $elasticsearchType = 'track';
 
-    protected $dates = ['deleted_at', 'published_at', 'released_at'];
+    protected $dates = [
+        'published_at', 'released_at',
+    ];
     protected $hidden = ['original_tags', 'metadata'];
     protected $casts = [
         'id'                => 'integer',
@@ -385,7 +387,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     {
         $trackData = Cache::remember(
             'popular_tracks'.$count.'-'.($allowExplicit ? 'explicit' : 'safe'),
-            5,
+            300,
             function () use ($allowExplicit, $count, $skip) {
                 /*$query = static
                     ::published()

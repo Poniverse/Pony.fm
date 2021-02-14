@@ -8,6 +8,7 @@ use App\Models\Track;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
+use Illuminate\Support\Arr;
 use Psr\Log\LoggerInterface;
 
 class AlexaController extends Controller
@@ -146,7 +147,7 @@ class AlexaController extends Controller
 
     public function play()
     {
-        $track = array_first(Track::popular(1));
+        $track = Arr::first(Track::popular(1));
 
         $this->session->put('current_position', 1);
         $this->session->put('track_id', $track['id']);
