@@ -20,7 +20,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Contracts\Commentable;
 use App\Contracts\Favouritable;
 use App\Contracts\Searchable;
@@ -34,6 +33,7 @@ use DB;
 use Exception;
 use Gate;
 use Helpers;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -91,7 +91,6 @@ use Venturecraft\Revisionable\RevisionableTrait;
 class Album extends Model implements Searchable, Commentable, Favouritable
 {
     use HasFactory;
-
     use SoftDeletes, SlugTrait, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'album';

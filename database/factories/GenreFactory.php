@@ -31,9 +31,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
-
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @property int $id
@@ -51,7 +50,6 @@ use App\Models\User;
  * @property string $updated_at
  * @property \Carbon\Carbon $deleted_at
  */
-
 class GenreFactory extends Factory
 {
     /**
