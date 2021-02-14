@@ -26,9 +26,9 @@ use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\TrackType;
 use App\Models\User;
-use DB;
-use Gate;
-use Notification;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 
 class EditTrackCommand extends CommandBase
 {

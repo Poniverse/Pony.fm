@@ -24,11 +24,11 @@ namespace App\Traits;
 use App\Jobs\EncodeTrackFile;
 use App\Models\Track;
 use App\Models\TrackFile;
-use File;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 
 /**
  * Class TrackCollection.

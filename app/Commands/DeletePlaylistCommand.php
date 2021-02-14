@@ -21,7 +21,7 @@
 namespace App\Commands;
 
 use App\Models\Playlist;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class DeletePlaylistCommand extends CommandBase
 {

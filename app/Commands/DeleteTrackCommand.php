@@ -21,7 +21,7 @@
 namespace App\Commands;
 
 use App\Models\Track;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 
 class DeleteTrackCommand extends CommandBase
 {

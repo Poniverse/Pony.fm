@@ -22,10 +22,10 @@ namespace App\Jobs;
 
 use App\Contracts\Searchable;
 use App\Jobs\Job;
-use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\DB;
 use SerializesModels;
 
 class UpdateSearchIndexForEntity extends Job implements ShouldQueue

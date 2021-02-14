@@ -20,12 +20,13 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use App\Models\Email;
 use App\Models\EmailSubscription;
-use Auth;
-use DB;
-use View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class NotificationsController extends Controller
 {
@@ -33,36 +34,36 @@ class NotificationsController extends Controller
      * @param $emailKey
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function getEmailClick($emailKey)
+    public function getEmailClick(Request $request, $emailKey)
     {
         /** @var Email $email */
         $email = Email::findOrFail($emailKey);
 
         DB::transaction(function () use ($email) {
-            $email->emailClicks()->create(['ip_address' => \Request::ip()]);
+            $email->emailClicks()->create(['ip_address' => $request->ip()]);
             $email->notification->is_read = true;
             $email->notification->save();
         });
 
-        return redirect($email->getActivity()->url);
+        return redirect()->to($email->getActivity()->url);
     }
 
-    public function getEmailUnsubscribe($subscriptionKey)
+    public function getEmailUnsubscribe(Request $request, $subscriptionKey)
     {
         /** @var EmailSubscription $subscription */
         $subscription = EmailSubscription::findOrFail($subscriptionKey);
         $subscription->delete();
 
-        if (Auth::check() && $subscription->user->id === Auth::user()->id) {
+        if ($request->user() && $subscription->user->id === $request->user()->id) {
             return redirect(route('account:settings', [
                 'slug' => $subscription->user->slug,
                 'unsubscribedMessageKey' => $subscription->activity_type,
-            ]), 303);
+            ]), );
         } else {
             return redirect(route('email:confirm-unsubscribed', [
                 'unsubscribedUser' => $subscription->user->display_name,
                 'unsubscribedMessageKey' => $subscription->activity_type,
-            ]), 303);
+            ]), );
         }
     }
 

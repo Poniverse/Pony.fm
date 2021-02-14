@@ -22,7 +22,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class DisabledAccountCheck
 {

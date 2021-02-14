@@ -22,10 +22,10 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use PfmValidator;
 use Poniverse;
-use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {

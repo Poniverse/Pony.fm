@@ -20,11 +20,11 @@
 
 namespace App\Models;
 
-use App;
-use Config;
-use File;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 
 /**
  * App\Models\TrackFile.
@@ -67,8 +67,9 @@ class TrackFile extends Model
     const STATUS_PROCESSING_PENDING = 3;
 
     protected $appends = ['is_expired'];
-    protected $dates = ['expires_at'];
+
     protected $casts = [
+        'expires_at' => 'datetime',
         'id'            => 'integer',
         'track_id'      => 'integer',
         'is_master'     => 'boolean',

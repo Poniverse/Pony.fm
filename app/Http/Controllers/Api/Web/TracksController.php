@@ -32,11 +32,11 @@ use App\Models\Track;
 use App\Models\TrackFile;
 use App\Models\TrackType;
 use App\Models\User;
-use Auth;
-use File;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TracksController extends ApiControllerBase
@@ -54,12 +54,12 @@ class TracksController extends ApiControllerBase
         $this->authorize('edit', $track);
 
         if ($track->status === Track::STATUS_PROCESSING) {
-            return Response::json(['message' => 'Processing...'], 202);
+            return response()->json(['message' => 'Processing...'], 202);
         } elseif ($track->status === Track::STATUS_COMPLETE) {
-            return Response::json(['message' => 'Processing complete!'], 201);
+            return response()->json(['message' => 'Processing complete!'], 201);
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed!'], 500);
+            return response()->json(['error' => 'Processing failed!'], 500);
         }
     }
 
@@ -68,9 +68,9 @@ class TracksController extends ApiControllerBase
         return $this->execute(new DeleteTrackCommand($id));
     }
 
-    public function postEdit($id)
+    public function postEdit(Request $request, $id)
     {
-        return $this->execute(new EditTrackCommand($id, Request::all()));
+        return $this->execute(new EditTrackCommand($id, $request->all()));
     }
 
     public function postUploadNewVersion($trackId)
@@ -95,12 +95,12 @@ class TracksController extends ApiControllerBase
         $this->authorize('edit', $track);
 
         if ($track->version_upload_status === Track::STATUS_PROCESSING) {
-            return Response::json(['message' => 'Processing...'], 202);
+            return response()->json(['message' => 'Processing...'], 202);
         } elseif ($track->version_upload_status === Track::STATUS_COMPLETE) {
-            return Response::json(['message' => 'Processing complete!'], 201);
+            return response()->json(['message' => 'Processing complete!'], 201);
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed!'], 500);
+            return response()->json(['error' => 'Processing failed!'], 500);
         }
     }
 
@@ -119,7 +119,7 @@ class TracksController extends ApiControllerBase
             ];
         }
 
-        return Response::json(['current_version' => $track->current_version, 'versions' => $versions], 200);
+        return response()->json(['current_version' => $track->current_version, 'versions' => $versions], 200);
     }
 
     public function getChangeVersion($trackId, $newVersion)
@@ -142,14 +142,14 @@ class TracksController extends ApiControllerBase
         return $this->execute(new GenerateTrackFilesCommand($track, $sourceFile, false, false, true, $newVersion));
     }
 
-    public function getShow($id)
+    public function getShow(Request $request, $id)
     {
         $track = Track::userDetails()->withComments()->find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             return $this->notFound('Track not found!');
         }
 
-        if (Request::get('log')) {
+        if ($request->get('log')) {
             ResourceLogItem::logItem('track', $id, ResourceLogItem::VIEW);
             $track->view_count++;
         }
@@ -159,10 +159,10 @@ class TracksController extends ApiControllerBase
             unset($returned_track['formats']);
         }
 
-        return Response::json(['track' => $returned_track], 200);
+        return response()->json(['track' => $returned_track], 200);
     }
 
-    public function getCachedTrack($id, $format)
+    public function getCachedTrack(Request $request, $id, $format)
     {
         // Validation
         try {
@@ -171,7 +171,7 @@ class TracksController extends ApiControllerBase
             return $this->notFound('Track not found!');
         }
 
-        if (! $track->canView(Auth::user())) {
+        if (! $track->canView($request->user())) {
             return $this->notFound('Track not found!');
         }
 
@@ -199,16 +199,16 @@ class TracksController extends ApiControllerBase
             $url = null;
         }
 
-        return Response::json(['url' => $url], 200);
+        return response()->json(['url' => $url], 200);
     }
 
-    public function getIndex($all = false, $unknown = false)
+    public function getIndex(Request $request, $all = false, $unknown = false)
     {
         $page = 1;
         $perPage = 45;
 
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         if ($all) {
@@ -240,7 +240,7 @@ class TracksController extends ApiControllerBase
             $ids[] = $track->id;
         }
 
-        return Response::json([
+        return response()->json([
             'tracks' => $tracks,
             'current_page' => $page,
             'total_pages' => ceil($totalCount / $perPage),
@@ -263,14 +263,14 @@ class TracksController extends ApiControllerBase
 
     public function getOwned(User $user)
     {
-        $query = Track::summary()->where('user_id', $user->id)->orderBy('created_at', 'desc');
+        $query = Track::summary()->where('user_id', $user->id)->orderByDesc('created_at');
 
         $tracks = [];
         foreach ($query->get() as $track) {
             $tracks[] = Track::mapPrivateTrackSummary($track);
         }
 
-        return Response::json($tracks, 200);
+        return response()->json($tracks, 200);
     }
 
     public function getEdit($id)
@@ -282,7 +282,7 @@ class TracksController extends ApiControllerBase
 
         $this->authorize('edit', $track);
 
-        return Response::json(Track::mapPrivateTrackShow($track), 200);
+        return response()->json(Track::mapPrivateTrackShow($track), 200);
     }
 
     /**

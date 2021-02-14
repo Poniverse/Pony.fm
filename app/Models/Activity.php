@@ -59,7 +59,7 @@ class Activity extends Model
     use SoftDeletes;
 
     public $timestamps = false;
-    protected $dates = ['created_at'];
+
     protected $fillable = ['created_at', 'user_id', 'activity_type', 'resource_type', 'resource_id'];
     protected $appends = ['url', 'thumbnail_url', 'human_friendly_resource_type'];
     protected $casts = [

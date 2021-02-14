@@ -27,17 +27,17 @@ use App\Exceptions\TrackFileNotFoundException;
 use App\Traits\IndexedInElasticsearchTrait;
 use App\Traits\SlugTrait;
 use App\Traits\TrackCollection;
-use Auth;
-use Cache;
-use DB;
 use Exception;
-use Gate;
 use Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -126,8 +126,6 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         return $query;
     }
 
-    protected $table = 'albums';
-
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -150,7 +148,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function tracks()
     {
-        return $this->hasMany(Track::class)->orderBy('track_number', 'asc');
+        return $this->hasMany(Track::class)->orderBy('track_number');
     }
 
     public function trackFiles()
@@ -162,7 +160,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function comments():HasMany
     {
-        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderByDesc('created_at');
     }
 
     public function activities():MorphMany

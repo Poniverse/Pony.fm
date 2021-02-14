@@ -23,10 +23,10 @@ namespace App\Commands;
 use App\Models\Album;
 use App\Models\Image;
 use App\Models\User;
-use Auth;
-use DB;
-use Gate;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class EditAlbumCommand extends CommandBase
 {

@@ -27,13 +27,8 @@ use App\Exceptions\TrackFileNotFoundException;
 use App\Models\ResourceLogItem;
 use App\Traits\IndexedInElasticsearchTrait;
 use App\Traits\SlugTrait;
-use Auth;
-use Cache;
-use Config;
-use DB;
 use Exception;
 use External;
-use Gate;
 use getid3_writetags;
 use Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,8 +36,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Log;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -154,11 +154,10 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     protected $elasticsearchType = 'track';
 
-    protected $dates = [
-        'published_at', 'released_at',
-    ];
     protected $hidden = ['original_tags', 'metadata'];
     protected $casts = [
+        'published_at' => 'datetime',
+        'released_at' => 'datetime',
         'id'                => 'integer',
         'user_id'           => 'integer',
         'license_id'        => 'integer',
@@ -692,8 +691,6 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         ];
     }
 
-    protected $table = 'tracks';
-
     public function genre()
     {
         return $this->belongsTo(Genre::class);
@@ -706,7 +703,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
     public function comments():HasMany
     {
-        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderByDesc('created_at');
     }
 
     public function favourites():HasMany

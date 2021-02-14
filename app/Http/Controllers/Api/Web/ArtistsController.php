@@ -20,7 +20,6 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App;
 use App\Commands\CreateUserCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Album;
@@ -31,10 +30,11 @@ use App\Models\Image;
 use App\Models\Track;
 use App\Models\User;
 use ColorThief\ColorThief;
-use Gate;
 use Helpers;
-use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 
 class ArtistsController extends ApiControllerBase
 {
@@ -78,7 +78,7 @@ class ArtistsController extends ApiControllerBase
             }
         }
 
-        return Response::json([
+        return response()->json([
             'tracks' => $tracks,
             'albums' => $albums,
         ], 200);
@@ -112,7 +112,7 @@ class ArtistsController extends ApiControllerBase
 
         $query = Album::summary()
             ->with('user')
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->where('track_count', '>', 0)
             ->whereUserId($user->id);
 
@@ -122,7 +122,7 @@ class ArtistsController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($album);
         }
 
-        return Response::json(['singles' => $singles, 'albumTracks' => $tracks, 'albums' => $albums], 200);
+        return response()->json(['singles' => $singles, 'albumTracks' => $tracks, 'albums' => $albums], 200);
     }
 
     public function getShow($slug)
@@ -148,7 +148,7 @@ class ArtistsController extends ApiControllerBase
             ->userDetails()
             ->whereUserId($user->id)
             ->whereNotNull('published_at')
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->take(20);
 
         $latestTracks = [];
@@ -178,7 +178,7 @@ class ArtistsController extends ApiControllerBase
         $followers = Follower::where('artist_id', $user->id)
             ->count();
 
-        return Response::json([
+        return response()->json([
             'artist' => [
                 'id' => $user->id,
                 'name' => $user->display_name,
@@ -206,11 +206,11 @@ class ArtistsController extends ApiControllerBase
         ], 200);
     }
 
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         $page = 1;
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         $query = User::where('track_count', '>', 0);
@@ -218,7 +218,7 @@ class ArtistsController extends ApiControllerBase
 
         // The query results are ordered after they're counted
         // due to Postgres's behaviour when combining those two operations.
-        $query->orderBy('display_name', 'asc');
+        $query->orderBy('display_name');
         $perPage = 40;
         $query->skip(($page - 1) * $perPage)->take($perPage);
         $users = [];
@@ -227,15 +227,15 @@ class ArtistsController extends ApiControllerBase
             $users[] = User::mapPublicUserSummary($user);
         }
 
-        return Response::json(
+        return response()->json(
             ['artists' => $users, 'current_page' => $page, 'total_pages' => ceil($count / $perPage)],
             200
         );
     }
 
-    public function postIndex()
+    public function postIndex(Request $request)
     {
-        $name = Request::json('username');
+        $name = $request->json('username');
 
         return $this->execute(new CreateUserCommand($name, $name, null, true));
     }

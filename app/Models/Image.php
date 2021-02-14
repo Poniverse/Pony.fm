@@ -20,9 +20,9 @@
 
 namespace App\Models;
 
-use Config;
 use External;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
@@ -164,8 +164,6 @@ class Image extends Model
         External::execute($command);
         chmod($path, 0644);
     }
-
-    protected $table = 'images';
 
     public function getUrl($type = self::NORMAL)
     {

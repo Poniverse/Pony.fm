@@ -22,10 +22,10 @@ namespace App\Jobs;
 
 use App\Models\Genre;
 use App\Models\Track;
-use Auth;
-use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use SerializesModels;
 
 class DeleteGenre extends Job implements ShouldQueue

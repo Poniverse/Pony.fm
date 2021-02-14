@@ -20,11 +20,11 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use App\Models\Image;
-use Config;
-use Redirect;
-use Response;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 
 class ImagesController extends Controller
 {
@@ -41,13 +41,13 @@ class ImagesController extends Controller
             abort(404);
         }
 
-        $response = response('', 200);
+        $response = response()->noContent(200);
         $filename = $image->getFile($coverType['id']);
 
         if (! is_file($filename)) {
             $redirect = url('/images/icons/profile_'.Image::$ImageTypes[$coverType['id']]['name'].'.png');
 
-            return redirect($redirect);
+            return redirect()->to($redirect);
         }
 
         if (config('app.sendfile')) {

@@ -21,8 +21,8 @@
 namespace App\Console\Commands;
 
 use App\Models\TrackFile;
-use File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class VersionFiles extends Command
 {

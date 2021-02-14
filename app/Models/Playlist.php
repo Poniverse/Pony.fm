@@ -27,15 +27,15 @@ use App\Exceptions\TrackFileNotFoundException;
 use App\Traits\IndexedInElasticsearchTrait;
 use App\Traits\SlugTrait;
 use App\Traits\TrackCollection;
-use Auth;
-use Cache;
-use DB;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -93,8 +93,6 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     use SoftDeletes, SlugTrait, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'playlist';
-
-    protected $table = 'playlists';
 
     protected $casts = [
         'id'                => 'integer',
@@ -244,7 +242,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             ->withTimestamps();
 
         if ($ordered) {
-            $query = $query->orderBy('position', 'asc');
+            $query = $query->orderBy('position');
         }
 
         return $query;
@@ -269,7 +267,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public function comments():HasMany
     {
-        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderByDesc('created_at');
     }
 
     public function pins()

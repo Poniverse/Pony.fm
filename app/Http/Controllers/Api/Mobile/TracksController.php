@@ -22,7 +22,7 @@ namespace App\Http\Controllers\Api\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\Track;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class TracksController extends Controller
 {
@@ -44,7 +44,7 @@ class TracksController extends Controller
             'tracks' => $tracks->toArray(),
         ];
 
-        return Response::json($json, 200);
+        return response()->json($json, 200);
     }
 
     public function popular()
@@ -56,6 +56,6 @@ class TracksController extends Controller
             'tracks' => $tracks->toArray(),
         ];
 
-        return Response::json($json, 200);
+        return response()->json($json, 200);
     }
 }

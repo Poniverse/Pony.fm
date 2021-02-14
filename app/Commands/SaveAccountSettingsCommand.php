@@ -22,9 +22,9 @@ namespace App\Commands;
 
 use App\Models\Image;
 use App\Models\User;
-use DB;
-use Gate;
-use Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class SaveAccountSettingsCommand extends CommandBase
 {

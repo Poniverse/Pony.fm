@@ -20,18 +20,18 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App;
 use App\Commands\CreateCommentCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Comment;
-use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Response;
 
 class CommentsController extends ApiControllerBase
 {
-    public function postCreate($type, $id)
+    public function postCreate(Request $request, $type, $id)
     {
-        return $this->execute(new CreateCommentCommand($type, $id, Request::all()));
+        return $this->execute(new CreateCommentCommand($type, $id, $request->all()));
     }
 
     public function getIndex($type, $id)
@@ -56,13 +56,13 @@ class CommentsController extends ApiControllerBase
             }
         }
 
-        $query = Comment::where($column, '=', $id)->orderBy('created_at', 'desc')->with('user');
+        $query = Comment::where($column, '=', $id)->orderByDesc('created_at')->with('user');
         $comments = [];
 
         foreach ($query->get() as $comment) {
             $comments[] = Comment::mapPublic($comment);
         }
 
-        return Response::json(['list' => $comments, 'count' => count($comments)]);
+        return response()->json(['list' => $comments, 'count' => count($comments)]);
     }
 }

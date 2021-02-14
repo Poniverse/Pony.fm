@@ -71,7 +71,7 @@ class SyncPoniverseAccounts extends Command
 %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%');
 
         $usersToUpdate
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->chunk(100, function ($users) use ($progress) {
                 /** @var User $user */
                 foreach ($users as $user) {

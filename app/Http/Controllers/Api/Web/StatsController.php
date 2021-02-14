@@ -23,13 +23,14 @@ namespace App\Http\Controllers\Api\Web;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
-use Auth;
-use Cache;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
-use Response;
 
 class StatsController extends ApiControllerBase
 {
@@ -101,13 +102,13 @@ class StatsController extends ApiControllerBase
         }
 
         if ($hourly) {
-            return Response::json(['playStats' => $output, 'type' => 'Hourly'], 200);
+            return response()->json(['playStats' => $output, 'type' => 'Hourly'], 200);
         } else {
-            return Response::json(['playStats' => $output, 'type' => 'Daily'], 200);
+            return response()->json(['playStats' => $output, 'type' => 'Daily'], 200);
         }
     }
 
-    public function getTrackStats($id)
+    public function getTrackStats(Request $request, $id)
     {
         $cachedOutput = Cache::remember('track_stats'.$id, 300, function () use ($id) {
             try {
@@ -117,7 +118,7 @@ class StatsController extends ApiControllerBase
             }
 
             // Do we have permission to view this track?
-            if (! $track->canView(Auth::user())) {
+            if (! $track->canView($request->user())) {
                 return $this->notFound('Track not found!');
             }
 

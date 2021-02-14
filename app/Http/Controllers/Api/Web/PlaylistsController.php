@@ -31,21 +31,21 @@ use App\Models\Playlist;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\User;
-use Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class PlaylistsController extends ApiControllerBase
 {
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        return $this->execute(new CreatePlaylistCommand(Request::all()));
+        return $this->execute(new CreatePlaylistCommand($request->all()));
     }
 
-    public function postEdit($id)
+    public function postEdit(Request $request, $id)
     {
-        return $this->execute(new EditPlaylistCommand($id, Request::all()));
+        return $this->execute(new EditPlaylistCommand($id, $request->all()));
     }
 
     public function postDelete($id)
@@ -53,19 +53,19 @@ class PlaylistsController extends ApiControllerBase
         return $this->execute(new DeletePlaylistCommand($id));
     }
 
-    public function postAddTrack($id)
+    public function postAddTrack(Request $request, $id)
     {
-        return $this->execute(new AddTrackToPlaylistCommand($id, Request::get('track_id')));
+        return $this->execute(new AddTrackToPlaylistCommand($id, $request->get('track_id')));
     }
 
-    public function postRemoveTrack($id)
+    public function postRemoveTrack(Request $request, $id)
     {
-        return $this->execute(new RemoveTrackFromPlaylistCommand($id, Request::get('track_id')));
+        return $this->execute(new RemoveTrackFromPlaylistCommand($id, $request->get('track_id')));
     }
 
-    public function getIndex()
+    public function getIndex(Request $request)
     {
-        $page = Request::has('page') ? Request::get('page') : 1;
+        $page = $request->has('page') ? $request->get('page') : 1;
 
         $query = Playlist::summary()
             ->with(
@@ -94,14 +94,14 @@ class PlaylistsController extends ApiControllerBase
             $playlists[] = Playlist::mapPublicPlaylistSummary($playlist);
         }
 
-        return Response::json([
+        return response()->json([
             'playlists' => $playlists,
             'current_page' => $page,
             'total_pages' => ceil($count / $perPage),
         ], 200);
     }
 
-    public function getShow($id)
+    public function getShow(Request $request, $id)
     {
         $playlist = Playlist::with([
             'tracks.user',
@@ -115,19 +115,19 @@ class PlaylistsController extends ApiControllerBase
             'comments',
             'comments.user',
         ])->userDetails()->find($id);
-        if (! $playlist || ! $playlist->canView(Auth::user())) {
+        if (! $playlist || ! $playlist->canView($request->user())) {
             abort('404');
         }
 
-        if (Request::get('log')) {
+        if ($request->get('log')) {
             ResourceLogItem::logItem('playlist', $id, ResourceLogItem::VIEW);
             $playlist->view_count++;
         }
 
-        return Response::json(Playlist::mapPublicPlaylistShow($playlist), 200);
+        return response()->json(Playlist::mapPublicPlaylistShow($playlist), 200);
     }
 
-    public function getCachedPlaylist($id, $format)
+    public function getCachedPlaylist(Request $request, $id, $format)
     {
         // Validation
         try {
@@ -137,7 +137,7 @@ class PlaylistsController extends ApiControllerBase
             return $this->notFound('Playlist not found!');
         }
 
-        if ((! $playlist->is_public && ! Auth::check()) || (! $playlist->is_public && ($playlist->user_id !== Auth::user()->id))) {
+        if ((! $playlist->is_public && ! $request->user()) || (! $playlist->is_public && ($playlist->user_id !== $request->user()->id))) {
             return $this->notFound('Playlist not found!');
         }
 
@@ -155,10 +155,10 @@ class PlaylistsController extends ApiControllerBase
             $url = null;
         }
 
-        return Response::json(['url' => $url], 200);
+        return response()->json(['url' => $url], 200);
     }
 
-    public function getPinned()
+    public function getPinned(Request $request)
     {
         $query = Playlist
             ::userDetails()
@@ -166,8 +166,8 @@ class PlaylistsController extends ApiControllerBase
             ->join('pinned_playlists', function ($join) {
                 $join->on('playlist_id', '=', 'playlists.id');
             })
-            ->where('pinned_playlists.user_id', '=', Auth::user()->id)
-            ->orderBy('title', 'asc')
+            ->where('pinned_playlists.user_id', '=', $request->user()->id)
+            ->orderBy('title')
             ->select('playlists.*')
             ->get();
 
@@ -179,15 +179,15 @@ class PlaylistsController extends ApiControllerBase
             $playlists[] = $mapped;
         }
 
-        return Response::json($playlists, 200);
+        return response()->json($playlists, 200);
     }
 
-    public function getOwned(User $user)
+    public function getOwned(Request $request, User $user)
     {
         $query = Playlist::summary()
             ->with('pins', 'tracks', 'tracks.cover')
             ->where('user_id', $user->id)
-            ->orderBy('title', 'asc')
+            ->orderBy('title')
             ->get();
 
         $playlists = [];
@@ -203,13 +203,13 @@ class PlaylistsController extends ApiControllerBase
                     'small' => $playlist->getCoverUrl(Image::SMALL),
                     'normal' => $playlist->getCoverUrl(Image::NORMAL),
                 ],
-                'is_pinned' => $playlist->hasPinFor(Auth::user()->id),
+                'is_pinned' => $playlist->hasPinFor($request->user()->id),
                 'is_public' => $playlist->is_public == 1,
                 'track_ids' => $playlist->tracks->pluck('id'),
             ];
         }
 
-        return Response::json($playlists, 200);
+        return response()->json($playlists, 200);
     }
 
     /**

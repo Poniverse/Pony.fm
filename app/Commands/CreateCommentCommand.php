@@ -25,9 +25,9 @@ use App\Models\Comment;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
-use Auth;
-use Notification;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class CreateCommentCommand extends CommandBase
 {

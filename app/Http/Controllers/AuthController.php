@@ -22,15 +22,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\User;
-use Auth;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
-use Log;
 use Poniverse\Lib\Client;
-use Redirect;
-use Request;
 
 class AuthController extends Controller
 {
@@ -50,23 +50,23 @@ class AuthController extends Controller
                     ->getAuthorizationUrl());
         }
 
-        return redirect('/');
+        return redirect()->to('/');
     }
 
     public function postLogout()
     {
         Auth::logout();
 
-        return redirect('/');
+        return redirect()->to('/');
     }
 
-    public function getOAuth()
+    public function getOAuth(Request $request)
     {
         $oauthProvider = $this->poniverse->getOAuthProvider();
 
         try {
             $accessToken = $oauthProvider->getAccessToken('authorization_code', [
-                'code' => Request::query('code'),
+                'code' => $request->query('code'),
                 'redirect_uri' => action('AuthController@getOAuth'),
             ]);
             $this->poniverse->setAccessToken($accessToken);
@@ -74,7 +74,7 @@ class AuthController extends Controller
         } catch (IdentityProviderException $e) {
             Log::error($e);
 
-            return redirect('/')->with(
+            return redirect()->to('/')->with(
                 'message',
                 'Unfortunately we are having problems attempting to log you in at the moment. Please try again at a later time.'
             );
@@ -129,14 +129,14 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postPoniverseAccountSync()
+    public function postPoniverseAccountSync(Request $request)
     {
-        $poniverseId = Request::get('id');
-        $updatedAttribute = Request::get('attribute');
+        $poniverseId = $request->get('id');
+        $updatedAttribute = $request->get('attribute');
 
         // Only email address updates are supported at this time.
         if ('email' !== $updatedAttribute) {
-            return \Response::json(['message' => 'Unsupported Poniverse account attribute.'], 400);
+            return response()->json(['message' => 'Unsupported Poniverse account attribute.'], 400);
         }
 
         $user = User::wherePoniverseId($poniverseId)->first();
@@ -154,13 +154,13 @@ class AuthController extends Controller
         $user->{$updatedAttribute} = $newUserData->{$updatedAttribute};
         $user->save();
 
-        return \Response::json(['message' => 'Successfully updated this user!'], 200);
+        return response()->json(['message' => 'Successfully updated this user!'], 200);
     }
 
     protected function loginRedirect($user, $rememberMe = true)
     {
         Auth::login($user, $rememberMe);
 
-        return redirect('/');
+        return redirect()->to('/');
     }
 }

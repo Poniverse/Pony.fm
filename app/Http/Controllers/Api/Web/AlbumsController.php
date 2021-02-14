@@ -29,22 +29,22 @@ use App\Models\Image;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\User;
-use Auth;
-use Gate;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 
 class AlbumsController extends ApiControllerBase
 {
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        return $this->execute(new CreateAlbumCommand(Request::all()));
+        return $this->execute(new CreateAlbumCommand($request->all()));
     }
 
-    public function postEdit($id)
+    public function postEdit(Request $request, $id)
     {
-        return $this->execute(new EditAlbumCommand($id, Request::all()));
+        return $this->execute(new EditAlbumCommand($id, $request->all()));
     }
 
     public function postDelete($id)
@@ -52,7 +52,7 @@ class AlbumsController extends ApiControllerBase
         return $this->execute(new DeleteAlbumCommand($id));
     }
 
-    public function getShow($id)
+    public function getShow(Request $request, $id)
     {
         $album = Album::with([
             'tracks' => function ($query) {
@@ -75,7 +75,7 @@ class AlbumsController extends ApiControllerBase
             abort(404);
         }
 
-        if (Request::get('log')) {
+        if ($request->get('log')) {
             ResourceLogItem::logItem('album', $id, ResourceLogItem::VIEW);
             $album->view_count++;
         }
@@ -85,7 +85,7 @@ class AlbumsController extends ApiControllerBase
             unset($returned_album['formats']);
         }
 
-        return Response::json([
+        return response()->json([
             'album' => $returned_album,
         ], 200);
     }
@@ -114,14 +114,14 @@ class AlbumsController extends ApiControllerBase
             $url = null;
         }
 
-        return Response::json(['url' => $url], 200);
+        return response()->json(['url' => $url], 200);
     }
 
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         $page = 1;
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         $query = Album::summary()
@@ -134,7 +134,7 @@ class AlbumsController extends ApiControllerBase
         $perPage = 40;
 
         $query
-            ->orderBy('title', 'asc')
+            ->orderBy('title')
             ->skip(($page - 1) * $perPage)
             ->take($perPage);
         $albums = [];
@@ -143,7 +143,7 @@ class AlbumsController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($album);
         }
 
-        return Response::json(
+        return response()->json(
             ['albums' => $albums, 'current_page' => $page, 'total_pages' => ceil($count / $perPage)],
             200
         );
@@ -156,7 +156,7 @@ class AlbumsController extends ApiControllerBase
         $query = Album::summary()
             ->with('cover', 'user.avatar')
             ->where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')->get();
+            ->orderByDesc('created_at')->get();
         $albums = [];
 
         foreach ($query as $album) {
@@ -172,17 +172,17 @@ class AlbumsController extends ApiControllerBase
             ];
         }
 
-        return Response::json($albums, 200);
+        return response()->json($albums, 200);
     }
 
-    public function getEdit($id)
+    public function getEdit(Request $request, $id)
     {
         $album = Album::with('tracks')->find($id);
         if (! $album) {
             return $this->notFound('Album '.$id.' not found!');
         }
 
-        if (Gate::denies('edit', Auth::user())) {
+        if (Gate::denies('edit', $request->user())) {
             return $this->notAuthorized();
         }
 
@@ -194,7 +194,7 @@ class AlbumsController extends ApiControllerBase
             ];
         }
 
-        return Response::json([
+        return response()->json([
             'id' => $album->id,
             'title' => $album->title,
             'user_id' => $album->user_id,

@@ -25,8 +25,8 @@ use App\Models\Notification;
 use App\Models\Subscription;
 use App\Models\Track;
 use App\Models\User;
-use Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Minishlink\WebPush\WebPush;
 
 class NotificationsController extends ApiControllerBase
@@ -36,9 +36,9 @@ class NotificationsController extends ApiControllerBase
      *
      * @return array
      */
-    public function getNotifications()
+    public function getNotifications(Request $request)
     {
-        $notifications = Notification::forUser(Auth::user())
+        $notifications = Notification::forUser($request->user())
             ->take(20)
             ->get();
 
@@ -54,10 +54,10 @@ class NotificationsController extends ApiControllerBase
      *
      * @return array
      */
-    public function putMarkAsRead()
+    public function putMarkAsRead(Request $request)
     {
-        $notificationIds = Request::json('notification_ids');
-        $numberOfUpdatedRows = Auth::user()
+        $notificationIds = $request->json('notification_ids');
+        $numberOfUpdatedRows = $request->user()
             ->notifications()
             ->whereIn('id', $notificationIds)
             ->update(['is_read' => true]);
@@ -72,17 +72,17 @@ class NotificationsController extends ApiControllerBase
      *
      * @return string
      */
-    public function postSubscribe()
+    public function postSubscribe(Request $request)
     {
-        $input = json_decode(Request::json('subscription'));
+        $input = json_decode($request->json('subscription'));
         if ($input != 'null') {
             $existing = Subscription::where('endpoint', '=', $input->endpoint)
-                ->where('user_id', '=', Auth::user()->id)
+                ->where('user_id', '=', $request->user()->id)
                 ->first();
 
             if ($existing === null) {
                 $subscription = Subscription::create([
-                    'user_id' => Auth::user()->id,
+                    'user_id' => $request->user()->id,
                     'endpoint' => $input->endpoint,
                     'p256dh' => $input->keys->p256dh,
                     'auth' => $input->keys->auth,
@@ -102,12 +102,12 @@ class NotificationsController extends ApiControllerBase
      *
      * @return string
      */
-    public function postUnsubscribe()
+    public function postUnsubscribe(Request $request)
     {
-        $input = json_decode(Request::json('subscription'));
+        $input = json_decode($request->json('subscription'));
 
         $existing = Subscription::where('endpoint', '=', $input->endpoint)
-            ->where('user_id', '=', Auth::user()->id)
+            ->where('user_id', '=', $request->user()->id)
             ->delete();
 
         return ['result' => 'success'];

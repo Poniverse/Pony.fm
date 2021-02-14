@@ -23,9 +23,7 @@ namespace App\Models;
 use App\Contracts\Commentable;
 use App\Contracts\Searchable;
 use App\Traits\IndexedInElasticsearchTrait;
-use Auth;
 use Carbon\Carbon;
-use DB;
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -36,9 +34,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use League\OAuth2\Client\Token\AccessToken;
-use Validator;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -109,9 +109,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'user';
-
-    protected $table = 'users';
     protected $casts = [
+        'disabled_at' => 'datetime',
         'id'                        => 'integer',
         'sync_names'                => 'boolean',
         'uses_gravatar'             => 'boolean',
@@ -122,7 +121,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'is_archived'               => 'boolean',
         'redirect_to'               => 'integer',
     ];
-    protected $dates = ['created_at', 'updated_at', 'disabled_at'];
+
     protected $hidden = ['disabled_at', 'remember_token'];
 
     public function scopeUserDetails($query)
@@ -312,7 +311,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function comments():HasMany
     {
-        return $this->hasMany(Comment::class, 'profile_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class, 'profile_id')->orderByDesc('created_at');
     }
 
     public function tracks()

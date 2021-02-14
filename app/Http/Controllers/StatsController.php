@@ -20,7 +20,7 @@
 
 namespace App\Http\Controllers;
 
-use View;
+use Illuminate\Support\Facades\View;
 
 class StatsController extends Controller
 {

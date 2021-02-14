@@ -22,8 +22,8 @@ namespace App\Commands;
 
 use App\Models\Playlist;
 use App\Models\Track;
-use Auth;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RemoveTrackFromPlaylistCommand extends CommandBase
 {

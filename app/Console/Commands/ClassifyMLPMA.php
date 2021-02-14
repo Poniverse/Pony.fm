@@ -23,8 +23,8 @@ namespace App\Console\Commands;
 use App\Models\ShowSong;
 use App\Models\Track;
 use App\Models\TrackType;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ClassifyMLPMA extends Command

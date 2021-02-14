@@ -20,11 +20,11 @@
 
 namespace App\Models;
 
-use Auth;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Database\Eloquent\Model;
-use Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
 /**
  * App\Models\ResourceLogItem.
@@ -51,9 +51,7 @@ use Request;
  */
 class ResourceLogItem extends Model
 {
-    protected $table = 'resource_log_items';
     public $timestamps = false;
-    protected $dates = ['created_at'];
 
     const VIEW = 1;
     const DOWNLOAD = 2;

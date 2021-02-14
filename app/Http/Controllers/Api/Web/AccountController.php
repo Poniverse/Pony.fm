@@ -24,10 +24,10 @@ use App\Commands\SaveAccountSettingsCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Image;
 use App\Models\User;
-use Auth;
-use Gate;
-use Request;
-use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 
 class AccountController extends ApiControllerBase
 {
@@ -35,23 +35,23 @@ class AccountController extends ApiControllerBase
     {
         $this->authorize('edit', $user);
 
-        return Response::json([
+        return response()->json([
             'user' => $user->toArray(),
         ]);
     }
 
-    public function getCurrentUser()
+    public function getCurrentUser(Request $request)
     {
-        $current_user = Auth::user();
+        $current_user = $request->user();
 
         if ($current_user != null) {
             $user = User::where('id', $current_user->id)->whereNull('disabled_at')->first();
 
             if ($user == null) {
-                return Response::json(['error' => 'You are not logged in'], 404);
+                return response()->json(['error' => 'You are not logged in'], 404);
             }
 
-            return Response::json([
+            return response()->json([
                 'id' => $user->id,
                 'name' => $user->display_name,
                 'slug' => $user->slug,
@@ -64,14 +64,14 @@ class AccountController extends ApiControllerBase
                 'created_at' => $user->created_at,
             ], 200);
         } else {
-            return Response::json(['error' => 'You are not logged in'], 404);
+            return response()->json(['error' => 'You are not logged in'], 404);
         }
     }
 
-    public function getSettings($slug)
+    public function getSettings(Request $request, $slug)
     {
         $user = null;
-        $current_user = Auth::user();
+        $current_user = $request->user();
 
         if ($current_user != null) {
             if ($slug == $current_user->slug) {
@@ -81,15 +81,15 @@ class AccountController extends ApiControllerBase
             }
 
             if ($user == null) {
-                return Response::json(['error' => 'User does not exist'], 404);
+                return response()->json(['error' => 'User does not exist'], 404);
             }
 
             if (Gate::denies('edit', $user)) {
-                return Response::json(['error' => 'You cannot do that. So stop trying!'], 403);
+                return response()->json(['error' => 'You cannot do that. So stop trying!'], 403);
             }
         }
 
-        return Response::json([
+        return response()->json([
             'id'  => $user->id,
             'bio' => $user->bio,
             'can_see_explicit_content' => $user->can_see_explicit_content == 1,
@@ -104,8 +104,8 @@ class AccountController extends ApiControllerBase
         ], 200);
     }
 
-    public function postSave(User $user)
+    public function postSave(Request $request, User $user)
     {
-        return $this->execute(new SaveAccountSettingsCommand(Request::all(), $user));
+        return $this->execute(new SaveAccountSettingsCommand($request->all(), $user));
     }
 }

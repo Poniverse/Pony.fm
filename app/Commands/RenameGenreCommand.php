@@ -22,10 +22,10 @@ namespace App\Commands;
 
 use App\Jobs\UpdateTagsForRenamedGenre;
 use App\Models\Genre;
-use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Validator;
 
 class RenameGenreCommand extends CommandBase
 {

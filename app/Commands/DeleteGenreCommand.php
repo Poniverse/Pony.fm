@@ -22,9 +22,9 @@ namespace App\Commands;
 
 use App\Jobs\DeleteGenre;
 use App\Models\Genre;
-use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Validator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class DeleteGenreCommand extends CommandBase
 {

@@ -59,7 +59,7 @@ class RebuildTags extends Command
             $track = Track::findOrFail($this->argument('trackId'));
             $tracks = [$track];
         } else {
-            $tracks = Track::whereNotNull('published_at')->withTrashed()->orderBy('id', 'asc')->get();
+            $tracks = Track::whereNotNull('published_at')->withTrashed()->orderBy('id')->get();
         }
 
         $numberOfTracks = count($tracks);

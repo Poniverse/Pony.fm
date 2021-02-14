@@ -20,9 +20,9 @@
 
 namespace App\Http\Controllers;
 
-use Config;
-use Redirect;
-use View;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class AccountController extends Controller
 {
@@ -33,7 +33,7 @@ class AccountController extends Controller
 
     public function getRegister()
     {
-        return redirect(config('poniverse.urls')['register']);
+        return redirect()->to(config('poniverse.urls')['register']);
     }
 
     public function getNotifications()

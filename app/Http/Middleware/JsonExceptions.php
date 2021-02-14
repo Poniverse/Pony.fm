@@ -40,7 +40,7 @@ class JsonExceptions
         try {
             $response = $next($request);
         } catch (HttpException $e) {
-            return \Response::json([
+            return response()->json([
                 'message' => $e->getMessage(),
             ], $e->getStatusCode());
         }

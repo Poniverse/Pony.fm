@@ -30,8 +30,8 @@ use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
 use Carbon\Carbon;
-use Log;
-use Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PonyfmDriver extends AbstractDriver
 {

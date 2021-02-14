@@ -21,11 +21,11 @@
 namespace App\Models;
 
 use App\Traits\SlugTrait;
-use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -59,8 +59,6 @@ use Venturecraft\Revisionable\RevisionableTrait;
 class Genre extends Model
 {
     use HasFactory;
-
-    protected $table = 'genres';
 
     protected $fillable = ['name', 'slug'];
     protected $appends = ['track_count', 'url'];

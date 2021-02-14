@@ -22,9 +22,9 @@ namespace App\Commands;
 
 use App\Models\Playlist;
 use App\Models\Track;
-use Auth;
-use DB;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AddTrackToPlaylistCommand extends CommandBase
 {

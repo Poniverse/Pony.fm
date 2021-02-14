@@ -20,16 +20,16 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\TrackFile;
-use Auth;
-use Config;
 use Illuminate\Http\Request;
-use Redirect;
-use Response;
-use View;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
 
 class TracksController extends Controller
 {
@@ -38,7 +38,7 @@ class TracksController extends Controller
         return view('tracks.index');
     }
 
-    public function getEmbed($id)
+    public function getEmbed(Request $request, $id)
     {
         $track = Track
             ::whereId($id)
@@ -50,7 +50,7 @@ class TracksController extends Controller
                 'genre'
             )->first();
 
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
@@ -93,7 +93,7 @@ class TracksController extends Controller
             ->userDetails()
             ->first();
 
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
@@ -110,13 +110,13 @@ class TracksController extends Controller
             'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
         ];
 
-        return Response::json($output);
+        return response()->json($output);
     }
 
-    public function getTrack($id, $slug)
+    public function getTrack(Request $request, $id, $slug)
     {
         $track = Track::find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
@@ -132,26 +132,26 @@ class TracksController extends Controller
         return $this->getTrack($id, $slug);
     }
 
-    public function getShortlink($id)
+    public function getShortlink(Request $request, $id)
     {
         $track = Track::find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
         return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
     }
 
-    public function getStream($id, $extension)
+    public function getStream(Request $request, $id, $extension)
     {
         $track = Track::find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
 
-        $response = response('', 200);
+        $response = response()->noContent(200);
         $filename = $trackFile->getFile();
 
         if (! file_exists($filename)) {
@@ -179,17 +179,17 @@ class TracksController extends Controller
         return $response;
     }
 
-    public function getDownload($id, $extension)
+    public function getDownload(Request $request, $id, $extension)
     {
         $track = Track::find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
         ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $trackFile->getFormat()['index']);
 
-        $response = response('', 200);
+        $response = response()->noContent(200);
         $filename = $trackFile->getFile();
 
         if (config('app.sendfile')) {

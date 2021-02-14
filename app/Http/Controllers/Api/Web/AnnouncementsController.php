@@ -24,8 +24,8 @@ use App\Commands\CreateAnnouncementCommand;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use Carbon\Carbon;
-use Request;
-use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class AnnouncementsController extends Controller
 {
@@ -37,11 +37,11 @@ class AnnouncementsController extends Controller
             ->whereNotNull('end_time')
             ->where('start_time', '<', $currentDate)
             ->where('end_time', '>', $currentDate)
-            ->orderBy('start_time', 'desc');
+            ->orderByDesc('start_time');
 
         $announcement = $query->first();
 
-        return Response::json(
+        return response()->json(
             ['announcement' => $announcement],
             200
         );
@@ -51,10 +51,10 @@ class AnnouncementsController extends Controller
     {
         $this->authorize('access-admin-area');
 
-        $announcements = Announcement::orderBy('start_time', 'desc')
+        $announcements = Announcement::orderByDesc('start_time')
             ->get();
 
-        return Response::json([
+        return response()->json([
             'announcements' => $announcements->toArray(),
         ], 200);
     }
@@ -64,19 +64,19 @@ class AnnouncementsController extends Controller
         $this->authorize('access-admin-area');
 
         $query = Announcement::where('id', '=', $genreId)
-            ->orderBy('start_time', 'desc');
+            ->orderByDesc('start_time');
 
         $announcement = $query->first();
 
-        return Response::json(
+        return response()->json(
             ['announcement' => $announcement],
             200
         );
     }
 
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        $command = new CreateAnnouncementCommand(Request::get('name'));
+        $command = new CreateAnnouncementCommand($request->get('name'));
 
         return $this->execute($command);
     }

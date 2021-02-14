@@ -35,8 +35,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TrackType extends Model
 {
-    protected $table = 'track_types';
-
     const ORIGINAL_TRACK = 1;
     const OFFICIAL_TRACK_REMIX = 2;
     const FAN_TRACK_REMIX = 3;

@@ -22,8 +22,8 @@ namespace App\Console\Commands;
 
 use App\Models\TrackFile;
 use Carbon\Carbon;
-use File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class ClearTrackCache extends Command
 {
