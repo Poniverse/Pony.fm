@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,10 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Elasticsearch;
 use App\Http\Controllers\ApiControllerBase;
-use Illuminate\Support\Facades\Request;
 use App\Library\Search;
+use Elasticsearch;
+use Illuminate\Support\Facades\Request;
 use Response;
 
 class SearchController extends ApiControllerBase

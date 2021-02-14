@@ -14,9 +14,7 @@ return [
 
     'name' => env('APP_NAME', 'My Application'),
 
-
     'env' => env('APP_ENV', 'production'),
-
 
     /*
     |--------------------------------------------------------------------------
@@ -165,7 +163,6 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\NotificationServiceProvider::class,
 
-        Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
         Cviebrock\LaravelElasticsearch\ServiceProvider::class,
         Poniverse\Lib\PoniverseServiceProvider::class,
     ],
@@ -217,7 +214,6 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
 
         'Elasticsearch' => Cviebrock\LaravelElasticsearch\Facade::class,
-        'Newrelic'  => Intouch\LaravelNewrelic\Facades\Newrelic::class,
         'Notification'  => App\Facades\Notification::class,
 
     ],

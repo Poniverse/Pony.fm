@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,14 +20,14 @@
 
 namespace App\Jobs;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Jobs\Job;
 use App\Library\Notifications\Drivers\AbstractDriver;
 use App\Library\Notifications\Drivers\EmailDriver;
 use App\Library\Notifications\Drivers\NativeDriver;
 use App\Library\Notifications\Drivers\PonyfmDriver;
 use App\Models\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use SerializesModels;
 
 class SendNotifications extends Job implements ShouldQueue

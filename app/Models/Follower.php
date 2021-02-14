@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,12 +24,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * App\Models\Follower
+ * App\Models\Follower.
  *
- * @property integer $id
- * @property integer $user_id
- * @property integer $artist_id
- * @property integer $playlist_id
+ * @property int $id
+ * @property int $user_id
+ * @property int $artist_id
+ * @property int $playlist_id
  * @property string $created_at
  * @property-read \App\Models\User $follower
  * @property-read \App\Models\User $artist
@@ -45,7 +45,6 @@ class Follower extends Model
     protected $table = 'followers';
 
     public $timestamps = false;
-
 
     public function follower():BelongsTo
     {

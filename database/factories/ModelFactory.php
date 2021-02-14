@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015-2017 Feld0
+ * Copyright (C) 2015-2017 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,7 @@
 
 use App\Models\User;
 
-$factory->define(App\Models\User::class, function (\Faker\Generator $faker) {
+$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     return [
         'username'      => $faker->userName,
         'display_name'  => $faker->userName,
@@ -45,7 +45,7 @@ $factory->define(App\Models\User::class, function (\Faker\Generator $faker) {
     ];
 });
 
-$factory->define(\App\Models\Track::class, function(\Faker\Generator $faker) {
+$factory->define(\App\Models\Track::class, function (Faker\Generator $faker) {
     $user = factory(User::class)->create();
 
     return [
@@ -62,11 +62,11 @@ $factory->define(\App\Models\Track::class, function(\Faker\Generator $faker) {
         'is_downloadable'   => true,
         'is_listed'         => true,
         'metadata'          => '{"this":{"is":["very","random","metadata"]}}',
-        'duration'          => $faker->randomFloat(null, 30, 600)
+        'duration'          => $faker->randomFloat(null, 30, 600),
     ];
 });
 
-$factory->define(\App\Models\Genre::class, function(\Faker\Generator $faker) {
+$factory->define(\App\Models\Genre::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word,
         'slug' => $faker->slug,
@@ -74,23 +74,22 @@ $factory->define(\App\Models\Genre::class, function(\Faker\Generator $faker) {
 });
 
 /**
- *
- * @property integer $id
- * @property integer $user_id
+ * @property int $id
+ * @property int $user_id
  * @property string $title
  * @property string $slug
  * @property string $description
- * @property integer $cover_id
- * @property integer $track_count
- * @property integer $view_count
- * @property integer $download_count
- * @property integer $favourite_count
- * @property integer $comment_count
+ * @property int $cover_id
+ * @property int $track_count
+ * @property int $view_count
+ * @property int $download_count
+ * @property int $favourite_count
+ * @property int $comment_count
  * @property \Carbon\Carbon $created_at
  * @property string $updated_at
  * @property \Carbon\Carbon $deleted_at
  */
-$factory->define(\App\Models\Album::class, function(\Faker\Generator $faker) {
+$factory->define(\App\Models\Album::class, function (Faker\Generator $faker) {
     return [
         'title'         => $faker->sentence(5),
         'slug'          => $faker->slug,

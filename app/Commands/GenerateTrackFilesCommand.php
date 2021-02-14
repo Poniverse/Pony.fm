@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,23 +20,21 @@
 
 namespace App\Commands;
 
+use App\Exceptions\InvalidEncodeOptionsException;
+use App\Jobs\EncodeTrackFile;
+use App\Models\Track;
+use App\Models\TrackFile;
 use AudioCache;
 use FFmpegMovie;
 use File;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
-use App\Exceptions\InvalidEncodeOptionsException;
-use App\Jobs\EncodeTrackFile;
-use App\Models\Track;
-use App\Models\TrackFile;
 use SplFileInfo;
 
 /**
  * This command is the "second phase" of the upload process - once metadata has
  * been parsed and the track object is created, this generates the track's
  * corresponding TrackFile objects and ensures that all of them have been encoded.
- *
- * @package App\Commands
  */
 class GenerateTrackFilesCommand extends CommandBase
 {
@@ -53,7 +51,7 @@ class GenerateTrackFilesCommand extends CommandBase
         'flac',
         'pcm',
         'adpcm',
-        'alac'
+        'alac',
     ];
 
     public function __construct(Track $track, SplFileInfo $sourceFile, bool $autoPublish = false, bool $isForUpload = false, bool $isReplacingTrack = false, int $version = 1)
@@ -78,25 +76,26 @@ class GenerateTrackFilesCommand extends CommandBase
             // Lossy uploads need to be identified and set as the master file
             // without being re-encoded.
             $audioObject = AudioCache::get($source);
-            $isLossyUpload = !$this->isLosslessFile($audioObject);
+            $isLossyUpload = ! $this->isLosslessFile($audioObject);
             $codecString = $audioObject->getAudioCodec();
 
             if ($isLossyUpload) {
                 if ($codecString === 'mp3') {
                     $masterFormat = 'MP3';
-                } else if (Str::startsWith($codecString, 'aac')) {
+                } elseif (Str::startsWith($codecString, 'aac')) {
                     $masterFormat = 'AAC';
-                } else if ($codecString === 'vorbis') {
+                } elseif ($codecString === 'vorbis') {
                     $masterFormat = 'OGG Vorbis';
                 } else {
                     $this->track->delete();
+
                     return CommandResponse::fail(['track' => "The track does not contain audio in a known lossy format. The format read from the file is: {$codecString}"]);
                 }
 
                 // Sanity check: skip creating this TrackFile if it already exists.
                 $trackFile = $this->trackFileExists($masterFormat);
 
-                if (!$trackFile) {
+                if (! $trackFile) {
                     $trackFile = new TrackFile();
                     $trackFile->is_master = true;
                     $trackFile->format = $masterFormat;
@@ -108,7 +107,6 @@ class GenerateTrackFilesCommand extends CommandBase
                 // Lossy masters are copied into the datastore - no re-encoding involved.
                 File::copy($source, $trackFile->getFile());
             }
-
 
             $trackFiles = [];
 
@@ -132,7 +130,7 @@ class GenerateTrackFilesCommand extends CommandBase
                 $trackFile->status = TrackFile::STATUS_PROCESSING_PENDING;
                 $trackFile->version = $this->version;
 
-                if (in_array($name, Track::$CacheableFormats) && !$trackFile->is_master) {
+                if (in_array($name, Track::$CacheableFormats) && ! $trackFile->is_master) {
                     $trackFile->is_cacheable = true;
                 } else {
                     $trackFile->is_cacheable = false;
@@ -148,7 +146,7 @@ class GenerateTrackFilesCommand extends CommandBase
             try {
                 foreach ($trackFiles as $trackFile) {
                     // Don't re-encode master files when replacing tracks with an already-uploaded version
-                    if ($trackFile->is_master && !$this->isForUpload && $this->isReplacingTrack) {
+                    if ($trackFile->is_master && ! $this->isForUpload && $this->isReplacingTrack) {
                         continue;
                     }
                     $this->dispatch(new EncodeTrackFile($trackFile, false, false, $this->isForUpload, $this->isReplacingTrack));
@@ -161,6 +159,7 @@ class GenerateTrackFilesCommand extends CommandBase
                 } else {
                     $this->track->delete();
                 }
+
                 return CommandResponse::fail(['track' => [$e->getMessage()]]);
             }
         } catch (\Exception $e) {
@@ -176,6 +175,7 @@ class GenerateTrackFilesCommand extends CommandBase
         // This ensures that any updates to the track record, like from parsed
         // tags, are reflected in the command's response.
         $this->track = $this->track->fresh();
+
         return CommandResponse::succeed([
             'id' => $this->track->id,
             'name' => $this->track->name,

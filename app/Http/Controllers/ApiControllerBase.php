@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,7 @@ abstract class ApiControllerBase extends Controller
      */
     protected function execute(CommandBase $command)
     {
-        if (!$command->authorize()) {
+        if (! $command->authorize()) {
             return $this->notAuthorized();
         }
 
@@ -42,7 +42,7 @@ abstract class ApiControllerBase extends Controller
         if ($result->didFail()) {
             return Response::json([
                 'message' => 'Validation failed',
-                'errors' => $result->getMessages()
+                'errors' => $result->getMessages(),
             ], $result->getStatusCode());
         }
 

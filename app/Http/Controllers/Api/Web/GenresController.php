@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,12 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Support\Facades\Request;
 use App\Commands\CreateGenreCommand;
 use App\Commands\DeleteGenreCommand;
 use App\Commands\RenameGenreCommand;
-use App\Models\Genre;
 use App\Http\Controllers\ApiControllerBase;
+use App\Models\Genre;
+use Illuminate\Support\Facades\Request;
 use Response;
 
 class GenresController extends ApiControllerBase
@@ -41,26 +41,28 @@ class GenresController extends ApiControllerBase
             ->get();
 
         return Response::json([
-            'genres' => $genres->toArray()
+            'genres' => $genres->toArray(),
         ], 200);
     }
 
     public function postCreate()
     {
         $command = new CreateGenreCommand(Request::get('name'));
+
         return $this->execute($command);
     }
 
     public function putRename($genreId)
     {
         $command = new RenameGenreCommand($genreId, Request::get('name'));
+
         return $this->execute($command);
     }
-
 
     public function deleteGenre($genreId)
     {
         $command = new DeleteGenreCommand($genreId, Request::get('destination_genre_id'));
+
         return $this->execute($command);
     }
 }

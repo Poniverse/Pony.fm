@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class EnforceUniqueSlugs extends Migration
 {
@@ -41,7 +41,7 @@ class EnforceUniqueSlugs extends Migration
                 // ensure a unique slug for each
                 $isOriginalSlugTaken = false;
                 $counter = 2;
-                foreach($users as $user) {
+                foreach ($users as $user) {
                     if (false === $isOriginalSlugTaken) {
                         // This lucky user gets to keep the original slug!
                         $isOriginalSlugTaken = true;
@@ -66,7 +66,7 @@ class EnforceUniqueSlugs extends Migration
                             ->where('id', $user->id)
                             ->update([
                                 'slug'          => $newSlug,
-                                'updated_at'    => $now
+                                'updated_at'    => $now,
                             ]);
 
                         $counter++;
@@ -75,7 +75,7 @@ class EnforceUniqueSlugs extends Migration
             });
         }
 
-        Schema::table('users', function(Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->unique('slug');
         });
     }

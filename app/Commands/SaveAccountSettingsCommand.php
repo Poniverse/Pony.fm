@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,9 @@
 
 namespace App\Commands;
 
-use DB;
 use App\Models\Image;
 use App\Models\User;
+use DB;
 use Gate;
 use Validator;
 
@@ -63,7 +63,7 @@ class SaveAccountSettingsCommand extends CommandBase
                 'unique:users,slug,'.$this->_user->id,
                 'min:'.config('ponyfm.user_slug_minimum_length'),
                 'regex:/^[a-z\d-]+$/',
-                'is_not_reserved_slug'
+                'is_not_reserved_slug',
             ],
             'notifications.*.activity_type' => 'required|exists:activity_types,activity_type',
             'notifications.*.receive_emails'    => 'present|boolean',
@@ -77,13 +77,12 @@ class SaveAccountSettingsCommand extends CommandBase
         }
 
         $validator = Validator::make($this->_input, $rules, [
-            'slug.regex'  => 'Slugs can only contain numbers, lowercase letters, and dashes.'
+            'slug.regex'  => 'Slugs can only contain numbers, lowercase letters, and dashes.',
         ]);
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);
         }
-
 
         $this->_user->bio = $this->_input['bio'];
         $this->_user->display_name = $this->_input['display_name'];
@@ -91,7 +90,7 @@ class SaveAccountSettingsCommand extends CommandBase
         $this->_user->can_see_explicit_content = $this->_input['can_see_explicit_content'] == 'true';
         $this->_user->uses_gravatar = $this->_input['uses_gravatar'] == 'true';
 
-        if ($this->_user->uses_gravatar && !empty($this->_input['gravatar'])) {
+        if ($this->_user->uses_gravatar && ! empty($this->_input['gravatar'])) {
             $this->_user->avatar_id = null;
             $this->_user->gravatar = $this->_input['gravatar'];
         } else {
@@ -106,21 +105,19 @@ class SaveAccountSettingsCommand extends CommandBase
             }
         }
 
-        DB::transaction(function() {
+        DB::transaction(function () {
             $this->_user->save();
 
             // Sync email subscriptions
             $emailSubscriptions = $this->_user->emailSubscriptions->keyBy('activity_type');
             foreach ($this->_input['notifications'] as $notificationSetting) {
-
                 if (
                     $notificationSetting['receive_emails'] &&
-                    !$emailSubscriptions->offsetExists($notificationSetting['activity_type'])
+                    ! $emailSubscriptions->offsetExists($notificationSetting['activity_type'])
                 ) {
                     $this->_user->emailSubscriptions()->create(['activity_type' => $notificationSetting['activity_type']]);
-
                 } elseif (
-                    !$notificationSetting['receive_emails'] &&
+                    ! $notificationSetting['receive_emails'] &&
                     $emailSubscriptions->offsetExists($notificationSetting['activity_type'])
                 ) {
                     $emailSubscriptions->get($notificationSetting['activity_type'])->delete();

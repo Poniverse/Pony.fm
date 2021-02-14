@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,9 +23,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\TrackType
+ * App\Models\TrackType.
  *
- * @property integer $id
+ * @property int $id
  * @property string $title
  * @property string $editor_title
  * @method static \Illuminate\Database\Query\Builder|\App\Models\TrackType whereId($value)

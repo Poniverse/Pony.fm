@@ -2,14 +2,14 @@
 
 namespace Tests;
 
-use Illuminate\Contracts\Console\Kernel;
-use Storage;
-use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
 use App\Models\User;
+use Illuminate\Contracts\Console\Kernel;
+use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
+use Storage;
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ use App\Models\User;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 class TestCase extends BaseTestCase
 {
     /**
@@ -62,7 +61,7 @@ class TestCase extends BaseTestCase
     public function getTestFiles()
     {
         // Ensure we have the Pony.fm test files
-        if (!static::$initializedFiles) {
+        if (! static::$initializedFiles) {
             Storage::disk('local')->makeDirectory('test-files');
             $storage = Storage::disk('testing');
 
@@ -71,11 +70,11 @@ class TestCase extends BaseTestCase
             // timestamp.
             $files = [
                 'ponyfm-test.flac' => 1450965707,
-                'ponyfm-transparent-cover-art.png' => 1451211579
+                'ponyfm-transparent-cover-art.png' => 1451211579,
             ];
 
             foreach ($files as $filename => $lastModifiedTimestamp) {
-                if (!$storage->has($filename) ||
+                if (! $storage->has($filename) ||
                     $storage->lastModified($filename) < $lastModifiedTimestamp
                 ) {
                     echo "Downloading test file: ${filename}...".PHP_EOL;
@@ -96,7 +95,7 @@ class TestCase extends BaseTestCase
 
             // Delete any unnecessary test files
             foreach ($storage->allFiles() as $filename) {
-                if (!isset($files[$filename])) {
+                if (! isset($files[$filename])) {
                     $storage->delete($filename);
                 }
             }
@@ -113,7 +112,7 @@ class TestCase extends BaseTestCase
 
     /**
      * Returns an object for testing file uploads using the given test file.
-     * In a test, to "attach" a file to the `track` field, call the following:
+     * In a test, to "attach" a file to the `track` field, call the following:.
      *
      *      $this->call('POST', '/api/v1/tracks', [], [], ['track' => $file]);
      *      // then, deal with the response
@@ -141,7 +140,7 @@ class TestCase extends BaseTestCase
     {
         $this->expectsJobs([
             \App\Jobs\EncodeTrackFile::class,
-            \App\Jobs\UpdateSearchIndexForEntity::class
+            \App\Jobs\UpdateSearchIndexForEntity::class,
         ]);
         $this->user = factory(User::class)->create();
 

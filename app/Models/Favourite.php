@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,13 +23,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Favourite
+ * App\Models\Favourite.
  *
- * @property integer $id
- * @property integer $user_id
- * @property integer $track_id
- * @property integer $album_id
- * @property integer $playlist_id
+ * @property int $id
+ * @property int $user_id
+ * @property int $track_id
+ * @property int $album_id
+ * @property int $playlist_id
  * @property string $created_at
  * @property-read \App\Models\User $user
  * @property-read \App\Models\Track $track
@@ -79,7 +79,7 @@ class Favourite extends Model
     /**
      * Return the resource associated with this favourite.
      *
-     * @return Resource|NULL
+     * @return resource|null
      */
     public function getResourceAttribute()
     {

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,16 +20,15 @@
 
 namespace App\Commands;
 
+use App\Jobs\DeleteGenre;
+use App\Models\Genre;
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use App\Models\Genre;
-use App\Jobs\DeleteGenre;
 use Validator;
 
 class DeleteGenreCommand extends CommandBase
 {
     use DispatchesJobs;
-
 
     /** @var Genre */
     private $_genreToDelete;
@@ -66,7 +65,6 @@ class DeleteGenreCommand extends CommandBase
             'genre_to_delete' => $this->_genreToDelete,
             'destination_genre' => $this->_destinationGenre,
         ], $rules);
-
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);

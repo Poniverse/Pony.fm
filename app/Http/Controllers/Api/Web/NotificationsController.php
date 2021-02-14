@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,13 +20,13 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Auth;
-use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Notification;
 use App\Models\Subscription;
 use App\Models\Track;
 use App\Models\User;
+use Auth;
+use Illuminate\Support\Facades\Request;
 use Minishlink\WebPush\WebPush;
 
 class NotificationsController extends ApiControllerBase
@@ -85,7 +85,7 @@ class NotificationsController extends ApiControllerBase
                     'user_id' => Auth::user()->id,
                     'endpoint' => $input->endpoint,
                     'p256dh' => $input->keys->p256dh,
-                    'auth' => $input->keys->auth
+                    'auth' => $input->keys->auth,
                 ]);
 
                 return ['id' => $subscription->id];
@@ -98,7 +98,7 @@ class NotificationsController extends ApiControllerBase
     }
 
     /**
-     * Removes a user's notification subscription
+     * Removes a user's notification subscription.
      *
      * @return string
      */

@@ -4,7 +4,7 @@ namespace Tests;
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,9 @@ namespace Tests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Poniverse\Lib\AccessToken;
-use App\Models\User;
 
 class ApiAuthTest extends TestCase
 {

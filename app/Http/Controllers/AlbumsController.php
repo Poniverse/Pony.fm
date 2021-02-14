@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,8 @@
 
 namespace App\Http\Controllers;
 
-use App\AlbumDownloader;
 use App;
+use App\AlbumDownloader;
 use App\Models\Album;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
@@ -38,7 +38,7 @@ class AlbumsController extends Controller
     public function getShow($id, $slug)
     {
         $album = Album::find($id);
-        if (!$album) {
+        if (! $album) {
             App::abort(404);
         }
 
@@ -52,7 +52,7 @@ class AlbumsController extends Controller
     public function getShortlink($id)
     {
         $album = Album::find($id);
-        if (!$album) {
+        if (! $album) {
             App::abort(404);
         }
 
@@ -62,7 +62,7 @@ class AlbumsController extends Controller
     public function getDownload($id, $extension)
     {
         $album = Album::with('tracks', 'tracks.trackFiles', 'user')->find($id);
-        if (!$album) {
+        if (! $album) {
             App::abort(404);
         }
 
@@ -81,7 +81,7 @@ class AlbumsController extends Controller
             App::abort(404);
         }
 
-        if (!$album->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
+        if (! $album->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
             App::abort(404);
         }
 

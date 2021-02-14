@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -80,13 +80,12 @@ class CreateTracksTable extends Migration
             $table->foreign('track_type_id')->references('id')->on('track_types')->on_update('cascade');
         });
 
-
         DB::table('licenses')->insert([
             'title' => 'Personal',
             'description' => 'Only you and Pony.fm are allowed to distribute and broadcast the track.',
             'affiliate_distribution' => 0,
             'open_distribution' => 0,
-            'remix' => 0
+            'remix' => 0,
         ]);
 
         DB::table('licenses')->insert([
@@ -94,7 +93,7 @@ class CreateTracksTable extends Migration
             'description' => 'You, Pony.fm, and its affiliates may distribute and broadcast the track.',
             'affiliate_distribution' => 1,
             'open_distribution' => 0,
-            'remix' => 0
+            'remix' => 0,
         ]);
 
         DB::table('licenses')->insert([
@@ -102,7 +101,7 @@ class CreateTracksTable extends Migration
             'description' => 'Anyone is permitted to broadcast and distribute the song in its original form, with attribution to you.',
             'affiliate_distribution' => 1,
             'open_distribution' => 1,
-            'remix' => 0
+            'remix' => 0,
         ]);
 
         DB::table('licenses')->insert([
@@ -110,32 +109,32 @@ class CreateTracksTable extends Migration
             'description' => 'Anyone is permitted to broadcast and distribute the song in any form, or create derivative works based on it for any purpose, with attribution to you.',
             'affiliate_distribution' => 1,
             'open_distribution' => 1,
-            'remix' => 1
+            'remix' => 1,
         ]);
 
         DB::table('track_types')->insert([
             'title' => 'Original Song',
-            'editor_title' => 'an original song'
+            'editor_title' => 'an original song',
         ]);
 
         DB::table('track_types')->insert([
             'title' => 'Official Song Remix',
-            'editor_title' => 'a remix of an official song'
+            'editor_title' => 'a remix of an official song',
         ]);
 
         DB::table('track_types')->insert([
             'title' => 'Fan Song Remix',
-            'editor_title' => 'a remix of a fan song'
+            'editor_title' => 'a remix of a fan song',
         ]);
 
         DB::table('track_types')->insert([
             'title' => 'Ponified Song',
-            'editor_title' => 'a non-pony song, turned pony'
+            'editor_title' => 'a non-pony song, turned pony',
         ]);
 
         DB::table('track_types')->insert([
             'title' => 'Official Show Audio Remix',
-            'editor_title' => 'a remix of official show audio'
+            'editor_title' => 'a remix of official show audio',
         ]);
     }
 

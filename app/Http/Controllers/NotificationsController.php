@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,23 +21,24 @@
 namespace App\Http\Controllers;
 
 use App;
-use Auth;
-use DB;
 use App\Models\Email;
 use App\Models\EmailSubscription;
+use Auth;
+use DB;
 use View;
 
-
-class NotificationsController extends Controller {
+class NotificationsController extends Controller
+{
     /**
      * @param $emailKey
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function getEmailClick($emailKey) {
+    public function getEmailClick($emailKey)
+    {
         /** @var Email $email */
         $email = Email::findOrFail($emailKey);
 
-        DB::transaction(function() use ($email) {
+        DB::transaction(function () use ($email) {
             $email->emailClicks()->create(['ip_address' => \Request::ip()]);
             $email->notification->is_read = true;
             $email->notification->save();
@@ -46,7 +47,8 @@ class NotificationsController extends Controller {
         return redirect($email->getActivity()->url);
     }
 
-    public function getEmailUnsubscribe($subscriptionKey) {
+    public function getEmailUnsubscribe($subscriptionKey)
+    {
         /** @var EmailSubscription $subscription */
         $subscription = EmailSubscription::findOrFail($subscriptionKey);
         $subscription->delete();
@@ -54,17 +56,18 @@ class NotificationsController extends Controller {
         if (Auth::check() && $subscription->user->id === Auth::user()->id) {
             return redirect(route('account:settings', [
                 'slug' => $subscription->user->slug,
-                'unsubscribedMessageKey' => $subscription->activity_type
+                'unsubscribedMessageKey' => $subscription->activity_type,
             ]), 303);
         } else {
             return redirect(route('email:confirm-unsubscribed', [
                 'unsubscribedUser' => $subscription->user->display_name,
-                'unsubscribedMessageKey' => $subscription->activity_type
+                'unsubscribedMessageKey' => $subscription->activity_type,
             ]), 303);
         }
     }
 
-    public function getEmailUnsubscribePage() {
+    public function getEmailUnsubscribePage()
+    {
         return View::make('shared.null');
     }
 }

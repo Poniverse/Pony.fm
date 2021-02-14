@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,10 @@
 
 namespace App\Models;
 
+use App\Contracts\Commentable;
+use App\Contracts\Searchable;
+use App\Traits\IndexedInElasticsearchTrait;
+use Auth;
 use Carbon\Carbon;
 use DB;
 use Gravatar;
@@ -31,35 +35,31 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Auth;
 use Illuminate\Support\Str;
 use League\OAuth2\Client\Token\AccessToken;
-use App\Contracts\Commentable;
-use App\Contracts\Searchable;
-use App\Traits\IndexedInElasticsearchTrait;
 use Validator;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * App\Models\User
+ * App\Models\User.
  *
- * @property integer $id
+ * @property int $id
  * @property string $display_name
  * @property string $username
- * @property boolean $sync_names
+ * @property bool $sync_names
  * @property string $email
  * @property string $gravatar
  * @property string $slug
- * @property boolean $uses_gravatar
- * @property boolean $can_see_explicit_content
+ * @property bool $uses_gravatar
+ * @property bool $can_see_explicit_content
  * @property string $bio
- * @property integer $track_count
- * @property integer $comment_count
+ * @property int $track_count
+ * @property int $comment_count
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer $avatar_id
+ * @property int $avatar_id
  * @property string $remember_token
- * @property boolean $is_archived
+ * @property bool $is_archived
  * @property \Carbon\Carbon $disabled_at
  * @property-read \App\Models\Image $avatar
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceUser[] $users
@@ -118,7 +118,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'comment_count'             => 'integer',
         'avatar_id'                 => 'integer',
         'is_archived'               => 'boolean',
-        'redirect_to'               => 'integer'
+        'redirect_to'               => 'integer',
     ];
     protected $dates = ['created_at', 'updated_at', 'disabled_at'];
     protected $hidden = ['disabled_at', 'remember_token'];
@@ -129,7 +129,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             $query->with([
                 'users' => function ($query) {
                     $query->whereUserId(Auth::user()->id);
-                }
+                },
             ]);
         }
 
@@ -143,7 +143,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @param int $activityType one of the TYPE_* constants in the Activity class
      * @return mixed
      */
-    public function scopeWithEmailSubscriptionFor($query, int $activityType) {
+    public function scopeWithEmailSubscriptionFor($query, int $activityType)
+    {
         return $query->whereHas('emailSubscriptions', function ($query) use ($activityType) {
             $query->where('activity_type', $activityType);
         });
@@ -156,7 +157,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @param int $poniverseId
      * @return mixed
      */
-    public function scopeWherePoniverseId($query, int $poniverseId) {
+    public function scopeWherePoniverseId($query, int $poniverseId)
+    {
         return $query
             ->whereLinkedToPoniverse($query)
             ->where('oauth2_tokens.external_user_id', '=', $poniverseId);
@@ -168,7 +170,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @param $query
      * @return mixed
      */
-    public function scopeWhereLinkedToPoniverse($query) {
+    public function scopeWhereLinkedToPoniverse($query)
+    {
         return $query
             ->join('oauth2_tokens', 'users.id', '=', 'oauth2_tokens.user_id')
             ->select('users.*', 'oauth2_tokens.external_user_id');
@@ -179,7 +182,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return AccessToken|null
      */
-    public function getAccessToken() {
+    public function getAccessToken()
+    {
         $accessTokenRecord = DB::table('oauth2_tokens')->where('user_id', '=', $this->id)->first();
 
         if ($accessTokenRecord === null) {
@@ -199,7 +203,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @param AccessToken $accessToken
      */
-    public function setAccessToken(AccessToken $accessToken) {
+    public function setAccessToken(AccessToken $accessToken)
+    {
         DB::table('oauth2_tokens')
             ->where('user_id', '=', $this->id)
             ->update([
@@ -267,7 +272,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         if (null !== $user) {
             return $user;
         } else {
-            $user = new User;
+            $user = new self;
 
             $user->username = $username;
             $user->display_name = $displayName;
@@ -292,10 +297,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return $this->hasMany(ResourceUser::class, 'artist_id');
     }
-    
+
     public function followers()
     {
-        return $this->belongsToMany(User::class, 'followers', 'artist_id', 'user_id');
+        return $this->belongsToMany(self::class, 'followers', 'artist_id', 'user_id');
     }
 
     public function roles()
@@ -312,7 +317,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return $this->hasMany(Track::class, 'user_id');
     }
-    
+
     public function notifications()
     {
         return $this->hasMany(Notification::class, 'user_id');
@@ -370,17 +375,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getAvatarUrl($type = Image::NORMAL)
     {
-        if (!$this->uses_gravatar && $this->avatar !== null) {
+        if (! $this->uses_gravatar && $this->avatar !== null) {
             return $this->avatar->getUrl($type);
         }
 
-        if ($this->email == "redacted@example.net") {
-            return Gravatar::getUrl($this->id."", Image::$ImageTypes[$type]['width'], "identicon");
+        if ($this->email == 'redacted@example.net') {
+            return Gravatar::getUrl($this->id.'', Image::$ImageTypes[$type]['width'], 'identicon');
         }
 
         $email = $this->gravatar;
 
-        if (!strlen($email)) {
+        if (! strlen($email)) {
             $email = $this->email;
         }
 
@@ -389,17 +394,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getAvatarUrlLocal($type = Image::NORMAL)
     {
-        if (!$this->uses_gravatar && $this->avatar !== null) {
+        if (! $this->uses_gravatar && $this->avatar !== null) {
             return $this->avatar->getFile($type);
         }
 
-        if ($this->email == "redacted@example.net") {
-            return Gravatar::getUrl($this->id."", Image::$ImageTypes[$type]['width'], "identicon");
+        if ($this->email == 'redacted@example.net') {
+            return Gravatar::getUrl($this->id.'', Image::$ImageTypes[$type]['width'], 'identicon');
         }
 
         $email = $this->gravatar;
 
-        if (!strlen($email)) {
+        if (! strlen($email)) {
             $email = $this->email;
         }
 
@@ -439,16 +444,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function getRememberTokenName()
     {
-        return "remember_token";
+        return 'remember_token';
     }
 
-    public function getUserAttribute():User
+    public function getUserAttribute():self
     {
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getResourceType():string
     {
@@ -477,7 +482,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return false;
     }
 
-    public static function mapPublicUserSummary(User $user)
+    public static function mapPublicUserSummary(self $user)
     {
         return [
             'id' => $user->id,
@@ -487,9 +492,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             'is_archived' => $user->is_archived,
             'avatars' => [
                 'small' => $user->getAvatarUrl(Image::SMALL),
-                'normal' => $user->getAvatarUrl(Image::NORMAL)
+                'normal' => $user->getAvatarUrl(Image::NORMAL),
             ],
-            'created_at' => $user->created_at
+            'created_at' => $user->created_at,
         ];
     }
 
@@ -499,7 +504,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return array
      */
-    private function emailSubscriptionsJoined() {
+    private function emailSubscriptionsJoined()
+    {
         return DB::select('
             SELECT "subscriptions".*, "activity_types".* FROM
               (SELECT * FROM "email_subscriptions"
@@ -516,17 +522,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return array
      */
-    public function getNotificationSettings() {
+    public function getNotificationSettings()
+    {
         $settings = [];
         $emailSubscriptions = $this->emailSubscriptionsJoined();
 
-        foreach($emailSubscriptions as $subscription) {
+        foreach ($emailSubscriptions as $subscription) {
             // TODO: remove this check when news and album notifications are implemented
-            if (!in_array($subscription->activity_type, [Activity::TYPE_NEWS, Activity::TYPE_PUBLISHED_ALBUM])) {
+            if (! in_array($subscription->activity_type, [Activity::TYPE_NEWS, Activity::TYPE_PUBLISHED_ALBUM])) {
                 $settings[] = [
                     'description' => $subscription->description,
                     'activity_type' => $subscription->activity_type,
-                    'receive_emails' => $subscription->id !== NULL
+                    'receive_emails' => $subscription->id !== null,
                 ];
             }
         }
@@ -550,7 +557,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function shouldBeIndexed():bool
     {

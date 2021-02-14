@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,14 +20,14 @@
 
 namespace App\Library;
 
-use DB;
-use Elasticsearch\Client;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\Album;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
+use DB;
+use Elasticsearch\Client;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class Search
 {
@@ -66,7 +66,7 @@ class Search
                             'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => 13
+                    'size' => 13,
                 ],
 
                 //===== Albums =====//
@@ -83,7 +83,7 @@ class Search
                             'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => 3
+                    'size' => 3,
                 ],
 
                 //===== Playlists =====//
@@ -100,7 +100,7 @@ class Search
                             'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => 3
+                    'size' => 3,
                 ],
 
                 //===== Users =====//
@@ -116,9 +116,9 @@ class Search
                             'tie_breaker' => 0.3,
                         ],
                     ],
-                    'size' => 3
+                    'size' => 3,
                 ],
-            ]
+            ],
         ]);
 
         $tracks = $this->transformTracks($results['responses'][0]['hits']['hits']);
@@ -130,7 +130,7 @@ class Search
             'tracks'    => $tracks,
             'albums'    => $albums,
             'playlists' => $playlists,
-            'users'     => $users
+            'users'     => $users,
         ];
     }
 
@@ -140,6 +140,7 @@ class Search
         $tracks = $tracks->map(function (Track $track) {
             return Track::mapPublicTrackSummary($track);
         });
+
         return $tracks;
     }
 
@@ -149,6 +150,7 @@ class Search
         $albums = $albums->map(function (Album $album) {
             return Album::mapPublicAlbumSummary($album);
         });
+
         return $albums;
     }
 
@@ -158,6 +160,7 @@ class Search
         $playlists = $playlists->map(function (Playlist $playlist) {
             return Playlist::mapPublicPlaylistSummary($playlist);
         });
+
         return $playlists;
     }
 
@@ -167,6 +170,7 @@ class Search
         $users = $users->map(function (User $user) {
             return User::mapPublicUserSummary($user);
         });
+
         return $users;
     }
 

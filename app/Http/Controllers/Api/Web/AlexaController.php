@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Session\Store;
 use App\Http\Controllers\Controller;
 use App\Models\AlexaSession;
 use App\Models\Track;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use Psr\Log\LoggerInterface;
 
 class AlexaController extends Controller
@@ -27,7 +27,7 @@ class AlexaController extends Controller
         if ($sessId) {
             $this->session = AlexaSession::find($sessId);
 
-            if (!$this->session) {
+            if (! $this->session) {
                 $this->session = new AlexaSession();
                 $this->session->id = $sessId;
             }
@@ -35,11 +35,11 @@ class AlexaController extends Controller
 
         $logger->debug('Incoming Alexa Request', [
             'type' => $type,
-            'intent' => $intent
+            'intent' => $intent,
         ]);
 
         $logger->debug('Incoming Alexa Full Request', [
-            'json' => json_encode($request->json()->all(), JSON_PRETTY_PRINT)
+            'json' => json_encode($request->json()->all(), JSON_PRETTY_PRINT),
         ]);
 
         /** @var JsonResponse $response */
@@ -63,7 +63,7 @@ class AlexaController extends Controller
         switch ($type) {
             case 'LaunchRequest':
                 return $this->launch();
-            case 'PlayAudio';
+            case 'PlayAudio':
                 return $this->play();
             case 'AudioPlayer.PlaybackNearlyFinished':
                 return $this->queueNextTrack();
@@ -99,11 +99,11 @@ class AlexaController extends Controller
     {
         return [
             'version' => '1.0',
-            'sessionAttributes' => (object)[],
+            'sessionAttributes' => (object) [],
             'response' => [
-                "outputSpeech" => [
-                    "type" => "SSML",
-                    "ssml" => "<speak>If you want to play music, say 'Alexa, ask pony fm to play'</speak>"
+                'outputSpeech' => [
+                    'type' => 'SSML',
+                    'ssml' => "<speak>If you want to play music, say 'Alexa, ask pony fm to play'</speak>",
                 ],
                 'shouldEndSession' => true,
             ],
@@ -114,11 +114,11 @@ class AlexaController extends Controller
     {
         return [
             'version' => '1.0',
-            'sessionAttributes' => (object)[],
+            'sessionAttributes' => (object) [],
             'response' => [
-                "outputSpeech" => [
-                    "type" => "SSML",
-                    "ssml" => "<speak>Sorry, I don't recognise that command.</speak>"
+                'outputSpeech' => [
+                    'type' => 'SSML',
+                    'ssml' => "<speak>Sorry, I don't recognise that command.</speak>",
                 ],
                 'shouldEndSession' => true,
             ],
@@ -129,15 +129,15 @@ class AlexaController extends Controller
     {
         return [
             'version' => '1.0',
-            'sessionAttributes' => (object)[],
+            'sessionAttributes' => (object) [],
             'response' => [
-                "outputSpeech" => [
-                    "type" => "SSML",
-                    "ssml" => "
+                'outputSpeech' => [
+                    'type' => 'SSML',
+                    'ssml' => '
                         <speak>
                             Pony.fm was built by Pixel Wavelength for Viola to keep all her music in one place.
                         </speak>
-                    "
+                    ',
                 ],
                 'shouldEndSession' => true,
             ],
@@ -153,7 +153,7 @@ class AlexaController extends Controller
 
         return [
             'version' => '1.0',
-            'sessionAttributes' => (object)[],
+            'sessionAttributes' => (object) [],
             'response' => [
                 'directives' => [
                     [
@@ -197,18 +197,18 @@ class AlexaController extends Controller
         if (count($playlist) === 0) {
             return [
                 'version' => '1.0',
-                'sessionAttributes' => (object)[],
+                'sessionAttributes' => (object) [],
                 'response' => [
-                    "outputSpeech" => [
-                        "type" => "SSML",
-                        "ssml" => "
+                    'outputSpeech' => [
+                        'type' => 'SSML',
+                        'ssml' => "
                         <speak>
                             You've reached the end of the popular tracks today. To start from the beginning say 'Alexa, ask pony fm to play'
                         </speak>
-                    "],
+                    ", ],
                     'directives' => [
                         [
-                            'type' => 'AudioPlayer.Stop'
+                            'type' => 'AudioPlayer.Stop',
                         ],
                     ],
                     'shouldEndSession' => true,
@@ -216,7 +216,7 @@ class AlexaController extends Controller
             ];
         }
 
-        $track = $playlist[$position-1];
+        $track = $playlist[$position - 1];
 
         $trackHistory[] = $trackId;
 
@@ -231,13 +231,13 @@ class AlexaController extends Controller
             'offsetInMilliseconds' => 0,
         ];
 
-        if (!$replace) {
+        if (! $replace) {
             $stream['expectedPreviousToken'] = $trackId;
         }
 
         return [
             'version' => '1.0',
-            'sessionAttributes' => (object)[],
+            'sessionAttributes' => (object) [],
             'response' => [
                 'directives' => [
                     [
@@ -247,7 +247,7 @@ class AlexaController extends Controller
                             'stream' => $stream,
                         ],
                     ],
-                ]
+                ],
             ],
         ];
     }
@@ -259,7 +259,7 @@ class AlexaController extends Controller
         $trackHistory = $this->session->get('track_history', []);
         $playlist = $this->session->get('playlist', []);
 
-        $track = $playlist[$position-2];
+        $track = $playlist[$position - 2];
 
         $trackHistory[] = $trackId;
 
@@ -275,7 +275,7 @@ class AlexaController extends Controller
 
         return [
             'version' => '1.0',
-            'sessionAttributes' => (object)[],
+            'sessionAttributes' => (object) [],
             'response' => [
                 'directives' => [
                     [
@@ -285,7 +285,7 @@ class AlexaController extends Controller
                             'stream' => $stream,
                         ],
                     ],
-                ]
+                ],
             ],
         ];
     }
@@ -294,11 +294,11 @@ class AlexaController extends Controller
     {
         return [
             'version' => '1.0',
-            'sessionAttributes' => (object)[],
+            'sessionAttributes' => (object) [],
             'response' => [
                 'directives' => [
                     [
-                        'type' => 'AudioPlayer.Stop'
+                        'type' => 'AudioPlayer.Stop',
                     ],
                 ],
                 'shouldEndSession' => true,

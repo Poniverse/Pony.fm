@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,12 +23,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Announcement
+ * App\Models\Announcement.
  *
- * @property integer $id
+ * @property int $id
  * @property string $title
  * @property string $text_content
- * @property integer $announcement_type_id
+ * @property int $announcement_type_id
  * @property mixed $links
  * @property mixed $tracks
  * @property string $css_class
@@ -47,12 +47,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereEndTime($value)
  * @mixin \Eloquent
  */
-class Announcement extends Model {
+class Announcement extends Model
+{
     protected $table = 'announcements';
 
     protected $casts = [
         'links' => 'array',
-        'tracks' => 'array'
+        'tracks' => 'array',
     ];
 
     const TYPE_GENERIC = 1;

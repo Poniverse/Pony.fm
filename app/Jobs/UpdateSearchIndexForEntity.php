@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,12 @@
 
 namespace App\Jobs;
 
+use App\Contracts\Searchable;
+use App\Jobs\Job;
 use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Contracts\Searchable;
-use App\Jobs\Job;
 use SerializesModels;
 
 class UpdateSearchIndexForEntity extends Job implements ShouldQueue

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,19 +20,19 @@
 
 namespace App\Providers;
 
-use Gate;
-use Illuminate\Contracts\Auth\Access\Gate as GateContract;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Models\Album;
 use App\Models\Genre;
+use App\Models\ShowSong;
+use App\Models\Track;
+use App\Models\User;
 use App\Policies\AlbumPolicy;
 use App\Policies\GenrePolicy;
 use App\Policies\ShowSongPolicy;
 use App\Policies\TrackPolicy;
-use App\Models\Track;
-use App\Models\User;
-use App\Models\ShowSong;
 use App\Policies\UserPolicy;
+use Gate;
+use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -46,7 +46,7 @@ class AuthServiceProvider extends ServiceProvider
         Track::class => TrackPolicy::class,
         Album::class => AlbumPolicy::class,
         User::class => UserPolicy::class,
-        ShowSong::class => ShowSongPolicy::class
+        ShowSong::class => ShowSongPolicy::class,
     ];
 
     /**

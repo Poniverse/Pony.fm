@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 class Assets
 {
     public static function scriptIncludes(string $area)
@@ -36,7 +35,7 @@ class Assets
             if (Config::get('app.debug') && $filename !== 'templates.js') {
                 $scriptTags .= "<script src='http://localhost:61999/build/scripts/{$filename}'></script>";
             } else {
-                $scriptTags .= "<script src='/build/scripts/{$filename}?" . filemtime(public_path("build/scripts/{$filename}")) . "'></script>";
+                $scriptTags .= "<script src='/build/scripts/{$filename}?".filemtime(public_path("build/scripts/{$filename}"))."'></script>";
             }
         }
 
@@ -49,18 +48,18 @@ class Assets
 
     public static function styleIncludes($area = 'app')
     {
-        if (!Config::get("app.debug")) {
-            return '<script>document.write(\'<link rel="stylesheet" href="build/styles/' . $area . '.css?' .
+        if (! Config::get('app.debug')) {
+            return '<script>document.write(\'<link rel="stylesheet" href="build/styles/'.$area.'.css?'.
                    filemtime(public_path("/build/styles/${area}.css"))
-                   . '" />\');</script>';
+                   .'" />\');</script>';
         }
 
         $styles = self::mergeGlobs(self::getStylesForArea($area));
-        $retVal = "";
+        $retVal = '';
 
         foreach ($styles as $style) {
-            $filename = self::replaceExtensionWith($style, ".less", ".css");
-            $retVal .= "<link rel='stylesheet' href='/build/$filename?" .filemtime(public_path("/build/${filename}")). "' />";
+            $filename = self::replaceExtensionWith($style, '.less', '.css');
+            $retVal .= "<link rel='stylesheet' href='/build/$filename?".filemtime(public_path("/build/${filename}"))."' />";
         }
 
         return $retVal;
@@ -71,7 +70,7 @@ class Assets
         $fromLength = strlen($fromExtension);
 
         return substr($filename, -$fromLength) == $fromExtension
-            ? substr($filename, 0, strlen($filename) - $fromLength) . $toExtension
+            ? substr($filename, 0, strlen($filename) - $fromLength).$toExtension
             : $filename;
     }
 
@@ -82,7 +81,7 @@ class Assets
         $files = [];
         $filesFound = [];
         foreach ($globs as $glob) {
-            foreach (glob("../resources/assets/" . $glob, GLOB_BRACE) as $file) {
+            foreach (glob('../resources/assets/'.$glob, GLOB_BRACE) as $file) {
                 if (isset($filesFound[$file])) {
                     continue;
                 }
@@ -91,6 +90,7 @@ class Assets
                 $files[] = substr($file, 20); // chop off ../app/
             }
         }
+
         return $files;
     }
 
@@ -98,14 +98,14 @@ class Assets
     {
         if ($area == 'app') {
             return [
-                "styles/base/jquery-ui.css",
-                "styles/base/colorbox.css",
-                "styles/app.less",
+                'styles/base/jquery-ui.css',
+                'styles/base/colorbox.css',
+                'styles/app.less',
             ];
         } else {
             if ($area == 'embed') {
                 return [
-                    "styles/embed.less"
+                    'styles/embed.less',
                 ];
             }
         }
