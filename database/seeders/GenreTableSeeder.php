@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class GenreTableSeeder extends Seeder
