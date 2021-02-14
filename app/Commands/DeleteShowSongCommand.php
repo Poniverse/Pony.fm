@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,14 +22,13 @@ namespace Poniverse\Ponyfm\Commands;
 
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Poniverse\Ponyfm\Models\ShowSong;
 use Poniverse\Ponyfm\Jobs\DeleteShowSong;
+use Poniverse\Ponyfm\Models\ShowSong;
 use Validator;
 
 class DeleteShowSongCommand extends CommandBase
 {
     use DispatchesJobs;
-
 
     /** @var ShowSong */
     private $_songToDelete;
@@ -66,7 +65,6 @@ class DeleteShowSongCommand extends CommandBase
             'song_to_delete' => $this->_songToDelete,
             'destination_song' => $this->_destinationSong,
         ], $rules);
-
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);

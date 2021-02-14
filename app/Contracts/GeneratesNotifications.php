@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,8 +26,6 @@ use Poniverse\Ponyfm\Models\User;
 /**
  * This interface is used for type safety when referring to entities that can be
  * the "target resource" of a notification (ie. what the notification is about).
- *
- * @package Poniverse\Ponyfm\Contracts
  */
 interface GeneratesNotifications
 {

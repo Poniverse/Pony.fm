@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,9 +23,9 @@ namespace Poniverse\Ponyfm\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\Role
+ * Poniverse\Ponyfm\Models\Role.
  *
- * @property integer $id
+ * @property int $id
  * @property string $name
  * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\User[] $users
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Role whereId($value)

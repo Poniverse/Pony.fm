@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,7 +41,7 @@ class TracksController extends Controller
 
         $json = [
             'total_tracks' => $tracks->count(),
-            'tracks' => $tracks->toArray()
+            'tracks' => $tracks->toArray(),
         ];
 
         return Response::json($json, 200);
@@ -53,7 +53,7 @@ class TracksController extends Controller
 
         $json = [
             'total_tracks' => $tracks->count(),
-            'tracks' => $tracks->toArray()
+            'tracks' => $tracks->toArray(),
         ];
 
         return Response::json($json, 200);

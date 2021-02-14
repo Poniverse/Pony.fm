@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Kelvin Zhang
+ * Copyright (C) 2015 Kelvin Zhang.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,7 +45,6 @@ class ClearTrackCache extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -76,7 +75,7 @@ class ClearTrackCache extends Command
         if (count($trackFiles) === 0) {
             $this->info('No tracks found. Exiting.');
         } else {
-            if ($this->option('force') || $this->confirm(count($trackFiles) . ' cacheable track files found. Proceed to delete their files if they exist? [y|N]', false)) {
+            if ($this->option('force') || $this->confirm(count($trackFiles).' cacheable track files found. Proceed to delete their files if they exist? [y|N]', false)) {
                 $count = 0;
 
                 foreach ($trackFiles as $trackFile) {
@@ -89,10 +88,10 @@ class ClearTrackCache extends Command
                         $count++;
                         File::delete($trackFile->getFile());
 
-                        $this->info('Deleted ' . $trackFile->getFile());
+                        $this->info('Deleted '.$trackFile->getFile());
                     }
                 }
-                $this->info($count . ' files deleted. Deletion complete. Exiting.');
+                $this->info($count.' files deleted. Deletion complete. Exiting.');
             } else {
                 $this->info('Deletion cancelled. Exiting.');
             }

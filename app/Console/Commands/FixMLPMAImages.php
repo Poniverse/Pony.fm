@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,7 +47,6 @@ class FixMLPMAImages extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -55,7 +54,6 @@ class FixMLPMAImages extends Command
     }
 
     protected $currentFile;
-
 
     /**
      * File extensions to ignore when importing the archive.
@@ -69,7 +67,7 @@ class FixMLPMAImages extends Command
         'txt',
         'rtf',
         'wma',
-        'wmv'
+        'wmv',
     ];
 
     /**
@@ -84,16 +82,15 @@ class FixMLPMAImages extends Command
 
         $this->comment('Enumerating MLP Music Archive source files...');
         $files = File::allFiles($mlpmaPath);
-        $this->info(sizeof($files).' files found!');
+        $this->info(count($files).' files found!');
 
         $this->comment('Importing tracks...');
-        $totalFiles = sizeof($files);
+        $totalFiles = count($files);
         $fileToStartAt = (int) $this->option('startAt') - 1;
 
         $this->comment("Skipping $fileToStartAt files...".PHP_EOL);
         $files = array_slice($files, $fileToStartAt);
         $this->currentFile = $fileToStartAt;
-
 
         foreach ($files as $file) {
             $this->currentFile++;
@@ -110,7 +107,6 @@ class FixMLPMAImages extends Command
                                 ->first();
             $artistId = $importedTrack->user_id;
 
-
             //==========================================================================================================
             // Extract the original tags.
             //==========================================================================================================
@@ -118,7 +114,6 @@ class FixMLPMAImages extends Command
             $getId3 = new getID3;
             // all tags read by getID3, including the cover art
             $allTags = $getId3->analyze($file->getPathname());
-
 
             //==========================================================================================================
             // Extract the cover art, if any exists.

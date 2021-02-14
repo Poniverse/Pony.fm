@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,11 +21,11 @@
 namespace Poniverse\Ponyfm\Http\Controllers;
 
 use App;
+use Auth;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\PlaylistDownloader;
-use Auth;
 use Redirect;
 use View;
 
@@ -39,7 +39,7 @@ class PlaylistsController extends Controller
     public function getPlaylist($id, $slug)
     {
         $playlist = Playlist::find($id);
-        if (!$playlist || !$playlist->canView(Auth::user())) {
+        if (! $playlist || ! $playlist->canView(Auth::user())) {
             App::abort(404);
         }
 
@@ -53,7 +53,7 @@ class PlaylistsController extends Controller
     public function getShortlink($id)
     {
         $playlist = Playlist::find($id);
-        if (!$playlist || !$playlist->canView(Auth::user())) {
+        if (! $playlist || ! $playlist->canView(Auth::user())) {
             App::abort(404);
         }
 
@@ -63,7 +63,7 @@ class PlaylistsController extends Controller
     public function getDownload($id, $extension)
     {
         $playlist = Playlist::with('tracks', 'tracks.trackFiles', 'user', 'tracks.album')->find($id);
-        if (!$playlist || !$playlist->canView(Auth::user())) {
+        if (! $playlist || ! $playlist->canView(Auth::user())) {
             App::abort(404);
         }
 
@@ -82,7 +82,7 @@ class PlaylistsController extends Controller
             App::abort(404);
         }
 
-        if (!$playlist->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
+        if (! $playlist->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
             App::abort(404);
         }
 

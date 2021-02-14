@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,10 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Models\Follower;
-use Poniverse\Ponyfm\Models\ResourceUser;
 use Auth;
 use Notification;
+use Poniverse\Ponyfm\Models\Follower;
+use Poniverse\Ponyfm\Models\ResourceUser;
 
 class ToggleFollowingCommand extends CommandBase
 {
@@ -52,7 +52,7 @@ class ToggleFollowingCommand extends CommandBase
      */
     public function execute()
     {
-        $typeId = $this->_resourceType . '_id';
+        $typeId = $this->_resourceType.'_id';
         $existing = Follower::where($typeId, '=', $this->_resourceId)->whereUserId(Auth::user()->id)->first();
         $isFollowed = false;
 

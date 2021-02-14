@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Kelvin Zhang
+ * Copyright (C) 2015 Kelvin Zhang.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Poniverse\Ponyfm\Models\TrackFile;
 
 class RebuildTrackCache extends Command
 {
-
     use DispatchesJobs;
 
     /**
@@ -49,7 +48,6 @@ class RebuildTrackCache extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -172,7 +170,6 @@ class RebuildTrackCache extends Command
                     $this->output->newLine(1);
                 });
 
-
             $this->info('Format(s) set from cacheable to non-cacheable: '.implode(' ', array_unique($formats)));
             $this->info($trackFileCount.' cacheable track files set to non-cacheable.');
 
@@ -209,7 +206,6 @@ class RebuildTrackCache extends Command
                     $this->output->newLine(1);
                 });
 
-
             $this->info(sprintf('%d track files deleted out of %d track files. Continuing.', $count, $trackFileCount));
 
             //==========================================================================================================
@@ -228,17 +224,17 @@ class RebuildTrackCache extends Command
                     $this->output->newLine(1);
                     $this->info('---------- Start Chunk ----------');
 
-                // Record the track files which do not exist (i.e., have not been encoded yet)
+                    // Record the track files which do not exist (i.e., have not been encoded yet)
                     $emptyTrackFiles = [];
 
                     foreach ($trackFiles as $trackFile) {
-                        if (!File::exists($trackFile->getFile())) {
+                        if (! File::exists($trackFile->getFile())) {
                             $count++;
                             $emptyTrackFiles[] = $trackFile;
                         }
                     }
 
-                // Encode recorded track files
+                    // Encode recorded track files
                     foreach ($emptyTrackFiles as $emptyTrackFile) {
                         $this->info("Started encoding track file ID {$emptyTrackFile->id}");
                         $this->dispatch(new EncodeTrackFile($emptyTrackFile, false));
@@ -247,7 +243,6 @@ class RebuildTrackCache extends Command
                     $this->info('----------- End Chunk -----------');
                     $this->output->newLine(1);
                 });
-
 
             $this->info($count.' track files encoded.');
             $this->output->newLine(1);

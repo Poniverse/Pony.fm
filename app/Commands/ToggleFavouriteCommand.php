@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,15 +20,15 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Notification;
-use Poniverse\Ponyfm\Contracts\Favouritable;
-use Poniverse\Ponyfm\Models\Favourite;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\ResourceUser;
 use Auth;
 use DB;
+use Notification;
+use Poniverse\Ponyfm\Contracts\Favouritable;
+use Poniverse\Ponyfm\Models\Album;
+use Poniverse\Ponyfm\Models\Favourite;
+use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\ResourceUser;
+use Poniverse\Ponyfm\Models\Track;
 
 class ToggleFavouriteCommand extends CommandBase
 {
@@ -98,14 +98,13 @@ class ToggleFavouriteCommand extends CommandBase
         // for the same resource at the same time, the cached values will still be correct with this method.
 
         DB::table($resourceTable)->whereId($this->_resourceId)->update([
-            'favourite_count' =>
-                DB::raw('(
+            'favourite_count' => DB::raw('(
                     SELECT
                         COUNT(id)
                     FROM
                         favourites
-                    WHERE ' .
-                    $typeId.' = '.$this->_resourceId.')')
+                    WHERE '.
+                    $typeId.' = '.$this->_resourceId.')'),
         ]);
 
         return CommandResponse::succeed(['is_favourited' => $isFavourited]);

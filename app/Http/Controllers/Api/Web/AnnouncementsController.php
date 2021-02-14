@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,8 +27,10 @@ use Poniverse\Ponyfm\Models\Announcement;
 use Request;
 use Response;
 
-class AnnouncementsController extends Controller {
-    public function getIndex() {
+class AnnouncementsController extends Controller
+{
+    public function getIndex()
+    {
         $currentDate = Carbon::now();
 
         $query = Announcement::whereNotNull('start_time')
@@ -40,23 +42,25 @@ class AnnouncementsController extends Controller {
         $announcement = $query->first();
 
         return Response::json(
-            ["announcement" => $announcement],
+            ['announcement' => $announcement],
             200
         );
     }
 
-    public function getAdminIndex() {
+    public function getAdminIndex()
+    {
         $this->authorize('access-admin-area');
 
         $announcements = Announcement::orderBy('start_time', 'desc')
             ->get();
 
         return Response::json([
-            'announcements' => $announcements->toArray()
+            'announcements' => $announcements->toArray(),
         ], 200);
     }
 
-    public function getItemById($genreId) {
+    public function getItemById($genreId)
+    {
         $this->authorize('access-admin-area');
 
         $query = Announcement::where('id', '=', $genreId)
@@ -65,13 +69,15 @@ class AnnouncementsController extends Controller {
         $announcement = $query->first();
 
         return Response::json(
-            ["announcement" => $announcement],
+            ['announcement' => $announcement],
             200
         );
     }
 
-    public function postCreate() {
+    public function postCreate()
+    {
         $command = new CreateAnnouncementCommand(Request::get('name'));
+
         return $this->execute($command);
     }
 }

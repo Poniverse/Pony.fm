@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,13 +20,13 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use Auth;
 use Notification;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
-use Auth;
 use Validator;
 
 class CreateCommentCommand extends CommandBase
@@ -112,7 +112,7 @@ class CreateCommentCommand extends CommandBase
 
         $entity->comment_count = Comment::where($column, $this->_id)->count();
         $entity->save();
-        
+
         Notification::newComment($comment);
 
         return CommandResponse::succeed(Comment::mapPublic($comment));

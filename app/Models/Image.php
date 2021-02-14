@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,9 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use Config;
 use External;
 use Illuminate\Database\Eloquent\Model;
-use Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
@@ -30,15 +30,15 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Poniverse\Ponyfm\Models\Image
+ * Poniverse\Ponyfm\Models\Image.
  *
- * @property integer $id
+ * @property int $id
  * @property string $filename
  * @property string $mime
  * @property string $extension
- * @property integer $size
+ * @property int $size
  * @property string $hash
- * @property integer $uploaded_by
+ * @property int $uploaded_by
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Image whereId($value)
@@ -63,7 +63,7 @@ class Image extends Model
         self::NORMAL =>     ['id' => self::NORMAL,      'name' => 'normal',     'width' => 350,     'height' => 350,    'geometry' => '350'],
         self::ORIGINAL =>   ['id' => self::ORIGINAL,    'name' => 'original',   'width' => null,    'height' => null,   'geometry' => null],
         self::SMALL =>      ['id' => self::SMALL,       'name' => 'small',      'width' => 100,     'height' => 100,    'geometry' => '100x100^'],
-        self::THUMBNAIL =>  ['id' => self::THUMBNAIL,   'name' => 'thumbnail',  'width' => 50,      'height' => 50,     'geometry' => '50x50^']
+        self::THUMBNAIL =>  ['id' => self::THUMBNAIL,   'name' => 'thumbnail',  'width' => 50,      'height' => 50,     'geometry' => '50x50^'],
     ];
 
     const MIME_JPEG = 'image/jpeg';
@@ -96,7 +96,7 @@ class Image extends Model
         }
 
         $hash = md5_file($file->getPathname());
-        $image = Image::whereHash($hash)->whereUploadedBy($userId)->first();
+        $image = self::whereHash($hash)->whereUploadedBy($userId)->first();
 
         if ($image) {
             if ($forceReupload) {
@@ -105,7 +105,7 @@ class Image extends Model
                 return $image;
             }
         } else {
-            $image = new Image();
+            $image = new self();
         }
 
         try {
@@ -136,12 +136,13 @@ class Image extends Model
      * @param string $path The path to save the processed image file
      * @param array $coverType The type to process the image to
      */
-    private static function processFile(File $image, string $path, $coverType) {
-        if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === self::MIME_JPEG ){
-            if($image->getPathname() === $path) {
+    private static function processFile(File $image, string $path, $coverType)
+    {
+        if ($coverType['id'] === self::ORIGINAL && $image->getMimeType() === self::MIME_JPEG) {
+            if ($image->getPathname() === $path) {
                 Log::warning("Attempted to copy an original file $path to itself.");
             } else {
-                $command = 'cp "' . $image->getPathname() . '" ' . $path;
+                $command = 'cp "'.$image->getPathname().'" '.$path;
             }
         } else {
             // ImageMagick options reference: http://www.imagemagick.org/script/command-line-options.php
@@ -197,26 +198,26 @@ class Image extends Model
         $destination = $this->getDirectory();
         umask(0);
 
-        if (!is_dir($destination)) {
+        if (! is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
     }
 
     /**
-     * Deletes any generated files if they exist
+     * Deletes any generated files if they exist.
      * @param bool $includeOriginal Set to true if the original image should be deleted as well.
      */
-    public function clearExisting(bool $includeOriginal = false) {
+    public function clearExisting(bool $includeOriginal = false)
+    {
         $files = scandir($this->getDirectory());
         $filePrefix = $this->id.'_';
-        $originalName = $filePrefix.Image::$ImageTypes[Image::ORIGINAL]['name'];
+        $originalName = $filePrefix.self::$ImageTypes[self::ORIGINAL]['name'];
 
-        $files = array_filter($files, function($file) use ($originalName, $includeOriginal, $filePrefix) {
-            if (Str::startsWith($file,$originalName) && !$includeOriginal) {
+        $files = array_filter($files, function ($file) use ($originalName, $includeOriginal, $filePrefix) {
+            if (Str::startsWith($file, $originalName) && ! $includeOriginal) {
                 return false;
-            }
-            else {
-                return (Str::startsWith($file, $filePrefix));
+            } else {
+                return Str::startsWith($file, $filePrefix);
             }
         });
 
@@ -230,12 +231,13 @@ class Image extends Model
      *
      * @throws FileNotFoundException If the original file cannot be found.
      */
-    public function buildCovers() {
+    public function buildCovers()
+    {
         $originalFile = new File($this->getFile(self::ORIGINAL));
 
         foreach (self::$ImageTypes as $imageType) {
             //Ignore original imagetype
-            if($imageType['id'] === self::ORIGINAL) {
+            if ($imageType['id'] === self::ORIGINAL) {
                 continue;
             }
 

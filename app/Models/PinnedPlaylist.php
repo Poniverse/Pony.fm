@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,11 +23,11 @@ namespace Poniverse\Ponyfm\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\PinnedPlaylist
+ * Poniverse\Ponyfm\Models\PinnedPlaylist.
  *
- * @property integer $id
- * @property integer $user_id
- * @property integer $playlist_id
+ * @property int $id
+ * @property int $user_id
+ * @property int $playlist_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Poniverse\Ponyfm\Models\User $user

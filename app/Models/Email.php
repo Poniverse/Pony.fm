@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,10 +25,10 @@ use Illuminate\Database\Eloquent\Model;
 use Poniverse\Ponyfm\Models\Notification;
 
 /**
- * Poniverse\Ponyfm\Models\Email
+ * Poniverse\Ponyfm\Models\Email.
  *
  * @property string $id
- * @property integer $notification_id
+ * @property int $notification_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Poniverse\Ponyfm\Models\Notification $notification
@@ -45,23 +45,28 @@ class Email extends Model
     // Non-sequential UUID's are desirable for this model.
     protected $uuidVersion = 4;
 
-    public function notification() {
+    public function notification()
+    {
         return $this->belongsTo(Notification::class, 'notification_id', 'id', 'notifications');
     }
 
-    public function emailClicks() {
+    public function emailClicks()
+    {
         return $this->hasMany(EmailClick::class, 'email_id', 'id');
     }
 
-    public function getActivity():Activity {
+    public function getActivity():Activity
+    {
         return $this->notification->activity;
     }
 
-    public function getUser():User {
+    public function getUser():User
+    {
         return $this->notification->recipient;
     }
 
-    public function getSubscription():EmailSubscription {
+    public function getSubscription():EmailSubscription
+    {
         return $this
             ->getUser()
             ->emailSubscriptions()

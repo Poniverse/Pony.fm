@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Poniverse\Ponyfm\Models\Playlist;
 
 class EnforceUniqueTracksInPlaylists extends Migration
@@ -31,7 +31,7 @@ class EnforceUniqueTracksInPlaylists extends Migration
      */
     public function up()
     {
-        DB::transaction(function(){
+        DB::transaction(function () {
             $playlistIds = DB::table('playlists')->pluck('id');
 
             foreach ($playlistIds as $playlistId) {
@@ -41,7 +41,7 @@ class EnforceUniqueTracksInPlaylists extends Migration
                 // duplicate track except for the first one.
                 $ids = DB::select(
                     DB::raw(
-<<<EOF
+<<<'EOF'
 SELECT id,position FROM playlist_track
 WHERE playlist_id = ?
 AND track_id IN
@@ -57,8 +57,7 @@ AND track_id IN
 ORDER BY position ASC
 LIMIT 1,18446744073709551615
 EOF
-                    )
-                , [$playlistId, $playlistId]);
+                    ), [$playlistId, $playlistId]);
                 $ids = collect($ids)->pluck('id');
 
                 DB::table('playlist_track')
@@ -70,7 +69,7 @@ EOF
                 $playlist = Playlist::with('tracks')->withTrashed()->find($playlistId);
 
                 $position = 1;
-                foreach($playlist->tracks as $track) {
+                foreach ($playlist->tracks as $track) {
                     $track->pivot->position = $position;
                     $track->pivot->save();
                     $position++;
@@ -78,7 +77,7 @@ EOF
             }
         });
 
-        Schema::table('playlist_track', function(Blueprint $table) {
+        Schema::table('playlist_track', function (Blueprint $table) {
             $table->unique(['playlist_id', 'track_id']);
         });
 

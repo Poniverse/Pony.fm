@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,8 +22,8 @@ namespace Poniverse\Ponyfm\Http\Controllers;
 
 use App;
 use Poniverse\Ponyfm\Models\User;
-use View;
 use Redirect;
+use View;
 
 class ArtistsController extends Controller
 {
@@ -68,7 +68,7 @@ class ArtistsController extends Controller
     public function getShortlink($id)
     {
         $user = User::find($id);
-        if (!$user || $user->disabled_at !== null) {
+        if (! $user || $user->disabled_at !== null) {
             App::abort('404');
         }
 

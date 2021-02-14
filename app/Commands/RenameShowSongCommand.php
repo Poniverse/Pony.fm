@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,14 +59,13 @@ class RenameShowSongCommand extends CommandBase
 
         $rules = [
             'title'      => 'required|unique:show_songs,title,'.$this->_song->id.',id|max:250',
-            'slug'      => 'required|unique:show_songs,slug,'.$this->_song->id.',id'
+            'slug'      => 'required|unique:show_songs,slug,'.$this->_song->id.',id',
         ];
 
         $validator = Validator::make([
             'title' => $this->_newName,
-            'slug' => $slug
+            'slug' => $slug,
         ], $rules);
-
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);

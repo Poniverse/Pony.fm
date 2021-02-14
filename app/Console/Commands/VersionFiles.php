@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Kelvin Zhang
+ * Copyright (C) 2016 Kelvin Zhang.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,23 +62,22 @@ class VersionFiles extends Command
 
         if ($this->option('force') || $this->confirm('Are you sure you want to rename all unversioned track files? [y|N]', false)) {
             TrackFile::chunk(200, function ($trackFiles) {
-
                 $this->info('========== Start Chunk ==========');
 
                 foreach ($trackFiles as $trackFile) {
                     /** @var TrackFile $trackFile */
 
                     // Check whether the unversioned file exists
-                    if (!File::exists($trackFile->getUnversionedFile())) {
-                        $this->info('ID ' . $trackFile->id . ' skipped - file not found');
+                    if (! File::exists($trackFile->getUnversionedFile())) {
+                        $this->info('ID '.$trackFile->id.' skipped - file not found');
                         continue;
                     }
 
                     // Version the file and check the outcome
                     if (File::move($trackFile->getUnversionedFile(), $trackFile->getFile())) {
-                        $this->info('ID ' . $trackFile->id . ' processed');
+                        $this->info('ID '.$trackFile->id.' processed');
                     } else {
-                        $this->error('ID ' . $trackFile->id . ' was unable to be renamed');
+                        $this->error('ID '.$trackFile->id.' was unable to be renamed');
                     }
                 }
 

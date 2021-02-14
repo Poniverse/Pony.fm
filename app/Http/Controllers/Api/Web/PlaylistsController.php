@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,9 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Commands\AddTrackToPlaylistCommand;
 use Poniverse\Ponyfm\Commands\CreatePlaylistCommand;
 use Poniverse\Ponyfm\Commands\DeletePlaylistCommand;
@@ -30,11 +32,9 @@ use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Playlist;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
-use Auth;
-use Illuminate\Support\Facades\Request;
+use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 use Response;
-use Poniverse\Ponyfm\Models\Track;
 
 class PlaylistsController extends ApiControllerBase
 {
@@ -95,9 +95,9 @@ class PlaylistsController extends ApiControllerBase
         }
 
         return Response::json([
-            "playlists" => $playlists,
-            "current_page" => $page,
-            "total_pages" => ceil($count / $perPage)
+            'playlists' => $playlists,
+            'current_page' => $page,
+            'total_pages' => ceil($count / $perPage),
         ], 200);
     }
 
@@ -113,9 +113,9 @@ class PlaylistsController extends ApiControllerBase
             },
             'tracks.trackFiles',
             'comments',
-            'comments.user'
+            'comments.user',
         ])->userDetails()->find($id);
-        if (!$playlist || !$playlist->canView(Auth::user())) {
+        if (! $playlist || ! $playlist->canView(Auth::user())) {
             App::abort('404');
         }
 
@@ -137,11 +137,11 @@ class PlaylistsController extends ApiControllerBase
             return $this->notFound('Playlist not found!');
         }
 
-        if ((!$playlist->is_public && !Auth::check()) || (!$playlist->is_public && ($playlist->user_id !== Auth::user()->id))) {
+        if ((! $playlist->is_public && ! Auth::check()) || (! $playlist->is_public && ($playlist->user_id !== Auth::user()->id))) {
             return $this->notFound('Playlist not found!');
         }
 
-        if (!in_array($format, Track::$CacheableFormats)) {
+        if (! in_array($format, Track::$CacheableFormats)) {
             return $this->notFound('Format not found!');
         }
 
@@ -201,17 +201,16 @@ class PlaylistsController extends ApiControllerBase
                 'url' => $playlist->url,
                 'covers' => [
                     'small' => $playlist->getCoverUrl(Image::SMALL),
-                    'normal' => $playlist->getCoverUrl(Image::NORMAL)
+                    'normal' => $playlist->getCoverUrl(Image::NORMAL),
                 ],
                 'is_pinned' => $playlist->hasPinFor(Auth::user()->id),
                 'is_public' => $playlist->is_public == 1,
-                'track_ids' => $playlist->tracks->pluck('id')
+                'track_ids' => $playlist->tracks->pluck('id'),
             ];
         }
 
         return Response::json($playlists, 200);
     }
-
 
     /**
      * This function should not deal with anything other than applying order,

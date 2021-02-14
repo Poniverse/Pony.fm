@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,12 +53,12 @@ class CreateShowSongCommand extends CommandBase
 
         $rules = [
             'title'      => 'required|unique:show_songs,title,NULL,id,deleted_at,NULL|max:250',
-            'slug'       => 'required|unique:show_songs,slug,NULL,id,deleted_at,NULL'
+            'slug'       => 'required|unique:show_songs,slug,NULL,id,deleted_at,NULL',
         ];
 
         $validator = Validator::make([
             'title' => $this->_songName,
-            'slug'  => $slug
+            'slug'  => $slug,
         ], $rules);
 
         if ($validator->fails()) {
@@ -68,7 +68,7 @@ class CreateShowSongCommand extends CommandBase
         ShowSong::create([
             'title'   => $this->_songName,
             'slug'   => $slug,
-            'lyrics' => ''
+            'lyrics' => '',
         ]);
 
         return CommandResponse::succeed(['message' => 'Song created!']);

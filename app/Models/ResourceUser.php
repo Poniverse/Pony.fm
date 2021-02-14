@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,20 +23,20 @@ namespace Poniverse\Ponyfm\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\ResourceUser
+ * Poniverse\Ponyfm\Models\ResourceUser.
  *
- * @property integer $id
- * @property integer $user_id
- * @property integer $track_id
- * @property integer $album_id
- * @property integer $playlist_id
- * @property integer $artist_id
- * @property boolean $is_followed
- * @property boolean $is_favourited
- * @property boolean $is_pinned
- * @property integer $view_count
- * @property integer $play_count
- * @property integer $download_count
+ * @property int $id
+ * @property int $user_id
+ * @property int $track_id
+ * @property int $album_id
+ * @property int $playlist_id
+ * @property int $artist_id
+ * @property bool $is_followed
+ * @property bool $is_favourited
+ * @property bool $is_pinned
+ * @property int $view_count
+ * @property int $play_count
+ * @property int $download_count
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereTrackId($value)
@@ -64,7 +64,7 @@ class ResourceUser extends Model
             return $existing;
         }
 
-        $item = new ResourceUser();
+        $item = new self();
         $item->{$resourceIdColumn} = $resourceId;
         $item->user_id = $userId;
 

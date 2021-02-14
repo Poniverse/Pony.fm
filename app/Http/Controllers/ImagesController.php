@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,9 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers;
 
-use Poniverse\Ponyfm\Models\Image;
-use Config;
 use App;
+use Config;
+use Poniverse\Ponyfm\Models\Image;
 use Redirect;
 use Response;
 
@@ -37,14 +37,14 @@ class ImagesController extends Controller
         }
 
         $image = Image::find($id);
-        if (!$image) {
+        if (! $image) {
             App::abort(404);
         }
 
         $response = Response::make('', 200);
         $filename = $image->getFile($coverType['id']);
 
-        if (!is_file($filename)) {
+        if (! is_file($filename)) {
             $redirect = url('/images/icons/profile_'.Image::$ImageTypes[$coverType['id']]['name'].'.png');
 
             return Redirect::to($redirect);

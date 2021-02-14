@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,20 +20,20 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Auth;
+use Gate;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Poniverse\Ponyfm\Models\Album;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Commands\CreateAlbumCommand;
 use Poniverse\Ponyfm\Commands\DeleteAlbumCommand;
 use Poniverse\Ponyfm\Commands\EditAlbumCommand;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
-use Auth;
-use Gate;
-use Illuminate\Support\Facades\Request;
+use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 use Response;
-use Poniverse\Ponyfm\Models\Track;
 
 class AlbumsController extends ApiControllerBase
 {
@@ -66,12 +66,12 @@ class AlbumsController extends ApiControllerBase
             'user',
             'user.avatar',
             'comments',
-            'comments.user'
+            'comments.user',
         ])
             ->userDetails()
             ->find($id);
 
-        if (!$album) {
+        if (! $album) {
             App::abort(404);
         }
 
@@ -86,7 +86,7 @@ class AlbumsController extends ApiControllerBase
         }
 
         return Response::json([
-            'album' => $returned_album
+            'album' => $returned_album,
         ], 200);
     }
 
@@ -100,7 +100,7 @@ class AlbumsController extends ApiControllerBase
             return $this->notFound('Album not found!');
         }
 
-        if (!in_array($format, Track::$CacheableFormats)) {
+        if (! in_array($format, Track::$CacheableFormats)) {
             return $this->notFound('Format not found!');
         }
 
@@ -144,7 +144,7 @@ class AlbumsController extends ApiControllerBase
         }
 
         return Response::json(
-            ["albums" => $albums, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
+            ['albums' => $albums, 'current_page' => $page, 'total_pages' => ceil($count / $perPage)],
             200
         );
     }
@@ -167,8 +167,8 @@ class AlbumsController extends ApiControllerBase
                 'created_at' => $album->created_at->format('c'),
                 'covers' => [
                     'small' => $album->getCoverUrl(Image::SMALL),
-                    'normal' => $album->getCoverUrl(Image::NORMAL)
-                ]
+                    'normal' => $album->getCoverUrl(Image::NORMAL),
+                ],
             ];
         }
 
@@ -178,7 +178,7 @@ class AlbumsController extends ApiControllerBase
     public function getEdit($id)
     {
         $album = Album::with('tracks')->find($id);
-        if (!$album) {
+        if (! $album) {
             return $this->notFound('Album '.$id.' not found!');
         }
 
@@ -190,7 +190,7 @@ class AlbumsController extends ApiControllerBase
         foreach ($album->tracks as $track) {
             $tracks[] = [
                 'id' => $track->id,
-                'title' => $track->title
+                'title' => $track->title,
             ];
         }
 
@@ -205,7 +205,7 @@ class AlbumsController extends ApiControllerBase
             'description' => $album->description,
             'cover_url' => $album->hasCover() ? $album->getCoverUrl(Image::NORMAL) : null,
             'real_cover_url' => $album->getCoverUrl(Image::NORMAL),
-            'tracks' => $tracks
+            'tracks' => $tracks,
         ], 200);
     }
 }

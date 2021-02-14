@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,9 +22,9 @@ namespace Poniverse\Ponyfm\Jobs;
 
 use Auth;
 use DB;
-use Poniverse\Ponyfm\Models\ShowSong;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Poniverse\Ponyfm\Models\ShowSong;
 use Poniverse\Ponyfm\Models\Track;
 use SerializesModels;
 

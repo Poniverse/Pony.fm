@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,8 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use Auth;
+use Cache;
 use DB;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
@@ -27,32 +29,30 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Auth;
-use Cache;
 use Poniverse\Ponyfm\Contracts\Commentable;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\Searchable;
 use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
-use Poniverse\Ponyfm\Traits\TrackCollection;
 use Poniverse\Ponyfm\Traits\SlugTrait;
+use Poniverse\Ponyfm\Traits\TrackCollection;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Poniverse\Ponyfm\Models\Playlist
+ * Poniverse\Ponyfm\Models\Playlist.
  *
- * @property integer $id
- * @property integer $user_id
+ * @property int $id
+ * @property int $user_id
  * @property string $title
  * @property string $slug
  * @property string $description
- * @property boolean $is_public
- * @property integer $track_count
- * @property integer $view_count
- * @property integer $download_count
- * @property integer $favourite_count
- * @property integer $follow_count
- * @property integer $comment_count
+ * @property bool $is_public
+ * @property int $track_count
+ * @property int $view_count
+ * @property int $download_count
+ * @property int $favourite_count
+ * @property int $follow_count
+ * @property int $comment_count
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
@@ -134,25 +134,24 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             $query->with([
                 'users' => function ($query) {
                     $query->whereUserId(Auth::user()->id);
-                }
+                },
             ]);
         }
 
         return $query;
     }
 
-    public static function mapPublicPlaylistShow(Playlist $playlist)
+    public static function mapPublicPlaylistShow(self $playlist)
     {
         $tracks = [];
         foreach ($playlist->tracks as $track) {
             /** @var $track Track */
-
             $tracks[] = Track::mapPublicTrackSummary($track);
         }
 
         $formats = [];
         foreach (Track::$Formats as $name => $format) {
-            if (in_array($name, Track::$LosslessFormats) && !$playlist->hasLosslessTracksOnly() && !$playlist->hasLosslessTracks()) {
+            if (in_array($name, Track::$LosslessFormats) && ! $playlist->hasLosslessTracksOnly() && ! $playlist->hasLosslessTracks()) {
                 continue;
             }
 
@@ -162,7 +161,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
                 'url' => $playlist->getDownloadUrl($name),
                 'size' => Helpers::formatBytes($playlist->getFilesize($name)),
                 'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false),
-                'isMixedLosslessness' => (in_array($name, Track::$LosslessFormats) && !$playlist->hasLosslessTracksOnly() && $playlist->hasLosslessTracks())
+                'isMixedLosslessness' => (in_array($name, Track::$LosslessFormats) && ! $playlist->hasLosslessTracksOnly() && $playlist->hasLosslessTracks()),
             ];
         }
 
@@ -178,20 +177,20 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         $data['share'] = [
             'url' => action('PlaylistsController@getShortlink', ['id' => $playlist->id]),
             'tumblrUrl' => 'http://www.tumblr.com/share/link?url='.urlencode($playlist->url).'&name='.urlencode($playlist->title).'&description='.urlencode($playlist->description),
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$playlist->title.' by '.$playlist->user->display_name.' on Pony.fm'
+            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$playlist->title.' by '.$playlist->user->display_name.' on Pony.fm',
         ];
 
         return $data;
     }
 
-    public static function mapPublicPlaylistSummary(Playlist $playlist)
+    public static function mapPublicPlaylistSummary(self $playlist)
     {
         $userData = [
             'stats' => [
                 'views' => 0,
-                'downloads' => 0
+                'downloads' => 0,
             ],
-            'is_favourited' => false
+            'is_favourited' => false,
         ];
 
         if (Auth::check() && $playlist->users->count()) {
@@ -201,7 +200,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
                     'views' => (int) $userRow->view_count,
                     'downloads' => (int) $userRow->download_count,
                 ],
-                'is_favourited' => (bool) $userRow->is_favourited
+                'is_favourited' => (bool) $userRow->is_favourited,
             ];
         }
 
@@ -216,12 +215,12 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
                 'views' => (int) $playlist->view_count,
                 'downloads' => (int) $playlist->download_count,
                 'comments' => (int) $playlist->comment_count,
-                'favourites' => (int) $playlist->favourite_count
+                'favourites' => (int) $playlist->favourite_count,
             ],
             'covers' => [
                 'small' => $playlist->getCoverUrl(Image::SMALL),
                 'normal' => $playlist->getCoverUrl(Image::NORMAL),
-                'original' => $playlist->getCoverUrl(Image::ORIGINAL)
+                'original' => $playlist->getCoverUrl(Image::ORIGINAL),
             ],
             'url' => $playlist->url,
             'user' => [
@@ -232,8 +231,8 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
             'user_data' => $userData,
             'permissions' => [
                 'delete' => Auth::check() && Auth::user()->id == $playlist->user_id,
-                'edit' => Auth::check() && Auth::user()->id == $playlist->user_id
-            ]
+                'edit' => Auth::check() && Auth::user()->id == $playlist->user_id,
+            ],
         ];
     }
 
@@ -259,6 +258,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     public function trackFiles()
     {
         $trackIds = $this->tracks->pluck('id');
+
         return TrackFile::join('tracks', 'tracks.current_version', '=', 'track_files.version')->whereIn('track_id', $trackIds);
     }
 
@@ -364,17 +364,17 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function shouldBeIndexed():bool
     {
         return $this->is_public &&
                $this->track_count > 0 &&
-               !$this->trashed();
+               ! $this->trashed();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getResourceType():string
     {

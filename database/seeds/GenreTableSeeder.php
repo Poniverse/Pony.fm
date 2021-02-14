@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,8 @@
 
 use Illuminate\Database\Seeder;
 
-class GenreTableSeeder extends Seeder {
-
+class GenreTableSeeder extends Seeder
+{
     public function run()
     {
         // This table only needs to be filled once.
@@ -30,155 +30,154 @@ class GenreTableSeeder extends Seeder {
                 [
                     [
                         'name' => 'Acoustic',
-                        'slug' => 'acoustic'
+                        'slug' => 'acoustic',
                     ],
 
                     [
                         'name' => 'Adult Contemporary',
-                        'slug' => 'adult-contemporary'
+                        'slug' => 'adult-contemporary',
                     ],
 
                     [
                         'name' => 'Ambient',
-                        'slug' => 'ambient'
+                        'slug' => 'ambient',
                     ],
 
                     [
                         'name' => 'Chiptune',
-                        'slug' => 'chiptune'
+                        'slug' => 'chiptune',
                     ],
 
                     [
                         'name' => 'Country',
-                        'slug' => 'country'
+                        'slug' => 'country',
                     ],
 
                     [
                         'name' => 'Darkwave',
-                        'slug' => 'darkwave'
+                        'slug' => 'darkwave',
                     ],
 
                     [
                         'name' => 'Disco / Funk',
-                        'slug' => 'disco-funk'
+                        'slug' => 'disco-funk',
                     ],
 
                     [
                         'name' => 'Downtempo',
-                        'slug' => 'downtempo'
+                        'slug' => 'downtempo',
                     ],
 
                     [
                         'name' => 'Drum & Bass',
-                        'slug' => 'drum-bass'
+                        'slug' => 'drum-bass',
                     ],
 
                     [
                         'name' => 'Dubstep',
-                        'slug' => 'dubstep'
+                        'slug' => 'dubstep',
                     ],
 
                     [
                         'name' => 'EDM',
-                        'slug' => 'edm'
+                        'slug' => 'edm',
                     ],
 
                     [
                         'name' => 'Electro',
-                        'slug' => 'electro'
+                        'slug' => 'electro',
                     ],
 
                     [
                         'name' => 'Eurobeat',
-                        'slug' => 'eurobeat'
+                        'slug' => 'eurobeat',
                     ],
 
                     [
                         'name' => 'Experimental',
-                        'slug' => 'experimental'
+                        'slug' => 'experimental',
                     ],
 
                     [
                         'name' => 'Hardcore',
-                        'slug' => 'hardcore'
+                        'slug' => 'hardcore',
                     ],
 
                     [
                         'name' => 'Hardstyle',
-                        'slug' => 'hardstyle'
+                        'slug' => 'hardstyle',
                     ],
 
                     [
                         'name' => 'Hip-Hop',
-                        'slug' => 'hip-hop'
+                        'slug' => 'hip-hop',
                     ],
 
                     [
                         'name' => 'House',
-                        'slug' => 'house'
+                        'slug' => 'house',
                     ],
 
                     [
                         'name' => 'IDM',
-                        'slug' => 'idm'
+                        'slug' => 'idm',
                     ],
 
                     [
                         'name' => 'Jazz',
-                        'slug' => 'jazz'
+                        'slug' => 'jazz',
                     ],
 
                     [
                         'name' => 'Mashup',
-                        'slug' => 'mashup'
+                        'slug' => 'mashup',
                     ],
 
                     [
                         'name' => 'Metal',
-                        'slug' => 'metal'
+                        'slug' => 'metal',
                     ],
 
                     [
                         'name' => 'Orchestral',
-                        'slug' => 'orchestral'
+                        'slug' => 'orchestral',
                     ],
 
                     [
                         'name' => 'Other',
-                        'slug' => 'other'
+                        'slug' => 'other',
                     ],
 
                     [
                         'name' => 'Pop',
-                        'slug' => 'pop'
+                        'slug' => 'pop',
                     ],
 
                     [
                         'name' => 'Progressive',
-                        'slug' => 'progressive'
+                        'slug' => 'progressive',
                     ],
 
                     [
                         'name' => 'Rock',
-                        'slug' => 'rock'
+                        'slug' => 'rock',
                     ],
 
                     [
                         'name' => 'Ska / Punk',
-                        'slug' => 'ska-punk'
+                        'slug' => 'ska-punk',
                     ],
 
                     [
                         'name' => 'Synthpop',
-                        'slug' => 'synthpop'
+                        'slug' => 'synthpop',
                     ],
 
                     [
                         'name' => 'Trance',
-                        'slug' => 'trance'
-                    ]
+                        'slug' => 'trance',
+                    ],
                 ]);
-            }
+        }
     }
-
 }

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,8 +25,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * This interface is used for type safety when referring to entities that
  * are capable of being favourited.
- *
- * @package Poniverse\Ponyfm\Contracts
  */
 interface Favouritable extends GeneratesNotifications
 {

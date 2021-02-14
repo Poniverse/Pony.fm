@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,8 +43,6 @@ class DisabledAccountCheck
         $this->auth = $auth;
     }
 
-
-
     /**
      * Handle an incoming request.
      *
@@ -59,7 +57,7 @@ class DisabledAccountCheck
         //          something other than merged accounts.
         if ($this->auth->check()
             && $this->auth->user()->disabled_at !== null
-            && !($request->getMethod() === 'POST' && $request->getRequestUri() == '/auth/logout')
+            && ! ($request->getMethod() === 'POST' && $request->getRequestUri() == '/auth/logout')
         ) {
             Log::info("A login was attempted to a disabled account, user ID #{$this->auth->user()->id}.");
             $this->auth->logout();

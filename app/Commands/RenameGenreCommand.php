@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,14 +59,13 @@ class RenameGenreCommand extends CommandBase
 
         $rules = [
             'name'      => 'required|unique:genres,name,'.$this->_genre->id.',id,deleted_at,NULL|max:50',
-            'slug'      => 'required|unique:genres,slug,'.$this->_genre->id.',id,deleted_at,NULL'
+            'slug'      => 'required|unique:genres,slug,'.$this->_genre->id.',id,deleted_at,NULL',
         ];
 
         $validator = Validator::make([
             'name' => $this->_newName,
-            'slug' => $slug
+            'slug' => $slug,
         ], $rules);
-
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);

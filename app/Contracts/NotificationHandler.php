@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,12 +26,7 @@ use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 
 /**
- * Interface NotificationHandler
- * @package Poniverse\Ponyfm\Contracts
- *
- * Each method in this interface represents a type of notification. To add a new
- * type of notification, add a method for it to this interface and every class
- * that implements it. Your IDE should be able to help with this.
+ * Interface NotificationHandler.
  */
 interface NotificationHandler
 {

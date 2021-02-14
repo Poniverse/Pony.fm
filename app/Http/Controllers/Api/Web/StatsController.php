@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,15 +20,15 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use Auth;
+use Cache;
+use Carbon\Carbon;
+use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Models\Track;
-use Auth;
-use Cache;
-use DB;
 use Response;
-use Carbon\Carbon;
 
 class StatsController extends ApiControllerBase
 {
@@ -88,12 +88,12 @@ class StatsController extends ApiControllerBase
             if ($hourly) {
                 $set = [
                     'hours' => $timeOffet.' '.str_plural('hour', $timeOffet),
-                    'plays' => $plays
+                    'plays' => $plays,
                 ];
             } else {
                 $set = [
                     'days' => $timeOffet.' '.str_plural('day', $timeOffet),
-                    'plays' => $plays
+                    'plays' => $plays,
                 ];
             }
             array_push($output, $set);
@@ -116,7 +116,7 @@ class StatsController extends ApiControllerBase
             }
 
             // Do we have permission to view this track?
-            if (!$track->canView(Auth::user())) {
+            if (! $track->canView(Auth::user())) {
                 return $this->notFound('Track not found!');
             }
 
@@ -134,6 +134,7 @@ class StatsController extends ApiControllerBase
             $statsData = $this->getStatsData($id, $hourly);
 
             $output = $this->sortTrackStatsArray($statsData, $hourly);
+
             return $output;
         });
 

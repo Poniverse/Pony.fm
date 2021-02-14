@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,13 +23,7 @@ namespace Poniverse\Ponyfm\Exceptions;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
- * Class TrackFileNotFoundException
- * @package Poniverse\Ponyfm
- *
- * This exception is used to indicate that the requested `TrackFile` object
- * does not exist. This is useful when dealing with albums or playlists that
- * contain tracks for which no lossless master is available (and thus, lossless
- * `TrackFiles` don't exist for).
+ * Class TrackFileNotFoundException.
  */
 class TrackFileNotFoundException extends ModelNotFoundException
 {

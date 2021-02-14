@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,11 +71,11 @@ class AuthenticateOAuth
         // check that access token is valid at Poniverse.net
         $accessTokenInfo = $this->poniverse->poniverse()->meta()->introspect($accessToken);
 
-        if (!$accessTokenInfo->getIsActive()) {
+        if (! $accessTokenInfo->getIsActive()) {
             throw new AccessDeniedHttpException('This access token is expired or invalid!');
         }
 
-        if (!in_array($requiredScope, $accessTokenInfo->getScopes())) {
+        if (! in_array($requiredScope, $accessTokenInfo->getScopes())) {
             throw new AccessDeniedHttpException("This access token lacks the '${requiredScope}' scope!");
         }
 
@@ -91,7 +91,6 @@ class AuthenticateOAuth
 
         return $next($request);
     }
-
 
     private function determineAccessToken(Request $request, $headerOnly = true)
     {

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,8 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
-use Poniverse\Ponyfm\Models\Track;
 use Illuminate\Console\Command;
+use Poniverse\Ponyfm\Models\Track;
 
 class RebuildTags extends Command
 {
@@ -42,7 +42,6 @@ class RebuildTags extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -63,7 +62,7 @@ class RebuildTags extends Command
             $tracks = Track::whereNotNull('published_at')->withTrashed()->orderBy('id', 'asc')->get();
         }
 
-        $numberOfTracks = sizeof($tracks);
+        $numberOfTracks = count($tracks);
 
         $this->info("Updating tags for ${numberOfTracks} tracks...");
         $bar = $this->output->createProgressBar($numberOfTracks);

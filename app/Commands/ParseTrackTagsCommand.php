@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,16 +20,16 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
+use AudioCache;
 use Carbon\Carbon;
 use Config;
+use File;
 use getID3;
+use Illuminate\Support\Str;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
-use AudioCache;
-use File;
-use Illuminate\Support\Str;
 use Poniverse\Ponyfm\Models\TrackType;
 use Poniverse\Ponyfm\Models\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -58,15 +58,14 @@ class ParseTrackTagsCommand extends CommandBase
         list($parsedTags, $rawTags) = $this->parseOriginalTags($this->fileToParse, $this->track->user, $audio->getAudioCodec());
         $this->track->original_tags = ['parsed_tags' => $parsedTags, 'raw_tags' => $rawTags];
 
-
         if ($this->input['cover'] !== null) {
             $this->track->cover_id = Image::upload($this->input['cover'], $this->track->user_id)->id;
         } else {
             $this->track->cover_id = $parsedTags['cover_id'];
         }
 
-        $this->track->title           = $this->input['title'] ?? $parsedTags['title'] ?? $this->track->title;
-        $this->track->track_type_id   = $this->input['track_type_id'] ?? TrackType::UNCLASSIFIED_TRACK;
+        $this->track->title = $this->input['title'] ?? $parsedTags['title'] ?? $this->track->title;
+        $this->track->track_type_id = $this->input['track_type_id'] ?? TrackType::UNCLASSIFIED_TRACK;
 
         $this->track->genre_id = isset($this->input['genre'])
             ? $this->getGenreId($this->input['genre'])
@@ -89,26 +88,27 @@ class ParseTrackTagsCommand extends CommandBase
             ? Carbon::createFromFormat(Carbon::ISO8601, $this->input['released_at'])
             : $parsedTags['release_date'];
 
-        $this->track->description     = $this->input['description'] ?? $parsedTags['comments'];
-        $this->track->lyrics          = $this->input['lyrics'] ?? $parsedTags['lyrics'];
+        $this->track->description = $this->input['description'] ?? $parsedTags['comments'];
+        $this->track->lyrics = $this->input['lyrics'] ?? $parsedTags['lyrics'];
 
-        $this->track->is_vocal        = $this->input['is_vocal'] ?? $parsedTags['is_vocal'];
-        $this->track->is_explicit     = $this->input['is_explicit'] ?? false;
+        $this->track->is_vocal = $this->input['is_vocal'] ?? $parsedTags['is_vocal'];
+        $this->track->is_explicit = $this->input['is_explicit'] ?? false;
         $this->track->is_downloadable = $this->input['is_downloadable'] ?? true;
-        $this->track->is_listed       = $this->input['is_listed'] ?? true;
+        $this->track->is_listed = $this->input['is_listed'] ?? true;
 
         $this->track = $this->unsetNullVariables($this->track);
 
         $this->track->save();
+
         return CommandResponse::succeed();
     }
 
     /**
-     * If a value is null, remove it! Helps prevent weird SQL errors
+     * If a value is null, remove it! Helps prevent weird SQL errors.
      *
      * @param Track
      * @return Track
-    */
+     */
     private function unsetNullVariables($track)
     {
         $vars = $track->getAttributes();
@@ -138,7 +138,7 @@ class ParseTrackTagsCommand extends CommandBase
 
             return Genre::create([
                 'name' => $genreName,
-                'slug' => Str::slug($genreName)
+                'slug' => Str::slug($genreName),
             ])->id;
         } else {
             // Exists in db, has it been deleted?
@@ -150,6 +150,7 @@ class ParseTrackTagsCommand extends CommandBase
                 // instead of creating a new one
 
                 $existingGenre->restore();
+
                 return $existingGenre->id;
             } else {
                 // It's fine, just return the ID
@@ -166,7 +167,7 @@ class ParseTrackTagsCommand extends CommandBase
      *
      * @param int $artistId
      * @param string|null $albumName
-     * @param integer|null $coverId
+     * @param int|null $coverId
      * @return int|null
      */
     protected function getAlbumId(int $artistId, $albumName, $coverId = null)
@@ -174,7 +175,7 @@ class ParseTrackTagsCommand extends CommandBase
         if (null !== $albumName) {
             $album = Album::firstOrNew([
                 'user_id' => $artistId,
-                'title' => $albumName
+                'title' => $albumName,
             ]);
 
             if (null === $album->id) {
@@ -249,7 +250,6 @@ class ParseTrackTagsCommand extends CommandBase
         //==========================================================================================================
         $parsedTags['is_vocal'] = $parsedTags['lyrics'] !== null;
 
-
         //==========================================================================================================
         // Determine the genre.
         //==========================================================================================================
@@ -294,7 +294,6 @@ class ParseTrackTagsCommand extends CommandBase
 
         $parsedTags['cover_id'] = $coverId;
 
-
         //==========================================================================================================
         // Is this part of an album?
         //==========================================================================================================
@@ -307,10 +306,8 @@ class ParseTrackTagsCommand extends CommandBase
 
         $parsedTags['album_id'] = $albumId;
 
-
         return [$parsedTags, $rawTags];
     }
-
 
     /**
      * @param array $rawTags
@@ -325,7 +322,6 @@ class ParseTrackTagsCommand extends CommandBase
         } else {
             $tags = [];
         }
-
 
         $comment = null;
 
@@ -361,7 +357,7 @@ class ParseTrackTagsCommand extends CommandBase
                 'comments' => $comment,
                 'lyrics' => isset($tags['unsynchronised_lyric']) ? $tags['unsynchronised_lyric'][0] : null,
             ],
-            $tags
+            $tags,
         ];
     }
 
@@ -405,7 +401,7 @@ class ParseTrackTagsCommand extends CommandBase
                 'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
                 'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
             ],
-            $tags
+            $tags,
         ];
     }
 
@@ -441,7 +437,7 @@ class ParseTrackTagsCommand extends CommandBase
                 'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
                 'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
             ],
-            $tags
+            $tags,
         ];
     }
 
@@ -474,7 +470,7 @@ class ParseTrackTagsCommand extends CommandBase
             // YYYY-MM
             case 7:
                 try {
-                    return Carbon::createFromFormat('Y m', str_replace("-", " ", $dateString))
+                    return Carbon::createFromFormat('Y m', str_replace('-', ' ', $dateString))
                         ->day(1);
                 } catch (\InvalidArgumentException $e) {
                     return null;
@@ -483,7 +479,7 @@ class ParseTrackTagsCommand extends CommandBase
             // YYYY-MM-DD
             case 10:
                 try {
-                    return Carbon::createFromFormat('Y m d', str_replace("-", " ", $dateString));
+                    return Carbon::createFromFormat('Y m d', str_replace('-', ' ', $dateString));
                 } catch (\InvalidArgumentException $e) {
                     return null;
                 }

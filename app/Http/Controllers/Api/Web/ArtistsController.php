@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,28 +20,28 @@
 
 namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
 
+use App;
+use ColorThief\ColorThief;
 use Gate;
+use Helpers;
+use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Commands\CreateUserCommand;
+use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Comment;
 use Poniverse\Ponyfm\Models\Favourite;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Models\Follower;
 use Poniverse\Ponyfm\Models\Image;
 use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
-use Poniverse\Ponyfm\Models\Follower;
-use App;
-use Illuminate\Support\Facades\Request;
 use Response;
-use ColorThief\ColorThief;
-use Helpers;
 
 class ArtistsController extends ApiControllerBase
 {
     public function getFavourites($slug)
     {
         $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
-        if (!$user) {
+        if (! $user) {
             App::abort(404);
         }
 
@@ -62,7 +62,7 @@ class ArtistsController extends ApiControllerBase
             },
             'album' => function ($query) {
                 $query->userDetails();
-            }
+            },
             ])->get();
 
         $tracks = [];
@@ -80,14 +80,14 @@ class ArtistsController extends ApiControllerBase
 
         return Response::json([
             'tracks' => $tracks,
-            'albums' => $albums
+            'albums' => $albums,
         ], 200);
     }
 
     public function getContent($slug)
     {
         $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
-        if (!$user) {
+        if (! $user) {
             App::abort(404);
         }
 
@@ -133,10 +133,10 @@ class ArtistsController extends ApiControllerBase
             ->with([
                 'comments' => function ($query) {
                     $query->with(['user', 'user.avatar']);
-                }
+                },
             ])
             ->first();
-        if (!$user) {
+        if (! $user) {
             App::abort(404);
         }
 
@@ -162,18 +162,18 @@ class ArtistsController extends ApiControllerBase
         }
 
         $userData = [
-            'is_following' => false
+            'is_following' => false,
         ];
 
         if ($user->users->count()) {
             $userRow = $user->users[0];
             $userData = [
-                'is_following' => (bool) $userRow->is_followed
+                'is_following' => (bool) $userRow->is_followed,
             ];
         }
 
         $palette = ColorThief::getPalette($user->getAvatarUrlLocal(Image::SMALL), 2);
-        $formatted_palette = array_map("Helpers::rgb2hex", $palette);
+        $formatted_palette = array_map('Helpers::rgb2hex', $palette);
 
         $followers = Follower::where('artist_id', $user->id)
             ->count();
@@ -186,7 +186,7 @@ class ArtistsController extends ApiControllerBase
                 'is_archived' => (bool) $user->is_archived,
                 'avatars' => [
                     'small' => $user->getAvatarUrl(Image::SMALL),
-                    'normal' => $user->getAvatarUrl(Image::NORMAL)
+                    'normal' => $user->getAvatarUrl(Image::NORMAL),
                 ],
                 'avatar_colors' => $formatted_palette,
                 'created_at' => $user->created_at,
@@ -199,10 +199,10 @@ class ArtistsController extends ApiControllerBase
                 'message_url' => $user->message_url,
                 'user_data' => $userData,
                 'permissions' => [
-                    'edit' => Gate::allows('edit', $user)
+                    'edit' => Gate::allows('edit', $user),
                 ],
-                'isAdmin' => $user->hasRole('admin')
-            ]
+                'isAdmin' => $user->hasRole('admin'),
+            ],
         ], 200);
     }
 
@@ -228,7 +228,7 @@ class ArtistsController extends ApiControllerBase
         }
 
         return Response::json(
-            ["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
+            ['artists' => $users, 'current_page' => $page, 'total_pages' => ceil($count / $perPage)],
             200
         );
     }
@@ -236,6 +236,7 @@ class ArtistsController extends ApiControllerBase
     public function postIndex()
     {
         $name = Request::json('username');
+
         return $this->execute(new CreateUserCommand($name, $name, null, true));
     }
 }

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,8 +45,8 @@ class AlbumDownloader
     public function download()
     {
         // Check whether the format is lossless yet not all master files are lossless
-        $isLosslessFormatWithLossyTracks =  in_array($this->_format, Track::$LosslessFormats)
-            && !$this->_album->hasLosslessTracksOnly()
+        $isLosslessFormatWithLossyTracks = in_array($this->_format, Track::$LosslessFormats)
+            && ! $this->_album->hasLosslessTracksOnly()
             && $this->_album->hasLosslessTracks();
 
         $zip = new ZipStream($this->_album->user->display_name.' - '.$this->_album->title.'.zip');
@@ -71,7 +71,7 @@ class AlbumDownloader
             "\r\n";
 
         foreach ($this->_album->tracks as $track) {
-            if (!$track->is_downloadable) {
+            if (! $track->is_downloadable) {
                 continue;
             }
 
@@ -79,12 +79,12 @@ class AlbumDownloader
                 $masterFormatName = $track->getMasterFormatName();
                 $zip->addLargeFile(
                     $track->getFileFor($masterFormatName),
-                    $directory . $track->getDownloadFilenameFor($masterFormatName)
+                    $directory.$track->getDownloadFilenameFor($masterFormatName)
                 );
             } else {
                 $zip->addLargeFile(
                     $track->getFileFor($this->_format),
-                    $directory . $track->getDownloadFilenameFor($this->_format)
+                    $directory.$track->getDownloadFilenameFor($this->_format)
                 );
             }
 

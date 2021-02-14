@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,7 +39,7 @@ abstract class AbstractDriver implements NotificationHandler
                 $this->recipientFinder = new RecipientFinder(get_class($this));
                 break;
             default:
-                throw new \Exception("Invalid notification driver!");
+                throw new \Exception('Invalid notification driver!');
         }
     }
 

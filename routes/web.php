@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015-2017 Feld0
+ * Copyright (C) 2015-2017 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -78,27 +78,24 @@ Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload');
 
 Route::get('notifications', 'AccountController@getNotifications');
 
-
-Route::group(['prefix' => 'notifications/email'], function() {
+Route::group(['prefix' => 'notifications/email'], function () {
     Route::get('/unsubscribe/{subscriptionKey}', 'NotificationsController@getEmailUnsubscribe')->name('email:unsubscribe');
     Route::get('/unsubscribed', 'NotificationsController@getEmailUnsubscribePage')->name('email:confirm-unsubscribed');
     Route::get('/click/{emailKey}', 'NotificationsController@getEmailClick')->name('email:click');
 });
 
-
 Route::get('oembed', 'TracksController@getOembed');
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function () {
-    Route::get( '/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
+    Route::get('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
     Route::post('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
-    Route::get( '/tracks/{id}', 'Api\V1\TracksController@getTrackDetails')->where('id', '\d+');
+    Route::get('/tracks/{id}', 'Api\V1\TracksController@getTrackDetails')->where('id', '\d+');
 
     Route::group(['middleware' => 'auth.oauth:ponyfm:tracks:upload'], function () {
         Route::post('tracks', 'Api\V1\TracksController@postUploadTrack');
-        Route::get( '/tracks/{id}/upload-status', 'Api\V1\TracksController@getUploadStatus');
+        Route::get('/tracks/{id}/upload-status', 'Api\V1\TracksController@getUploadStatus');
     });
 });
-
 
 Route::group(['prefix' => 'api/web', 'middleware' => 'cors'], function () {
     Route::post('/alexa', 'Api\Web\AlexaController@handle');
@@ -219,7 +216,6 @@ Route::group(['prefix' => 'api/web', 'middleware' => 'cors'], function () {
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
 });
 
-
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function () {
     Route::get('/genres', 'AdminController@getGenres');
     Route::get('/tracks', 'AdminController@getTracks');
@@ -233,12 +229,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-ar
 Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
 
-
 Route::group(['prefix' => '{slug}'], function () {
     Route::get('/', 'ArtistsController@getProfile');
     Route::get('/content', 'ArtistsController@getContent');
     Route::get('/favourites', 'ArtistsController@getFavourites');
-
 
     Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
         Route::get('/tracks', 'ContentController@getTracks');
@@ -258,5 +252,5 @@ Route::get('/', 'HomeController@getIndex');
 
 Route::group(['domain' => 'api.pony.fm'], function () {
     Route::get('tracks/latest', ['uses' => 'Api\Mobile\TracksController@latest']);
-    Route::get('tracks/popular', [ 'uses' => 'Api\Mobile\TracksController@popular']);
+    Route::get('tracks/popular', ['uses' => 'Api\Mobile\TracksController@popular']);
 });

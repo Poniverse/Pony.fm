@@ -3,7 +3,7 @@
 /**
  * Pony.fm - A community for pony fan music.
  * Copyright (C) 2015 Feld0
- * Copyright (C) 2015 Kelvin Zhang
+ * Copyright (C) 2015 Kelvin Zhang.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,11 +31,7 @@ use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\TrackFile;
 
 /**
- * Class TrackCollection
- * @package Poniverse\Ponyfm\Traits
- *
- * Contains common logic between albums and playlists. They share some functionality
- * because they're both a form of downloadable track collection.
+ * Class TrackCollection.
  */
 trait TrackCollection
 {
@@ -54,7 +50,6 @@ trait TrackCollection
      */
     abstract public function trackFiles();
 
-
     /**
      * Returns the number of tracks that are available in the given format.
      *
@@ -65,7 +60,6 @@ trait TrackCollection
     {
         return $this->downloadableTrackFiles($format)->count();
     }
-
 
     /**
      * Returns the number of currently-available track files (master files +
@@ -81,7 +75,6 @@ trait TrackCollection
 
         foreach ($trackFiles as $trackFile) {
             /** @var TrackFile $trackFile */
-
             if ($trackFile->is_master ||
                 ($trackFile->expires_at != null && File::exists($trackFile->getFile()))
             ) {
@@ -91,7 +84,6 @@ trait TrackCollection
 
         return $availableCount;
     }
-
 
     /**
      * Kicks off the encoding of any cacheable files in this collection that
@@ -105,12 +97,11 @@ trait TrackCollection
 
         foreach ($trackFiles as $trackFile) {
             /** @var TrackFile $trackFile */
-            if (!File::exists($trackFile->getFile()) && $trackFile->status == TrackFile::STATUS_NOT_BEING_PROCESSED) {
+            if (! File::exists($trackFile->getFile()) && $trackFile->status == TrackFile::STATUS_NOT_BEING_PROCESSED) {
                 $this->dispatch(new EncodeTrackFile($trackFile, true));
             }
         }
     }
-
 
     /**
      * Returns an Eloquent collection of downloadable TrackFiles for this {@link TrackCollection}.
@@ -124,7 +115,7 @@ trait TrackCollection
         return $this->trackFiles()->with([
             'track' => function ($query) {
                 $query->where('is_downloadable', true);
-            }
+            },
         ])->where('format', $format)->get();
     }
 
@@ -138,11 +129,12 @@ trait TrackCollection
     {
         $hasLosslessTracks = false;
         foreach ($this->tracks as $track) {
-            if (!$track->isMasterLossy()) {
+            if (! $track->isMasterLossy()) {
                 $hasLosslessTracks = true;
                 break;
             }
         }
+
         return $hasLosslessTracks;
     }
 
@@ -161,6 +153,7 @@ trait TrackCollection
                 break;
             }
         }
+
         return $hasLosslessTracksOnly;
     }
 
@@ -173,7 +166,7 @@ trait TrackCollection
     public function getFilesize($format) : int
     {
         $tracks = $this->tracks;
-        if (!count($tracks)) {
+        if (! count($tracks)) {
             return 0;
         }
 
@@ -181,15 +174,15 @@ trait TrackCollection
             $size = 0;
 
             // Check whether the format is lossless yet not all master files are lossless
-            $isLosslessFormatWithLossyTracks =  in_array($format, Track::$LosslessFormats)
-                && !$this->hasLosslessTracksOnly()
+            $isLosslessFormatWithLossyTracks = in_array($format, Track::$LosslessFormats)
+                && ! $this->hasLosslessTracksOnly()
                 && $this->hasLosslessTracks();
-            
+
             foreach ($tracks as $track) {
                 /** @var $track Track */
 
                 // Ensure that only downloadable tracks are added onto the file size
-                if (!$track->is_downloadable) {
+                if (! $track->is_downloadable) {
                     continue;
                 }
 

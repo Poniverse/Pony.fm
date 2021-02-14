@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,8 +21,8 @@
 namespace Poniverse\Ponyfm\Exceptions;
 
 use Exception;
-use Illuminate\Auth\AuthenticationException;
 use GrahamCampbell\Exceptions\ExceptionHandler;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,7 +44,6 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
-
 
     /**
      * Report or log an exception.

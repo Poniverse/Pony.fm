@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,9 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
-use Poniverse\Ponyfm\Models\ResourceLogItem;
 use DB;
 use Illuminate\Console\Command;
+use Poniverse\Ponyfm\Models\ResourceLogItem;
 
 class RefreshCache extends Command
 {
@@ -42,7 +42,6 @@ class RefreshCache extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -62,17 +61,17 @@ class RefreshCache extends Command
 
         DB::table('albums')->update([
             'comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.album_id = albums.id AND deleted_at IS NULL)'),
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = albums.id)')
+            'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE album_id = albums.id)'),
         ]);
 
         DB::table('playlists')->update([
             'comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.playlist_id = playlists.id AND deleted_at IS NULL)'),
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = playlists.id)')
+            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = playlists.id)'),
         ]);
 
         DB::table('users')->update([
             'comment_count' => DB::raw('(SELECT COUNT(id) FROM comments WHERE comments.profile_id = users.id AND deleted_at IS NULL)'),
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = users.id)')
+            'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = users.id)'),
         ]);
 
         $users = DB::table('users')->get();
@@ -80,7 +79,7 @@ class RefreshCache extends Command
         $resources = [
             'album' => [],
             'playlist' => [],
-            'track' => []
+            'track' => [],
         ];
 
         foreach ($users as $user) {
@@ -206,7 +205,7 @@ class RefreshCache extends Command
 
     private function getCacheItem(&$resources, $type, $id)
     {
-        if (!isset($resources[$type][$id])) {
+        if (! isset($resources[$type][$id])) {
             $item = [
                 'view_count' => 0,
                 'download_count' => 0,
@@ -227,7 +226,7 @@ class RefreshCache extends Command
 
     private function getUserCacheItem(&$items, $userId, $type, $id)
     {
-        if (!isset($items[$userId][$type][$id])) {
+        if (! isset($items[$userId][$type][$id])) {
             $item = [
                 'is_followed' => false,
                 'is_favourited' => false,
@@ -235,7 +234,7 @@ class RefreshCache extends Command
                 'view_count' => 0,
                 'play_count' => 0,
                 'download_count' => 0,
-                'user_id' => $userId
+                'user_id' => $userId,
             ];
 
             $item[$type.'_id'] = $id;

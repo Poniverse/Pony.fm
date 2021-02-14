@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,9 @@
 
 namespace Poniverse\Ponyfm\Console\Commands;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Console\Command;
-use GuzzleHttp\Client;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 class PoniverseApiSetup extends Command
@@ -43,7 +43,6 @@ class PoniverseApiSetup extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -74,7 +73,7 @@ class PoniverseApiSetup extends Command
             $response = $client->post('api-credentials', [
                 'headers' => ['accept' => 'application/json'],
                 'auth' => [$username, $password],
-                'query' => ['app' => 'Pony.fm']
+                'query' => ['app' => 'Pony.fm'],
             ]);
         } catch (ClientException $e) {
             if ($e->getResponse()->getStatusCode() === 401) {
@@ -96,7 +95,6 @@ class PoniverseApiSetup extends Command
 
         $this->info('Client ID and secret set!');
     }
-
 
     protected function setEnvironmentVariable($key, $oldValue, $newValue)
     {

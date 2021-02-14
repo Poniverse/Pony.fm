@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,13 +30,7 @@ use Poniverse\Ponyfm\Models\Track;
 use Poniverse\Ponyfm\Models\User;
 
 /**
- * Class NotificationManager
- * @package Poniverse\Ponyfm\Library
- *
- * This class exists mostly to maintain type safety when sending notifications
- * from around the Pony.fm codebase. There should be virtually zero logic here.
- * All the heavy lifting happens asynchronously in the {@link SendNotifications}
- * job and the notification drivers.
+ * Class NotificationManager.
  */
 class NotificationManager implements NotificationHandler
 {
@@ -48,7 +42,7 @@ class NotificationManager implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function publishedNewTrack(Track $track)
     {
@@ -56,7 +50,7 @@ class NotificationManager implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function publishedNewPlaylist(Playlist $playlist)
     {
@@ -64,7 +58,7 @@ class NotificationManager implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newFollower(User $userBeingFollowed, User $follower)
     {
@@ -72,7 +66,7 @@ class NotificationManager implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newComment(Comment $comment)
     {
@@ -80,7 +74,7 @@ class NotificationManager implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter)
     {

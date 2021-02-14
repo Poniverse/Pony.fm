@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,10 @@
 
 namespace Poniverse\Ponyfm\Commands;
 
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\Track;
 use Auth;
 use DB;
+use Poniverse\Ponyfm\Models\Playlist;
+use Poniverse\Ponyfm\Models\Track;
 use Validator;
 
 class AddTrackToPlaylistCommand extends CommandBase
@@ -59,20 +59,19 @@ class AddTrackToPlaylistCommand extends CommandBase
         // check if this track is already in the playlist
         $validator = Validator::make(
             ['track_id' => $this->_track->id],
-            ['track_id' => "unique:playlist_track,track_id,null,id,playlist_id,{$this->_playlist->id}", ]
+            ['track_id' => "unique:playlist_track,track_id,null,id,playlist_id,{$this->_playlist->id}"]
         );
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);
         }
 
-
         $songIndex = $this->_playlist->trackCount() + 1;
         $this->_playlist->tracks()->attach($this->_track, ['position' => $songIndex]);
         $this->_playlist->touch();
 
         Playlist::where('id', $this->_playlist->id)->update([
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$this->_playlist->id.')')
+            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$this->_playlist->id.')'),
         ]);
 
         return CommandResponse::succeed(['message' => 'Track added!']);

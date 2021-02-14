@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,8 @@ use Illuminate\Queue\SerializesModels;
 use Poniverse\Ponyfm\Models\Activity;
 use Poniverse\Ponyfm\Models\Email;
 
-abstract class BaseNotification extends Mailable {
+abstract class BaseNotification extends Mailable
+{
     use Queueable, SerializesModels;
 
     /** @var Email */
@@ -47,7 +48,8 @@ abstract class BaseNotification extends Mailable {
      *
      * @param Email $email
      */
-    public function __construct(Email $email) {
+    public function __construct(Email $email)
+    {
         $this->emailRecord = $email;
         $this->notificationRecord = $email->notification;
         $this->activityRecord = $email->notification->activity;
@@ -62,7 +64,8 @@ abstract class BaseNotification extends Mailable {
      * @param Email $email
      * @return BaseNotification
      */
-    static public function factory(Activity $activity, Email $email): BaseNotification {
+    public static function factory(Activity $activity, Email $email): self
+    {
         switch ($activity->activity_type) {
             case Activity::TYPE_NEWS:
                 break;
@@ -96,7 +99,8 @@ abstract class BaseNotification extends Mailable {
      *
      * @return string
      */
-    protected function generateUnsubscribeUrl() {
+    protected function generateUnsubscribeUrl()
+    {
         return route('email:unsubscribe', ['subscriptionKey' => $this->emailRecord->getSubscription()->id]);
     }
 
@@ -105,7 +109,8 @@ abstract class BaseNotification extends Mailable {
      *
      * @return string
      */
-    protected function generateNotificationUrl() {
+    protected function generateNotificationUrl()
+    {
         return route('email:click', ['emailKey' => $this->emailRecord->id]);
     }
 
@@ -121,7 +126,8 @@ abstract class BaseNotification extends Mailable {
      * @param array $extraVariables
      * @return $this
      */
-    protected function renderEmail(string $templateName, string $subject, array $extraVariables) {
+    protected function renderEmail(string $templateName, string $subject, array $extraVariables)
+    {
         return $this
             ->subject($subject)
             ->view("emails.html.notifications.{$templateName}")

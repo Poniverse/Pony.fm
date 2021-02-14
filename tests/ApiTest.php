@@ -4,7 +4,7 @@ namespace Tests;
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015-2017 Feld0
+ * Copyright (C) 2015-2017 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,8 +21,8 @@ namespace Tests;
  */
 
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Poniverse\Ponyfm\Models\Album;
 use Poniverse\Ponyfm\Models\Genre;
 use Poniverse\Ponyfm\Models\Track;
@@ -41,9 +41,9 @@ class ApiTest extends TestCase
              ->post('/api/v1/tracks', [])
              ->seeJsonEquals([
                  'errors' => [
-                     'track' => ['You must upload an audio file!']
+                     'track' => ['You must upload an audio file!'],
                  ],
-                 'message' => 'Validation failed'
+                 'message' => 'Validation failed',
              ]);
         $this->assertResponseStatus(400);
     }
@@ -51,14 +51,14 @@ class ApiTest extends TestCase
     public function testUploadWithFileWithoutAutoPublish()
     {
         $this->callUploadWithParameters([
-            'auto_publish' => false
+            'auto_publish' => false,
         ]);
 
         $this->seeJsonEquals([
                 'message'       => "This track has been accepted for processing! Poll the status_url to know when it's ready to publish. It will be published at the track_url.",
-                'id'            => "1",
-                'status_url'    => "http://ponyfm-testing.poni/api/v1/tracks/1/upload-status",
-                'track_url'     => "http://ponyfm-testing.poni/tracks/1-ponyfm-test-file",
+                'id'            => '1',
+                'status_url'    => 'http://ponyfm-testing.poni/api/v1/tracks/1/upload-status',
+                'track_url'     => 'http://ponyfm-testing.poni/tracks/1-ponyfm-test-file',
             ]);
     }
 
@@ -67,10 +67,10 @@ class ApiTest extends TestCase
         $this->callUploadWithParameters([]);
 
         $this->seeJsonEquals([
-                'message'       => "This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url.",
-                'id'            => "1",
-                'status_url'    => "http://ponyfm-testing.poni/api/v1/tracks/1/upload-status",
-                'track_url'     => "http://ponyfm-testing.poni/tracks/1-ponyfm-test-file",
+                'message'       => 'This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url.',
+                'id'            => '1',
+                'status_url'    => 'http://ponyfm-testing.poni/api/v1/tracks/1/upload-status',
+                'track_url'     => 'http://ponyfm-testing.poni/tracks/1-ponyfm-test-file',
             ]);
 
         $this->visit('/tracks/1-ponyfm-test');
@@ -98,29 +98,29 @@ class ApiTest extends TestCase
             'is_explicit'       => true,
             'is_downloadable'   => false,
             'is_listed'         => false,
-            'metadata'          => $track->metadata
+            'metadata'          => $track->metadata,
         ], [
-            'cover'             => $this->getTestFileForUpload('ponyfm-transparent-cover-art.png')
+            'cover'             => $this->getTestFileForUpload('ponyfm-transparent-cover-art.png'),
         ]);
 
         $this->seeInDatabase('genres', [
-            'name' => $genre->name
+            'name' => $genre->name,
         ]);
 
         $this->seeInDatabase('albums', [
-            'title' => $album->title
+            'title' => $album->title,
         ]);
 
         $this->seeInDatabase('images', [
             'id' => 1,
-            'uploaded_by' => $this->user->id
+            'uploaded_by' => $this->user->id,
         ]);
 
         $this->seeInDatabase('tracks', [
             'title'             => $track->title,
             'user_id'           => $this->user->id,
             'track_type_id'     => $track->track_type_id,
-            'released_at'       => "2015-01-01 01:01:01",
+            'released_at'       => '2015-01-01 01:01:01',
             'description'       => $track->description,
             'lyrics'            => $track->lyrics,
             'is_vocal'          => true,
@@ -128,7 +128,7 @@ class ApiTest extends TestCase
             'is_downloadable'   => false,
             'is_listed'         => false,
             'cover_id'          => 1,
-            'metadata'          => $track->metadata
+            'metadata'          => $track->metadata,
         ]);
     }
 
@@ -145,7 +145,6 @@ class ApiTest extends TestCase
         $track->published_at = Carbon::now();
         $track->save();
 
-
         $response = $this
             ->withSession(['api_client_id' => 'ponyponyponyponypony'])
             ->get("/api/v1/tracks/{$track->id}");
@@ -158,9 +157,9 @@ class ApiTest extends TestCase
                 'streams'       => [
                     'mp3'       => [
                         'url'       => $track->getStreamUrl('MP3', 'ponyponyponyponypony'),
-                        'mime_type' => Track::$Formats['MP3']['mime_type']
-                    ]
-                ]
+                        'mime_type' => Track::$Formats['MP3']['mime_type'],
+                    ],
+                ],
             ]);
     }
 }

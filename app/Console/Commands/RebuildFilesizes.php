@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Kelvin Zhang
+ * Copyright (C) 2015 Kelvin Zhang.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,7 +43,6 @@ class RebuildFilesizes extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -65,12 +64,10 @@ class RebuildFilesizes extends Command
         )
         ) {
             TrackFile::chunk(200, function ($trackFiles) {
-
                 $this->info('========== Start Chunk ==========');
 
                 foreach ($trackFiles as $trackFile) {
                     /** @var TrackFile $trackFile */
-
                     if (File::exists($trackFile->getFile())) {
                         $size = $trackFile->updateFilesize();
                         $this->info('ID '.$trackFile->id.' processed - '.$size.' bytes');

@@ -5,7 +5,7 @@ namespace Poniverse\Ponyfm\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\AlexaSession
+ * Poniverse\Ponyfm\Models\AlexaSession.
  *
  * @property string $id
  * @property string $payload
@@ -24,7 +24,7 @@ class AlexaSession extends Model
     protected $table = 'alexa_session';
 
     protected $casts = [
-        'payload' => 'array'
+        'payload' => 'array',
     ];
 
     public function put($key, $value)

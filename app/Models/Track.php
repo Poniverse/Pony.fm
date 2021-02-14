@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015-2017 Feld0
+ * Copyright (C) 2015-2017 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,9 +24,17 @@ use Auth;
 use Cache;
 use Config;
 use DB;
+use Exception;
+use External;
 use Gate;
+use getid3_writetags;
+use Helpers;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+use Log;
 use Poniverse\Ponyfm\Contracts\Commentable;
 use Poniverse\Ponyfm\Contracts\Favouritable;
 use Poniverse\Ponyfm\Contracts\Searchable;
@@ -34,48 +42,40 @@ use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
 use Poniverse\Ponyfm\Models\ResourceLogItem;
 use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
 use Poniverse\Ponyfm\Traits\SlugTrait;
-use Exception;
-use External;
-use getid3_writetags;
-use Helpers;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
-use Log;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Poniverse\Ponyfm\Models\Track
+ * Poniverse\Ponyfm\Models\Track.
  *
- * @property integer $id
- * @property integer $user_id
- * @property integer $license_id
- * @property integer $genre_id
- * @property integer $track_type_id
+ * @property int $id
+ * @property int $user_id
+ * @property int $license_id
+ * @property int $genre_id
+ * @property int $track_type_id
  * @property string $title
  * @property string $slug
  * @property string $description
  * @property string $lyrics
- * @property boolean $is_vocal
- * @property boolean $is_explicit
- * @property integer $cover_id
- * @property boolean $is_downloadable
+ * @property bool $is_vocal
+ * @property bool $is_explicit
+ * @property int $cover_id
+ * @property bool $is_downloadable
  * @property float $duration
- * @property integer $play_count
- * @property integer $view_count
- * @property integer $download_count
- * @property integer $favourite_count
- * @property integer $comment_count
+ * @property int $play_count
+ * @property int $view_count
+ * @property int $download_count
+ * @property int $favourite_count
+ * @property int $comment_count
  * @property \Carbon\Carbon $created_at
  * @property string $updated_at
  * @property \Carbon\Carbon $deleted_at
  * @property \Carbon\Carbon $published_at
  * @property \Carbon\Carbon $released_at
- * @property integer $album_id
- * @property integer $track_number
- * @property boolean $is_latest
+ * @property int $album_id
+ * @property int $track_number
+ * @property bool $is_latest
  * @property string $hash
- * @property boolean $is_listed
+ * @property bool $is_listed
  * @property string $source
  * @property string $original_tags
  * @property string $metadata
@@ -184,7 +184,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     const STATUS_ERROR = 2;
 
     /**
-     * All the information about how to encode files into Pony.fm's various formats
+     * All the information about how to encode files into Pony.fm's various formats.
      *
      * @var array
      */
@@ -196,7 +196,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'tag_format' => 'metaflac',
             'tag_method' => 'updateTagsWithGetId3',
             'mime_type' => 'audio/flac',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a flac -aq 8 -f flac {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a flac -aq 8 -f flac {$target}',
         ],
         'MP3' => [
             'index' => 1,
@@ -205,7 +205,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'tag_format' => 'id3v2.3',
             'tag_method' => 'updateTagsWithGetId3',
             'mime_type' => 'audio/mpeg',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libmp3lame -ab 320k -f mp3 {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libmp3lame -ab 320k -f mp3 {$target}',
         ],
         'OGG Vorbis' => [
             'index' => 2,
@@ -214,7 +214,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'tag_format' => 'vorbiscomment',
             'tag_method' => 'updateTagsWithGetId3',
             'mime_type' => 'audio/ogg',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libvorbis -aq 7 -f ogg {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libvorbis -aq 7 -f ogg {$target}',
         ],
         'AAC' => [
             'index' => 3,
@@ -223,7 +223,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'tag_format' => 'AtomicParsley',
             'tag_method' => 'updateTagsWithAtomicParsley',
             'mime_type' => 'audio/mp4',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libfaac -ab 256k -f mp4 {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libfaac -ab 256k -f mp4 {$target}',
         ],
         'ALAC' => [
             'index' => 4,
@@ -232,7 +232,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'tag_format' => 'AtomicParsley',
             'tag_method' => 'updateTagsWithAtomicParsley',
             'mime_type' => 'audio/mp4',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a alac {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a alac {$target}',
         ],
     ];
 
@@ -250,7 +250,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     public static $CacheableFormats = [
         'OGG Vorbis',
         'ALAC',
-        'AAC'
+        'AAC',
     ];
 
     /**
@@ -264,7 +264,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public static $LosslessFormats = [
         'FLAC',
-        'ALAC'
+        'ALAC',
     ];
 
     /**
@@ -311,7 +311,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             $query->with([
                 'users' => function ($query) {
                     $query->whereUserId(Auth::user()->id);
-                }
+                },
             ]);
         }
     }
@@ -343,7 +343,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function scopeExplicitFilter($query)
     {
-        if (!Auth::check() || !Auth::user()->can_see_explicit_content) {
+        if (! Auth::check() || ! Auth::user()->can_see_explicit_content) {
             $query->whereIsExplicit(false);
         }
     }
@@ -358,7 +358,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         $query->with([
             'comments' => function ($query) {
                 $query->with('user');
-            }
+            },
         ]);
     }
 
@@ -376,7 +376,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * The (messy) query used to generate the list of popular tracks on PFM's
      * homepage.
      *
-     * @param integer $count the number of tracks to return
+     * @param int $count the number of tracks to return
      * @param bool $allowExplicit whether to include explicit tracks in the results
      * @param int $skip currently unused as of 2017-09-22
      * @return array
@@ -443,7 +443,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 foreach ($countQuery as $track) {
                     $results[] = [
                         'id' => $track->track_id,
-                        'weight' => $track->weight
+                        'weight' => $track->weight,
                     ];
                 }
 
@@ -459,11 +459,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             $trackWeights[$track['id']] = $track['weight'];
         }
 
-        if (!count($trackIds)) {
+        if (! count($trackIds)) {
             return [];
         }
 
-        $tracks = Track::summary()
+        $tracks = self::summary()
             ->userDetails()
             ->explicitFilter()
             ->published()
@@ -472,12 +472,12 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
         $processed = [];
         foreach ($tracks->get() as $track) {
-            $trackModel = Track::mapPublicTrackSummary($track);
+            $trackModel = self::mapPublicTrackSummary($track);
             $trackModel['weight'] = $trackWeights[$track->id];
             $processed[] = $trackModel;
         }
 
-        usort($processed, function($a, $b) {
+        usort($processed, function ($a, $b) {
             return $a['weight'] <=> $b['weight'];
         });
 
@@ -493,7 +493,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * @param Track $track
      * @return array
      */
-    public static function mapPublicTrackShow(Track $track)
+    public static function mapPublicTrackShow(self $track)
     {
         $returnValue = self::mapPublicTrackSummary($track);
         $returnValue['description'] = $track->description;
@@ -506,7 +506,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
 
         $returnValue['comments'] = $comments;
-        
+
         $formats = [];
 
         foreach ($track->trackFiles as $trackFile) {
@@ -515,7 +515,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 'extension' => $trackFile->extension,
                 'url' => $trackFile->url,
                 'size' => $trackFile->size,
-                'isCacheable' => (bool) $trackFile->is_cacheable
+                'isCacheable' => (bool) $trackFile->is_cacheable,
             ];
         }
 
@@ -523,7 +523,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'url' => action('TracksController@getShortlink', ['id' => $track->id]),
             'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
             'bbcode' => '[url='.$track->url.'][img]'.$track->getCoverUrl().'[/img][/url]',
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$track->title.' by '.$track->user->display_name.' on Pony.fm'
+            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$track->title.' by '.$track->user->display_name.' on Pony.fm',
         ];
 
         $returnValue['share']['tumblrUrl'] = 'http://www.tumblr.com/share/video?embed='.urlencode($returnValue['share']['html']).'&caption='.urlencode($track->title);
@@ -540,15 +540,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * @param Track $track
      * @return array
      */
-    public static function mapPublicTrackSummary(Track $track)
+    public static function mapPublicTrackSummary(self $track)
     {
         $userData = [
             'stats' => [
                 'views' => 0,
                 'plays' => 0,
-                'downloads' => 0
+                'downloads' => 0,
             ],
-            'is_favourited' => false
+            'is_favourited' => false,
         ];
 
         if (Auth::check() && $track->users->count()) {
@@ -559,7 +559,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                     'plays' => (int) $userRow->play_count,
                     'downloads' => $userRow->download_count,
                 ],
-                'is_favourited' => (bool) $userRow->is_favourited
+                'is_favourited' => (bool) $userRow->is_favourited,
             ];
         }
 
@@ -569,14 +569,14 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'user' => [
                 'id' => (int) $track->user->id,
                 'name' => $track->user->display_name,
-                'url' => $track->user->url
+                'url' => $track->user->url,
             ],
             'stats' => [
                 'views' => (int) $track->view_count,
                 'plays' => (int) $track->play_count,
                 'downloads' => (int) $track->download_count,
                 'comments' => (int) $track->comment_count,
-                'favourites' => (int) $track->favourite_count
+                'favourites' => (int) $track->favourite_count,
             ],
             'url' => $track->url,
             'slug' => $track->slug,
@@ -599,18 +599,18 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 'thumbnail' => $track->getCoverUrl(Image::THUMBNAIL),
                 'small' => $track->getCoverUrl(Image::SMALL),
                 'normal' => $track->getCoverUrl(Image::NORMAL),
-                'original' => $track->getCoverUrl(Image::ORIGINAL)
+                'original' => $track->getCoverUrl(Image::ORIGINAL),
             ],
             'streams' => [
                 'mp3' => $track->getStreamUrl('MP3'),
-                'aac' => (!Config::get('app.debug') || is_file($track->getFileFor('AAC'))) ? $track->getStreamUrl('AAC') : null,
-                'ogg' => (Config::get('app.debug') || is_file($track->getFileFor('OGG Vorbis'))) ? $track->getStreamUrl('OGG Vorbis') : null
+                'aac' => (! Config::get('app.debug') || is_file($track->getFileFor('AAC'))) ? $track->getStreamUrl('AAC') : null,
+                'ogg' => (Config::get('app.debug') || is_file($track->getFileFor('OGG Vorbis'))) ? $track->getStreamUrl('OGG Vorbis') : null,
             ],
             'user_data' => $userData,
             'permissions' => [
                 'delete' => Gate::allows('delete', $track),
-                'edit' => Gate::allows('edit', $track)
-            ]
+                'edit' => Gate::allows('edit', $track),
+            ],
         ];
 
         if ($track->album_id != null) {
@@ -630,7 +630,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * @param Track $track
      * @return array
      */
-    public static function mapPrivateTrackShow(Track $track)
+    public static function mapPrivateTrackShow(self $track)
     {
         $showSongs = [];
         foreach ($track->showSongs as $showSong) {
@@ -646,7 +646,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         $returnValue['released_at'] = $track->released_at ? $track->released_at->toDateString() : null;
         $returnValue['lyrics'] = $track->lyrics;
         $returnValue['description'] = $track->description;
-        $returnValue['is_downloadable'] = !$track->isPublished() ? true : (bool) $track->is_downloadable;
+        $returnValue['is_downloadable'] = ! $track->isPublished() ? true : (bool) $track->is_downloadable;
         $returnValue['license_id'] = $track->license_id != null ? $track->license_id : 3;
         $returnValue['username'] = User::whereId($track->user_id)->first()->username;
 
@@ -667,7 +667,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      * @param Track $track
      * @return array
      */
-    public static function mapPrivateTrackSummary(Track $track)
+    public static function mapPrivateTrackSummary(self $track)
     {
         return [
             'id' => $track->id,
@@ -684,7 +684,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'genre_id' => $track->genre_id,
             'track_type_id' => $track->track_type_id,
             'cover_url' => $track->getCoverUrl(Image::SMALL),
-            'is_listed' => !!$track->is_listed
+            'is_listed' => (bool) $track->is_listed,
         ];
     }
 
@@ -739,7 +739,6 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     {
         return $this->hasMany(TrackFile::class)->where('version', $this->current_version);
     }
-
 
     public function trackFilesForAllVersions()
     {
@@ -860,7 +859,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         $destination = $this->getDirectory();
         umask(0);
 
-        if (!is_dir($destination)) {
+        if (! is_dir($destination)) {
             mkdir($destination, 0777, true);
         }
     }
@@ -919,7 +918,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getCoverUrl($type = Image::NORMAL)
     {
-        if (!$this->hasCover()) {
+        if (! $this->hasCover()) {
             if ($this->album_id != null) {
                 return $this->album->getCoverUrl($type);
             }
@@ -945,7 +944,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         return action('TracksController@getStream',
             [
                 'id' => $this->id,
-                'extension' => self::$Formats[$format]['extension']
+                'extension' => self::$Formats[$format]['extension'],
             ] + ($apiClientId !== null ? ['api_client_id' => $apiClientId] : [])
         );
     }
@@ -978,7 +977,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getFilenameFor(string $format) : string
     {
-        if (!isset(self::$Formats[$format])) {
+        if (! isset(self::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
         }
 
@@ -997,7 +996,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getDownloadFilenameFor(string $format) : string
     {
-        if (!isset(self::$Formats[$format])) {
+        if (! isset(self::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
         }
 
@@ -1015,7 +1014,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getFileFor(string $format) : string
     {
-        if (!isset(self::$Formats[$format])) {
+        if (! isset(self::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
         }
 
@@ -1046,7 +1045,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getUrlFor(string $format) : string
     {
-        if (!isset(self::$Formats[$format])) {
+        if (! isset(self::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
         }
 
@@ -1054,7 +1053,6 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
         return action('TracksController@getDownload', ['id' => $this->id, 'extension' => $format['extension']]);
     }
-
 
     /**
      * @return int one of the Track::STATUS_* values, indicating whether this track is currently being processed
@@ -1067,7 +1065,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             } elseif ($carry !== static::STATUS_ERROR &&
                 in_array($trackFile->status, [TrackFile::STATUS_PROCESSING, TrackFile::STATUS_PROCESSING_PENDING])) {
                 return static::STATUS_PROCESSING;
-            } elseif (!in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING, TrackFile::STATUS_PROCESSING_PENDING]) &&
+            } elseif (! in_array($carry, [static::STATUS_ERROR, static::STATUS_PROCESSING, TrackFile::STATUS_PROCESSING_PENDING]) &&
                 (int) $trackFile->status === TrackFile::STATUS_NOT_BEING_PROCESSED
             ) {
                 return static::STATUS_COMPLETE;
@@ -1152,7 +1150,6 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         External::execute($command);
     }
 
-
     /**
      * Writes a TrackFile's tags using getId3(). This is useful for MP3, FLAC,
      * and OGG Vorbis files. This function is called from updateTagsForTrackFile.
@@ -1162,8 +1159,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     private function updateTagsWithGetId3(string $format)
     {
-        require_once(app_path().'/Library/getid3/getid3/getid3.php');
-        require_once(app_path().'/Library/getid3/getid3/write.php');
+        require_once app_path().'/Library/getid3/getid3/getid3.php';
+        require_once app_path().'/Library/getid3/getid3/write.php';
         $tagWriter = new getid3_writetags;
 
         $tagWriter->overwrite_tags = true;
@@ -1182,7 +1179,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 //                'url_artist'            => [$this->user->url],
 //                'url_source'            => [$this->url],
 //                'url_file'                => [$this->url],
-            'url_publisher' => ['https://pony.fm/']
+            'url_publisher' => ['https://pony.fm/'],
         ];
 
         if ($this->album_id !== null) {
@@ -1195,7 +1192,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 'data' => file_get_contents($this->cover->getFile(Image::ORIGINAL)),
                 'picturetypeid' => 2,
                 'description' => 'cover',
-                'mime' => $this->cover->mime
+                'mime' => $this->cover->mime,
             ];
         }
 
@@ -1203,7 +1200,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         $tagWriter->tagformats = [self::$Formats[$format]['tag_format']];
 
         if ($tagWriter->WriteTags()) {
-            if (!empty($tagWriter->warnings)) {
+            if (! empty($tagWriter->warnings)) {
                 Log::warning('Track #'.$this->id.': There were some warnings:<br />'.implode(
                     '<br /><br />',
                     $tagWriter->warnings
@@ -1234,17 +1231,17 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function shouldBeIndexed():bool
     {
         return $this->is_listed &&
                $this->published_at !== null &&
-               !$this->trashed();
+               ! $this->trashed();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function toElasticsearch():array
     {
@@ -1254,7 +1251,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'published_at'  => $this->published_at ? $this->published_at->toIso8601String() : null,
             'genre'         => $this->genre->name,
             'track_type'    => $this->trackType->title,
-            'show_songs'    => $this->showSongs->pluck('title')
+            'show_songs'    => $this->showSongs->pluck('title'),
         ];
     }
 

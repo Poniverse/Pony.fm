@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,31 +20,31 @@
 
 namespace Poniverse\Ponyfm\Models;
 
+use App;
 use Config;
+use File;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
-use App;
-use File;
 
 /**
- * Poniverse\Ponyfm\Models\TrackFile
+ * Poniverse\Ponyfm\Models\TrackFile.
  *
- * @property integer $id
- * @property integer $track_id
- * @property boolean $is_master
+ * @property int $id
+ * @property int $track_id
+ * @property bool $is_master
  * @property string $format
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property boolean $is_cacheable
- * @property boolean $status
+ * @property bool $is_cacheable
+ * @property bool $status
  * @property \Carbon\Carbon $expires_at
- * @property integer $filesize
+ * @property int $filesize
  * @property-read \Poniverse\Ponyfm\Models\Track $track
  * @property-read mixed $extension
  * @property-read mixed $url
  * @property-read mixed $size
  * @property-read mixed $is_expired
- * @property integer $version
+ * @property int $version
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereTrackId($value)
  * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackFile whereIsMaster($value)
@@ -95,7 +95,7 @@ class TrackFile extends Model
     public static function findOrFailByExtension($trackId, $extension)
     {
         $track = Track::find($trackId);
-        if (!$track) {
+        if (! $track) {
             App::abort(404);
         }
 
@@ -219,6 +219,6 @@ class TrackFile extends Model
 
     public function isLossy() : bool
     {
-        return !in_array($this->format, Track::$LosslessFormats);
+        return ! in_array($this->format, Track::$LosslessFormats);
     }
 }

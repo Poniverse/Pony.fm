@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,8 +24,8 @@ use Illuminate\Support\Facades\Request;
 use Poniverse\Ponyfm\Commands\CreateShowSongCommand;
 use Poniverse\Ponyfm\Commands\DeleteShowSongCommand;
 use Poniverse\Ponyfm\Commands\RenameShowSongCommand;
-use Poniverse\Ponyfm\Models\ShowSong;
 use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use Poniverse\Ponyfm\Models\ShowSong;
 use Response;
 
 class ShowSongsController extends ApiControllerBase
@@ -42,26 +42,28 @@ class ShowSongsController extends ApiControllerBase
             ->get();
 
         return Response::json([
-            'showsongs' => $songs->toArray()
+            'showsongs' => $songs->toArray(),
         ], 200);
     }
 
     public function postCreate()
     {
         $command = new CreateShowSongCommand(Request::get('title'));
+
         return $this->execute($command);
     }
 
     public function putRename($songId)
     {
         $command = new RenameShowSongCommand($songId, Request::get('title'));
+
         return $this->execute($command);
     }
-
 
     public function deleteSong($songId)
     {
         $command = new DeleteShowSongCommand($songId, Request::get('destination_song_id'));
+
         return $this->execute($command);
     }
 }
