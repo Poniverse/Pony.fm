@@ -20,17 +20,17 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\ApiControllerBase;
 use App\Library\Search;
 use Elasticsearch;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class SearchController extends ApiControllerBase
 {
-    public function getSearch(Search $search)
+    public function getSearch(Request $request, Search $search)
     {
-        $results = $search->searchAllContent(Request::query('query'));
+        $results = $search->searchAllContent($request->query('query'));
 
         return response()->json([
             'results' => $results,

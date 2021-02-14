@@ -20,11 +20,11 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Commands\CreateAnnouncementCommand;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class AnnouncementsController extends Controller
@@ -74,9 +74,9 @@ class AnnouncementsController extends Controller
         );
     }
 
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        $command = new CreateAnnouncementCommand(Request::get('name'));
+        $command = new CreateAnnouncementCommand($request->get('name'));
 
         return $this->execute($command);
     }

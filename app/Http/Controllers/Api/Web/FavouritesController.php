@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Commands\ToggleFavouriteCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Album;
@@ -27,20 +28,19 @@ use App\Models\Favourite;
 use App\Models\Playlist;
 use App\Models\Track;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class FavouritesController extends ApiControllerBase
 {
-    public function postToggle()
+    public function postToggle(Request $request)
     {
-        return $this->execute(new ToggleFavouriteCommand(Request::get('type'), Request::get('id')));
+        return $this->execute(new ToggleFavouriteCommand($request->get('type'), $request->get('id')));
     }
 
-    public function getTracks()
+    public function getTracks(Request $request)
     {
         $query = Favourite
-            ::whereUserId(Auth::user()->id)
+            ::whereUserId($request->user()->id)
             ->whereNotNull('track_id')
             ->with([
                 'track' => function ($query) {
@@ -68,10 +68,10 @@ class FavouritesController extends ApiControllerBase
         return response()->json(['tracks' => $tracks], 200);
     }
 
-    public function getAlbums()
+    public function getAlbums(Request $request)
     {
         $query = Favourite
-            ::whereUserId(Auth::user()->id)
+            ::whereUserId($request->user()->id)
             ->whereNotNull('album_id')
             ->with([
                 'album' => function ($query) {
@@ -95,10 +95,10 @@ class FavouritesController extends ApiControllerBase
         return response()->json(['albums' => $albums], 200);
     }
 
-    public function getPlaylist()
+    public function getPlaylist(Request $request)
     {
         $query = Favourite
-            ::whereUserId(Auth::user()->id)
+            ::whereUserId($request->user()->id)
             ->whereNotNull('playlist_id')
             ->with([
                 'playlist' => function ($query) {

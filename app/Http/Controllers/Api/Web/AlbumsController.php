@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Commands\CreateAlbumCommand;
 use App\Commands\DeleteAlbumCommand;
 use App\Commands\EditAlbumCommand;
@@ -32,19 +33,18 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class AlbumsController extends ApiControllerBase
 {
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        return $this->execute(new CreateAlbumCommand(Request::all()));
+        return $this->execute(new CreateAlbumCommand($request->all()));
     }
 
-    public function postEdit($id)
+    public function postEdit(Request $request, $id)
     {
-        return $this->execute(new EditAlbumCommand($id, Request::all()));
+        return $this->execute(new EditAlbumCommand($id, $request->all()));
     }
 
     public function postDelete($id)
@@ -52,7 +52,7 @@ class AlbumsController extends ApiControllerBase
         return $this->execute(new DeleteAlbumCommand($id));
     }
 
-    public function getShow($id)
+    public function getShow(Request $request, $id)
     {
         $album = Album::with([
             'tracks' => function ($query) {
@@ -75,7 +75,7 @@ class AlbumsController extends ApiControllerBase
             abort(404);
         }
 
-        if (Request::get('log')) {
+        if ($request->get('log')) {
             ResourceLogItem::logItem('album', $id, ResourceLogItem::VIEW);
             $album->view_count++;
         }
@@ -117,11 +117,11 @@ class AlbumsController extends ApiControllerBase
         return response()->json(['url' => $url], 200);
     }
 
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         $page = 1;
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         $query = Album::summary()
@@ -175,14 +175,14 @@ class AlbumsController extends ApiControllerBase
         return response()->json($albums, 200);
     }
 
-    public function getEdit($id)
+    public function getEdit(Request $request, $id)
     {
         $album = Album::with('tracks')->find($id);
         if (! $album) {
             return $this->notFound('Album '.$id.' not found!');
         }
 
-        if (Gate::denies('edit', Auth::user())) {
+        if (Gate::denies('edit', $request->user())) {
             return $this->notAuthorized();
         }
 

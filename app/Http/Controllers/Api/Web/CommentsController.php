@@ -20,18 +20,18 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Commands\CreateCommentCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Comment;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class CommentsController extends ApiControllerBase
 {
-    public function postCreate($type, $id)
+    public function postCreate(Request $request, $type, $id)
     {
-        return $this->execute(new CreateCommentCommand($type, $id, Request::all()));
+        return $this->execute(new CreateCommentCommand($type, $id, $request->all()));
     }
 
     public function getIndex($type, $id)

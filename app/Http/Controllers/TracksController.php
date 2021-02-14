@@ -38,7 +38,7 @@ class TracksController extends Controller
         return view('tracks.index');
     }
 
-    public function getEmbed($id)
+    public function getEmbed(Request $request, $id)
     {
         $track = Track
             ::whereId($id)
@@ -50,7 +50,7 @@ class TracksController extends Controller
                 'genre'
             )->first();
 
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
@@ -93,7 +93,7 @@ class TracksController extends Controller
             ->userDetails()
             ->first();
 
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
@@ -113,10 +113,10 @@ class TracksController extends Controller
         return response()->json($output);
     }
 
-    public function getTrack($id, $slug)
+    public function getTrack(Request $request, $id, $slug)
     {
         $track = Track::find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
@@ -132,20 +132,20 @@ class TracksController extends Controller
         return $this->getTrack($id, $slug);
     }
 
-    public function getShortlink($id)
+    public function getShortlink(Request $request, $id)
     {
         $track = Track::find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
         return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
     }
 
-    public function getStream($id, $extension)
+    public function getStream(Request $request, $id, $extension)
     {
         $track = Track::find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 
@@ -179,10 +179,10 @@ class TracksController extends Controller
         return $response;
     }
 
-    public function getDownload($id, $extension)
+    public function getDownload(Request $request, $id, $extension)
     {
         $track = Track::find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
 

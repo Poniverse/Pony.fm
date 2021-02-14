@@ -20,12 +20,12 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Commands\CreateGenreCommand;
 use App\Commands\DeleteGenreCommand;
 use App\Commands\RenameGenreCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Genre;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class GenresController extends ApiControllerBase
@@ -45,23 +45,23 @@ class GenresController extends ApiControllerBase
         ], 200);
     }
 
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        $command = new CreateGenreCommand(Request::get('name'));
+        $command = new CreateGenreCommand($request->get('name'));
 
         return $this->execute($command);
     }
 
-    public function putRename($genreId)
+    public function putRename(Request $request, $genreId)
     {
-        $command = new RenameGenreCommand($genreId, Request::get('name'));
+        $command = new RenameGenreCommand($genreId, $request->get('name'));
 
         return $this->execute($command);
     }
 
-    public function deleteGenre($genreId)
+    public function deleteGenre(Request $request, $genreId)
     {
-        $command = new DeleteGenreCommand($genreId, Request::get('destination_genre_id'));
+        $command = new DeleteGenreCommand($genreId, $request->get('destination_genre_id'));
 
         return $this->execute($command);
     }

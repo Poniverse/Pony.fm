@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Models\Playlist;
 use App\Models\ResourceLogItem;
@@ -36,10 +37,10 @@ class PlaylistsController extends Controller
         return view('playlists.index');
     }
 
-    public function getPlaylist($id, $slug)
+    public function getPlaylist(Request $request, $id, $slug)
     {
         $playlist = Playlist::find($id);
-        if (! $playlist || ! $playlist->canView(Auth::user())) {
+        if (! $playlist || ! $playlist->canView($request->user())) {
             abort(404);
         }
 
@@ -50,20 +51,20 @@ class PlaylistsController extends Controller
         return view('playlists.show');
     }
 
-    public function getShortlink($id)
+    public function getShortlink(Request $request, $id)
     {
         $playlist = Playlist::find($id);
-        if (! $playlist || ! $playlist->canView(Auth::user())) {
+        if (! $playlist || ! $playlist->canView($request->user())) {
             abort(404);
         }
 
         return Redirect::action('PlaylistsController@getPlaylist', [$id, $playlist->slug]);
     }
 
-    public function getDownload($id, $extension)
+    public function getDownload(Request $request, $id, $extension)
     {
         $playlist = Playlist::with('tracks', 'tracks.trackFiles', 'user', 'tracks.album')->find($id);
-        if (! $playlist || ! $playlist->canView(Auth::user())) {
+        if (! $playlist || ! $playlist->canView($request->user())) {
             abort(404);
         }
 
@@ -88,6 +89,6 @@ class PlaylistsController extends Controller
 
         ResourceLogItem::logItem('playlist', $id, ResourceLogItem::DOWNLOAD, $format['index']);
         $downloader = new PlaylistDownloader($playlist, $formatName);
-        $downloader->download(Auth::user());
+        $downloader->download($request->user());
     }
 }

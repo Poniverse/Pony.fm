@@ -20,13 +20,13 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Commands\SaveAccountSettingsCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Image;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class AccountController extends ApiControllerBase
@@ -40,9 +40,9 @@ class AccountController extends ApiControllerBase
         ]);
     }
 
-    public function getCurrentUser()
+    public function getCurrentUser(Request $request)
     {
-        $current_user = Auth::user();
+        $current_user = $request->user();
 
         if ($current_user != null) {
             $user = User::where('id', $current_user->id)->whereNull('disabled_at')->first();
@@ -68,10 +68,10 @@ class AccountController extends ApiControllerBase
         }
     }
 
-    public function getSettings($slug)
+    public function getSettings(Request $request, $slug)
     {
         $user = null;
-        $current_user = Auth::user();
+        $current_user = $request->user();
 
         if ($current_user != null) {
             if ($slug == $current_user->slug) {
@@ -104,8 +104,8 @@ class AccountController extends ApiControllerBase
         ], 200);
     }
 
-    public function postSave(User $user)
+    public function postSave(Request $request, User $user)
     {
-        return $this->execute(new SaveAccountSettingsCommand(Request::all(), $user));
+        return $this->execute(new SaveAccountSettingsCommand($request->all(), $user));
     }
 }

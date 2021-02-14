@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
@@ -107,7 +108,7 @@ class StatsController extends ApiControllerBase
         }
     }
 
-    public function getTrackStats($id)
+    public function getTrackStats(Request $request, $id)
     {
         $cachedOutput = Cache::remember('track_stats'.$id, 300, function () use ($id) {
             try {
@@ -117,7 +118,7 @@ class StatsController extends ApiControllerBase
             }
 
             // Do we have permission to view this track?
-            if (! $track->canView(Auth::user())) {
+            if (! $track->canView($request->user())) {
                 return $this->notFound('Track not found!');
             }
 

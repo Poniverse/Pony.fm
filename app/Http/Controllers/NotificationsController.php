@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Models\Email;
 use App\Models\EmailSubscription;
@@ -33,13 +34,13 @@ class NotificationsController extends Controller
      * @param $emailKey
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function getEmailClick($emailKey)
+    public function getEmailClick(Request $request, $emailKey)
     {
         /** @var Email $email */
         $email = Email::findOrFail($emailKey);
 
         DB::transaction(function () use ($email) {
-            $email->emailClicks()->create(['ip_address' => \Request::ip()]);
+            $email->emailClicks()->create(['ip_address' => $request->ip()]);
             $email->notification->is_read = true;
             $email->notification->save();
         });
@@ -47,13 +48,13 @@ class NotificationsController extends Controller
         return redirect($email->getActivity()->url);
     }
 
-    public function getEmailUnsubscribe($subscriptionKey)
+    public function getEmailUnsubscribe(Request $request, $subscriptionKey)
     {
         /** @var EmailSubscription $subscription */
         $subscription = EmailSubscription::findOrFail($subscriptionKey);
         $subscription->delete();
 
-        if (Auth::check() && $subscription->user->id === Auth::user()->id) {
+        if ($request->user() && $subscription->user->id === $request->user()->id) {
             return redirect(route('account:settings', [
                 'slug' => $subscription->user->slug,
                 'unsubscribedMessageKey' => $subscription->activity_type,

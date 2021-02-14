@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Commands\DeleteTrackCommand;
 use App\Commands\EditTrackCommand;
 use App\Commands\GenerateTrackFilesCommand;
@@ -35,7 +36,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -68,9 +68,9 @@ class TracksController extends ApiControllerBase
         return $this->execute(new DeleteTrackCommand($id));
     }
 
-    public function postEdit($id)
+    public function postEdit(Request $request, $id)
     {
-        return $this->execute(new EditTrackCommand($id, Request::all()));
+        return $this->execute(new EditTrackCommand($id, $request->all()));
     }
 
     public function postUploadNewVersion($trackId)
@@ -142,14 +142,14 @@ class TracksController extends ApiControllerBase
         return $this->execute(new GenerateTrackFilesCommand($track, $sourceFile, false, false, true, $newVersion));
     }
 
-    public function getShow($id)
+    public function getShow(Request $request, $id)
     {
         $track = Track::userDetails()->withComments()->find($id);
-        if (! $track || ! $track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             return $this->notFound('Track not found!');
         }
 
-        if (Request::get('log')) {
+        if ($request->get('log')) {
             ResourceLogItem::logItem('track', $id, ResourceLogItem::VIEW);
             $track->view_count++;
         }
@@ -162,7 +162,7 @@ class TracksController extends ApiControllerBase
         return response()->json(['track' => $returned_track], 200);
     }
 
-    public function getCachedTrack($id, $format)
+    public function getCachedTrack(Request $request, $id, $format)
     {
         // Validation
         try {
@@ -171,7 +171,7 @@ class TracksController extends ApiControllerBase
             return $this->notFound('Track not found!');
         }
 
-        if (! $track->canView(Auth::user())) {
+        if (! $track->canView($request->user())) {
             return $this->notFound('Track not found!');
         }
 
@@ -202,13 +202,13 @@ class TracksController extends ApiControllerBase
         return response()->json(['url' => $url], 200);
     }
 
-    public function getIndex($all = false, $unknown = false)
+    public function getIndex(Request $request, $all = false, $unknown = false)
     {
         $page = 1;
         $perPage = 45;
 
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         if ($all) {

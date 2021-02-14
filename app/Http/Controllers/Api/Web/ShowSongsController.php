@@ -20,12 +20,12 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Commands\CreateShowSongCommand;
 use App\Commands\DeleteShowSongCommand;
 use App\Commands\RenameShowSongCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\ShowSong;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class ShowSongsController extends ApiControllerBase
@@ -46,23 +46,23 @@ class ShowSongsController extends ApiControllerBase
         ], 200);
     }
 
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        $command = new CreateShowSongCommand(Request::get('title'));
+        $command = new CreateShowSongCommand($request->get('title'));
 
         return $this->execute($command);
     }
 
-    public function putRename($songId)
+    public function putRename(Request $request, $songId)
     {
-        $command = new RenameShowSongCommand($songId, Request::get('title'));
+        $command = new RenameShowSongCommand($songId, $request->get('title'));
 
         return $this->execute($command);
     }
 
-    public function deleteSong($songId)
+    public function deleteSong(Request $request, $songId)
     {
-        $command = new DeleteShowSongCommand($songId, Request::get('destination_song_id'));
+        $command = new DeleteShowSongCommand($songId, $request->get('destination_song_id'));
 
         return $this->execute($command);
     }

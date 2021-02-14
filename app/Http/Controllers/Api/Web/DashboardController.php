@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Track;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,7 @@ use Illuminate\Support\Facades\Response;
 
 class DashboardController extends ApiControllerBase
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         $recentQuery = Track::summary()
             ->with(['genre', 'user', 'cover', 'user.avatar'])
@@ -51,7 +52,7 @@ class DashboardController extends ApiControllerBase
 
         return response()->json([
             'recent_tracks' => $recentTracks,
-            'popular_tracks' => Track::popular(30, Auth::check() && Auth::user()->can_see_explicit_content),
+            'popular_tracks' => Track::popular(30, $request->user() && $request->user()->can_see_explicit_content),
         ], 200);
     }
 }

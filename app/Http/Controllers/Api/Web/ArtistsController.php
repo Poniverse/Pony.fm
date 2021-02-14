@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Commands\CreateUserCommand;
 use App\Http\Controllers\ApiControllerBase;
@@ -33,7 +34,6 @@ use App\Models\User;
 use ColorThief\ColorThief;
 use Illuminate\Support\Facades\Gate;
 use Helpers;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class ArtistsController extends ApiControllerBase
@@ -206,11 +206,11 @@ class ArtistsController extends ApiControllerBase
         ], 200);
     }
 
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         $page = 1;
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         $query = User::where('track_count', '>', 0);
@@ -233,9 +233,9 @@ class ArtistsController extends ApiControllerBase
         );
     }
 
-    public function postIndex()
+    public function postIndex(Request $request)
     {
-        $name = Request::json('username');
+        $name = $request->json('username');
 
         return $this->execute(new CreateUserCommand($name, $name, null, true));
     }

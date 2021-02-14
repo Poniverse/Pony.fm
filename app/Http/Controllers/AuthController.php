@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,6 @@ use League\OAuth2\Client\Token\AccessToken;
 use Illuminate\Support\Facades\Log;
 use Poniverse\Lib\Client;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
 
 class AuthController extends Controller
 {
@@ -60,13 +60,13 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function getOAuth()
+    public function getOAuth(Request $request)
     {
         $oauthProvider = $this->poniverse->getOAuthProvider();
 
         try {
             $accessToken = $oauthProvider->getAccessToken('authorization_code', [
-                'code' => Request::query('code'),
+                'code' => $request->query('code'),
                 'redirect_uri' => action('AuthController@getOAuth'),
             ]);
             $this->poniverse->setAccessToken($accessToken);
@@ -129,10 +129,10 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postPoniverseAccountSync()
+    public function postPoniverseAccountSync(Request $request)
     {
-        $poniverseId = Request::get('id');
-        $updatedAttribute = Request::get('attribute');
+        $poniverseId = $request->get('id');
+        $updatedAttribute = $request->get('attribute');
 
         // Only email address updates are supported at this time.
         if ('email' !== $updatedAttribute) {

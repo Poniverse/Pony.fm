@@ -20,14 +20,14 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Http\Request;
 use App\Commands\ToggleFollowingCommand;
 use App\Http\Controllers\ApiControllerBase;
-use Illuminate\Support\Facades\Request;
 
 class FollowController extends ApiControllerBase
 {
-    public function postToggle()
+    public function postToggle(Request $request)
     {
-        return $this->execute(new ToggleFollowingCommand(Request::get('type'), Request::get('id')));
+        return $this->execute(new ToggleFollowingCommand($request->get('type'), $request->get('id')));
     }
 }
