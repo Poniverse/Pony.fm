@@ -9,7 +9,7 @@
   "packages": {},
   "dependencies": {},
   "devDependencies": {
-    "angular": "1.5.8",
+    "angular": "1.8.0",
     "angular-chart.js": "1.0.0-alpha6",
     "angular-strap": "2.3.8",
     "angular-ui-router": "0.3.1",
