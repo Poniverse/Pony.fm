@@ -41,13 +41,13 @@ class ImagesController extends Controller
             abort(404);
         }
 
-        $response = response('', 200);
+        $response = response()->noContent(200);
         $filename = $image->getFile($coverType['id']);
 
         if (! is_file($filename)) {
             $redirect = url('/images/icons/profile_'.Image::$ImageTypes[$coverType['id']]['name'].'.png');
 
-            return redirect($redirect);
+            return redirect()->to($redirect);
         }
 
         if (config('app.sendfile')) {

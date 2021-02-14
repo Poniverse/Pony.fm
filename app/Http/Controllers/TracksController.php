@@ -151,7 +151,7 @@ class TracksController extends Controller
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
 
-        $response = response('', 200);
+        $response = response()->noContent(200);
         $filename = $trackFile->getFile();
 
         if (! file_exists($filename)) {
@@ -189,7 +189,7 @@ class TracksController extends Controller
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
         ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $trackFile->getFormat()['index']);
 
-        $response = response('', 200);
+        $response = response()->noContent(200);
         $filename = $trackFile->getFile();
 
         if (config('app.sendfile')) {

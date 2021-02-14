@@ -50,14 +50,14 @@ class AuthController extends Controller
                     ->getAuthorizationUrl());
         }
 
-        return redirect('/');
+        return redirect()->to('/');
     }
 
     public function postLogout()
     {
         Auth::logout();
 
-        return redirect('/');
+        return redirect()->to('/');
     }
 
     public function getOAuth(Request $request)
@@ -74,7 +74,7 @@ class AuthController extends Controller
         } catch (IdentityProviderException $e) {
             Log::error($e);
 
-            return redirect('/')->with(
+            return redirect()->to('/')->with(
                 'message',
                 'Unfortunately we are having problems attempting to log you in at the moment. Please try again at a later time.'
             );
@@ -161,6 +161,6 @@ class AuthController extends Controller
     {
         Auth::login($user, $rememberMe);
 
-        return redirect('/');
+        return redirect()->to('/');
     }
 }

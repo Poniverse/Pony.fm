@@ -33,7 +33,7 @@ class AccountController extends Controller
 
     public function getRegister()
     {
-        return redirect(config('poniverse.urls')['register']);
+        return redirect()->to(config('poniverse.urls')['register']);
     }
 
     public function getNotifications()

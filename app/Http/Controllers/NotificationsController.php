@@ -45,7 +45,7 @@ class NotificationsController extends Controller
             $email->notification->save();
         });
 
-        return redirect($email->getActivity()->url);
+        return redirect()->to($email->getActivity()->url);
     }
 
     public function getEmailUnsubscribe(Request $request, $subscriptionKey)
@@ -58,12 +58,12 @@ class NotificationsController extends Controller
             return redirect(route('account:settings', [
                 'slug' => $subscription->user->slug,
                 'unsubscribedMessageKey' => $subscription->activity_type,
-            ]), 303);
+            ]), );
         } else {
             return redirect(route('email:confirm-unsubscribed', [
                 'unsubscribedUser' => $subscription->user->display_name,
                 'unsubscribedMessageKey' => $subscription->activity_type,
-            ]), 303);
+            ]), );
         }
     }
 
