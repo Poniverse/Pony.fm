@@ -63,11 +63,11 @@ class AppServiceProvider extends ServiceProvider
         //       any weirdness with merging array indices. $merge = false is
         //       set below so that no morphMap array merging happens!
         Relation::morphMap([
-            App\Models\Activity::TARGET_TRACK => App\Models\Track::class,
-            App\Models\Activity::TARGET_ALBUM => App\Models\Album::class,
-            App\Models\Activity::TARGET_PLAYLIST => App\Models\Playlist::class,
-            App\Models\Activity::TARGET_USER => App\Models\User::class,
-            App\Models\Activity::TARGET_COMMENT => App\Models\Comment::class,
+            \App\Models\Activity::TARGET_TRACK => \App\Models\Track::class,
+            \App\Models\Activity::TARGET_ALBUM => \App\Models\Album::class,
+            \App\Models\Activity::TARGET_PLAYLIST => \App\Models\Playlist::class,
+            \App\Models\Activity::TARGET_USER => \App\Models\User::class,
+            \App\Models\Activity::TARGET_COMMENT => \App\Models\Comment::class,
         ], false);
     }
 }
