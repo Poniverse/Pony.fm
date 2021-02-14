@@ -46,13 +46,13 @@
     },
     "autoload": {
         "classmap": [
-            "database/factories",
             "database/migrations",
-            "database/seeds",
             "app/Library"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
