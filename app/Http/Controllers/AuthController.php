@@ -25,7 +25,6 @@ use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use DB;
-
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Log;
