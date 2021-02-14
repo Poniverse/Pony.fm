@@ -20,6 +20,7 @@
 
 namespace App\Exceptions;
 
+use Throwable;
 use Exception;
 use GrahamCampbell\Exceptions\ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
@@ -53,7 +54,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $e
      * @return void
      */
-    public function report(Exception $e)
+    public function report(Throwable $e)
     {
         parent::report($e);
     }
@@ -65,7 +66,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $e
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $e)
+    public function render($request, Throwable $e)
     {
         return parent::render($request, $e);
     }
