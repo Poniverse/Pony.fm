@@ -105,136 +105,136 @@ Route::prefix('notifications/email')->group(function () {
 Route::get('oembed', [TracksController::class, 'getOembed']);
 
 Route::prefix('api/v1')->middleware('json-exceptions')->group(function () {
-    Route::get('/tracks/radio-details/{hash}', [Api\V1\TracksController::class, 'getTrackRadioDetails']);
-    Route::post('/tracks/radio-details/{hash}', [Api\V1\TracksController::class, 'getTrackRadioDetails']);
-    Route::get('/tracks/{id}', [Api\V1\TracksController::class, 'getTrackDetails'])->where('id', '\d+');
+    Route::get('/tracks/radio-details/{hash}', [V1\TracksController::class, 'getTrackRadioDetails']);
+    Route::post('/tracks/radio-details/{hash}', [V1\TracksController::class, 'getTrackRadioDetails']);
+    Route::get('/tracks/{id}', [V1\TracksController::class, 'getTrackDetails'])->where('id', '\d+');
 
     Route::middleware('auth.oauth:ponyfm:tracks:upload')->group(function () {
-        Route::post('tracks', [Api\V1\TracksController::class, 'postUploadTrack']);
-        Route::get('/tracks/{id}/upload-status', [Api\V1\TracksController::class, 'getUploadStatus']);
+        Route::post('tracks', [V1\TracksController::class, 'postUploadTrack']);
+        Route::get('/tracks/{id}/upload-status', [V1\TracksController::class, 'getUploadStatus']);
     });
 });
 
 Route::prefix('api/web')->middleware('cors')->group(function () {
-    Route::post('/alexa', [Api\Web\AlexaController::class, 'handle']);
+    Route::post('/alexa', [Web\AlexaController::class, 'handle']);
 
-    Route::get('/taxonomies/all', [Api\Web\TaxonomiesController::class, 'getAll']);
-    Route::get('/search', [Api\Web\SearchController::class, 'getSearch']);
+    Route::get('/taxonomies/all', [Web\TaxonomiesController::class, 'getAll']);
+    Route::get('/search', [Web\SearchController::class, 'getSearch']);
 
-    Route::get('/tracks', [Api\Web\TracksController::class, 'getIndex']);
-    Route::get('/tracks/{id}', [Api\Web\TracksController::class, 'getShow'])->where('id', '\d+');
-    Route::get('/tracks/cached/{id}/{format}', [Api\Web\TracksController::class, 'getCachedTrack'])->where(['id' => '\d+', 'format' => '.+']);
-    Route::get('/tracks/{id}/stats', [Api\Web\StatsController::class, 'getTrackStats'])->where('id', '\d+');
+    Route::get('/tracks', [Web\TracksController::class, 'getIndex']);
+    Route::get('/tracks/{id}', [Web\TracksController::class, 'getShow'])->where('id', '\d+');
+    Route::get('/tracks/cached/{id}/{format}', [Web\TracksController::class, 'getCachedTrack'])->where(['id' => '\d+', 'format' => '.+']);
+    Route::get('/tracks/{id}/stats', [Web\StatsController::class, 'getTrackStats'])->where('id', '\d+');
 
-    Route::get('/albums', [Api\Web\AlbumsController::class, 'getIndex']);
-    Route::get('/albums/{id}', [Api\Web\AlbumsController::class, 'getShow'])->where('id', '\d+');
-    Route::get('/albums/cached/{id}/{format}', [Api\Web\AlbumsController::class, 'getCachedAlbum'])->where(['id' => '\d+', 'format' => '.+']);
+    Route::get('/albums', [Web\AlbumsController::class, 'getIndex']);
+    Route::get('/albums/{id}', [Web\AlbumsController::class, 'getShow'])->where('id', '\d+');
+    Route::get('/albums/cached/{id}/{format}', [Web\AlbumsController::class, 'getCachedAlbum'])->where(['id' => '\d+', 'format' => '.+']);
 
-    Route::get('/playlists', [Api\Web\PlaylistsController::class, 'getIndex']);
-    Route::get('/playlists/show/{id}', [Api\Web\PlaylistsController::class, 'getShow']);
-    Route::get('/playlists/{id}', [Api\Web\PlaylistsController::class, 'getShow'])->where('id', '\d+');
-    Route::get('/playlists/cached/{id}/{format}', [Api\Web\PlaylistsController::class, 'getCachedPlaylist'])->where(['id' => '\d+', 'format' => '.+']);
+    Route::get('/playlists', [Web\PlaylistsController::class, 'getIndex']);
+    Route::get('/playlists/show/{id}', [Web\PlaylistsController::class, 'getShow']);
+    Route::get('/playlists/{id}', [Web\PlaylistsController::class, 'getShow'])->where('id', '\d+');
+    Route::get('/playlists/cached/{id}/{format}', [Web\PlaylistsController::class, 'getCachedPlaylist'])->where(['id' => '\d+', 'format' => '.+']);
 
-    Route::get('/comments/{type}/{id}', [Api\Web\CommentsController::class, 'getIndex'])->where('id', '\d+');
+    Route::get('/comments/{type}/{id}', [Web\CommentsController::class, 'getIndex'])->where('id', '\d+');
 
-    Route::get('/artists', [Api\Web\ArtistsController::class, 'getIndex']);
-    Route::post('/artists', [Api\Web\ArtistsController::class, 'postIndex']);
-    Route::get('/artists/{slug}', [Api\Web\ArtistsController::class, 'getShow']);
-    Route::get('/artists/{slug}/content', [Api\Web\ArtistsController::class, 'getContent']);
-    Route::get('/artists/{slug}/favourites', [Api\Web\ArtistsController::class, 'getFavourites']);
+    Route::get('/artists', [Web\ArtistsController::class, 'getIndex']);
+    Route::post('/artists', [Web\ArtistsController::class, 'postIndex']);
+    Route::get('/artists/{slug}', [Web\ArtistsController::class, 'getShow']);
+    Route::get('/artists/{slug}/content', [Web\ArtistsController::class, 'getContent']);
+    Route::get('/artists/{slug}/favourites', [Web\ArtistsController::class, 'getFavourites']);
 
-    Route::get('/dashboard', [Api\Web\DashboardController::class, 'getIndex']);
+    Route::get('/dashboard', [Web\DashboardController::class, 'getIndex']);
 
-    Route::get('/announcements', [Api\Web\AnnouncementsController::class, 'getIndex']);
+    Route::get('/announcements', [Web\AnnouncementsController::class, 'getIndex']);
 
     Route::middleware('auth')->group(function () {
-        Route::post('/tracks/upload', [Api\Web\TracksController::class, 'postUpload']);
-        Route::get('/tracks/{id}/upload-status', [Api\Web\TracksController::class, 'getUploadStatus']);
-        Route::post('/tracks/delete/{id}', [Api\Web\TracksController::class, 'postDelete']);
-        Route::post('/tracks/edit/{id}', [Api\Web\TracksController::class, 'postEdit']);
+        Route::post('/tracks/upload', [Web\TracksController::class, 'postUpload']);
+        Route::get('/tracks/{id}/upload-status', [Web\TracksController::class, 'getUploadStatus']);
+        Route::post('/tracks/delete/{id}', [Web\TracksController::class, 'postDelete']);
+        Route::post('/tracks/edit/{id}', [Web\TracksController::class, 'postEdit']);
 
-        Route::post('/tracks/{id}/version-upload', [Api\Web\TracksController::class, 'postUploadNewVersion']);
-        Route::get('/tracks/{id}/version-change/{version}', [Api\Web\TracksController::class, 'getChangeVersion']);
-        Route::get('/tracks/{id}/version-upload-status', [Api\Web\TracksController::class, 'getVersionUploadStatus']);
-        Route::get('/tracks/{id}/versions', [Api\Web\TracksController::class, 'getVersionList']);
+        Route::post('/tracks/{id}/version-upload', [Web\TracksController::class, 'postUploadNewVersion']);
+        Route::get('/tracks/{id}/version-change/{version}', [Web\TracksController::class, 'getChangeVersion']);
+        Route::get('/tracks/{id}/version-upload-status', [Web\TracksController::class, 'getVersionUploadStatus']);
+        Route::get('/tracks/{id}/versions', [Web\TracksController::class, 'getVersionList']);
 
-        Route::post('/albums/create', [Api\Web\AlbumsController::class, 'postCreate']);
-        Route::post('/albums/delete/{id}', [Api\Web\AlbumsController::class, 'postDelete']);
-        Route::post('/albums/edit/{id}', [Api\Web\AlbumsController::class, 'postEdit']);
+        Route::post('/albums/create', [Web\AlbumsController::class, 'postCreate']);
+        Route::post('/albums/delete/{id}', [Web\AlbumsController::class, 'postDelete']);
+        Route::post('/albums/edit/{id}', [Web\AlbumsController::class, 'postEdit']);
 
-        Route::post('/playlists/create', [Api\Web\PlaylistsController::class, 'postCreate']);
-        Route::post('/playlists/delete/{id}', [Api\Web\PlaylistsController::class, 'postDelete']);
-        Route::post('/playlists/edit/{id}', [Api\Web\PlaylistsController::class, 'postEdit']);
-        Route::post('/playlists/{id}/add-track', [Api\Web\PlaylistsController::class, 'postAddTrack']);
-        Route::post('/playlists/{id}/remove-track', [Api\Web\PlaylistsController::class, 'postRemoveTrack']);
+        Route::post('/playlists/create', [Web\PlaylistsController::class, 'postCreate']);
+        Route::post('/playlists/delete/{id}', [Web\PlaylistsController::class, 'postDelete']);
+        Route::post('/playlists/edit/{id}', [Web\PlaylistsController::class, 'postEdit']);
+        Route::post('/playlists/{id}/add-track', [Web\PlaylistsController::class, 'postAddTrack']);
+        Route::post('/playlists/{id}/remove-track', [Web\PlaylistsController::class, 'postRemoveTrack']);
 
-        Route::post('/comments/{type}/{id}', [Api\Web\CommentsController::class, 'postCreate'])->where('id', '\d+');
+        Route::post('/comments/{type}/{id}', [Web\CommentsController::class, 'postCreate'])->where('id', '\d+');
 
-        Route::post('/account/settings/save/{userSlug}', [Api\Web\AccountController::class, 'postSave']);
+        Route::post('/account/settings/save/{userSlug}', [Web\AccountController::class, 'postSave']);
 
-        Route::post('/favourites/toggle', [Api\Web\FavouritesController::class, 'postToggle']);
+        Route::post('/favourites/toggle', [Web\FavouritesController::class, 'postToggle']);
 
-        Route::post('/follow/toggle', [Api\Web\FollowController::class, 'postToggle']);
+        Route::post('/follow/toggle', [Web\FollowController::class, 'postToggle']);
 
-        Route::post('/dashboard/read-news', [Api\Web\DashboardController::class, 'postReadNews']);
-        Route::get('/account/settings/{slug}', [Api\Web\AccountController::class, 'getSettings']);
+        Route::post('/dashboard/read-news', [Web\DashboardController::class, 'postReadNews']);
+        Route::get('/account/settings/{slug}', [Web\AccountController::class, 'getSettings']);
 
-        Route::get('/notifications', [Api\Web\NotificationsController::class, 'getNotifications']);
-        Route::put('/notifications/mark-as-read', [Api\Web\NotificationsController::class, 'putMarkAsRead']);
-        Route::post('/notifications/subscribe', [Api\Web\NotificationsController::class, 'postSubscribe']);
-        Route::post('/notifications/unsubscribe', [Api\Web\NotificationsController::class, 'postUnsubscribe']);
+        Route::get('/notifications', [Web\NotificationsController::class, 'getNotifications']);
+        Route::put('/notifications/mark-as-read', [Web\NotificationsController::class, 'putMarkAsRead']);
+        Route::post('/notifications/subscribe', [Web\NotificationsController::class, 'postSubscribe']);
+        Route::post('/notifications/unsubscribe', [Web\NotificationsController::class, 'postUnsubscribe']);
 
-        Route::get('/tracks/edit/{id}', [Api\Web\TracksController::class, 'getEdit']);
+        Route::get('/tracks/edit/{id}', [Web\TracksController::class, 'getEdit']);
 
-        Route::get('/users/{userId}', [Api\Web\AccountController::class, 'getUser'])->where('userId', '\d+');
+        Route::get('/users/{userId}', [Web\AccountController::class, 'getUser'])->where('userId', '\d+');
 
-        Route::get('/users/{userId}/tracks', [Api\Web\TracksController::class, 'getOwned'])->where('userId', '\d+');
-        Route::get('/users/{userSlug}/tracks', [Api\Web\TracksController::class, 'getOwned']);
+        Route::get('/users/{userId}/tracks', [Web\TracksController::class, 'getOwned'])->where('userId', '\d+');
+        Route::get('/users/{userSlug}/tracks', [Web\TracksController::class, 'getOwned']);
 
-        Route::get('/users/{userId}/albums', [Api\Web\AlbumsController::class, 'getOwned'])->where('userId', '\d+');
-        Route::get('/users/{userSlug}/albums', [Api\Web\AlbumsController::class, 'getOwned']);
+        Route::get('/users/{userId}/albums', [Web\AlbumsController::class, 'getOwned'])->where('userId', '\d+');
+        Route::get('/users/{userSlug}/albums', [Web\AlbumsController::class, 'getOwned']);
 
-        Route::get('/users/{userId}/images', [Api\Web\ImagesController::class, 'getOwned'])->where('userId', '\d+');
-        Route::get('/users/{userSlug}/images', [Api\Web\ImagesController::class, 'getOwned']);
+        Route::get('/users/{userId}/images', [Web\ImagesController::class, 'getOwned'])->where('userId', '\d+');
+        Route::get('/users/{userSlug}/images', [Web\ImagesController::class, 'getOwned']);
 
-        Route::get('/users/{userId}/playlists', [Api\Web\PlaylistsController::class, 'getOwned'])->where('userId', '\d+');
-        Route::get('/users/{userSlug}/playlists', [Api\Web\PlaylistsController::class, 'getOwned']);
+        Route::get('/users/{userId}/playlists', [Web\PlaylistsController::class, 'getOwned'])->where('userId', '\d+');
+        Route::get('/users/{userSlug}/playlists', [Web\PlaylistsController::class, 'getOwned']);
 
-        Route::get('/albums/edit/{id}', [Api\Web\AlbumsController::class, 'getEdit']);
+        Route::get('/albums/edit/{id}', [Web\AlbumsController::class, 'getEdit']);
 
-        Route::get('/playlists/pinned', [Api\Web\PlaylistsController::class, 'getPinned']);
+        Route::get('/playlists/pinned', [Web\PlaylistsController::class, 'getPinned']);
 
-        Route::get('/favourites/tracks', [Api\Web\FavouritesController::class, 'getTracks']);
-        Route::get('/favourites/albums', [Api\Web\FavouritesController::class, 'getAlbums']);
-        Route::get('/favourites/playlists', [Api\Web\FavouritesController::class, 'getPlaylists']);
+        Route::get('/favourites/tracks', [Web\FavouritesController::class, 'getTracks']);
+        Route::get('/favourites/albums', [Web\FavouritesController::class, 'getAlbums']);
+        Route::get('/favourites/playlists', [Web\FavouritesController::class, 'getPlaylists']);
     });
 
-    Route::prefix('admin')->middleware('auth', 'can:access-admin-area')->group(function () {
-        Route::get('/genres', [Api\Web\GenresController::class, 'getIndex']);
-        Route::post('/genres', [Api\Web\GenresController::class, 'postCreate']);
-        Route::put('/genres/{id}', [Api\Web\GenresController::class, 'putRename'])->where('id', '\d+');
-        Route::delete('/genres/{id}', [Api\Web\GenresController::class, 'deleteGenre'])->where('id', '\d+');
+    Route::prefix('admin')->middleware(['auth', 'can:access-admin-area'])->group(function () {
+        Route::get('/genres', [Web\GenresController::class, 'getIndex']);
+        Route::post('/genres', [Web\GenresController::class, 'postCreate']);
+        Route::put('/genres/{id}', [Web\GenresController::class, 'putRename'])->where('id', '\d+');
+        Route::delete('/genres/{id}', [Web\GenresController::class, 'deleteGenre'])->where('id', '\d+');
 
-        Route::get('/showsongs', [Api\Web\ShowSongsController::class, 'getIndex']);
-        Route::post('/showsongs', [Api\Web\ShowSongsController::class, 'postCreate']);
-        Route::put('/showsongs/{id}', [Api\Web\ShowSongsController::class, 'putRename'])->where('id', '\d+');
-        Route::delete('/showsongs/{id}', [Api\Web\ShowSongsController::class, 'deleteSong'])->where('id', '\d+');
+        Route::get('/showsongs', [Web\ShowSongsController::class, 'getIndex']);
+        Route::post('/showsongs', [Web\ShowSongsController::class, 'postCreate']);
+        Route::put('/showsongs/{id}', [Web\ShowSongsController::class, 'putRename'])->where('id', '\d+');
+        Route::delete('/showsongs/{id}', [Web\ShowSongsController::class, 'deleteSong'])->where('id', '\d+');
 
-        Route::get('/tracks', [Api\Web\TracksController::class, 'getAllTracks']);
-        Route::get('/tracks/unclassified', [Api\Web\TracksController::class, 'getClassifierQueue']);
+        Route::get('/tracks', [Web\TracksController::class, 'getAllTracks']);
+        Route::get('/tracks/unclassified', [Web\TracksController::class, 'getClassifierQueue']);
 
-        Route::get('/announcements', [Api\Web\AnnouncementsController::class, 'getAdminIndex']);
-        Route::get('/announcements/{id}', [Api\Web\AnnouncementsController::class, 'getItemById'])->where('id', '\d+');
-        Route::post('/announcements', [Api\Web\AnnouncementsController::class, 'postCreate']);
-        Route::put('/announcements/{id}', [Api\Web\AnnouncementsController::class, 'putUpdate'])->where('id', '\d+');
-        Route::delete('/announcements/{id}', [Api\Web\AnnouncementsController::class, 'deleteItem'])->where('id', '\d+');
+        Route::get('/announcements', [Web\AnnouncementsController::class, 'getAdminIndex']);
+        Route::get('/announcements/{id}', [Web\AnnouncementsController::class, 'getItemById'])->where('id', '\d+');
+        Route::post('/announcements', [Web\AnnouncementsController::class, 'postCreate']);
+        Route::put('/announcements/{id}', [Web\AnnouncementsController::class, 'putUpdate'])->where('id', '\d+');
+        Route::delete('/announcements/{id}', [Web\AnnouncementsController::class, 'deleteItem'])->where('id', '\d+');
     });
 
-    Route::get('/auth/current', [Api\Web\AccountController::class, 'getCurrentUser']);
-    Route::post('/auth/logout', [Api\Web\AuthController::class, 'postLogout']);
+    Route::get('/auth/current', [Web\AccountController::class, 'getCurrentUser']);
+    Route::post('/auth/logout', [Web\AuthController::class, 'postLogout']);
 });
 
-Route::prefix('admin')->middleware('auth', 'can:access-admin-area')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'can:access-admin-area'])->group(function () {
     Route::get('/genres', [AdminController::class, 'getGenres']);
     Route::get('/tracks', [AdminController::class, 'getTracks']);
     Route::get('/tracks/unclassified', [AdminController::class, 'getClassifierQueue']);
@@ -269,6 +269,6 @@ Route::prefix('{slug}')->group(function () {
 Route::get('/', [HomeController::class, 'getIndex']);
 
 Route::domain('api.pony.fm')->group(function () {
-    Route::get('tracks/latest', [Api\Mobile\TracksController::class, 'latest']);
-    Route::get('tracks/popular', [Api\Mobile\TracksController::class, 'popular']);
+    Route::get('tracks/latest', [Mobile\TracksController::class, 'latest']);
+    Route::get('tracks/popular', [Mobile\TracksController::class, 'popular']);
 });
