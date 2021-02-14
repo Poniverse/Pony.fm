@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 use App\Models\AlexaSession;
 use App\Models\Track;
@@ -146,7 +147,7 @@ class AlexaController extends Controller
 
     public function play()
     {
-        $track = array_first(Track::popular(1));
+        $track = Arr::first(Track::popular(1));
 
         $this->session->put('current_position', 1);
         $this->session->put('track_id', $track['id']);

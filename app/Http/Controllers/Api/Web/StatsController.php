@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
+use Illuminate\Support\Str;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
@@ -87,12 +88,12 @@ class StatsController extends ApiControllerBase
         foreach ($playsArray as $timeOffet => $plays) {
             if ($hourly) {
                 $set = [
-                    'hours' => $timeOffet.' '.str_plural('hour', $timeOffet),
+                    'hours' => $timeOffet.' '.Str::plural('hour', $timeOffet),
                     'plays' => $plays,
                 ];
             } else {
                 $set = [
-                    'days' => $timeOffet.' '.str_plural('day', $timeOffet),
+                    'days' => $timeOffet.' '.Str::plural('day', $timeOffet),
                     'plays' => $plays,
                 ];
             }
