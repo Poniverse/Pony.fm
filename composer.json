@@ -43,7 +43,9 @@
         "nunomaduro/collision": "^5.0",
         "fakerphp/faker": "^1.9.1",
         "facade/ignition": "^2.5",
-        "barryvdh/laravel-ide-helper": "^2.9"
+        "barryvdh/laravel-ide-helper": "^2.9",
+        "jasonmccreary/laravel-test-assertions": "^1.0",
+        "laravel-shift/factory-generator": "dev-master"
     },
     "autoload": {
         "classmap": [

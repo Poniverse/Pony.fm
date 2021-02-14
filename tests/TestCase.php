@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use JMac\Testing\Traits\AdditionalAssertions;
 use App\Models\User;
 use Illuminate\Contracts\Console\Kernel;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
