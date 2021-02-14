@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 use App\Models\AlexaSession;
 use App\Models\Track;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
+use Illuminate\Support\Arr;
 use Psr\Log\LoggerInterface;
 
 class AlexaController extends Controller

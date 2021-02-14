@@ -153,7 +153,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     protected $elasticsearchType = 'track';
 
     protected $dates = [
-        'published_at', 'released_at'
+        'published_at', 'released_at',
     ];
     protected $hidden = ['original_tags', 'metadata'];
     protected $casts = [

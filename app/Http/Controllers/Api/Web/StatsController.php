@@ -20,7 +20,6 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Support\Str;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
@@ -29,6 +28,7 @@ use Cache;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Str;
 use Response;
 
 class StatsController extends ApiControllerBase
