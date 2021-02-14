@@ -65,7 +65,7 @@ class FavouritesController extends ApiControllerBase
             $tracks[] = Track::mapPublicTrackSummary($fav->track);
         }
 
-        return Response::json(['tracks' => $tracks], 200);
+        return response()->json(['tracks' => $tracks], 200);
     }
 
     public function getAlbums()
@@ -92,7 +92,7 @@ class FavouritesController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($fav->album);
         }
 
-        return Response::json(['albums' => $albums], 200);
+        return response()->json(['albums' => $albums], 200);
     }
 
     public function getPlaylist()
@@ -120,6 +120,6 @@ class FavouritesController extends ApiControllerBase
             $playlists[] = Playlist::mapPublicPlaylistSummary($fav->playlist);
         }
 
-        return Response::json(['playlists' => $playlists], 200);
+        return response()->json(['playlists' => $playlists], 200);
     }
 }

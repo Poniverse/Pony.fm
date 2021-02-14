@@ -85,7 +85,7 @@ class AlbumsController extends ApiControllerBase
             unset($returned_album['formats']);
         }
 
-        return Response::json([
+        return response()->json([
             'album' => $returned_album,
         ], 200);
     }
@@ -114,7 +114,7 @@ class AlbumsController extends ApiControllerBase
             $url = null;
         }
 
-        return Response::json(['url' => $url], 200);
+        return response()->json(['url' => $url], 200);
     }
 
     public function getIndex()
@@ -143,7 +143,7 @@ class AlbumsController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($album);
         }
 
-        return Response::json(
+        return response()->json(
             ['albums' => $albums, 'current_page' => $page, 'total_pages' => ceil($count / $perPage)],
             200
         );
@@ -172,7 +172,7 @@ class AlbumsController extends ApiControllerBase
             ];
         }
 
-        return Response::json($albums, 200);
+        return response()->json($albums, 200);
     }
 
     public function getEdit($id)
@@ -194,7 +194,7 @@ class AlbumsController extends ApiControllerBase
             ];
         }
 
-        return Response::json([
+        return response()->json([
             'id' => $album->id,
             'title' => $album->title,
             'user_id' => $album->user_id,

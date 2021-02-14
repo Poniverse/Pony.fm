@@ -63,6 +63,6 @@ class CommentsController extends ApiControllerBase
             $comments[] = Comment::mapPublic($comment);
         }
 
-        return Response::json(['list' => $comments, 'count' => count($comments)]);
+        return response()->json(['list' => $comments, 'count' => count($comments)]);
     }
 }

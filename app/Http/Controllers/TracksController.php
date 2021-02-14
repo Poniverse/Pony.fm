@@ -110,7 +110,7 @@ class TracksController extends Controller
             'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
         ];
 
-        return Response::json($output);
+        return response()->json($output);
     }
 
     public function getTrack($id, $slug)

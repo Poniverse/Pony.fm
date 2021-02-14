@@ -49,7 +49,7 @@ class DashboardController extends ApiControllerBase
             $recentTracks[] = Track::mapPublicTrackSummary($track);
         }
 
-        return Response::json([
+        return response()->json([
             'recent_tracks' => $recentTracks,
             'popular_tracks' => Track::popular(30, Auth::check() && Auth::user()->can_see_explicit_content),
         ], 200);

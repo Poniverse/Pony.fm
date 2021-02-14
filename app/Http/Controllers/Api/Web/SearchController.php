@@ -32,7 +32,7 @@ class SearchController extends ApiControllerBase
     {
         $results = $search->searchAllContent(Request::query('query'));
 
-        return Response::json([
+        return response()->json([
             'results' => $results,
         ], 200);
     }

@@ -101,9 +101,9 @@ class StatsController extends ApiControllerBase
         }
 
         if ($hourly) {
-            return Response::json(['playStats' => $output, 'type' => 'Hourly'], 200);
+            return response()->json(['playStats' => $output, 'type' => 'Hourly'], 200);
         } else {
-            return Response::json(['playStats' => $output, 'type' => 'Daily'], 200);
+            return response()->json(['playStats' => $output, 'type' => 'Daily'], 200);
         }
     }
 

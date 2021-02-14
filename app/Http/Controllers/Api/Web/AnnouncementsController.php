@@ -41,7 +41,7 @@ class AnnouncementsController extends Controller
 
         $announcement = $query->first();
 
-        return Response::json(
+        return response()->json(
             ['announcement' => $announcement],
             200
         );
@@ -54,7 +54,7 @@ class AnnouncementsController extends Controller
         $announcements = Announcement::orderBy('start_time', 'desc')
             ->get();
 
-        return Response::json([
+        return response()->json([
             'announcements' => $announcements->toArray(),
         ], 200);
     }
@@ -68,7 +68,7 @@ class AnnouncementsController extends Controller
 
         $announcement = $query->first();
 
-        return Response::json(
+        return response()->json(
             ['announcement' => $announcement],
             200
         );

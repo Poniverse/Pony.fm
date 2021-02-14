@@ -136,7 +136,7 @@ class AuthController extends Controller
 
         // Only email address updates are supported at this time.
         if ('email' !== $updatedAttribute) {
-            return \Response::json(['message' => 'Unsupported Poniverse account attribute.'], 400);
+            return response()->json(['message' => 'Unsupported Poniverse account attribute.'], 400);
         }
 
         $user = User::wherePoniverseId($poniverseId)->first();
@@ -154,7 +154,7 @@ class AuthController extends Controller
         $user->{$updatedAttribute} = $newUserData->{$updatedAttribute};
         $user->save();
 
-        return \Response::json(['message' => 'Successfully updated this user!'], 200);
+        return response()->json(['message' => 'Successfully updated this user!'], 200);
     }
 
     protected function loginRedirect($user, $rememberMe = true)

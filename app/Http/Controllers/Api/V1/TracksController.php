@@ -60,9 +60,9 @@ class TracksController extends ApiControllerBase
         $this->authorize('edit', $track);
 
         if ($track->status === Track::STATUS_PROCESSING) {
-            return Response::json(['message' => 'Processing...'], 202);
+            return response()->json(['message' => 'Processing...'], 202);
         } elseif ($track->status === Track::STATUS_COMPLETE) {
-            return Response::json([
+            return response()->json([
                 'message' => $track->published_at
                     ? 'Processing complete! The track is live at the track_url. The artist can edit the track by visiting its edit_url.'
                     : 'Processing complete! The artist must publish the track by visiting its edit_url.',
@@ -71,7 +71,7 @@ class TracksController extends ApiControllerBase
             ], 201);
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed! Please contact logic@pony.fm to figure out what went wrong.'], 500);
+            return response()->json(['error' => 'Processing failed! Please contact logic@pony.fm to figure out what went wrong.'], 500);
         }
     }
 
@@ -92,10 +92,10 @@ class TracksController extends ApiControllerBase
             ->where('id', $id)->first();
 
         if (! $track) {
-            return Response::json(['message' => 'Track not found.'], 404);
+            return response()->json(['message' => 'Track not found.'], 404);
         }
 
-        return Response::json(self::trackToJson($track, false, true), 200);
+        return response()->json(self::trackToJson($track, false, true), 200);
     }
 
     /**
@@ -114,10 +114,10 @@ class TracksController extends ApiControllerBase
             ->where('hash', $hash)->first();
 
         if (! $track) {
-            return Response::json(['message' => 'Track not found.'], 403);
+            return response()->json(['message' => 'Track not found.'], 403);
         }
 
-        return Response::json(self::trackToJson($track, true, false), 200);
+        return response()->json(self::trackToJson($track, true, false), 200);
     }
 
     /**

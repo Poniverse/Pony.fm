@@ -54,12 +54,12 @@ class TracksController extends ApiControllerBase
         $this->authorize('edit', $track);
 
         if ($track->status === Track::STATUS_PROCESSING) {
-            return Response::json(['message' => 'Processing...'], 202);
+            return response()->json(['message' => 'Processing...'], 202);
         } elseif ($track->status === Track::STATUS_COMPLETE) {
-            return Response::json(['message' => 'Processing complete!'], 201);
+            return response()->json(['message' => 'Processing complete!'], 201);
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed!'], 500);
+            return response()->json(['error' => 'Processing failed!'], 500);
         }
     }
 
@@ -95,12 +95,12 @@ class TracksController extends ApiControllerBase
         $this->authorize('edit', $track);
 
         if ($track->version_upload_status === Track::STATUS_PROCESSING) {
-            return Response::json(['message' => 'Processing...'], 202);
+            return response()->json(['message' => 'Processing...'], 202);
         } elseif ($track->version_upload_status === Track::STATUS_COMPLETE) {
-            return Response::json(['message' => 'Processing complete!'], 201);
+            return response()->json(['message' => 'Processing complete!'], 201);
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed!'], 500);
+            return response()->json(['error' => 'Processing failed!'], 500);
         }
     }
 
@@ -119,7 +119,7 @@ class TracksController extends ApiControllerBase
             ];
         }
 
-        return Response::json(['current_version' => $track->current_version, 'versions' => $versions], 200);
+        return response()->json(['current_version' => $track->current_version, 'versions' => $versions], 200);
     }
 
     public function getChangeVersion($trackId, $newVersion)
@@ -159,7 +159,7 @@ class TracksController extends ApiControllerBase
             unset($returned_track['formats']);
         }
 
-        return Response::json(['track' => $returned_track], 200);
+        return response()->json(['track' => $returned_track], 200);
     }
 
     public function getCachedTrack($id, $format)
@@ -199,7 +199,7 @@ class TracksController extends ApiControllerBase
             $url = null;
         }
 
-        return Response::json(['url' => $url], 200);
+        return response()->json(['url' => $url], 200);
     }
 
     public function getIndex($all = false, $unknown = false)
@@ -240,7 +240,7 @@ class TracksController extends ApiControllerBase
             $ids[] = $track->id;
         }
 
-        return Response::json([
+        return response()->json([
             'tracks' => $tracks,
             'current_page' => $page,
             'total_pages' => ceil($totalCount / $perPage),
@@ -270,7 +270,7 @@ class TracksController extends ApiControllerBase
             $tracks[] = Track::mapPrivateTrackSummary($track);
         }
 
-        return Response::json($tracks, 200);
+        return response()->json($tracks, 200);
     }
 
     public function getEdit($id)
@@ -282,7 +282,7 @@ class TracksController extends ApiControllerBase
 
         $this->authorize('edit', $track);
 
-        return Response::json(Track::mapPrivateTrackShow($track), 200);
+        return response()->json(Track::mapPrivateTrackShow($track), 200);
     }
 
     /**

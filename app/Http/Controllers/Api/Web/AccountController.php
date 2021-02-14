@@ -35,7 +35,7 @@ class AccountController extends ApiControllerBase
     {
         $this->authorize('edit', $user);
 
-        return Response::json([
+        return response()->json([
             'user' => $user->toArray(),
         ]);
     }
@@ -48,10 +48,10 @@ class AccountController extends ApiControllerBase
             $user = User::where('id', $current_user->id)->whereNull('disabled_at')->first();
 
             if ($user == null) {
-                return Response::json(['error' => 'You are not logged in'], 404);
+                return response()->json(['error' => 'You are not logged in'], 404);
             }
 
-            return Response::json([
+            return response()->json([
                 'id' => $user->id,
                 'name' => $user->display_name,
                 'slug' => $user->slug,
@@ -64,7 +64,7 @@ class AccountController extends ApiControllerBase
                 'created_at' => $user->created_at,
             ], 200);
         } else {
-            return Response::json(['error' => 'You are not logged in'], 404);
+            return response()->json(['error' => 'You are not logged in'], 404);
         }
     }
 
@@ -81,15 +81,15 @@ class AccountController extends ApiControllerBase
             }
 
             if ($user == null) {
-                return Response::json(['error' => 'User does not exist'], 404);
+                return response()->json(['error' => 'User does not exist'], 404);
             }
 
             if (Gate::denies('edit', $user)) {
-                return Response::json(['error' => 'You cannot do that. So stop trying!'], 403);
+                return response()->json(['error' => 'You cannot do that. So stop trying!'], 403);
             }
         }
 
-        return Response::json([
+        return response()->json([
             'id'  => $user->id,
             'bio' => $user->bio,
             'can_see_explicit_content' => $user->can_see_explicit_content == 1,

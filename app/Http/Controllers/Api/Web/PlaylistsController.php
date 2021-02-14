@@ -94,7 +94,7 @@ class PlaylistsController extends ApiControllerBase
             $playlists[] = Playlist::mapPublicPlaylistSummary($playlist);
         }
 
-        return Response::json([
+        return response()->json([
             'playlists' => $playlists,
             'current_page' => $page,
             'total_pages' => ceil($count / $perPage),
@@ -124,7 +124,7 @@ class PlaylistsController extends ApiControllerBase
             $playlist->view_count++;
         }
 
-        return Response::json(Playlist::mapPublicPlaylistShow($playlist), 200);
+        return response()->json(Playlist::mapPublicPlaylistShow($playlist), 200);
     }
 
     public function getCachedPlaylist($id, $format)
@@ -155,7 +155,7 @@ class PlaylistsController extends ApiControllerBase
             $url = null;
         }
 
-        return Response::json(['url' => $url], 200);
+        return response()->json(['url' => $url], 200);
     }
 
     public function getPinned()
@@ -179,7 +179,7 @@ class PlaylistsController extends ApiControllerBase
             $playlists[] = $mapped;
         }
 
-        return Response::json($playlists, 200);
+        return response()->json($playlists, 200);
     }
 
     public function getOwned(User $user)
@@ -209,7 +209,7 @@ class PlaylistsController extends ApiControllerBase
             ];
         }
 
-        return Response::json($playlists, 200);
+        return response()->json($playlists, 200);
     }
 
     /**

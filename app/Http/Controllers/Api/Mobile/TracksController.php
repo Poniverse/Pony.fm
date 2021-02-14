@@ -44,7 +44,7 @@ class TracksController extends Controller
             'tracks' => $tracks->toArray(),
         ];
 
-        return Response::json($json, 200);
+        return response()->json($json, 200);
     }
 
     public function popular()
@@ -56,6 +56,6 @@ class TracksController extends Controller
             'tracks' => $tracks->toArray(),
         ];
 
-        return Response::json($json, 200);
+        return response()->json($json, 200);
     }
 }

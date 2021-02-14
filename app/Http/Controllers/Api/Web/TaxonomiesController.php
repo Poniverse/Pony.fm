@@ -31,7 +31,7 @@ class TaxonomiesController extends ApiControllerBase
 {
     public function getAll()
     {
-        return \Response::json([
+        return response()->json([
             'licenses' => License::all()->toArray(),
             'genres' => Genre::with('trackCountRelation')
                 ->orderBy('name')

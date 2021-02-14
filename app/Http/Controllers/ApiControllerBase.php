@@ -40,22 +40,22 @@ abstract class ApiControllerBase extends Controller
 
         $result = $command->execute();
         if ($result->didFail()) {
-            return Response::json([
+            return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $result->getMessages(),
             ], $result->getStatusCode());
         }
 
-        return Response::json($result->getResponse(), $result->getStatusCode());
+        return response()->json($result->getResponse(), $result->getStatusCode());
     }
 
     public function notAuthorized()
     {
-        return Response::json(['message' => 'You may not do this!'], 403);
+        return response()->json(['message' => 'You may not do this!'], 403);
     }
 
     public function notFound($message)
     {
-        return Response::json(['message' => $message], 403);
+        return response()->json(['message' => $message], 403);
     }
 }

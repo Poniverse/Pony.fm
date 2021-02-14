@@ -41,7 +41,7 @@ class ShowSongsController extends ApiControllerBase
             ->select('id', 'title', 'slug')
             ->get();
 
-        return Response::json([
+        return response()->json([
             'showsongs' => $songs->toArray(),
         ], 200);
     }

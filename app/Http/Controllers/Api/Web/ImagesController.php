@@ -48,6 +48,6 @@ class ImagesController extends ApiControllerBase
             ];
         }
 
-        return Response::json($images, 200);
+        return response()->json($images, 200);
     }
 }

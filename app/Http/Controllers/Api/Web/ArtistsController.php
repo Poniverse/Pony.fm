@@ -78,7 +78,7 @@ class ArtistsController extends ApiControllerBase
             }
         }
 
-        return Response::json([
+        return response()->json([
             'tracks' => $tracks,
             'albums' => $albums,
         ], 200);
@@ -122,7 +122,7 @@ class ArtistsController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($album);
         }
 
-        return Response::json(['singles' => $singles, 'albumTracks' => $tracks, 'albums' => $albums], 200);
+        return response()->json(['singles' => $singles, 'albumTracks' => $tracks, 'albums' => $albums], 200);
     }
 
     public function getShow($slug)
@@ -178,7 +178,7 @@ class ArtistsController extends ApiControllerBase
         $followers = Follower::where('artist_id', $user->id)
             ->count();
 
-        return Response::json([
+        return response()->json([
             'artist' => [
                 'id' => $user->id,
                 'name' => $user->display_name,
@@ -227,7 +227,7 @@ class ArtistsController extends ApiControllerBase
             $users[] = User::mapPublicUserSummary($user);
         }
 
-        return Response::json(
+        return response()->json(
             ['artists' => $users, 'current_page' => $page, 'total_pages' => ceil($count / $perPage)],
             200
         );

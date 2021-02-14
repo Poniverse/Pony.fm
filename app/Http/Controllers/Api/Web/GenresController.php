@@ -40,7 +40,7 @@ class GenresController extends ApiControllerBase
             ->orderBy('name', 'asc')
             ->get();
 
-        return Response::json([
+        return response()->json([
             'genres' => $genres->toArray(),
         ], 200);
     }
