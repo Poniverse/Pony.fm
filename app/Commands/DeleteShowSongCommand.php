@@ -22,9 +22,9 @@ namespace App\Commands;
 
 use App\Jobs\DeleteShowSong;
 use App\Models\ShowSong;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class DeleteShowSongCommand extends CommandBase
 {

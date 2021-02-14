@@ -20,12 +20,12 @@
 
 namespace App\Http\Controllers;
 
-use App;
+use Illuminate\Support\Facades\App;
 use App\Models\Email;
 use App\Models\EmailSubscription;
-use Auth;
-use DB;
-use View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class NotificationsController extends Controller
 {

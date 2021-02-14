@@ -22,8 +22,8 @@ namespace App\Commands;
 
 use App\Models\PinnedPlaylist;
 use App\Models\Playlist;
-use Auth;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class EditPlaylistCommand extends CommandBase
 {

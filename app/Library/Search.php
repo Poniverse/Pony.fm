@@ -24,7 +24,7 @@ use App\Models\Album;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Elasticsearch\Client;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;

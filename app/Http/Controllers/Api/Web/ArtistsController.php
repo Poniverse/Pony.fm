@@ -20,7 +20,7 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App;
+use Illuminate\Support\Facades\App;
 use App\Commands\CreateUserCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Album;
@@ -31,10 +31,10 @@ use App\Models\Image;
 use App\Models\Track;
 use App\Models\User;
 use ColorThief\ColorThief;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use Helpers;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class ArtistsController extends ApiControllerBase
 {

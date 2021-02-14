@@ -22,7 +22,7 @@ namespace App\Console\Commands;
 
 use App\Models\Image;
 use App\Models\ResourceLogItem;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Console\Command;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

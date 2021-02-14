@@ -23,8 +23,8 @@ namespace App\Http\Controllers\Api\Web;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Image;
 use App\Models\User;
-use Auth;
-use Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class ImagesController extends ApiControllerBase
 {

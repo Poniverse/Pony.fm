@@ -22,10 +22,10 @@ namespace App\Commands;
 
 use App\Jobs\UpdateTagsForRenamedShowSong;
 use App\Models\ShowSong;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class RenameShowSongCommand extends CommandBase
 {

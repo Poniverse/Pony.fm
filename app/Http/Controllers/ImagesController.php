@@ -20,11 +20,11 @@
 
 namespace App\Http\Controllers;
 
-use App;
+use Illuminate\Support\Facades\App;
 use App\Models\Image;
-use Config;
-use Redirect;
-use Response;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 
 class ImagesController extends Controller
 {

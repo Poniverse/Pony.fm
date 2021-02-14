@@ -24,7 +24,7 @@ use App\Http\Controllers\ApiControllerBase;
 use App\Library\Search;
 use Elasticsearch;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class SearchController extends ApiControllerBase
 {

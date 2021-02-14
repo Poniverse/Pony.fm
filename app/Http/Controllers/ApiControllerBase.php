@@ -21,7 +21,7 @@
 namespace App\Http\Controllers;
 
 use App\Commands\CommandBase;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 abstract class ApiControllerBase extends Controller
 {

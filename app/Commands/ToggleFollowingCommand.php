@@ -22,8 +22,8 @@ namespace App\Commands;
 
 use App\Models\Follower;
 use App\Models\ResourceUser;
-use Auth;
-use Notification;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class ToggleFollowingCommand extends CommandBase
 {

@@ -20,7 +20,7 @@
 
 namespace App\Models;
 
-use Config;
+use Illuminate\Support\Facades\Config;
 use External;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;

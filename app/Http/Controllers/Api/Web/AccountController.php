@@ -24,10 +24,10 @@ use App\Commands\SaveAccountSettingsCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Image;
 use App\Models\User;
-use Auth;
-use Gate;
-use Request;
-use Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 
 class AccountController extends ApiControllerBase
 {

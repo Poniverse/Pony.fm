@@ -22,8 +22,8 @@ namespace App\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Track;
-use Auth;
-use Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class DashboardController extends ApiControllerBase
 {

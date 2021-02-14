@@ -24,7 +24,7 @@ use App\Commands\UploadTrackCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Image;
 use App\Models\Track;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class TracksController extends ApiControllerBase
 {

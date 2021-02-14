@@ -22,13 +22,13 @@ namespace App\Commands;
 
 use App\Models\Track;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Config;
-use Gate;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Request;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class UploadTrackCommand extends CommandBase
 {

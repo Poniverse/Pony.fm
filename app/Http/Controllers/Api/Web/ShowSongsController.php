@@ -26,7 +26,7 @@ use App\Commands\RenameShowSongCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\ShowSong;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class ShowSongsController extends ApiControllerBase
 {

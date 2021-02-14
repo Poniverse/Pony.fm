@@ -32,11 +32,11 @@ use App\Models\Track;
 use App\Models\TrackFile;
 use App\Models\TrackType;
 use App\Models\User;
-use Auth;
-use File;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TracksController extends ApiControllerBase

@@ -20,10 +20,10 @@
 
 namespace App\Http\Controllers;
 
-use App;
+use Illuminate\Support\Facades\App;
 use App\Models\User;
-use Redirect;
-use View;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class ArtistsController extends Controller
 {

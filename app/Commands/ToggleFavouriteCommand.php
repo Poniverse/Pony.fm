@@ -26,9 +26,9 @@ use App\Models\Favourite;
 use App\Models\Playlist;
 use App\Models\ResourceUser;
 use App\Models\Track;
-use Auth;
-use DB;
-use Notification;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class ToggleFavouriteCommand extends CommandBase
 {

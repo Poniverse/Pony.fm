@@ -20,9 +20,9 @@
 
 namespace App\Http\Controllers;
 
-use Config;
-use Redirect;
-use View;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class AccountController extends Controller
 {

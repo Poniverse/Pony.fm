@@ -21,9 +21,9 @@
 namespace App\Commands;
 
 use App\Models\Playlist;
-use Auth;
-use Notification;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class CreatePlaylistCommand extends CommandBase
 {

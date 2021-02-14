@@ -21,9 +21,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Image;
-use Config;
-use DB;
-use File;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use getID3;
 use Illuminate\Console\Command;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

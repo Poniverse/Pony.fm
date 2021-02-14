@@ -22,7 +22,7 @@ namespace App\Jobs;
 
 use App\Contracts\Searchable;
 use App\Jobs\Job;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;

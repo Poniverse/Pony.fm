@@ -25,7 +25,7 @@ use App\Models\Genre;
 use App\Models\License;
 use App\Models\ShowSong;
 use App\Models\TrackType;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class TaxonomiesController extends ApiControllerBase
 {

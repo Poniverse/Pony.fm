@@ -20,12 +20,12 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App;
+use Illuminate\Support\Facades\App;
 use App\Commands\CreateCommentCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class CommentsController extends ApiControllerBase
 {

@@ -26,7 +26,7 @@ use App\Models\Track;
 use App\Models\TrackFile;
 use AudioCache;
 use FFmpegMovie;
-use File;
+use Illuminate\Support\Facades\File;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use SplFileInfo;

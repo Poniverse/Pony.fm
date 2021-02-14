@@ -25,7 +25,7 @@ use App\Models\Notification;
 use App\Models\Subscription;
 use App\Models\Track;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Minishlink\WebPush\WebPush;
 

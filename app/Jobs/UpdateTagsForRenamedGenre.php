@@ -22,12 +22,12 @@ namespace App\Jobs;
 
 use App\Models\Genre;
 use App\Models\Track;
-use Auth;
-use Cache;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Log;
+use Illuminate\Support\Facades\Log;
 use SerializesModels;
 
 /**

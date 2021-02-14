@@ -30,7 +30,7 @@ use App\Policies\GenrePolicy;
 use App\Policies\ShowSongPolicy;
 use App\Policies\TrackPolicy;
 use App\Policies\UserPolicy;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 

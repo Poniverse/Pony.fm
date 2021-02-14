@@ -23,7 +23,7 @@ namespace App\Console\Commands;
 use App\Jobs\EncodeTrackFile;
 use App\Models\Track;
 use App\Models\TrackFile;
-use File;
+use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 

@@ -21,8 +21,8 @@
 namespace App\Commands;
 
 use App\Models\Announcement;
-use Gate;
-use Validator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class CreateAnnouncementCommand extends CommandBase
 {

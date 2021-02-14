@@ -26,7 +26,7 @@ use App\Commands\RenameGenreCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Genre;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class GenresController extends ApiControllerBase
 {

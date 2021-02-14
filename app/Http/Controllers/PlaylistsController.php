@@ -20,14 +20,14 @@
 
 namespace App\Http\Controllers;
 
-use App;
+use Illuminate\Support\Facades\App;
 use App\Models\Playlist;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\PlaylistDownloader;
-use Auth;
-use Redirect;
-use View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class PlaylistsController extends Controller
 {

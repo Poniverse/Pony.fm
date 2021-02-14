@@ -20,8 +20,8 @@
 
 namespace App\Jobs;
 
-use App;
-use DB;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Bus\Queueable;
 
 abstract class Job

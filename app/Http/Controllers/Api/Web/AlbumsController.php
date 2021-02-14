@@ -29,11 +29,11 @@ use App\Models\Image;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\User;
-use Auth;
-use Gate;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class AlbumsController extends ApiControllerBase
 {

@@ -21,7 +21,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Auth\Guard;
 
 class Authorize

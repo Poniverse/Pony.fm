@@ -25,13 +25,13 @@ use App\Exceptions\InvalidEncodeOptionsException;
 use App\Models\Track;
 use App\Models\TrackFile;
 use Carbon\Carbon;
-use Config;
-use DB;
-use File;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 

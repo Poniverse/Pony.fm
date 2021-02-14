@@ -21,8 +21,8 @@
 namespace App\Commands;
 
 use App\Models\Album;
-use Auth;
-use Gate;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class DeleteAlbumCommand extends CommandBase
 {

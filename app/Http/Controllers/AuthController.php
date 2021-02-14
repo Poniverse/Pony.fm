@@ -22,15 +22,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Poniverse\Lib\Client;
-use Redirect;
-use Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class AuthController extends Controller
 {

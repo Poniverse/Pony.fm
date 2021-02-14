@@ -20,9 +20,9 @@
 
 namespace App\Models;
 
-use App;
-use Config;
-use File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 

@@ -31,10 +31,10 @@ use App\Models\Playlist;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class PlaylistsController extends ApiControllerBase
 {

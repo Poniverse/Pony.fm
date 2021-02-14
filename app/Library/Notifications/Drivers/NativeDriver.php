@@ -26,7 +26,7 @@ use App\Models\Comment;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
-use Config;
+use Illuminate\Support\Facades\Config;
 use Minishlink\WebPush\WebPush;
 
 class NativeDriver extends AbstractDriver

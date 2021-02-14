@@ -26,9 +26,9 @@ use App\Models\Album;
 use App\Models\Favourite;
 use App\Models\Playlist;
 use App\Models\Track;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class FavouritesController extends ApiControllerBase
 {
