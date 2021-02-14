@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'database'),
+    'driver' => env('SESSION_DRIVER', 'file'),
 
     /*
     |--------------------------------------------------------------------------
@@ -87,6 +87,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Session Cache Store
+    |--------------------------------------------------------------------------
+    |
+    | When using the "apc" or "memcached" session drivers, you may specify a
+    | cache store that should be used for these sessions. This value must
+    | correspond with one of the application's configured cache stores.
+    |
+    */
+
+    'store' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Session Sweeping Lottery
     |--------------------------------------------------------------------------
     |
@@ -111,7 +124,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        'IfYouAreReadingThisWeWantToWorkWithYou_PleaseDropAnEmailTo_HelloAtPoniverseDotNet'
+        str_slug(env('APP_NAME', 'laravel'), '_').'_session'
     ),
 
     /*
@@ -151,7 +164,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_HTTPS_ONLY', true),
+    'secure' => env('SESSION_SECURE_COOKIE', false),
 
     /*
     |--------------------------------------------------------------------------
