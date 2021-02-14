@@ -2876,23 +2876,23 @@
         },
         {
             "name": "mdanter/ecc",
-            "version": "v0.4.3",
+            "version": "v0.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpecc/phpecc.git",
-                "reference": "fa3405da1b2bb4772a0c908c65b0c3e9dde4ccfd"
+                "reference": "e465bf84a81898310a896e8cb26bd2f165ddc025"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpecc/phpecc/zipball/fa3405da1b2bb4772a0c908c65b0c3e9dde4ccfd",
-                "reference": "fa3405da1b2bb4772a0c908c65b0c3e9dde4ccfd",
+                "url": "https://api.github.com/repos/phpecc/phpecc/zipball/e465bf84a81898310a896e8cb26bd2f165ddc025",
+                "reference": "e465bf84a81898310a896e8cb26bd2f165ddc025",
                 "shasum": ""
             },
             "require": {
                 "ext-gmp": "*",
                 "fgrosse/phpasn1": "~1.5",
                 "paragonie/random_compat": "^1|^2",
-                "php": ">=5.6.0"
+                "php": ">=5.6.0, <7.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.1|~5.0",
@@ -2942,7 +2942,7 @@
                 "issues": "https://github.com/phpecc/phpecc/issues",
                 "source": "https://github.com/phpecc/phpecc/tree/0.4"
             },
-            "time": "2017-09-22T15:12:06+00:00"
+            "time": "2018-12-03T22:19:39+00:00"
         },
         {
             "name": "minishlink/web-push",
