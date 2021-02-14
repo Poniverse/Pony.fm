@@ -11,7 +11,7 @@
     "type": "project",
     "require": {
         "php": ">=7.0.1",
-        "laravel/framework": "5.5.*",
+        "laravel/framework": "5.6.*",
         "codescale/ffmpeg-php": "2.7.0",
         "intouch/laravel-newrelic": "*",
         "barryvdh/laravel-ide-helper": "^2.1",
@@ -32,18 +32,20 @@
         "doctrine/collections": "v1.4.*",
         "doctrine/annotations": "v1.4.*",
         "doctrine/cache": "v1.6.*",
-        "doctrine/instantiator": "1.0.*"
+        "doctrine/instantiator": "1.0.*",
+        "fideloper/proxy": "^4.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "~1.0",
-        "phpunit/phpunit": "~6.0",
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^7.0",
         "phpspec/phpspec": "~2.1",
         "filp/whoops": "^2.1",
         "symfony/dom-crawler": "~3.1",
         "symfony/css-selector": "~3.1",
         "laravel/browser-kit-testing": "2.*",
-        "nategood/httpful": "^0.2.20"
+        "nategood/httpful": "^0.2.20",
+        "nunomaduro/collision": "^2.0"
     },
     "autoload": {
         "classmap": [
@@ -81,8 +83,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-            ]
+            "dont-discover": []
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
