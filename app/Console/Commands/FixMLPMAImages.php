@@ -77,8 +77,8 @@ class FixMLPMAImages extends Command
      */
     public function handle()
     {
-        $mlpmaPath = Config::get('ponyfm.files_directory').'/mlpma';
-        $tmpPath = Config::get('ponyfm.files_directory').'/tmp';
+        $mlpmaPath = config('ponyfm.files_directory').'/mlpma';
+        $tmpPath = config('ponyfm.files_directory').'/tmp';
 
         $this->comment('Enumerating MLP Music Archive source files...');
         $files = File::allFiles($mlpmaPath);

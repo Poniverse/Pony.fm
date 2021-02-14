@@ -96,7 +96,7 @@ class TrackFile extends Model
     {
         $track = Track::find($trackId);
         if (! $track) {
-            App::abort(404);
+            abort(404);
         }
 
         // find the extension's format
@@ -108,7 +108,7 @@ class TrackFile extends Model
             }
         }
         if ($requestedFormatName === null) {
-            App::abort(404);
+            abort(404);
         }
 
         $trackFile = static::
@@ -119,7 +119,7 @@ class TrackFile extends Model
             ->first();
 
         if ($trackFile === null) {
-            App::abort(404);
+            abort(404);
         } else {
             return $trackFile;
         }
@@ -165,7 +165,7 @@ class TrackFile extends Model
     {
         $dir = (string) (floor($this->track_id / 100) * 100);
 
-        return \Config::get('ponyfm.files_directory').'/tracks/'.$dir;
+        return config('ponyfm.files_directory').'/tracks/'.$dir;
     }
 
     public function getFile()

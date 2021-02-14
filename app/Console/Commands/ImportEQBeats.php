@@ -86,7 +86,7 @@ class ImportEQBeats extends Command
         pcntl_signal(SIGINT, [$this, 'handleInterrupt']);
 
         $archivePath = $this->argument('archiveFolder');
-        $tmpPath = Config::get('ponyfm.files_directory').'/tmp';
+        $tmpPath = config('ponyfm.files_directory').'/tmp';
 
         if (! File::exists($tmpPath)) {
             File::makeDirectory($tmpPath);

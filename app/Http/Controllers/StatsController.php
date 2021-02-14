@@ -26,6 +26,6 @@ class StatsController extends Controller
 {
     public function getIndex()
     {
-        return View::make('tracks.stats');
+        return view('tracks.stats');
     }
 }

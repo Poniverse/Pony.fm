@@ -44,20 +44,20 @@ class AuthController extends Controller
     public function getLogin()
     {
         if (Auth::guest()) {
-            return Redirect::to(
+            return redirect(
                 $this->poniverse
                     ->getOAuthProvider(['redirectUri' => action('AuthController@getOAuth')])
                     ->getAuthorizationUrl());
         }
 
-        return Redirect::to('/');
+        return redirect('/');
     }
 
     public function postLogout()
     {
         Auth::logout();
 
-        return Redirect::to('/');
+        return redirect('/');
     }
 
     public function getOAuth()
@@ -74,7 +74,7 @@ class AuthController extends Controller
         } catch (IdentityProviderException $e) {
             Log::error($e);
 
-            return Redirect::to('/')->with(
+            return redirect('/')->with(
                 'message',
                 'Unfortunately we are having problems attempting to log you in at the moment. Please try again at a later time.'
             );
@@ -161,6 +161,6 @@ class AuthController extends Controller
     {
         Auth::login($user, $rememberMe);
 
-        return Redirect::to('/');
+        return redirect('/');
     }
 }

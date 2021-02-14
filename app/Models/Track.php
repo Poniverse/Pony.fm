@@ -607,8 +607,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             ],
             'streams' => [
                 'mp3' => $track->getStreamUrl('MP3'),
-                'aac' => (! Config::get('app.debug') || is_file($track->getFileFor('AAC'))) ? $track->getStreamUrl('AAC') : null,
-                'ogg' => (Config::get('app.debug') || is_file($track->getFileFor('OGG Vorbis'))) ? $track->getStreamUrl('OGG Vorbis') : null,
+                'aac' => (! config('app.debug') || is_file($track->getFileFor('AAC'))) ? $track->getStreamUrl('AAC') : null,
+                'ogg' => (config('app.debug') || is_file($track->getFileFor('OGG Vorbis'))) ? $track->getStreamUrl('OGG Vorbis') : null,
             ],
             'user_data' => $userData,
             'permissions' => [
@@ -963,7 +963,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     {
         $dir = (string) (floor($this->id / 100) * 100);
 
-        return \Config::get('ponyfm.files_directory').'/tracks/'.$dir;
+        return config('ponyfm.files_directory').'/tracks/'.$dir;
     }
 
     public function getDates()
@@ -1037,7 +1037,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getTemporarySourceFileForVersion(int $version):string
     {
-        return Config::get('ponyfm.files_directory').'/queued-tracks/'.$this->id.'v'.$version;
+        return config('ponyfm.files_directory').'/queued-tracks/'.$this->id.'v'.$version;
     }
 
     /**

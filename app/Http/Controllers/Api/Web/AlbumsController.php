@@ -72,7 +72,7 @@ class AlbumsController extends ApiControllerBase
             ->find($id);
 
         if (! $album) {
-            App::abort(404);
+            abort(404);
         }
 
         if (Request::get('log')) {

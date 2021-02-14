@@ -134,15 +134,15 @@ class UploadTrackCommand extends CommandBase
         }
         $this->_track->ensureDirectoryExists();
 
-        if (! is_dir(Config::get('ponyfm.files_directory').'/tmp')) {
-            mkdir(Config::get('ponyfm.files_directory').'/tmp', 0755, true);
+        if (! is_dir(config('ponyfm.files_directory').'/tmp')) {
+            mkdir(config('ponyfm.files_directory').'/tmp', 0755, true);
         }
 
-        if (! is_dir(Config::get('ponyfm.files_directory').'/queued-tracks')) {
-            mkdir(Config::get('ponyfm.files_directory').'/queued-tracks', 0755, true);
+        if (! is_dir(config('ponyfm.files_directory').'/queued-tracks')) {
+            mkdir(config('ponyfm.files_directory').'/queued-tracks', 0755, true);
         }
 
-        $trackFile = $trackFile->move(Config::get('ponyfm.files_directory').'/queued-tracks', $this->_track->id.'v'.$this->_version);
+        $trackFile = $trackFile->move(config('ponyfm.files_directory').'/queued-tracks', $this->_track->id.'v'.$this->_version);
 
         $input = Request::all();
         $input['track'] = $trackFile;

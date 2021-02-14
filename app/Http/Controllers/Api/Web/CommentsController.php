@@ -50,7 +50,7 @@ class CommentsController extends ApiControllerBase
                     if ($type == 'playlist') {
                         $column = 'playlist_id';
                     } else {
-                        App::abort(500);
+                        abort(500);
                     }
                 }
             }

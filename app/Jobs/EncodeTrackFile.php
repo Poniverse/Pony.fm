@@ -145,7 +145,7 @@ class EncodeTrackFile extends Job implements ShouldQueue
 
         // Insert the expiration time for cached tracks
         if ($this->isExpirable && $this->trackFile->is_cacheable) {
-            $this->trackFile->expires_at = Carbon::now()->addMinutes(Config::get('ponyfm.track_file_cache_duration'));
+            $this->trackFile->expires_at = Carbon::now()->addMinutes(config('ponyfm.track_file_cache_duration'));
             $this->trackFile->save();
         }
 

@@ -68,6 +68,6 @@ class NotificationsController extends Controller
 
     public function getEmailUnsubscribePage()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 }

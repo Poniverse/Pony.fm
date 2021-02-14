@@ -190,7 +190,7 @@ class Image extends Model
     {
         $dir = (string) (floor($this->id / 100) * 100);
 
-        return Config::get('ponyfm.files_directory').'/images/'.$dir;
+        return config('ponyfm.files_directory').'/images/'.$dir;
     }
 
     public function ensureDirectoryExists()

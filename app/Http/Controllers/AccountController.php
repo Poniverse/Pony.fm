@@ -28,16 +28,16 @@ class AccountController extends Controller
 {
     public function getIndex()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getRegister()
     {
-        return Redirect::to(Config::get('poniverse.urls')['register']);
+        return redirect(config('poniverse.urls')['register']);
     }
 
     public function getNotifications()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 }

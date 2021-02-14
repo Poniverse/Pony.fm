@@ -15,7 +15,7 @@ class File extends \Illuminate\Support\Facades\File
             $name = basename($path);
         }
 
-        $response = Response::make(static::get($path));
+        $response = response(static::get($path));
 
         $response->header('Content-Type', $mime);
         $response->header('Content-Disposition', 'inline; filename="'.$name.'"');
