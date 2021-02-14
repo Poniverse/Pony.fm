@@ -30,7 +30,7 @@
 */
 
 Route::get('/dashboard', 'TracksController@getIndex');
-Route::get('/tracks', ['as' => 'tracks.discover', 'uses' => 'TracksController@getIndex']);
+Route::get('/tracks', 'TracksController@getIndex')->name('tracks.discover');
 Route::get('/tracks/popular', 'TracksController@getIndex');
 Route::get('/tracks/random', 'TracksController@getIndex');
 
@@ -78,7 +78,7 @@ Route::get('p{id}/dl.{extension}', 'PlaylistsController@getDownload');
 
 Route::get('notifications', 'AccountController@getNotifications');
 
-Route::group(['prefix' => 'notifications/email'], function () {
+Route::prefix('notifications/email')->group(function () {
     Route::get('/unsubscribe/{subscriptionKey}', 'NotificationsController@getEmailUnsubscribe')->name('email:unsubscribe');
     Route::get('/unsubscribed', 'NotificationsController@getEmailUnsubscribePage')->name('email:confirm-unsubscribed');
     Route::get('/click/{emailKey}', 'NotificationsController@getEmailClick')->name('email:click');
@@ -86,18 +86,18 @@ Route::group(['prefix' => 'notifications/email'], function () {
 
 Route::get('oembed', 'TracksController@getOembed');
 
-Route::group(['prefix' => 'api/v1', 'middleware' => 'json-exceptions'], function () {
+Route::prefix('api/v1')->middleware('json-exceptions')->group(function () {
     Route::get('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
     Route::post('/tracks/radio-details/{hash}', 'Api\V1\TracksController@getTrackRadioDetails');
     Route::get('/tracks/{id}', 'Api\V1\TracksController@getTrackDetails')->where('id', '\d+');
 
-    Route::group(['middleware' => 'auth.oauth:ponyfm:tracks:upload'], function () {
+    Route::middleware('auth.oauth:ponyfm:tracks:upload')->group(function () {
         Route::post('tracks', 'Api\V1\TracksController@postUploadTrack');
         Route::get('/tracks/{id}/upload-status', 'Api\V1\TracksController@getUploadStatus');
     });
 });
 
-Route::group(['prefix' => 'api/web', 'middleware' => 'cors'], function () {
+Route::prefix('api/web')->middleware('cors')->group(function () {
     Route::post('/alexa', 'Api\Web\AlexaController@handle');
 
     Route::get('/taxonomies/all', 'Api\Web\TaxonomiesController@getAll');
@@ -129,7 +129,7 @@ Route::group(['prefix' => 'api/web', 'middleware' => 'cors'], function () {
 
     Route::get('/announcements', 'Api\Web\AnnouncementsController@getIndex');
 
-    Route::group(['middleware' => 'auth'], function () {
+    Route::middleware('auth')->group(function () {
         Route::post('/tracks/upload', 'Api\Web\TracksController@postUpload');
         Route::get('/tracks/{id}/upload-status', 'Api\Web\TracksController@getUploadStatus');
         Route::post('/tracks/delete/{id}', 'Api\Web\TracksController@postDelete');
@@ -191,7 +191,7 @@ Route::group(['prefix' => 'api/web', 'middleware' => 'cors'], function () {
         Route::get('/favourites/playlists', 'Api\Web\FavouritesController@getPlaylists');
     });
 
-    Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function () {
+    Route::prefix('admin')->middleware('auth', 'can:access-admin-area')->group(function () {
         Route::get('/genres', 'Api\Web\GenresController@getIndex');
         Route::post('/genres', 'Api\Web\GenresController@postCreate');
         Route::put('/genres/{id}', 'Api\Web\GenresController@putRename')->where('id', '\d+');
@@ -216,7 +216,7 @@ Route::group(['prefix' => 'api/web', 'middleware' => 'cors'], function () {
     Route::post('/auth/logout', 'Api\Web\AuthController@postLogout');
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-area']], function () {
+Route::prefix('admin')->middleware('auth', 'can:access-admin-area')->group(function () {
     Route::get('/genres', 'AdminController@getGenres');
     Route::get('/tracks', 'AdminController@getTracks');
     Route::get('/tracks/unclassified', 'AdminController@getClassifierQueue');
@@ -229,12 +229,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'can:access-admin-ar
 Route::get('u{id}', 'ArtistsController@getShortlink')->where('id', '\d+');
 Route::get('users/{id}-{slug}', 'ArtistsController@getShortlink')->where('id', '\d+');
 
-Route::group(['prefix' => '{slug}'], function () {
+Route::prefix('{slug}')->group(function () {
     Route::get('/', 'ArtistsController@getProfile');
     Route::get('/content', 'ArtistsController@getContent');
     Route::get('/favourites', 'ArtistsController@getFavourites');
 
-    Route::group(['prefix' => 'account', 'middleware' => 'auth'], function () {
+    Route::prefix('account')->middleware('auth')->group(function () {
         Route::get('/tracks', 'ContentController@getTracks');
         Route::get('/tracks/edit/{id}', 'ContentController@getTracks');
         Route::get('/albums', 'ContentController@getAlbums');
@@ -250,7 +250,7 @@ Route::group(['prefix' => '{slug}'], function () {
 
 Route::get('/', 'HomeController@getIndex');
 
-Route::group(['domain' => 'api.pony.fm'], function () {
-    Route::get('tracks/latest', ['uses' => 'Api\Mobile\TracksController@latest']);
-    Route::get('tracks/popular', ['uses' => 'Api\Mobile\TracksController@popular']);
+Route::domain('api.pony.fm')->group(function () {
+    Route::get('tracks/latest', 'Api\Mobile\TracksController@latest');
+    Route::get('tracks/popular', 'Api\Mobile\TracksController@popular');
 });
