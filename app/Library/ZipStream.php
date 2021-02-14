@@ -557,7 +557,7 @@ class ZipStream
      */
     public static function getRelativePath($path)
     {
-        $path = preg_replace("#/+\.?/+#", '/', str_replace('\\', '/', $path));
+        $path = preg_replace('#/+\\.?/+#', '/', str_replace('\\', '/', $path));
         $dirs = explode('/', rtrim(preg_replace('#^(?:\./)+#', '', $path), '/'));
 
         $offset = 0;
