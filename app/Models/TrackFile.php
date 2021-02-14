@@ -67,8 +67,9 @@ class TrackFile extends Model
     const STATUS_PROCESSING_PENDING = 3;
 
     protected $appends = ['is_expired'];
-    protected $dates = ['expires_at'];
+
     protected $casts = [
+        'expires_at' => 'datetime',
         'id'            => 'integer',
         'track_id'      => 'integer',
         'is_master'     => 'boolean',

@@ -110,6 +110,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     protected $elasticsearchType = 'user';
     protected $casts = [
+        'disabled_at' => 'datetime',
         'id'                        => 'integer',
         'sync_names'                => 'boolean',
         'uses_gravatar'             => 'boolean',
@@ -120,7 +121,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'is_archived'               => 'boolean',
         'redirect_to'               => 'integer',
     ];
-    protected $dates = ['created_at', 'updated_at', 'disabled_at'];
+
     protected $hidden = ['disabled_at', 'remember_token'];
 
     public function scopeUserDetails($query)

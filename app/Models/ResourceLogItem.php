@@ -52,7 +52,7 @@ use Illuminate\Support\Facades\Request;
 class ResourceLogItem extends Model
 {
     public $timestamps = false;
-    protected $dates = ['created_at'];
+
 
     const VIEW = 1;
     const DOWNLOAD = 2;
