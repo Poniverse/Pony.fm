@@ -22,8 +22,8 @@ namespace App\Commands;
 
 use App\Models\Genre;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CreateGenreCommand extends CommandBase
 {

@@ -20,9 +20,9 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Config;
 use External;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;

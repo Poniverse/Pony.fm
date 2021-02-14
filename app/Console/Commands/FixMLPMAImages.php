@@ -21,11 +21,11 @@
 namespace App\Console\Commands;
 
 use App\Models\Image;
+use getID3;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use getID3;
-use Illuminate\Console\Command;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FixMLPMAImages extends Command

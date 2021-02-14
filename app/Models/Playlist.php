@@ -27,15 +27,15 @@ use App\Exceptions\TrackFileNotFoundException;
 use App\Traits\IndexedInElasticsearchTrait;
 use App\Traits\SlugTrait;
 use App\Traits\TrackCollection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**

@@ -20,8 +20,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
 use App\Models\User;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 

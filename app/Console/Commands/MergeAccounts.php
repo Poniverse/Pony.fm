@@ -33,9 +33,9 @@ use App\Models\ResourceUser;
 use App\Models\Track;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class MergeAccounts extends Command
 {

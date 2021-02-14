@@ -20,8 +20,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
 use App\Models\Image;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;

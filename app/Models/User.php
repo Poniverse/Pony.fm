@@ -23,9 +23,7 @@ namespace App\Models;
 use App\Contracts\Commentable;
 use App\Contracts\Searchable;
 use App\Traits\IndexedInElasticsearchTrait;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -36,9 +34,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use League\OAuth2\Client\Token\AccessToken;
-use Illuminate\Support\Facades\Validator;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**

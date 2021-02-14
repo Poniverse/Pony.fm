@@ -20,7 +20,6 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Commands\CreateAlbumCommand;
 use App\Commands\DeleteAlbumCommand;
 use App\Commands\EditAlbumCommand;
@@ -30,9 +29,10 @@ use App\Models\Image;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Response;
 
 class AlbumsController extends ApiControllerBase

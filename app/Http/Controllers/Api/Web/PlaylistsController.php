@@ -20,7 +20,6 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Commands\AddTrackToPlaylistCommand;
 use App\Commands\CreatePlaylistCommand;
 use App\Commands\DeletePlaylistCommand;
@@ -32,8 +31,9 @@ use App\Models\Playlist;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class PlaylistsController extends ApiControllerBase

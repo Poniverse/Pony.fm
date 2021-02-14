@@ -22,9 +22,9 @@ namespace App\Console\Commands;
 
 use App\Models\Image;
 use App\Models\ResourceLogItem;
-use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MigrateOldData extends Command

@@ -21,8 +21,8 @@
 namespace App\Console\Commands;
 
 use App\Models\TrackFile;
-use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class RebuildFilesizes extends Command
 {

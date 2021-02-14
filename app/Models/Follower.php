@@ -42,7 +42,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Follower extends Model
 {
-
     public $timestamps = false;
 
     public function follower():BelongsTo

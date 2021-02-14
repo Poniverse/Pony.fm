@@ -20,17 +20,17 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 
 class StatsController extends ApiControllerBase
 {

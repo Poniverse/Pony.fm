@@ -27,13 +27,8 @@ use App\Exceptions\TrackFileNotFoundException;
 use App\Models\ResourceLogItem;
 use App\Traits\IndexedInElasticsearchTrait;
 use App\Traits\SlugTrait;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Exception;
 use External;
-use Illuminate\Support\Facades\Gate;
 use getid3_writetags;
 use Helpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,8 +36,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**

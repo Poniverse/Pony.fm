@@ -22,8 +22,8 @@ namespace App\Commands;
 
 use App\Models\ShowSong;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CreateShowSongCommand extends CommandBase
 {

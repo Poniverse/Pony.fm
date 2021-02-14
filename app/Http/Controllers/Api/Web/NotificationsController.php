@@ -20,12 +20,12 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Notification;
 use App\Models\Subscription;
 use App\Models\Track;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Minishlink\WebPush\WebPush;
 

@@ -49,7 +49,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Announcement extends Model
 {
-
     protected $casts = [
         'links' => 'array',
         'tracks' => 'array',

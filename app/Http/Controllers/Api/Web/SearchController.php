@@ -20,10 +20,10 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\ApiControllerBase;
 use App\Library\Search;
 use Elasticsearch;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 class SearchController extends ApiControllerBase

@@ -22,10 +22,10 @@ namespace App\Traits;
 
 use App\Contracts\Searchable;
 use App\Jobs\UpdateSearchIndexForEntity;
-use Illuminate\Support\Facades\Config;
 use Elasticsearch;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class IndexedInElasticsearch.

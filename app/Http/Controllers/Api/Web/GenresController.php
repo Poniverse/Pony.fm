@@ -20,12 +20,12 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Commands\CreateGenreCommand;
 use App\Commands\DeleteGenreCommand;
 use App\Commands\RenameGenreCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Genre;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 class GenresController extends ApiControllerBase

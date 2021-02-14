@@ -20,17 +20,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Activity;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
-use Illuminate\Support\Facades\Log;
 use Poniverse\Lib\Client;
-use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends Controller
 {

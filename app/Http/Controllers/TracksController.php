@@ -20,13 +20,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\TrackFile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;

@@ -20,13 +20,13 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Commands\ToggleFavouriteCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Album;
 use App\Models\Favourite;
 use App\Models\Playlist;
 use App\Models\Track;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 

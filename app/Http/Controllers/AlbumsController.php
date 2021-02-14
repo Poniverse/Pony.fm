@@ -20,11 +20,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
 use App\AlbumDownloader;
 use App\Models\Album;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 

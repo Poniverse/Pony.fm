@@ -21,8 +21,8 @@
 namespace App\Console\Commands;
 
 use App\Models\ResourceLogItem;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class RefreshCache extends Command
 {

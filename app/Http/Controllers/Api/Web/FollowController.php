@@ -20,9 +20,9 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Commands\ToggleFollowingCommand;
 use App\Http\Controllers\ApiControllerBase;
+use Illuminate\Http\Request;
 
 class FollowController extends ApiControllerBase
 {

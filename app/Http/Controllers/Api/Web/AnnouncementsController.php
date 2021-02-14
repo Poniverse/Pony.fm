@@ -20,11 +20,11 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Commands\CreateAnnouncementCommand;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 class AnnouncementsController extends Controller

@@ -20,10 +20,10 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 
 /**
@@ -52,7 +52,6 @@ use Illuminate\Support\Facades\Request;
 class ResourceLogItem extends Model
 {
     public $timestamps = false;
-
 
     const VIEW = 1;
     const DOWNLOAD = 2;

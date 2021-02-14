@@ -20,11 +20,11 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Commands\SaveAccountSettingsCommand;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Image;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Response;

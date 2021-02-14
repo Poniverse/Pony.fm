@@ -20,7 +20,6 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Http\Request;
 use App\Commands\DeleteTrackCommand;
 use App\Commands\EditTrackCommand;
 use App\Commands\GenerateTrackFilesCommand;
@@ -33,9 +32,10 @@ use App\Models\Track;
 use App\Models\TrackFile;
 use App\Models\TrackType;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

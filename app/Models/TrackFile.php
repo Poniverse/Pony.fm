@@ -20,11 +20,11 @@
 
 namespace App\Models;
 
+use Helpers;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
-use Helpers;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\TrackFile.
