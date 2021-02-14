@@ -95,7 +95,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
     protected $elasticsearchType = 'playlist';
 
     protected $table = 'playlists';
-    protected $dates = ['deleted_at'];
+    
     protected $casts = [
         'id'                => 'integer',
         'user_id'           => 'integer',

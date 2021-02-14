@@ -93,7 +93,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     protected $elasticsearchType = 'album';
 
-    protected $dates = ['deleted_at'];
+    
     protected $fillable = ['user_id', 'title', 'slug'];
 
     public static function summary()
