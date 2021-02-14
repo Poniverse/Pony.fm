@@ -25,7 +25,6 @@ use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use DB;
-use Illuminate\Support\Facades\Input;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Log;
@@ -132,8 +131,8 @@ class AuthController extends Controller
      */
     public function postPoniverseAccountSync()
     {
-        $poniverseId = Input::get('id');
-        $updatedAttribute = Input::get('attribute');
+        $poniverseId = Request::get('id');
+        $updatedAttribute = Request::get('attribute');
 
         // Only email address updates are supported at this time.
         if ('email' !== $updatedAttribute) {
