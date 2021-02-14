@@ -158,12 +158,12 @@ return [
          * Application Service Providers...
          */
         Barryvdh\Debugbar\ServiceProvider::class,
-        Poniverse\Ponyfm\Providers\AppServiceProvider::class,
-        // Poniverse\Ponyfm\Providers\BroadcastServiceProvider::class,
-        Poniverse\Ponyfm\Providers\EventServiceProvider::class,
-        Poniverse\Ponyfm\Providers\RouteServiceProvider::class,
-        Poniverse\Ponyfm\Providers\AuthServiceProvider::class,
-        Poniverse\Ponyfm\Providers\NotificationServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\EventServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        App\Providers\NotificationServiceProvider::class,
 
         Intouch\LaravelNewrelic\NewrelicServiceProvider::class,
         Cviebrock\LaravelElasticsearch\ServiceProvider::class,
@@ -218,7 +218,7 @@ return [
 
         'Elasticsearch' => Cviebrock\LaravelElasticsearch\Facade::class,
         'Newrelic'  => Intouch\LaravelNewrelic\Facades\Newrelic::class,
-        'Notification'  => Poniverse\Ponyfm\Facades\Notification::class,
+        'Notification'  => App\Facades\Notification::class,
 
     ],
 

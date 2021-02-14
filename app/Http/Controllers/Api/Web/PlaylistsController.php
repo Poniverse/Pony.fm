@@ -18,23 +18,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Poniverse\Ponyfm\Commands\AddTrackToPlaylistCommand;
-use Poniverse\Ponyfm\Commands\CreatePlaylistCommand;
-use Poniverse\Ponyfm\Commands\DeletePlaylistCommand;
-use Poniverse\Ponyfm\Commands\EditPlaylistCommand;
-use Poniverse\Ponyfm\Commands\RemoveTrackFromPlaylistCommand;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\ResourceLogItem;
+use App\Commands\AddTrackToPlaylistCommand;
+use App\Commands\CreatePlaylistCommand;
+use App\Commands\DeletePlaylistCommand;
+use App\Commands\EditPlaylistCommand;
+use App\Commands\RemoveTrackFromPlaylistCommand;
+use App\Http\Controllers\ApiControllerBase;
+use App\Models\Image;
+use App\Models\Playlist;
+use App\Models\ResourceLogItem;
 use Auth;
 use Illuminate\Support\Facades\Request;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 use Response;
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Track;
 
 class PlaylistsController extends ApiControllerBase
 {

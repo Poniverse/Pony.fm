@@ -20,7 +20,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Poniverse\Ponyfm\Models\Playlist;
+use App\Models\Playlist;
 
 class EnforceUniqueTracksInPlaylists extends Migration
 {

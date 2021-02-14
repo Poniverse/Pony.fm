@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Contracts;
+namespace App\Contracts;
 
-use Poniverse\Ponyfm\Models\Comment;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\Comment;
+use App\Models\Playlist;
+use App\Models\Track;
+use App\Models\User;
 
 /**
  * Interface NotificationHandler
- * @package Poniverse\Ponyfm\Contracts
+ * @package App\Contracts
  *
  * Each method in this interface represents a type of notification. To add a new
  * type of notification, add a method for it to this interface and every class

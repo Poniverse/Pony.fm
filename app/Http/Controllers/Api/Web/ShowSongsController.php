@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Illuminate\Support\Facades\Request;
-use Poniverse\Ponyfm\Commands\CreateShowSongCommand;
-use Poniverse\Ponyfm\Commands\DeleteShowSongCommand;
-use Poniverse\Ponyfm\Commands\RenameShowSongCommand;
-use Poniverse\Ponyfm\Models\ShowSong;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use App\Commands\CreateShowSongCommand;
+use App\Commands\DeleteShowSongCommand;
+use App\Commands\RenameShowSongCommand;
+use App\Models\ShowSong;
+use App\Http\Controllers\ApiControllerBase;
 use Response;
 
 class ShowSongsController extends ApiControllerBase

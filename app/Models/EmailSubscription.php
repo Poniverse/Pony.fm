@@ -18,15 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Alsofronie\Uuid\UuidModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 
 /**
- * Poniverse\Ponyfm\EmailSubscription
+ * App\EmailSubscription
  *
  * @property string $id
  * @property integer $user_id
@@ -34,19 +34,19 @@ use Poniverse\Ponyfm\Models\User;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string $deleted_at
- * @property-read \Poniverse\Ponyfm\Models\User $user
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription whereActivityType($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription whereDeletedAt($value)
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription whereActivityType($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription whereDeletedAt($value)
  * @mixin \Eloquent
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailSubscription withoutTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailSubscription withoutTrashed()
  */
 class EmailSubscription extends Model
 {

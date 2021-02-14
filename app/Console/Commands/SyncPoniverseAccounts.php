@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Console\Commands;
+namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use League\OAuth2\Client\Token\AccessToken;
 use Poniverse\Lib\Client;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 
 class SyncPoniverseAccounts extends Command
 {

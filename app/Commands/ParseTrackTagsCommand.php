@@ -18,20 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Carbon\Carbon;
 use Config;
 use getID3;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Genre;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Album;
+use App\Models\Genre;
+use App\Models\Image;
+use App\Models\Track;
 use AudioCache;
 use File;
 use Illuminate\Support\Str;
-use Poniverse\Ponyfm\Models\TrackType;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\TrackType;
+use App\Models\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 

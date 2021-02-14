@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Library;
+namespace App\Library;
 
 use DB;
 use Elasticsearch\Client;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\Album;
+use App\Models\Playlist;
+use App\Models\Track;
+use App\Models\User;
 
 class Search
 {

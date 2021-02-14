@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Console\Commands;
+namespace App\Console\Commands;
 
 use Config;
 use DB;
 use File;
 use getID3;
 use Illuminate\Console\Command;
-use Poniverse\Ponyfm\Models\Image;
+use App\Models\Image;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FixMLPMAImages extends Command

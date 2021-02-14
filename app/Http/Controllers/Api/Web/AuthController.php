@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {

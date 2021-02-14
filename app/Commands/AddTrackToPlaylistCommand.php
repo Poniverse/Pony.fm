@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Playlist;
+use App\Models\Track;
 use Auth;
 use DB;
 use Validator;

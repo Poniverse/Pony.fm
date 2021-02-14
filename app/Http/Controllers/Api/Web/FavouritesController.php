@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Commands\ToggleFavouriteCommand;
-use Poniverse\Ponyfm\Models\Favourite;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Album;
+use App\Commands\ToggleFavouriteCommand;
+use App\Models\Favourite;
+use App\Http\Controllers\ApiControllerBase;
+use App\Models\Playlist;
+use App\Models\Track;
 use Auth;
 use Illuminate\Support\Facades\Request;
 use Response;

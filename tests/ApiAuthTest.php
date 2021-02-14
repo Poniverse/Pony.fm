@@ -22,7 +22,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Poniverse\Lib\AccessToken;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 
 class ApiAuthTest extends TestCase
 {

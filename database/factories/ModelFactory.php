@@ -29,9 +29,9 @@
 |
 */
 
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 
-$factory->define(Poniverse\Ponyfm\Models\User::class, function (\Faker\Generator $faker) {
+$factory->define(App\Models\User::class, function (\Faker\Generator $faker) {
     return [
         'username'      => $faker->userName,
         'display_name'  => $faker->userName,
@@ -45,7 +45,7 @@ $factory->define(Poniverse\Ponyfm\Models\User::class, function (\Faker\Generator
     ];
 });
 
-$factory->define(\Poniverse\Ponyfm\Models\Track::class, function(\Faker\Generator $faker) {
+$factory->define(\App\Models\Track::class, function(\Faker\Generator $faker) {
     $user = factory(User::class)->create();
 
     return [
@@ -53,7 +53,7 @@ $factory->define(\Poniverse\Ponyfm\Models\Track::class, function(\Faker\Generato
         'hash'              => $faker->md5,
         'title'             => $faker->sentence(5),
         'slug'              => $faker->slug,
-        'track_type_id'     => \Poniverse\Ponyfm\Models\TrackType::UNCLASSIFIED_TRACK,
+        'track_type_id'     => \App\Models\TrackType::UNCLASSIFIED_TRACK,
         'track_number'      => null,
         'description'       => $faker->paragraph(5),
         'lyrics'            => $faker->paragraph(5),
@@ -66,7 +66,7 @@ $factory->define(\Poniverse\Ponyfm\Models\Track::class, function(\Faker\Generato
     ];
 });
 
-$factory->define(\Poniverse\Ponyfm\Models\Genre::class, function(\Faker\Generator $faker) {
+$factory->define(\App\Models\Genre::class, function(\Faker\Generator $faker) {
     return [
         'name' => $faker->word,
         'slug' => $faker->slug,
@@ -90,7 +90,7 @@ $factory->define(\Poniverse\Ponyfm\Models\Genre::class, function(\Faker\Generato
  * @property string $updated_at
  * @property \Carbon\Carbon $deleted_at
  */
-$factory->define(\Poniverse\Ponyfm\Models\Album::class, function(\Faker\Generator $faker) {
+$factory->define(\App\Models\Album::class, function(\Faker\Generator $faker) {
     return [
         'title'         => $faker->sentence(5),
         'slug'          => $faker->slug,

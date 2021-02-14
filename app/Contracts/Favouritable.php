@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Contracts;
+namespace App\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * This interface is used for type safety when referring to entities that
  * are capable of being favourited.
  *
- * @package Poniverse\Ponyfm\Contracts
+ * @package App\Contracts
  */
 interface Favouritable extends GeneratesNotifications
 {

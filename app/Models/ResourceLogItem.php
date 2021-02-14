@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
@@ -27,7 +27,7 @@ use DB;
 use Request;
 
 /**
- * Poniverse\Ponyfm\Models\ResourceLogItem
+ * App\Models\ResourceLogItem
  *
  * @property integer $id
  * @property integer $user_id
@@ -38,15 +38,15 @@ use Request;
  * @property integer $album_id
  * @property integer $playlist_id
  * @property \Carbon\Carbon $created_at
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereLogType($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereIpAddress($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereTrackFormatId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereTrackId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereAlbumId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem wherePlaylistId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceLogItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereLogType($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereIpAddress($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereTrackFormatId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereTrackId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereAlbumId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereCreatedAt($value)
  * @mixin \Eloquent
  */
 class ResourceLogItem extends Model

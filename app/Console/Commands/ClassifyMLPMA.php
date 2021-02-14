@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Console\Commands;
+namespace App\Console\Commands;
 
-use Poniverse\Ponyfm\Models\ShowSong;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\TrackType;
+use App\Models\ShowSong;
+use App\Models\Track;
+use App\Models\TrackType;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;

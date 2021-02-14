@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Carbon\Carbon;
 use DB;
@@ -34,14 +34,14 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Auth;
 use Illuminate\Support\Str;
 use League\OAuth2\Client\Token\AccessToken;
-use Poniverse\Ponyfm\Contracts\Commentable;
-use Poniverse\Ponyfm\Contracts\Searchable;
-use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
+use App\Contracts\Commentable;
+use App\Contracts\Searchable;
+use App\Traits\IndexedInElasticsearchTrait;
 use Validator;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Poniverse\Ponyfm\Models\User
+ * App\Models\User
  *
  * @property integer $id
  * @property string $display_name
@@ -61,46 +61,46 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property string $remember_token
  * @property boolean $is_archived
  * @property \Carbon\Carbon $disabled_at
- * @property-read \Poniverse\Ponyfm\Models\Image $avatar
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\ResourceUser[] $users
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Role[] $roles
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Comment[] $comments
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
+ * @property-read \App\Models\Image $avatar
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceUser[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Track[] $tracks
  * @property-read mixed $url
  * @property-read mixed $message_url
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User userDetails()
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Notification[] $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\User[] $followers
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User userDetails()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $followers
  * @property-read mixed $user
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $notificationActivities
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Email[] $emails
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\EmailSubscription[] $emailSubscriptions
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereDisplayName($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereUsername($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereSyncNames($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereEmail($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereGravatar($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereSlug($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereUsesGravatar($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereCanSeeExplicitContent($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereBio($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereTrackCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereCommentCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereAvatarId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereRememberToken($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereIsArchived($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereDisabledAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User withEmailSubscriptionFor($activityType)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Activity[] $activities
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Activity[] $notificationActivities
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Email[] $emails
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\EmailSubscription[] $emailSubscriptions
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereDisplayName($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereUsername($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereSyncNames($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereGravatar($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereUsesGravatar($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereCanSeeExplicitContent($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereBio($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereTrackCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereCommentCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereAvatarId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereIsArchived($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereDisabledAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User withEmailSubscriptionFor($activityType)
  * @mixin \Eloquent
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User wherePoniverseId($poniverseId)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\User whereLinkedToPoniverse()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User wherePoniverseId($poniverseId)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\User whereLinkedToPoniverse()
  * @property int $redirect_to
- * @method static \Illuminate\Database\Eloquent\Builder|\Poniverse\Ponyfm\Models\User whereRedirectTo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRedirectTo($value)
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, \Illuminate\Contracts\Auth\Access\Authorizable, Searchable, Commentable
 {

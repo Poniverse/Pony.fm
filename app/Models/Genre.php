@@ -18,42 +18,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use DB;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Poniverse\Ponyfm\Traits\SlugTrait;
+use App\Traits\SlugTrait;
 use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Poniverse\Ponyfm\Models\Genre
+ * App\Models\Genre
  *
  * @property integer $id
  * @property string $name
  * @property string $slug
  * @property string $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
- * @property-read \Poniverse\Ponyfm\Models\Track $trackCountRelation
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Track[] $tracks
+ * @property-read \App\Models\Track $trackCountRelation
  * @property-read mixed $track_count
  * @property-read mixed $url
  * @property-write mixed $title
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre whereSlug($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre whereUpdatedAt($value)
  * @mixin \Eloquent
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Genre withoutTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Genre withoutTrashed()
  */
 class Genre extends Model
 {

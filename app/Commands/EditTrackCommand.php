@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Gate;
 use Notification;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\TrackType;
-use Poniverse\Ponyfm\Models\User;
-use Poniverse\Ponyfm\Models\Playlist;
+use App\Models\Album;
+use App\Models\Image;
+use App\Models\Track;
+use App\Models\TrackType;
+use App\Models\User;
+use App\Models\Playlist;
 use DB;
 
 class EditTrackCommand extends CommandBase

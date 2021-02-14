@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+namespace App\Http\Controllers;
 
 use App;
 use Auth;
 use DB;
-use Poniverse\Ponyfm\Models\Email;
-use Poniverse\Ponyfm\Models\EmailSubscription;
+use App\Models\Email;
+use App\Models\EmailSubscription;
 use View;
 
 

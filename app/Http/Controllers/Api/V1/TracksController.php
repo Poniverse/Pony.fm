@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
-use Poniverse\Ponyfm\Commands\UploadTrackCommand;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\Track;
+use App\Commands\UploadTrackCommand;
+use App\Http\Controllers\ApiControllerBase;
+use App\Models\Image;
+use App\Models\Track;
 use Response;
 
 class TracksController extends ApiControllerBase

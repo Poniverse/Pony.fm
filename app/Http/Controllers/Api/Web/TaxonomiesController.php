@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Models\Genre;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Models\License;
-use Poniverse\Ponyfm\Models\ShowSong;
-use Poniverse\Ponyfm\Models\TrackType;
+use App\Models\Genre;
+use App\Http\Controllers\ApiControllerBase;
+use App\Models\License;
+use App\Models\ShowSong;
+use App\Models\TrackType;
 use DB;
 
 class TaxonomiesController extends ApiControllerBase

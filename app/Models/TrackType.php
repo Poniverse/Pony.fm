@@ -18,19 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\TrackType
+ * App\Models\TrackType
  *
  * @property integer $id
  * @property string $title
  * @property string $editor_title
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackType whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackType whereTitle($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\TrackType whereEditorTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\TrackType whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\TrackType whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\TrackType whereEditorTitle($value)
  * @mixin \Eloquent
  */
 class TrackType extends Model

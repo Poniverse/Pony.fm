@@ -18,24 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Auth;
 use File;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Request;
-use Poniverse\Ponyfm\Commands\DeleteTrackCommand;
-use Poniverse\Ponyfm\Commands\EditTrackCommand;
-use Poniverse\Ponyfm\Commands\GenerateTrackFilesCommand;
-use Poniverse\Ponyfm\Commands\UploadTrackCommand;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\Models\Genre;
-use Poniverse\Ponyfm\Models\ResourceLogItem;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\TrackType;
-use Poniverse\Ponyfm\Models\TrackFile;
-use Poniverse\Ponyfm\Models\User;
+use App\Commands\DeleteTrackCommand;
+use App\Commands\EditTrackCommand;
+use App\Commands\GenerateTrackFilesCommand;
+use App\Commands\UploadTrackCommand;
+use App\Http\Controllers\ApiControllerBase;
+use App\Jobs\EncodeTrackFile;
+use App\Models\Genre;
+use App\Models\ResourceLogItem;
+use App\Models\Track;
+use App\Models\TrackType;
+use App\Models\TrackFile;
+use App\Models\User;
 use Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

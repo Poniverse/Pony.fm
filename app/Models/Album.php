@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use DB;
 use Exception;
@@ -30,17 +30,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
 use Gate;
 use Cache;
-use Poniverse\Ponyfm\Contracts\Commentable;
-use Poniverse\Ponyfm\Contracts\Favouritable;
-use Poniverse\Ponyfm\Contracts\Searchable;
-use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
-use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
-use Poniverse\Ponyfm\Traits\TrackCollection;
-use Poniverse\Ponyfm\Traits\SlugTrait;
+use App\Contracts\Commentable;
+use App\Contracts\Favouritable;
+use App\Contracts\Searchable;
+use App\Exceptions\TrackFileNotFoundException;
+use App\Traits\IndexedInElasticsearchTrait;
+use App\Traits\TrackCollection;
+use App\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Poniverse\Ponyfm\Models\Album
+ * App\Models\Album
  *
  * @property integer $id
  * @property integer $user_id
@@ -56,36 +56,36 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property \Carbon\Carbon $created_at
  * @property string $updated_at
  * @property \Carbon\Carbon $deleted_at
- * @property-read \Poniverse\Ponyfm\Models\User $user
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\ResourceUser[] $users
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Favourite[] $favourites
- * @property-read \Poniverse\Ponyfm\Models\Image $cover
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Comment[] $comments
+ * @property-read \App\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceUser[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Favourite[] $favourites
+ * @property-read \App\Models\Image $cover
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Track[] $tracks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read mixed $url
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album userDetails()
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereTitle($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereSlug($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereCoverId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereTrackCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereViewCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereDownloadCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereFavouriteCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereCommentCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album userDetails()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Activity[] $activities
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereCoverId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereTrackCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereViewCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereDownloadCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereFavouriteCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereCommentCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album whereDeletedAt($value)
  * @mixin \Eloquent
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Album withoutTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Album withoutTrashed()
  */
 class Album extends Model implements Searchable, Commentable, Favouritable
 {

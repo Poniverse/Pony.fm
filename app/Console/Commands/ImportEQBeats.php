@@ -1,6 +1,6 @@
 <?php
 
-namespace Poniverse\Ponyfm\Console\Commands;
+namespace App\Console\Commands;
 
 use Auth;
 use Carbon\Carbon;
@@ -9,12 +9,12 @@ use DB;
 use File;
 use Input;
 use getID3;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
-use Poniverse\Ponyfm\Models\Genre;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Commands\UploadTrackCommand;
+use App\Models\Image;
+use App\Models\Track;
+use App\Models\User;
+use App\Models\Genre;
+use App\Models\Album;
+use App\Commands\UploadTrackCommand;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

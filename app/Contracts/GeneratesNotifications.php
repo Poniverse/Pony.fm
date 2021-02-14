@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Contracts;
+namespace App\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 
 /**
  * This interface is used for type safety when referring to entities that can be
  * the "target resource" of a notification (ie. what the notification is about).
  *
- * @package Poniverse\Ponyfm\Contracts
+ * @package App\Contracts
  */
 interface GeneratesNotifications
 {

@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\Announcement
+ * App\Models\Announcement
  *
  * @property integer $id
  * @property string $title
@@ -35,16 +35,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $template_file
  * @property string $start_time
  * @property string $end_time
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereTitle($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereTextContent($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereAnnouncementTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereLinks($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereTracks($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereCssClass($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereTemplateFile($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereStartTime($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Announcement whereEndTime($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereTextContent($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereAnnouncementTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereLinks($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereTracks($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereCssClass($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereTemplateFile($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereStartTime($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Announcement whereEndTime($value)
  * @mixin \Eloquent
  */
 class Announcement extends Model {

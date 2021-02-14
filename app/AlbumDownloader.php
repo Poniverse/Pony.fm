@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm;
+namespace App;
 
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Album;
+use App\Models\Track;
 use ZipStream;
 
 class AlbumDownloader

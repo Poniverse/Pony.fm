@@ -1,20 +1,20 @@
 <?php
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\AlexaSession
+ * App\Models\AlexaSession
  *
  * @property string $id
  * @property string $payload
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\AlexaSession whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\AlexaSession wherePayload($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\AlexaSession whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\AlexaSession whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\AlexaSession whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\AlexaSession wherePayload($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\AlexaSession whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\AlexaSession whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class AlexaSession extends Model

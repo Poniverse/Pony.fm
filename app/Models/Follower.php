@@ -18,26 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Poniverse\Ponyfm\Models\Follower
+ * App\Models\Follower
  *
  * @property integer $id
  * @property integer $user_id
  * @property integer $artist_id
  * @property integer $playlist_id
  * @property string $created_at
- * @property-read \Poniverse\Ponyfm\Models\User $follower
- * @property-read \Poniverse\Ponyfm\Models\User $artist
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower whereArtistId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower wherePlaylistId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Follower whereCreatedAt($value)
+ * @property-read \App\Models\User $follower
+ * @property-read \App\Models\User $artist
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Follower whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Follower whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Follower whereArtistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Follower wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Follower whereCreatedAt($value)
  * @mixin \Eloquent
  */
 class Follower extends Model

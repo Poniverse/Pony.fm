@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Console\Commands;
+namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Poniverse\Ponyfm\Models\Image;
+use App\Models\Image;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 

@@ -18,15 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Auth;
 use Illuminate\Support\Facades\Request;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Models\Notification;
-use Poniverse\Ponyfm\Models\Subscription;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Http\Controllers\ApiControllerBase;
+use App\Models\Notification;
+use App\Models\Subscription;
+use App\Models\Track;
+use App\Models\User;
 use Minishlink\WebPush\WebPush;
 
 class NotificationsController extends ApiControllerBase

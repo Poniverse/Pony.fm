@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+namespace App\Http\Controllers;
 
 use App;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\ResourceLogItem;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\PlaylistDownloader;
+use App\Models\Playlist;
+use App\Models\ResourceLogItem;
+use App\Models\Track;
+use App\PlaylistDownloader;
 use Auth;
 use Redirect;
 use View;

@@ -18,20 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Library\Notifications;
+namespace App\Library\Notifications;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Poniverse\Ponyfm\Contracts\Favouritable;
-use Poniverse\Ponyfm\Contracts\NotificationHandler;
-use Poniverse\Ponyfm\Jobs\SendNotifications;
-use Poniverse\Ponyfm\Models\Comment;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Contracts\Favouritable;
+use App\Contracts\NotificationHandler;
+use App\Jobs\SendNotifications;
+use App\Models\Comment;
+use App\Models\Playlist;
+use App\Models\Track;
+use App\Models\User;
 
 /**
  * Class NotificationManager
- * @package Poniverse\Ponyfm\Library
+ * @package App\Library
  *
  * This class exists mostly to maintain type safety when sending notifications
  * from around the Pony.fm codebase. There should be virtually zero logic here.

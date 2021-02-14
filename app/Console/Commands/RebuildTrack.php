@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Console\Commands;
+namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Poniverse\Ponyfm\Commands\GenerateTrackFilesCommand;
-use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\Models\Track;
+use App\Commands\GenerateTrackFilesCommand;
+use App\Jobs\EncodeTrackFile;
+use App\Models\Track;
 
 class RebuildTrack extends Command
 {

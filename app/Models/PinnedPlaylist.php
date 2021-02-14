@@ -18,25 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\PinnedPlaylist
+ * App\Models\PinnedPlaylist
  *
  * @property integer $id
  * @property integer $user_id
  * @property integer $playlist_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Poniverse\Ponyfm\Models\User $user
- * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist wherePlaylistId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\PinnedPlaylist whereUpdatedAt($value)
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\Playlist $playlist
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\PinnedPlaylist whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\PinnedPlaylist whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\PinnedPlaylist wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\PinnedPlaylist whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\PinnedPlaylist whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class PinnedPlaylist extends Model

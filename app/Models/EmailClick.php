@@ -18,25 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Alsofronie\Uuid\UuidModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\EmailClick
+ * App\Models\EmailClick
  *
  * @property string $id
  * @property string $email_id
  * @property string $ip_address
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Poniverse\Ponyfm\Models\Email $email
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailClick whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailClick whereEmailId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailClick whereIpAddress($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailClick whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\EmailClick whereUpdatedAt($value)
+ * @property-read \App\Models\Email $email
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailClick whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailClick whereEmailId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailClick whereIpAddress($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailClick whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\EmailClick whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class EmailClick extends Model

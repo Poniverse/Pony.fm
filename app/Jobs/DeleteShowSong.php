@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Jobs;
+namespace App\Jobs;
 
 use Auth;
 use DB;
-use Poniverse\Ponyfm\Models\ShowSong;
+use App\Models\ShowSong;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Track;
 use SerializesModels;
 
 class DeleteShowSong extends Job implements ShouldQueue

@@ -25,7 +25,7 @@
     <meta property="og:title" content="{{ $track->title }}" />
     <meta property="og:type" content="music.song" />
     <meta property="og:url" content="{{ url('tracks/' . $track->id . '-' . $track->slug) }}" />
-    <meta property="og:image" content="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::NORMAL) }}" />
+    <meta property="og:image" content="{{ $track->getCoverUrl(\App\Models\Image::NORMAL) }}" />
     <meta property="og:image:width" content="350" />
     <meta property="og:image:height" content="350" />
     <meta property="og:description" content="{{ str_limit($track->description, $limit = 200, $end = '...') }}">
@@ -40,7 +40,7 @@
     <meta name="twitter:site" content="@ponyfm" />
     <meta name="twitter:title" content="{{ $track->title }}" />
     <meta name="twitter:description" content="{{ str_limit($track->description, $limit = 200, $end = '...') }}" />
-    <meta name="twitter:image" content="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::NORMAL) }}" />
+    <meta name="twitter:image" content="{{ $track->getCoverUrl(\App\Models\Image::NORMAL) }}" />
     <meta name="twitter:player" content="{{ url('t' . $track->id . '/embed?twitter') }}" />
     <meta name="twitter:player:width" content="480" />
     <meta name="twitter:player:height" content="130" />
@@ -54,7 +54,7 @@
     <div class="resource-details track-details">
         <header>
             <div class="hidden-xs single-player">
-                <img src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::THUMBNAIL) }}" style="opacity: 1;">
+                <img src="{{ $track->getCoverUrl(\App\Models\Image::THUMBNAIL) }}" style="opacity: 1;">
             </div>
             <h1>{{ $track->title }}</h1>
             <h2>
@@ -64,7 +64,7 @@
 
         <div class="stretch-to-bottom details-columns">
             <div class="right">
-                <img class="cover" src="{{ $track->getCoverUrl(\Poniverse\Ponyfm\Models\Image::NORMAL) }}"/>
+                <img class="cover" src="{{ $track->getCoverUrl(\App\Models\Image::NORMAL) }}"/>
 
                 <ul class="stats">
                     <li>Published: <strong>{!! Helpers::timestamp($track->published_at) !!}</strong></li>

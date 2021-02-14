@@ -18,28 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\Subscription
+ * App\Models\Subscription
  *
  * @property integer $id
  * @property integer $user_id
  * @property string $endpoint
  * @property string $p256dh
  * @property string $auth
- * @property-read \Poniverse\Ponyfm\Models\User $user
+ * @property-read \App\Models\User $user
  * @property string $created_at
  * @property string $updated_at
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereEndpoint($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereP256dh($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereAuth($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Subscription whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Subscription whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Subscription whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Subscription whereEndpoint($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Subscription whereP256dh($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Subscription whereAuth($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Subscription whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Subscription whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Subscription extends Model

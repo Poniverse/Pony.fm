@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\ShowSong
+ * App\Models\ShowSong
  *
  * @property integer $id
  * @property string $title
@@ -33,15 +33,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $trackCountRelation
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereTitle($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereLyrics($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereSlug($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ShowSong whereDeletedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Track[] $trackCountRelation
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Track[] $tracks
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ShowSong whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ShowSong whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ShowSong whereLyrics($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ShowSong whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ShowSong whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ShowSong whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ShowSong whereDeletedAt($value)
  * @mixin \Eloquent
  */
 class ShowSong extends Model

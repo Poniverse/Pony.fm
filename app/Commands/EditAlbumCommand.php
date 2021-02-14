@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\Album;
+use App\Models\Image;
+use App\Models\User;
 use Auth;
 use Gate;
 use DB;

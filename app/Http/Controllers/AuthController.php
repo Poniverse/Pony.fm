@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
@@ -26,8 +26,8 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Log;
 use Poniverse\Lib\Client;
-use Poniverse\Ponyfm\Models\Activity;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\Activity;
+use App\Models\User;
 use Auth;
 use DB;
 use Request;

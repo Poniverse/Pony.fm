@@ -18,24 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Console\Commands;
+namespace App\Console\Commands;
 
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Poniverse\Ponyfm\Commands\MergeAccountsCommand;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Comment;
-use Poniverse\Ponyfm\Models\Favourite;
-use Poniverse\Ponyfm\Models\Follower;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\PinnedPlaylist;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\ResourceLogItem;
-use Poniverse\Ponyfm\Models\ResourceUser;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Commands\MergeAccountsCommand;
+use App\Models\Album;
+use App\Models\Comment;
+use App\Models\Favourite;
+use App\Models\Follower;
+use App\Models\Image;
+use App\Models\PinnedPlaylist;
+use App\Models\Playlist;
+use App\Models\ResourceLogItem;
+use App\Models\ResourceUser;
+use App\Models\Track;
+use App\Models\User;
 
 class MergeAccounts extends Command
 {

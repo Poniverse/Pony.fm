@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Jobs;
+namespace App\Jobs;
 
 use Carbon\Carbon;
 use Config;
@@ -29,9 +29,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Log;
-use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\TrackFile;
+use App\Exceptions\InvalidEncodeOptionsException;
+use App\Models\Track;
+use App\Models\TrackFile;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 

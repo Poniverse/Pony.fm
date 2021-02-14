@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use App;
-use Poniverse\Ponyfm\Commands\CreateCommentCommand;
-use Poniverse\Ponyfm\Models\Comment;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use App\Commands\CreateCommentCommand;
+use App\Models\Comment;
+use App\Http\Controllers\ApiControllerBase;
 use Illuminate\Support\Facades\Request;
 use Response;
 

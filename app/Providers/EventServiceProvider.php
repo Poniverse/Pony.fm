@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Providers;
+namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -30,8 +30,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Poniverse\Ponyfm\Events\Event' => [
-            'Poniverse\Ponyfm\Listeners\EventListener',
+        'App\Events\Event' => [
+            'App\Listeners\EventListener',
         ],
     ];
 

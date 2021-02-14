@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\ResourceUser
+ * App\Models\ResourceUser
  *
  * @property integer $id
  * @property integer $user_id
@@ -37,18 +37,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $view_count
  * @property integer $play_count
  * @property integer $download_count
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereTrackId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereAlbumId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser wherePlaylistId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereArtistId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereIsFollowed($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereIsFavourited($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereIsPinned($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereViewCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser wherePlayCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\ResourceUser whereDownloadCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereTrackId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereAlbumId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereArtistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereIsFollowed($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereIsFavourited($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereIsPinned($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereViewCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser wherePlayCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceUser whereDownloadCount($value)
  * @mixin \Eloquent
  */
 class ResourceUser extends Model

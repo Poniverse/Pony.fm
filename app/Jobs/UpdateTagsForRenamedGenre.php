@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Jobs;
+namespace App\Jobs;
 
 use Auth;
 use Cache;
 use DB;
 use Log;
-use Poniverse\Ponyfm\Models\Genre;
+use App\Models\Genre;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Track;
 use SerializesModels;
 
 /**
@@ -36,7 +36,7 @@ use SerializesModels;
  * NOTE: It is assumed that the genre passed into this job has already been renamed!
  * All this job does is update the tags in that genre's tracks.
  *
- * @package Poniverse\Ponyfm\Jobs
+ * @package App\Jobs
  */
 class UpdateTagsForRenamedGenre extends Job implements ShouldQueue
 {

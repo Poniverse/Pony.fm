@@ -18,18 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\Role
+ * App\Models\Role
  *
  * @property integer $id
  * @property string $name
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\User[] $users
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Role whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Role whereName($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Role whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Role whereName($value)
  * @mixin \Eloquent
  */
 class Role extends Model

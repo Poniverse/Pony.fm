@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Jobs;
+namespace App\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Poniverse\Ponyfm\Jobs\Job;
-use Poniverse\Ponyfm\Library\Notifications\Drivers\AbstractDriver;
-use Poniverse\Ponyfm\Library\Notifications\Drivers\EmailDriver;
-use Poniverse\Ponyfm\Library\Notifications\Drivers\NativeDriver;
-use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
-use Poniverse\Ponyfm\Models\User;
+use App\Jobs\Job;
+use App\Library\Notifications\Drivers\AbstractDriver;
+use App\Library\Notifications\Drivers\EmailDriver;
+use App\Library\Notifications\Drivers\NativeDriver;
+use App\Library\Notifications\Drivers\PonyfmDriver;
+use App\Models\User;
 use SerializesModels;
 
 class SendNotifications extends Job implements ShouldQueue

@@ -18,25 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Alsofronie\Uuid\UuidModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Poniverse\Ponyfm\Models\Notification;
+use App\Models\Notification;
 
 /**
- * Poniverse\Ponyfm\Models\Email
+ * App\Models\Email
  *
  * @property string $id
  * @property integer $notification_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Poniverse\Ponyfm\Models\Notification $notification
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\EmailClick[] $emailClicks
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Email whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Email whereNotificationId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Email whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Email whereUpdatedAt($value)
+ * @property-read \App\Models\Notification $notification
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\EmailClick[] $emailClicks
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Email whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Email whereNotificationId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Email whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Email whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Email extends Model

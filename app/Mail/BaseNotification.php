@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Mail;
+namespace App\Mail;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Poniverse\Ponyfm\Models\Activity;
-use Poniverse\Ponyfm\Models\Email;
+use App\Models\Activity;
+use App\Models\Email;
 
 abstract class BaseNotification extends Mailable {
     use Queueable, SerializesModels;
@@ -33,13 +33,13 @@ abstract class BaseNotification extends Mailable {
     /** @var Email */
     protected $emailRecord;
 
-    /** @var \Poniverse\Ponyfm\Models\Notification */
+    /** @var \App\Models\Notification */
     protected $notificationRecord;
 
-    /** @var \Poniverse\Ponyfm\Models\Activity */
+    /** @var \App\Models\Activity */
     protected $activityRecord;
 
-    /** @var \Poniverse\Ponyfm\Models\User */
+    /** @var \App\Models\User */
     protected $initiatingUser;
 
     /**

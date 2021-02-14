@@ -1,13 +1,13 @@
 <?php
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
-use Poniverse\Ponyfm\Http\Controllers\Controller;
-use Poniverse\Ponyfm\Models\AlexaSession;
-use Poniverse\Ponyfm\Models\Track;
+use App\Http\Controllers\Controller;
+use App\Models\AlexaSession;
+use App\Models\Track;
 use Psr\Log\LoggerInterface;
 
 class AlexaController extends Controller

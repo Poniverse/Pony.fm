@@ -1,9 +1,9 @@
 <?php
 
-namespace Poniverse\Ponyfm\Policies;
+namespace App\Policies;
 
-use Poniverse\Ponyfm\Models\ShowSong;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\ShowSong;
+use App\Models\User;
 
 class ShowSongPolicy
 {

@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Poniverse\Ponyfm\Models\ShowSong;
-use Poniverse\Ponyfm\Jobs\DeleteShowSong;
+use App\Models\ShowSong;
+use App\Jobs\DeleteShowSong;
 use Validator;
 
 class DeleteShowSongCommand extends CommandBase

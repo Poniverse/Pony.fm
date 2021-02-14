@@ -18,20 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
+namespace App\Library\Notifications\Drivers;
 
 use Carbon\Carbon;
 use Log;
 use Mail;
-use Poniverse\Ponyfm\Contracts\Favouritable;
-use Poniverse\Ponyfm\Mail\BaseNotification;
-use Poniverse\Ponyfm\Models\Activity;
-use Poniverse\Ponyfm\Models\Comment;
-use Poniverse\Ponyfm\Models\Email;
-use Poniverse\Ponyfm\Models\Notification;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Contracts\Favouritable;
+use App\Mail\BaseNotification;
+use App\Models\Activity;
+use App\Models\Comment;
+use App\Models\Email;
+use App\Models\Notification;
+use App\Models\Playlist;
+use App\Models\Track;
+use App\Models\User;
 
 class PonyfmDriver extends AbstractDriver
 {

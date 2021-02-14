@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Auth;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\User;
+use App\Http\Controllers\ApiControllerBase;
+use App\Models\Image;
+use App\Models\User;
 use Response;
 
 class ImagesController extends ApiControllerBase

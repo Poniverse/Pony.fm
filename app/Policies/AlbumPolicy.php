@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Policies;
+namespace App\Policies;
 
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\Album;
+use App\Models\User;
 
 class AlbumPolicy
 {

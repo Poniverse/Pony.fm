@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Poniverse\Ponyfm\Models\Activity
+ * App\Models\Activity
  *
  * @property integer $id
  * @property \Carbon\Carbon $created_at
@@ -32,27 +32,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $activity_type
  * @property boolean $resource_type
  * @property integer $resource_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Notification[] $notifications
- * @property-read \Poniverse\Ponyfm\Models\User $initiatingUser
- * @property-read \Poniverse\Ponyfm\Models\Activity $resource
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
+ * @property-read \App\Models\User $initiatingUser
+ * @property-read \App\Models\Activity $resource
  * @property-read mixed $url
  * @property-read mixed $thumbnail_url
  * @property-read mixed $text
  * @property string $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\User[] $notificationRecipients
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereActivityType($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereResourceType($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereResourceId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity whereDeletedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $notificationRecipients
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity whereActivityType($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity whereResourceType($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity whereResourceId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity whereDeletedAt($value)
  * @mixin \Eloquent
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Activity withoutTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Activity withoutTrashed()
  */
 class Activity extends Model
 {

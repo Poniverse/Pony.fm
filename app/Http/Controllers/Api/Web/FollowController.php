@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Commands\ToggleFollowingCommand;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use App\Commands\ToggleFollowingCommand;
+use App\Http\Controllers\ApiControllerBase;
 use Illuminate\Support\Facades\Request;
 
 class FollowController extends ApiControllerBase

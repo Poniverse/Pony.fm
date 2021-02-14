@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Library\Notifications\Drivers;
+namespace App\Library\Notifications\Drivers;
 
 use ArrayAccess;
-use Poniverse\Ponyfm\Contracts\NotificationHandler;
-use Poniverse\Ponyfm\Library\Notifications\RecipientFinder;
-use Poniverse\Ponyfm\Models\User;
+use App\Contracts\NotificationHandler;
+use App\Library\Notifications\RecipientFinder;
+use App\Models\User;
 
 abstract class AbstractDriver implements NotificationHandler
 {

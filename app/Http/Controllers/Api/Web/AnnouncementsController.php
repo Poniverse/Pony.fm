@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Carbon\Carbon;
-use Poniverse\Ponyfm\Commands\CreateAnnouncementCommand;
-use Poniverse\Ponyfm\Http\Controllers\Controller;
-use Poniverse\Ponyfm\Models\Announcement;
+use App\Commands\CreateAnnouncementCommand;
+use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use Request;
 use Response;
 

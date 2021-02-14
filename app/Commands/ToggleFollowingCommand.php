@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
-use Poniverse\Ponyfm\Models\Follower;
-use Poniverse\Ponyfm\Models\ResourceUser;
+use App\Models\Follower;
+use App\Models\ResourceUser;
 use Auth;
 use Notification;
 

@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Class JsonExceptions
- * @package Poniverse\Ponyfm\Http\Middleware
+ * @package App\Http\Middleware
  *
  * This middleware turns any HTTP exceptions thrown during the request
  * into a JSON response. To be used when implementing the API!

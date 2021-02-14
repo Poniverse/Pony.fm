@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Exceptions;
+namespace App\Exceptions;
 
 use InvalidArgumentException;
 

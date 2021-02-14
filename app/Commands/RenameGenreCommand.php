@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
-use Poniverse\Ponyfm\Jobs\UpdateTagsForRenamedGenre;
-use Poniverse\Ponyfm\Models\Genre;
+use App\Jobs\UpdateTagsForRenamedGenre;
+use App\Models\Genre;
 use Validator;
 
 class RenameGenreCommand extends CommandBase

@@ -18,26 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\Notification
+ * App\Models\Notification
  *
  * @property integer $id
  * @property integer $activity_id
  * @property integer $user_id
  * @property boolean $is_read
- * @property-read \Poniverse\Ponyfm\Models\Activity $activity
- * @property-read \Poniverse\Ponyfm\Models\Email $email
- * @property-read \Poniverse\Ponyfm\Models\User $recipient
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification forUser($user)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereActivityId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Notification whereIsRead($value)
+ * @property-read \App\Models\Activity $activity
+ * @property-read \App\Models\Email $email
+ * @property-read \App\Models\User $recipient
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Notification forUser($user)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Notification whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Notification whereActivityId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Notification whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Notification whereIsRead($value)
  * @mixin \Eloquent
  */
 class Notification extends Model

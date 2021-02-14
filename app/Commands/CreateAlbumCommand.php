@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Gate;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Image;
+use App\Models\Album;
+use App\Models\Image;
 use Auth;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 use Validator;
 
 class CreateAlbumCommand extends CommandBase

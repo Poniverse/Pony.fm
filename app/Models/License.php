@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\License
+ * App\Models\License
  *
  * @property integer $id
  * @property string $title
@@ -31,12 +31,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $affiliate_distribution
  * @property boolean $open_distribution
  * @property boolean $remix
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereTitle($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereAffiliateDistribution($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereOpenDistribution($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\License whereRemix($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereAffiliateDistribution($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereOpenDistribution($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereRemix($value)
  * @mixin \Eloquent
  */
 class License extends Model

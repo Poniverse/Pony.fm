@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Mail;
+namespace App\Mail;
 
 
 class NewComment extends BaseNotification

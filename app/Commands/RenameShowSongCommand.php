@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
-use Poniverse\Ponyfm\Jobs\UpdateTagsForRenamedShowSong;
-use Poniverse\Ponyfm\Models\ShowSong;
+use App\Jobs\UpdateTagsForRenamedShowSong;
+use App\Models\ShowSong;
 use Validator;
 
 class RenameShowSongCommand extends CommandBase

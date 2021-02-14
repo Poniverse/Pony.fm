@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Poniverse\Ponyfm\Contracts\Commentable;
+use App\Contracts\Commentable;
 
 /**
- * Poniverse\Ponyfm\Models\Comment
+ * App\Models\Comment
  *
  * @property integer $id
  * @property integer $user_id
@@ -40,31 +40,31 @@ use Poniverse\Ponyfm\Contracts\Commentable;
  * @property integer $track_id
  * @property integer $album_id
  * @property integer $playlist_id
- * @property-read \Poniverse\Ponyfm\Models\User $user
- * @property-read \Poniverse\Ponyfm\Models\Track $track
- * @property-read \Poniverse\Ponyfm\Models\Album $album
- * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
- * @property-read \Poniverse\Ponyfm\Models\User $profile
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\Track $track
+ * @property-read \App\Models\Album $album
+ * @property-read \App\Models\Playlist $playlist
+ * @property-read \App\Models\User $profile
  * @property-read Commentable $resource
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Activity[] $activities
  * @property-read mixed $url
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereIpAddress($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereContent($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereProfileId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereTrackId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment whereAlbumId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereIpAddress($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereContent($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereProfileId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereTrackId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment whereAlbumId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment wherePlaylistId($value)
  * @mixin \Eloquent
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Comment withoutTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Comment withoutTrashed()
  */
 class Comment extends Model
 {

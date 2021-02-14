@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Traits;
+namespace App\Traits;
 
 use Config;
 use Elasticsearch;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Poniverse\Ponyfm\Contracts\Searchable;
-use Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity;
+use App\Contracts\Searchable;
+use App\Jobs\UpdateSearchIndexForEntity;
 
 /**
  * Class IndexedInElasticsearch
@@ -33,7 +33,7 @@ use Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity;
  * Classes using this trait must declare the `$elasticsearchType` property and
  * implement the `Searchable` interface.
  *
- * @package Poniverse\Ponyfm\Traits
+ * @package App\Traits
  */
 trait IndexedInElasticsearchTrait
 {

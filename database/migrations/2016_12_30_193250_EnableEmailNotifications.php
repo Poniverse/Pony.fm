@@ -22,7 +22,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 
 class EnableEmailNotifications extends Migration {
     /**

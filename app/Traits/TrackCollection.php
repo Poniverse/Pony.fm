@@ -19,20 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Traits;
+namespace App\Traits;
 
 use File;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Cache;
-use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\TrackFile;
+use App\Jobs\EncodeTrackFile;
+use App\Models\Track;
+use App\Models\TrackFile;
 
 /**
  * Class TrackCollection
- * @package Poniverse\Ponyfm\Traits
+ * @package App\Traits
  *
  * Contains common logic between albums and playlists. They share some functionality
  * because they're both a form of downloadable track collection.

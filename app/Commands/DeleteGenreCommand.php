@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Poniverse\Ponyfm\Models\Genre;
-use Poniverse\Ponyfm\Jobs\DeleteGenre;
+use App\Models\Genre;
+use App\Jobs\DeleteGenre;
 use Validator;
 
 class DeleteGenreCommand extends CommandBase

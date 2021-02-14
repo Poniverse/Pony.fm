@@ -1,6 +1,6 @@
 <?php
 
-namespace Poniverse\Ponyfm\Providers;
+namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Broadcast;

@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Illuminate\Support\Facades\Request;
-use Poniverse\Ponyfm\Commands\CreateGenreCommand;
-use Poniverse\Ponyfm\Commands\DeleteGenreCommand;
-use Poniverse\Ponyfm\Commands\RenameGenreCommand;
-use Poniverse\Ponyfm\Models\Genre;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
+use App\Commands\CreateGenreCommand;
+use App\Commands\DeleteGenreCommand;
+use App\Commands\RenameGenreCommand;
+use App\Models\Genre;
+use App\Http\Controllers\ApiControllerBase;
 use Response;
 
 class GenresController extends ApiControllerBase

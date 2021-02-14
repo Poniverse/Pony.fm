@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Auth;
 use Carbon\Carbon;
@@ -26,8 +26,8 @@ use Config;
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Request;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\Track;
+use App\Models\User;
 use Validator;
 
 class UploadTrackCommand extends CommandBase

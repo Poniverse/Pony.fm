@@ -18,22 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Commands\CreateAlbumCommand;
-use Poniverse\Ponyfm\Commands\DeleteAlbumCommand;
-use Poniverse\Ponyfm\Commands\EditAlbumCommand;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\ResourceLogItem;
+use App\Models\Album;
+use App\Commands\CreateAlbumCommand;
+use App\Commands\DeleteAlbumCommand;
+use App\Commands\EditAlbumCommand;
+use App\Http\Controllers\ApiControllerBase;
+use App\Models\Image;
+use App\Models\ResourceLogItem;
 use Auth;
 use Gate;
 use Illuminate\Support\Facades\Request;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 use Response;
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Track;
 
 class AlbumsController extends ApiControllerBase
 {

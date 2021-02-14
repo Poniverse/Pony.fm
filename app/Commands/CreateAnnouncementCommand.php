@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Gate;
-use Poniverse\Ponyfm\Models\Announcement;
+use App\Models\Announcement;
 use Validator;
 
 class CreateAnnouncementCommand extends CommandBase

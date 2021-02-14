@@ -18,13 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Exceptions;
+namespace App\Exceptions;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Class TrackFileNotFoundException
- * @package Poniverse\Ponyfm
  *
  * This exception is used to indicate that the requested `TrackFile` object
  * does not exist. This is useful when dealing with albums or playlists that

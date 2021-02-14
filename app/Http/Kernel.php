@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http;
+namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -35,13 +35,13 @@ class Kernel extends HttpKernel
 
     protected $middlewareGroups = [
         'web' => [
-            \Poniverse\Ponyfm\Http\Middleware\EncryptCookies::class,
+            \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Poniverse\Ponyfm\Http\Middleware\VerifyCsrfToken::class,
-            \Poniverse\Ponyfm\Http\Middleware\DisabledAccountCheck::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \App\Http\Middleware\DisabledAccountCheck::class,
         ]
     ];
 
@@ -51,12 +51,12 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \Poniverse\Ponyfm\Http\Middleware\Authenticate::class,
+        'auth' => \App\Http\Middleware\Authenticate::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'auth.oauth' => \Poniverse\Ponyfm\Http\Middleware\AuthenticateOAuth::class,
-        'can' => \Poniverse\Ponyfm\Http\Middleware\Authorize::class,
-        'json-exceptions' => \Poniverse\Ponyfm\Http\Middleware\JsonExceptions::class,
-        'guest' => \Poniverse\Ponyfm\Http\Middleware\RedirectIfAuthenticated::class,
+        'auth.oauth' => \App\Http\Middleware\AuthenticateOAuth::class,
+        'can' => \App\Http\Middleware\Authorize::class,
+        'json-exceptions' => \App\Http\Middleware\JsonExceptions::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'cors' => \Barryvdh\Cors\HandleCors::class,
     ];

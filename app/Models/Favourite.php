@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Poniverse\Ponyfm\Models\Favourite
+ * App\Models\Favourite
  *
  * @property integer $id
  * @property integer $user_id
@@ -31,18 +31,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $album_id
  * @property integer $playlist_id
  * @property string $created_at
- * @property-read \Poniverse\Ponyfm\Models\User $user
- * @property-read \Poniverse\Ponyfm\Models\Track $track
- * @property-read \Poniverse\Ponyfm\Models\Album $album
- * @property-read \Poniverse\Ponyfm\Models\Playlist $playlist
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\Track $track
+ * @property-read \App\Models\Album $album
+ * @property-read \App\Models\Playlist $playlist
  * @property-read mixed $resource
  * @property-read mixed $type
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereTrackId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereAlbumId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite wherePlaylistId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Favourite whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Favourite whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Favourite whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Favourite whereTrackId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Favourite whereAlbumId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Favourite wherePlaylistId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Favourite whereCreatedAt($value)
  * @mixin \Eloquent
  */
 class Favourite extends Model

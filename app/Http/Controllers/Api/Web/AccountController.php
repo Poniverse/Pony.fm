@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Commands\SaveAccountSettingsCommand;
-use Poniverse\Ponyfm\Models\User;
-use Poniverse\Ponyfm\Models\Image;
+use App\Http\Controllers\ApiControllerBase;
+use App\Commands\SaveAccountSettingsCommand;
+use App\Models\User;
+use App\Models\Image;
 use Gate;
 use Auth;
 use Request;

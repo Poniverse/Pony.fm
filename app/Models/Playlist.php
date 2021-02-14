@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Models;
+namespace App\Models;
 
 use DB;
 use Helpers;
@@ -29,17 +29,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Auth;
 use Cache;
-use Poniverse\Ponyfm\Contracts\Commentable;
-use Poniverse\Ponyfm\Contracts\Favouritable;
-use Poniverse\Ponyfm\Contracts\Searchable;
-use Poniverse\Ponyfm\Exceptions\TrackFileNotFoundException;
-use Poniverse\Ponyfm\Traits\IndexedInElasticsearchTrait;
-use Poniverse\Ponyfm\Traits\TrackCollection;
-use Poniverse\Ponyfm\Traits\SlugTrait;
+use App\Contracts\Commentable;
+use App\Contracts\Favouritable;
+use App\Contracts\Searchable;
+use App\Exceptions\TrackFileNotFoundException;
+use App\Traits\IndexedInElasticsearchTrait;
+use App\Traits\TrackCollection;
+use App\Traits\SlugTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * Poniverse\Ponyfm\Models\Playlist
+ * App\Models\Playlist
  *
  * @property integer $id
  * @property integer $user_id
@@ -56,37 +56,37 @@ use Venturecraft\Revisionable\RevisionableTrait;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Track[] $tracks
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\ResourceUser[] $users
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Comment[] $comments
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\PinnedPlaylist[] $pins
- * @property-read \Poniverse\Ponyfm\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Track[] $tracks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceUser[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PinnedPlaylist[] $pins
+ * @property-read \App\Models\User $user
  * @property-read mixed $url
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist userDetails()
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Favourite[] $favourites
- * @property-read \Illuminate\Database\Eloquent\Collection|\Poniverse\Ponyfm\Models\Activity[] $activities
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereTitle($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereSlug($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereIsPublic($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereTrackCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereViewCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereDownloadCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereFavouriteCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereFollowCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereCommentCount($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist userDetails()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Favourite[] $favourites
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Activity[] $activities
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereSlug($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereIsPublic($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereTrackCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereViewCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereDownloadCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereFavouriteCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereFollowCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereCommentCount($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist whereDeletedAt($value)
  * @mixin \Eloquent
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\Poniverse\Ponyfm\Models\Playlist withoutTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Playlist withoutTrashed()
  */
 class Playlist extends Model implements Searchable, Commentable, Favouritable
 {

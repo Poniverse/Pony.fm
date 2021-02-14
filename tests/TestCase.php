@@ -5,7 +5,7 @@ namespace Tests;
 use Illuminate\Contracts\Console\Kernel;
 use Storage;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 
 /**
  * Pony.fm - A community for pony fan music.
@@ -140,8 +140,8 @@ class TestCase extends BaseTestCase
     protected function callUploadWithParameters(array $parameters, array $files = [])
     {
         $this->expectsJobs([
-            \Poniverse\Ponyfm\Jobs\EncodeTrackFile::class,
-            \Poniverse\Ponyfm\Jobs\UpdateSearchIndexForEntity::class
+            \App\Jobs\EncodeTrackFile::class,
+            \App\Jobs\UpdateSearchIndexForEntity::class
         ]);
         $this->user = factory(User::class)->create();
 

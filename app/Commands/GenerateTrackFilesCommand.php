@@ -18,17 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use AudioCache;
 use FFmpegMovie;
 use File;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
-use Poniverse\Ponyfm\Exceptions\InvalidEncodeOptionsException;
-use Poniverse\Ponyfm\Jobs\EncodeTrackFile;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\TrackFile;
+use App\Exceptions\InvalidEncodeOptionsException;
+use App\Jobs\EncodeTrackFile;
+use App\Models\Track;
+use App\Models\TrackFile;
 use SplFileInfo;
 
 /**
@@ -36,7 +36,7 @@ use SplFileInfo;
  * been parsed and the track object is created, this generates the track's
  * corresponding TrackFile objects and ensures that all of them have been encoded.
  *
- * @package Poniverse\Ponyfm\Commands
+ * @package App\Commands
  */
 class GenerateTrackFilesCommand extends CommandBase
 {

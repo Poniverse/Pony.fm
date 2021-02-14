@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
@@ -27,7 +27,7 @@ use Illuminate\Session\Store;
 use League\OAuth2\Client\Token\AccessToken;
 use Poniverse;
 use Poniverse\Lib\Client;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class AuthenticateOAuth

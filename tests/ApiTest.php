@@ -23,10 +23,10 @@ namespace Tests;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Genre;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Models\Album;
+use App\Models\Genre;
+use App\Models\Track;
+use App\Models\User;
 
 class ApiTest extends TestCase
 {

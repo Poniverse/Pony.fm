@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Providers;
+namespace App\Providers;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Poniverse\Ponyfm\Library\Notifications\NotificationManager;
+use App\Library\Notifications\NotificationManager;
 
 class NotificationServiceProvider extends ServiceProvider
 {

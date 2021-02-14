@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Console\Commands;
+namespace App\Console\Commands;
 
-use Poniverse\Ponyfm\Models\Track;
+use App\Models\Track;
 use Illuminate\Console\Command;
 
 class RebuildTags extends Command

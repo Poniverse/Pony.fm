@@ -18,21 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Providers;
+namespace App\Providers;
 
 use Gate;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Genre;
-use Poniverse\Ponyfm\Policies\AlbumPolicy;
-use Poniverse\Ponyfm\Policies\GenrePolicy;
-use Poniverse\Ponyfm\Policies\ShowSongPolicy;
-use Poniverse\Ponyfm\Policies\TrackPolicy;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
-use Poniverse\Ponyfm\Models\ShowSong;
-use Poniverse\Ponyfm\Policies\UserPolicy;
+use App\Models\Album;
+use App\Models\Genre;
+use App\Policies\AlbumPolicy;
+use App\Policies\GenrePolicy;
+use App\Policies\ShowSongPolicy;
+use App\Policies\TrackPolicy;
+use App\Models\Track;
+use App\Models\User;
+use App\Models\ShowSong;
+use App\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {

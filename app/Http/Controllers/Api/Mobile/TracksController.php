@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Mobile;
+namespace App\Http\Controllers\Api\Mobile;
 
-use Poniverse\Ponyfm\Http\Controllers\Controller;
-use Poniverse\Ponyfm\Models\Track;
+use App\Http\Controllers\Controller;
+use App\Models\Track;
 use Response;
 
 class TracksController extends Controller

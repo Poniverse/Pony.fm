@@ -18,15 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Commands;
+namespace App\Commands;
 
 use Notification;
-use Poniverse\Ponyfm\Contracts\Favouritable;
-use Poniverse\Ponyfm\Models\Favourite;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\ResourceUser;
+use App\Contracts\Favouritable;
+use App\Models\Favourite;
+use App\Models\Track;
+use App\Models\Album;
+use App\Models\Playlist;
+use App\Models\ResourceUser;
 use Auth;
 use DB;
 

@@ -18,18 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Http\Controllers\Api\Web;
+namespace App\Http\Controllers\Api\Web;
 
 use Gate;
-use Poniverse\Ponyfm\Commands\CreateUserCommand;
-use Poniverse\Ponyfm\Models\Album;
-use Poniverse\Ponyfm\Models\Comment;
-use Poniverse\Ponyfm\Models\Favourite;
-use Poniverse\Ponyfm\Http\Controllers\ApiControllerBase;
-use Poniverse\Ponyfm\Models\Image;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
-use Poniverse\Ponyfm\Models\Follower;
+use App\Commands\CreateUserCommand;
+use App\Models\Album;
+use App\Models\Comment;
+use App\Models\Favourite;
+use App\Http\Controllers\ApiControllerBase;
+use App\Models\Image;
+use App\Models\Track;
+use App\Models\User;
+use App\Models\Follower;
 use App;
 use Illuminate\Support\Facades\Request;
 use Response;
@@ -69,10 +69,10 @@ class ArtistsController extends ApiControllerBase
         $albums = [];
 
         foreach ($favs as $fav) {
-            if ($fav->type == 'Poniverse\Ponyfm\Models\Track') {
+            if ($fav->type == 'App\Models\Track') {
                 $tracks[] = Track::mapPublicTrackSummary($fav->track);
             } else {
-                if ($fav->type == 'Poniverse\Ponyfm\Models\Album') {
+                if ($fav->type == 'App\Models\Album') {
                     $albums[] = Album::mapPublicAlbumSummary($fav->album);
                 }
             }

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Providers;
+namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Application;
@@ -52,8 +52,8 @@ class AppServiceProvider extends ServiceProvider
             return new Poniverse($app['config']->get('poniverse.client_id'), $app['config']->get('poniverse.secret'));
         });
 
-        $this->app->bind(Poniverse\Ponyfm\Library\Search::class, function (Application $app) {
-            return new Poniverse\Ponyfm\Library\Search(
+        $this->app->bind(App\Library\Search::class, function (Application $app) {
+            return new App\Library\Search(
                 \Elasticsearch::connection(),
                 $app['config']->get('ponyfm.elasticsearch_index')
             );
@@ -63,11 +63,11 @@ class AppServiceProvider extends ServiceProvider
         //       any weirdness with merging array indices. $merge = false is
         //       set below so that no morphMap array merging happens!
         Relation::morphMap([
-            Poniverse\Ponyfm\Models\Activity::TARGET_TRACK => Poniverse\Ponyfm\Models\Track::class,
-            Poniverse\Ponyfm\Models\Activity::TARGET_ALBUM => Poniverse\Ponyfm\Models\Album::class,
-            Poniverse\Ponyfm\Models\Activity::TARGET_PLAYLIST => Poniverse\Ponyfm\Models\Playlist::class,
-            Poniverse\Ponyfm\Models\Activity::TARGET_USER => Poniverse\Ponyfm\Models\User::class,
-            Poniverse\Ponyfm\Models\Activity::TARGET_COMMENT => Poniverse\Ponyfm\Models\Comment::class,
+            App\Models\Activity::TARGET_TRACK => App\Models\Track::class,
+            App\Models\Activity::TARGET_ALBUM => App\Models\Album::class,
+            App\Models\Activity::TARGET_PLAYLIST => App\Models\Playlist::class,
+            App\Models\Activity::TARGET_USER => App\Models\User::class,
+            App\Models\Activity::TARGET_COMMENT => App\Models\Comment::class,
         ], false);
     }
 }

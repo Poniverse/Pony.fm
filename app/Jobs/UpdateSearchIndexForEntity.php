@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Jobs;
+namespace App\Jobs;
 
 use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
-use Poniverse\Ponyfm\Contracts\Searchable;
-use Poniverse\Ponyfm\Jobs\Job;
+use App\Contracts\Searchable;
+use App\Jobs\Job;
 use SerializesModels;
 
 class UpdateSearchIndexForEntity extends Job implements ShouldQueue

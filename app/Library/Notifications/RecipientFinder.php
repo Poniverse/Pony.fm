@@ -18,25 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Poniverse\Ponyfm\Library\Notifications;
+namespace App\Library\Notifications;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Poniverse\Ponyfm\Contracts\Favouritable;
-use Poniverse\Ponyfm\Contracts\NotificationHandler;
-use Poniverse\Ponyfm\Jobs\SendNotifications;
-use Poniverse\Ponyfm\Library\Notifications\Drivers\NativeDriver;
-use Poniverse\Ponyfm\Library\Notifications\Drivers\PonyfmDriver;
-use Poniverse\Ponyfm\Models\Activity;
-use Poniverse\Ponyfm\Models\Comment;
-use Poniverse\Ponyfm\Models\Playlist;
-use Poniverse\Ponyfm\Models\Subscription;
-use Poniverse\Ponyfm\Models\Track;
-use Poniverse\Ponyfm\Models\User;
+use App\Contracts\Favouritable;
+use App\Contracts\NotificationHandler;
+use App\Jobs\SendNotifications;
+use App\Library\Notifications\Drivers\NativeDriver;
+use App\Library\Notifications\Drivers\PonyfmDriver;
+use App\Models\Activity;
+use App\Models\Comment;
+use App\Models\Playlist;
+use App\Models\Subscription;
+use App\Models\Track;
+use App\Models\User;
 
 /**
  * Class RecipientFinder
- * @package Poniverse\Ponyfm\Library\Notifications
+ * @package App\Library\Notifications
  *
  * This class returns a list of users who are to receive a particular notification.
  * It is instantiated on a per-driver basis. Its methods return Eloquent query
