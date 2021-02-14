@@ -53,7 +53,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ResourceUser extends Model
 {
-    protected $table = 'resource_users';
     public $timestamps = false;
 
     public static function get($userId, $resourceType, $resourceId)

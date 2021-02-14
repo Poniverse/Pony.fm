@@ -109,8 +109,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     use Authenticatable, CanResetPassword, Authorizable, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'user';
-
-    protected $table = 'users';
     protected $casts = [
         'id'                        => 'integer',
         'sync_names'                => 'boolean',

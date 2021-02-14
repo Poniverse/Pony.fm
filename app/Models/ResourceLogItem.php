@@ -51,7 +51,6 @@ use Illuminate\Support\Facades\Request;
  */
 class ResourceLogItem extends Model
 {
-    protected $table = 'resource_log_items';
     public $timestamps = false;
     protected $dates = ['created_at'];
 

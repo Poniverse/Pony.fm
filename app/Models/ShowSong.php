@@ -46,7 +46,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ShowSong extends Model
 {
-    protected $table = 'show_songs';
     protected $fillable = ['title', 'slug', 'lyrics'];
 
     public function trackCountRelation()

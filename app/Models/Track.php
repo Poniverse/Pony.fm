@@ -692,8 +692,6 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         ];
     }
 
-    protected $table = 'tracks';
-
     public function genre()
     {
         return $this->belongsTo(Genre::class);

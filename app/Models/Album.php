@@ -126,8 +126,6 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         return $query;
     }
 
-    protected $table = 'albums';
-
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -165,8 +165,6 @@ class Image extends Model
         chmod($path, 0644);
     }
 
-    protected $table = 'images';
-
     public function getUrl($type = self::NORMAL)
     {
         $type = self::$ImageTypes[$type];

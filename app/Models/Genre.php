@@ -60,8 +60,6 @@ class Genre extends Model
 {
     use HasFactory;
 
-    protected $table = 'genres';
-
     protected $fillable = ['name', 'slug'];
     protected $appends = ['track_count', 'url'];
     protected $hidden = ['trackCountRelation'];
