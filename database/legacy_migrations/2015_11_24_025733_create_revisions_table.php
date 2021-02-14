@@ -1,7 +1,7 @@
 <?php
 
 /**
- * From the venturecraft/revisionable package: https://github.com/VentureCraft/revisionable
+ * From the venturecraft/revisionable package: https://github.com/VentureCraft/revisionable.
  *
  * Modified to add a foreign key constraint on the `user_id` column and
  * designate the `revisionable_id` and `user_id` columns as unsigned.

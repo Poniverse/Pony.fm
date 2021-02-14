@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,14 +24,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * App\Models\Activity
+ * App\Models\Activity.
  *
- * @property integer $id
+ * @property int $id
  * @property \Carbon\Carbon $created_at
- * @property integer $user_id
- * @property boolean $activity_type
- * @property boolean $resource_type
- * @property integer $resource_id
+ * @property int $user_id
+ * @property bool $activity_type
+ * @property bool $resource_type
+ * @property int $resource_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
  * @property-read \App\Models\User $initiatingUser
  * @property-read \App\Models\Activity $resource
@@ -88,12 +88,12 @@ class Activity extends Model
      * Activity types to subscribe new users to email notifications for.
      */
     const DEFAULT_EMAIL_TYPES = [
-        Activity::TYPE_PUBLISHED_TRACK,
-        Activity::TYPE_PUBLISHED_ALBUM,
-        Activity::TYPE_PUBLISHED_PLAYLIST,
-        Activity::TYPE_NEW_FOLLOWER,
-        Activity::TYPE_NEW_COMMENT,
-        Activity::TYPE_CONTENT_FAVOURITED,
+        self::TYPE_PUBLISHED_TRACK,
+        self::TYPE_PUBLISHED_ALBUM,
+        self::TYPE_PUBLISHED_PLAYLIST,
+        self::TYPE_NEW_FOLLOWER,
+        self::TYPE_NEW_COMMENT,
+        self::TYPE_CONTENT_FAVOURITED,
     ];
 
     /**
@@ -122,7 +122,7 @@ class Activity extends Model
     {
         return $this->hasMany(Notification::class, 'activity_id', 'id');
     }
-    
+
     public function notificationRecipients()
     {
         return $this->hasManyThrough(User::class, Notification::class, 'activity_id', 'user_id', 'id');
@@ -141,7 +141,7 @@ class Activity extends Model
             return $this->resource->url;
         }
     }
-    
+
     public function getResourceTypeAttribute($value)
     {
         switch ($value) {
@@ -159,7 +159,7 @@ class Activity extends Model
 
             case static::TARGET_COMMENT:
                 return Comment::class;
-            
+
             default:
                 // Null must be returned here for Eloquent's eager-loading
                 // of the polymorphic relation to work.
@@ -220,21 +220,20 @@ class Activity extends Model
 
     public function getTitleFromActivityType()
     {
-
         switch ($this->activity_type) {
             case static::TYPE_PUBLISHED_TRACK:
-                return "Pony.fm - New track";
+                return 'Pony.fm - New track';
             case static::TYPE_PUBLISHED_PLAYLIST:
-                return "Pony.fm - New playlist";
+                return 'Pony.fm - New playlist';
             case static::TYPE_NEW_FOLLOWER:
-                return "Pony.fm - New follower";
+                return 'Pony.fm - New follower';
             case static::TYPE_NEW_COMMENT:
-                return "Pony.fm - New comment";
+                return 'Pony.fm - New comment';
             case static::TYPE_CONTENT_FAVOURITED:
-                return "Pony.fm - Favourited";
+                return 'Pony.fm - Favourited';
 
             default:
-                return "Pony.fm - Unknown";
+                return 'Pony.fm - Unknown';
         }
     }
 
@@ -247,7 +246,7 @@ class Activity extends Model
      */
     public function getResourceTypeString():string
     {
-        switch($this->activity_type) {
+        switch ($this->activity_type) {
             case static::TYPE_NEW_COMMENT:
                 return $this->resource->resource->getResourceType();
             case static::TYPE_CONTENT_FAVOURITED:
@@ -259,7 +258,8 @@ class Activity extends Model
     /**
      * @return bool
      */
-    public function isProfileComment():bool {
+    public function isProfileComment():bool
+    {
         return static::TYPE_NEW_COMMENT === $this->activity_type &&
                User::class === $this->resource->getResourceClass();
     }
@@ -277,7 +277,6 @@ class Activity extends Model
             case static::TYPE_NEWS:
                 // not implemented yet
                 throw new \InvalidArgumentException('This type of activity has not been implemented yet!');
-
             case static::TYPE_PUBLISHED_TRACK:
                 return "{$this->resource->user->display_name} published a new track, {$this->resource->title}!";
 
@@ -295,7 +294,7 @@ class Activity extends Model
                 } else {
                     return "{$this->initiatingUser->display_name} left a comment on your {$this->getResourceTypeString()}, \"{$this->resource->resource->title}\"!";
                 }
-            
+
             case static::TYPE_CONTENT_FAVOURITED:
                 return "{$this->initiatingUser->display_name} favourited your {$this->getResourceTypeString()}, \"{$this->resource->title}\"!";
 

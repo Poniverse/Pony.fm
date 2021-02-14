@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,6 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Auth;
-use File;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Request;
 use App\Commands\DeleteTrackCommand;
 use App\Commands\EditTrackCommand;
 use App\Commands\GenerateTrackFilesCommand;
@@ -33,9 +29,13 @@ use App\Jobs\EncodeTrackFile;
 use App\Models\Genre;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
-use App\Models\TrackType;
 use App\Models\TrackFile;
+use App\Models\TrackType;
 use App\Models\User;
+use Auth;
+use File;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Request;
 use Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -78,13 +78,14 @@ class TracksController extends ApiControllerBase
         session_write_close();
 
         $track = Track::find($trackId);
-        if (!$track) {
+        if (! $track) {
             return $this->notFound('Track not found!');
         }
         $this->authorize('edit', $track);
 
         $track->version_upload_status = Track::STATUS_PROCESSING;
         $track->update();
+
         return $this->execute(new UploadTrackCommand(true, false, null, false, $track->getNextVersion(), $track));
     }
 
@@ -113,8 +114,8 @@ class TracksController extends ApiControllerBase
         foreach ($trackFiles as $trackFile) {
             $versions[] = [
                 'version' => $trackFile->version,
-                'url' => '/tracks/' . $track->id . '/version-change/' . $trackFile->version,
-                'created_at' => $trackFile->created_at->timestamp
+                'url' => '/tracks/'.$track->id.'/version-change/'.$trackFile->version,
+                'created_at' => $trackFile->created_at->timestamp,
             ];
         }
 
@@ -124,26 +125,27 @@ class TracksController extends ApiControllerBase
     public function getChangeVersion($trackId, $newVersion)
     {
         $track = Track::find($trackId);
-        if (!$track) {
+        if (! $track) {
             return $this->notFound('Track not found!');
         }
         $this->authorize('edit', $track);
 
         $masterTrackFile = $track->trackFilesForVersion($newVersion)->where('is_master', true)->first();
-        if (!$masterTrackFile) {
+        if (! $masterTrackFile) {
             return $this->notFound('Version not found!');
         }
 
         $track->version_upload_status = Track::STATUS_PROCESSING;
         $track->update();
         $sourceFile = new UploadedFile($masterTrackFile->getFile(), $masterTrackFile->getFilename());
+
         return $this->execute(new GenerateTrackFilesCommand($track, $sourceFile, false, false, true, $newVersion));
     }
 
     public function getShow($id)
     {
         $track = Track::userDetails()->withComments()->find($id);
-        if (!$track || !$track->canView(Auth::user())) {
+        if (! $track || ! $track->canView(Auth::user())) {
             return $this->notFound('Track not found!');
         }
 
@@ -169,15 +171,15 @@ class TracksController extends ApiControllerBase
             return $this->notFound('Track not found!');
         }
 
-        if (!$track->canView(Auth::user())) {
-                    return $this->notFound('Track not found!');
+        if (! $track->canView(Auth::user())) {
+            return $this->notFound('Track not found!');
         }
 
         if ($track->is_downloadable == false) {
-                    return $this->notFound('Track not found!');
+            return $this->notFound('Track not found!');
         }
 
-        if (!in_array($format, Track::$CacheableFormats)) {
+        if (! in_array($format, Track::$CacheableFormats)) {
             return $this->notFound('Format not found!');
         }
 
@@ -239,21 +241,23 @@ class TracksController extends ApiControllerBase
         }
 
         return Response::json([
-            "tracks" => $tracks,
-            "current_page" => $page,
-            "total_pages" => ceil($totalCount / $perPage)
+            'tracks' => $tracks,
+            'current_page' => $page,
+            'total_pages' => ceil($totalCount / $perPage),
         ], 200);
     }
 
     public function getAllTracks()
     {
         $this->authorize('access-admin-area');
+
         return $this->getIndex(true);
     }
 
     public function getClassifierQueue()
     {
         $this->authorize('access-admin-area');
+
         return $this->getIndex(true, true);
     }
 
@@ -272,7 +276,7 @@ class TracksController extends ApiControllerBase
     public function getEdit($id)
     {
         $track = Track::with('showSongs')->find($id);
-        if (!$track) {
+        if (! $track) {
             return $this->notFound('Track '.$id.' not found!');
         }
 
@@ -329,7 +333,7 @@ class TracksController extends ApiControllerBase
             $query->whereIn('genre_id', Request::get('genres'));
         }
 
-        if (Request::has('types') && !$unknown) {
+        if (Request::has('types') && ! $unknown) {
             $query->whereIn('track_type_id', Request::get('types'));
         }
 
@@ -355,8 +359,9 @@ class TracksController extends ApiControllerBase
             $archives = ['mlpma', 'ponify', 'eqbeats'];
             $akey = array_search($archive, $archives);
 
-            if (!$akey)
-                $query->join($archive . '_tracks', 'tracks.id', '=', $archive . 'tracks.track_id');
+            if (! $akey) {
+                $query->join($archive.'_tracks', 'tracks.id', '=', $archive.'tracks.track_id');
+            }
         }
 
         if (Request::has('songs')) {

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,8 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App\Models\Genre;
 use App\Http\Controllers\ApiControllerBase;
+use App\Models\Genre;
 use App\Models\License;
 use App\Models\ShowSong;
 use App\Models\TrackType;
@@ -48,7 +48,7 @@ class TaxonomiesController extends ApiControllerBase
                 'id',
                 'slug',
                 DB::raw('(SELECT COUNT(tracks.id) FROM show_song_track INNER JOIN tracks ON tracks.id = show_song_track.track_id WHERE show_song_track.show_song_id = show_songs.id AND tracks.published_at IS NOT NULL) AS track_count')
-            )->orderBy('title')->get()->toArray()
+            )->orderBy('title')->get()->toArray(),
         ], 200);
     }
 }

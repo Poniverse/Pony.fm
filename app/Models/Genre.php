@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,17 +20,17 @@
 
 namespace App\Models;
 
+use App\Traits\SlugTrait;
 use DB;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\SlugTrait;
-use Illuminate\Database\Eloquent\Model;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * App\Models\Genre
+ * App\Models\Genre.
  *
- * @property integer $id
+ * @property int $id
  * @property string $name
  * @property string $slug
  * @property string $deleted_at
@@ -92,7 +92,7 @@ class Genre extends Model
      */
     public function getTrackCountAttribute()
     {
-        if (!$this->relationLoaded('trackCountRelation')) {
+        if (! $this->relationLoaded('trackCountRelation')) {
             $this->load('trackCountRelation');
         }
 

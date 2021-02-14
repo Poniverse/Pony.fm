@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,6 @@
 
 namespace App\Commands;
 
-use Carbon\Carbon;
-use DB;
 use App\Models\Album;
 use App\Models\Comment;
 use App\Models\EmailSubscription;
@@ -35,6 +33,8 @@ use App\Models\ResourceLogItem;
 use App\Models\ResourceUser;
 use App\Models\Track;
 use App\Models\User;
+use Carbon\Carbon;
+use DB;
 
 class MergeAccountsCommand extends CommandBase
 {
@@ -117,7 +117,7 @@ class MergeAccountsCommand extends CommandBase
             }
 
             /** @var EmailSubscription $emailSubscription */
-            foreach($this->sourceAccount->emailSubscriptions()->withTrashed()->get() as $emailSubscription) {
+            foreach ($this->sourceAccount->emailSubscriptions()->withTrashed()->get() as $emailSubscription) {
                 // This keeps emails from being sent to disabled accounts.
                 $emailSubscription->delete();
             }

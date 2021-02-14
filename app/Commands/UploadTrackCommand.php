@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,14 +20,14 @@
 
 namespace App\Commands;
 
+use App\Models\Track;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Config;
 use Gate;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Request;
-use App\Models\Track;
-use App\Models\User;
 use Validator;
 
 class UploadTrackCommand extends CommandBase
@@ -106,7 +106,7 @@ class UploadTrackCommand extends CommandBase
             $trackFile = Request::file('track', null);
         }
 
-        if (!$this->_isReplacingTrack) {
+        if (! $this->_isReplacingTrack) {
             $coverFile = Request::file('cover', null);
         }
 
@@ -115,12 +115,13 @@ class UploadTrackCommand extends CommandBase
                 $this->_track->version_upload_status = Track::STATUS_ERROR;
                 $this->_track->update();
             }
+
             return CommandResponse::fail(['track' => ['You must upload an audio file!']]);
         }
 
         $audio = \AudioCache::get($trackFile->getPathname());
 
-        if (!$this->_isReplacingTrack) {
+        if (! $this->_isReplacingTrack) {
             $this->_track = new Track();
             $this->_track->user_id = $this->_artist->id;
             // The title set here is a placeholder; it'll be replaced by ParseTrackTagsCommand
@@ -133,34 +134,33 @@ class UploadTrackCommand extends CommandBase
         }
         $this->_track->ensureDirectoryExists();
 
-        if (!is_dir(Config::get('ponyfm.files_directory').'/tmp')) {
+        if (! is_dir(Config::get('ponyfm.files_directory').'/tmp')) {
             mkdir(Config::get('ponyfm.files_directory').'/tmp', 0755, true);
         }
 
-        if (!is_dir(Config::get('ponyfm.files_directory').'/queued-tracks')) {
+        if (! is_dir(Config::get('ponyfm.files_directory').'/queued-tracks')) {
             mkdir(Config::get('ponyfm.files_directory').'/queued-tracks', 0755, true);
         }
 
-        $trackFile = $trackFile->move(Config::get('ponyfm.files_directory') . '/queued-tracks', $this->_track->id . 'v' . $this->_version);
+        $trackFile = $trackFile->move(Config::get('ponyfm.files_directory').'/queued-tracks', $this->_track->id.'v'.$this->_version);
 
         $input = Request::all();
         $input['track'] = $trackFile;
 
         // Prevent the setting of the cover index for validation
-        if (!$this->_isReplacingTrack && isset($coverFile)) {
+        if (! $this->_isReplacingTrack && isset($coverFile)) {
             $input['cover'] = $coverFile;
         }
 
         $rules = [
-            'track' =>
-                'required|'
-                . ($this->_allowLossy
+            'track' => 'required|'
+                .($this->_allowLossy
                     ? 'audio_format:flac,alac,pcm,adpcm,aac,mp3,vorbis|'
                     : 'audio_format:flac,alac,pcm,adpcm|')
-                . ($this->_allowShortTrack ? '' : 'min_duration:30|')
-                . 'audio_channels:1,2',
+                .($this->_allowShortTrack ? '' : 'min_duration:30|')
+                .'audio_channels:1,2',
         ];
-        if (!$this->_isReplacingTrack) {
+        if (! $this->_isReplacingTrack) {
             array_merge($rules, [
                 'cover'             => 'image|mimes:png,jpeg|min_width:350|min_height:350',
                 'auto_publish'      => 'boolean',
@@ -176,7 +176,7 @@ class UploadTrackCommand extends CommandBase
                 'is_explicit'       => 'boolean',
                 'is_downloadable'   => 'boolean',
                 'is_listed'         => 'boolean',
-                'metadata'          => 'json'
+                'metadata'          => 'json',
             ]);
         }
         $validator = \Validator::make($input, $rules);
@@ -188,15 +188,16 @@ class UploadTrackCommand extends CommandBase
             } else {
                 $this->_track->delete();
             }
+
             return CommandResponse::fail($validator);
         }
 
-        if (!$this->_isReplacingTrack) {
+        if (! $this->_isReplacingTrack) {
             // If json_decode() isn't called here, Laravel will surround the JSON
             // string with quotes when storing it in the database, which breaks things.
             $this->_track->metadata = json_decode(Request::get('metadata', null));
         }
-        $autoPublish = (bool)($input['auto_publish'] ?? $this->_autoPublishByDefault);
+        $autoPublish = (bool) ($input['auto_publish'] ?? $this->_autoPublishByDefault);
         $this->_track->source = $this->_customTrackSource ?? $source;
         $this->_track->save();
 
@@ -206,7 +207,7 @@ class UploadTrackCommand extends CommandBase
             $input['cover'] = null;
         }
 
-        if (!$this->_isReplacingTrack) {
+        if (! $this->_isReplacingTrack) {
             // Parse any tags in the uploaded files.
             $parseTagsCommand = new ParseTrackTagsCommand($this->_track, $trackFile, $input);
             $result = $parseTagsCommand->execute();
@@ -215,11 +216,13 @@ class UploadTrackCommand extends CommandBase
                     $this->_track->version_upload_status = Track::STATUS_ERROR;
                     $this->_track->update();
                 }
+
                 return $result;
             }
         }
 
         $generateTrackFiles = new GenerateTrackFilesCommand($this->_track, $trackFile, $autoPublish, true, $this->_isReplacingTrack, $this->_version);
+
         return $generateTrackFiles->execute();
     }
 }

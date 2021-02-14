@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,7 +45,6 @@ class MigrateOldData extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -69,15 +68,15 @@ class MigrateOldData extends Command
         $this->info('Syncing Users');
         foreach ($oldUsers as $user) {
             $displayName = $user->display_name;
-            if (!$displayName) {
+            if (! $displayName) {
                 $displayName = $user->username;
             }
 
-            if (!$displayName) {
+            if (! $displayName) {
                 $displayName = $user->username;
             }
 
-            if (!$displayName) {
+            if (! $displayName) {
                 continue;
             }
 
@@ -94,11 +93,11 @@ class MigrateOldData extends Command
                 'username' => $user->username,
                 'uses_gravatar' => $user->uses_gravatar,
                 'gravatar' => $user->gravatar,
-                'avatar_id' => null
+                'avatar_id' => null,
             ]);
 
             $coverId = null;
-            if (!$user->uses_gravatar) {
+            if (! $user->uses_gravatar) {
                 try {
                     $coverFile = $this->getIdDirectory('users', $user->id).'/'.$user->id.'_.png';
                     $coverId = Image::upload(new UploadedFile(
@@ -119,7 +118,7 @@ class MigrateOldData extends Command
             DB::table('genres')->insert([
                 'id' => $genre->id,
                 'name' => $genre->title,
-                'slug' => $genre->slug
+                'slug' => $genre->slug,
             ]);
         }
 
@@ -139,7 +138,7 @@ class MigrateOldData extends Command
                 'id' => $playlist->id,
                 'user_id' => $playlist->user_id,
                 'view_count' => 0,
-                'download_count' => 0
+                'download_count' => 0,
             ]);
 
             foreach ($logViews as $logItem) {
@@ -164,7 +163,7 @@ class MigrateOldData extends Command
                         'album_id' => $logItem->album_id,
                         'created_at' => $logItem->created_at,
                         'ip_address' => $logItem->ip_address,
-                        'track_format_id' => $logItem->track_file_format_id - 1
+                        'track_format_id' => $logItem->track_file_format_id - 1,
                     ]);
                 } catch (\Exception $e) {
                     $this->error('Could insert log item for album '.$playlist->id.' because '.$e->getMessage());
@@ -219,7 +218,7 @@ class MigrateOldData extends Command
                 'duration' => $track->duration,
                 'view_count' => 0,
                 'play_count' => 0,
-                'download_count' => 0
+                'download_count' => 0,
             ]);
 
             foreach ($trackLogViews as $logItem) {
@@ -229,7 +228,7 @@ class MigrateOldData extends Command
                         'log_type' => ResourceLogItem::VIEW,
                         'track_id' => $logItem->track_id,
                         'created_at' => $logItem->created_at,
-                        'ip_address' => $logItem->ip_address
+                        'ip_address' => $logItem->ip_address,
                     ]);
                 } catch (\Exception $e) {
                     $this->error('Could insert log item for track '.$track->id.' because '.$e->getMessage());
@@ -243,7 +242,7 @@ class MigrateOldData extends Command
                         'log_type' => ResourceLogItem::PLAY,
                         'track_id' => $logItem->track_id,
                         'created_at' => $logItem->created_at,
-                        'ip_address' => $logItem->ip_address
+                        'ip_address' => $logItem->ip_address,
                     ]);
                 } catch (\Exception $e) {
                     $this->error('Could insert log item for track '.$track->id.' because '.$e->getMessage());
@@ -258,7 +257,7 @@ class MigrateOldData extends Command
                         'track_id' => $logItem->track_id,
                         'created_at' => $logItem->created_at,
                         'ip_address' => $logItem->ip_address,
-                        'track_format_id' => $logItem->track_file_format_id - 1
+                        'track_format_id' => $logItem->track_file_format_id - 1,
                     ]);
                 } catch (\Exception $e) {
                     $this->error('Could insert log item for track '.$track->id.' because '.$e->getMessage());
@@ -272,7 +271,7 @@ class MigrateOldData extends Command
                 DB::table('show_song_track')->insert([
                     'id' => $song->id,
                     'show_song_id' => $song->song_id,
-                    'track_id' => $song->track_id
+                    'track_id' => $song->track_id,
                 ]);
             } catch (\Exception $e) {
                 $this->error('Could insert show track item for '.$song->track_id.' because '.$e->getMessage());
@@ -321,7 +320,7 @@ class MigrateOldData extends Command
                         'playlist_id' => $logItem->playlist_id,
                         'created_at' => $logItem->created_at,
                         'ip_address' => $logItem->ip_address,
-                        'track_format_id' => $logItem->track_file_format_id - 1
+                        'track_format_id' => $logItem->track_file_format_id - 1,
                     ]);
                 } catch (\Exception $e) {
                     $this->error('Could insert log item for playlist '.$playlist->id.' because '.$e->getMessage());
@@ -338,7 +337,7 @@ class MigrateOldData extends Command
                 'updated_at' => $playlistTrack->updated_at,
                 'position' => $playlistTrack->position,
                 'playlist_id' => $playlistTrack->playlist_id,
-                'track_id' => $playlistTrack->track_id
+                'track_id' => $playlistTrack->track_id,
             ]);
         }
 
@@ -356,7 +355,7 @@ class MigrateOldData extends Command
                     'track_id' => $comment->track_id,
                     'album_id' => $comment->album_id,
                     'playlist_id' => $comment->playlist_id,
-                    'profile_id' => $comment->profile_id
+                    'profile_id' => $comment->profile_id,
                 ]);
             } catch (Exception $e) {
                 $this->error('Could not sync comment '.$comment->id.' because '.$e->getMessage());

@@ -115,9 +115,9 @@ return [
     | be desirable for future site functionality.
     |
     */
-    
+
     'user_slug_minimum_length' => 3,
-    
+
     /*
      |--------------------------------------------------------------------------
      | Indexing queue name

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,9 @@
 
 namespace App\Providers;
 
+use App\Library\Notifications\NotificationManager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use App\Library\Notifications\NotificationManager;
 
 class NotificationServiceProvider extends ServiceProvider
 {

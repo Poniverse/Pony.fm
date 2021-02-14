@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,8 @@
 
 namespace App\Commands;
 
-use Gate;
 use App\Models\User;
+use Gate;
 use Validator;
 
 class CreateUserCommand extends CommandBase
@@ -30,7 +30,7 @@ class CreateUserCommand extends CommandBase
     private $displayName;
     private $email;
     private $createArchivedUser;
-    
+
     public function __construct(
         string $username,
         string $displayName,
@@ -72,7 +72,7 @@ class CreateUserCommand extends CommandBase
         if ($validator->fails()) {
             return CommandResponse::fail([
                 'message'   => $validator->getMessageBag()->first(),
-                'user'      => null
+                'user'      => null,
             ]);
         }
 
@@ -81,12 +81,12 @@ class CreateUserCommand extends CommandBase
         if ($user->wasRecentlyCreated) {
             return CommandResponse::succeed([
                 'message'   => 'New user successfully created!',
-                'user'      => User::mapPublicUserSummary($user)
+                'user'      => User::mapPublicUserSummary($user),
             ], 201);
         } else {
             return CommandResponse::fail([
                 'message'   => 'A user with that username already exists.',
-                'user'      => User::mapPublicUserSummary($user)
+                'user'      => User::mapPublicUserSummary($user),
             ], 409);
         }
     }

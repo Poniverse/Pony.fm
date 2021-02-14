@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddUnclassifiedTrackType extends Migration
 {
@@ -33,7 +33,7 @@ class AddUnclassifiedTrackType extends Migration
         DB::table('track_types')->insert([
             'id' => 6,
             'title' => 'Unclassified',
-            'editor_title' => 'an unclassified track'
+            'editor_title' => 'an unclassified track',
         ]);
     }
 

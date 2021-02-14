@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,20 +20,18 @@
 
 namespace App\Traits;
 
+use App\Contracts\Searchable;
+use App\Jobs\UpdateSearchIndexForEntity;
 use Config;
 use Elasticsearch;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use App\Contracts\Searchable;
-use App\Jobs\UpdateSearchIndexForEntity;
 
 /**
- * Class IndexedInElasticsearch
+ * Class IndexedInElasticsearch.
  *
  * Classes using this trait must declare the `$elasticsearchType` property and
  * implement the `Searchable` interface.
- *
- * @package App\Traits
  */
 trait IndexedInElasticsearchTrait
 {
@@ -41,9 +39,9 @@ trait IndexedInElasticsearchTrait
 
     // These two functions are from the Searchable interface. They're included
     // here, without being implemented, to assist IDE's when editing this trait.
-    public abstract function toElasticsearch():array;
-    public abstract function shouldBeIndexed():bool;
+    abstract public function toElasticsearch():array;
 
+    abstract public function shouldBeIndexed():bool;
 
     // Laravel automatically runs this method based on the trait's name. #magic
     public static function bootIndexedInElasticsearchTrait()

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,8 +26,7 @@ class ShowSongTableSeeder extends Seeder
         [
             'title' => 'My Little Pony Theme Song',
             'slug' => 'my-little-pony-theme-song',
-            'lyrics' =>
-                "[Backup singer]
+            'lyrics' => "[Backup singer]
 My Little Pony, My Little Pony
 Ahh, ahh, ahh, ahhh...
 
@@ -56,14 +55,13 @@ Sharing kindness
 It's an easy feat
 And magic makes it all complete
 You have my little ponies
-Do you know you're all my very best friends?"
+Do you know you're all my very best friends?",
 
         ],
         [
             'title' => 'Laughter Song (Giggle at the Ghostly)',
             'slug' => 'laughter-song',
-            'lyrics' =>
-                "[Pinkie Pie]
+            'lyrics' => "[Pinkie Pie]
 When I was a little filly and the sun was going down...
 
 Twilight Sparkle: Tell me she's not...
@@ -101,14 +99,13 @@ Snortle at the spooky
 
 And tell that big dumb scary face to take a hike and leave you alone and if he thinks he can scare you then he's got another thing coming and the very idea of such a thing just makes you wanna... hahahaha... heh...
 
-Laaaaaaauuugh!"
+Laaaaaaauuugh!",
 
         ],
         [
             'title' => 'Winter Wrap-Up',
             'slug' => 'winter-wrap-up',
-            'lyrics' =>
-                "[Rainbow Dash]
+            'lyrics' => "[Rainbow Dash]
 Three months of winter coolness
 And awesome holidays
 
@@ -242,13 +239,12 @@ Winter Wrap Up! Winter Wrap Up!
 [Twilight Sparkle]
 'Cause tomorrow spring is here
 'Cause tomorrow spring is here
-'Cause tomorrow spring is here!"
+'Cause tomorrow spring is here!",
         ],
         [
             'title' => 'EQG - Helping Twilight Win The Crown',
             'slug' => 'helping-twilight-win-the-crown',
-            'lyrics' =>
-                "[Pinkie Pie, Rainbow Dash, Applejack, Fluttershy, Rarity]
+            'lyrics' => "[Pinkie Pie, Rainbow Dash, Applejack, Fluttershy, Rarity]
 Hey! Hey! Everybody!
 We've got something to say.
 We may seem as different,
@@ -340,8 +336,8 @@ Gonna come around.
 Jump up, make a sound. Hey!
 Stomp your hooves, turn around.
 Canterlot Wondercolts
-Help her win the crown..."
-        ]
+Help her win the crown...",
+        ],
     ];
 
     /**
@@ -357,9 +353,10 @@ Help her win the crown..."
         // sourced from http://mlp.wikia.com/wiki/Songs
         if (DB::table('show_songs')->count() === 0) {
             $now = \Carbon\Carbon::now();
-            $showSongs = array_map(function(array $item) use ($now) {
+            $showSongs = array_map(function (array $item) use ($now) {
                 $item['created_at'] = $now;
                 $item['updated_at'] = $now;
+
                 return $item;
             }, $this->showSongs);
             DB::table('show_songs')->insert($showSongs);

@@ -14,9 +14,7 @@ return [
 
     'name' => env('APP_NAME', 'My Application'),
 
-
     'env' => env('APP_ENV', 'production'),
-
 
     /*
     |--------------------------------------------------------------------------

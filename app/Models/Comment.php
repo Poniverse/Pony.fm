@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,26 +20,26 @@
 
 namespace App\Models;
 
+use App\Contracts\Commentable;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Contracts\Commentable;
 
 /**
- * App\Models\Comment
+ * App\Models\Comment.
  *
- * @property integer $id
- * @property integer $user_id
+ * @property int $id
+ * @property int $user_id
  * @property string $ip_address
  * @property string $content
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
- * @property integer $profile_id
- * @property integer $track_id
- * @property integer $album_id
- * @property integer $playlist_id
+ * @property int $profile_id
+ * @property int $track_id
+ * @property int $album_id
+ * @property int $playlist_id
  * @property-read \App\Models\User $user
  * @property-read \App\Models\Track $track
  * @property-read \App\Models\Album $album
@@ -123,8 +123,8 @@ class Comment extends Model
                     'normal' => $comment->user->getAvatarUrl(Image::NORMAL),
                     'thumbnail' => $comment->user->getAvatarUrl(Image::THUMBNAIL),
                     'small' => $comment->user->getAvatarUrl(Image::SMALL),
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -157,7 +157,8 @@ class Comment extends Model
      *
      * @return string
      */
-    public function getResourceClass():string {
+    public function getResourceClass():string
+    {
         return get_class($this->resource);
     }
 

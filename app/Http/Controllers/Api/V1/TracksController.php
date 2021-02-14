@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015-2017 Feld0
+ * Copyright (C) 2015-2017 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,15 +44,15 @@ class TracksController extends ApiControllerBase
             'status_url'    => action('Api\V1\TracksController@getUploadStatus', ['id' => $commandData['id']]),
             'track_url'     => action('TracksController@getTrack', ['id' => $commandData['id'], 'slug' => $commandData['slug']]),
             'message'       => $commandData['autoPublish']
-                ? "This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url."
+                ? 'This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url.'
                 : "This track has been accepted for processing! Poll the status_url to know when it's ready to publish. It will be published at the track_url.",
         ];
 
         $response->setData($data);
         $response->setStatusCode(202);
+
         return $response;
     }
-
 
     public function getUploadStatus($trackId)
     {
@@ -67,7 +67,7 @@ class TracksController extends ApiControllerBase
                     ? 'Processing complete! The track is live at the track_url. The artist can edit the track by visiting its edit_url.'
                     : 'Processing complete! The artist must publish the track by visiting its edit_url.',
                 'edit_url' => action('ContentController@getTracks', ['id' => $trackId]),
-                'track_url' => $track->url
+                'track_url' => $track->url,
             ], 201);
         } else {
             // something went wrong
@@ -83,14 +83,15 @@ class TracksController extends ApiControllerBase
      * @param int $id track ID
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getTrackDetails($id) {
+    public function getTrackDetails($id)
+    {
         /** @var Track|null $track */
         $track = Track
             ::with('user', 'album', 'user.avatar', 'cover', 'genre')
             ->published()
             ->where('id', $id)->first();
 
-        if (!$track) {
+        if (! $track) {
             return Response::json(['message' => 'Track not found.'], 404);
         }
 
@@ -112,7 +113,7 @@ class TracksController extends ApiControllerBase
             ->published()
             ->where('hash', $hash)->first();
 
-        if (!$track) {
+        if (! $track) {
             return Response::json(['message' => 'Track not found.'], 403);
         }
 
@@ -126,7 +127,8 @@ class TracksController extends ApiControllerBase
      * @param bool $includeComments if true, includes the track's comments in the serialization
      * @return array serialized track
      */
-    private static function trackToJson(Track $track, bool $includeComments, bool $includeStreamUrl) {
+    private static function trackToJson(Track $track, bool $includeComments, bool $includeStreamUrl)
+    {
         $trackResponse = [
             'id' => $track->id,
             'title' => $track->title,
@@ -139,41 +141,41 @@ class TracksController extends ApiControllerBase
                 'avatars' => [
                     'thumbnail' => $track->user->getAvatarUrl(Image::THUMBNAIL),
                     'small' => $track->user->getAvatarUrl(Image::SMALL),
-                    'normal' => $track->user->getAvatarUrl(Image::NORMAL)
-                ]
+                    'normal' => $track->user->getAvatarUrl(Image::NORMAL),
+                ],
             ],
             'stats' => [
                 'views' => $track->view_count,
                 'plays' => $track->play_count,
                 'downloads' => $track->download_count,
                 'comments' => $track->comment_count,
-                'favourites' => $track->favourite_count
+                'favourites' => $track->favourite_count,
             ],
             'url' => $track->url,
-            'is_vocal' => !!$track->is_vocal,
-            'is_explicit' => !!$track->is_explicit,
-            'is_downloadable' => !!$track->is_downloadable,
+            'is_vocal' => (bool) $track->is_vocal,
+            'is_explicit' => (bool) $track->is_explicit,
+            'is_downloadable' => (bool) $track->is_downloadable,
             'published_at' => $track->published_at,
             'duration' => $track->duration,
             'genre' => $track->genre != null
                 ?
                 [
                     'id' => $track->genre->id,
-                    'name' => $track->genre->name
+                    'name' => $track->genre->name,
                 ] : null,
             'type' => [
                 'id' => $track->trackType->id,
-                'name' => $track->trackType->title
+                'name' => $track->trackType->title,
             ],
             'covers' => [
                 'thumbnail' => $track->getCoverUrl(Image::THUMBNAIL),
                 'small' => $track->getCoverUrl(Image::SMALL),
-                'normal' => $track->getCoverUrl(Image::NORMAL)
+                'normal' => $track->getCoverUrl(Image::NORMAL),
             ],
 
             // As of 2017-10-28, this should be expected to produce
             // "direct_upload", "mlpma", "ponify", or "eqbeats" for all tracks.
-            'source' => $track->source
+            'source' => $track->source,
         ];
 
         if ($includeComments) {
@@ -191,8 +193,8 @@ class TracksController extends ApiControllerBase
                             'normal' => $comment->user->getAvatarUrl(Image::NORMAL),
                             'thumbnail' => $comment->user->getAvatarUrl(Image::THUMBNAIL),
                             'small' => $comment->user->getAvatarUrl(Image::SMALL),
-                        ]
-                    ]
+                        ],
+                    ],
                 ];
             }
 
@@ -204,7 +206,7 @@ class TracksController extends ApiControllerBase
                 'mp3' => [
                     'url'       => $track->getStreamUrl('MP3', session('api_client_id')),
                     'mime_type' => Track::$Formats['MP3']['mime_type'],
-                ]
+                ],
             ];
         }
 

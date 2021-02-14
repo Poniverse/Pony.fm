@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,30 +18,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 use App\Models\User;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class EnableEmailNotifications extends Migration {
+class EnableEmailNotifications extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         DB::table('email_subscriptions')->delete();
 
         User::whereNull('disabled_at')
             ->where('is_archived', false)
             ->chunk(100, function ($users) {
-            /** @var User $user */
-            foreach ($users as $user) {
-                $now = \Carbon\Carbon::now();
-                $userId = $user->id;
+                /** @var User $user */
+                foreach ($users as $user) {
+                    $now = \Carbon\Carbon::now();
+                    $userId = $user->id;
 
-                DB::table('email_subscriptions')
+                    DB::table('email_subscriptions')
                   ->insert([
                       [
                           'id' => \Webpatser\Uuid\Uuid::generate(4),
@@ -84,11 +85,10 @@ class EnableEmailNotifications extends Migration {
                           'activity_type' => 7,
                           'created_at' => $now,
                           'updated_at' => $now,
-                      ]
+                      ],
                   ]);
-            }
-
-        });
+                }
+            });
     }
 
     /**
@@ -96,7 +96,8 @@ class EnableEmailNotifications extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         DB::table('email_subscriptions')->delete();
     }
 }

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ class DashboardController extends ApiControllerBase
 
         return Response::json([
             'recent_tracks' => $recentTracks,
-            'popular_tracks' => Track::popular(30, Auth::check() && Auth::user()->can_see_explicit_content)
+            'popular_tracks' => Track::popular(30, Auth::check() && Auth::user()->can_see_explicit_content),
         ], 200);
     }
 }

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,6 @@
 
 namespace App\Library\Notifications\Drivers;
 
-use Carbon\Carbon;
-use Log;
-use Mail;
 use App\Contracts\Favouritable;
 use App\Mail\BaseNotification;
 use App\Models\Activity;
@@ -32,6 +29,9 @@ use App\Models\Notification;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
+use Carbon\Carbon;
+use Log;
+use Mail;
 
 class PonyfmDriver extends AbstractDriver
 {
@@ -47,7 +47,7 @@ class PonyfmDriver extends AbstractDriver
         foreach ($recipients as $recipient) {
             $notifications[] = [
                 'activity_id'   => $activity->id,
-                'user_id'       => $recipient->id
+                'user_id'       => $recipient->id,
             ];
         }
         Notification::insert($notifications);
@@ -59,7 +59,8 @@ class PonyfmDriver extends AbstractDriver
      * @param Activity $activity
      * @param User[] $recipients collection of {@link User} objects
      */
-    private function sendEmails(Activity $activity, $recipients) {
+    private function sendEmails(Activity $activity, $recipients)
+    {
         foreach ($recipients as $recipient) {
             /** @var Notification $notification */
             $notification = $activity->notifications->where('user_id', $recipient->id)->first();
@@ -72,7 +73,7 @@ class PonyfmDriver extends AbstractDriver
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function publishedNewTrack(Track $track)
     {
@@ -90,14 +91,14 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        if (NULL !== $recipientsQuery) {
+        if (null !== $recipientsQuery) {
             $this->insertNotifications($activity, $recipientsQuery->get());
             $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_PUBLISHED_TRACK)->get());
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function publishedNewPlaylist(Playlist $playlist)
     {
@@ -110,14 +111,14 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        if (NULL !== $recipientsQuery) {
+        if (null !== $recipientsQuery) {
             $this->insertNotifications($activity, $recipientsQuery->get());
             $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_PUBLISHED_PLAYLIST)->get());
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newFollower(User $userBeingFollowed, User $follower)
     {
@@ -130,14 +131,14 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        if (NULL !== $recipientsQuery) {
+        if (null !== $recipientsQuery) {
             $this->insertNotifications($activity, $recipientsQuery->get());
             $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_NEW_FOLLOWER)->get());
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newComment(Comment $comment)
     {
@@ -150,14 +151,14 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        if (NULL !== $recipientsQuery) {
+        if (null !== $recipientsQuery) {
             $this->insertNotifications($activity, $recipientsQuery->get());
             $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_NEW_COMMENT)->get());
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter)
     {
@@ -170,7 +171,7 @@ class PonyfmDriver extends AbstractDriver
         ]);
 
         $recipientsQuery = $this->getRecipients(__FUNCTION__, func_get_args());
-        if (NULL !== $recipientsQuery) {
+        if (null !== $recipientsQuery) {
             $this->insertNotifications($activity, $recipientsQuery->get());
             $this->sendEmails($activity, $recipientsQuery->withEmailSubscriptionFor(Activity::TYPE_CONTENT_FAVOURITED)->get());
         }

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,18 +20,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
+use App\Models\User;
+use Auth;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Support\Facades\Input;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Log;
 use Poniverse\Lib\Client;
-use App\Models\Activity;
-use App\Models\User;
-use Auth;
-use DB;
-use Request;
 use Redirect;
+use Request;
 
 class AuthController extends Controller
 {
@@ -57,6 +57,7 @@ class AuthController extends Controller
     public function postLogout()
     {
         Auth::logout();
+
         return Redirect::to('/');
     }
 
@@ -67,7 +68,7 @@ class AuthController extends Controller
         try {
             $accessToken = $oauthProvider->getAccessToken('authorization_code', [
                 'code' => Request::query('code'),
-                'redirect_uri' => action('AuthController@getOAuth')
+                'redirect_uri' => action('AuthController@getOAuth'),
             ]);
             $this->poniverse->setAccessToken($accessToken);
             $resourceOwner = $oauthProvider->getResourceOwner($accessToken);
@@ -94,13 +95,14 @@ class AuthController extends Controller
             'type' => 'Bearer',
         ];
 
-        if (!empty($accessToken->getRefreshToken())) {
+        if (! empty($accessToken->getRefreshToken())) {
             $setData['refresh_token'] = $accessToken->getRefreshToken();
         }
 
         if ($token) {
             //User already exists, update access token and refresh token if provided.
             DB::table('oauth2_tokens')->where('id', '=', $token->id)->update($setData);
+
             return $this->loginRedirect(User::find($token->user_id));
         }
 
@@ -119,7 +121,6 @@ class AuthController extends Controller
                 $user->emailSubscriptions()->create(['activity_type' => $activityType]);
             }
         }
-
 
         return $this->loginRedirect($user);
     }

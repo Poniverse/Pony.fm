@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,8 +22,8 @@ namespace App\Http\Controllers\Api\Web;
 
 use App;
 use App\Commands\CreateCommentCommand;
-use App\Models\Comment;
 use App\Http\Controllers\ApiControllerBase;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Request;
 use Response;
 

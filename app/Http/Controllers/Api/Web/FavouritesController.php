@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,10 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App\Models\Album;
 use App\Commands\ToggleFavouriteCommand;
-use App\Models\Favourite;
 use App\Http\Controllers\ApiControllerBase;
+use App\Models\Album;
+use App\Models\Favourite;
 use App\Models\Playlist;
 use App\Models\Track;
 use Auth;
@@ -52,7 +52,7 @@ class FavouritesController extends ApiControllerBase
                 'track.genre',
                 'track.cover',
                 'track.album',
-                'track.album.user'
+                'track.album.user',
             ]);
 
         $tracks = [];
@@ -65,7 +65,7 @@ class FavouritesController extends ApiControllerBase
             $tracks[] = Track::mapPublicTrackSummary($fav->track);
         }
 
-        return Response::json(["tracks" => $tracks], 200);
+        return Response::json(['tracks' => $tracks], 200);
     }
 
     public function getAlbums()
@@ -79,7 +79,7 @@ class FavouritesController extends ApiControllerBase
                 },
                 'album.user',
                 'album.user.avatar',
-                'album.cover'
+                'album.cover',
             ]);
 
         $albums = [];
@@ -92,7 +92,7 @@ class FavouritesController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($fav->album);
         }
 
-        return Response::json(["albums" => $albums], 200);
+        return Response::json(['albums' => $albums], 200);
     }
 
     public function getPlaylist()
@@ -107,7 +107,7 @@ class FavouritesController extends ApiControllerBase
                 'playlist.user',
                 'playlist.user.avatar',
                 'playlist.tracks',
-                'playlist.tracks.cover'
+                'playlist.tracks.cover',
             ]);
 
         $playlists = [];
@@ -120,6 +120,6 @@ class FavouritesController extends ApiControllerBase
             $playlists[] = Playlist::mapPublicPlaylistSummary($fav->playlist);
         }
 
-        return Response::json(["playlists" => $playlists], 200);
+        return Response::json(['playlists' => $playlists], 200);
     }
 }

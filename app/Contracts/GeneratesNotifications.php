@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,14 +20,12 @@
 
 namespace App\Contracts;
 
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * This interface is used for type safety when referring to entities that can be
  * the "target resource" of a notification (ie. what the notification is about).
- *
- * @package App\Contracts
  */
 interface GeneratesNotifications
 {

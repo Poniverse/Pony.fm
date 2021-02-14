@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,5 +36,6 @@ interface Searchable
     public function shouldBeIndexed():bool;
 
     public function updateElasticsearchEntry();
+
     public function updateElasticsearchEntrySynchronously();
 }

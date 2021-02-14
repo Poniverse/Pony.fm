@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,6 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
-use DB;
-use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use App\Commands\MergeAccountsCommand;
 use App\Models\Album;
 use App\Models\Comment;
@@ -36,6 +32,10 @@ use App\Models\ResourceLogItem;
 use App\Models\ResourceUser;
 use App\Models\Track;
 use App\Models\User;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class MergeAccounts extends Command
 {
@@ -57,7 +57,6 @@ class MergeAccounts extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -81,9 +80,10 @@ class MergeAccounts extends Command
         if (null !== $sourceAccount->getAccessToken()) {
             $this->warn("WARNING: The source account (ID {$sourceAccountId}) is linked to a Poniverse account! Normally, the destination account should be the one that's linked to a Poniverse account as that's the one that the artist will be logging into.");
             $this->line('');
-            $this->warn("If you continue with this merge, the Poniverse account linked to the source Pony.fm account will no longer be able to log into Pony.fm.");
-            if (!$this->confirm('Continue merging this set of source and destination accounts?')){
+            $this->warn('If you continue with this merge, the Poniverse account linked to the source Pony.fm account will no longer be able to log into Pony.fm.');
+            if (! $this->confirm('Continue merging this set of source and destination accounts?')) {
                 $this->error('Merge aborted.');
+
                 return 1;
             }
         }
@@ -91,8 +91,9 @@ class MergeAccounts extends Command
         if (null === $destinationAccount->getAccessToken()) {
             $this->warn("WARNING: The destination account (ID {$destinationAccountId}) is not linked to a Poniverse account!");
             $this->warn("This is normal if you're merging two archived profiles but not if you're helping an artist claim their profile.");
-            if (!$this->confirm('Continue merging this set of source and destination accounts?')){
+            if (! $this->confirm('Continue merging this set of source and destination accounts?')) {
                 $this->error('Merge aborted.');
+
                 return 1;
             }
         }
@@ -101,6 +102,7 @@ class MergeAccounts extends Command
 
         $command = new MergeAccountsCommand($sourceAccount, $destinationAccount);
         $command->execute();
+
         return 0;
     }
 }

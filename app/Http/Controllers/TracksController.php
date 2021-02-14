@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,13 +20,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\TrackFile;
 use Auth;
 use Config;
-use App;
+use Illuminate\Http\Request;
 use Redirect;
 use Response;
 use View;
@@ -50,7 +50,7 @@ class TracksController extends Controller
                 'genre'
             )->first();
 
-        if (!$track || !$track->canView(Auth::user())) {
+        if (! $track || ! $track->canView(Auth::user())) {
             App::abort(404);
         }
 
@@ -58,9 +58,9 @@ class TracksController extends Controller
             'stats' => [
                 'views' => 0,
                 'plays' => 0,
-                'downloads' => 0
+                'downloads' => 0,
             ],
-            'is_favourited' => false
+            'is_favourited' => false,
         ];
 
         if ($track->users->count()) {
@@ -71,7 +71,7 @@ class TracksController extends Controller
                     'plays' => $userRow->play_count,
                     'downloads' => $userRow->download_count,
                 ],
-                'is_favourited' => $userRow->is_favourited
+                'is_favourited' => $userRow->is_favourited,
             ];
         }
 
@@ -80,7 +80,7 @@ class TracksController extends Controller
 
     public function getOembed(Request $request)
     {
-        if (!$request->filled('url')) {
+        if (! $request->filled('url')) {
             App::abort(404);
         }
 
@@ -93,7 +93,7 @@ class TracksController extends Controller
             ->userDetails()
             ->first();
 
-        if (!$track || !$track->canView(Auth::user())) {
+        if (! $track || ! $track->canView(Auth::user())) {
             App::abort(404);
         }
 
@@ -107,7 +107,7 @@ class TracksController extends Controller
             'title' => $track->title,
             'author_name' => $track->user->display_name,
             'author_url' => $track->user->url,
-            'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>'
+            'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
         ];
 
         return Response::json($output);
@@ -116,7 +116,7 @@ class TracksController extends Controller
     public function getTrack($id, $slug)
     {
         $track = Track::find($id);
-        if (!$track || !$track->canView(Auth::user())) {
+        if (! $track || ! $track->canView(Auth::user())) {
             App::abort(404);
         }
 
@@ -135,7 +135,7 @@ class TracksController extends Controller
     public function getShortlink($id)
     {
         $track = Track::find($id);
-        if (!$track || !$track->canView(Auth::user())) {
+        if (! $track || ! $track->canView(Auth::user())) {
             App::abort(404);
         }
 
@@ -145,7 +145,7 @@ class TracksController extends Controller
     public function getStream($id, $extension)
     {
         $track = Track::find($id);
-        if (!$track || !$track->canView(Auth::user())) {
+        if (! $track || ! $track->canView(Auth::user())) {
             App::abort(404);
         }
 
@@ -154,7 +154,7 @@ class TracksController extends Controller
         $response = Response::make('', 200);
         $filename = $trackFile->getFile();
 
-        if (!file_exists($filename)) {
+        if (! file_exists($filename)) {
             App::abort(418);
         }
 
@@ -182,7 +182,7 @@ class TracksController extends Controller
     public function getDownload($id, $extension)
     {
         $track = Track::find($id);
-        if (!$track || !$track->canView(Auth::user())) {
+        if (! $track || ! $track->canView(Auth::user())) {
             App::abort(404);
         }
 

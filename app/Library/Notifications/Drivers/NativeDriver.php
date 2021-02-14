@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,19 +20,19 @@
 
 namespace App\Library\Notifications\Drivers;
 
-use Config;
 use App\Contracts\Favouritable;
 use App\Models\Activity;
 use App\Models\Comment;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
+use Config;
 use Minishlink\WebPush\WebPush;
 
 class NativeDriver extends AbstractDriver
 {
     /**
-     * Method for sending notifications to devices
+     * Method for sending notifications to devices.
      *
      * @param Activity $activity
      * @param User[] $recipients collection of {@link User} objects
@@ -51,7 +51,7 @@ class NativeDriver extends AbstractDriver
                 'text' => $activity->getTextAttribute(),
                 'title' => $activity->getTitleFromActivityType(),
                 'image' => $activity->getThumbnailUrlAttribute(),
-                'url' => $activity->url
+                'url' => $activity->url,
             ];
 
             $jsonData = json_encode($data);
@@ -70,7 +70,7 @@ class NativeDriver extends AbstractDriver
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function publishedNewTrack(Track $track)
     {
@@ -79,12 +79,11 @@ class NativeDriver extends AbstractDriver
             ->where('resource_id', $track->id)
             ->get()[0];
 
-
         $this->pushNotifications($activity, $this->getRecipients(__FUNCTION__, func_get_args()));
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function publishedNewPlaylist(Playlist $playlist)
     {
@@ -107,7 +106,7 @@ class NativeDriver extends AbstractDriver
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newComment(Comment $comment)
     {
@@ -120,7 +119,7 @@ class NativeDriver extends AbstractDriver
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter)
     {
