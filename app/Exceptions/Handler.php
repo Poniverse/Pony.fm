@@ -20,10 +20,10 @@
 
 namespace App\Exceptions;
 
-use Throwable;
 use Exception;
 use GrahamCampbell\Exceptions\ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
