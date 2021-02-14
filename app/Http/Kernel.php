@@ -30,7 +30,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \App\Http\Middleware\CheckForMaintenanceMode::class,
     ];
 
     protected $middlewareGroups = [
@@ -53,6 +53,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'auth.oauth' => \App\Http\Middleware\AuthenticateOAuth::class,
         'can' => \App\Http\Middleware\Authorize::class,
         'json-exceptions' => \App\Http\Middleware\JsonExceptions::class,
