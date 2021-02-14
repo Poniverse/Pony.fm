@@ -69,10 +69,10 @@ class ArtistsController extends ApiControllerBase
         $albums = [];
 
         foreach ($favs as $fav) {
-            if ($fav->type == 'App\Models\Track') {
+            if ($fav->type == \App\Models\Track::class) {
                 $tracks[] = Track::mapPublicTrackSummary($fav->track);
             } else {
-                if ($fav->type == 'App\Models\Album') {
+                if ($fav->type == \App\Models\Album::class) {
                     $albums[] = Album::mapPublicAlbumSummary($fav->album);
                 }
             }
