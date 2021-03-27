@@ -24,6 +24,7 @@ use App\Contracts\Commentable;
 use App\Contracts\Favouritable;
 use App\Contracts\Searchable;
 use App\Exceptions\TrackFileNotFoundException;
+use App\Http\Controllers\PlaylistsController;
 use App\Traits\IndexedInElasticsearchTrait;
 use App\Traits\SlugTrait;
 use App\Traits\TrackCollection;
@@ -173,7 +174,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         $data['comments'] = $comments;
         $data['formats'] = $formats;
         $data['share'] = [
-            'url' => action('PlaylistsController@getShortlink', ['id' => $playlist->id]),
+            'url' => action([PlaylistsController::class, 'getShortlink'], ['id' => $playlist->id]),
             'tumblrUrl' => 'http://www.tumblr.com/share/link?url='.urlencode($playlist->url).'&name='.urlencode($playlist->title).'&description='.urlencode($playlist->description),
             'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$playlist->title.' by '.$playlist->user->display_name.' on Pony.fm',
         ];
@@ -308,12 +309,12 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public function getUrlAttribute()
     {
-        return action('PlaylistsController@getPlaylist', ['id' => $this->id, 'slug' => $this->slug]);
+        return action([PlaylistsController::class, 'getPlaylist'], ['id' => $this->id, 'slug' => $this->slug]);
     }
 
     public function getDownloadUrl($format)
     {
-        return action('PlaylistsController@getDownload', ['id' => $this->id, 'format' => Track::$Formats[$format]['extension']]);
+        return action([PlaylistsController::class, 'getDownload'], ['id' => $this->id, 'format' => Track::$Formats[$format]['extension']]);
     }
 
     public function getCoverUrl($type = Image::NORMAL)

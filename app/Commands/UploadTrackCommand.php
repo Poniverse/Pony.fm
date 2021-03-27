@@ -22,13 +22,11 @@ namespace App\Commands;
 
 use App\Models\Track;
 use App\Models\User;
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 
 class UploadTrackCommand extends CommandBase
 {
@@ -161,7 +159,7 @@ class UploadTrackCommand extends CommandBase
                 .'audio_channels:1,2',
         ];
         if (! $this->_isReplacingTrack) {
-            array_merge($rules, [
+            $rules = array_merge($rules, [
                 'cover'             => 'image|mimes:png,jpeg|min_width:350|min_height:350',
                 'auto_publish'      => 'boolean',
                 'title'             => 'string',
@@ -169,7 +167,7 @@ class UploadTrackCommand extends CommandBase
                 'genre'             => 'string',
                 'album'             => 'string',
                 'track_number'      => 'integer',
-                'released_at'       => 'date_format:'.Carbon::ISO8601,
+                'released_at'       => 'date_format:'.CarbonInterface::ISO8601,
                 'description'       => 'string',
                 'lyrics'            => 'string',
                 'is_vocal'          => 'boolean',

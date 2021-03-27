@@ -130,7 +130,7 @@ class EncodeTrackFile extends Job implements ShouldQueue
         Log::info('Encoding track file '.$this->trackFile->id.' into '.$target);
 
         // Start a synchronous process to encode the file
-        $process = new Process($command);
+        $process = Process::fromShellCommandline($command);
         try {
             $process->mustRun();
         } catch (ProcessFailedException $e) {

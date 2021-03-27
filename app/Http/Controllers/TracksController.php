@@ -107,7 +107,7 @@ class TracksController extends Controller
             'title' => $track->title,
             'author_name' => $track->user->display_name,
             'author_url' => $track->user->url,
-            'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
+            'html' => '<iframe src="'.action([static::class, 'getEmbed'], ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
         ];
 
         return response()->json($output);
@@ -121,7 +121,7 @@ class TracksController extends Controller
         }
 
         if ($track->slug != $slug) {
-            return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
+            return Redirect::action([static::class, 'getTrack'], [$id, $track->slug]);
         }
 
         return view('tracks.show', ['track' => $track]);
@@ -139,7 +139,7 @@ class TracksController extends Controller
             abort(404);
         }
 
-        return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
+        return Redirect::action([static::class, 'getTrack'], [$id, $track->slug]);
     }
 
     public function getStream(Request $request, $id, $extension)

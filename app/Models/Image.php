@@ -20,6 +20,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\ImagesController;
 use External;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -169,7 +170,7 @@ class Image extends Model
     {
         $type = self::$ImageTypes[$type];
 
-        return action('ImagesController@getImage', ['id' => $this->id, 'type' => $type['name'], 'extension' => $this->extension]);
+        return action([ImagesController::class, 'getImage'], ['id' => $this->id, 'type' => $type['name'], 'extension' => $this->extension]);
     }
 
     public function getFile($type = self::NORMAL)

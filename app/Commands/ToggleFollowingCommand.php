@@ -20,10 +20,10 @@
 
 namespace App\Commands;
 
+use App\Facades\Notification;
 use App\Models\Follower;
 use App\Models\ResourceUser;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 
 class ToggleFollowingCommand extends CommandBase
 {

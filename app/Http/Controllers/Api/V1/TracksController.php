@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Commands\UploadTrackCommand;
 use App\Http\Controllers\ApiControllerBase;
+use App\Http\Controllers\ContentController;
 use App\Models\Image;
 use App\Models\Track;
 use Illuminate\Support\Facades\Response;
@@ -41,8 +42,8 @@ class TracksController extends ApiControllerBase
 
         $data = [
             'id'            => (string) $commandData['id'],
-            'status_url'    => action('Api\V1\TracksController@getUploadStatus', ['id' => $commandData['id']]),
-            'track_url'     => action('TracksController@getTrack', ['id' => $commandData['id'], 'slug' => $commandData['slug']]),
+            'status_url'    => action([static::class, 'getUploadStatus'], ['id' => $commandData['id']]),
+            'track_url'     => action([\App\Http\Controllers\TracksController::class, 'getTrack'], ['id' => $commandData['id'], 'slug' => $commandData['slug']]),
             'message'       => $commandData['autoPublish']
                 ? 'This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url.'
                 : "This track has been accepted for processing! Poll the status_url to know when it's ready to publish. It will be published at the track_url.",
@@ -66,7 +67,7 @@ class TracksController extends ApiControllerBase
                 'message' => $track->published_at
                     ? 'Processing complete! The track is live at the track_url. The artist can edit the track by visiting its edit_url.'
                     : 'Processing complete! The artist must publish the track by visiting its edit_url.',
-                'edit_url' => action('ContentController@getTracks', ['id' => $trackId]),
+                'edit_url' => action([ContentController::class, 'getTracks'], ['id' => $trackId]),
                 'track_url' => $track->url,
             ], 201);
         } else {

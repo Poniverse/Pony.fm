@@ -20,6 +20,7 @@
 
 namespace App\Commands;
 
+use App\Facades\Notification;
 use App\Models\Album;
 use App\Models\Image;
 use App\Models\Playlist;
@@ -28,7 +29,6 @@ use App\Models\TrackType;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Notification;
 
 class EditTrackCommand extends CommandBase
 {

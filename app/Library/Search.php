@@ -48,10 +48,15 @@ class Search
     public function searchAllContent(string $query)
     {
         $results = $this->elasticsearch->msearch([
-            'index' => $this->index,
+            'index' => [
+                $this->index.'-album',
+                $this->index.'-playlist',
+                $this->index.'-tracks',
+                $this->index.'-user',
+            ],
             'body' => [
                 //===== Tracks=====//
-                ['type' => 'track'],
+                ['index' => $this->index.'-track'],
                 [
                     'query' => [
                         'multi_match' => [
@@ -70,7 +75,7 @@ class Search
                 ],
 
                 //===== Albums =====//
-                ['type' => 'album'],
+                ['index' => $this->index.'-album'],
                 [
                     'query' => [
                         'multi_match' => [
@@ -87,7 +92,7 @@ class Search
                 ],
 
                 //===== Playlists =====//
-                ['type' => 'playlist'],
+                ['index' => $this->index.'-playlist'],
                 [
                     'query' => [
                         'multi_match' => [
@@ -104,7 +109,7 @@ class Search
                 ],
 
                 //===== Users =====//
-                ['type' => 'user'],
+                ['index' => $this->index.'-user'],
                 [
                     'query' => [
                         'multi_match' => [

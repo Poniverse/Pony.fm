@@ -46,7 +46,7 @@ class AuthController extends Controller
         if (Auth::guest()) {
             return redirect(
                 $this->poniverse
-                    ->getOAuthProvider(['redirectUri' => action('AuthController@getOAuth')])
+                    ->getOAuthProvider(['redirectUri' => action([static::class, 'getOAuth'])])
                     ->getAuthorizationUrl());
         }
 
@@ -67,7 +67,7 @@ class AuthController extends Controller
         try {
             $accessToken = $oauthProvider->getAccessToken('authorization_code', [
                 'code' => $request->query('code'),
-                'redirect_uri' => action('AuthController@getOAuth'),
+                'redirect_uri' => action([static::class, 'getOAuth']),
             ]);
             $this->poniverse->setAccessToken($accessToken);
             $resourceOwner = $oauthProvider->getResourceOwner($accessToken);

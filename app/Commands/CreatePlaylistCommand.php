@@ -20,9 +20,9 @@
 
 namespace App\Commands;
 
+use App\Facades\Notification;
 use App\Models\Playlist;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class CreatePlaylistCommand extends CommandBase

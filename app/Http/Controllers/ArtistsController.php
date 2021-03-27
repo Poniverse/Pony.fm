@@ -51,7 +51,7 @@ class ArtistsController extends Controller
                 $newUser = User::find($user->redirect_to);
 
                 if ($newUser) {
-                    return Redirect::action('ArtistsController@getProfile', [$newUser->slug]);
+                    return Redirect::action([static::class, 'getProfile'], [$newUser->slug]);
                 }
             }
 
@@ -72,6 +72,6 @@ class ArtistsController extends Controller
             abort('404');
         }
 
-        return Redirect::action('ArtistsController@getProfile', [$user->slug]);
+        return Redirect::action([static::class, 'getProfile'], [$user->slug]);
     }
 }

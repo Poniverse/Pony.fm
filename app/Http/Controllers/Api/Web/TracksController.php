@@ -34,6 +34,7 @@ use App\Models\TrackType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -295,8 +296,8 @@ class TracksController extends ApiControllerBase
      */
     private function applyOrdering($query)
     {
-        if (Request::has('order')) {
-            $order = \Request::get('order');
+        if (RequestF::has('order')) {
+            $order = RequestF::get('order');
             $parts = explode(',', $order);
             $query->orderBy($parts[0], $parts[1]);
         }
@@ -312,8 +313,8 @@ class TracksController extends ApiControllerBase
      */
     private function applyFilters($query, $unknown = false)
     {
-        if (Request::has('is_vocal')) {
-            $isVocal = \Request::get('is_vocal');
+        if (RequestF::has('is_vocal')) {
+            $isVocal = RequestF::get('is_vocal');
             if ($isVocal == 'true') {
                 $query->whereIsVocal(true);
             } else {
@@ -321,27 +322,27 @@ class TracksController extends ApiControllerBase
             }
         }
 
-        if (Request::has('in_album')) {
-            if (Request::get('in_album') == 'true') {
+        if (RequestF::has('in_album')) {
+            if (RequestF::get('in_album') == 'true') {
                 $query->whereNotNull('album_id');
             } else {
                 $query->whereNull('album_id');
             }
         }
 
-        if (Request::has('genres')) {
-            $query->whereIn('genre_id', Request::get('genres'));
+        if (RequestF::has('genres')) {
+            $query->whereIn('genre_id', RequestF::get('genres'));
         }
 
-        if (Request::has('types') && ! $unknown) {
-            $query->whereIn('track_type_id', Request::get('types'));
+        if (RequestF::has('types') && ! $unknown) {
+            $query->whereIn('track_type_id', RequestF::get('types'));
         }
 
         $archive = null;
 
-        if (Request::has('archive')) {
+        if (RequestF::has('archive')) {
             // Select which archive to view
-            $archive = Request::get('archive');
+            $archive = RequestF::get('archive');
             $query->where('source', $archive);
         }
 
@@ -364,14 +365,14 @@ class TracksController extends ApiControllerBase
             }
         }
 
-        if (Request::has('songs')) {
+        if (RequestF::has('songs')) {
             // DISTINCT is needed here to avoid duplicate results
             // when a track is associated with multiple show songs.
             $query->distinct();
             $query->join('show_song_track', function ($join) {
                 $join->on('tracks.id', '=', 'show_song_track.track_id');
             });
-            $query->whereIn('show_song_track.show_song_id', Request::get('songs'));
+            $query->whereIn('show_song_track.show_song_id', RequestF::get('songs'));
         }
 
         return $query;

@@ -35,7 +35,10 @@ class AddDeletedAtColumnToActivities extends Migration
                 $table->softDeletes()->index();
             });
 
-            if ('sqlite' !== DB::getDriverName()) {
+            // this has issues now, but considering it's about 5 years old and already ran in production
+            //  i don't think we need to worry about making this work :)
+
+            /*if ('sqlite' !== DB::getDriverName()) {
                 // Retroactively fix activities that should be marked as deleted.
                 // Tracks
                 DB::table('activities')
@@ -64,7 +67,7 @@ class AddDeletedAtColumnToActivities extends Migration
                   ->join('comments', 'activities.resource_id', '=', 'comments.id')
                   ->whereNotNull('comments.deleted_at')
                   ->update(['deleted_at' => DB::raw('comments.deleted_at')]);
-            }
+            }*/
         }
     }
 

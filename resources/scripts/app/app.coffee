@@ -43,8 +43,7 @@ require 'script!../base/moment'
 require '../base/soundmanager2-nodebug'
 require 'script!../base/tumblr'
 require 'angular-strap'
-# Just ignore this, blame webpack
-require '../../../../node_modules/angular-strap/dist/angular-strap.tpl'
+require 'angular-strap/dist/angular-strap.tpl.js'
 require 'chart.js';
 require 'angular-chart.js';
 

@@ -20,13 +20,13 @@
 
 namespace App\Commands;
 
+use App\Facades\Notification;
 use App\Models\Album;
 use App\Models\Comment;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class CreateCommentCommand extends CommandBase

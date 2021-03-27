@@ -33,8 +33,7 @@ use App\Models\Track;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Request as RequestF;
 
 class PlaylistsController extends ApiControllerBase
 {
@@ -222,8 +221,8 @@ class PlaylistsController extends ApiControllerBase
      */
     private function applyOrdering($query)
     {
-        if (Request::has('order')) {
-            $order = \Request::get('order');
+        if (RequestF::has('order')) {
+            $order = RequestF::get('order');
             $parts = explode(',', $order);
             $query->orderBy($parts[0], $parts[1]);
         }

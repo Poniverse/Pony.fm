@@ -20,6 +20,7 @@
 
 namespace App\Providers;
 
+use App\Library\Search;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Validator;
@@ -48,12 +49,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(Poniverse::class, function (Application $app) {
-            return new Poniverse($app['config']->get('poniverse.client_id'), $app['config']->get('poniverse.secret'));
+        $this->app->bind(\Poniverse::class, function (Application $app) {
+            return new \Poniverse($app['config']->get('poniverse.client_id'), $app['config']->get('poniverse.secret'));
         });
 
-        $this->app->bind(App\Library\Search::class, function (Application $app) {
-            return new App\Library\Search(
+        $this->app->bind(Search::class, function (Application $app) {
+            return new Search(
                 \Elasticsearch::connection(),
                 $app['config']->get('ponyfm.elasticsearch_index')
             );

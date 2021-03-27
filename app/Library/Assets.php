@@ -59,7 +59,7 @@ class Assets
 
         foreach ($styles as $style) {
             $filename = self::replaceExtensionWith($style, '.less', '.css');
-            $retVal .= "<link rel='stylesheet' href='/build/$filename?".filemtime(public_path("/build/${filename}"))."' />";
+            $retVal .= "<link rel='stylesheet' href='/build/styles/$filename?".filemtime(public_path("/build/styles/${filename}"))."' />";
         }
 
         return $retVal;
@@ -81,7 +81,7 @@ class Assets
         $files = [];
         $filesFound = [];
         foreach ($globs as $glob) {
-            foreach (glob('../resources/assets/'.$glob, GLOB_BRACE) as $file) {
+            foreach (glob('../resources/'.$glob) as $file) {
                 if (isset($filesFound[$file])) {
                     continue;
                 }

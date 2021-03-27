@@ -20,28 +20,28 @@
 
 namespace App\Jobs;
 
-use App\Contracts\Searchable;
-use App\Jobs\Job;
+use Elasticsearch;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\DB;
-use SerializesModels;
 
 class UpdateSearchIndexForEntity extends Job implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue;
 
-    protected $entity;
+    protected array $elasticsearchBody;
+    protected bool $removeFromIndex;
 
     /**
      * Create a new job instance.
      *
-     * @param Model $entity
+     * @param array $elasticsearchBody
+     * @param bool $removeFromIndex
      */
-    public function __construct(Searchable $entity)
+    public function __construct(array $elasticsearchBody, bool $removeFromIndex = true)
     {
-        $this->entity = $entity;
+        $this->elasticsearchBody = $elasticsearchBody;
+        $this->removeFromIndex = $removeFromIndex;
     }
 
     /**
@@ -52,6 +52,26 @@ class UpdateSearchIndexForEntity extends Job implements ShouldQueue
     public function handle()
     {
         $this->beforeHandle();
-        $this->entity->updateElasticsearchEntrySynchronously();
+
+        match($this->removeFromIndex) {
+            true => $this->deleteElasticsearchEntry(),
+            false => $this->createOrUpdateElasticsearchEntry(),
+        };
     }
+
+    private function createOrUpdateElasticsearchEntry()
+    {
+        Elasticsearch::connection()->index($this->elasticsearchBody);
+    }
+
+    private function deleteElasticsearchEntry()
+    {
+        try {
+            Elasticsearch::connection()->delete($this->elasticsearchBody);
+        } catch (Missing404Exception $e) {
+            // If the entity we're trying to delete isn't indexed in Elasticsearch,
+            // that's fine.
+        }
+    }
+
 }

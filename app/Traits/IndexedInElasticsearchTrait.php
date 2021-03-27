@@ -51,7 +51,7 @@ trait IndexedInElasticsearchTrait
         });
 
         static::deleted(function (Searchable $entity) {
-            $entity->updateElasticsearchEntry();
+            $entity->updateElasticsearchEntry(true);
         });
     }
 
@@ -62,7 +62,7 @@ trait IndexedInElasticsearchTrait
     private function getElasticsearchParameters(bool $includeBody = true)
     {
         $parameters = [
-            'index' => config('ponyfm.elasticsearch_index'),
+            'index' => config('ponyfm.elasticsearch_index')."-".$this->elasticsearchType,
             'type'  => $this->elasticsearchType,
             'id'    => $this->id,
         ];
@@ -74,41 +74,15 @@ trait IndexedInElasticsearchTrait
         return $parameters;
     }
 
-    private function createOrUpdateElasticsearchEntry()
-    {
-        Elasticsearch::connection()->index($this->getElasticsearchParameters());
-    }
-
-    private function deleteElasticsearchEntry()
-    {
-        try {
-            Elasticsearch::connection()->delete($this->getElasticsearchParameters(false));
-        } catch (Missing404Exception $e) {
-            // If the entity we're trying to delete isn't indexed in Elasticsearch,
-            // that's fine.
-        }
-    }
-
     /**
      * Asynchronously updates the Elasticsearch entry.
      * When in doubt, this is the method to use.
+     *
+     * @param bool $removeFromIndex
      */
-    public function updateElasticsearchEntry()
+    public function updateElasticsearchEntry(bool $removeFromIndex = false)
     {
-        $job = (new UpdateSearchIndexForEntity($this))->onQueue(config('ponyfm.indexing_queue'));
+        $job = (new UpdateSearchIndexForEntity($this->getElasticsearchParameters(!$removeFromIndex), $removeFromIndex))->onQueue(config('ponyfm.indexing_queue'));
         $this->dispatch($job);
-    }
-
-    /**
-     * Synchronously updates the Elasticsearch entry. This should only be
-     * called from the UpdateSearchIndexForEntity job.
-     */
-    public function updateElasticsearchEntrySynchronously()
-    {
-        if ($this->shouldBeIndexed()) {
-            $this->createOrUpdateElasticsearchEntry();
-        } else {
-            $this->deleteElasticsearchEntry();
-        }
     }
 }

@@ -24,7 +24,7 @@ class External
 {
     public static function execute($command)
     {
-        $process = new Process($command);
+        $process = Process::fromShellCommandline($command);
         $process->run();
 
         if (! $process->isSuccessful()) {

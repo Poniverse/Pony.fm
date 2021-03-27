@@ -45,7 +45,7 @@ class PlaylistsController extends Controller
         }
 
         if ($playlist->slug != $slug) {
-            return Redirect::action('PlaylistsController@getPlaylist', [$id, $playlist->slug]);
+            return Redirect::action([static::class, 'getPlaylist'], [$id, $playlist->slug]);
         }
 
         return view('playlists.show');
@@ -58,7 +58,7 @@ class PlaylistsController extends Controller
             abort(404);
         }
 
-        return Redirect::action('PlaylistsController@getPlaylist', [$id, $playlist->slug]);
+        return Redirect::action([static::class, 'getPlaylist'], [$id, $playlist->slug]);
     }
 
     public function getDownload(Request $request, $id, $extension)

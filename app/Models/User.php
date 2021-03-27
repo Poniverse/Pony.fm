@@ -22,6 +22,7 @@ namespace App\Models;
 
 use App\Contracts\Commentable;
 use App\Contracts\Searchable;
+use App\Http\Controllers\ArtistsController;
 use App\Traits\IndexedInElasticsearchTrait;
 use Carbon\Carbon;
 use Gravatar;
@@ -346,7 +347,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getUrlAttribute()
     {
-        return action('ArtistsController@getProfile', $this->slug);
+        return action([ArtistsController::class, 'getProfile'], $this->slug);
     }
 
     public function getMessageUrlAttribute()

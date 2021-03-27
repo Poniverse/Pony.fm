@@ -43,7 +43,7 @@ class AlbumsController extends Controller
         }
 
         if ($album->slug != $slug) {
-            return Redirect::action('AlbumsController@getAlbum', [$id, $album->slug]);
+            return Redirect::action([AlbumsController::class, 'getAlbum'], [$id, $album->slug]);
         }
 
         return view('albums.show');
@@ -56,7 +56,7 @@ class AlbumsController extends Controller
             abort(404);
         }
 
-        return Redirect::action('AlbumsController@getShow', [$id, $album->slug]);
+        return Redirect::action([AlbumsController::class, 'getShow'], [$id, $album->slug]);
     }
 
     public function getDownload($id, $extension)

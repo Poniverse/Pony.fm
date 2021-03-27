@@ -10,7 +10,7 @@
     "license": "AGPL",
     "type": "project",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "laravel/framework": "^8.27",
         "codescale/ffmpeg-php": "2.7.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -20,9 +20,9 @@
         "cviebrock/laravel-elasticsearch": "^8.0",
         "barryvdh/laravel-debugbar": "^3.5",
         "predis/predis": "^1.1",
-        "ksubileau/color-thief-php": "^1.3",
+        "ksubileau/color-thief-php": "v2.0.x-dev",
         "graham-campbell/exceptions": "^14.0",
-        "minishlink/web-push": "^1.0",
+        "minishlink/web-push": "^6.0",
         "alsofronie/eloquent-uuid": "^1.0",
         "poniverse/api": "dev-rewrite",
         "fruitcake/laravel-cors": "2.0.1",
@@ -31,7 +31,8 @@
         "doctrine/annotations": "^1.11",
         "doctrine/cache": "^1.8",
         "doctrine/instantiator": "^1.4",
-        "fideloper/proxy": "^4.4"
+        "fideloper/proxy": "^4.4",
+        "james-heinrich/getid3": "^1.9"
     },
     "require-dev": {
         "mockery/mockery": "^1.4.2",
@@ -46,6 +47,9 @@
         "barryvdh/laravel-ide-helper": "^2.9"
     },
     "autoload": {
+        "files": [
+            "vendor/james-heinrich/getid3/getid3/getid3.php"
+        ],
         "classmap": [
             "database/migrations",
             "app/Library"

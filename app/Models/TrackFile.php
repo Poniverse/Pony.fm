@@ -20,6 +20,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\TracksController;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
@@ -144,7 +145,7 @@ class TrackFile extends Model
 
     public function getUrlAttribute()
     {
-        return action('TracksController@getDownload', ['id' => $this->track_id, 'extension' => $this->extension]);
+        return action([TracksController::class, 'getDownload'], ['id' => $this->track_id, 'extension' => $this->extension]);
     }
 
     public function getSizeAttribute()

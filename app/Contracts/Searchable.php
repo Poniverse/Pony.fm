@@ -28,14 +28,12 @@ interface Searchable
      *
      * @return array
      */
-    public function toElasticsearch():array;
+    public function toElasticsearch(): array;
 
     /**
      * @return bool whether this particular object should be indexed or not
      */
-    public function shouldBeIndexed():bool;
+    public function shouldBeIndexed(): bool;
 
-    public function updateElasticsearchEntry();
-
-    public function updateElasticsearchEntrySynchronously();
+    public function updateElasticsearchEntry(bool $removeFromIndex = false);
 }

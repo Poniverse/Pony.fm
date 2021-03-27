@@ -24,6 +24,7 @@ use App\Contracts\Commentable;
 use App\Contracts\Favouritable;
 use App\Contracts\Searchable;
 use App\Exceptions\TrackFileNotFoundException;
+use App\Http\Controllers\TracksController;
 use App\Models\ResourceLogItem;
 use App\Traits\IndexedInElasticsearchTrait;
 use App\Traits\SlugTrait;
@@ -226,7 +227,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'tag_format' => 'AtomicParsley',
             'tag_method' => 'updateTagsWithAtomicParsley',
             'mime_type' => 'audio/mp4',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libfaac -ab 256k -f mp4 {$target}',
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a aac -ab 256k -f mp4 {$target}',
         ],
         'ALAC' => [
             'index' => 4,
@@ -523,8 +524,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         }
 
         $returnValue['share'] = [
-            'url' => action('TracksController@getShortlink', ['id' => $track->id]),
-            'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
+            'url' => action([TracksController::class, 'getShortlink'], ['id' => $track->id]),
+            'html' => '<iframe src="'.action([TracksController::class, 'getEmbed'], ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
             'bbcode' => '[url='.$track->url.'][img]'.$track->getCoverUrl().'[/img][/url]',
             'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$track->title.' by '.$track->user->display_name.' on Pony.fm',
         ];
@@ -813,7 +814,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getUrlAttribute()
     {
-        return action('TracksController@getTrack', ['id' => $this->id, 'slug' => $this->slug]);
+        return action([TracksController::class, 'getTrack'], ['id' => $this->id, 'slug' => $this->slug]);
     }
 
     /**
@@ -942,7 +943,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function getStreamUrl(string $format = 'MP3', string $apiClientId = null)
     {
-        return action('TracksController@getStream',
+        return action([TracksController::class, 'getStream'],
             [
                 'id' => $this->id,
                 'extension' => self::$Formats[$format]['extension'],
@@ -1052,7 +1053,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
         $format = self::$Formats[$format];
 
-        return action('TracksController@getDownload', ['id' => $this->id, 'extension' => $format['extension']]);
+        return action([TracksController::class, 'getDownload'], ['id' => $this->id, 'extension' => $format['extension']]);
     }
 
     /**
@@ -1160,9 +1161,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     private function updateTagsWithGetId3(string $format)
     {
-        require_once app_path().'/Library/getid3/getid3/getid3.php';
-        require_once app_path().'/Library/getid3/getid3/write.php';
-        $tagWriter = new getid3_writetags;
+        $tagWriter = new \getid3_writetags;
 
         $tagWriter->overwrite_tags = true;
         $tagWriter->tag_encoding = 'UTF-8';
@@ -1171,7 +1170,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
         $tagWriter->tag_data = [
             'title' => [$this->title],
             'artist' => [$this->user->display_name],
-            'year' => [''.$this->year],
+            'year' => [(string) $this->year],
             'genre' => [$this->genre != null ? $this->genre->name : ''],
             'comment' => ['Downloaded from: https://pony.fm/'],
             'copyright' => ['© '.$this->year.' '.$this->user->display_name],
@@ -1185,7 +1184,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
         if ($this->album_id !== null) {
             $tagWriter->tag_data['album'] = [$this->album->title];
-            $tagWriter->tag_data['track'] = [$this->track_number];
+            $tagWriter->tag_data['track'] = [(string) $this->track_number];
         }
 
         if ($format == 'MP3' && $this->cover_id != null && is_file($this->cover->getFile())) {
@@ -1250,8 +1249,8 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'title'         => $this->title,
             'artist'        => $this->user->display_name,
             'published_at'  => $this->published_at ? $this->published_at->toIso8601String() : null,
-            'genre'         => $this->genre->name,
-            'track_type'    => $this->trackType->title,
+            'genre'         => $this->genre?->name,
+            'track_type'    => $this->trackType?->title,
             'show_songs'    => $this->showSongs->pluck('title'),
         ];
     }

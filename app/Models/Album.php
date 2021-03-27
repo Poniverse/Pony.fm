@@ -24,6 +24,7 @@ use App\Contracts\Commentable;
 use App\Contracts\Favouritable;
 use App\Contracts\Searchable;
 use App\Exceptions\TrackFileNotFoundException;
+use App\Http\Controllers\AlbumsController;
 use App\Traits\IndexedInElasticsearchTrait;
 use App\Traits\SlugTrait;
 use App\Traits\TrackCollection;
@@ -211,7 +212,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         $data['description'] = $album->description;
         $data['is_downloadable'] = $is_downloadable;
         $data['share'] = [
-            'url' => action('AlbumsController@getShortlink', ['id' => $album->id]),
+            'url' => action([AlbumsController::class, 'getShortlink'], ['id' => $album->id]),
             'tumblrUrl' => 'http://www.tumblr.com/share/link?url='.urlencode($album->url).'&name='.urlencode($album->title).'&description='.urlencode($album->description),
             'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$album->title.' by '.$album->user->display_name.' on Pony.fm',
         ];
@@ -279,12 +280,12 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function getUrlAttribute()
     {
-        return action('AlbumsController@getShow', ['id' => $this->id, 'slug' => $this->slug]);
+        return action([AlbumsController::class, 'getShow'], ['id' => $this->id, 'slug' => $this->slug]);
     }
 
     public function getDownloadUrl($format)
     {
-        return action('AlbumsController@getDownload', ['id' => $this->id, 'extension' => Track::$Formats[$format]['extension']]);
+        return action([AlbumsController::class, 'getDownload'], ['id' => $this->id, 'extension' => Track::$Formats[$format]['extension']]);
     }
 
     public function getCoverUrl($type = Image::NORMAL)
