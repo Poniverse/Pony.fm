@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  web:
+    image: ponyfm
+    container_name: web
+    ports:
+      - "8000:80"
+    links:
+      - elasticsearch
+      - postgresd
+    command:
+      - web
+    volumes:
+      - .:/app
+      - ./vagrant/php-overrides.ini:/usr/local/etc/php/conf.d/php.ini:ro
+      - ./vagrant/php-overrides.ini:/usr/local/etc/php-fpm.d/php.ini:ro
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    container_name: elasticsearch
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  postgresd:
+    image: postgres:13.1-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=app
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+
+volumes:
+  postgres-data:
+  elasticsearch-data:
