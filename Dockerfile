@@ -45,7 +45,7 @@ RUN apk add --no-cache libgcc libstdc++ ca-certificates libcrypto1.1 libssl1.1 l
 RUN apk add --no-cache nginx sudo
 
 # Install php extensions
-RUN install-php-extensions mysqli pgsql pdo_mysql pdo_pgsql gmp gmagick
+RUN install-php-extensions mysqli pgsql pdo_mysql pdo_pgsql gmp gmagick redis
 
 RUN mkdir /app && chown -R www-data: /app
 
