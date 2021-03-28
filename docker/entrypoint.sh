@@ -2,6 +2,8 @@
 
 set -e
 
+sudo -Esu www-data php artisan optimize
+
 MODE=$1
 
 case $MODE in
