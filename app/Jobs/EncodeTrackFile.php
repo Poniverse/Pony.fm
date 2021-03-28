@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -123,7 +124,14 @@ class EncodeTrackFile extends Job implements ShouldQueue
 
         // Prepare the command
         $format = Track::$Formats[$this->trackFile->format];
-        $command = $format['command'];
+
+        $prefix = Config('ponyfm.ffmpeg_prefix');
+
+        if (str_contains($prefix, '$(pwd)')) {
+            $prefix = str_replace('$(pwd)', App::basePath(), $prefix);
+        }
+
+        $command = $prefix . " " . $format['command'];
         $command = str_replace('{$source}', '"'.$source.'"', $command);
         $command = str_replace('{$target}', '"'.$target.'"', $command);
 
