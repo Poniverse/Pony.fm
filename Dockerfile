@@ -60,6 +60,15 @@ RUN rm /usr/bin/composer /usr/bin/install-php-extensions
 
 COPY docker/nginx/site.conf /etc/nginx/conf.d/default.conf
 
+## Install AtomicParsley
+RUN curl -s https://api.github.com/repos/wez/atomicparsley/releases/latest \
+  | grep "browser_download_url.*Linux" \
+  | cut -d '"' -f 4 \
+  | xargs curl -sLo AtomicParsleyLinux.zip \
+  && unzip AtomicParsleyLinux.zip \
+  && rm AtomicParsleyLinux.zip \
+  && mv AtomicParsley /usr/local/bin/AtomicParsley
+
 EXPOSE 80
 
 ENTRYPOINT ["docker/entrypoint.sh"]
