@@ -1,4 +1,14 @@
 FROM jrottenberg/ffmpeg:4.3-alpine312 as ffmpeg
+
+FROM alpine:3.12 as atomicparsley_builder
+
+RUN apk add --no-cache make cmake linux-headers g++ git
+RUN git clone https://github.com/wez/atomicparsley.git /tmp/atomicparsley
+
+RUN cd /tmp/atomicparsley \
+  && cmake . \
+  && cmake --build . --config Release
+
 FROM node:12-alpine as assets_builder
 
 # To handle 'not get uid/gid'
@@ -29,8 +39,9 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
 COPY --from=ffmpeg /usr/local /usr/local
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/install-php-extensions
+COPY --from=atomicparsley_builder /tmp/atomicparsley/AtomicParsley /usr/local/bin/AtomicParsley
 
-## Common libraries required for ffmpeg to work
+## Common libraries required for ffmpeg & atomicparsley` to work
 RUN apk add --no-cache libgcc libstdc++ ca-certificates libcrypto1.1 libssl1.1 libgomp expat git
 RUN apk add --no-cache nginx sudo
 
@@ -59,15 +70,6 @@ USER root
 RUN rm /usr/bin/composer /usr/bin/install-php-extensions
 
 COPY docker/nginx/site.conf /etc/nginx/conf.d/default.conf
-
-## Install AtomicParsley
-RUN curl -s https://api.github.com/repos/wez/atomicparsley/releases/latest \
-  | grep "browser_download_url.*Linux" \
-  | cut -d '"' -f 4 \
-  | xargs curl -sLo AtomicParsleyLinux.zip \
-  && unzip AtomicParsleyLinux.zip \
-  && rm AtomicParsleyLinux.zip \
-  && mv AtomicParsley /usr/local/bin/AtomicParsley
 
 EXPOSE 80
 
