@@ -18,8 +18,6 @@ RUN npm install -g gulp
 
 WORKDIR /app
 
-RUN mkdir -p /app/resources
-
 COPY package.json /app
 
 RUN npm install
@@ -28,7 +26,8 @@ COPY gulpfile.js /app
 COPY webpack.base.config.js /app
 COPY webpack.dev.config.js /app
 COPY webpack.production.config.js /app
-COPY resources /app/resources
+COPY public /app/public/
+COPY resources /app/resources/
 
 RUN gulp build
 
