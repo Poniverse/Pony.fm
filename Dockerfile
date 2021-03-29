@@ -70,6 +70,9 @@ RUN rm /usr/bin/composer /usr/bin/install-php-extensions
 
 COPY docker/nginx/site.conf /etc/nginx/conf.d/default.conf
 
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/php.ini
+COPY docker/php/php.ini /usr/local/etc/php-fpm.d/php.ini
+
 EXPOSE 80
 
 ENTRYPOINT ["docker/entrypoint.sh"]
