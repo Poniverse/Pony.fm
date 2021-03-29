@@ -48,12 +48,14 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
-        $this->routes(function () {
-            Route::model('userId', User::class);
-            Route::bind('userSlug', function ($value) {
-                return User::where('slug', $value)->first();
-            });
+        // Ensure route bindings are out of the `$this->routes()` callable, otherwise route caching won't
+        //  take our custom bindings into account.
+        Route::model('userId', User::class);
+        Route::bind('userSlug', function ($value) {
+            return User::where('slug', $value)->first();
+        });
 
+        $this->routes(function () {
             Route::prefix('api')
                 ->middleware('api')
                 ->group(base_path('routes/api.php'));

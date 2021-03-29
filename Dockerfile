@@ -42,7 +42,7 @@ COPY --from=atomicparsley_builder /tmp/atomicparsley/AtomicParsley /usr/local/bi
 
 ## Common libraries required for ffmpeg & atomicparsley` to work
 RUN apk add --no-cache libgcc libstdc++ ca-certificates libcrypto1.1 libssl1.1 libgomp expat git
-RUN apk add --no-cache nginx sudo
+RUN apk add --no-cache nginx sudo imagemagick
 
 # Install php extensions
 RUN install-php-extensions mysqli pgsql pdo_mysql pdo_pgsql gmp gmagick redis
