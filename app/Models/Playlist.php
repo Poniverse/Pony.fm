@@ -314,7 +314,7 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
 
     public function getDownloadUrl($format)
     {
-        return action([PlaylistsController::class, 'getDownload'], ['id' => $this->id, 'format' => Track::$Formats[$format]['extension']]);
+        return action([PlaylistsController::class, 'getDownload'], ['id' => $this->id, 'extension' => Track::$Formats[$format]['extension']]);
     }
 
     public function getCoverUrl($type = Image::NORMAL)
