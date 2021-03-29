@@ -10,33 +10,55 @@ return [
      * as your default connection when building an client. Of course you may
      * use create several clients at once, each with different configurations.
      */
+
     'defaultConnection' => 'default',
 
     /**
      * These are the connection parameters used when building a client.
      */
+
     'connections' => [
 
         'default' => [
 
             /**
-             * Hosts.
+             * Hosts
              *
              * This is an array of hosts that the client will connect to. It can be a
-             * single host name, or an array if you are running a cluster of Elasticsearch
+             * single host, or an array if you are running a cluster of Elasticsearch
              * instances.
              *
              * This is the only configuration value that is mandatory.
              *
-             * If set in an environment variable, this should be a comma-separated
-             * list of hostnames. Port numbers are optional; 9200 is the default.
+             * Presently using "extended" host configuration method
              *
-             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_host_configuration
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_extended_host_configuration
+             *
+             * There is also the shorter "inline" configuration method available
+             *
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_inline_host_configuration
              */
-            'hosts' => explode(',', env('ELASTICSEARCH_HOSTS', 'localhost:9200')),
+
+            'hosts' => [
+                [
+                    'host'              => env('ELASTICSEARCH_HOST', 'localhost'),
+                    'port'              => env('ELASTICSEARCH_PORT', 9200),
+                    'scheme'            => env('ELASTICSEARCH_SCHEME', null),
+                    'user'              => env('ELASTICSEARCH_USER', null),
+                    'pass'              => env('ELASTICSEARCH_PASS', null),
+
+                    // If you are connecting to an Elasticsearch instance on AWS, you will need these values as well
+                    'aws'               => env('AWS_ELASTICSEARCH_ENABLED', false),
+                    'aws_region'        => env('AWS_REGION', ''),
+                    'aws_key'           => env('AWS_ACCESS_KEY_ID', ''),
+                    'aws_secret'        => env('AWS_SECRET_ACCESS_KEY', ''),
+                    'aws_credentials'   => null,
+                    'aws_session_token' => env('AWS_SESSION_TOKEN', null),
+                ],
+            ],
 
             /**
-             * SSL.
+             * SSL
              *
              * If your Elasticsearch instance uses an out-dated or self-signed SSL
              * certificate, you will need to pass in the certificate bundle.  This can
@@ -50,10 +72,11 @@ return [
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_security.html#_ssl_encryption_2
              */
+
             'sslVerification' => null,
 
             /**
-             * Logging.
+             * Logging
              *
              * Logging is handled by passing in an instance of Monolog\Logger (which
              * coincidentally is what Laravel's default logger is).
@@ -69,17 +92,18 @@ return [
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#enabling_logger
              */
+
             'logging' => false,
 
             // If you have an existing instance of Monolog you can use it here.
-            //'logObject' => \Log::getMonolog(),
+            // 'logObject' => \Log::getMonolog(),
 
             'logPath' => storage_path('logs/elasticsearch.log'),
 
             'logLevel' => Monolog\Logger::INFO,
 
             /**
-             * Retries.
+             * Retries
              *
              * By default, the client will retry n times, where n = number of nodes in
              * your cluster. If you would like to disable retries, or change the number,
@@ -87,6 +111,7 @@ return [
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_set_retries
              */
+
             'retries' => null,
 
             /**
@@ -97,59 +122,87 @@ return [
              */
 
             /**
-             * Sniff On Start.
+             * Sniff On Start
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html
              */
+
             'sniffOnStart' => false,
 
             /**
-             * HTTP Handler.
+             * HTTP Handler
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_configure_the_http_handler
              * @see http://ringphp.readthedocs.org/en/latest/client_handlers.html
              */
+
             'httpHandler' => null,
 
             /**
-             * Connection Pool.
+             * Connection Pool
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_setting_the_connection_pool
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_connection_pool.html
              */
+
             'connectionPool' => null,
 
             /**
-             * Connection Selector.
+             * Connection Selector
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_setting_the_connection_selector
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_selectors.html
              */
+
             'connectionSelector' => null,
 
             /**
-             * Serializer.
+             * Serializer
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_setting_the_serializer
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_serializers.html
              */
+
             'serializer' => null,
 
             /**
-             * Connection Factory.
+             * Connection Factory
              *
              * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_setting_a_custom_connectionfactory
              */
+
             'connectionFactory' => null,
 
             /**
-             * Endpoint.
+             * Endpoint
              *
-             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_set_the_endpoint_closure
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/6.0/_configuration.html#_set_the_endpoint_closure
              */
+
             'endpoint' => null,
 
+
+            /**
+             * Register additional namespaces
+             *
+             * An array of additional namespaces to register.
+             *
+             * @example 'namespaces' => [XPack::Security(), XPack::Watcher()]
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/ElasticsearchPHP_Endpoints.html#Elasticsearch_ClientBuilderregisterNamespace_registerNamespace
+             */
+            'namespaces' => [],
+
+            /**
+             * Tracer
+             *
+             * Tracer is handled by passing in a name of the class implements Psr\Log\LoggerInterface.
+             *
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_setting_a_custom_connectionfactory
+             */
+            'tracer' => null,
+
         ],
+
     ],
 
 ];
