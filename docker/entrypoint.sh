@@ -2,7 +2,11 @@
 
 set -e
 
-sudo -Esu www-data php artisan optimize
+# If we have an .env file then we're likely running on a dev machine
+#  in which case auto optimization on start up is not necessary.
+if [ ! -f .env ]; then
+  sudo -Esu www-data php artisan optimize
+fi
 
 MODE=$1
 

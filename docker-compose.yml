@@ -12,7 +12,7 @@ services:
     command:
       - web
     volumes:
-      - .:/app
+      - appcode-sync:/app:nocopy
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
       - ./docker/php/php.ini:/usr/local/etc/php-fpm.d/php.ini:ro
 
@@ -42,7 +42,8 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
-
 volumes:
+  appcode-sync:
+    external: true
   postgres-data:
   elasticsearch-data:
