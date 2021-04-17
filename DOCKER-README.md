@@ -42,6 +42,7 @@ In your .env file you will refer to the container names for all services. (I.E `
 
 Bring everything up
 ```
+docker build . -t ponyfm
 docker-sync start
 docker-compose up -d
 ```
@@ -49,3 +50,17 @@ docker-compose up -d
 Notes:
 - Initial sync is super slow, but watching is pretty fast
 - You could skip docker-sync and change `appcode-sync` to `./` but expect request time to go from the `ms` to the many `s`'s.
+
+Once everything is up and running
+
+Create an alias to interact with the `artisan` cli tool:
+
+```
+alias p="docker compose exec web php artisan"
+```
+
+Then migrate and seed the app, and you should be good to go! 
+
+```
+p migrate --seed
+```
