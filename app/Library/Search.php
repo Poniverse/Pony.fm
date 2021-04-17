@@ -27,6 +27,7 @@ use App\Models\User;
 use Elasticsearch\Client;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class Search
@@ -61,6 +62,7 @@ class Search
                     'query' => [
                         'multi_match' => [
                             'query' => $query,
+                            'type' => 'phrase_prefix',
                             'fields' => [
                                 'title^3',
                                 'artist^2',
@@ -80,6 +82,7 @@ class Search
                     'query' => [
                         'multi_match' => [
                             'query' => $query,
+                            'type' => 'phrase_prefix',
                             'fields' => [
                                 'title^2',
                                 'artist',
@@ -97,6 +100,7 @@ class Search
                     'query' => [
                         'multi_match' => [
                             'query' => $query,
+                            'type' => 'phrase_prefix',
                             'fields' => [
                                 'title^3',
                                 'curator',
@@ -114,6 +118,7 @@ class Search
                     'query' => [
                         'multi_match' => [
                             'query' => $query,
+                            'type' => 'phrase_prefix',
                             'fields' => [
                                 'display_name',
                                 'tracks',
@@ -126,10 +131,10 @@ class Search
             ],
         ]);
 
-        $tracks = $this->transformTracks($results['responses'][0]['hits']['hits']);
-        $albums = $this->transformAlbums($results['responses'][1]['hits']['hits']);
-        $playlists = $this->transformPlaylist($results['responses'][2]['hits']['hits']);
-        $users = $this->transformUsers($results['responses'][3]['hits']['hits']);
+        $tracks = $this->transformTracks(Arr::get($results, 'responses.0.hits.hits', []));
+        $albums = $this->transformAlbums(Arr::get($results, 'responses.1.hits.hits', []));
+        $playlists = $this->transformPlaylist(Arr::get($results, 'responses.2.hits.hits', []));
+        $users = $this->transformUsers(Arr::get($results, 'responses.3.hits.hits', []));
 
         return [
             'tracks'    => $tracks,
