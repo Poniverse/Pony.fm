@@ -179,6 +179,7 @@ return [
     */
 
     'aliases' => [
+        'Date' => Illuminate\Support\Facades\Date::class,
         'Str' => Illuminate\Support\Str::class,
         'Arr' => Illuminate\Support\Arr::class,
 
