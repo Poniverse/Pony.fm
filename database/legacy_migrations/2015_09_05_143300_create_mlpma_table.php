@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateMlpmaTable extends Migration
 {
@@ -30,7 +30,7 @@ class CreateMlpmaTable extends Migration
      */
     public function up()
     {
-        Schema::create('mlpma_tracks', function(\Illuminate\Database\Schema\Blueprint $table) {
+        Schema::create('mlpma_tracks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('track_id')->unsigned()->index();
             $table->string('path')->index();

@@ -94,9 +94,9 @@ gulp.task("webpack-dev-server", function () {
 
 gulp.task("styles-app", function () {
     var includedStyles = [
-        "resources/assets/styles/base/jquery-ui.css",
-        "resources/assets/styles/base/colorbox.css",
-        "resources/assets/styles/app.less"
+        "resources/styles/base/jquery-ui.css",
+        "resources/styles/base/colorbox.css",
+        "resources/styles/app.less"
     ];
 
     if (!argv.production) {
@@ -104,7 +104,7 @@ gulp.task("styles-app", function () {
         // we want to watch embed files and re-compile them. However, we want
         // to leave this path out in production so that embed files are not bloating
         // the css file
-        includedStyles.push("resources/assets/styles/embed.less");
+        includedStyles.push("resources/styles/embed.less");
 
         // Remove app.less from the cache so that it gets recompiled
         var styleCache = plug.cached.caches.styles;
@@ -124,7 +124,7 @@ gulp.task("styles-app", function () {
 
     return argv.production
         // Production pipeline
-        ? gulp.src(includedStyles, {base: "resources/assets/styles"})
+        ? gulp.src(includedStyles, {base: "resources/styles"})
         .pipe(plug.plumber(plumberOptions))
         .pipe(plug.if(/\.less/, plug.less()))
         .pipe(plug.autoprefixer({
@@ -137,7 +137,7 @@ gulp.task("styles-app", function () {
         .pipe(gulp.dest("public/build/styles"))
 
         // Development pipeline
-        : gulp.src(includedStyles, {base: "resources/assets/styles"})
+        : gulp.src(includedStyles, {base: "resources/styles"})
         .pipe(plug.plumber(plumberOptions))
         .pipe(plug.cached("styles"))
         .pipe(plug.sourcemaps.init())
@@ -153,7 +153,7 @@ gulp.task("styles-embed", function () {
     // since development-mode watches and builds include the embed styles
     // already
 
-    return gulp.src(["resources/assets/styles/embed.less"], {base: "resources/assets/styles"})
+    return gulp.src(["resources/styles/embed.less"], {base: "resources/styles"})
         .pipe(plug.less())
         .pipe(plug.autoprefixer({
             browsers: ["last 2 versions"],
@@ -166,7 +166,7 @@ gulp.task("styles-embed", function () {
 });
 
 gulp.task('copy:templates', function () {
-    gulp.src([
+    return gulp.src([
         'public/templates/**/*.html'
     ])
         .pipe(plug.angularTemplatecache({
@@ -312,7 +312,7 @@ gulp.task('build', gulp.parallel('webpack-build',
 
 
 gulp.task("watch-legacy", gulp.series(gulp.parallel("build"), function () {
-    gulp.watch("resources/assets/styles/**/*.{css,less}", gulp.parallel("styles-app"));
+    gulp.watch("resources/styles/**/*.{css,less}", gulp.parallel("styles-app"));
 }));
 
 gulp.task("watch", gulp.parallel("webpack-dev-server", "email-default", "watch-legacy"));

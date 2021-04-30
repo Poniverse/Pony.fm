@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
 namespace App\Http\Controllers;
 
 use App\Commands\CommandBase;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 abstract class ApiControllerBase extends Controller
 {
@@ -34,28 +34,28 @@ abstract class ApiControllerBase extends Controller
      */
     protected function execute(CommandBase $command)
     {
-        if (!$command->authorize()) {
+        if (! $command->authorize()) {
             return $this->notAuthorized();
         }
 
         $result = $command->execute();
         if ($result->didFail()) {
-            return Response::json([
+            return response()->json([
                 'message' => 'Validation failed',
-                'errors' => $result->getMessages()
+                'errors' => $result->getMessages(),
             ], $result->getStatusCode());
         }
 
-        return Response::json($result->getResponse(), $result->getStatusCode());
+        return response()->json($result->getResponse(), $result->getStatusCode());
     }
 
     public function notAuthorized()
     {
-        return Response::json(['message' => 'You may not do this!'], 403);
+        return response()->json(['message' => 'You may not do this!'], 403);
     }
 
     public function notFound($message)
     {
-        return Response::json(['message' => $message], 403);
+        return response()->json(['message' => $message], 403);
     }
 }

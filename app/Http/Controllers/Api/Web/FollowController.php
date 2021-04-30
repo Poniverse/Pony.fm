@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,12 +22,12 @@ namespace App\Http\Controllers\Api\Web;
 
 use App\Commands\ToggleFollowingCommand;
 use App\Http\Controllers\ApiControllerBase;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class FollowController extends ApiControllerBase
 {
-    public function postToggle()
+    public function postToggle(Request $request)
     {
-        return $this->execute(new ToggleFollowingCommand(Request::get('type'), Request::get('id')));
+        return $this->execute(new ToggleFollowingCommand($request->get('type'), $request->get('id')));
     }
 }

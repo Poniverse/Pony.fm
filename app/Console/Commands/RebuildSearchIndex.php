@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,12 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\Album;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
 
 class RebuildSearchIndex extends Command
 {
@@ -45,7 +45,6 @@ class RebuildSearchIndex extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -65,7 +64,7 @@ class RebuildSearchIndex extends Command
         $totalUsers = User::count();
 
         $trackProgress = $this->output->createProgressBar($totalTracks);
-        $this->info("Processing tracks...");
+        $this->info('Processing tracks...');
         Track::withTrashed()->chunk(200, function (Collection $tracks) use ($trackProgress) {
             foreach ($tracks as $track) {
                 /** @var Track $track */
@@ -76,9 +75,8 @@ class RebuildSearchIndex extends Command
         $trackProgress->finish();
         $this->line('');
 
-
         $albumProgress = $this->output->createProgressBar($totalAlbums);
-        $this->info("Processing albums...");
+        $this->info('Processing albums...');
         Album::withTrashed()->chunk(200, function (Collection $albums) use ($albumProgress) {
             foreach ($albums as $album) {
                 /** @var Album $album */
@@ -89,9 +87,8 @@ class RebuildSearchIndex extends Command
         $albumProgress->finish();
         $this->line('');
 
-
         $playlistProgress = $this->output->createProgressBar($totalPlaylists);
-        $this->info("Processing playlists...");
+        $this->info('Processing playlists...');
         Playlist::withTrashed()->chunk(200, function (Collection $playlists) use ($playlistProgress) {
             foreach ($playlists as $playlist) {
                 /** @var Playlist $playlist */
@@ -102,9 +99,8 @@ class RebuildSearchIndex extends Command
         $playlistProgress->finish();
         $this->line('');
 
-
         $userProgress = $this->output->createProgressBar($totalUsers);
-        $this->info("Processing users...");
+        $this->info('Processing users...');
         User::chunk(200, function (Collection $users) use ($userProgress) {
             foreach ($users as $user) {
                 /** @var User $user */

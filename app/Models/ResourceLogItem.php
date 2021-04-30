@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,23 +20,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Auth;
-use DB;
-use Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
 /**
- * App\Models\ResourceLogItem
+ * App\Models\ResourceLogItem.
  *
- * @property integer $id
- * @property integer $user_id
- * @property integer $log_type
+ * @property int $id
+ * @property int $user_id
+ * @property int $log_type
  * @property string $ip_address
- * @property integer $track_format_id
- * @property integer $track_id
- * @property integer $album_id
- * @property integer $playlist_id
+ * @property int $track_format_id
+ * @property int $track_id
+ * @property int $album_id
+ * @property int $playlist_id
  * @property \Carbon\Carbon $created_at
  * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\ResourceLogItem whereUserId($value)
@@ -51,9 +51,7 @@ use Request;
  */
 class ResourceLogItem extends Model
 {
-    protected $table = 'resource_log_items';
     public $timestamps = false;
-    protected $dates = ['created_at'];
 
     const VIEW = 1;
     const DOWNLOAD = 2;
@@ -63,7 +61,7 @@ class ResourceLogItem extends Model
     {
         $resourceIdColumn = $resourceType.'_id';
 
-        $logItem = new ResourceLogItem();
+        $logItem = new self();
         $logItem->{$resourceIdColumn} = $resourceId;
         $logItem->created_at = Carbon::now();
         $logItem->log_type = $logType;
@@ -96,31 +94,29 @@ class ResourceLogItem extends Model
         // for the same resource at the same time, the cached values will still be correct with this method.
 
         DB::table($resourceTable)->whereId($resourceId)->update([
-            $countColumn =>
-                DB::raw('(SELECT
+            $countColumn => DB::raw('(SELECT
                     COUNT(id)
                 FROM
                     resource_log_items
-                WHERE ' .
+                WHERE '.
                     $resourceIdColumn.' = '.$resourceId.'
                 AND
-                    log_type = ' . $logType.')')
+                    log_type = '.$logType.')'),
         ]);
 
         if (Auth::check()) {
             $resourceUserId = ResourceUser::getId(Auth::user()->id, $resourceType, $resourceId);
             DB::table('resource_users')->whereId($resourceUserId)->update([
-                $countColumn =>
-                    DB::raw('(SELECT
+                $countColumn => DB::raw('(SELECT
                         COUNT(id)
                     FROM
                         resource_log_items
                     WHERE
-                        user_id = ' . Auth::user()->id.'
-                    AND ' .
+                        user_id = '.Auth::user()->id.'
+                    AND '.
                         $resourceIdColumn.' = '.$resourceId.'
                     AND
-                        log_type = ' . $logType.')')
+                        log_type = '.$logType.')'),
             ]);
         }
     }

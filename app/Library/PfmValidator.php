@@ -1,9 +1,10 @@
 <?php
+
 use Illuminate\Support\Str;
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,7 +19,6 @@ use Illuminate\Support\Str;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 class PfmValidator extends Illuminate\Validation\Validator
 {
     private static $reservedNames = [
@@ -169,7 +169,6 @@ class PfmValidator extends Illuminate\Validation\Validator
         return in_array($file->getAudioCodec(), $parameters);
     }
 
-
     /**
      * Validate the sample rate of the audio file.
      *
@@ -187,7 +186,6 @@ class PfmValidator extends Illuminate\Validation\Validator
 
         return in_array($file->getAudioSampleRate(), $parameters);
     }
-
 
     /**
      * Validate the number of channels in the audio file.
@@ -207,7 +205,6 @@ class PfmValidator extends Illuminate\Validation\Validator
         return in_array($file->getAudioChannels(), $parameters);
     }
 
-
     /**
      * Validate the bit rate of the audio file.
      *
@@ -226,7 +223,6 @@ class PfmValidator extends Illuminate\Validation\Validator
         return in_array($file->getAudioBitRate(), $parameters);
     }
 
-
     /**
      * Validate the duration of the audio file, in seconds.
      *
@@ -242,9 +238,8 @@ class PfmValidator extends Illuminate\Validation\Validator
         // parameters is an array containing one value: the minimum duration
         $file = AudioCache::get($value->getPathname());
 
-        return $file->getDuration() >= (float)$parameters[0];
+        return $file->getDuration() >= (float) $parameters[0];
     }
-
 
     /**
      * Require a field when the value of another field matches a certain value.
@@ -258,7 +253,7 @@ class PfmValidator extends Illuminate\Validation\Validator
      * public function validate_required_when($attribute, $value, $parameters)
      * {
      * if ( Request::get($parameters[0]) === $parameters[1] && static::required($attribute, $value) ){
-     * return true;
+     * return true;.
      *
      * } else {
      * return false;
@@ -275,7 +270,6 @@ class PfmValidator extends Illuminate\Validation\Validator
 
         return true;
     }
-
 
     // custom image width validator
     public function validateMinWidth($attribute, $value, $parameters)
@@ -305,8 +299,8 @@ class PfmValidator extends Illuminate\Validation\Validator
      */
     public function validateIsNotReservedSlug($attribute, $value, $parameters)
     {
-        return !array_key_exists($value, static::$reservedNames) &&
+        return ! array_key_exists($value, static::$reservedNames) &&
                // Pony.fm shortlinks are in the form: /{letter}{series of numbers}
-               !preg_match('/^[a-z]?\d+$/', $value);
+               ! preg_match('/^[a-z]?\d+$/', $value);
     }
 }

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddSensibleDefaults extends Migration
 {
@@ -30,7 +30,7 @@ class AddSensibleDefaults extends Migration
      */
     public function up()
     {
-        Schema::table('tracks', function(Blueprint $table){
+        Schema::table('tracks', function (Blueprint $table) {
             $table->boolean('is_listed')->default(true)->change();
             $table->boolean('is_explicit')->default(false)->change();
             $table->boolean('is_vocal')->default(false)->change();
@@ -43,7 +43,7 @@ class AddSensibleDefaults extends Migration
             $table->unsignedInteger('comment_count')->default(0)->change();
         });
 
-        Schema::table('users', function(Blueprint $table){
+        Schema::table('users', function (Blueprint $table) {
             $table->boolean('can_see_explicit_content')->default(false)->change();
             $table->text('bio')->default('')->change();
             $table->unsignedInteger('track_count')->default(0)->change();

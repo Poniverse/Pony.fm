@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateFailedJobsTable3 extends Migration
 {
@@ -13,7 +13,7 @@ class CreateFailedJobsTable3 extends Migration
      */
     public function up()
     {
-        DB::transaction(function(){
+        DB::transaction(function () {
             Schema::dropIfExists('failed_jobs');
 
             Schema::create('failed_jobs', function (Blueprint $table) {

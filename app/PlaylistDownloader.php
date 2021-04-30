@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,8 +46,8 @@ class PlaylistDownloader
     public function download(User $user)
     {
         // Check whether the format is lossless yet not all master files are lossless
-        $isLosslessFormatWithLossyTracks =  in_array($this->_format, Track::$LosslessFormats)
-            && !$this->_playlist->hasLosslessTracksOnly()
+        $isLosslessFormatWithLossyTracks = in_array($this->_format, Track::$LosslessFormats)
+            && ! $this->_playlist->hasLosslessTracksOnly()
             && $this->_playlist->hasLosslessTracks();
 
         $zip = new ZipStream($this->_playlist->user->display_name.' - '.$this->_playlist->title.'.zip');
@@ -72,19 +72,19 @@ class PlaylistDownloader
         $m3u = '';
         $index = 1;
         foreach ($this->_playlist->tracks as $track) {
-            if (!$track->is_downloadable && !$user->hasRole('admin')) {
+            if (! $track->is_downloadable && ! $user->hasRole('admin')) {
                 continue;
             }
 
             if ($isLosslessFormatWithLossyTracks && $track->isMasterLossy()) {
                 $masterFormatName = $track->getMasterFormatName();
-                $trackTarget = $track->downloadDirectory . '/' . $track->getDownloadFilenameFor($masterFormatName);
+                $trackTarget = $track->downloadDirectory.'/'.$track->getDownloadFilenameFor($masterFormatName);
                 $zip->addLargeFile($track->getFileFor($masterFormatName), $trackTarget);
             } else {
-                $trackTarget = $track->downloadDirectory . '/' . $track->getDownloadFilenameFor($this->_format);
+                $trackTarget = $track->downloadDirectory.'/'.$track->getDownloadFilenameFor($this->_format);
                 $zip->addLargeFile($track->getFileFor($this->_format), $trackTarget);
             }
-            
+
             $notes .=
                 $index.'. '.$track->title."\r\n".
                 $track->description."\r\n".

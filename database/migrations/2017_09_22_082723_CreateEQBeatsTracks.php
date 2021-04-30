@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateEQBeatsTracks extends Migration
 {
@@ -13,8 +13,7 @@ class CreateEQBeatsTracks extends Migration
      */
     public function up()
     {
-        Schema::create('eqbeats_tracks', function(Blueprint $table)
-        {
+        Schema::create('eqbeats_tracks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('track_id')->unsigned()->index();
             $table->string('path')->index();
@@ -25,8 +24,7 @@ class CreateEQBeatsTracks extends Migration
             $table->text('raw_tags');
         });
 
-        Schema::table('eqbeats_tracks', function(Blueprint $table)
-        {
+        Schema::table('eqbeats_tracks', function (Blueprint $table) {
             $table->foreign('track_id')->references('id')->on('tracks')->onUpdate('RESTRICT')->onDelete('RESTRICT');
         });
     }
@@ -38,8 +36,7 @@ class CreateEQBeatsTracks extends Migration
      */
     public function down()
     {
-        Schema::table('eqbeats_tracks', function(Blueprint $table)
-        {
+        Schema::table('eqbeats_tracks', function (Blueprint $table) {
             $table->dropForeign('eqbeats_tracks_track_id_foreign');
         });
 

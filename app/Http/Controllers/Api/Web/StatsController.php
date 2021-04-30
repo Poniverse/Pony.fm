@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,15 +20,17 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
-use Auth;
-use Cache;
-use DB;
-use Response;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 
 class StatsController extends ApiControllerBase
 {
@@ -87,28 +89,28 @@ class StatsController extends ApiControllerBase
         foreach ($playsArray as $timeOffet => $plays) {
             if ($hourly) {
                 $set = [
-                    'hours' => $timeOffet.' '.str_plural('hour', $timeOffet),
-                    'plays' => $plays
+                    'hours' => $timeOffet.' '.Str::plural('hour', $timeOffet),
+                    'plays' => $plays,
                 ];
             } else {
                 $set = [
-                    'days' => $timeOffet.' '.str_plural('day', $timeOffet),
-                    'plays' => $plays
+                    'days' => $timeOffet.' '.Str::plural('day', $timeOffet),
+                    'plays' => $plays,
                 ];
             }
             array_push($output, $set);
         }
 
         if ($hourly) {
-            return Response::json(['playStats' => $output, 'type' => 'Hourly'], 200);
+            return response()->json(['playStats' => $output, 'type' => 'Hourly'], 200);
         } else {
-            return Response::json(['playStats' => $output, 'type' => 'Daily'], 200);
+            return response()->json(['playStats' => $output, 'type' => 'Daily'], 200);
         }
     }
 
-    public function getTrackStats($id)
+    public function getTrackStats(Request $request, $id)
     {
-        $cachedOutput = Cache::remember('track_stats'.$id, 5, function () use ($id) {
+        $cachedOutput = Cache::remember('track_stats'.$id, 300, function () use ($id) {
             try {
                 $track = Track::published()->findOrFail($id);
             } catch (ModelNotFoundException $e) {
@@ -116,7 +118,7 @@ class StatsController extends ApiControllerBase
             }
 
             // Do we have permission to view this track?
-            if (!$track->canView(Auth::user())) {
+            if (! $track->canView($request->user())) {
                 return $this->notFound('Track not found!');
             }
 
@@ -134,6 +136,7 @@ class StatsController extends ApiControllerBase
             $statsData = $this->getStatsData($id, $hourly);
 
             $output = $this->sortTrackStatsArray($statsData, $hourly);
+
             return $output;
         });
 

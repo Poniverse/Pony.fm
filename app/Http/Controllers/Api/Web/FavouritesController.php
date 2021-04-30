@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,27 +20,27 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App\Models\Album;
 use App\Commands\ToggleFavouriteCommand;
-use App\Models\Favourite;
 use App\Http\Controllers\ApiControllerBase;
+use App\Models\Album;
+use App\Models\Favourite;
 use App\Models\Playlist;
 use App\Models\Track;
-use Auth;
-use Illuminate\Support\Facades\Request;
-use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class FavouritesController extends ApiControllerBase
 {
-    public function postToggle()
+    public function postToggle(Request $request)
     {
-        return $this->execute(new ToggleFavouriteCommand(Request::get('type'), Request::get('id')));
+        return $this->execute(new ToggleFavouriteCommand($request->get('type'), $request->get('id')));
     }
 
-    public function getTracks()
+    public function getTracks(Request $request)
     {
         $query = Favourite
-            ::whereUserId(Auth::user()->id)
+            ::whereUserId($request->user()->id)
             ->whereNotNull('track_id')
             ->with([
                 'track' => function ($query) {
@@ -52,7 +52,7 @@ class FavouritesController extends ApiControllerBase
                 'track.genre',
                 'track.cover',
                 'track.album',
-                'track.album.user'
+                'track.album.user',
             ]);
 
         $tracks = [];
@@ -65,13 +65,13 @@ class FavouritesController extends ApiControllerBase
             $tracks[] = Track::mapPublicTrackSummary($fav->track);
         }
 
-        return Response::json(["tracks" => $tracks], 200);
+        return response()->json(['tracks' => $tracks], 200);
     }
 
-    public function getAlbums()
+    public function getAlbums(Request $request)
     {
         $query = Favourite
-            ::whereUserId(Auth::user()->id)
+            ::whereUserId($request->user()->id)
             ->whereNotNull('album_id')
             ->with([
                 'album' => function ($query) {
@@ -79,7 +79,7 @@ class FavouritesController extends ApiControllerBase
                 },
                 'album.user',
                 'album.user.avatar',
-                'album.cover'
+                'album.cover',
             ]);
 
         $albums = [];
@@ -92,13 +92,13 @@ class FavouritesController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($fav->album);
         }
 
-        return Response::json(["albums" => $albums], 200);
+        return response()->json(['albums' => $albums], 200);
     }
 
-    public function getPlaylist()
+    public function getPlaylist(Request $request)
     {
         $query = Favourite
-            ::whereUserId(Auth::user()->id)
+            ::whereUserId($request->user()->id)
             ->whereNotNull('playlist_id')
             ->with([
                 'playlist' => function ($query) {
@@ -107,7 +107,7 @@ class FavouritesController extends ApiControllerBase
                 'playlist.user',
                 'playlist.user.avatar',
                 'playlist.tracks',
-                'playlist.tracks.cover'
+                'playlist.tracks.cover',
             ]);
 
         $playlists = [];
@@ -120,6 +120,6 @@ class FavouritesController extends ApiControllerBase
             $playlists[] = Playlist::mapPublicPlaylistSummary($fav->playlist);
         }
 
-        return Response::json(["playlists" => $playlists], 200);
+        return response()->json(['playlists' => $playlists], 200);
     }
 }

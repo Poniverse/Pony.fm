@@ -18,8 +18,8 @@ module.exports = {
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],
     entry: {
-        app: './resources/assets/scripts/app/app.coffee',
-        embed: './resources/assets/scripts/embed/embed.coffee'
+        app: './resources/scripts/app/app.coffee',
+        embed: './resources/scripts/embed/embed.coffee'
     },
     output: {
         path: __dirname + '/public',

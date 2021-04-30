@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAnnouncementsTable extends Migration
 {
@@ -22,8 +22,8 @@ class CreateAnnouncementsTable extends Migration
             $table->json('tracks')->nullable();
             $table->string('css_class')->nullable();
             $table->string('template_file')->nullable();
-            $table->dateTime("start_time")->nullable();
-            $table->dateTime("end_time")->nullable();
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('end_time')->nullable();
         });
     }
 

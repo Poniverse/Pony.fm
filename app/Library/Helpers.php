@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 class Helpers
 {
     /**
@@ -33,12 +32,12 @@ class Helpers
 
     public static function template($template)
     {
-        echo file_get_contents('templates/' . $template);
+        echo file_get_contents('templates/'.$template);
     }
 
     public static function angular($expression)
     {
-        return '{{' . $expression . '}}';
+        return '{{'.$expression.'}}';
     }
 
     public static function formatBytes($bytes, $precision = 2)
@@ -55,7 +54,7 @@ class Helpers
 
         $bytes /= pow(1024, $pow);
 
-        return round($bytes, $precision) . ' ' . $units[$pow];
+        return round($bytes, $precision).' '.$units[$pow];
     }
 
     /**
@@ -73,21 +72,21 @@ class Helpers
         $title = date('c', strtotime($timestamp));
         $content = date('F j, Y \@ g:i:s a', strtotime($timestamp));
 
-        return '<abbr class="timeago" title="' . $title . '">' . $content . '</abbr>';
+        return '<abbr class="timeago" title="'.$title.'">'.$content.'</abbr>';
     }
 
     /**
-     * Converts an RGB array to a hex string
+     * Converts an RGB array to a hex string.
      *
      * @param array[int] $rgb RGB values in an array
      * @return string
      */
     public static function rgb2hex($rgb)
     {
-        $hex = "#";
-        $hex .= str_pad(dechex($rgb[0]), 2, "0", STR_PAD_LEFT);
-        $hex .= str_pad(dechex($rgb[1]), 2, "0", STR_PAD_LEFT);
-        $hex .= str_pad(dechex($rgb[2]), 2, "0", STR_PAD_LEFT);
+        $hex = '#';
+        $hex .= str_pad(dechex($rgb[0]), 2, '0', STR_PAD_LEFT);
+        $hex .= str_pad(dechex($rgb[1]), 2, '0', STR_PAD_LEFT);
+        $hex .= str_pad(dechex($rgb[2]), 2, '0', STR_PAD_LEFT);
 
         return $hex;
     }

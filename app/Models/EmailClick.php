@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@ use Alsofronie\Uuid\UuidModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\EmailClick
+ * App\Models\EmailClick.
  *
  * @property string $id
  * @property string $email_id
@@ -45,7 +45,8 @@ class EmailClick extends Model
 
     protected $fillable = ['ip_address'];
 
-    public function email() {
+    public function email()
+    {
         return $this->belongsTo(Email::class, 'email_id', 'id', 'emails');
     }
 }

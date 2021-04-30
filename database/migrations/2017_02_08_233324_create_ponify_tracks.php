@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePonifyTracks extends Migration
 {
@@ -13,8 +13,7 @@ class CreatePonifyTracks extends Migration
      */
     public function up()
     {
-        Schema::create('ponify_tracks', function(Blueprint $table)
-        {
+        Schema::create('ponify_tracks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('track_id')->unsigned()->index();
             $table->string('path')->index();
@@ -25,8 +24,7 @@ class CreatePonifyTracks extends Migration
             $table->text('raw_tags');
         });
 
-        Schema::table('ponify_tracks', function(Blueprint $table)
-        {
+        Schema::table('ponify_tracks', function (Blueprint $table) {
             $table->foreign('track_id')->references('id')->on('tracks')->onUpdate('RESTRICT')->onDelete('RESTRICT');
         });
     }
@@ -38,8 +36,7 @@ class CreatePonifyTracks extends Migration
      */
     public function down()
     {
-        Schema::table('ponify_tracks', function(Blueprint $table)
-        {
+        Schema::table('ponify_tracks', function (Blueprint $table) {
             $table->dropForeign('ponify_tracks_track_id_foreign');
         });
 

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddMoreDefaults extends Migration
 {
@@ -31,7 +31,6 @@ class AddMoreDefaults extends Migration
     public function up()
     {
         Schema::table('albums', function (Blueprint $table) {
-
             $table->text('description')->default('')->change();
             $table->unsignedInteger('view_count')->default(0)->change();
             $table->unsignedInteger('download_count')->default(0)->change();

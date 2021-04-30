@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,11 +20,11 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Auth;
 use App\Http\Controllers\ApiControllerBase;
 use App\Models\Image;
 use App\Models\User;
-use Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class ImagesController extends ApiControllerBase
 {
@@ -42,12 +42,12 @@ class ImagesController extends ApiControllerBase
                     'small' => $image->getUrl(Image::SMALL),
                     'normal' => $image->getUrl(Image::NORMAL),
                     'thumbnail' => $image->getUrl(Image::THUMBNAIL),
-                    'original' => $image->getUrl(Image::ORIGINAL)
+                    'original' => $image->getUrl(Image::ORIGINAL),
                 ],
-                'filename' => $image->filename
+                'filename' => $image->filename,
             ];
         }
 
-        return Response::json($images, 200);
+        return response()->json($images, 200);
     }
 }

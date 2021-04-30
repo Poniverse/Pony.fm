@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,8 +23,8 @@ namespace App\Console\Commands;
 use App\Models\ShowSong;
 use App\Models\Track;
 use App\Models\TrackType;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ClassifyMLPMA extends Command
@@ -53,7 +53,6 @@ class ClassifyMLPMA extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -74,7 +73,7 @@ class ClassifyMLPMA extends Command
 
         $this->comment('Importing tracks...');
 
-        $totalTracks = sizeof($tracks);
+        $totalTracks = count($tracks);
 
         $fileToStartAt = (int) $this->option('startAt') - 1;
         $this->comment("Skipping $fileToStartAt files...".PHP_EOL);
@@ -87,7 +86,6 @@ class ClassifyMLPMA extends Command
             $this->comment('['.$this->currentTrack.'/'.$totalTracks.'] Classifying track ['.$track->filename.']...');
 
             $parsedTags = json_decode($track->parsed_tags, true);
-
 
             //==========================================================================================================
             // Original, show song remix, fan song remix, show audio remix, or ponified song?
@@ -103,7 +101,6 @@ class ClassifyMLPMA extends Command
                 ")
                 ->get();
 
-
             // If it has "Ingram" in the name, it's definitely an official song remix.
             if (Str::contains(Str::lower($track->filename), 'ingram')) {
                 $this->info('This is an official song remix!');
@@ -115,8 +112,7 @@ class ClassifyMLPMA extends Command
                     $parsedTags
                 );
 
-
-                // If it has "remix" in the name, it's definitely a remix.
+            // If it has "remix" in the name, it's definitely a remix.
             } else {
                 if (Str::contains(Str::lower($sanitizedTrackTitle), 'remix')) {
                     $this->info('This is some kind of remix!');
@@ -128,7 +124,7 @@ class ClassifyMLPMA extends Command
                         $parsedTags
                     );
 
-                    // No idea what this is. Have the pony at the terminal figure it out!
+                // No idea what this is. Have the pony at the terminal figure it out!
                 } else {
                     list($trackType, $linkedSongIds) = $this->classifyTrack(
                         $track->filename,
@@ -138,7 +134,6 @@ class ClassifyMLPMA extends Command
                     );
                 }
             }
-
 
             //==========================================================================================================
             // Attach the data and publish the track!
@@ -150,7 +145,7 @@ class ClassifyMLPMA extends Command
             $track->published_at = $parsedTags['released_at'];
             $track->save();
 
-            if (sizeof($linkedSongIds) > 0) {
+            if (count($linkedSongIds) > 0) {
                 $track->showSongs()->sync($linkedSongIds);
             }
 
@@ -167,24 +162,22 @@ class ClassifyMLPMA extends Command
      * @param bool|false $isRemixOfOfficialTrack
      * @return array
      */
-    protected function classifyTrack($filename, $officialSongs, $isRemixOfOfficialTrack = false, $tags)
+    protected function classifyTrack($filename, $officialSongs, $isRemixOfOfficialTrack, $tags)
     {
         $trackTypeId = null;
         $linkedSongIds = [];
-
 
         foreach ($officialSongs as $song) {
             $this->comment('=> Matched official song: ['.$song->id.'] '.$song->title);
         }
 
-
-        if ($isRemixOfOfficialTrack && sizeof($officialSongs) === 1) {
+        if ($isRemixOfOfficialTrack && count($officialSongs) === 1) {
             $linkedSongIds = [$officialSongs[0]->id];
         } else {
-            if ($isRemixOfOfficialTrack && sizeof($officialSongs) > 1) {
+            if ($isRemixOfOfficialTrack && count($officialSongs) > 1) {
                 $this->question('Multiple official songs matched! Please enter the ID of the correct one.');
             } else {
-                if (sizeof($officialSongs) > 0) {
+                if (count($officialSongs) > 0) {
                     $this->question('This looks like a remix of an official song!');
                     $this->question('Press "r" if the match above is right!');
                 } else {

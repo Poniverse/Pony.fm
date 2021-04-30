@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,13 +20,13 @@
 
 namespace App\Models;
 
-use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
- * App\Models\ShowSong
+ * App\Models\ShowSong.
  *
- * @property integer $id
+ * @property int $id
  * @property string $title
  * @property string $lyrics
  * @property string $slug
@@ -46,7 +46,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ShowSong extends Model
 {
-    protected $table = 'show_songs';
     protected $fillable = ['title', 'slug', 'lyrics'];
 
     public function trackCountRelation()

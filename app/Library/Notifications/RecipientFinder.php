@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,6 @@
 
 namespace App\Library\Notifications;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Contracts\Favouritable;
 use App\Contracts\NotificationHandler;
 use App\Jobs\SendNotifications;
@@ -33,14 +31,11 @@ use App\Models\Playlist;
 use App\Models\Subscription;
 use App\Models\Track;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 /**
- * Class RecipientFinder
- * @package App\Library\Notifications
- *
- * This class returns a list of users who are to receive a particular notification.
- * It is instantiated on a per-driver basis. Its methods return Eloquent query
- * objects for the PonyfmDriver.
+ * Class RecipientFinder.
  */
 class RecipientFinder implements NotificationHandler
 {
@@ -48,7 +43,7 @@ class RecipientFinder implements NotificationHandler
      * @var string class name of a notification driver
      */
     private $notificationDriver;
-    
+
     public function __construct(string $notificationDriver)
     {
         $this->notificationDriver = $notificationDriver;
@@ -60,7 +55,7 @@ class RecipientFinder implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function publishedNewTrack(Track $track)
     {
@@ -82,6 +77,7 @@ class RecipientFinder implements NotificationHandler
                 }
 
                 $targetIds = array_intersect($followerIds, $subIds);
+
                 return Subscription::whereIn('user_id', $targetIds)->get();
             default:
                 return $this->fail();
@@ -89,7 +85,7 @@ class RecipientFinder implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function publishedNewPlaylist(Playlist $playlist)
     {
@@ -111,6 +107,7 @@ class RecipientFinder implements NotificationHandler
                 }
 
                 $targetIds = array_intersect($followerIds, $subIds);
+
                 return Subscription::whereIn('user_id', $targetIds)->get();
             default:
                 return $this->fail();
@@ -118,7 +115,7 @@ class RecipientFinder implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newFollower(User $userBeingFollowed, User $follower)
     {
@@ -134,7 +131,7 @@ class RecipientFinder implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newComment(Comment $comment)
     {
@@ -142,7 +139,7 @@ class RecipientFinder implements NotificationHandler
             case PonyfmDriver::class:
                 return
                     $comment->user->id === $comment->resource->user->id
-                        ? NULL
+                        ? null
                         : $this->queryForUser($comment->resource->user);
             case NativeDriver::class:
                 return Subscription::where('user_id', '=', $comment->resource->user->id)->get();
@@ -152,7 +149,7 @@ class RecipientFinder implements NotificationHandler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function newFavourite(Favouritable $entityBeingFavourited, User $favouriter)
     {
@@ -160,7 +157,7 @@ class RecipientFinder implements NotificationHandler
             case PonyfmDriver::class:
                 return
                     $favouriter->id === $entityBeingFavourited->user->id
-                        ? NULL
+                        ? null
                         : $this->queryForUser($entityBeingFavourited->user);
             case NativeDriver::class:
                 return Subscription::where('user_id', '=', $entityBeingFavourited->user->id)->get();
@@ -176,7 +173,8 @@ class RecipientFinder implements NotificationHandler
      * @param User $user
      * @return \Eloquent|Builder
      */
-    private function queryForUser(User $user):Builder {
+    private function queryForUser(User $user):Builder
+    {
         return User::where('id', '=', $user->id);
     }
 }

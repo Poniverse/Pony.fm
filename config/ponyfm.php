@@ -115,9 +115,9 @@ return [
     | be desirable for future site functionality.
     |
     */
-    
+
     'user_slug_minimum_length' => 3,
-    
+
     /*
      |--------------------------------------------------------------------------
      | Indexing queue name
@@ -130,4 +130,21 @@ return [
      */
 
     'gcm_key' => env('GCM_KEY', 'default'),
+
+    /*
+     |--------------------------------------------------------------------------
+     | ffmpeg prefix
+     |--------------------------------------------------------------------------
+     |
+     | This is the prefix to the ffmpeg binary to use when encoding tracks
+     |
+     | On system where ffmpeg is installed it can be left as default.
+     |
+     | On systems where ffmpeg isn't installed, but docker is, it's preferable
+     | change this so it can use a prebuilt version of ffmpeg.
+     |
+     | E.G "docker run -v "$(pwd):$(pwd)" -w "$(pwd)" jrottenberg/ffmpeg:4.3-alpine312"
+     */
+
+    'ffmpeg_prefix' => env('FFMPEG_PREFIX', 'ffmpeg'),
 ];

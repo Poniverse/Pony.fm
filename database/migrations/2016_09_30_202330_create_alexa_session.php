@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAlexaSession extends Migration
 {
@@ -13,8 +13,7 @@ class CreateAlexaSession extends Migration
      */
     public function up()
     {
-        Schema::create('alexa_session', function(Blueprint $table)
-        {
+        Schema::create('alexa_session', function (Blueprint $table) {
             $table->string('id')->unique();
             $table->text('payload');
             $table->timestamps();
