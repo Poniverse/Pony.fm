@@ -82,6 +82,11 @@ trait IndexedInElasticsearchTrait
      */
     public function updateElasticsearchEntry(bool $removeFromIndex = false)
     {
+        // If it shouldn't be indexed, always force a removal from the index.
+        if (!$this->shouldBeIndexed()) {
+            $removeFromIndex = true;
+        }
+
         $job = (new UpdateSearchIndexForEntity($this->getElasticsearchParameters(!$removeFromIndex), $removeFromIndex))->onQueue(config('ponyfm.indexing_queue'));
         $this->dispatch($job);
     }
