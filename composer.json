@@ -14,7 +14,7 @@
         "laravel/framework": "^8.44",
         "codescale/ffmpeg-php": "2.7.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "doctrine/dbal": "^3.0",
+        "doctrine/dbal": "^3.1",
         "venturecraft/revisionable": "^1.36",
         "pda/pheanstalk": "^4.0",
         "cviebrock/laravel-elasticsearch": "^8.0",
@@ -44,7 +44,7 @@
         "nunomaduro/collision": "^5.0",
         "fakerphp/faker": "^1.9.1",
         "facade/ignition": "^2.5",
-        "barryvdh/laravel-ide-helper": "^2.9"
+        "barryvdh/laravel-ide-helper": "^2.10"
     },
     "autoload": {
         "files": [
