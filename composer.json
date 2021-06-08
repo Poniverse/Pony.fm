@@ -14,7 +14,7 @@
         "laravel/framework": "^8.46",
         "codescale/ffmpeg-php": "2.7.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "doctrine/dbal": "^3.0",
+        "doctrine/dbal": "^3.1",
         "venturecraft/revisionable": "^1.36",
         "pda/pheanstalk": "^4.0",
         "cviebrock/laravel-elasticsearch": "^8.0",
@@ -37,14 +37,14 @@
     "require-dev": {
         "mockery/mockery": "^1.4.2",
         "phpunit/phpunit": "^9.3.3",
-        "symfony/dom-crawler": "^5.2",
+        "symfony/dom-crawler": "^5.3",
         "symfony/css-selector": "^5.2",
         "laravel/browser-kit-testing": "^6.2",
         "nategood/httpful": "^0.2.20",
         "nunomaduro/collision": "^5.0",
         "fakerphp/faker": "^1.9.1",
         "facade/ignition": "^2.5",
-        "barryvdh/laravel-ide-helper": "^2.9"
+        "barryvdh/laravel-ide-helper": "^2.10"
     },
     "autoload": {
         "files": [
