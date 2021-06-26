@@ -11,7 +11,7 @@
     "type": "project",
     "require": {
         "php": "^8.0",
-        "laravel/framework": "^8.35",
+        "laravel/framework": "^8.48",
         "codescale/ffmpeg-php": "2.7.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "doctrine/dbal": "^3.0",
