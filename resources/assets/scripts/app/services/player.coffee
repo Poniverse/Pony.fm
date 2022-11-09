@@ -93,20 +93,27 @@ module.exports = angular.module('ponyfm').factory('player', [
                         {src: track.covers.small, sizes: '100x100', type: 'image/png'}
                         {src: track.covers.thumbnail, sizes: '50x50', type: 'image/png'}
                     ]
-                    
-                    navigator.mediaSession.setActionHandler(
-                        'play'
-                        (() -> self.currentSound.play()))
-                    navigator.mediaSession.setActionHandler(
-                        'pause'
-                        (() -> self.currentSound.pause()))
-                    navigator.mediaSession.setActionHandler(
-                        'previoustrack'
-                        (() -> self.playPrev()))
-                    navigator.mediaSession.setActionHandler(
-                        'nexttrack'
-                        (() -> self.playNext()))
-                )
+                )    
+                
+                navigator.mediaSession.setActionHandler(
+                    'play'
+                    (() -> self.currentSound.play()))
+                navigator.mediaSession.setActionHandler(
+                    'pause'
+                    (() -> self.currentSound.pause()))
+                navigator.mediaSession.setActionHandler(
+                    'previoustrack'
+                    (() -> self.playPrev()))
+                navigator.mediaSession.setActionHandler(
+                    'nexttrack'
+                    (() -> self.playNext()))
+
+                navigator.mediaSession.setPositionState(
+                    duration: track.duration
+                    playbackRate: 1
+                    position: track.progressSeconds
+                );
+                
 
         self =
             ready: false
