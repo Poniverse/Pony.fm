@@ -23,6 +23,7 @@ namespace App\Providers;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use App;
 use PfmValidator;
 use Poniverse;
 use Validator;
