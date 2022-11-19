@@ -42,6 +42,7 @@ module.exports = angular.module('ponyfm').factory('player', [
                 whileplaying: () -> $rootScope.safeApply ->
                     track.progressSeconds = self.currentSound.position / 1000
                     track.progress = (self.currentSound.position / (track.duration * 1000)) * 100
+                    broadcastMediaPosition track
 
                 onload: (res) -> $rootScope.safeApply ->
                     if !res
@@ -51,6 +52,8 @@ module.exports = angular.module('ponyfm').factory('player', [
                             show: true
 
                 onfinish: () -> $rootScope.safeApply ->
+                    if 'mediaSession' of navigator
+                        navigator.mediaSession.setPositionState null
                     if self.repeatState == 2
                         # Track repeat
                         # Playlist repeat is handled
@@ -63,16 +66,24 @@ module.exports = angular.module('ponyfm').factory('player', [
                 onstop: () -> $rootScope.safeApply ->
                     track.isPlaying = false
                     self.isPlaying = false
+                    if 'mediaSession' of navigator
+                        navigator.mediaSession.playbackState = "none";
 
                 onplay: () -> $rootScope.safeApply ->
                     track.isPlaying = true
                     broadcastMediaInfo track
+                    if 'mediaSession' of navigator
+                        navigator.mediaSession.playbackState = "playing";
 
                 onresume: () -> $rootScope.safeApply ->
                     track.isPlaying = true
+                    if 'mediaSession' of navigator
+                        navigator.mediaSession.playbackState = "playing";
 
                 onpause: () -> $rootScope.safeApply ->
                     track.isPlaying = false
+                    if 'mediaSession' of navigator
+                        navigator.mediaSession.playbackState = "paused";
 
             track.isPlaying = true
             self.isPlaying = true
@@ -107,13 +118,14 @@ module.exports = angular.module('ponyfm').factory('player', [
                 navigator.mediaSession.setActionHandler(
                     'nexttrack'
                     (() -> self.playNext()))
-
+                
+        broadcastMediaPosition = (track) ->
+            if 'mediaSession' of navigator
                 navigator.mediaSession.setPositionState(
                     duration: track.duration
                     playbackRate: 1
                     position: track.progressSeconds
-                );
-                
+                )
 
         self =
             ready: false
