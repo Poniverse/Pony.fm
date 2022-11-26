@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,21 +20,24 @@
 
 namespace App\Providers;
 
-use Illuminate\Routing\Router;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Route;
 use App\Models\User;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * This namespace is applied to the controller routes in your routes file.
+     * The path to the "home" route for your application.
      *
-     * In addition, it is set as the URL generator's root namespace.
+     * This is used by Laravel authentication to redirect users after login.
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    public const HOME = '/home';
+    //
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -43,26 +46,34 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        parent::boot();
+        $this->configureRateLimiting();
 
+        // Ensure route bindings are out of the `$this->routes()` callable, otherwise route caching won't
+        //  take our custom bindings into account.
         Route::model('userId', User::class);
         Route::bind('userSlug', function ($value) {
             return User::where('slug', $value)->first();
         });
+
+        $this->routes(function () {
+            Route::prefix('api')
+                ->middleware('api')
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
+        });
     }
 
     /**
-     * Define the routes for the application.
+     * Configure the rate limiters for the application.
      *
      * @return void
      */
-    public function map()
+    protected function configureRateLimiting()
     {
-        Route::group([
-            'middleware' => 'web',
-            'namespace' => $this->namespace
-        ], function ($router) {
-            require base_path('routes/web.php');
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
     }
 }

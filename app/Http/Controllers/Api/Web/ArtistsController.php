@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,29 +20,29 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Gate;
 use App\Commands\CreateUserCommand;
+use App\Http\Controllers\ApiControllerBase;
 use App\Models\Album;
 use App\Models\Comment;
 use App\Models\Favourite;
-use App\Http\Controllers\ApiControllerBase;
+use App\Models\Follower;
 use App\Models\Image;
 use App\Models\Track;
 use App\Models\User;
-use App\Models\Follower;
-use App;
-use Illuminate\Support\Facades\Request;
-use Response;
 use ColorThief\ColorThief;
 use Helpers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 
 class ArtistsController extends ApiControllerBase
 {
     public function getFavourites($slug)
     {
         $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
-        if (!$user) {
-            App::abort(404);
+        if (! $user) {
+            abort(404);
         }
 
         $favs = Favourite::where('user_id', $user->id)
@@ -62,33 +62,33 @@ class ArtistsController extends ApiControllerBase
             },
             'album' => function ($query) {
                 $query->userDetails();
-            }
+            },
             ])->get();
 
         $tracks = [];
         $albums = [];
 
         foreach ($favs as $fav) {
-            if ($fav->type == 'App\Models\Track') {
+            if ($fav->type == \App\Models\Track::class) {
                 $tracks[] = Track::mapPublicTrackSummary($fav->track);
             } else {
-                if ($fav->type == 'App\Models\Album') {
+                if ($fav->type == \App\Models\Album::class) {
                     $albums[] = Album::mapPublicAlbumSummary($fav->album);
                 }
             }
         }
 
-        return Response::json([
+        return response()->json([
             'tracks' => $tracks,
-            'albums' => $albums
+            'albums' => $albums,
         ], 200);
     }
 
     public function getContent($slug)
     {
         $user = User::where('slug', $slug)->whereNull('disabled_at')->first();
-        if (!$user) {
-            App::abort(404);
+        if (! $user) {
+            abort(404);
         }
 
         $query = Track::summary()
@@ -112,7 +112,7 @@ class ArtistsController extends ApiControllerBase
 
         $query = Album::summary()
             ->with('user')
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->where('track_count', '>', 0)
             ->whereUserId($user->id);
 
@@ -122,7 +122,7 @@ class ArtistsController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($album);
         }
 
-        return Response::json(['singles' => $singles, 'albumTracks' => $tracks, 'albums' => $albums], 200);
+        return response()->json(['singles' => $singles, 'albumTracks' => $tracks, 'albums' => $albums], 200);
     }
 
     public function getShow($slug)
@@ -133,11 +133,11 @@ class ArtistsController extends ApiControllerBase
             ->with([
                 'comments' => function ($query) {
                     $query->with(['user', 'user.avatar']);
-                }
+                },
             ])
             ->first();
-        if (!$user) {
-            App::abort(404);
+        if (! $user) {
+            abort(404);
         }
 
         $trackQuery = Track::summary()
@@ -148,7 +148,7 @@ class ArtistsController extends ApiControllerBase
             ->userDetails()
             ->whereUserId($user->id)
             ->whereNotNull('published_at')
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->take(20);
 
         $latestTracks = [];
@@ -162,23 +162,23 @@ class ArtistsController extends ApiControllerBase
         }
 
         $userData = [
-            'is_following' => false
+            'is_following' => false,
         ];
 
         if ($user->users->count()) {
             $userRow = $user->users[0];
             $userData = [
-                'is_following' => (bool) $userRow->is_followed
+                'is_following' => (bool) $userRow->is_followed,
             ];
         }
 
         $palette = ColorThief::getPalette($user->getAvatarUrlLocal(Image::SMALL), 2);
-        $formatted_palette = array_map("Helpers::rgb2hex", $palette);
+        $formatted_palette = array_map('Helpers::rgb2hex', $palette);
 
         $followers = Follower::where('artist_id', $user->id)
             ->count();
 
-        return Response::json([
+        return response()->json([
             'artist' => [
                 'id' => $user->id,
                 'name' => $user->display_name,
@@ -186,7 +186,7 @@ class ArtistsController extends ApiControllerBase
                 'is_archived' => (bool) $user->is_archived,
                 'avatars' => [
                     'small' => $user->getAvatarUrl(Image::SMALL),
-                    'normal' => $user->getAvatarUrl(Image::NORMAL)
+                    'normal' => $user->getAvatarUrl(Image::NORMAL),
                 ],
                 'avatar_colors' => $formatted_palette,
                 'created_at' => $user->created_at,
@@ -199,18 +199,18 @@ class ArtistsController extends ApiControllerBase
                 'message_url' => $user->message_url,
                 'user_data' => $userData,
                 'permissions' => [
-                    'edit' => Gate::allows('edit', $user)
+                    'edit' => Gate::allows('edit', $user),
                 ],
-                'isAdmin' => $user->hasRole('admin')
-            ]
+                'isAdmin' => $user->hasRole('admin'),
+            ],
         ], 200);
     }
 
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         $page = 1;
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         $query = User::where('track_count', '>', 0);
@@ -218,7 +218,7 @@ class ArtistsController extends ApiControllerBase
 
         // The query results are ordered after they're counted
         // due to Postgres's behaviour when combining those two operations.
-        $query->orderBy('display_name', 'asc');
+        $query->orderBy('display_name');
         $perPage = 40;
         $query->skip(($page - 1) * $perPage)->take($perPage);
         $users = [];
@@ -227,15 +227,16 @@ class ArtistsController extends ApiControllerBase
             $users[] = User::mapPublicUserSummary($user);
         }
 
-        return Response::json(
-            ["artists" => $users, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
+        return response()->json(
+            ['artists' => $users, 'current_page' => $page, 'total_pages' => ceil($count / $perPage)],
             200
         );
     }
 
-    public function postIndex()
+    public function postIndex(Request $request)
     {
-        $name = Request::json('username');
+        $name = $request->json('username');
+
         return $this->execute(new CreateUserCommand($name, $name, null, true));
     }
 }

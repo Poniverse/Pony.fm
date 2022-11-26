@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateEmailNotificationTables extends Migration
 {
@@ -31,7 +31,7 @@ class CreateEmailNotificationTables extends Migration
      */
     public function up()
     {
-        DB::transaction(function(){
+        DB::transaction(function () {
             // This table is used to enforce referential data integrity
             // for the polymorphic "activity" table.
             Schema::create('activity_types', function (Blueprint $table) {
@@ -52,7 +52,6 @@ class CreateEmailNotificationTables extends Migration
             Schema::table('activities', function (Blueprint $table) {
                 $table->foreign('activity_type')->references('activity_type')->on('activity_types');
             });
-
 
             Schema::create('email_subscriptions', function (Blueprint $table) {
                 $table->uuid('id')->primary();
@@ -92,7 +91,7 @@ class CreateEmailNotificationTables extends Migration
      */
     public function down()
     {
-        DB::transaction(function() {
+        DB::transaction(function () {
             Schema::drop('email_clicks');
             Schema::drop('emails');
             Schema::drop('email_subscriptions');

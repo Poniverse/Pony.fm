@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,39 +20,41 @@
 
 namespace App\Models;
 
-use DB;
-use Exception;
-use Helpers;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Auth;
-use Gate;
-use Cache;
 use App\Contracts\Commentable;
 use App\Contracts\Favouritable;
 use App\Contracts\Searchable;
 use App\Exceptions\TrackFileNotFoundException;
+use App\Http\Controllers\AlbumsController;
 use App\Traits\IndexedInElasticsearchTrait;
-use App\Traits\TrackCollection;
 use App\Traits\SlugTrait;
+use App\Traits\TrackCollection;
+use Exception;
+use Helpers;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * App\Models\Album
+ * App\Models\Album.
  *
- * @property integer $id
- * @property integer $user_id
+ * @property int $id
+ * @property int $user_id
  * @property string $title
  * @property string $slug
  * @property string $description
- * @property integer $cover_id
- * @property integer $track_count
- * @property integer $view_count
- * @property integer $download_count
- * @property integer $favourite_count
- * @property integer $comment_count
+ * @property int $cover_id
+ * @property int $track_count
+ * @property int $view_count
+ * @property int $download_count
+ * @property int $favourite_count
+ * @property int $comment_count
  * @property \Carbon\Carbon $created_at
  * @property string $updated_at
  * @property \Carbon\Carbon $deleted_at
@@ -89,11 +91,11 @@ use Venturecraft\Revisionable\RevisionableTrait;
  */
 class Album extends Model implements Searchable, Commentable, Favouritable
 {
+    use HasFactory;
     use SoftDeletes, SlugTrait, TrackCollection, RevisionableTrait, IndexedInElasticsearchTrait;
 
     protected $elasticsearchType = 'album';
 
-    protected $dates = ['deleted_at'];
     protected $fillable = ['user_id', 'title', 'slug'];
 
     public static function summary()
@@ -118,14 +120,12 @@ class Album extends Model implements Searchable, Commentable, Favouritable
             $query->with([
                 'users' => function ($query) {
                     $query->whereUserId(Auth::user()->id);
-                }
+                },
             ]);
         }
 
         return $query;
     }
-
-    protected $table = 'albums';
 
     public function user()
     {
@@ -149,18 +149,19 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function tracks()
     {
-        return $this->hasMany(Track::class)->orderBy('track_number', 'asc');
+        return $this->hasMany(Track::class)->orderBy('track_number');
     }
 
     public function trackFiles()
     {
         $trackIds = $this->tracks->pluck('id');
+
         return TrackFile::join('tracks', 'tracks.current_version', '=', 'track_files.version')->whereIn('track_id', $trackIds);
     }
 
     public function comments():HasMany
     {
-        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)->orderByDesc('created_at');
     }
 
     public function activities():MorphMany
@@ -168,7 +169,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         return $this->morphMany(Activity::class, 'resource');
     }
 
-    public static function mapPublicAlbumShow(Album $album)
+    public static function mapPublicAlbumShow(self $album)
     {
         $tracks = [];
         foreach ($album->tracks as $track) {
@@ -177,7 +178,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
         $formats = [];
         foreach (Track::$Formats as $name => $format) {
-            if (in_array($name, Track::$LosslessFormats) && !$album->hasLosslessTracksOnly() && !$album->hasLosslessTracks()) {
+            if (in_array($name, Track::$LosslessFormats) && ! $album->hasLosslessTracksOnly() && ! $album->hasLosslessTracks()) {
                 continue;
             }
 
@@ -187,10 +188,10 @@ class Album extends Model implements Searchable, Commentable, Favouritable
                 'url' => $album->getDownloadUrl($name),
                 'size' => Helpers::formatBytes($album->getFilesize($name)),
                 'isCacheable' => (in_array($name, Track::$CacheableFormats) ? true : false),
-                'isMixedLosslessness' => (in_array($name, Track::$LosslessFormats) && !$album->hasLosslessTracksOnly() && $album->hasLosslessTracks())
+                'isMixedLosslessness' => (in_array($name, Track::$LosslessFormats) && ! $album->hasLosslessTracksOnly() && $album->hasLosslessTracks()),
             ];
         }
-        
+
         $comments = [];
         foreach ($album->comments as $comment) {
             $comments[] = Comment::mapPublic($comment);
@@ -211,22 +212,22 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         $data['description'] = $album->description;
         $data['is_downloadable'] = $is_downloadable;
         $data['share'] = [
-            'url' => action('AlbumsController@getShortlink', ['id' => $album->id]),
+            'url' => action([AlbumsController::class, 'getShortlink'], ['id' => $album->id]),
             'tumblrUrl' => 'http://www.tumblr.com/share/link?url='.urlencode($album->url).'&name='.urlencode($album->title).'&description='.urlencode($album->description),
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$album->title.' by '.$album->user->display_name.' on Pony.fm'
+            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$album->title.' by '.$album->user->display_name.' on Pony.fm',
         ];
 
         return $data;
     }
 
-    public static function mapPublicAlbumSummary(Album $album)
+    public static function mapPublicAlbumSummary(self $album)
     {
         $userData = [
             'stats' => [
                 'views' => 0,
-                'downloads' => 0
+                'downloads' => 0,
             ],
-            'is_favourited' => false
+            'is_favourited' => false,
         ];
 
         if (Auth::check() && $album->users->count()) {
@@ -236,7 +237,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
                     'views' => (int) $userRow->view_count,
                     'downloads' => (int) $userRow->download_count,
                 ],
-                'is_favourited' => (bool) $userRow->is_favourited
+                'is_favourited' => (bool) $userRow->is_favourited,
             ];
         }
 
@@ -250,12 +251,12 @@ class Album extends Model implements Searchable, Commentable, Favouritable
                 'views' => (int) $album->view_count,
                 'downloads' => (int) $album->download_count,
                 'comments' => (int) $album->comment_count,
-                'favourites' => (int) $album->favourite_count
+                'favourites' => (int) $album->favourite_count,
             ],
             'covers' => [
                 'small' => $album->getCoverUrl(Image::SMALL),
                 'normal' => $album->getCoverUrl(Image::NORMAL),
-                'original' => $album->getCoverUrl(Image::ORIGINAL)
+                'original' => $album->getCoverUrl(Image::ORIGINAL),
             ],
             'url' => $album->url,
             'user' => [
@@ -267,8 +268,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
             'user_data' => $userData,
             'permissions' => [
                 'delete' => Gate::allows('delete', $album),
-                'edit' => Gate::allows('edit', $album)
-            ]
+                'edit' => Gate::allows('edit', $album),
+            ],
         ];
     }
 
@@ -279,17 +280,17 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function getUrlAttribute()
     {
-        return action('AlbumsController@getShow', ['id' => $this->id, 'slug' => $this->slug]);
+        return action([AlbumsController::class, 'getShow'], ['id' => $this->id, 'slug' => $this->slug]);
     }
 
     public function getDownloadUrl($format)
     {
-        return action('AlbumsController@getDownload', ['id' => $this->id, 'extension' => Track::$Formats[$format]['extension']]);
+        return action([AlbumsController::class, 'getDownload'], ['id' => $this->id, 'extension' => Track::$Formats[$format]['extension']]);
     }
 
     public function getCoverUrl($type = Image::NORMAL)
     {
-        if (!$this->hasCover()) {
+        if (! $this->hasCover()) {
             return $this->user->getAvatarUrl($type);
         }
 
@@ -300,7 +301,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
     {
         $dir = (string) (floor($this->id / 100) * 100);
 
-        return \Config::get('ponyfm.files_directory').'/tracks/'.$dir;
+        return config('ponyfm.files_directory').'/tracks/'.$dir;
     }
 
     public function getDates()
@@ -310,7 +311,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
     public function getFilenameFor($format)
     {
-        if (!isset(Track::$Formats[$format])) {
+        if (! isset(Track::$Formats[$format])) {
             throw new Exception("$format is not a valid format!");
         }
 
@@ -326,7 +327,6 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
         foreach ($tracks as $track) {
             /** @var $track Track */
-
             $track->track_number = $index;
             $index++;
             $track->updateTags();
@@ -369,7 +369,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         }
 
         foreach ($trackIds as $trackId) {
-            if (!strlen(trim($trackId))) {
+            if (! strlen(trim($trackId))) {
                 continue;
             }
 
@@ -391,7 +391,6 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
         foreach ($tracksToRemove as $track) {
             /** @var $track Track */
-
             $track->album_id = null;
             $track->track_number = null;
             $track->updateTags();
@@ -400,7 +399,6 @@ class Album extends Model implements Searchable, Commentable, Favouritable
 
         foreach ($albumsToFix as $album) {
             /** @var $album Album */
-
             $album->updateTrackNumbers();
         }
 
@@ -427,6 +425,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
     public function save(array $options = [])
     {
         $this->recountTracks();
+
         return parent::save($options);
     }
 
@@ -459,11 +458,11 @@ class Album extends Model implements Searchable, Commentable, Favouritable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function shouldBeIndexed():bool
     {
-        return $this->track_count > 0 && !$this->trashed();
+        return $this->track_count > 0 && ! $this->trashed();
     }
 
     /**

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,10 @@
 
 namespace App\Commands;
 
-use Gate;
-use Illuminate\Support\Str;
 use App\Models\Genre;
-use Validator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CreateGenreCommand extends CommandBase
 {
@@ -53,12 +53,12 @@ class CreateGenreCommand extends CommandBase
 
         $rules = [
             'name'      => 'required|unique:genres,name,NULL,id,deleted_at,NULL|max:50',
-            'slug'      => 'required|unique:genres,slug,NULL,id,deleted_at,NULL'
+            'slug'      => 'required|unique:genres,slug,NULL,id,deleted_at,NULL',
         ];
 
         $validator = Validator::make([
             'name' => $this->_genreName,
-            'slug' => $slug
+            'slug' => $slug,
         ], $rules);
 
         if ($validator->fails()) {
@@ -67,7 +67,7 @@ class CreateGenreCommand extends CommandBase
 
         Genre::create([
             'name' => $this->_genreName,
-            'slug' => $slug
+            'slug' => $slug,
         ]);
 
         return CommandResponse::succeed(['message' => 'Genre created!']);

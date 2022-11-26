@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,12 @@
 
 namespace App\Jobs;
 
-use Auth;
-use DB;
 use App\Models\Genre;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Track;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use SerializesModels;
 
 class DeleteGenre extends Job implements ShouldQueue

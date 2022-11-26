@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,31 +20,31 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Models\Album;
 use App\Commands\CreateAlbumCommand;
 use App\Commands\DeleteAlbumCommand;
 use App\Commands\EditAlbumCommand;
 use App\Http\Controllers\ApiControllerBase;
+use App\Models\Album;
 use App\Models\Image;
 use App\Models\ResourceLogItem;
-use Auth;
-use Gate;
-use Illuminate\Support\Facades\Request;
-use App\Models\User;
-use Response;
 use App\Models\Track;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 
 class AlbumsController extends ApiControllerBase
 {
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        return $this->execute(new CreateAlbumCommand(Request::all()));
+        return $this->execute(new CreateAlbumCommand($request->all()));
     }
 
-    public function postEdit($id)
+    public function postEdit(Request $request, $id)
     {
-        return $this->execute(new EditAlbumCommand($id, Request::all()));
+        return $this->execute(new EditAlbumCommand($id, $request->all()));
     }
 
     public function postDelete($id)
@@ -52,7 +52,7 @@ class AlbumsController extends ApiControllerBase
         return $this->execute(new DeleteAlbumCommand($id));
     }
 
-    public function getShow($id)
+    public function getShow(Request $request, $id)
     {
         $album = Album::with([
             'tracks' => function ($query) {
@@ -66,16 +66,16 @@ class AlbumsController extends ApiControllerBase
             'user',
             'user.avatar',
             'comments',
-            'comments.user'
+            'comments.user',
         ])
             ->userDetails()
             ->find($id);
 
-        if (!$album) {
-            App::abort(404);
+        if (! $album) {
+            abort(404);
         }
 
-        if (Request::get('log')) {
+        if ($request->get('log')) {
             ResourceLogItem::logItem('album', $id, ResourceLogItem::VIEW);
             $album->view_count++;
         }
@@ -85,8 +85,8 @@ class AlbumsController extends ApiControllerBase
             unset($returned_album['formats']);
         }
 
-        return Response::json([
-            'album' => $returned_album
+        return response()->json([
+            'album' => $returned_album,
         ], 200);
     }
 
@@ -100,7 +100,7 @@ class AlbumsController extends ApiControllerBase
             return $this->notFound('Album not found!');
         }
 
-        if (!in_array($format, Track::$CacheableFormats)) {
+        if (! in_array($format, Track::$CacheableFormats)) {
             return $this->notFound('Format not found!');
         }
 
@@ -114,14 +114,14 @@ class AlbumsController extends ApiControllerBase
             $url = null;
         }
 
-        return Response::json(['url' => $url], 200);
+        return response()->json(['url' => $url], 200);
     }
 
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         $page = 1;
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         $query = Album::summary()
@@ -134,7 +134,7 @@ class AlbumsController extends ApiControllerBase
         $perPage = 40;
 
         $query
-            ->orderBy('title', 'asc')
+            ->orderBy('title')
             ->skip(($page - 1) * $perPage)
             ->take($perPage);
         $albums = [];
@@ -143,8 +143,8 @@ class AlbumsController extends ApiControllerBase
             $albums[] = Album::mapPublicAlbumSummary($album);
         }
 
-        return Response::json(
-            ["albums" => $albums, "current_page" => $page, "total_pages" => ceil($count / $perPage)],
+        return response()->json(
+            ['albums' => $albums, 'current_page' => $page, 'total_pages' => ceil($count / $perPage)],
             200
         );
     }
@@ -156,7 +156,7 @@ class AlbumsController extends ApiControllerBase
         $query = Album::summary()
             ->with('cover', 'user.avatar')
             ->where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')->get();
+            ->orderByDesc('created_at')->get();
         $albums = [];
 
         foreach ($query as $album) {
@@ -167,22 +167,22 @@ class AlbumsController extends ApiControllerBase
                 'created_at' => $album->created_at->format('c'),
                 'covers' => [
                     'small' => $album->getCoverUrl(Image::SMALL),
-                    'normal' => $album->getCoverUrl(Image::NORMAL)
-                ]
+                    'normal' => $album->getCoverUrl(Image::NORMAL),
+                ],
             ];
         }
 
-        return Response::json($albums, 200);
+        return response()->json($albums, 200);
     }
 
-    public function getEdit($id)
+    public function getEdit(Request $request, $id)
     {
         $album = Album::with('tracks')->find($id);
-        if (!$album) {
+        if (! $album) {
             return $this->notFound('Album '.$id.' not found!');
         }
 
-        if (Gate::denies('edit', Auth::user())) {
+        if (Gate::denies('edit', $request->user())) {
             return $this->notAuthorized();
         }
 
@@ -190,11 +190,11 @@ class AlbumsController extends ApiControllerBase
         foreach ($album->tracks as $track) {
             $tracks[] = [
                 'id' => $track->id,
-                'title' => $track->title
+                'title' => $track->title,
             ];
         }
 
-        return Response::json([
+        return response()->json([
             'id' => $album->id,
             'title' => $album->title,
             'user_id' => $album->user_id,
@@ -205,7 +205,7 @@ class AlbumsController extends ApiControllerBase
             'description' => $album->description,
             'cover_url' => $album->hasCover() ? $album->getCoverUrl(Image::NORMAL) : null,
             'real_cover_url' => $album->getCoverUrl(Image::NORMAL),
-            'tracks' => $tracks
+            'tracks' => $tracks,
         ], 200);
     }
 }

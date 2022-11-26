@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,9 @@
 
 namespace App\Commands;
 
-use Gate;
 use App\Models\Announcement;
-use Validator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class CreateAnnouncementCommand extends CommandBase
 {
@@ -48,7 +48,6 @@ class CreateAnnouncementCommand extends CommandBase
      */
     public function execute()
     {
-
         $rules = [
             'name' => 'required|max:50',
         ];

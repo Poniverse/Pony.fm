@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,25 +20,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\Models\TrackFile;
-use Auth;
-use Config;
-use App;
-use Redirect;
-use Response;
-use View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
 
 class TracksController extends Controller
 {
     public function getIndex()
     {
-        return View::make('tracks.index');
+        return view('tracks.index');
     }
 
-    public function getEmbed($id)
+    public function getEmbed(Request $request, $id)
     {
         $track = Track
             ::whereId($id)
@@ -50,17 +50,17 @@ class TracksController extends Controller
                 'genre'
             )->first();
 
-        if (!$track || !$track->canView(Auth::user())) {
-            App::abort(404);
+        if (! $track || ! $track->canView($request->user())) {
+            abort(404);
         }
 
         $userData = [
             'stats' => [
                 'views' => 0,
                 'plays' => 0,
-                'downloads' => 0
+                'downloads' => 0,
             ],
-            'is_favourited' => false
+            'is_favourited' => false,
         ];
 
         if ($track->users->count()) {
@@ -71,17 +71,17 @@ class TracksController extends Controller
                     'plays' => $userRow->play_count,
                     'downloads' => $userRow->download_count,
                 ],
-                'is_favourited' => $userRow->is_favourited
+                'is_favourited' => $userRow->is_favourited,
             ];
         }
 
-        return View::make('tracks.embed', ['track' => $track, 'user' => $userData]);
+        return view('tracks.embed', ['track' => $track, 'user' => $userData]);
     }
 
     public function getOembed(Request $request)
     {
-        if (!$request->filled('url')) {
-            App::abort(404);
+        if (! $request->filled('url')) {
+            abort(404);
         }
 
         $parsedUrl = parse_url($request->input('url'));
@@ -93,8 +93,8 @@ class TracksController extends Controller
             ->userDetails()
             ->first();
 
-        if (!$track || !$track->canView(Auth::user())) {
-            App::abort(404);
+        if (! $track || ! $track->canView($request->user())) {
+            abort(404);
         }
 
         $output = [
@@ -107,24 +107,24 @@ class TracksController extends Controller
             'title' => $track->title,
             'author_name' => $track->user->display_name,
             'author_url' => $track->user->url,
-            'html' => '<iframe src="'.action('TracksController@getEmbed', ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>'
+            'html' => '<iframe src="'.action([static::class, 'getEmbed'], ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
         ];
 
-        return Response::json($output);
+        return response()->json($output);
     }
 
-    public function getTrack($id, $slug)
+    public function getTrack(Request $request, $id, $slug)
     {
         $track = Track::find($id);
-        if (!$track || !$track->canView(Auth::user())) {
-            App::abort(404);
+        if (! $track || ! $track->canView($request->user())) {
+            abort(404);
         }
 
         if ($track->slug != $slug) {
-            return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
+            return Redirect::action([static::class, 'getTrack'], [$id, $track->slug]);
         }
 
-        return View::make('tracks.show', ['track' => $track]);
+        return view('tracks.show', ['track' => $track]);
     }
 
     public function getEdit($id, $slug)
@@ -132,35 +132,35 @@ class TracksController extends Controller
         return $this->getTrack($id, $slug);
     }
 
-    public function getShortlink($id)
+    public function getShortlink(Request $request, $id)
     {
         $track = Track::find($id);
-        if (!$track || !$track->canView(Auth::user())) {
-            App::abort(404);
+        if (! $track || ! $track->canView($request->user())) {
+            abort(404);
         }
 
-        return Redirect::action('TracksController@getTrack', [$id, $track->slug]);
+        return Redirect::action([static::class, 'getTrack'], [$id, $track->slug]);
     }
 
-    public function getStream($id, $extension)
+    public function getStream(Request $request, $id, $extension)
     {
         $track = Track::find($id);
-        if (!$track || !$track->canView(Auth::user())) {
-            App::abort(404);
+        if (! $track || ! $track->canView($request->user())) {
+            abort(404);
         }
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
 
-        $response = Response::make('', 200);
+        $response = response()->noContent(200);
         $filename = $trackFile->getFile();
 
-        if (!file_exists($filename)) {
-            App::abort(418);
+        if (! file_exists($filename)) {
+            abort(418);
         }
 
         ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $trackFile->getFormat()['index']);
 
-        if (Config::get('app.sendfile')) {
+        if (config('app.sendfile')) {
             $response->header('X-Sendfile', $filename);
         } else {
             $response->header('X-Accel-Redirect', $filename);
@@ -179,20 +179,20 @@ class TracksController extends Controller
         return $response;
     }
 
-    public function getDownload($id, $extension)
+    public function getDownload(Request $request, $id, $extension)
     {
         $track = Track::find($id);
-        if (!$track || !$track->canView(Auth::user())) {
-            App::abort(404);
+        if (! $track || ! $track->canView($request->user())) {
+            abort(404);
         }
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
         ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $trackFile->getFormat()['index']);
 
-        $response = Response::make('', 200);
+        $response = response()->noContent(200);
         $filename = $trackFile->getFile();
 
-        if (Config::get('app.sendfile')) {
+        if (config('app.sendfile')) {
             $response->header('X-Sendfile', $filename);
             $response->header(
                 'Content-Disposition',

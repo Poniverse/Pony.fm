@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,13 +20,13 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Illuminate\Support\Facades\Request;
 use App\Commands\CreateShowSongCommand;
 use App\Commands\DeleteShowSongCommand;
 use App\Commands\RenameShowSongCommand;
-use App\Models\ShowSong;
 use App\Http\Controllers\ApiControllerBase;
-use Response;
+use App\Models\ShowSong;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class ShowSongsController extends ApiControllerBase
 {
@@ -37,31 +37,33 @@ class ShowSongsController extends ApiControllerBase
         $songs = ShowSong::with(['trackCountRelation' => function ($query) {
             $query->withTrashed();
         }])
-            ->orderBy('title', 'asc')
+            ->orderBy('title')
             ->select('id', 'title', 'slug')
             ->get();
 
-        return Response::json([
-            'showsongs' => $songs->toArray()
+        return response()->json([
+            'showsongs' => $songs->toArray(),
         ], 200);
     }
 
-    public function postCreate()
+    public function postCreate(Request $request)
     {
-        $command = new CreateShowSongCommand(Request::get('title'));
+        $command = new CreateShowSongCommand($request->get('title'));
+
         return $this->execute($command);
     }
 
-    public function putRename($songId)
+    public function putRename(Request $request, $songId)
     {
-        $command = new RenameShowSongCommand($songId, Request::get('title'));
+        $command = new RenameShowSongCommand($songId, $request->get('title'));
+
         return $this->execute($command);
     }
 
-
-    public function deleteSong($songId)
+    public function deleteSong(Request $request, $songId)
     {
-        $command = new DeleteShowSongCommand($songId, Request::get('destination_song_id'));
+        $command = new DeleteShowSongCommand($songId, $request->get('destination_song_id'));
+
         return $this->execute($command);
     }
 }

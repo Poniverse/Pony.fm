@@ -53,7 +53,7 @@
           <a href="/" class="logo"><img class="default-logo" src="/images/ponyfm-logo-white.svg"><img class="small-logo" src="/images/ponyfm-logo-white-nodisc.svg"></a>
         </div>
         <div class="now-playing">
-            @if (Auth::check())
+            @auth
                 <div class="user-details dropdown">
                     <a class="avatar dropdown-toggle" bs-dropdown href="#">
                         <img src="{{Auth::user()->getAvatarUrl(\App\Models\Image::THUMBNAIL)}}" />
@@ -70,7 +70,7 @@
                     <a href="#" ng-click="notifPulloutToggle()"><i class="fa fa-bell fa-fw" aria-hidden="true"></i></a>
                     <div class="counter" ng-class="{'show': nCount > 0}">@{{ nCountFormatted }}</div>
                 </div>
-            @endif
+            @endauth
             <pfm-player></pfm-player>
         </div>
     </header>
@@ -90,7 +90,7 @@
             <li ng-class="{selected: stateIncludes('pages')}"><a href="/about">About / FAQ</a></li>
             <li><a href="https://mlpforums.com/forum/62-ponyfm/" title="Pony.fm Forum" target="_blank">Forum</a></li>
 
-            @if (Auth::check())
+            @auth
                 <li class="uploader" ui-sref-active="selected">
                     <a ui-sref="content.artist.account.uploader({slug: auth.user.slug})">Upload Music</a>
                 </li>
@@ -114,7 +114,7 @@
             @else
                 <li><a href="/login" target="_self">Login</a></li>
                 <li><a href="/register" target="_self">Register</a></li>
-            @endif
+            @endauth
             <li class="x-attribution">
                 <a href="#" ng-click="showCredits()" pfm-eat-click title="Pony.fm project credits">
                     @if(config('ponyfm.use_powered_by_footer'))
@@ -133,13 +133,13 @@
             @yield('app_content')
         </ui-view>
 
-        @if (Auth::check())
+        @auth
             <div class="notification-pullout" ng-class="{'active': notifActive}">
                 <div class="notif-container">
                     <pfm-notification-list></pfm-notification-list>
                 </div>
             </div>
-        @endif
+        @endauth
     </div>
 
 @endsection
@@ -154,12 +154,12 @@
     <script>
         window.pfm = {
             auth: {
-                @if (Auth::check())
+                @auth
                     isLogged: true,
                     user: {!! Auth::user()->toJson() !!}
                 @else
                     isLogged: false
-                @endif
+                @endauth
             },
             environment: "{{ App::environment() }}"
         };

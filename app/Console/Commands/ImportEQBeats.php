@@ -2,21 +2,21 @@
 
 namespace App\Console\Commands;
 
-use Auth;
-use Carbon\Carbon;
-use Config;
-use DB;
-use File;
-use Input;
-use getID3;
+use App\Commands\UploadTrackCommand;
+use App\Models\Album;
+use App\Models\Genre;
 use App\Models\Image;
 use App\Models\Track;
 use App\Models\User;
-use App\Models\Genre;
-use App\Models\Album;
-use App\Commands\UploadTrackCommand;
+use Carbon\Carbon;
+use getID3;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Input;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImportEQBeats extends Command
@@ -69,7 +69,7 @@ class ImportEQBeats extends Command
     public function handleInterrupt($signo)
     {
         $this->error('Import aborted!');
-        $this->error('Resume it from here using: --startAt=' . $this->currentFile);
+        $this->error('Resume it from here using: --startAt='.$this->currentFile);
         $this->isInterrupted = true;
     }
 
@@ -86,15 +86,15 @@ class ImportEQBeats extends Command
         pcntl_signal(SIGINT, [$this, 'handleInterrupt']);
 
         $archivePath = $this->argument('archiveFolder');
-        $tmpPath = Config::get('ponyfm.files_directory').'/tmp';
+        $tmpPath = config('ponyfm.files_directory').'/tmp';
 
-        if (!File::exists($tmpPath)) {
+        if (! File::exists($tmpPath)) {
             File::makeDirectory($tmpPath);
         }
 
         $UNKNOWN_GENRE = Genre::firstOrCreate([
             'name' => 'Unknown',
-            'slug' => 'unknown'
+            'slug' => 'unknown',
         ]);
 
         //==========================================================================================================
@@ -102,18 +102,18 @@ class ImportEQBeats extends Command
         //==========================================================================================================
         $this->comment('Enumerating files...');
         $files = File::allFiles($archivePath);
-        $this->info(sizeof($files) . ' files found!');
+        $this->info(count($files).' files found!');
 
         $this->comment('Enumerating artists...');
         $artists = File::directories($archivePath);
-        $this->info(sizeof($artists) . ' artists found!');
+        $this->info(count($artists).' artists found!');
 
         $this->comment('Importing tracks...');
 
-        $totalFiles = sizeof($files);
+        $totalFiles = count($files);
 
-        $fileToStartAt = (int)$this->option('startAt') - 1;
-        $this->comment("Skipping $fileToStartAt files..." . PHP_EOL);
+        $fileToStartAt = (int) $this->option('startAt') - 1;
+        $this->comment("Skipping $fileToStartAt files...".PHP_EOL);
 
         $files = array_slice($files, $fileToStartAt);
         $this->currentFile = $fileToStartAt;
@@ -127,20 +127,20 @@ class ImportEQBeats extends Command
                 break;
             }
 
-            $this->comment('[' . $this->currentFile . '/' . $totalFiles . '] Importing track [' . $file->getFilename() . ']...');
+            $this->comment('['.$this->currentFile.'/'.$totalFiles.'] Importing track ['.$file->getFilename().']...');
 
-            if (!in_array($file->getExtension(), $this->allowedExtensions)) {
-                $this->comment('This is not an audio file! Skipping...' . PHP_EOL);
+            if (! in_array($file->getExtension(), $this->allowedExtensions)) {
+                $this->comment('This is not an audio file! Skipping...'.PHP_EOL);
                 continue;
             }
 
-            $this->info('Path to file: ' . $file->getRelativePath());
+            $this->info('Path to file: '.$file->getRelativePath());
             $path_components = explode(DIRECTORY_SEPARATOR, $file->getRelativePath());
             $artist_name = $path_components[0];
             $album_name = array_key_exists(1, $path_components) ? $path_components[1] : null;
 
-            $this->info('Artist: ' . $artist_name);
-            $this->info('Album: ' . $album_name);
+            $this->info('Artist: '.$artist_name);
+            $this->info('Album: '.$album_name);
 
             //==========================================================================================================
             // Analyse the track so we can find the MIME type and album art
@@ -170,7 +170,7 @@ class ImportEQBeats extends Command
                 $parsedTags['title'] = substr($fileName, strpos($fileName, $hyphen) + strlen($hyphen));
             }
 
-            $this->info('Title: ' . $parsedTags['title']);
+            $this->info('Title: '.$parsedTags['title']);
 
             //==========================================================================================================
             // Determine the release date.
@@ -183,11 +183,9 @@ class ImportEQBeats extends Command
 
             if ($taggedYear !== null && $modifiedDate->year === $taggedYear) {
                 $releasedAt = $modifiedDate;
-
-            } else if ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
+            } elseif ($taggedYear !== null && $modifiedDate->year !== $taggedYear) {
                 $this->warn('Release years don\'t match! Using the tagged year...');
                 $releasedAt = Carbon::create($taggedYear);
-
             } else {
                 // $taggedYear is null
                 $this->warn('This track isn\'t tagged with its release year! Using the track\'s last modified date...');
@@ -215,7 +213,6 @@ class ImportEQBeats extends Command
                         $genre->restore();
                     }
                     $genreId = $genre->id;
-
                 } else {
                     $genre = new Genre();
                     $genre->name = $genreName;
@@ -224,10 +221,9 @@ class ImportEQBeats extends Command
                     $genreId = $genre->id;
                     $this->comment('Created a new genre!');
                 }
-
             } else {
                 $genreId = $UNKNOWN_GENRE->id; // "Unknown" genre ID
-            }           
+            }
 
             //==========================================================================================================
             // Check to see if we have this track already, if so, compare hashes of the two files
@@ -236,7 +232,7 @@ class ImportEQBeats extends Command
             $artist = User::where('display_name', '=', $artist_name)->first();
             $artistId = null;
 
-            $this->comment("Checking for duplicates");
+            $this->comment('Checking for duplicates');
 
             if ($artist) {
                 $artistId = $artist->id;
@@ -254,7 +250,7 @@ class ImportEQBeats extends Command
                 $importFormat = $this->getFormat($file->getExtension());
                 if ($importFormat == null) {
                     // No idea what this is, skip file
-                    $this->comment(sprintf("Not an audio file (%s), skipping...", $importFormat));
+                    $this->comment(sprintf('Not an audio file (%s), skipping...', $importFormat));
                     continue;
                 }
 
@@ -273,7 +269,7 @@ class ImportEQBeats extends Command
                         // Source is lossless, is the existing track lossy?
                         if ($existingFile->isMasterLossy()) {
                             // Cool! Let's replace it
-                            $this->comment('Replacing (' . $existingTrack->id . ') ' . $existingTrack->title);
+                            $this->comment('Replacing ('.$existingTrack->id.') '.$existingTrack->title);
 
                             $this->replaceTrack($file, $existingTrack, $artist, $allTags['mime_type']);
 
@@ -282,16 +278,15 @@ class ImportEQBeats extends Command
                     }
 
                     continue;
-
                 } else {
-                    $this->comment("Found existing file");
+                    $this->comment('Found existing file');
 
                     // Found a matching format, are they the same?
                     // Before we check it, see if it came from MLPMA
                     // We're only replacing tracks with the same format if they're archived
                     $mlpmaTrack = DB::table('mlpma_tracks')->where('track_id', '=', $existingTrack->id)->first();
 
-                    if (!is_null($mlpmaTrack)) {
+                    if (! is_null($mlpmaTrack)) {
                         $getId3_source = new getID3;
 
                         $getId3_source->option_md5_data = true;
@@ -307,8 +302,8 @@ class ImportEQBeats extends Command
                         $importHash = array_key_exists('md5_data_source', $sourceWithMd5) ? $sourceWithMd5['md5_data_source'] : $sourceWithMd5['md5_data'];
                         $targetHash = array_key_exists('md5_data_source', $existingFileTags) ? $existingFileTags['md5_data_source'] : $existingFileTags['md5_data'];
 
-                        $this->info("Archive hash: " . $importHash);
-                        $this->info("Pony.fm hash: " . $targetHash);
+                        $this->info('Archive hash: '.$importHash);
+                        $this->info('Pony.fm hash: '.$targetHash);
 
                         if ($importHash == $targetHash) {
                             // Audio is identical, no need to reupload
@@ -319,28 +314,30 @@ class ImportEQBeats extends Command
                             if (strlen($existingTrack->description) < strlen($parsedTags['comments'])) {
                                 $existingTrack->description = $parsedTags['comments'];
                                 $changedMetadata = true;
-                                $this->comment("Updated description");
+                                $this->comment('Updated description');
                             }
 
                             if (strlen($existingTrack->lyrics) < strlen($parsedTags['lyrics'])) {
                                 $existingTrack->lyrics = $parsedTags['lyrics'];
                                 $changedMetadata = true;
-                                $this->comment("Updated lyrics");
+                                $this->comment('Updated lyrics');
                             }
 
-                            if ($changedMetadata) $existingTrack->save();
+                            if ($changedMetadata) {
+                                $existingTrack->save();
+                            }
 
                             continue;
                         } else {
                             // Audio is different, let's replace it
-                            $this->comment('Replacing (' . $existingTrack->id . ') ' . $existingTrack->title);
+                            $this->comment('Replacing ('.$existingTrack->id.') '.$existingTrack->title);
 
                             $this->replaceTrack($file, $existingTrack, $artist, $allTags['mime_type']);
 
                             continue;
                         }
                     } else {
-                        $this->comment("Not replacing, user uploaded");
+                        $this->comment('Not replacing, user uploaded');
 
                         // We can update the metadata though
                         $changedMetadata = false;
@@ -348,28 +345,30 @@ class ImportEQBeats extends Command
                         if (strlen($existingTrack->description) < strlen($parsedTags['comments'])) {
                             $existingTrack->description = $parsedTags['comments'];
                             $changedMetadata = true;
-                            $this->comment("Updated description");
+                            $this->comment('Updated description');
                         }
 
                         if (strlen($existingTrack->lyrics) < strlen($parsedTags['lyrics'])) {
                             $existingTrack->lyrics = $parsedTags['lyrics'];
                             $changedMetadata = true;
-                            $this->comment("Updated lyrics");
+                            $this->comment('Updated lyrics');
                         }
 
-                        if ($changedMetadata) $existingTrack->save();
+                        if ($changedMetadata) {
+                            $existingTrack->save();
+                        }
                         continue;
                     }
                 }
             } else {
-                $this->comment("No duplicates");
+                $this->comment('No duplicates');
             }
 
             //==========================================================================================================
             // Create new user for the artist if one doesn't exist
             //==========================================================================================================
 
-            if (!$artist) {
+            if (! $artist) {
                 $artist = new User;
                 $artist->display_name = $artist_name;
                 $artist->email = null;
@@ -379,8 +378,8 @@ class ImportEQBeats extends Command
 
                 $slugExists = User::where('slug', '=', $artist->slug)->first();
                 if ($slugExists) {
-                    $this->error('Horsefeathers! The slug ' . $artist->slug . ' is already taken!');
-                    $artist->slug = $artist->slug . '-' . Str::random(4);
+                    $this->error('Horsefeathers! The slug '.$artist->slug.' is already taken!');
+                    $artist->slug = $artist->slug.'-'.Str::random(4);
                 }
 
                 $artist->save();
@@ -396,7 +395,7 @@ class ImportEQBeats extends Command
 
             if (array_key_exists('comments', $allTags) && array_key_exists('picture', $allTags['comments'])) {
                 $image = $allTags['comments']['picture'][0];
-            } else if (array_key_exists('id3v2', $allTags) && array_key_exists('APIC', $allTags['id3v2'])) {
+            } elseif (array_key_exists('id3v2', $allTags) && array_key_exists('APIC', $allTags['id3v2'])) {
                 $image = $allTags['id3v2']['APIC'][0];
             }
 
@@ -415,8 +414,8 @@ class ImportEQBeats extends Command
                     }
                 }
                 // write temporary image file
-                $imageFilename = $file->getFilename() . ".cover.$extension";
-                $imageFilePath = "$tmpPath/" . $imageFilename;
+                $imageFilename = $file->getFilename().".cover.$extension";
+                $imageFilePath = "$tmpPath/".$imageFilename;
                 File::put($imageFilePath, $image['data']);
 
                 $imageFile = new UploadedFile($imageFilePath, $imageFilename, $image['image_mime'], null, null, true);
@@ -437,13 +436,13 @@ class ImportEQBeats extends Command
                     ->where('title', '=', $albumName)
                     ->first();
 
-                if (!$album) {
+                if (! $album) {
                     $album = new Album;
 
                     $album->title = $albumName;
                     $album->user_id = $artist->id;
                     $album->cover_id = $coverId;
-                    $album->description = "";
+                    $album->description = '';
 
                     $album->save();
                 }
@@ -460,8 +459,8 @@ class ImportEQBeats extends Command
 
             $mime = $allTags['mime_type'];
 
-            File::copy($file->getPathname(), "$tmpPath/" . $file->getFilename());
-            $trackFile = new UploadedFile("$tmpPath/" . $file->getFilename(), $file->getFilename(), $mime, null, null, true);
+            File::copy($file->getPathname(), "$tmpPath/".$file->getFilename());
+            $trackFile = new UploadedFile("$tmpPath/".$file->getFilename(), $file->getFilename(), $mime, null, null, true);
 
             $upload = new UploadTrackCommand(true);
             $upload->_file = $trackFile;
@@ -479,18 +478,18 @@ class ImportEQBeats extends Command
                 $track->is_downloadable = true;
                 $track->is_vocal = $isVocal;
                 $track->license_id = 2;
-                $track->description = "";
-                $track->lyrics = "";
+                $track->description = '';
+                $track->lyrics = '';
 
-                if (!is_null($parsedTags['comments'])) {
+                if (! is_null($parsedTags['comments'])) {
                     $track->description = $parsedTags['comments'];
                 }
 
-                if (!is_null($parsedTags['lyrics'])) {
+                if (! is_null($parsedTags['lyrics'])) {
                     $track->lyrics = $parsedTags['lyrics'];
                 }
 
-                if (!is_null($parsedTags['title'])) {
+                if (! is_null($parsedTags['title'])) {
                     $track->title = $parsedTags['title'];
                 }
 
@@ -501,7 +500,7 @@ class ImportEQBeats extends Command
                     ->insert([
                         'track_id' => $result->getResponse()['id'],
                         'path' => $file->getRelativePath(),
-                        'filename' => iconv("UTF-8", "ISO-8859-1//TRANSLIT", $file->getFilename()),
+                        'filename' => iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $file->getFilename()),
                         'extension' => $file->getExtension(),
                         'imported_at' => Carbon::now(),
                         'parsed_tags' => json_encode($parsedTags),
@@ -509,18 +508,21 @@ class ImportEQBeats extends Command
                     ]);
             }
 
-            echo PHP_EOL . PHP_EOL;
+            echo PHP_EOL.PHP_EOL;
         }
     }
 
-    protected function hashAudio($filepath) {
+    protected function hashAudio($filepath)
+    {
         $hash = hash_file('crc32b', $filepath);
         $array = unpack('N', pack('H*', $hash));
+
         return $array[1];
     }
 
-    protected function getFormat($extension) {
-        foreach(Track::$Formats as $name => $format) {
+    protected function getFormat($extension)
+    {
+        foreach (Track::$Formats as $name => $format) {
             if ($format['extension'] == $extension) {
                 return $name;
             }
@@ -564,7 +566,6 @@ class ImportEQBeats extends Command
             ];
             $rawTags = [];
         }
-
 
         return [$parsedTags, $rawTags];
     }
@@ -623,7 +624,7 @@ class ImportEQBeats extends Command
                 'comments' => $comment,
                 'lyrics' => isset($tags['unsynchronised_lyric']) ? $tags['unsynchronised_lyric'][0] : null,
             ],
-            $tags
+            $tags,
         ];
     }
 
@@ -667,7 +668,7 @@ class ImportEQBeats extends Command
                 'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
                 'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
             ],
-            $tags
+            $tags,
         ];
     }
 
@@ -703,7 +704,7 @@ class ImportEQBeats extends Command
                 'comments' => isset($tags['comments']) ? $tags['comments'][0] : null,
                 'lyrics' => isset($tags['lyrics']) ? $tags['lyrics'][0] : null,
             ],
-            $tags
+            $tags,
         ];
     }
 
@@ -736,7 +737,7 @@ class ImportEQBeats extends Command
             // YYYY-MM
             case 7:
                 try {
-                    return Carbon::createFromFormat('Y m', str_replace("-", " ", $dateString))
+                    return Carbon::createFromFormat('Y m', str_replace('-', ' ', $dateString))
                         ->day(1);
                 } catch (\InvalidArgumentException $e) {
                     return null;
@@ -745,7 +746,7 @@ class ImportEQBeats extends Command
             // YYYY-MM-DD
             case 10:
                 try {
-                    return Carbon::createFromFormat('Y m d', str_replace("-", " ", $dateString));
+                    return Carbon::createFromFormat('Y m d', str_replace('-', ' ', $dateString));
                 } catch (\InvalidArgumentException $e) {
                     return null;
                 }
@@ -762,7 +763,8 @@ class ImportEQBeats extends Command
         }
     }
 
-    protected function replaceTrack($toBeUploaded, $targetTrack, $artist, $mime) {
+    protected function replaceTrack($toBeUploaded, $targetTrack, $artist, $mime)
+    {
         Auth::loginUsingId($artist->id);
 
         $trackFile = new UploadedFile($toBeUploaded->getPathname(), $toBeUploaded->getFilename(), $mime, null, null, true);

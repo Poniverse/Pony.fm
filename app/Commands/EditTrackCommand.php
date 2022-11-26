@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,15 +20,15 @@
 
 namespace App\Commands;
 
-use Gate;
-use Notification;
+use App\Facades\Notification;
 use App\Models\Album;
 use App\Models\Image;
+use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\TrackType;
 use App\Models\User;
-use App\Models\Playlist;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class EditTrackCommand extends CommandBase
 {
@@ -65,9 +65,9 @@ class EditTrackCommand extends CommandBase
 
         $rules = [
             'title' => 'required|min:3|max:80',
-            'released_at' => 'before:' .
-                    (date('Y-m-d', time() + (86400 * 2))) . (
-                    isset($this->_input['released_at']) && $this->_input['released_at'] != ""
+            'released_at' => 'before:'.
+                    (date('Y-m-d', time() + (86400 * 2))).(
+                    isset($this->_input['released_at']) && $this->_input['released_at'] != ''
                  ? '|date'
                  : ''),
             'license_id' => 'required|exists:licenses,id',
@@ -76,7 +76,7 @@ class EditTrackCommand extends CommandBase
             'track_type_id' => 'required|exists:track_types,id|not_in:'.TrackType::UNCLASSIFIED_TRACK,
             'cover_id' => 'exists:images,id',
             'album_id' => 'exists:albums,id',
-            'username' => 'exists:users,username'
+            'username' => 'exists:users,username',
         ];
 
         if (isset($this->_input['track_type_id']) && $this->_input['track_type_id'] == TrackType::OFFICIAL_TRACK_REMIX) {
@@ -92,7 +92,7 @@ class EditTrackCommand extends CommandBase
 
         $track = $this->_track;
         $track->title = $this->_input['title'];
-        $track->released_at = isset($this->_input['released_at']) && $this->_input['released_at'] != "" ? strtotime($this->_input['released_at']) : null;
+        $track->released_at = isset($this->_input['released_at']) && $this->_input['released_at'] != '' ? strtotime($this->_input['released_at']) : null;
         $track->description = isset($this->_input['description']) ? $this->_input['description'] : '';
         $track->lyrics = isset($this->_input['lyrics']) ? $this->_input['lyrics'] : '';
         $track->license_id = $this->_input['license_id'];
@@ -163,26 +163,26 @@ class EditTrackCommand extends CommandBase
         $track->save();
 
         User::whereId($this->_track->user_id)->update([
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = ' . $this->_track->user_id . ')')
+            'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = '.$this->_track->user_id.')'),
         ]);
 
         if ($oldid != null) {
             User::whereId($oldid)->update([
-                'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = ' . $oldid . ')')
+                'track_count' => DB::raw('(SELECT COUNT(id) FROM tracks WHERE deleted_at IS NULL AND published_at IS NOT NULL AND user_id = '.$oldid.')'),
             ]);
         }
 
-        if (isset($this->_input['hwc_submit']) && new \DateTime() < new \DateTime("2016-12-20 23:59:59")) {
+        if (isset($this->_input['hwc_submit']) && new \DateTime() < new \DateTime('2016-12-20 23:59:59')) {
             $playlist = Playlist::where('user_id', 22549)->first();
 
             if ($this->_input['hwc_submit'] == 'true') {
-                if (!$playlist->tracks()->get()->contains($track)) {
+                if (! $playlist->tracks()->get()->contains($track)) {
                     $songIndex = $playlist->trackCount() + 1;
                     $playlist->tracks()->attach($track, ['position' => $songIndex]);
                     $playlist->touch();
 
                     Playlist::where('id', $playlist->id)->update([
-                        'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$playlist->id.')')
+                        'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$playlist->id.')'),
                     ]);
                 }
             } else {
@@ -190,11 +190,12 @@ class EditTrackCommand extends CommandBase
                     $playlist->tracks()->detach($track);
 
                     Playlist::whereId($playlist->id)->update([
-                        'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$playlist->id.')')
+                        'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$playlist->id.')'),
                     ]);
                 }
             }
         }
+
         return CommandResponse::succeed(['real_cover_url' => $track->getCoverUrl(Image::NORMAL)]);
     }
 
@@ -215,7 +216,7 @@ class EditTrackCommand extends CommandBase
         }
 
         Album::whereId($album->id)->update([
-            'track_count' => DB::table('tracks')->where('album_id', '=', $album->id)->count()
+            'track_count' => DB::table('tracks')->where('album_id', '=', $album->id)->count(),
         ]);
     }
 
@@ -230,7 +231,7 @@ class EditTrackCommand extends CommandBase
         $track->save();
 
         $album->update([
-            'track_count' => DB::table('tracks')->where('album_id', '=', $album->id)->count()
+            'track_count' => DB::table('tracks')->where('album_id', '=', $album->id)->count(),
         ]);
     }
 }
