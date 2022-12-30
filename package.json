@@ -14,7 +14,7 @@
     "angular-strap": "2.3.8",
     "angular-ui-router": "0.3.1",
     "chart.js": "2.1.0",
-    "coffee-loader": "0.7.2",
+    "coffee-loader": "4.0.0",
     "coffee-script": "1.10.0",
     "del": "^2.2.2",
     "foundation-emails": "^2.2.1",
@@ -50,9 +50,9 @@
     "script-loader": "0.7.0",
     "siphon-media-query": "^1.0.0",
     "underscore": "1.8.3",
-    "webpack": "1.13.1",
+    "webpack": "5.75.0",
     "webpack-dev-server": "1.14.1",
-    "webpack-stream": "3.2.0",
+    "webpack-stream": "7.0.0",
     "yargs": "4.7.1"
   }
 }
