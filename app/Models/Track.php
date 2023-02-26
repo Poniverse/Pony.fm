@@ -223,7 +223,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'tag_format' => 'AtomicParsley',
             'tag_method' => 'updateTagsWithAtomicParsley',
             'mime_type' => 'audio/mp4',
-            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libfaac -ab 256k -f mp4 {$target}'
+            'command' => 'ffmpeg 2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libfdk_aac -ab 256k -f mp4 {$target}'
         ],
         'ALAC' => [
             'index' => 4,
