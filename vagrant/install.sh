@@ -26,7 +26,7 @@ sudo apt-get update
 
 echo "Installing tagging tools & other dependencies..."
 sudo apt-get install -y elasticsearch
-sudo apt-get install -y atomicparsley flac vorbis-tools imagemagick adoptopenjdk-8-openj9 pkg-config yasm libfaac-dev libmp3lame-dev libvorbis-dev libtheora-dev
+sudo apt-get install -y atomicparsley flac vorbis-tools imagemagick adoptopenjdk-8-openj9 pkg-config yasm libfaac-dev libmp3lame-dev libvorbis-dev libtheora-dev libfdk-aac-dev
 
 echo "Installing PHP extensions"
 sudo apt-get install -y libgmp-dev php-gmp php7.0-gmp
@@ -39,11 +39,11 @@ if type ffmpeg &>/dev/null; then
 else
     echo "ffmpeg is not installed; downloading..."
     cd /tmp
-    wget -q "https://ffmpeg.org/releases/ffmpeg-2.6.3.tar.bz2"
+    wget -q "https://ffmpeg.org/releases/ffmpeg-5.1.2.tar.bz2"
     echo "Finished downloading ffmpeg; now compiling it..."
-    tar -xjf "ffmpeg-2.6.3.tar.bz2"
-    cd "ffmpeg-2.6.3"
-    sudo ./configure --enable-gpl --enable-encoder=flac --enable-encoder=alac --enable-libmp3lame --enable-libvorbis --enable-libtheora --enable-libfaac --enable-nonfree
+    tar -xjf "ffmpeg-5.1.2.tar.bz2"
+    cd "ffmpeg-5.1.2"
+    sudo ./configure --enable-gpl --enable-encoder=flac --enable-encoder=alac --enable-libmp3lame --enable-libvorbis --enable-libtheora --enable-libfdk_aac --enable-nonfree
     sudo make -j4
     sudo make install
 fi
