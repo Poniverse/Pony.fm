@@ -10,7 +10,7 @@
     "license": "AGPL",
     "type": "project",
     "require": {
-        "php": ">=7.0.1",
+        "php": "7.2.24",
         "laravel/framework": "5.5.*",
         "codescale/ffmpeg-php": "2.7.0",
         "intouch/laravel-newrelic": "*",

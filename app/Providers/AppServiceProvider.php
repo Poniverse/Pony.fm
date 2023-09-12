@@ -27,6 +27,8 @@ use PfmValidator;
 use Poniverse;
 use Validator;
 
+use App;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
