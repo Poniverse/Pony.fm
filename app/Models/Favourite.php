@@ -105,10 +105,7 @@ class Favourite extends Model
     public function getTypeAttribute()
     {
         // As of PHP 7.2, get_class is picky about null args
-        if ($resource = $this->resource) {
-            return get_class($resource);
-        } else {
-            return null;
-        }
+        $resource = $this->resource;
+        return $resource ? get_class($resource) : null;
     }
 }
