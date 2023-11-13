@@ -91,8 +91,11 @@ class Favourite extends Model
             } else {
                 if ($this->playlist_id) {
                     return $this->playlist;
-                } // no resource - this should never happen under real circumstances
+                }
                 else {
+                    // No resource
+                    // In this case, either the resource was
+                    // soft-deleted or something else occurred.
                     return null;
                 }
             }
@@ -101,6 +104,8 @@ class Favourite extends Model
 
     public function getTypeAttribute()
     {
-        return get_class($this->resource);
+        // As of PHP 7.2, get_class is picky about null args
+        $resource = $this->resource;
+        return $resource ? get_class($resource) : null;
     }
 }
