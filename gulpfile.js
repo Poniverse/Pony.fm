@@ -310,12 +310,11 @@ gulp.task('build', gulp.parallel('webpack-build',
     'styles-embed',
     'email-build'));
 
+gulp.task("watch", (done) => {
+    gulp.series("styles-app", gulp.parallel("webpack-dev-server", "email-default"))(done);
 
-gulp.task("watch-legacy", gulp.series(gulp.parallel("build"), function () {
-    gulp.watch("resources/assets/styles/**/*.{css,less}", gulp.parallel("styles-app"));
-}));
-
-gulp.task("watch", gulp.parallel("webpack-dev-server", "email-default", "watch-legacy"));
+    gulp.watch("resources/assets/styles/**/*.{css,less}", gulp.series("styles-app"));
+});
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;

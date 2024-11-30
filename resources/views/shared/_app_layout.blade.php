@@ -116,6 +116,7 @@
                 <li><a href="/register" target="_self">Register</a></li>
             @endif
             <li class="x-attribution">
+                <p class="nelson">Dedicated to nlaq <br /> (1992 - 2024)</p>
                 <a href="#" ng-click="showCredits()" pfm-eat-click title="Pony.fm project credits">
                     @if(config('ponyfm.use_powered_by_footer'))
                         <span>Powered by</span>
