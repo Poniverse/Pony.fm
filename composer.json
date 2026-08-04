@@ -20,7 +20,7 @@
         "cviebrock/laravel-elasticsearch": "^8.0",
         "barryvdh/laravel-debugbar": "^3.5",
         "predis/predis": "^1.1",
-        "ksubileau/color-thief-php": "v2.0.x-dev",
+        "ksubileau/color-thief-php": "^2.0",
         "graham-campbell/exceptions": "^14.0",
         "minishlink/web-push": "^6.0",
         "alsofronie/eloquent-uuid": "^1.0",
@@ -83,7 +83,14 @@
         ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "platform": {
+            "php": "8.0.30"
+        },
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "kylekatarnls/update-helper": true
+        }
     },
     "extra": {
         "laravel": {

@@ -1,6 +1,6 @@
-FROM jrottenberg/ffmpeg:4.3-alpine312 as ffmpeg
+FROM jrottenberg/ffmpeg:4.3-alpine312 AS ffmpeg
 
-FROM alpine:3.12 as atomicparsley_builder
+FROM alpine:3.12 AS atomicparsley_builder
 
 RUN apk add --no-cache make cmake linux-headers g++ git
 RUN git clone https://github.com/wez/atomicparsley.git /tmp/atomicparsley
@@ -9,7 +9,7 @@ RUN cd /tmp/atomicparsley \
   && cmake . \
   && cmake --build . --config Release
 
-FROM node:12-alpine as assets_builder
+FROM node:12-alpine AS assets_builder
 
 # To handle 'not get uid/gid'
 RUN npm config set unsafe-perm true
