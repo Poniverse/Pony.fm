@@ -310,6 +310,8 @@ gulp.task('build', gulp.parallel('webpack-build',
     'styles-embed',
     'email-build'));
 
+gulp.task("watch", (done) => {
+    gulp.series("styles-app", gulp.parallel("webpack-dev-server", "email-default"))(done);
 
 gulp.task("watch-legacy", gulp.series(gulp.parallel("build"), function () {
     gulp.watch("resources/styles/**/*.{css,less}", gulp.parallel("styles-app"));

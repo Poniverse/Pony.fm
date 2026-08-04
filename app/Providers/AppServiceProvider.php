@@ -28,6 +28,8 @@ use Illuminate\Support\ServiceProvider;
 use PfmValidator;
 use Poniverse;
 
+use App;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**

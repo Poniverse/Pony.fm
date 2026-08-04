@@ -6,8 +6,10 @@
     "type": "git",
     "url": "ssh://git@phabricator.poniverse.net/diffusion/PF/pony-fm.git"
   },
+  "scripts": {
+    "watch": "gulp watch"
+  },
   "packages": {},
-  "dependencies": {},
   "devDependencies": {
     "angular": "1.5.8",
     "angular-chart.js": "1.0.0-alpha6",
@@ -38,7 +40,7 @@
     "gulp-notify": "2.2.0",
     "gulp-plumber": "1.1.0",
     "gulp-replace": "^0.5.4",
-    "gulp-sass": "^3.1.0",
+    "gulp-sass": "^6.0.0",
     "gulp-sourcemaps": "1.6.0",
     "gulp-uncss": "^1.0.6",
     "gulp-util": "3.0.7",
@@ -47,6 +49,7 @@
     "lazypipe": "^1.0.1",
     "panini": "^1.5.1",
     "run-sequence": "^1.2.2",
+    "sass": "^1.81.0",
     "script-loader": "0.7.0",
     "siphon-media-query": "^1.0.0",
     "underscore": "1.8.3",
