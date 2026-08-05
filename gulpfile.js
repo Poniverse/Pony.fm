@@ -82,7 +82,9 @@ gulp.task("webpack-dev-server", function () {
         // server and middleware options, currently blank
         // stats: {chunks: false}
         stats: 'minimal'
-    }).listen(61999, "localhost", function (err) {
+    // 0.0.0.0 so the dev server is reachable when gulp runs inside a
+    // container (the app's script tags point at localhost:61999 on the host)
+    }).listen(61999, "0.0.0.0", function (err) {
         if (err)
             throw new gutil.PluginError("webpack-dev-server", err);
 

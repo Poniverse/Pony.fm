@@ -66,6 +66,14 @@
         }
     },
     "scripts": {
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "PATH=\"$PWD/docker/bin:$PATH\" php -d upload_max_filesize=600M -d post_max_size=600M -S 127.0.0.1:8000 -t public server.php"
+        ],
+        "queue": [
+            "Composer\\Config::disableProcessTimeout",
+            "PATH=\"$PWD/docker/bin:$PATH\" php artisan queue:listen --queue=default,notifications,indexing --sleep=5 --tries=3"
+        ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],

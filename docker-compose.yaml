@@ -1,0 +1,99 @@
+# `docker compose up -d` starts only the app's dependencies; the app itself
+# runs on the host (see DOCKER-README.md).
+#
+# Optional profiles:
+#   --profile queue    beanstalkd, for QUEUE_CONNECTION=beanstalkd
+#   --profile app      the app itself, built from the production image
+#   --profile assets   gulp watcher in a Node 12 container
+
+services:
+  # Host ports come from .env (compose reads it for ${VAR} interpolation), so
+  # if a port clashes with another project, change it once in .env and both
+  # the container mapping and the app's connection follow.
+  postgres:
+    image: postgres:13.1-alpine
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_USER=ponyfm
+      - POSTGRES_PASSWORD=ponyfm
+      - POSTGRES_DB=ponyfm
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "${ELASTICSEARCH_PORT:-9200}:9200"
+
+  beanstalkd:
+    image: schickling/beanstalkd
+    profiles: ["queue"]
+    ports:
+      - "11300:11300"
+
+  # Prod-like smoke test: runs the baked image (nginx + php-fpm + ffmpeg +
+  # AtomicParsley in one container), no code mounts.
+  #   docker compose --profile app up -d --build
+  web:
+    build: .
+    image: ponyfm
+    profiles: ["app"]
+    ports:
+      - "8000:80"
+    command:
+      - web
+    environment:
+      # Dev-only key, same as .env.example.
+      - APP_KEY=base64:O8oDL/1AMZq2dxTskgjeg/2AhvxTYSwmKXfvcErLMq8=
+      - APP_ENV=local
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_DATABASE=ponyfm
+      - DB_USERNAME=ponyfm
+      - DB_PASSWORD=ponyfm
+      - ELASTICSEARCH_HOST=elasticsearch
+      - QUEUE_CONNECTION=sync
+      - MAIL_MAILER=log
+      - PONYFM_DATASTORE=/app/storage/app/datastore
+    depends_on:
+      - postgres
+      - elasticsearch
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+      - ./docker/php/php.ini:/usr/local/etc/php-fpm.d/php.ini:ro
+
+  # Escape hatch if your host Node is too new for the gulp 4 / webpack 1
+  # toolchain: runs the asset watcher in the same Node the prod image uses.
+  assets:
+    image: node:12
+    # phantomjs (via uncss) and the imagemin binaries only ship x86-64 glibc
+    # builds, so this must be amd64 debian — emulated on Apple Silicon.
+    platform: linux/amd64
+    profiles: ["assets"]
+    working_dir: /app
+    volumes:
+      - .:/app
+      # Keep the container's node_modules separate from the host's — native
+      # binaries (imagemin etc.) aren't portable between macOS and alpine.
+      - assets-node-modules:/app/node_modules
+    # --ignore-engines: sass declares node>=14 but the prod image builds with
+    # node 12 + npm, which only warns; yarn would hard-fail without this.
+    command: sh -c "yarn install --ignore-engines && yarn dev"
+    ports:
+      - "35729:35729" # livereload
+      - "61999:61999" # webpack-dev-server (script tags point here in debug)
+
+volumes:
+  postgres-data:
+  elasticsearch-data:
+  assets-node-modules:

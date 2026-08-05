@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+# AtomicParsley via docker, for dev machines without a local install.
+# `composer serve` and `composer queue` put this directory on PATH.
+# Builds the image from docker/AtomicParsley on first use.
+
+set -e
+
+IMAGE=ponyfm/atomicparsley
+
+if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
+  echo "Building $IMAGE..." >&2
+  docker build -t "$IMAGE" "$(dirname "$0")/../AtomicParsley" >&2
+fi
+
+exec docker run --rm -i \
+  -v "$PWD:$PWD" \
+  -v /tmp:/tmp \
+  -v /var/folders:/var/folders \
+  -w "$PWD" \
+  "$IMAGE" "$@"
