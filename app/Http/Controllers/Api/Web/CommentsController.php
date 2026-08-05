@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,18 +20,18 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App;
 use App\Commands\CreateCommentCommand;
-use App\Models\Comment;
 use App\Http\Controllers\ApiControllerBase;
-use Illuminate\Support\Facades\Request;
-use Response;
+use App\Models\Comment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Response;
 
 class CommentsController extends ApiControllerBase
 {
-    public function postCreate($type, $id)
+    public function postCreate(Request $request, $type, $id)
     {
-        return $this->execute(new CreateCommentCommand($type, $id, Request::all()));
+        return $this->execute(new CreateCommentCommand($type, $id, $request->all()));
     }
 
     public function getIndex($type, $id)
@@ -50,19 +50,19 @@ class CommentsController extends ApiControllerBase
                     if ($type == 'playlist') {
                         $column = 'playlist_id';
                     } else {
-                        App::abort(500);
+                        abort(500);
                     }
                 }
             }
         }
 
-        $query = Comment::where($column, '=', $id)->orderBy('created_at', 'desc')->with('user');
+        $query = Comment::where($column, '=', $id)->orderByDesc('created_at')->with('user');
         $comments = [];
 
         foreach ($query->get() as $comment) {
             $comments[] = Comment::mapPublic($comment);
         }
 
-        return Response::json(['list' => $comments, 'count' => count($comments)]);
+        return response()->json(['list' => $comments, 'count' => count($comments)]);
     }
 }

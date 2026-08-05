@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 class Gravatar
 {
     public static function getUrl($email, $size = 80, $default = null, $rating = 'g')
@@ -27,7 +26,7 @@ class Gravatar
         $url .= "?s=$size&r=$rating";
 
         if ($default != null) {
-            $url .= "&d=" . $default;
+            $url .= '&d='.$default;
         } else {
             $size = 'normal';
             if ($size == 50) {
@@ -41,7 +40,7 @@ class Gravatar
             // Pony.fm's production URL is hardcoded here so Gravatar can
             // serve functioning default avatars in the dev environment,
             // which it won't be able to access.
-            $url .= "&d=" . urlencode(URL::to('https://pony.fm/images/icons/profile_' . $size . '.png'));
+            $url .= '&d='.urlencode(URL::to('https://pony.fm/images/icons/profile_'.$size.'.png'));
         }
 
         return $url;

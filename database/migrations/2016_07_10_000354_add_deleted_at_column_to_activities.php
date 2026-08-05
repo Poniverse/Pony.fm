@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddDeletedAtColumnToActivities extends Migration
 {
@@ -30,12 +30,15 @@ class AddDeletedAtColumnToActivities extends Migration
      */
     public function up()
     {
-        if (!Schema::hasColumn('activities', 'deleted_at')) {
+        if (! Schema::hasColumn('activities', 'deleted_at')) {
             Schema::table('activities', function (Blueprint $table) {
                 $table->softDeletes()->index();
             });
 
-            if ('sqlite' !== DB::getDriverName()) {
+            // this has issues now, but considering it's about 5 years old and already ran in production
+            //  i don't think we need to worry about making this work :)
+
+            /*if ('sqlite' !== DB::getDriverName()) {
                 // Retroactively fix activities that should be marked as deleted.
                 // Tracks
                 DB::table('activities')
@@ -64,7 +67,7 @@ class AddDeletedAtColumnToActivities extends Migration
                   ->join('comments', 'activities.resource_id', '=', 'comments.id')
                   ->whereNotNull('comments.deleted_at')
                   ->update(['deleted_at' => DB::raw('comments.deleted_at')]);
-            }
+            }*/
         }
     }
 

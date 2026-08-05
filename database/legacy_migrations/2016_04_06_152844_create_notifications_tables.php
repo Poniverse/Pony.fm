@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateNotificationsTables extends Migration
 {
@@ -30,7 +30,7 @@ class CreateNotificationsTables extends Migration
      */
     public function up()
     {
-        Schema::create('activities', function(Blueprint $table){
+        Schema::create('activities', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->dateTime('created_at')->index();
             $table->unsignedInteger('user_id'); // initiator of the action
@@ -39,13 +39,13 @@ class CreateNotificationsTables extends Migration
             $table->unsignedInteger('resource_id'); // ID of the entity this activity is about
         });
 
-        Schema::create('notifications', function(Blueprint $table){
+        Schema::create('notifications', function (Blueprint $table) {
             // Notifications are a pivot table between activities and users.
             $table->bigIncrements('id');
             $table->unsignedBigInteger('activity_id')->index();
             $table->unsignedInteger('user_id')->index(); // recipient of the notification
             $table->boolean('is_read')->default(false)->index();
-            
+
             $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
         });

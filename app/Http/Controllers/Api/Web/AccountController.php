@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,14 +20,14 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use App\Http\Controllers\ApiControllerBase;
 use App\Commands\SaveAccountSettingsCommand;
-use App\Models\User;
+use App\Http\Controllers\ApiControllerBase;
 use App\Models\Image;
-use Gate;
-use Auth;
-use Request;
-use Response;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 
 class AccountController extends ApiControllerBase
 {
@@ -35,22 +35,23 @@ class AccountController extends ApiControllerBase
     {
         $this->authorize('edit', $user);
 
-        return Response::json([
-            'user' => $user->toArray()
+        return response()->json([
+            'user' => $user->toArray(),
         ]);
     }
 
-    public function getCurrentUser() {
-        $current_user = Auth::user();
+    public function getCurrentUser(Request $request)
+    {
+        $current_user = $request->user();
 
         if ($current_user != null) {
             $user = User::where('id', $current_user->id)->whereNull('disabled_at')->first();
 
             if ($user == null) {
-                return Response::json(['error' => 'You are not logged in'], 404);
+                return response()->json(['error' => 'You are not logged in'], 404);
             }
 
-            return Response::json([
+            return response()->json([
                 'id' => $user->id,
                 'name' => $user->display_name,
                 'slug' => $user->slug,
@@ -58,19 +59,19 @@ class AccountController extends ApiControllerBase
                 'is_archived' => $user->is_archived,
                 'avatars' => [
                     'small' => $user->getAvatarUrl(Image::SMALL),
-                    'normal' => $user->getAvatarUrl(Image::NORMAL)
+                    'normal' => $user->getAvatarUrl(Image::NORMAL),
                 ],
-                'created_at' => $user->created_at
+                'created_at' => $user->created_at,
             ], 200);
         } else {
-            return Response::json(['error' => 'You are not logged in'], 404);
+            return response()->json(['error' => 'You are not logged in'], 404);
         }
     }
 
-    public function getSettings($slug)
+    public function getSettings(Request $request, $slug)
     {
         $user = null;
-        $current_user = Auth::user();
+        $current_user = $request->user();
 
         if ($current_user != null) {
             if ($slug == $current_user->slug) {
@@ -80,16 +81,15 @@ class AccountController extends ApiControllerBase
             }
 
             if ($user == null) {
-                return Response::json(['error' => 'User does not exist'], 404);
+                return response()->json(['error' => 'User does not exist'], 404);
             }
 
             if (Gate::denies('edit', $user)) {
-                return Response::json(['error' => 'You cannot do that. So stop trying!'], 403);
+                return response()->json(['error' => 'You cannot do that. So stop trying!'], 403);
             }
         }
 
-
-        return Response::json([
+        return response()->json([
             'id'  => $user->id,
             'bio' => $user->bio,
             'can_see_explicit_content' => $user->can_see_explicit_content == 1,
@@ -97,15 +97,15 @@ class AccountController extends ApiControllerBase
             'slug' => $user->slug,
             'username' => $user->username,
             'gravatar' => $user->gravatar ? $user->gravatar : $user->email,
-            'avatar_url' => !$user->uses_gravatar ? $user->getAvatarUrl() : null,
+            'avatar_url' => ! $user->uses_gravatar ? $user->getAvatarUrl() : null,
             'uses_gravatar' => $user->uses_gravatar == 1,
             'notification_email' => $user->email,
-            'notifications' => $user->getNotificationSettings()
+            'notifications' => $user->getNotificationSettings(),
         ], 200);
     }
 
-    public function postSave(User $user)
+    public function postSave(Request $request, User $user)
     {
-        return $this->execute(new SaveAccountSettingsCommand(Request::all(), $user));
+        return $this->execute(new SaveAccountSettingsCommand($request->all(), $user));
     }
 }

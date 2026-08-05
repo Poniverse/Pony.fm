@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,12 @@
 
 namespace App\Jobs;
 
-use Auth;
-use DB;
 use App\Models\ShowSong;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Track;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use SerializesModels;
 
 class DeleteShowSong extends Job implements ShouldQueue

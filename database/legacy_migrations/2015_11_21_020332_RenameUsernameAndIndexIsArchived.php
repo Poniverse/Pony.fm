@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class RenameUsernameAndIndexIsArchived extends Migration
 {
@@ -30,7 +30,7 @@ class RenameUsernameAndIndexIsArchived extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->renameColumn('mlpforums_name', 'username');
             $table->index('is_archived');
         });
@@ -43,7 +43,7 @@ class RenameUsernameAndIndexIsArchived extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->renameColumn('username', 'mlpforums_name');
             $table->dropIndex('users_is_archived_index');
         });

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,11 +24,7 @@ use Closure;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * Class JsonExceptions
- * @package App\Http\Middleware
- *
- * This middleware turns any HTTP exceptions thrown during the request
- * into a JSON response. To be used when implementing the API!
+ * Class JsonExceptions.
  */
 class JsonExceptions
 {
@@ -44,8 +40,8 @@ class JsonExceptions
         try {
             $response = $next($request);
         } catch (HttpException $e) {
-            return \Response::json([
-                'message' => $e->getMessage()
+            return response()->json([
+                'message' => $e->getMessage(),
             ], $e->getStatusCode());
         }
 

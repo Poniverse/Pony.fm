@@ -25,18 +25,37 @@ return [
              * Hosts
              *
              * This is an array of hosts that the client will connect to. It can be a
-             * single host name, or an array if you are running a cluster of Elasticsearch
+             * single host, or an array if you are running a cluster of Elasticsearch
              * instances.
              *
              * This is the only configuration value that is mandatory.
              *
-             * If set in an environment variable, this should be a comma-separated
-             * list of hostnames. Port numbers are optional; 9200 is the default.
+             * Presently using "extended" host configuration method
              *
-             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_host_configuration
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_extended_host_configuration
+             *
+             * There is also the shorter "inline" configuration method available
+             *
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_inline_host_configuration
              */
 
-            'hosts' => explode(',', env('ELASTICSEARCH_HOSTS', 'localhost:9200')),
+            'hosts' => [
+                [
+                    'host'              => env('ELASTICSEARCH_HOST', 'localhost'),
+                    'port'              => env('ELASTICSEARCH_PORT', 9200),
+                    'scheme'            => env('ELASTICSEARCH_SCHEME', null),
+                    'user'              => env('ELASTICSEARCH_USER', null),
+                    'pass'              => env('ELASTICSEARCH_PASS', null),
+
+                    // If you are connecting to an Elasticsearch instance on AWS, you will need these values as well
+                    'aws'               => env('AWS_ELASTICSEARCH_ENABLED', false),
+                    'aws_region'        => env('AWS_REGION', ''),
+                    'aws_key'           => env('AWS_ACCESS_KEY_ID', ''),
+                    'aws_secret'        => env('AWS_SECRET_ACCESS_KEY', ''),
+                    'aws_credentials'   => null,
+                    'aws_session_token' => env('AWS_SESSION_TOKEN', null),
+                ],
+            ],
 
             /**
              * SSL
@@ -77,7 +96,7 @@ return [
             'logging' => false,
 
             // If you have an existing instance of Monolog you can use it here.
-            //'logObject' => \Log::getMonolog(),
+            // 'logObject' => \Log::getMonolog(),
 
             'logPath' => storage_path('logs/elasticsearch.log'),
 
@@ -157,12 +176,33 @@ return [
             /**
              * Endpoint
              *
-             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_set_the_endpoint_closure
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/6.0/_configuration.html#_set_the_endpoint_closure
              */
 
             'endpoint' => null,
 
-        ]
-    ]
+
+            /**
+             * Register additional namespaces
+             *
+             * An array of additional namespaces to register.
+             *
+             * @example 'namespaces' => [XPack::Security(), XPack::Watcher()]
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/ElasticsearchPHP_Endpoints.html#Elasticsearch_ClientBuilderregisterNamespace_registerNamespace
+             */
+            'namespaces' => [],
+
+            /**
+             * Tracer
+             *
+             * Tracer is handled by passing in a name of the class implements Psr\Log\LoggerInterface.
+             *
+             * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/2.0/_configuration.html#_setting_a_custom_connectionfactory
+             */
+            'tracer' => null,
+
+        ],
+
+    ],
 
 ];

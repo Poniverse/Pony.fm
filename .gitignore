@@ -13,3 +13,4 @@ resources/views/emails/html
 npm-debug.log
 yarn-error.log
 /composer.phar
+.phpstorm.meta.php

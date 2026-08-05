@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,51 +20,52 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use App\Models\Playlist;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
 use App\PlaylistDownloader;
-use Auth;
-use Redirect;
-use View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class PlaylistsController extends Controller
 {
     public function getIndex()
     {
-        return View::make('playlists.index');
+        return view('playlists.index');
     }
 
-    public function getPlaylist($id, $slug)
+    public function getPlaylist(Request $request, $id, $slug)
     {
         $playlist = Playlist::find($id);
-        if (!$playlist || !$playlist->canView(Auth::user())) {
-            App::abort(404);
+        if (! $playlist || ! $playlist->canView($request->user())) {
+            abort(404);
         }
 
         if ($playlist->slug != $slug) {
-            return Redirect::action('PlaylistsController@getPlaylist', [$id, $playlist->slug]);
+            return Redirect::action([static::class, 'getPlaylist'], [$id, $playlist->slug]);
         }
 
-        return View::make('playlists.show');
+        return view('playlists.show');
     }
 
-    public function getShortlink($id)
+    public function getShortlink(Request $request, $id)
     {
         $playlist = Playlist::find($id);
-        if (!$playlist || !$playlist->canView(Auth::user())) {
-            App::abort(404);
+        if (! $playlist || ! $playlist->canView($request->user())) {
+            abort(404);
         }
 
-        return Redirect::action('PlaylistsController@getPlaylist', [$id, $playlist->slug]);
+        return Redirect::action([static::class, 'getPlaylist'], [$id, $playlist->slug]);
     }
 
-    public function getDownload($id, $extension)
+    public function getDownload(Request $request, $id, $extension)
     {
         $playlist = Playlist::with('tracks', 'tracks.trackFiles', 'user', 'tracks.album')->find($id);
-        if (!$playlist || !$playlist->canView(Auth::user())) {
-            App::abort(404);
+        if (! $playlist || ! $playlist->canView($request->user())) {
+            abort(404);
         }
 
         $format = null;
@@ -79,15 +80,15 @@ class PlaylistsController extends Controller
         }
 
         if ($format == null) {
-            App::abort(404);
+            abort(404);
         }
 
-        if (!$playlist->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
-            App::abort(404);
+        if (! $playlist->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
+            abort(404);
         }
 
         ResourceLogItem::logItem('playlist', $id, ResourceLogItem::DOWNLOAD, $format['index']);
         $downloader = new PlaylistDownloader($playlist, $formatName);
-        $downloader->download(Auth::user());
+        $downloader->download($request->user());
     }
 }

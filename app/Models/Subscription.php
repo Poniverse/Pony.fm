@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,10 +23,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Subscription
+ * App\Models\Subscription.
  *
- * @property integer $id
- * @property integer $user_id
+ * @property int $id
+ * @property int $user_id
  * @property string $endpoint
  * @property string $p256dh
  * @property string $auth
@@ -51,7 +51,7 @@ class Subscription extends Model
         'user_id'     => 'integer',
         'endpoint'    => 'string',
         'p256dh'      => 'string',
-        'auth'        => 'string'
+        'auth'        => 'string',
     ];
 
     public function user()

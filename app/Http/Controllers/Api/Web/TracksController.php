@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,6 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Auth;
-use File;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Request;
 use App\Commands\DeleteTrackCommand;
 use App\Commands\EditTrackCommand;
 use App\Commands\GenerateTrackFilesCommand;
@@ -33,10 +29,15 @@ use App\Jobs\EncodeTrackFile;
 use App\Models\Genre;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
-use App\Models\TrackType;
 use App\Models\TrackFile;
+use App\Models\TrackType;
 use App\Models\User;
-use Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestF;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TracksController extends ApiControllerBase
@@ -54,12 +55,12 @@ class TracksController extends ApiControllerBase
         $this->authorize('edit', $track);
 
         if ($track->status === Track::STATUS_PROCESSING) {
-            return Response::json(['message' => 'Processing...'], 202);
+            return response()->json(['message' => 'Processing...'], 202);
         } elseif ($track->status === Track::STATUS_COMPLETE) {
-            return Response::json(['message' => 'Processing complete!'], 201);
+            return response()->json(['message' => 'Processing complete!'], 201);
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed!'], 500);
+            return response()->json(['error' => 'Processing failed!'], 500);
         }
     }
 
@@ -68,9 +69,9 @@ class TracksController extends ApiControllerBase
         return $this->execute(new DeleteTrackCommand($id));
     }
 
-    public function postEdit($id)
+    public function postEdit(Request $request, $id)
     {
-        return $this->execute(new EditTrackCommand($id, Request::all()));
+        return $this->execute(new EditTrackCommand($id, $request->all()));
     }
 
     public function postUploadNewVersion($trackId)
@@ -78,13 +79,14 @@ class TracksController extends ApiControllerBase
         session_write_close();
 
         $track = Track::find($trackId);
-        if (!$track) {
+        if (! $track) {
             return $this->notFound('Track not found!');
         }
         $this->authorize('edit', $track);
 
         $track->version_upload_status = Track::STATUS_PROCESSING;
         $track->update();
+
         return $this->execute(new UploadTrackCommand(true, false, null, false, $track->getNextVersion(), $track));
     }
 
@@ -94,12 +96,12 @@ class TracksController extends ApiControllerBase
         $this->authorize('edit', $track);
 
         if ($track->version_upload_status === Track::STATUS_PROCESSING) {
-            return Response::json(['message' => 'Processing...'], 202);
+            return response()->json(['message' => 'Processing...'], 202);
         } elseif ($track->version_upload_status === Track::STATUS_COMPLETE) {
-            return Response::json(['message' => 'Processing complete!'], 201);
+            return response()->json(['message' => 'Processing complete!'], 201);
         } else {
             // something went wrong
-            return Response::json(['error' => 'Processing failed!'], 500);
+            return response()->json(['error' => 'Processing failed!'], 500);
         }
     }
 
@@ -113,41 +115,42 @@ class TracksController extends ApiControllerBase
         foreach ($trackFiles as $trackFile) {
             $versions[] = [
                 'version' => $trackFile->version,
-                'url' => '/tracks/' . $track->id . '/version-change/' . $trackFile->version,
-                'created_at' => $trackFile->created_at->timestamp
+                'url' => '/tracks/'.$track->id.'/version-change/'.$trackFile->version,
+                'created_at' => $trackFile->created_at->timestamp,
             ];
         }
 
-        return Response::json(['current_version' => $track->current_version, 'versions' => $versions], 200);
+        return response()->json(['current_version' => $track->current_version, 'versions' => $versions], 200);
     }
 
     public function getChangeVersion($trackId, $newVersion)
     {
         $track = Track::find($trackId);
-        if (!$track) {
+        if (! $track) {
             return $this->notFound('Track not found!');
         }
         $this->authorize('edit', $track);
 
         $masterTrackFile = $track->trackFilesForVersion($newVersion)->where('is_master', true)->first();
-        if (!$masterTrackFile) {
+        if (! $masterTrackFile) {
             return $this->notFound('Version not found!');
         }
 
         $track->version_upload_status = Track::STATUS_PROCESSING;
         $track->update();
         $sourceFile = new UploadedFile($masterTrackFile->getFile(), $masterTrackFile->getFilename());
+
         return $this->execute(new GenerateTrackFilesCommand($track, $sourceFile, false, false, true, $newVersion));
     }
 
-    public function getShow($id)
+    public function getShow(Request $request, $id)
     {
         $track = Track::userDetails()->withComments()->find($id);
-        if (!$track || !$track->canView(Auth::user())) {
+        if (! $track || ! $track->canView($request->user())) {
             return $this->notFound('Track not found!');
         }
 
-        if (Request::get('log')) {
+        if ($request->get('log')) {
             ResourceLogItem::logItem('track', $id, ResourceLogItem::VIEW);
             $track->view_count++;
         }
@@ -157,10 +160,10 @@ class TracksController extends ApiControllerBase
             unset($returned_track['formats']);
         }
 
-        return Response::json(['track' => $returned_track], 200);
+        return response()->json(['track' => $returned_track], 200);
     }
 
-    public function getCachedTrack($id, $format)
+    public function getCachedTrack(Request $request, $id, $format)
     {
         // Validation
         try {
@@ -169,15 +172,15 @@ class TracksController extends ApiControllerBase
             return $this->notFound('Track not found!');
         }
 
-        if (!$track->canView(Auth::user())) {
-                    return $this->notFound('Track not found!');
+        if (! $track->canView($request->user())) {
+            return $this->notFound('Track not found!');
         }
 
         if ($track->is_downloadable == false) {
-                    return $this->notFound('Track not found!');
+            return $this->notFound('Track not found!');
         }
 
-        if (!in_array($format, Track::$CacheableFormats)) {
+        if (! in_array($format, Track::$CacheableFormats)) {
             return $this->notFound('Format not found!');
         }
 
@@ -197,16 +200,16 @@ class TracksController extends ApiControllerBase
             $url = null;
         }
 
-        return Response::json(['url' => $url], 200);
+        return response()->json(['url' => $url], 200);
     }
 
-    public function getIndex($all = false, $unknown = false)
+    public function getIndex(Request $request, $all = false, $unknown = false)
     {
         $page = 1;
         $perPage = 45;
 
-        if (Request::has('page')) {
-            $page = Request::get('page');
+        if ($request->has('page')) {
+            $page = $request->get('page');
         }
 
         if ($all) {
@@ -238,47 +241,49 @@ class TracksController extends ApiControllerBase
             $ids[] = $track->id;
         }
 
-        return Response::json([
-            "tracks" => $tracks,
-            "current_page" => $page,
-            "total_pages" => ceil($totalCount / $perPage)
+        return response()->json([
+            'tracks' => $tracks,
+            'current_page' => $page,
+            'total_pages' => ceil($totalCount / $perPage),
         ], 200);
     }
 
     public function getAllTracks()
     {
         $this->authorize('access-admin-area');
+
         return $this->getIndex(true);
     }
 
     public function getClassifierQueue()
     {
         $this->authorize('access-admin-area');
+
         return $this->getIndex(true, true);
     }
 
     public function getOwned(User $user)
     {
-        $query = Track::summary()->where('user_id', $user->id)->orderBy('created_at', 'desc');
+        $query = Track::summary()->where('user_id', $user->id)->orderByDesc('created_at');
 
         $tracks = [];
         foreach ($query->get() as $track) {
             $tracks[] = Track::mapPrivateTrackSummary($track);
         }
 
-        return Response::json($tracks, 200);
+        return response()->json($tracks, 200);
     }
 
     public function getEdit($id)
     {
         $track = Track::with('showSongs')->find($id);
-        if (!$track) {
+        if (! $track) {
             return $this->notFound('Track '.$id.' not found!');
         }
 
         $this->authorize('edit', $track);
 
-        return Response::json(Track::mapPrivateTrackShow($track), 200);
+        return response()->json(Track::mapPrivateTrackShow($track), 200);
     }
 
     /**
@@ -291,8 +296,8 @@ class TracksController extends ApiControllerBase
      */
     private function applyOrdering($query)
     {
-        if (Request::has('order')) {
-            $order = \Request::get('order');
+        if (RequestF::has('order')) {
+            $order = RequestF::get('order');
             $parts = explode(',', $order);
             $query->orderBy($parts[0], $parts[1]);
         }
@@ -308,8 +313,8 @@ class TracksController extends ApiControllerBase
      */
     private function applyFilters($query, $unknown = false)
     {
-        if (Request::has('is_vocal')) {
-            $isVocal = \Request::get('is_vocal');
+        if (RequestF::has('is_vocal')) {
+            $isVocal = RequestF::get('is_vocal');
             if ($isVocal == 'true') {
                 $query->whereIsVocal(true);
             } else {
@@ -317,27 +322,27 @@ class TracksController extends ApiControllerBase
             }
         }
 
-        if (Request::has('in_album')) {
-            if (Request::get('in_album') == 'true') {
+        if (RequestF::has('in_album')) {
+            if (RequestF::get('in_album') == 'true') {
                 $query->whereNotNull('album_id');
             } else {
                 $query->whereNull('album_id');
             }
         }
 
-        if (Request::has('genres')) {
-            $query->whereIn('genre_id', Request::get('genres'));
+        if (RequestF::has('genres')) {
+            $query->whereIn('genre_id', RequestF::get('genres'));
         }
 
-        if (Request::has('types') && !$unknown) {
-            $query->whereIn('track_type_id', Request::get('types'));
+        if (RequestF::has('types') && ! $unknown) {
+            $query->whereIn('track_type_id', RequestF::get('types'));
         }
 
         $archive = null;
 
-        if (Request::has('archive')) {
+        if (RequestF::has('archive')) {
             // Select which archive to view
-            $archive = Request::get('archive');
+            $archive = RequestF::get('archive');
             $query->where('source', $archive);
         }
 
@@ -355,18 +360,19 @@ class TracksController extends ApiControllerBase
             $archives = ['mlpma', 'ponify', 'eqbeats'];
             $akey = array_search($archive, $archives);
 
-            if (!$akey)
-                $query->join($archive . '_tracks', 'tracks.id', '=', $archive . 'tracks.track_id');
+            if (! $akey) {
+                $query->join($archive.'_tracks', 'tracks.id', '=', $archive.'tracks.track_id');
+            }
         }
 
-        if (Request::has('songs')) {
+        if (RequestF::has('songs')) {
             // DISTINCT is needed here to avoid duplicate results
             // when a track is associated with multiple show songs.
             $query->distinct();
             $query->join('show_song_track', function ($join) {
                 $join->on('tracks.id', '=', 'show_song_track.track_id');
             });
-            $query->whereIn('show_song_track.show_song_id', Request::get('songs'));
+            $query->whereIn('show_song_track.show_song_id', RequestF::get('songs'));
         }
 
         return $query;

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,22 +20,20 @@
 
 namespace App\Jobs;
 
-use Auth;
-use Cache;
-use Log;
 use App\Models\ShowSong;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Track;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use SerializesModels;
 
 /**
- * Class RenameGenre
+ * Class RenameGenre.
  *
  * NOTE: It is assumed that the genre passed into this job has already been renamed!
  * All this job does is update the tags in that genre's tracks.
- *
- * @package App\Jobs
  */
 class UpdateTagsForRenamedShowSong extends Job implements ShouldQueue
 {
@@ -74,11 +72,11 @@ class UpdateTagsForRenamedShowSong extends Job implements ShouldQueue
         if (Cache::has($this->lockKey)) {
             Log::info("Tag updates for the \"{$this->songThatWasRenamed->title}\" song are currently in progress! Will try again in 30 seconds.");
             $this->release(30);
+
             return;
         } else {
             Cache::forever($this->lockKey, true);
         }
-
 
         $this->songThatWasRenamed->tracks()->chunk(200, function ($tracks) {
             foreach ($tracks as $track) {

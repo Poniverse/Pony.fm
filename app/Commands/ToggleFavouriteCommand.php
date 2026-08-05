@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,15 +20,15 @@
 
 namespace App\Commands;
 
-use Notification;
 use App\Contracts\Favouritable;
-use App\Models\Favourite;
-use App\Models\Track;
+use App\Facades\Notification;
 use App\Models\Album;
+use App\Models\Favourite;
 use App\Models\Playlist;
 use App\Models\ResourceUser;
-use Auth;
-use DB;
+use App\Models\Track;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ToggleFavouriteCommand extends CommandBase
 {
@@ -98,14 +98,13 @@ class ToggleFavouriteCommand extends CommandBase
         // for the same resource at the same time, the cached values will still be correct with this method.
 
         DB::table($resourceTable)->whereId($this->_resourceId)->update([
-            'favourite_count' =>
-                DB::raw('(
+            'favourite_count' => DB::raw('(
                     SELECT
                         COUNT(id)
                     FROM
                         favourites
-                    WHERE ' .
-                    $typeId.' = '.$this->_resourceId.')')
+                    WHERE '.
+                    $typeId.' = '.$this->_resourceId.')'),
         ]);
 
         return CommandResponse::succeed(['is_favourited' => $isFavourited]);

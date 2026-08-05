@@ -1,7 +1,7 @@
 <?php
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2017 Isaac Avram
+ * Copyright (C) 2017 Isaac Avram.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,8 +19,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Image;
+use Illuminate\Console\Command;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -57,10 +57,10 @@ class RebuildImages extends Command
      */
     public function handle()
     {
-        $this->info("Regenerating Images");
+        $this->info('Regenerating Images');
         $progressBar = $this->output->createProgressBar(Image::count());
 
-        Image::chunk(1000, function($images) use ($progressBar) {
+        Image::chunk(1000, function ($images) use ($progressBar) {
             foreach ($images as $image) {
                 try {
                     $image->buildCovers();

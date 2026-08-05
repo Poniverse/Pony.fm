@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,9 +43,9 @@ class CreateUserTables extends Migration
 
             $table->foreign('artist_id')->references('id')->on('users')->on_delete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->on_delete('cascade');
-            $table->foreign('track_id')->references('id')->on('tracks')->on_delete('cascade');;
-            $table->foreign('album_id')->references('id')->on('albums')->on_delete('cascade');;
-            $table->foreign('playlist_id')->references('id')->on('playlists')->on_delete('cascade');;
+            $table->foreign('track_id')->references('id')->on('tracks')->on_delete('cascade');
+            $table->foreign('album_id')->references('id')->on('albums')->on_delete('cascade');
+            $table->foreign('playlist_id')->references('id')->on('playlists')->on_delete('cascade');
 
             $table->unique(['user_id', 'track_id', 'album_id', 'playlist_id', 'artist_id'], 'resource_unique');
         });

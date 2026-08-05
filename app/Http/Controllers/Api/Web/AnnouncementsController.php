@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic
+ * Copyright (C) 2016 Logic.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,58 +20,64 @@
 
 namespace App\Http\Controllers\Api\Web;
 
-use Carbon\Carbon;
 use App\Commands\CreateAnnouncementCommand;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
-use Request;
-use Response;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
-class AnnouncementsController extends Controller {
-    public function getIndex() {
+class AnnouncementsController extends Controller
+{
+    public function getIndex()
+    {
         $currentDate = Carbon::now();
 
         $query = Announcement::whereNotNull('start_time')
             ->whereNotNull('end_time')
             ->where('start_time', '<', $currentDate)
             ->where('end_time', '>', $currentDate)
-            ->orderBy('start_time', 'desc');
+            ->orderByDesc('start_time');
 
         $announcement = $query->first();
 
-        return Response::json(
-            ["announcement" => $announcement],
+        return response()->json(
+            ['announcement' => $announcement],
             200
         );
     }
 
-    public function getAdminIndex() {
+    public function getAdminIndex()
+    {
         $this->authorize('access-admin-area');
 
-        $announcements = Announcement::orderBy('start_time', 'desc')
+        $announcements = Announcement::orderByDesc('start_time')
             ->get();
 
-        return Response::json([
-            'announcements' => $announcements->toArray()
+        return response()->json([
+            'announcements' => $announcements->toArray(),
         ], 200);
     }
 
-    public function getItemById($genreId) {
+    public function getItemById($genreId)
+    {
         $this->authorize('access-admin-area');
 
         $query = Announcement::where('id', '=', $genreId)
-            ->orderBy('start_time', 'desc');
+            ->orderByDesc('start_time');
 
         $announcement = $query->first();
 
-        return Response::json(
-            ["announcement" => $announcement],
+        return response()->json(
+            ['announcement' => $announcement],
             200
         );
     }
 
-    public function postCreate() {
-        $command = new CreateAnnouncementCommand(Request::get('name'));
+    public function postCreate(Request $request)
+    {
+        $command = new CreateAnnouncementCommand($request->get('name'));
+
         return $this->execute($command);
     }
 }

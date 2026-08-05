@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,10 +21,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
-use Config;
-use App;
-use Redirect;
-use Response;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 
 class ImagesController extends Controller
 {
@@ -33,24 +33,24 @@ class ImagesController extends Controller
         $coverType = Image::getImageTypeFromName($type);
 
         if ($coverType == null) {
-            App::abort(404);
+            abort(404);
         }
 
         $image = Image::find($id);
-        if (!$image) {
-            App::abort(404);
+        if (! $image) {
+            abort(404);
         }
 
-        $response = Response::make('', 200);
+        $response = response()->noContent(200);
         $filename = $image->getFile($coverType['id']);
 
-        if (!is_file($filename)) {
+        if (! is_file($filename)) {
             $redirect = url('/images/icons/profile_'.Image::$ImageTypes[$coverType['id']]['name'].'.png');
 
-            return Redirect::to($redirect);
+            return redirect()->to($redirect);
         }
 
-        if (Config::get('app.sendfile')) {
+        if (config('app.sendfile')) {
             $response->header('X-Sendfile', $filename);
         } else {
             $response->header('X-Accel-Redirect', $filename);

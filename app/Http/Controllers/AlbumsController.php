@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,49 +21,49 @@
 namespace App\Http\Controllers;
 
 use App\AlbumDownloader;
-use App;
 use App\Models\Album;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
-use Redirect;
-use View;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class AlbumsController extends Controller
 {
     public function getIndex()
     {
-        return View::make('albums.index');
+        return view('albums.index');
     }
 
     public function getShow($id, $slug)
     {
         $album = Album::find($id);
-        if (!$album) {
-            App::abort(404);
+        if (! $album) {
+            abort(404);
         }
 
         if ($album->slug != $slug) {
-            return Redirect::action('AlbumsController@getAlbum', [$id, $album->slug]);
+            return Redirect::action([AlbumsController::class, 'getAlbum'], [$id, $album->slug]);
         }
 
-        return View::make('albums.show');
+        return view('albums.show');
     }
 
     public function getShortlink($id)
     {
         $album = Album::find($id);
-        if (!$album) {
-            App::abort(404);
+        if (! $album) {
+            abort(404);
         }
 
-        return Redirect::action('AlbumsController@getShow', [$id, $album->slug]);
+        return Redirect::action([AlbumsController::class, 'getShow'], [$id, $album->slug]);
     }
 
     public function getDownload($id, $extension)
     {
         $album = Album::with('tracks', 'tracks.trackFiles', 'user')->find($id);
-        if (!$album) {
-            App::abort(404);
+        if (! $album) {
+            abort(404);
         }
 
         $format = null;
@@ -78,11 +78,11 @@ class AlbumsController extends Controller
         }
 
         if ($format == null) {
-            App::abort(404);
+            abort(404);
         }
 
-        if (!$album->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
-            App::abort(404);
+        if (! $album->hasLosslessTracks() && in_array($formatName, Track::$LosslessFormats)) {
+            abort(404);
         }
 
         ResourceLogItem::logItem('album', $id, ResourceLogItem::DOWNLOAD, $format['index']);

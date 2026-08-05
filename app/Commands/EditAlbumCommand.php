@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,10 +23,10 @@ namespace App\Commands;
 use App\Models\Album;
 use App\Models\Image;
 use App\Models\User;
-use Auth;
-use Gate;
-use DB;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class EditAlbumCommand extends CommandBase
 {
@@ -63,7 +63,7 @@ class EditAlbumCommand extends CommandBase
             'title' => 'required|min:3|max:50',
             'cover' => 'image|mimes:png|min_width:350|min_height:350',
             'cover_id' => 'exists:images,id',
-            'username' => 'exists:users,username'
+            'username' => 'exists:users,username',
         ];
 
         $validator = Validator::make($this->_input, $rules);
@@ -77,7 +77,7 @@ class EditAlbumCommand extends CommandBase
         $trackDbCount = DB::table('tracks')->whereIn('id', $trackIds)->count();
 
         if ($trackDbCount != $trackIdsCount) {
-            return CommandResponse::fail("Track IDs invalid");
+            return CommandResponse::fail('Track IDs invalid');
         }
 
         $this->_album->title = $this->_input['title'];

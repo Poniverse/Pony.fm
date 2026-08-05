@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,10 @@
 
 namespace App\Commands;
 
-use Notification;
+use App\Facades\Notification;
 use App\Models\Playlist;
-use Auth;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CreatePlaylistCommand extends CommandBase
 {
@@ -53,7 +53,7 @@ class CreatePlaylistCommand extends CommandBase
         $rules = [
             'title' => 'required|min:3|max:50',
             'is_public' => 'required',
-            'is_pinned' => 'required'
+            'is_pinned' => 'required',
         ];
 
         $validator = Validator::make($this->_input, $rules);
@@ -69,7 +69,7 @@ class CreatePlaylistCommand extends CommandBase
         $playlist->is_public = $this->_input['is_public'] == 'true';
 
         $playlist->save();
-        
+
         Notification::publishedNewPlaylist($playlist);
 
         if ($this->_input['is_pinned'] == 'true') {
@@ -84,7 +84,7 @@ class CreatePlaylistCommand extends CommandBase
             'description' => $playlist->description,
             'url' => $playlist->url,
             'is_pinned' => $this->_input['is_pinned'] == 'true',
-            'is_public' => $this->_input['is_public'] == 'true'
+            'is_public' => $this->_input['is_public'] == 'true',
         ]);
     }
 }

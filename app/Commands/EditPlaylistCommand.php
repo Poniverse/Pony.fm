@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,8 +22,8 @@ namespace App\Commands;
 
 use App\Models\PinnedPlaylist;
 use App\Models\Playlist;
-use Auth;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class EditPlaylistCommand extends CommandBase
 {
@@ -57,7 +57,7 @@ class EditPlaylistCommand extends CommandBase
         $rules = [
             'title' => 'required|min:3|max:50',
             'is_public' => 'required',
-            'is_pinned' => 'required'
+            'is_pinned' => 'required',
         ];
 
         $validator = Validator::make($this->_input, $rules);
@@ -76,7 +76,7 @@ class EditPlaylistCommand extends CommandBase
         if ($pin && $this->_input['is_pinned'] != 'true') {
             $pin->delete();
         } else {
-            if (!$pin && $this->_input['is_pinned'] == 'true') {
+            if (! $pin && $this->_input['is_pinned'] == 'true') {
                 $this->_playlist->pin(Auth::user()->id);
             }
         }
@@ -89,7 +89,7 @@ class EditPlaylistCommand extends CommandBase
             'description' => $this->_playlist->description,
             'url' => $this->_playlist->url,
             'is_pinned' => $this->_input['is_pinned'] == 'true',
-            'is_public' => $this->_input['is_public'] == 'true'
+            'is_public' => $this->_input['is_public'] == 'true',
         ]);
     }
 }

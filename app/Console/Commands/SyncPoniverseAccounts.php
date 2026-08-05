@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
 use League\OAuth2\Client\Token\AccessToken;
 use Poniverse\Lib\Client;
-use App\Models\User;
 
 class SyncPoniverseAccounts extends Command
 {
@@ -71,25 +71,25 @@ class SyncPoniverseAccounts extends Command
 %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%');
 
         $usersToUpdate
-            ->orderBy('id', 'ASC')
-            ->chunk(100, function($users) use ($progress) {
-            /** @var User $user */
-            foreach ($users as $user) {
-                $progress->setMessage("Updating user ID {$user->id}...");
-                $progress->advance();
+            ->orderBy('id')
+            ->chunk(100, function ($users) use ($progress) {
+                /** @var User $user */
+                foreach ($users as $user) {
+                    $progress->setMessage("Updating user ID {$user->id}...");
+                    $progress->advance();
 
-                $this->poniverse->poniverse()->meta()
+                    $this->poniverse->poniverse()->meta()
                     ->syncAccount(
                         $user->getAccessToken()->getResourceOwnerId(),
-                        function(AccessToken $accessTokenInfo) use ($user) {
+                        function (AccessToken $accessTokenInfo) use ($user) {
                             $user->setAccessToken($accessTokenInfo);
                         },
-                        function(string $newEmailAddress) use ($user) {
+                        function (string $newEmailAddress) use ($user) {
                             $user->email = $newEmailAddress;
                             $user->save();
                         });
-            }
-        });
+                }
+            });
 
         $progress->finish();
         $this->line('');

@@ -19,7 +19,7 @@
 @extends('shared._app_layout')
 
 @section('title'){{ $track->title }} - {{ $track->user->display_name }} | @endsection
-@section('description'){{ str_limit($track->description, $limit = 200, $end = '...') }}@endsection
+@section('description'){{ Str::limit($track->description, $limit = 200, $end = '...') }}@endsection
 
 @section('metadata')
     <meta property="og:title" content="{{ $track->title }}" />
@@ -28,7 +28,7 @@
     <meta property="og:image" content="{{ $track->getCoverUrl(\App\Models\Image::NORMAL) }}" />
     <meta property="og:image:width" content="350" />
     <meta property="og:image:height" content="350" />
-    <meta property="og:description" content="{{ str_limit($track->description, $limit = 200, $end = '...') }}">
+    <meta property="og:description" content="{{ Str::limit($track->description, $limit = 200, $end = '...') }}">
     <meta property="og:site_name" content="Pony.fm" />
     <meta property="og:audio" content="{{ $track->getStreamUrl('MP3') }}" />
     <meta property="og:audio:secure_url" content="{{ $track->getStreamUrl('MP3') }}" />
@@ -39,7 +39,7 @@
     <meta name="twitter:card" content="player" />
     <meta name="twitter:site" content="@ponyfm" />
     <meta name="twitter:title" content="{{ $track->title }}" />
-    <meta name="twitter:description" content="{{ str_limit($track->description, $limit = 200, $end = '...') }}" />
+    <meta name="twitter:description" content="{{ Str::limit($track->description, $limit = 200, $end = '...') }}" />
     <meta name="twitter:image" content="{{ $track->getCoverUrl(\App\Models\Image::NORMAL) }}" />
     <meta name="twitter:player" content="{{ url('t' . $track->id . '/embed?twitter') }}" />
     <meta name="twitter:player:width" content="480" />

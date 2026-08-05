@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,14 +23,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\License
+ * App\Models\License.
  *
- * @property integer $id
+ * @property int $id
  * @property string $title
  * @property string $description
- * @property boolean $affiliate_distribution
- * @property boolean $open_distribution
- * @property boolean $remix
+ * @property bool $affiliate_distribution
+ * @property bool $open_distribution
+ * @property bool $remix
  * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereTitle($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\License whereDescription($value)
@@ -41,5 +41,4 @@ use Illuminate\Database\Eloquent\Model;
  */
 class License extends Model
 {
-    protected $table = 'licenses';
 }

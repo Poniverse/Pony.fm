@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class UpdateSessionsTableForLaravel52 extends Migration
 {
@@ -12,7 +12,7 @@ class UpdateSessionsTableForLaravel52 extends Migration
      */
     public function up()
     {
-        Schema::table('sessions', function(Blueprint $table) {
+        Schema::table('sessions', function (Blueprint $table) {
             $table->integer('user_id')->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
@@ -26,7 +26,7 @@ class UpdateSessionsTableForLaravel52 extends Migration
      */
     public function down()
     {
-        Schema::table('sessions', function(Blueprint $table) {
+        Schema::table('sessions', function (Blueprint $table) {
             $table->dropColumn(['user_id', 'ip_address', 'user_agent']);
         });
     }

@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,11 +20,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Commands\GenerateTrackFilesCommand;
 use App\Jobs\EncodeTrackFile;
 use App\Models\Track;
+use Illuminate\Console\Command;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class RebuildTrack extends Command
 {
@@ -48,7 +48,6 @@ class RebuildTrack extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -78,14 +77,14 @@ class RebuildTrack extends Command
             // The GenerateTrackFiles command will re-encode all TrackFiles.
 
             if ($result->didFail()) {
-                $this->error("Something went wrong!");
+                $this->error('Something went wrong!');
                 print_r($result->getMessages());
             }
         } else {
             $this->info("Re-encoding this track's files - there should be a line of output for each format!");
 
             foreach ($track->trackFiles as $trackFile) {
-                if (!$trackFile->is_master) {
+                if (! $trackFile->is_master) {
                     $this->info("Re-encoding this track's {$trackFile->format} file...");
                     $this->dispatch(new EncodeTrackFile($trackFile, true));
                 }
@@ -95,7 +94,7 @@ class RebuildTrack extends Command
 
     private function printTrackInfo(Track $track)
     {
-        $this->comment("Track info:");
+        $this->comment('Track info:');
         $this->comment("  Title: {$track->title}");
         $this->comment("  Uploaded at: {$track->created_at}");
         $this->comment("  Artist: {$track->user->display_name} [User ID: {$track->user_id}]");

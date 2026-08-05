@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@ class SetupElasticsearch extends Migration
                             // Note that all Elasticsearch fields can technically be used as arrays.
                             // See: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
                             'show_songs' => ['type' => 'string'],
-                        ]
+                        ],
                     ],
 
                     'album' => [
@@ -69,8 +69,8 @@ class SetupElasticsearch extends Migration
                             // This field is intended to be used as an array.
                             // Note that all Elasticsearch fields can technically be used as arrays.
                             // See: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
-                            'tracks' => ['type' => 'string', 'analyzer' => 'english']
-                        ]
+                            'tracks' => ['type' => 'string', 'analyzer' => 'english'],
+                        ],
                     ],
 
                     'playlist' => [
@@ -83,8 +83,8 @@ class SetupElasticsearch extends Migration
                             // This field is intended to be used as an array.
                             // Note that all Elasticsearch fields can technically be used as arrays.
                             // See: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
-                            'tracks' => ['type' => 'string', 'analyzer' => 'english']
-                        ]
+                            'tracks' => ['type' => 'string', 'analyzer' => 'english'],
+                        ],
                     ],
 
                     'user' => [
@@ -97,11 +97,11 @@ class SetupElasticsearch extends Migration
                             // This field is intended to be used as an array.
                             // Note that all Elasticsearch fields can technically be used as arrays.
                             // See: https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
-                            'tracks' => ['type' => 'string', 'analyzer' => 'english']
-                        ]
+                            'tracks' => ['type' => 'string', 'analyzer' => 'english'],
+                        ],
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         Artisan::call('rebuild:search');

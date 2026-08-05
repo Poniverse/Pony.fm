@@ -1,0 +1,12 @@
+version: "2"
+
+options:
+  verbose: true
+
+syncs:
+  appcode-sync:
+    src: '.'
+    sync_strategy: native_osx
+    sync_excludes: ['.git', '.idea', 'node_modules']
+    sync_userid: 82
+    notify_terminal: true

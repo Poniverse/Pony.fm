@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,31 +20,32 @@
 
 namespace App\Models;
 
-use Config;
+use App\Http\Controllers\TracksController;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
-use App;
-use File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 
 /**
- * App\Models\TrackFile
+ * App\Models\TrackFile.
  *
- * @property integer $id
- * @property integer $track_id
- * @property boolean $is_master
+ * @property int $id
+ * @property int $track_id
+ * @property bool $is_master
  * @property string $format
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property boolean $is_cacheable
- * @property boolean $status
+ * @property bool $is_cacheable
+ * @property bool $status
  * @property \Carbon\Carbon $expires_at
- * @property integer $filesize
+ * @property int $filesize
  * @property-read \App\Models\Track $track
  * @property-read mixed $extension
  * @property-read mixed $url
  * @property-read mixed $size
  * @property-read mixed $is_expired
- * @property integer $version
+ * @property int $version
  * @method static \Illuminate\Database\Query\Builder|\App\Models\TrackFile whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\TrackFile whereTrackId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\TrackFile whereIsMaster($value)
@@ -67,8 +68,9 @@ class TrackFile extends Model
     const STATUS_PROCESSING_PENDING = 3;
 
     protected $appends = ['is_expired'];
-    protected $dates = ['expires_at'];
+
     protected $casts = [
+        'expires_at' => 'datetime',
         'id'            => 'integer',
         'track_id'      => 'integer',
         'is_master'     => 'boolean',
@@ -95,8 +97,8 @@ class TrackFile extends Model
     public static function findOrFailByExtension($trackId, $extension)
     {
         $track = Track::find($trackId);
-        if (!$track) {
-            App::abort(404);
+        if (! $track) {
+            abort(404);
         }
 
         // find the extension's format
@@ -108,7 +110,7 @@ class TrackFile extends Model
             }
         }
         if ($requestedFormatName === null) {
-            App::abort(404);
+            abort(404);
         }
 
         $trackFile = static::
@@ -119,7 +121,7 @@ class TrackFile extends Model
             ->first();
 
         if ($trackFile === null) {
-            App::abort(404);
+            abort(404);
         } else {
             return $trackFile;
         }
@@ -143,7 +145,7 @@ class TrackFile extends Model
 
     public function getUrlAttribute()
     {
-        return action('TracksController@getDownload', ['id' => $this->track_id, 'extension' => $this->extension]);
+        return action([TracksController::class, 'getDownload'], ['id' => $this->track_id, 'extension' => $this->extension]);
     }
 
     public function getSizeAttribute()
@@ -165,7 +167,7 @@ class TrackFile extends Model
     {
         $dir = (string) (floor($this->track_id / 100) * 100);
 
-        return \Config::get('ponyfm.files_directory').'/tracks/'.$dir;
+        return config('ponyfm.files_directory').'/tracks/'.$dir;
     }
 
     public function getFile()
@@ -219,6 +221,6 @@ class TrackFile extends Model
 
     public function isLossy() : bool
     {
-        return !in_array($this->format, Track::$LosslessFormats);
+        return ! in_array($this->format, Track::$LosslessFormats);
     }
 }

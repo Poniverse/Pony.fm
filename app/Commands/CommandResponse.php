@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,7 +37,7 @@ class CommandResponse
 
     public static function fail($validatorOrMessages, int $statusCode = 400)
     {
-        $response = new CommandResponse();
+        $response = new self();
         $response->_didFail = true;
         $response->_statusCode = $statusCode;
 
@@ -53,7 +53,7 @@ class CommandResponse
 
     public static function succeed($response = null, int $statusCode = 200)
     {
-        $cmdResponse = new CommandResponse();
+        $cmdResponse = new self();
         $cmdResponse->_didFail = false;
         $cmdResponse->_response = $response;
         $cmdResponse->_statusCode = $statusCode;

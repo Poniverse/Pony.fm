@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class MysqlToPostgres extends Migration
@@ -50,15 +50,16 @@ class MysqlToPostgres extends Migration
         $array = [];
         exec($command, $array);
 
-        if (!empty($array)) {
+        if (! empty($array)) {
             foreach ($array as $line) {
                 $this->execCallback($line);
             }
         }
     }
 
-    private function execCallback($line) {
-        $this->console->writeln("[PGLOADER] " . $line);
+    private function execCallback($line)
+    {
+        $this->console->writeln('[PGLOADER] '.$line);
     }
 
     /**

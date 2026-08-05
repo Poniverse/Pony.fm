@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,16 +20,16 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use App\Models\User;
-use View;
-use Redirect;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class ArtistsController extends Controller
 {
     public function getIndex()
     {
-        return View::make('artists.index');
+        return view('artists.index');
     }
 
     public function getFavourites($slug)
@@ -51,27 +51,27 @@ class ArtistsController extends Controller
                 $newUser = User::find($user->redirect_to);
 
                 if ($newUser) {
-                    return Redirect::action('ArtistsController@getProfile', [$newUser->slug]);
+                    return Redirect::action([static::class, 'getProfile'], [$newUser->slug]);
                 }
             }
 
             if ($user->disabled_at) {
-                App::abort('404');
+                abort('404');
             }
 
-            return View::make('artists.profile');
+            return view('artists.profile');
         } else {
-            App::abort('404');
+            abort('404');
         }
     }
 
     public function getShortlink($id)
     {
         $user = User::find($id);
-        if (!$user || $user->disabled_at !== null) {
-            App::abort('404');
+        if (! $user || $user->disabled_at !== null) {
+            abort('404');
         }
 
-        return Redirect::action('ArtistsController@getProfile', [$user->slug]);
+        return Redirect::action([static::class, 'getProfile'], [$user->slug]);
     }
 }

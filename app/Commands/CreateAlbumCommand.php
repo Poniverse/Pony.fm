@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,12 @@
 
 namespace App\Commands;
 
-use Gate;
 use App\Models\Album;
 use App\Models\Image;
-use Auth;
 use App\Models\User;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class CreateAlbumCommand extends CommandBase
 {
@@ -60,7 +60,7 @@ class CreateAlbumCommand extends CommandBase
             'cover' => 'image|mimes:png|min_width:350|min_height:350',
             'cover_id' => 'exists:images,id',
             'track_ids' => 'exists:tracks,id',
-            'user_id'   => 'exists:users,id'
+            'user_id'   => 'exists:users,id',
         ];
 
         $validator = Validator::make($this->_input, $rules);

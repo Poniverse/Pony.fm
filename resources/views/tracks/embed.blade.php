@@ -45,9 +45,9 @@
                 <img src="{{ $track->getCoverUrl(\App\Models\Image::SMALL) }}" />
             </div>
             <div class="meta">
-                @if (Auth::check())
+                @auth
                     <a href="#" class="favourite"><i title="Favourite this track!" class="favourite-icon fa fa-star-o"></i></a>
-                @endif
+                @endauth
                 <div class="progressbar">
                     <div class="loader"></div>
                     <div class="seeker"></div>

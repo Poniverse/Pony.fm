@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,18 +20,17 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Input;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Token\AccessToken;
-use Log;
-use Poniverse\Lib\Client;
 use App\Models\Activity;
 use App\Models\User;
-use Auth;
-use DB;
-use Request;
-use Redirect;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Token\AccessToken;
+use Poniverse\Lib\Client;
 
 class AuthController extends Controller
 {
@@ -45,36 +44,37 @@ class AuthController extends Controller
     public function getLogin()
     {
         if (Auth::guest()) {
-            return Redirect::to(
+            return redirect(
                 $this->poniverse
-                    ->getOAuthProvider(['redirectUri' => action('AuthController@getOAuth')])
+                    ->getOAuthProvider(['redirectUri' => action([static::class, 'getOAuth'])])
                     ->getAuthorizationUrl());
         }
 
-        return Redirect::to('/');
+        return redirect()->to('/');
     }
 
     public function postLogout()
     {
         Auth::logout();
-        return Redirect::to('/');
+
+        return redirect()->to('/');
     }
 
-    public function getOAuth()
+    public function getOAuth(Request $request)
     {
         $oauthProvider = $this->poniverse->getOAuthProvider();
 
         try {
             $accessToken = $oauthProvider->getAccessToken('authorization_code', [
-                'code' => Request::query('code'),
-                'redirect_uri' => action('AuthController@getOAuth')
+                'code' => $request->query('code'),
+                'redirect_uri' => action([static::class, 'getOAuth']),
             ]);
             $this->poniverse->setAccessToken($accessToken);
             $resourceOwner = $oauthProvider->getResourceOwner($accessToken);
         } catch (IdentityProviderException $e) {
             Log::error($e);
 
-            return Redirect::to('/')->with(
+            return redirect()->to('/')->with(
                 'message',
                 'Unfortunately we are having problems attempting to log you in at the moment. Please try again at a later time.'
             );
@@ -94,13 +94,14 @@ class AuthController extends Controller
             'type' => 'Bearer',
         ];
 
-        if (!empty($accessToken->getRefreshToken())) {
+        if (! empty($accessToken->getRefreshToken())) {
             $setData['refresh_token'] = $accessToken->getRefreshToken();
         }
 
         if ($token) {
             //User already exists, update access token and refresh token if provided.
             DB::table('oauth2_tokens')->where('id', '=', $token->id)->update($setData);
+
             return $this->loginRedirect(User::find($token->user_id));
         }
 
@@ -120,7 +121,6 @@ class AuthController extends Controller
             }
         }
 
-
         return $this->loginRedirect($user);
     }
 
@@ -129,14 +129,14 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postPoniverseAccountSync()
+    public function postPoniverseAccountSync(Request $request)
     {
-        $poniverseId = Input::get('id');
-        $updatedAttribute = Input::get('attribute');
+        $poniverseId = $request->get('id');
+        $updatedAttribute = $request->get('attribute');
 
         // Only email address updates are supported at this time.
         if ('email' !== $updatedAttribute) {
-            return \Response::json(['message' => 'Unsupported Poniverse account attribute.'], 400);
+            return response()->json(['message' => 'Unsupported Poniverse account attribute.'], 400);
         }
 
         $user = User::wherePoniverseId($poniverseId)->first();
@@ -154,13 +154,13 @@ class AuthController extends Controller
         $user->{$updatedAttribute} = $newUserData->{$updatedAttribute};
         $user->save();
 
-        return \Response::json(['message' => 'Successfully updated this user!'], 200);
+        return response()->json(['message' => 'Successfully updated this user!'], 200);
     }
 
     protected function loginRedirect($user, $rememberMe = true)
     {
         Auth::login($user, $rememberMe);
 
-        return Redirect::to('/');
+        return redirect()->to('/');
     }
 }

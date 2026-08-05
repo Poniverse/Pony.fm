@@ -3,7 +3,7 @@
 /**
  * Pony.fm - A community for pony fan music.
  * Copyright (C) 2015 Feld0
- * Copyright (C) 2015 Kelvin Zhang
+ * Copyright (C) 2015 Kelvin Zhang.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,17 +21,18 @@
 
 namespace App\Jobs;
 
-use Carbon\Carbon;
-use Config;
-use DB;
-use File;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Log;
 use App\Exceptions\InvalidEncodeOptionsException;
 use App\Models\Track;
 use App\Models\TrackFile;
+use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -69,8 +70,8 @@ class EncodeTrackFile extends Job implements ShouldQueue
      */
     public function __construct(TrackFile $trackFile, $isExpirable, $autoPublish = false, $isForUpload = false, $isReplacingTrack = false)
     {
-        if ((!$isForUpload && $trackFile->is_master) ||
-            ($isForUpload && $trackFile->is_master && !$trackFile->getFormat()['is_lossless'])
+        if ((! $isForUpload && $trackFile->is_master) ||
+            ($isForUpload && $trackFile->is_master && ! $trackFile->getFormat()['is_lossless'])
         ) {
             throw new InvalidEncodeOptionsException("Master files cannot be encoded unless we're generating a lossless master file during the upload process.");
         }
@@ -94,9 +95,11 @@ class EncodeTrackFile extends Job implements ShouldQueue
         // Sanity check: was this file just generated, or is it already being processed?
         if ($this->trackFile->status === TrackFile::STATUS_PROCESSING) {
             Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is already being processed!');
+
             return;
-        } elseif (!$this->trackFile->is_expired && File::exists($this->trackFile->getFile())) {
+        } elseif (! $this->trackFile->is_expired && File::exists($this->trackFile->getFile())) {
             Log::warning('Track file #'.$this->trackFile->id.' (track #'.$this->trackFile->track_id.') is still valid! No need to re-encode it.');
+
             return;
         }
 
@@ -121,18 +124,25 @@ class EncodeTrackFile extends Job implements ShouldQueue
 
         // Prepare the command
         $format = Track::$Formats[$this->trackFile->format];
-        $command = $format['command'];
-        $command = str_replace('{$source}', '"' . $source . '"', $command);
-        $command = str_replace('{$target}', '"' . $target . '"', $command);
 
-        Log::info('Encoding track file ' . $this->trackFile->id . ' into ' . $target);
+        $prefix = Config('ponyfm.ffmpeg_prefix');
+
+        if (str_contains($prefix, '$(pwd)')) {
+            $prefix = str_replace('$(pwd)', App::basePath(), $prefix);
+        }
+
+        $command = $prefix . " " . $format['command'];
+        $command = str_replace('{$source}', '"'.$source.'"', $command);
+        $command = str_replace('{$target}', '"'.$target.'"', $command);
+
+        Log::info('Encoding track file '.$this->trackFile->id.' into '.$target);
 
         // Start a synchronous process to encode the file
-        $process = new Process($command);
+        $process = Process::fromShellCommandline($command);
         try {
             $process->mustRun();
         } catch (ProcessFailedException $e) {
-            Log::error('An exception occured in the encoding process for track file ' . $this->trackFile->id . ' - ' . $e->getMessage());
+            Log::error('An exception occured in the encoding process for track file '.$this->trackFile->id.' - '.$e->getMessage());
             Log::info($process->getOutput());
             // Ensure queue fails
             throw $e;
@@ -143,7 +153,7 @@ class EncodeTrackFile extends Job implements ShouldQueue
 
         // Insert the expiration time for cached tracks
         if ($this->isExpirable && $this->trackFile->is_cacheable) {
-            $this->trackFile->expires_at = Carbon::now()->addMinutes(Config::get('ponyfm.track_file_cache_duration'));
+            $this->trackFile->expires_at = Carbon::now()->addMinutes(config('ponyfm.track_file_cache_duration'));
             $this->trackFile->save();
         }
 
@@ -155,7 +165,7 @@ class EncodeTrackFile extends Job implements ShouldQueue
         $this->trackFile->save();
 
         if ($this->isForUpload || $this->isReplacingTrack) {
-            if (!$this->trackFile->is_master && $this->trackFile->is_cacheable) {
+            if (! $this->trackFile->is_master && $this->trackFile->is_cacheable) {
                 File::delete($this->trackFile->getFile());
             }
 

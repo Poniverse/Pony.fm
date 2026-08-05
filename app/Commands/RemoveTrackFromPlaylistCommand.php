@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,8 +22,8 @@ namespace App\Commands;
 
 use App\Models\Playlist;
 use App\Models\Track;
-use Auth;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RemoveTrackFromPlaylistCommand extends CommandBase
 {
@@ -54,7 +54,7 @@ class RemoveTrackFromPlaylistCommand extends CommandBase
     {
         $this->_playlist->tracks()->detach($this->_track);
         Playlist::whereId($this->_playlist->id)->update([
-            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$this->_playlist->id.')')
+            'track_count' => DB::raw('(SELECT COUNT(id) FROM playlist_track WHERE playlist_id = '.$this->_playlist->id.')'),
         ]);
 
         return CommandResponse::succeed(['message' => 'Track removed!']);

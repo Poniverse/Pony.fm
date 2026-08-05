@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0
+ * Copyright (C) 2015 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,24 +20,24 @@
 
 namespace App\Http\Controllers;
 
-use Config;
-use Redirect;
-use View;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class AccountController extends Controller
 {
     public function getIndex()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 
     public function getRegister()
     {
-        return Redirect::to(Config::get('poniverse.urls')['register']);
+        return redirect()->to(config('poniverse.urls')['register']);
     }
 
     public function getNotifications()
     {
-        return View::make('shared.null');
+        return view('shared.null');
     }
 }

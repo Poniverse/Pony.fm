@@ -44,7 +44,6 @@ return [
         'app/Models',
     ],
 
-
     /*
     |--------------------------------------------------------------------------
     | Extra classes
@@ -69,9 +68,9 @@ return [
             'critical'  => 'Monolog\Logger::addCritical',
             'alert'     => 'Monolog\Logger::addAlert',
             'emergency' => 'Monolog\Logger::addEmergency',
-        ]
+        ],
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Interface implementations
@@ -81,7 +80,7 @@ return [
     | are detected by the helpers, others can be listed below.
     |
     */
-    
+
     'interfaces' => [
 
     ],

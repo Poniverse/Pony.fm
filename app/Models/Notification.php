@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Feld0
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,12 +24,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Notification
+ * App\Models\Notification.
  *
- * @property integer $id
- * @property integer $activity_id
- * @property integer $user_id
- * @property boolean $is_read
+ * @property int $id
+ * @property int $activity_id
+ * @property int $user_id
+ * @property bool $is_read
  * @property-read \App\Models\Activity $activity
  * @property-read \App\Models\Email $email
  * @property-read \App\Models\User $recipient
@@ -55,7 +55,7 @@ class Notification extends Model
     {
         return $this->belongsTo(Activity::class, 'activity_id', 'id');
     }
-    
+
     public function recipient()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -84,7 +84,7 @@ class Notification extends Model
             ->where('notifications.user_id', $user->id)
             ->whereNull('activities.deleted_at')
             ->select('*', 'notifications.id as id')
-            ->orderBy('activities.created_at', 'DESC');
+            ->orderByDesc('activities.created_at');
 
         return $result;
     }
@@ -101,7 +101,7 @@ class Notification extends Model
             'thumbnail_url' => $this->activity->thumbnail_url,
             'text'          => $this->activity->text,
             'url'           => $this->activity->url,
-            'is_read'       => $this->is_read
+            'is_read'       => $this->is_read,
         ];
     }
 }
