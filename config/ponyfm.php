@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'files_directory' => env('PONYFM_DATASTORE'),
+    'files_directory' => env('PONYFM_DATASTORE') ?: storage_path('app/datastore'),
     'ponify_directory' => env('PONIFY_DIRECTORY'),
 
     /*

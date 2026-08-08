@@ -1,66 +1,130 @@
-# Pony.fm Docker README
+# Pony.fm Docker development
 
-So, Pony.fm is being converted to run within a container on some new servers where it is hosted, thus it is now gaining
-support for docker in the project. 
+Pony.fm runs in a container in production (nginx + php-fpm + ffmpeg +
+AtomicParsley all baked into one image — see `Dockerfile`). For local
+development the recommended setup is:
 
-This guide is going to be an attempt to document how to run things in the new docker environment, until it's merged into
-the main README expect things to be a WIP, and probably be partially documented or undocumented.
+- **Dependencies in Docker** — `docker compose up -d` gives you Postgres and
+  Elasticsearch (and optionally beanstalkd).
+- **The app on the host** — `composer serve` for PHP, `yarn dev` for the
+  asset watcher.
+- **ffmpeg & AtomicParsley via `docker run`** — shims in `docker/bin/` mean
+  you don't need either installed locally.
 
-## Environment Setups
+## Prerequisites
 
-It is my aim to allow Pony.fm to be run in the following types of environments:
+- Docker (Desktop or equivalent)
+- PHP 8.0 with composer
+- Node 12 with yarn — the gulp 4 / webpack 1 asset toolchain predates modern
+  Node; use nvm/volta, or skip local Node entirely and use the `assets`
+  compose profile below.
 
-- App is run on the host with dependencies running in docker.
-- App is run in docker, alongside all dependencies.
+You do **not** need ffmpeg, AtomicParsley, Postgres, or Elasticsearch
+installed on your machine.
 
-### App on host
+## Quick start
 
-In this the general idea is that you'd need to do the following
+If you have [`just`](https://github.com/casey/just), `just setup` runs all of
+the below, then it's `just dev` (deps + PHP server) and `just assets` (the
+watcher) in a second terminal — see `just --list` for the rest. By hand:
 
-In your .env file you will refer to localhost for pretty much all services.
+```sh
+cp .env.example .env       # works as-is, no editing needed
+docker compose up -d       # postgres + elasticsearch
 
-```
-docker-compose up -d
-```
-```
-cd public; php -c ../docker/php/php.ini -S localhost:8000 ../serve.php
-```
+composer install
+php artisan migrate --seed
 
-TODO: Figure out if I can change the path that the local php server uses
-
-Notes:
-- `php artisan serve` cannot be configured to change ini settings, so max file upload is a problem.
-- You can change the `FFMPEG_PREFIX` env var to `docker run -v \"$(pwd):$(pwd)\" -w \"$(pwd)\" jrottenberg/ffmpeg:4.3-alpine312` and that'll work as expected. (TODO: Same thing, but for AtomicParsley)
-
-### App on docker
-
-You need to install https://docker-sync.readthedocs.io/en/latest/getting-started/installation.html
-
-** This method is primarily optimised for macOS **
-
-In your .env file you will refer to the container names for all services. (I.E `DB_HOST=postgresd`, `ELASTICSEARCH_HOST=elasticsearch`)
-
-Bring everything up
-```
-docker build . -t ponyfm
-docker-sync start
-docker-compose up -d
+composer serve             # app on http://localhost:8000
 ```
 
-Notes:
-- Initial sync is super slow, but watching is pretty fast
-- You could skip docker-sync and change `appcode-sync` to `./` but expect request time to go from the `ms` to the many `s`'s.
+And in a second terminal, the asset watcher (leave it running while you
+develop):
 
-Once everything is up and running
-
-Create an alias to interact with the `artisan` cli tool:
-
-```
-alias p="docker compose exec web php artisan"
+```sh
+yarn install
+yarn dev
 ```
 
-Then migrate and seed the app, and you should be good to go! 
+If your host Node is too new for the old gulp toolchain (Node 17+ breaks
+webpack 1), run the watcher in a Node 12 container instead — `just dev` does
+this automatically when it detects a too-new host Node:
 
+```sh
+docker compose --profile assets up
 ```
-p migrate --seed
+
+The container is x86-64 Debian (emulated on Apple Silicon) because the email
+pipeline's phantomjs/imagemin dependencies only ship x86-64 glibc binaries.
+The first start runs a full `yarn install` and is slow; after that the
+`node_modules` volume is reused.
+
+## How ffmpeg & AtomicParsley work in dev
+
+The app shells out to `ffmpeg` (upload validation, transcoding) and
+`AtomicParsley` (MP4 tagging) by name. `composer serve` and `composer queue`
+prepend `docker/bin/` to `PATH`, where shim scripts forward those calls to
+`docker run`:
+
+- `docker/bin/ffmpeg` → `jrottenberg/ffmpeg:4.3-alpine312` (same build the
+  production image uses)
+- `docker/bin/AtomicParsley` → an image built from `docker/AtomicParsley/`
+  on first use
+
+The shims mount the project directory and temp directories at their host
+paths, so the file paths the app passes resolve identically inside the
+container. Expect a little `docker run` startup latency on each call — fine
+for dev.
+
+If you *do* have ffmpeg/AtomicParsley installed locally and would rather use
+them, just run `php -S 127.0.0.1:8000 -t public server.php` directly instead
+of `composer serve` (note: `php artisan serve` can't raise the upload size
+limits, which is why the composer script exists).
+
+## Queues
+
+`.env.example` sets `QUEUE_CONNECTION=sync`, so transcoding/indexing jobs run
+inline in the request — no worker needed, uploads are just slower.
+
+For prod-like behaviour:
+
+```sh
+docker compose --profile queue up -d    # starts beanstalkd
 ```
+
+Set `QUEUE_CONNECTION=beanstalkd` in `.env`, then run a worker:
+
+```sh
+composer queue
+```
+
+## Running the whole app in Docker
+
+This builds and runs the actual production image (code baked in, no live
+reload) against the compose dependencies — useful as a smoke test of the
+image, not as a dev loop:
+
+```sh
+docker compose --profile app up -d --build
+```
+
+The site is served at http://localhost:8000. Migrate/seed it with:
+
+```sh
+docker compose exec web php artisan migrate --seed
+```
+
+`Dockerfile.dev` layers xdebug on top of the built `ponyfm` image if you need
+to step-debug inside the container.
+
+In production the same image also runs the queue worker: the entrypoint takes
+a mode argument, `web` or `worker` (see `docker/entrypoint.sh`).
+
+## Useful bits
+
+- Reset all data: `docker compose down -v`
+- Postgres is on `localhost:5432` (`ponyfm` / `ponyfm`, database `ponyfm`);
+  Elasticsearch on `localhost:9200`.
+- Uploaded files land in `storage/app/datastore` by default
+  (`PONYFM_DATASTORE` overrides this).
+- Handy alias while developing: `alias p="php artisan"`

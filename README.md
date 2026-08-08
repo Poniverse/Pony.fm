@@ -35,6 +35,12 @@ these are smaller in scope and easier to tackle if you're unfamiliar with the co
 Starting a dev environment
 ==========================
 
+**Recommended:** the Docker-based setup described in
+[`DOCKER-README.md`](DOCKER-README.md) — dependencies run in containers and
+the app runs on your host.
+
+The Vagrant environment below is the legacy setup and may bitrot:
+
 To begin development, do the following:
 
 1. Install [Vagrant](https://www.vagrantup.com/downloads.html) and

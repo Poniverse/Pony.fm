@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+# ffmpeg via docker, for dev machines without a local install.
+# `composer serve` and `composer queue` put this directory on PATH, so every
+# ffmpeg call the app makes (validation, encoding) lands here.
+#
+# The project dir and common temp dirs are mounted at their host paths, so
+# absolute paths in the app's commands resolve inside the container too.
+
+set -e
+
+IMAGE=jrottenberg/ffmpeg:4.3-alpine312
+
+exec docker run --rm -i \
+  -v "$PWD:$PWD" \
+  -v /tmp:/tmp \
+  -v /var/folders:/var/folders \
+  -w "$PWD" \
+  "$IMAGE" "$@"

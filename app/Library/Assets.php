@@ -75,19 +75,21 @@ class Assets
     }
 
     /** Merges an array of paths that are passed into "glob" into a list of unique filenames.
-     * Note that this method assumes the globs should be relative to the "app" folder of this project */
+     * Note that this method assumes the globs are relative to the "resources" folder of this
+     * project, and returns them relative to "resources/styles". */
     private static function mergeGlobs($globs)
     {
         $files = [];
         $filesFound = [];
+        $prefixLength = strlen(resource_path('styles').DIRECTORY_SEPARATOR);
         foreach ($globs as $glob) {
-            foreach (glob('../resources/'.$glob) as $file) {
+            foreach (glob(resource_path($glob)) as $file) {
                 if (isset($filesFound[$file])) {
                     continue;
                 }
 
                 $filesFound[$file] = true;
-                $files[] = substr($file, 20); // chop off ../app/
+                $files[] = substr($file, $prefixLength);
             }
         }
 
