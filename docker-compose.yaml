@@ -48,6 +48,7 @@ services:
     build: .
     image: ponyfm
     profiles: ["app"]
+    platform: linux/amd64
     ports:
       - "8000:80"
     command:
