@@ -127,9 +127,9 @@ class TracksController extends Controller
         return view('tracks.show', ['track' => $track]);
     }
 
-    public function getEdit($id, $slug)
+    public function getEdit(Request $request, $id, $slug)
     {
-        return $this->getTrack($id, $slug);
+        return $this->getTrack($request, $id, $slug);
     }
 
     public function getShortlink(Request $request, $id)
