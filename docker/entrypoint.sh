@@ -20,7 +20,13 @@ case $MODE in
     sudo -Esu www-data php artisan queue:listen --queue=default,notifications,indexing --sleep=5 --tries=3
     ;;
 
+  artisan)
+    shift
+    sudo -Esu www-data php artisan "$@"
+    ;;
+
   *)
-    echo "Unknown mode given"
+    echo "Unknown mode given" >&2
+    exit 1
     ;;
 esac
