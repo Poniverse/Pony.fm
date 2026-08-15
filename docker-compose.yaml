@@ -2,7 +2,7 @@
 # runs on the host (see DOCKER-README.md).
 #
 # Optional profiles:
-#   --profile queue    beanstalkd, for QUEUE_CONNECTION=beanstalkd
+#   --profile queue    redis, for QUEUE_CONNECTION=redis
 #   --profile app      the app itself, built from the production image
 #   --profile assets   gulp watcher in a Node 12 container
 
@@ -35,11 +35,13 @@ services:
     ports:
       - "${ELASTICSEARCH_PORT:-9200}:9200"
 
-  beanstalkd:
-    image: schickling/beanstalkd
+  redis:
+    image: redis:7-alpine
     profiles: ["queue"]
     ports:
-      - "11300:11300"
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
 
   # Prod-like smoke test: runs the baked image (FrankenPHP/Octane + ffmpeg +
   # AtomicParsley in one container), no code mounts.
@@ -96,4 +98,5 @@ services:
 volumes:
   postgres-data:
   elasticsearch-data:
+  redis-data:
   assets-node-modules:

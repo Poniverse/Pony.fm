@@ -5,7 +5,7 @@ Octane, plus ffmpeg + AtomicParsley all baked into one image — see
 `Dockerfile`). For local development the recommended setup is:
 
 - **Dependencies in Docker** — `docker compose up -d` gives you Postgres and
-  Elasticsearch (and optionally beanstalkd).
+  Elasticsearch (and optionally redis).
 - **The app on the host** — `composer serve` for PHP, `yarn dev` for the
   asset watcher.
 - **ffmpeg & AtomicParsley via `docker run`** — shims in `docker/bin/` mean
@@ -66,7 +66,7 @@ The app shells out to `ffmpeg` (upload validation, transcoding) and
 prepend `docker/bin/` to `PATH`, where shim scripts forward those calls to
 `docker run`:
 
-- `docker/bin/ffmpeg` → `jrottenberg/ffmpeg:4.3-alpine312` (same build the
+- `docker/bin/ffmpeg` → `jrottenberg/ffmpeg:7.1-alpine320` (same build the
   production image uses)
 - `docker/bin/AtomicParsley` → an image built from `docker/AtomicParsley/`
   on first use
@@ -89,10 +89,10 @@ inline in the request — no worker needed, uploads are just slower.
 For prod-like behaviour:
 
 ```sh
-docker compose --profile queue up -d    # starts beanstalkd
+docker compose --profile queue up -d    # starts redis
 ```
 
-Set `QUEUE_CONNECTION=beanstalkd` in `.env`, then run a worker:
+Set `QUEUE_CONNECTION=redis` in `.env`, then run a worker:
 
 ```sh
 composer queue
