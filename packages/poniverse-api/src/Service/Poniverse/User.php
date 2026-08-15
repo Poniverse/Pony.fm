@@ -16,7 +16,7 @@ class User extends JsonApiService
      */
     public function get($id)
     {
-        $request = $this->request('get', $this->client->getPoniverseUrl().'/users/'.$id);
+        $request = $this->request('get', $this->client->getPoniverseUrl().'/users/'.rawurlencode((string) $id));
 
         $response = json_decode($request->getBody(), true);
 
@@ -25,10 +25,12 @@ class User extends JsonApiService
 
     public function update(\Poniverse\Lib\Entity\Poniverse\User $user)
     {
-        $request = $this->request('patch', $this->client->getPoniverseUrl().'/users/'.$user->id, [
+        $request = $this->request('patch', $this->client->getPoniverseUrl().'/users/'.rawurlencode((string) $user->id), [
             'body' => (new JsonApi())->serialize($user, 'users', true),
         ]);
 
-        dd((string) $request->getBody(), $request);
+        $response = json_decode($request->getBody(), true);
+
+        return new \Poniverse\Lib\Entity\Poniverse\User($response);
     }
 }

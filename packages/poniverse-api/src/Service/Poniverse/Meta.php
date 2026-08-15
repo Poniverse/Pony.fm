@@ -34,7 +34,7 @@ class Meta extends Service {
         } else {
             throw new \Poniverse\Lib\Errors\ApiException(
                 $response->getStatusCode(),
-                ['response' => var_export($response, true)],
+                ['response' => (string) $response->getBody()],
                 'An unknown error occurred while contacting the Poniverse API.');
         }
     }
@@ -90,7 +90,7 @@ class Meta extends Service {
 
         $request = $this->request(
             'post',
-            $this->client->getPoniverseUrl() . "/v1/meta/sync-account?user_id={$poniverseUserId}",
+            $this->client->getPoniverseUrl() . '/v1/meta/sync-account?user_id=' . rawurlencode((string) $poniverseUserId),
             [
                 'headers' => array_merge(
                     ['Accept' => 'application/json'],
