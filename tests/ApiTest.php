@@ -38,7 +38,7 @@ class ApiTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user)
-             ->post('/api/v1/tracks', [])
+             ->post('/api/web/tracks/upload', [])
              ->seeJsonEquals([
                  'errors' => [
                      'track' => ['You must upload an audio file!'],
@@ -54,26 +54,25 @@ class ApiTest extends TestCase
             'auto_publish' => false,
         ]);
 
-        $this->seeJsonEquals([
-                'message'       => "This track has been accepted for processing! Poll the status_url to know when it's ready to publish. It will be published at the track_url.",
-                'id'            => '1',
-                'status_url'    => 'http://ponyfm-testing.poni/api/v1/tracks/1/upload-status',
-                'track_url'     => 'http://ponyfm-testing.poni/tracks/1-ponyfm-test-file',
-            ]);
+        $json = json_decode($this->response->getContent(), true);
+        $this->assertSame(1, $json['id']);
+        $this->assertSame('Ponyfm Test File', $json['title']);
+        $this->assertSame('ponyfm-test-file', $json['slug']);
+        $this->assertFalse($json['autoPublish']);
     }
 
     public function testUploadWithFileWithAutoPublish()
     {
-        $this->callUploadWithParameters([]);
+        $this->callUploadWithParameters([
+            'auto_publish' => true,
+        ]);
 
-        $this->seeJsonEquals([
-                'message'       => 'This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url.',
-                'id'            => '1',
-                'status_url'    => 'http://ponyfm-testing.poni/api/v1/tracks/1/upload-status',
-                'track_url'     => 'http://ponyfm-testing.poni/tracks/1-ponyfm-test-file',
-            ]);
+        $json = json_decode($this->response->getContent(), true);
+        $this->assertSame(1, $json['id']);
+        $this->assertSame('ponyfm-test-file', $json['slug']);
+        $this->assertTrue($json['autoPublish']);
 
-        $this->visit('/tracks/1-ponyfm-test');
+        $this->visit('/tracks/1-ponyfm-test-file');
         $this->assertResponseStatus(200);
     }
 
@@ -145,16 +144,14 @@ class ApiTest extends TestCase
         $track->published_at = Carbon::now();
         $track->save();
 
-        $response = $this
-            ->withSession(['api_client_id' => 'ponyponyponyponypony'])
-            ->get("/api/v1/tracks/{$track->id}");
+        $response = $this->get("/api/v1/tracks/{$track->id}");
 
         $response->assertResponseStatus(200);
 
         $json = json_decode($this->response->getContent(), true);
         $this->assertSame($track->title, $json['title']);
         $this->assertSame($track->description, $json['description']);
-        $this->assertSame($track->getStreamUrl('MP3', 'ponyponyponyponypony'), $json['streams']['mp3']['url']);
+        $this->assertSame($track->getStreamUrl('MP3'), $json['streams']['mp3']['url']);
         $this->assertSame(Track::$Formats['MP3']['mime_type'], $json['streams']['mp3']['mime_type']);
     }
 }

@@ -108,11 +108,6 @@ Route::prefix('api/v1')->middleware('json-exceptions')->group(function () {
     Route::get('/tracks/radio-details/{hash}', [V1\TracksController::class, 'getTrackRadioDetails']);
     Route::post('/tracks/radio-details/{hash}', [V1\TracksController::class, 'getTrackRadioDetails']);
     Route::get('/tracks/{id}', [V1\TracksController::class, 'getTrackDetails'])->where('id', '\d+');
-
-    Route::middleware('auth.oauth:ponyfm:tracks:upload')->group(function () {
-        Route::post('tracks', [V1\TracksController::class, 'postUploadTrack']);
-        Route::get('/tracks/{id}/upload-status', [V1\TracksController::class, 'getUploadStatus']);
-    });
 });
 
 Route::prefix('api/web')->middleware('cors')->group(function () {

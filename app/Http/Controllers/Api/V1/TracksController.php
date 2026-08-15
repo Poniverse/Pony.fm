@@ -20,62 +20,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Commands\UploadTrackCommand;
 use App\Http\Controllers\ApiControllerBase;
-use App\Http\Controllers\ContentController;
 use App\Models\Image;
 use App\Models\Track;
 use Illuminate\Support\Facades\Response;
 
 class TracksController extends ApiControllerBase
 {
-    public function postUploadTrack()
-    {
-        session_write_close();
-
-        $response = $this->execute(new UploadTrackCommand(true, true, session('api_client_id'), true));
-        $commandData = $response->getData(true);
-
-        if (200 !== $response->getStatusCode()) {
-            return $response;
-        }
-
-        $data = [
-            'id'            => (string) $commandData['id'],
-            'status_url'    => action([static::class, 'getUploadStatus'], ['id' => $commandData['id']]),
-            'track_url'     => action([\App\Http\Controllers\TracksController::class, 'getTrack'], ['id' => $commandData['id'], 'slug' => $commandData['slug']]),
-            'message'       => $commandData['autoPublish']
-                ? 'This track has been accepted for processing! Poll the status_url to know when it has been published. It will be published at the track_url.'
-                : "This track has been accepted for processing! Poll the status_url to know when it's ready to publish. It will be published at the track_url.",
-        ];
-
-        $response->setData($data);
-        $response->setStatusCode(202);
-
-        return $response;
-    }
-
-    public function getUploadStatus($trackId)
-    {
-        $track = Track::findOrFail($trackId);
-        $this->authorize('edit', $track);
-
-        if ($track->status === Track::STATUS_PROCESSING) {
-            return response()->json(['message' => 'Processing...'], 202);
-        } elseif ($track->status === Track::STATUS_COMPLETE) {
-            return response()->json([
-                'message' => $track->published_at
-                    ? 'Processing complete! The track is live at the track_url. The artist can edit the track by visiting its edit_url.'
-                    : 'Processing complete! The artist must publish the track by visiting its edit_url.',
-                'edit_url' => action([ContentController::class, 'getTracks'], ['id' => $trackId]),
-                'track_url' => $track->url,
-            ], 201);
-        } else {
-            // something went wrong
-            return response()->json(['error' => 'Processing failed! Please contact logic@pony.fm to figure out what went wrong.'], 500);
-        }
-    }
-
     /**
      * Returns a stable representation of a track for the API. This is very
      * similar to the radio representation below but finds tracks by ID and is
@@ -205,7 +156,7 @@ class TracksController extends ApiControllerBase
         if ($includeStreamUrl) {
             $trackResponse['streams'] = [
                 'mp3' => [
-                    'url'       => $track->getStreamUrl('MP3', session('api_client_id')),
+                    'url'       => $track->getStreamUrl('MP3'),
                     'mime_type' => Track::$Formats['MP3']['mime_type'],
                 ],
             ];

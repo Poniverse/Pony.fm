@@ -149,9 +149,9 @@ class TestCase extends BaseTestCase
         $file = $this->getTestFileForUpload('ponyfm-test.flac');
 
         $this->actingAs($this->user)
-             ->call('POST', '/api/v1/tracks', $parameters, [], array_merge(['track' => $file], $files));
+             ->call('POST', '/api/web/tracks/upload', $parameters, [], array_merge(['track' => $file], $files));
 
-        $this->assertResponseStatus(202);
+        $this->assertResponseStatus(200);
 
         Bus::assertDispatched(\App\Jobs\EncodeTrackFile::class);
         Bus::assertDispatched(\App\Jobs\UpdateSearchIndexForEntity::class);
