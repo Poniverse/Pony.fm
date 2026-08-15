@@ -1,0 +1,7 @@
+- repo: git@github.com:hootsuite/pre-commit-php.git
+  sha: 1.2.0
+  hooks:
+  - id: php-lint
+  - id: php-unit
+  - id: php-cs-fixer
+    args: ['--config-file=.php_cs']
