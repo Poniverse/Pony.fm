@@ -1,4 +1,4 @@
-FROM jrottenberg/ffmpeg:4.3-alpine312 AS ffmpeg
+FROM jrottenberg/ffmpeg:7.1-alpine320 AS ffmpeg
 
 FROM alpine:3.12 AS atomicparsley_builder
 
@@ -31,7 +31,7 @@ COPY resources /app/resources/
 
 RUN gulp build
 
-FROM php:8.0-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
 
@@ -43,7 +43,7 @@ COPY --from=atomicparsley_builder /tmp/atomicparsley/AtomicParsley /usr/local/bi
 RUN apk update
 
 ## Common libraries required for ffmpeg & atomicparsley` to work
-RUN apk add libgcc libstdc++ ca-certificates libcrypto1.1 libssl1.1 libgomp expat git
+RUN apk add libgcc libstdc++ ca-certificates libcrypto3 libssl3 libgomp expat git
 RUN apk add nginx sudo
 
 # Install php extensions
@@ -59,6 +59,7 @@ WORKDIR /app
 
 COPY --chown=www-data composer.json /app
 COPY --chown=www-data composer.lock /app
+COPY --chown=www-data packages /app/packages
 
 RUN composer install --no-scripts --no-autoloader --ignore-platform-reqs
 

@@ -14,7 +14,7 @@ development the recommended setup is:
 ## Prerequisites
 
 - Docker (Desktop or equivalent)
-- PHP 8.0 with composer
+- PHP 8.4+ with composer
 - Node 12 with yarn — the gulp 4 / webpack 1 asset toolchain predates modern
   Node; use nvm/volta, or skip local Node entirely and use the `assets`
   compose profile below.
