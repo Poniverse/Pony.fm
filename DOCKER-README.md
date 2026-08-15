@@ -1,8 +1,8 @@
 # Pony.fm Docker development
 
-Pony.fm runs in a container in production (nginx + php-fpm + ffmpeg +
-AtomicParsley all baked into one image — see `Dockerfile`). For local
-development the recommended setup is:
+Pony.fm runs in a container in production (FrankenPHP running Laravel
+Octane, plus ffmpeg + AtomicParsley all baked into one image — see
+`Dockerfile`). For local development the recommended setup is:
 
 - **Dependencies in Docker** — `docker compose up -d` gives you Postgres and
   Elasticsearch (and optionally beanstalkd).

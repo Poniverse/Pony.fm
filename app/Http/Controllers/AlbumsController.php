@@ -87,6 +87,11 @@ class AlbumsController extends Controller
 
         ResourceLogItem::logItem('album', $id, ResourceLogItem::DOWNLOAD, $format['index']);
         $downloader = new AlbumDownloader($album, $formatName);
-        $downloader->download();
+
+        return response()->streamDownload(function () use ($downloader) {
+            $downloader->download();
+        }, $album->user->display_name.' - '.$album->title.'.zip', [
+            'Content-Type' => 'application/zip',
+        ]);
     }
 }

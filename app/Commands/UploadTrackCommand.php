@@ -68,7 +68,7 @@ class UploadTrackCommand extends CommandBase
     public function __construct(
         bool $allowLossy = false,
         bool $allowShortTrack = false,
-        string $customTrackSource = null,
+        ?string $customTrackSource = null,
         bool $autoPublishByDefault = false,
         int $version = 1,
         $track = null

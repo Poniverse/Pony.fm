@@ -12,8 +12,11 @@ MODE=$1
 
 case $MODE in
   web)
-    php-fpm -D
-    nginx -g 'pid /tmp/nginx.pid; daemon off;'
+    exec sudo -Esu www-data php artisan octane:start \
+      --server=frankenphp \
+      --caddyfile=docker/frankenphp/Caddyfile \
+      --host=0.0.0.0 \
+      --port=8080
     ;;
 
   worker)

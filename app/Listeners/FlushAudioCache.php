@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0.
+ * Copyright (C) 2026 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,23 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Char0n\FFMpegPHP\Adapters\FFMpegMovie;
+namespace App\Listeners;
 
-class AudioCache
+/**
+ * AudioCache memoizes FFmpeg probe results in a static array, which is
+ * per-request state under php-fpm but would grow without bound (and go
+ * stale for re-used temp paths) in a long-lived Octane worker.
+ */
+class FlushAudioCache
 {
-    private static $_movieCache = [];
-
-    public static function get(string $filename): FFMpegMovie
+    public function handle($event): void
     {
-        if (isset(self::$_movieCache[$filename])) {
-            return self::$_movieCache[$filename];
-        }
-
-        return self::$_movieCache[$filename] = new FFMpegMovie($filename);
-    }
-
-    public static function flush(): void
-    {
-        self::$_movieCache = [];
+        \AudioCache::flush();
     }
 }

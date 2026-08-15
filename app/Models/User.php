@@ -251,7 +251,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public static function findOrCreate(
         string $username,
         string $displayName,
-        string $email = null,
+        ?string $email = null,
         bool $createArchivedUser = false
     ) {
         $user = static::where(DB::raw('LOWER(username)'), Str::lower($username));

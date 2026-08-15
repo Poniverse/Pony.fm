@@ -44,7 +44,6 @@ class TracksController extends ApiControllerBase
 {
     public function postUpload()
     {
-        session_write_close();
 
         return $this->execute(new UploadTrackCommand(true));
     }
@@ -76,7 +75,6 @@ class TracksController extends ApiControllerBase
 
     public function postUploadNewVersion($trackId)
     {
-        session_write_close();
 
         $track = Track::find($trackId);
         if (! $track) {

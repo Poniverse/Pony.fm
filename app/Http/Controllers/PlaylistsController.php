@@ -89,6 +89,12 @@ class PlaylistsController extends Controller
 
         ResourceLogItem::logItem('playlist', $id, ResourceLogItem::DOWNLOAD, $format['index']);
         $downloader = new PlaylistDownloader($playlist, $formatName);
-        $downloader->download($request->user());
+        $user = $request->user();
+
+        return response()->streamDownload(function () use ($downloader, $user) {
+            $downloader->download($user);
+        }, $playlist->user->display_name.' - '.$playlist->title.'.zip', [
+            'Content-Type' => 'application/zip',
+        ]);
     }
 }
