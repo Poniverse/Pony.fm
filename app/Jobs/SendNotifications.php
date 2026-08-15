@@ -28,7 +28,7 @@ use App\Library\Notifications\Drivers\PonyfmDriver;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use SerializesModels;
+use Illuminate\Queue\SerializesModels;
 
 class SendNotifications extends Job implements ShouldQueue
 {

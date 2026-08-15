@@ -25,12 +25,12 @@ use App\Models\Genre;
 use App\Models\Track;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class ApiTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
     use WithoutMiddleware;
 
     public function testUploadWithoutFile()
@@ -91,7 +91,7 @@ class ApiTest extends TestCase
             'track_type_id'     => $track->track_type_id,
             'genre'             => $genre->name,
             'album'             => $album->title,
-            'released_at'       => \Carbon\Carbon::create(2015, 1, 1, 1, 1, 1)->toIso8601String(),
+            'released_at'       => \Carbon\Carbon::create(2015, 1, 1, 1, 1, 1)->format('Y-m-d\TH:i:sO'),
             'description'       => $track->description,
             'lyrics'            => $track->lyrics,
             'is_vocal'          => true,
@@ -149,17 +149,12 @@ class ApiTest extends TestCase
             ->withSession(['api_client_id' => 'ponyponyponyponypony'])
             ->get("/api/v1/tracks/{$track->id}");
 
-        $response
-            ->assertResponseStatus(200)
-            ->seeJsonSubset([
-                'title'         => $track->title,
-                'description'   => $track->description,
-                'streams'       => [
-                    'mp3'       => [
-                        'url'       => $track->getStreamUrl('MP3', 'ponyponyponyponypony'),
-                        'mime_type' => Track::$Formats['MP3']['mime_type'],
-                    ],
-                ],
-            ]);
+        $response->assertResponseStatus(200);
+
+        $json = json_decode($this->response->getContent(), true);
+        $this->assertSame($track->title, $json['title']);
+        $this->assertSame($track->description, $json['description']);
+        $this->assertSame($track->getStreamUrl('MP3', 'ponyponyponyponypony'), $json['streams']['mp3']['url']);
+        $this->assertSame(Track::$Formats['MP3']['mime_type'], $json['streams']['mp3']['mime_type']);
     }
 }

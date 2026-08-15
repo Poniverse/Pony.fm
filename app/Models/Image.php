@@ -156,7 +156,7 @@ class Image extends Model
             }
 
             if (isset($coverType['geometry'])) {
-                $command .= " -gravity center -thumbnail ${coverType['geometry']} -extent ${coverType['geometry']}";
+                $command .= " -gravity center -thumbnail {$coverType['geometry']} -extent {$coverType['geometry']}";
             }
 
             $command .= ' "'.$path.'"';

@@ -20,7 +20,7 @@
 
 namespace App\Models;
 
-use Alsofronie\Uuid\UuidModelTrait;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use App\Models\Notification;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,7 +41,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Email extends Model
 {
-    use UuidModelTrait;
+    use HasUuids;
     // Non-sequential UUID's are desirable for this model.
     protected $uuidVersion = 4;
 

@@ -9,42 +9,37 @@
     ],
     "license": "AGPL",
     "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/poniverse-api"
+        }
+    ],
     "require": {
-        "php": "^8.0",
-        "laravel/framework": "^8.35",
-        "codescale/ffmpeg-php": "2.7.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "doctrine/dbal": "^3.0",
-        "venturecraft/revisionable": "^1.36",
-        "pda/pheanstalk": "^4.0",
-        "cviebrock/laravel-elasticsearch": "^8.0",
-        "barryvdh/laravel-debugbar": "^3.5",
-        "predis/predis": "^1.1",
-        "ksubileau/color-thief-php": "^2.0",
-        "graham-campbell/exceptions": "^14.0",
-        "minishlink/web-push": "^6.0",
-        "alsofronie/eloquent-uuid": "^1.0",
-        "poniverse/api": "dev-rewrite",
-        "fruitcake/laravel-cors": "2.0.1",
-        "laravel/tinker": "^2.5",
-        "doctrine/collections": "^1.6",
-        "doctrine/annotations": "^1.11",
-        "doctrine/cache": "^1.8",
-        "doctrine/instantiator": "^1.4",
-        "fideloper/proxy": "^4.4",
-        "james-heinrich/getid3": "^1.9"
+        "php": "^8.4",
+        "laravel/framework": "^13.0",
+        "codescale/ffmpeg-php": "^3.2",
+        "guzzlehttp/guzzle": "^7.8",
+        "elasticsearch/elasticsearch": "^7.17",
+        "venturecraft/revisionable": "^1.43",
+        "pda/pheanstalk": "^7.0",
+        "barryvdh/laravel-debugbar": "^4.4",
+        "predis/predis": "^3.0",
+        "ksubileau/color-thief-php": "^3.0",
+        "minishlink/web-push": "^11.0",
+        "poniverse/api": "^2.0",
+        "laravel/tinker": "^3.0",
+        "james-heinrich/getid3": "^1.9.23"
     },
     "require-dev": {
-        "mockery/mockery": "^1.4.2",
-        "phpunit/phpunit": "^9.3.3",
-        "symfony/dom-crawler": "^5.2",
-        "symfony/css-selector": "^5.2",
-        "laravel/browser-kit-testing": "^6.2",
-        "nategood/httpful": "^0.2.20",
-        "nunomaduro/collision": "^5.0",
-        "fakerphp/faker": "^1.9.1",
-        "facade/ignition": "^2.5",
-        "barryvdh/laravel-ide-helper": "^2.9"
+        "mockery/mockery": "^1.6",
+        "phpunit/phpunit": "^12.0",
+        "symfony/dom-crawler": "^7.0",
+        "symfony/css-selector": "^7.0",
+        "laravel/browser-kit-testing": "^7.2",
+        "nunomaduro/collision": "^8.0",
+        "fakerphp/faker": "^1.24",
+        "barryvdh/laravel-ide-helper": "^3.7"
     },
     "autoload": {
         "files": [
@@ -81,7 +76,6 @@
             "@php artisan key:generate --ansi"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta"
         ],
@@ -93,11 +87,10 @@
     "config": {
         "preferred-install": "dist",
         "platform": {
-            "php": "8.0.30"
+            "php": "8.4.0"
         },
         "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "kylekatarnls/update-helper": true
+            "php-http/discovery": true
         }
     },
     "extra": {

@@ -120,16 +120,23 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Indexing queue name
+     | Web Push (VAPID) keys
      |--------------------------------------------------------------------------
      |
-     | Google Cloud Messaging API key. Needs to be generated in the Google Cloud
-     | Console as a browser key. This is used to send notifications to users
-     | with push notifications enabled.
+     | VAPID keypair used to send push notifications to users who have
+     | enabled them. Generate a keypair with:
+     |
+     |     vendor/bin/web-push generate-vapid-keys
+     |
+     | Push notifications are disabled when no keypair is configured.
      |
      */
 
-    'gcm_key' => env('GCM_KEY', 'default'),
+    'vapid' => [
+        'subject' => env('VAPID_SUBJECT', env('APP_URL', 'https://pony.fm')),
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
+    ],
 
     /*
      |--------------------------------------------------------------------------

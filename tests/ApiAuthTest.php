@@ -21,12 +21,12 @@ namespace Tests;
  */
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Poniverse\Lib\AccessToken;
 
 class ApiAuthTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /**
      * Ensures that when we call the Pony.fm API with a user who has never

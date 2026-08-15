@@ -25,7 +25,7 @@ use App\Jobs\EncodeTrackFile;
 use App\Models\Track;
 use App\Models\TrackFile;
 use AudioCache;
-use FFmpegMovie;
+use Char0n\FFMpegPHP\Adapters\FFMpegMovie;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -186,7 +186,7 @@ class GenerateTrackFilesCommand extends CommandBase
     }
 
     /**
-     * @param FFmpegMovie|string $file object or full path of the file we're checking
+     * @param FFMpegMovie|string $file object or full path of the file we're checking
      * @return bool whether the given file is lossless
      */
     private function isLosslessFile($file)

@@ -20,7 +20,7 @@
 
 namespace App\Models;
 
-use Alsofronie\Uuid\UuidModelTrait;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -41,7 +41,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EmailClick extends Model
 {
-    use UuidModelTrait;
+    use HasUuids;
 
     protected $fillable = ['ip_address'];
 

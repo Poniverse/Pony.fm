@@ -4,6 +4,8 @@ namespace Tests;
 
 use App\Models\User;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Http;
 use Laravel\BrowserKitTesting\TestCase as BaseTestCase;
 use Storage;
 
@@ -77,18 +79,18 @@ class TestCase extends BaseTestCase
                 if (! $storage->has($filename) ||
                     $storage->lastModified($filename) < $lastModifiedTimestamp
                 ) {
-                    echo "Downloading test file: ${filename}...".PHP_EOL;
+                    echo "Downloading test file: {$filename}...".PHP_EOL;
 
-                    $testFileUrl = "https://poniverse.net/files/ponyfm-test-files/${filename}";
-                    $data = \Httpful\Request::getQuick($testFileUrl);
+                    $testFileUrl = "https://poniverse.net/files/ponyfm-test-files/{$filename}";
+                    $response = Http::get($testFileUrl);
 
-                    if ($data->code === 200) {
+                    if ($response->status() === 200) {
                         $storage->put(
                             $filename,
-                            $data->body
+                            $response->body()
                         );
                     } else {
-                        $this->fail("A necessary test file was unavailable: ${testFileUrl}");
+                        $this->fail("A necessary test file was unavailable: {$testFileUrl}");
                     }
                 }
             }
@@ -125,9 +127,9 @@ class TestCase extends BaseTestCase
     public function getTestFileForUpload($filename)
     {
         Storage::disk('local')->makeDirectory('testing-datastore/tmp');
-        Storage::disk('local')->copy("test-files/${filename}", "testing-datastore/tmp/${filename}");
+        Storage::disk('local')->copy("test-files/{$filename}", "testing-datastore/tmp/{$filename}");
 
-        return new \Illuminate\Http\UploadedFile(storage_path("app/testing-datastore/tmp/${filename}"), $filename, null, null, null, true);
+        return new \Illuminate\Http\UploadedFile(storage_path("app/testing-datastore/tmp/{$filename}"), $filename, null, null, true);
     }
 
     /**
@@ -138,7 +140,7 @@ class TestCase extends BaseTestCase
      */
     protected function callUploadWithParameters(array $parameters, array $files = [])
     {
-        $this->expectsJobs([
+        Bus::fake([
             \App\Jobs\EncodeTrackFile::class,
             \App\Jobs\UpdateSearchIndexForEntity::class,
         ]);
@@ -150,5 +152,8 @@ class TestCase extends BaseTestCase
              ->call('POST', '/api/v1/tracks', $parameters, [], array_merge(['track' => $file], $files));
 
         $this->assertResponseStatus(202);
+
+        Bus::assertDispatched(\App\Jobs\EncodeTrackFile::class);
+        Bus::assertDispatched(\App\Jobs\UpdateSearchIndexForEntity::class);
     }
 }

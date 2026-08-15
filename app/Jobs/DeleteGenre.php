@@ -26,7 +26,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use SerializesModels;
+use Illuminate\Queue\SerializesModels;
 
 class DeleteGenre extends Job implements ShouldQueue
 {

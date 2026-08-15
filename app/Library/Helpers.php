@@ -65,7 +65,11 @@ class Helpers
      */
     public static function timestamp($timestamp)
     {
-        if (gettype($timestamp) !== 'string' && get_class($timestamp) === 'DateTime') {
+        if ($timestamp === null) {
+            return '';
+        }
+
+        if ($timestamp instanceof \DateTimeInterface) {
             $timestamp = $timestamp->format('c');
         }
 

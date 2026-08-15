@@ -206,7 +206,7 @@ class Search
         $i = 0;
         foreach ($searchHits as $result) {
             $ids[$result['_id']] = $result['_score'];
-            $caseStatement .= "WHEN ${result['_id']} THEN $i ";
+            $caseStatement .= "WHEN {$result['_id']} THEN $i ";
             $i++;
         }
         $caseStatement .= 'END';

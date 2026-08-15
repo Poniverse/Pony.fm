@@ -26,7 +26,7 @@ use App\Models\Comment;
 use App\Models\Playlist;
 use App\Models\Track;
 use App\Models\User;
-use Illuminate\Support\Facades\Config;
+use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
 
 class NativeDriver extends AbstractDriver
@@ -39,12 +39,14 @@ class NativeDriver extends AbstractDriver
      */
     private function pushNotifications(Activity $activity, $recipients)
     {
-        if (config('ponyfm.gcm_key') != 'default') {
-            $apiKeys = [
-                'GCM' => config('ponyfm.gcm_key'),
-            ];
-
-            $webPush = new WebPush($apiKeys);
+        if (config('ponyfm.vapid.public_key') && config('ponyfm.vapid.private_key')) {
+            $webPush = new WebPush([
+                'VAPID' => [
+                    'subject' => config('ponyfm.vapid.subject'),
+                    'publicKey' => config('ponyfm.vapid.public_key'),
+                    'privateKey' => config('ponyfm.vapid.private_key'),
+                ],
+            ]);
 
             $data = [
                 'id' => $activity->id,
@@ -57,15 +59,20 @@ class NativeDriver extends AbstractDriver
             $jsonData = json_encode($data);
 
             foreach ($recipients as $recipient) {
-                $webPush->sendNotification(
-                    $recipient->endpoint,
-                    $jsonData,
-                    $recipient->p256dh,
-                    $recipient->auth
+                $webPush->queueNotification(
+                    Subscription::create([
+                        'endpoint' => $recipient->endpoint,
+                        'publicKey' => $recipient->p256dh,
+                        'authToken' => $recipient->auth,
+                    ]),
+                    $jsonData
                 );
             }
 
-            $webPush->flush();
+            foreach ($webPush->flush() as $report) {
+                // Reports for failed pushes are ignored, matching the old
+                // fire-and-forget behaviour.
+            }
         }
     }
 

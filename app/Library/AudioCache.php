@@ -17,16 +17,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Char0n\FFMpegPHP\Adapters\FFMpegMovie;
+
 class AudioCache
 {
     private static $_movieCache = [];
 
-    public static function get(string $filename):FFmpegMovie
+    public static function get(string $filename): FFMpegMovie
     {
         if (isset(self::$_movieCache[$filename])) {
             return self::$_movieCache[$filename];
         }
 
-        return self::$_movieCache[$filename] = new FFmpegMovie($filename);
+        return self::$_movieCache[$filename] = new FFMpegMovie($filename);
     }
 }

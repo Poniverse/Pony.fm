@@ -76,7 +76,7 @@ class AuthenticateOAuth
         }
 
         if (! in_array($requiredScope, $accessTokenInfo->getScopes())) {
-            throw new AccessDeniedHttpException("This access token lacks the '${requiredScope}' scope!");
+            throw new AccessDeniedHttpException("This access token lacks the '{$requiredScope}' scope!");
         }
 
         // Log in as the given user, creating the account if necessary.
