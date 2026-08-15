@@ -56,7 +56,8 @@ RUN apk add imagemagick
 # Caddy (inside FrankenPHP) needs writable state dirs when running as www-data.
 RUN mkdir -p /config /data && chown -R www-data: /config /data
 
-RUN mkdir /app && chown -R www-data: /app
+# The frankenphp base image ships /app as its default workdir.
+RUN mkdir -p /app && chown -R www-data: /app
 
 USER www-data
 WORKDIR /app
