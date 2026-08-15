@@ -72,7 +72,6 @@ Route::get('/register', [AccountController::class, 'getRegister']);
 Route::get('/login', [AuthController::class, 'getLogin']);
 Route::post('/auth/logout', [AuthController::class, 'postLogout']);
 Route::get('/auth/oauth', [AuthController::class, 'getOAuth']);
-Route::post('/auth/poniverse-sync', [AuthController::class, 'postPoniverseAccountSync'])->middleware('throttle:60,1');
 
 Route::get('/about', function () {
     return View::make('pages.about');

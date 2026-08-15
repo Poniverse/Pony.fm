@@ -9,12 +9,6 @@
     ],
     "license": "AGPL",
     "type": "project",
-    "repositories": [
-        {
-            "type": "path",
-            "url": "packages/poniverse-api"
-        }
-    ],
     "require": {
         "php": "^8.4",
         "laravel/framework": "^13.0",
@@ -27,7 +21,7 @@
         "predis/predis": "^3.0",
         "ksubileau/color-thief-php": "^3.0",
         "minishlink/web-push": "^11.0",
-        "poniverse/api": "^2.0",
+        "league/oauth2-client": "^2.7",
         "laravel/tinker": "^3.0",
         "james-heinrich/getid3": "^1.9.23"
     },

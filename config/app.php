@@ -139,8 +139,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\NotificationServiceProvider::class,
-
-        Poniverse\Lib\PoniverseServiceProvider::class,
     ])->toArray(),
 
     /*

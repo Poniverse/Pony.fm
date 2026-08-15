@@ -59,7 +59,6 @@ WORKDIR /app
 
 COPY --chown=www-data composer.json /app
 COPY --chown=www-data composer.lock /app
-COPY --chown=www-data packages /app/packages
 
 RUN composer install --no-scripts --no-autoloader --ignore-platform-reqs
 

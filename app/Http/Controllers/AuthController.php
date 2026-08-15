@@ -22,32 +22,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
+use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Token\AccessToken;
-use Poniverse\Lib\Client;
+use League\OAuth2\Client\Provider\GenericProvider;
 
 class AuthController extends Controller
 {
-    protected $poniverse;
-
-    public function __construct()
-    {
-        $this->poniverse = new Client(config('poniverse.client_id'), config('poniverse.secret'), new \GuzzleHttp\Client());
-    }
-
-    public function getLogin()
+    public function getLogin(Request $request)
     {
         if (Auth::guest()) {
-            return redirect(
-                $this->poniverse
-                    ->getOAuthProvider(['redirectUri' => action([static::class, 'getOAuth'])])
-                    ->getAuthorizationUrl());
+            $provider = $this->oauthProvider();
+            $authorizationUrl = $provider->getAuthorizationUrl();
+
+            $request->session()->put('oauth2_state', $provider->getState());
+            $request->session()->put('oauth2_pkce_code', $provider->getPkceCode());
+
+            return redirect($authorizationUrl);
         }
 
         return redirect()->to('/');
@@ -62,58 +56,67 @@ class AuthController extends Controller
 
     public function getOAuth(Request $request)
     {
-        $oauthProvider = $this->poniverse->getOAuthProvider();
+        $expectedState = $request->session()->pull('oauth2_state');
+        $pkceCode = $request->session()->pull('oauth2_pkce_code');
+
+        if (
+            ! $request->filled('code') ||
+            ! $expectedState ||
+            $request->query('state') !== $expectedState
+        ) {
+            return $this->loginFailedRedirect();
+        }
+
+        $provider = $this->oauthProvider();
+        $provider->setPkceCode($pkceCode);
 
         try {
-            $accessToken = $oauthProvider->getAccessToken('authorization_code', [
+            $accessToken = $provider->getAccessToken('authorization_code', [
                 'code' => $request->query('code'),
-                'redirect_uri' => action([static::class, 'getOAuth']),
             ]);
-            $this->poniverse->setAccessToken($accessToken);
-            $resourceOwner = $oauthProvider->getResourceOwner($accessToken);
+            $claims = $provider->getResourceOwner($accessToken)->toArray();
         } catch (IdentityProviderException $e) {
             Log::error($e);
 
-            return redirect()->to('/')->with(
-                'message',
-                'Unfortunately we are having problems attempting to log you in at the moment. Please try again at a later time.'
-            );
+            return $this->loginFailedRedirect();
         }
 
-        /** @var \Poniverse\Lib\Entity\Poniverse\User $poniverseUser */
-        $poniverseUser = $resourceOwner;
+        $poniverseId = (int) ($claims['sub'] ?? 0);
+        $username = $claims['preferred_username'] ?? null;
+        $displayName = $claims['name'] ?? $username;
+        $email = $claims['email'] ?? null;
+
+        if (! $poniverseId || ! $username) {
+            Log::error('Poniverse userinfo response was missing the sub or preferred_username claim.', ['claims' => array_keys($claims)]);
+
+            return $this->loginFailedRedirect();
+        }
 
         $token = DB::table('oauth2_tokens')
-            ->where('external_user_id', '=', $poniverseUser->id)
+            ->where('external_user_id', '=', $poniverseId)
             ->where('service', '=', 'poniverse')
             ->first();
 
-        $setData = [
-            'access_token' => $accessToken,
-            'expires' => Carbon::createFromTimestampUTC($accessToken->getExpires()),
-            'type' => 'Bearer',
-        ];
-
-        if (! empty($accessToken->getRefreshToken())) {
-            $setData['refresh_token'] = $accessToken->getRefreshToken();
-        }
-
         if ($token) {
-            //User already exists, update access token and refresh token if provided.
-            DB::table('oauth2_tokens')->where('id', '=', $token->id)->update($setData);
-
             return $this->loginRedirect(User::find($token->user_id));
         }
 
         // Check by login name to see if they already have an account
-        $user = User::findOrCreate($poniverseUser->username, $poniverseUser->display_name, $poniverseUser->email);
+        $user = User::findOrCreate($username, $displayName, $email);
 
         if ($user->wasRecentlyCreated) {
-            // We need to insert a new token row :O
-            $setData['user_id'] = $user->id;
-            $setData['external_user_id'] = $poniverseUser->id;
-            $setData['service'] = 'poniverse';
-            DB::table('oauth2_tokens')->insert($setData);
+            // Record the Poniverse account link. Poniverse is used purely as
+            // an identity provider, so no tokens are kept around - the row
+            // exists only to map the Poniverse account ID to the local user.
+            DB::table('oauth2_tokens')->insert([
+                'user_id' => $user->id,
+                'external_user_id' => $poniverseId,
+                'service' => 'poniverse',
+                'type' => 'Bearer',
+                'access_token' => '',
+                'refresh_token' => '',
+                'expires' => now(),
+            ]);
 
             // Subscribe the user to default email notifications
             foreach (Activity::DEFAULT_EMAIL_TYPES as $activityType) {
@@ -124,43 +127,33 @@ class AuthController extends Controller
         return $this->loginRedirect($user);
     }
 
-    /**
-     * Processes requests to update a user's Poniverse information.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function postPoniverseAccountSync(Request $request)
-    {
-        $poniverseId = $request->get('id');
-        $updatedAttribute = $request->get('attribute');
-
-        // Only email address updates are supported at this time.
-        if ('email' !== $updatedAttribute) {
-            return response()->json(['message' => 'Unsupported Poniverse account attribute.'], 400);
-        }
-
-        $user = User::wherePoniverseId($poniverseId)->first();
-        /** @var AccessToken $accessToken */
-        $accessToken = $user->getAccessToken();
-
-        if ($accessToken->hasExpired()) {
-            $accessToken = $this->poniverse->getOAuthProvider()->getAccessToken('refresh_token', ['refresh_token' => $accessToken->getRefreshToken()]);
-            $user->setAccessToken($accessToken);
-        }
-
-        /** @var \Poniverse\Lib\Entity\Poniverse\User $newUserData */
-        $newUserData = $this->poniverse->getOAuthProvider()->getResourceOwner($accessToken);
-
-        $user->{$updatedAttribute} = $newUserData->{$updatedAttribute};
-        $user->save();
-
-        return response()->json(['message' => 'Successfully updated this user!'], 200);
-    }
-
     protected function loginRedirect($user, $rememberMe = true)
     {
         Auth::login($user, $rememberMe);
 
         return redirect()->to('/');
+    }
+
+    protected function loginFailedRedirect()
+    {
+        return redirect()->to('/')->with(
+            'message',
+            'Unfortunately we are having problems attempting to log you in at the moment. Please try again at a later time.'
+        );
+    }
+
+    protected function oauthProvider(): GenericProvider
+    {
+        return new GenericProvider([
+            'clientId' => config('poniverse.client_id'),
+            'clientSecret' => config('poniverse.secret'),
+            'redirectUri' => action([static::class, 'getOAuth']),
+            'urlAuthorize' => config('poniverse.urls.authorize'),
+            'urlAccessToken' => config('poniverse.urls.token'),
+            'urlResourceOwnerDetails' => config('poniverse.urls.userinfo'),
+            'scopes' => config('poniverse.scopes'),
+            'scopeSeparator' => ' ',
+            'pkceMethod' => AbstractProvider::PKCE_METHOD_S256,
+        ]);
     }
 }

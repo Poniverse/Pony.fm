@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb88a9d7cb1b9cd0a8ca14645afeeeb6",
+    "content-hash": "9d2cfb482a7d0036a50aa5b3fa4c9102",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -3645,50 +3645,6 @@
                 }
             ],
             "time": "2025-12-27T19:41:33+00:00"
-        },
-        {
-            "name": "poniverse/api",
-            "version": "2.0.0",
-            "dist": {
-                "type": "path",
-                "url": "packages/poniverse-api",
-                "reference": "fdd747c2e4dc0c07c6cace705c66a9d6e77353f7"
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^7.0",
-                "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
-                "league/oauth2-client": "^2.6",
-                "php": ">=8.3.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~4.0",
-                "satooshi/php-coveralls": "~1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Poniverse\\Lib\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Adam Lavin",
-                    "email": "adam@lavoaster.co.uk"
-                }
-            ],
-            "description": "PHP Library to access the Poniverse APi",
-            "keywords": [
-                "api",
-                "laravel",
-                "laravel4"
-            ],
-            "transport-options": {
-                "relative": true
-            }
         },
         {
             "name": "predis/predis",
@@ -10091,7 +10047,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.3"
+        "php": "^8.4"
     },
     "platform-dev": {},
     "platform-overrides": {
