@@ -68,8 +68,9 @@ RUN apk add sudo
 RUN apk add flac vorbis-tools
 
 # Install php extensions. gd is for color-thief (avatar colour extraction);
-# image resizing shells out to imagemagick's convert.
-RUN install-php-extensions mysqli pgsql pdo_mysql pdo_pgsql gmp gd redis pcntl opcache
+# image resizing shells out to imagemagick's convert. zip is for ZipStream
+# (album/playlist downloads).
+RUN install-php-extensions mysqli pgsql pdo_mysql pdo_pgsql gmp gd redis pcntl opcache zip
 
 # not sure why but this needs to be after the php extensions otherwise some kind of dependency issue occurs
 RUN apk add imagemagick
