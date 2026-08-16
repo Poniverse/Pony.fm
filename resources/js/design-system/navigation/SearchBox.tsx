@@ -44,7 +44,10 @@ export function SearchBox({ value, onChange, placeholder = 'Search Pony.fm…', 
         onKeyDown={(e) => { if (e.key === 'Escape') { setOpen(false); e.currentTarget.blur(); } }}
         className="relative z-[900] w-full rounded-pill border border-border bg-surface-3 py-2.5 pr-3 pl-[34px] font-text text-sm text-heading outline-none transition-[background,color,border-color,box-shadow] duration-(--dur-fast) ease-(--ease-standard) focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50" />
       {show ? (
-        <div className="absolute top-[calc(100%+6px)] left-0 z-[900] max-h-[75vh] w-[min(860px,calc(100vw-88px))] overflow-y-auto rounded-md border border-border bg-surface-raised p-4 shadow-pop">
+        // Clicking any link in the panel (result rows, cards) closes it;
+        // non-link actions like play/favourite keep it open.
+        <div onClick={(e) => { if ((e.target as Element).closest('a')) setOpen(false); }}
+          className="absolute top-[calc(100%+6px)] left-0 z-[900] max-h-[75vh] w-[min(860px,calc(100vw-88px))] overflow-y-auto rounded-md border border-border bg-surface-raised p-4 shadow-pop">
           {panel}
         </div>
       ) : null}
