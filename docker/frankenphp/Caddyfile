@@ -1,0 +1,64 @@
+{
+	{$CADDY_GLOBAL_OPTIONS}
+
+	admin {$CADDY_SERVER_ADMIN_HOST}:{$CADDY_SERVER_ADMIN_PORT}
+
+	frankenphp {
+		worker {
+			file "{$APP_PUBLIC_PATH}/frankenphp-worker.php"
+			{$CADDY_SERVER_WORKER_DIRECTIVE}
+			{$CADDY_SERVER_WATCH_DIRECTIVES}
+		}
+	}
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+{$CADDY_SERVER_SERVER_NAME} {
+	log {
+		level {$CADDY_SERVER_LOG_LEVEL}
+
+		# Redact the authorization query parameter that can be set by Mercure...
+		format filter {
+			wrap {$CADDY_SERVER_LOGGER}
+			fields {
+				uri query {
+					replace authorization REDACTED
+				}
+			}
+		}
+	}
+
+	route {
+		root * "{$APP_PUBLIC_PATH}"
+		encode zstd br gzip
+
+		# Track uploads can be up to 600 MB (see also php upload_max_filesize).
+		request_body {
+			max_size 600MB
+		}
+
+		# Datastore files (tracks, images) are served via X-Accel-Redirect,
+		# replacing the nginx `internal` location the app used under php-fpm.
+		# Only paths inside the datastore may be redirected to.
+		intercept {
+			# Default must match config/ponyfm.php's files_directory default.
+			@accel header X-Accel-Redirect "{$PONYFM_DATASTORE:/app/storage/app/datastore}*"
+			handle_response @accel {
+				root * /
+				rewrite * {resp.header.X-Accel-Redirect}
+				header -X-Accel-Redirect
+				file_server
+			}
+		}
+
+		{$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+		php_server {
+			index frankenphp-worker.php
+			try_files {path} frankenphp-worker.php
+			# Required for the public/storage/ directory...
+			resolve_root_symlink
+		}
+	}
+}

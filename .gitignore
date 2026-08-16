@@ -16,8 +16,10 @@ yarn-error.log
 .phpstorm.meta.php
 .phpunit.result.cache
 
+# Octane's local FrankenPHP binary and Caddy state — NOT docker/frankenphp/,
+# whose Caddyfile must be committed (the image needs it).
 **/caddy
-frankenphp
+/frankenphp
 frankenphp-worker.php
 /public/assets
 /bootstrap/ssr
