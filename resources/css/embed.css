@@ -1,0 +1,131 @@
+/* Self-hosted webfonts via Fontsource — the embed only renders text and
+   mono stats, so it carries the lighter subset. */
+@import "@fontsource/karla/400.css";
+@import "@fontsource/karla/700.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+
+@import "./tokens/fonts.css";
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/radius.css";
+@import "./tokens/elevation.css";
+@import "./tokens/motion.css";
+@import "./fontawesome.css";
+
+/* The 480×130-ish embeddable player, restyled with the Pony.fm 2 tokens. */
+html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--surface-1);
+    color: var(--text-body);
+    font-family: var(--font-text);
+    font-size: var(--text-sm);
+}
+
+a { color: var(--text-link); text-decoration: none; }
+a:hover { color: var(--text-link-hover); }
+
+.player {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    grid-template-rows: 1fr auto;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.player .play {
+    grid-row: 1 / span 2;
+    position: relative;
+    cursor: pointer;
+    width: 96px;
+    overflow: hidden;
+}
+.player .play img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.player .play .button {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 26px;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: opacity var(--dur-normal) var(--ease-standard);
+}
+.player .play:hover .button,
+.player.playing .play .button,
+.player.paused .play .button { opacity: 1; }
+
+.player .meta {
+    position: relative;
+    display: grid;
+    align-content: center;
+    gap: 3px;
+    padding: 10px 14px 6px;
+    min-width: 0;
+}
+.player .meta .title {
+    font-size: var(--text-md);
+    font-weight: var(--weight-bold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.player .meta .title a { color: var(--text-primary); }
+.player .meta span { font-size: var(--text-xs); color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.player .progressbar {
+    position: relative;
+    height: 7px;
+    margin: 5px 0;
+    border-radius: var(--radius-pill);
+    background: var(--player-transport-track);
+    cursor: pointer;
+    overflow: hidden;
+}
+.player .progressbar .loader,
+.player .progressbar .seeker {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    border-radius: var(--radius-pill);
+}
+.player .progressbar .loader { background: var(--player-transport-buffer); }
+.player .progressbar .seeker { background: var(--player-transport-played); }
+
+.player .favourite {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: var(--text-md);
+    color: var(--text-faint);
+    display: none;
+}
+.player.can-favourite .favourite { display: block; }
+.player.favourited .favourite { color: var(--favourite-star); }
+.player.favourited .favourite i::before { content: "\f005"; }
+
+.player .stats {
+    grid-column: 2;
+    padding: 4px 14px 8px;
+    font-size: var(--text-2xs);
+    color: var(--text-faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.player .stats strong { color: var(--text-muted); }
+
+.explicit {
+    display: grid;
+    gap: 8px;
+    align-content: center;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    background: rgba(207, 90, 82, 0.12);
+    border-left: 3px solid var(--status-danger);
+    font-size: var(--text-sm);
+}
+.explicit .stats { font-size: var(--text-2xs); color: var(--text-faint); }
