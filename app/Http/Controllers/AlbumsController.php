@@ -78,11 +78,8 @@ class AlbumsController extends Controller
             return Redirect::action([static::class, 'getShow'], [$id, $album->slug]);
         }
 
-        // Hover prefetches must not count as views.
-        if ($request->header('Purpose') !== 'prefetch') {
-            ResourceLogItem::logItem('album', $album->id, ResourceLogItem::VIEW);
-            $album->view_count++;
-        }
+        // Views are logged by the client via POST /api/web/views (see
+        // TracksController::getTrack for why).
 
         $mapped = Album::mapPublicAlbumShow($album);
         if ($mapped['is_downloadable'] == 0) {

@@ -114,6 +114,7 @@ Route::prefix('api/web')->middleware('cors')->group(function () {
 
     Route::get('/taxonomies/all', [Web\TaxonomiesController::class, 'getAll']);
     Route::get('/search', [Web\SearchController::class, 'getSearch']);
+    Route::post('/views', [Web\ViewsController::class, 'postLogView']);
 
     Route::get('/tracks', [Web\TracksController::class, 'getIndex']);
     Route::get('/tracks/{id}', [Web\TracksController::class, 'getShow'])->where('id', '\d+');

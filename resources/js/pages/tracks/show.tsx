@@ -31,6 +31,12 @@ export default function TrackShowPage({ track }: { track: TrackShow }) {
 
     React.useEffect(() => setFavourited(!!track.user_data?.is_favourited), [track.id, track.user_data?.is_favourited]);
 
+    // Log the view now that the page is actually displayed — the Inertia
+    // request itself doesn't count views (hover prefetches would skew them).
+    React.useEffect(() => {
+        void api.post('/views', { type: 'track', id: track.id }).catch(() => undefined);
+    }, [track.id]);
+
     const toggleFavourite = () => {
         setFavourited((f) => !f);
         api.post<{ is_favourited: boolean }>('/favourites/toggle', { type: 'track', id: track.id })

@@ -140,7 +140,7 @@ function ToastIcon({ type }: { type: string | undefined }) {
   if (type === "error") icon = <OctagonX className="text-destructive" aria-hidden="true" />
   // The classic Pony.fm loading gif, not a spinner glyph — larger than the
   // svg glyphs so the animation reads clearly.
-  if (type === "loading") icon = <Loader size={32} />
+  if (type === "loading") icon = <Loader size={32 } />
 
   if (!icon) {
     return null

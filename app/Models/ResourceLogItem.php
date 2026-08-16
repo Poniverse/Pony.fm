@@ -60,13 +60,35 @@ class ResourceLogItem extends Model
     public static function logItem($resourceType, $resourceId, $logType, $formatId = null)
     {
         $resourceIdColumn = $resourceType.'_id';
+        $ipAddress = Request::getClientIp();
+
+        // One count per person per hour: the same user (or, for guests, the
+        // same IP) logging the same action on the same resource within the
+        // window is ignored, so refreshes, replay loops and scripted spam
+        // can't inflate the counts. Note `where('track_format_id', $formatId)`
+        // compiles to IS NULL when no format is given, so views aren't
+        // deduped against format-specific plays/downloads.
+        $recent = self::where($resourceIdColumn, $resourceId)
+            ->where('log_type', $logType)
+            ->where('track_format_id', $formatId)
+            ->where('created_at', '>', Carbon::now()->subHour());
+
+        if (Auth::check()) {
+            $recent->where('user_id', Auth::user()->id);
+        } else {
+            $recent->where('ip_address', $ipAddress);
+        }
+
+        if ($recent->exists()) {
+            return;
+        }
 
         $logItem = new self();
         $logItem->{$resourceIdColumn} = $resourceId;
         $logItem->created_at = Carbon::now();
         $logItem->log_type = $logType;
         $logItem->track_format_id = $formatId;
-        $logItem->ip_address = Request::getClientIp();
+        $logItem->ip_address = $ipAddress;
 
         if (Auth::check()) {
             $logItem->user_id = Auth::user()->id;

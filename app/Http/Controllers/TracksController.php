@@ -143,13 +143,10 @@ class TracksController extends Controller
             return Redirect::action([static::class, 'getTrack'], [$id, $track->slug]);
         }
 
-        // The Angular SPA logged a view through /api/web/tracks/{id}?log=true;
-        // with Inertia the page request itself is the visit — except hover
-        // prefetches, which must not count as views.
-        if ($request->header('Purpose') !== 'prefetch') {
-            ResourceLogItem::logItem('track', $track->id, ResourceLogItem::VIEW);
-            $track->view_count++;
-        }
+        // Views are logged by the client via POST /api/web/views when the page
+        // is actually displayed — the page request itself can't be trusted:
+        // hover prefetches would inflate counts, and prefetch-cache hits
+        // would never reach the server at all.
 
         $mapped = Track::mapPublicTrackShow($track);
         if ($mapped['is_downloadable'] != 1) {

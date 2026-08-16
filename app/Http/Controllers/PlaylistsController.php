@@ -101,11 +101,8 @@ class PlaylistsController extends Controller
             return Redirect::action([static::class, 'getPlaylist'], [$id, $playlist->slug]);
         }
 
-        // Hover prefetches must not count as views.
-        if ($request->header('Purpose') !== 'prefetch') {
-            ResourceLogItem::logItem('playlist', $playlist->id, ResourceLogItem::VIEW);
-            $playlist->view_count++;
-        }
+        // Views are logged by the client via POST /api/web/views (see
+        // TracksController::getTrack for why).
 
         $mapped = Playlist::mapPublicPlaylistShow($playlist);
         if ($request->user()) {

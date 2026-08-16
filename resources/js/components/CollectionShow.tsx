@@ -31,6 +31,12 @@ export function CollectionShow({ kind, data, extraBadges, extraActions }: {
 
     React.useEffect(() => setFavourited(!!data.user_data?.is_favourited), [data.id, data.user_data?.is_favourited]);
 
+    // Log the view now that the page is actually displayed — the Inertia
+    // request itself doesn't count views (hover prefetches would skew them).
+    React.useEffect(() => {
+        void api.post('/views', { type: kind, id: data.id }).catch(() => undefined);
+    }, [kind, data.id]);
+
     const tracks = data.tracks;
     const isCurrentCollection = tracks.some((t) => player.isCurrent(t.id));
     const playing = isCurrentCollection && player.isPlaying;
