@@ -68,11 +68,24 @@ services:
       - QUEUE_CONNECTION=sync
       - MAIL_MAILER=log
       - PONYFM_DATASTORE=/app/storage/app/datastore
+      - INERTIA_SSR_ENABLED=true
+      - INERTIA_SSR_URL=http://ssr:13714
     depends_on:
       - postgres
       - elasticsearch
+      - ssr
     volumes:
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+
+  # Inertia SSR server (Node). inertia-laravel falls back to client-side
+  # rendering automatically if this is down.
+  ssr:
+    build:
+      context: .
+      target: ssr
+    image: ponyfm-ssr
+    profiles: ["app"]
+    platform: linux/amd64
 
   # Escape hatch if your host Node is too new for the gulp 4 / webpack 1
   # toolchain: runs the asset watcher in the same Node the prod image uses.

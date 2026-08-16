@@ -74,17 +74,17 @@ Route::post('/auth/logout', [AuthController::class, 'postLogout']);
 Route::get('/auth/oauth', [AuthController::class, 'getOAuth']);
 
 Route::get('/about', function () {
-    return View::make('pages.about');
+    return Inertia\Inertia::render('static/about');
 });
 Route::get('/faq', function () {
-    return View::make('pages.faq');
+    return Inertia\Inertia::render('static/faq');
 });
 Route::get('/mlpforums-advertising-program', function () {
-    return View::make('pages.mlpforums-advertising-program');
+    return Inertia\Inertia::render('static/mlpforums-advertising-program');
 });
 
 Route::get('/hwc2016-rules', function () {
-    return View::make('pages.hwc-terms');
+    return Inertia\Inertia::render('static/hwc-terms');
 });
 
 Route::get('i{id}/{type}.{extension}', [ImagesController::class, 'getImage'])->where('id', '\d+');

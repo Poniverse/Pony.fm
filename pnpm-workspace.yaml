@@ -1,0 +1,4 @@
+# pnpm settings. esbuild's postinstall places the platform binary, so its
+# build script must be allowed.
+allowBuilds:
+  esbuild: true

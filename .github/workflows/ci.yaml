@@ -17,6 +17,7 @@ jobs:
         id: prep
         run: |
           DOCKER_IMAGE=ghcr.io/poniverse/pony.fm
+          SSR_IMAGE=ghcr.io/poniverse/pony.fm-ssr
           VERSION=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
@@ -26,12 +27,18 @@ jobs:
             VERSION=pr-${{ github.event.number }}
           fi
           TAGS="${DOCKER_IMAGE}:${VERSION}"
+          SSR_TAGS="${SSR_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
             TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
+            SSR_TAGS="$SSR_TAGS,${SSR_IMAGE}:sha-${GITHUB_SHA::8}"
           fi
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          if [ "$VERSION" = "master" ]; then
+            SSR_TAGS="$SSR_TAGS,${SSR_IMAGE}:latest"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+          echo "ssr_tags=${SSR_TAGS}" >> "$GITHUB_OUTPUT"
+          echo "created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -49,6 +56,22 @@ jobs:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
+          cache-from: type=registry,ref=ghcr.io/poniverse/pony.fm:master
+          cache-to: type=inline
+          labels: |
+            org.opencontainers.image.source=${{ github.event.repository.html_url }}
+            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      # The SSR sidecar shares the Dockerfile (and its layer cache) but stops
+      # at the `ssr` target; docker-compose.prod.yaml pulls it as pony.fm-ssr.
+      - name: Build and push SSR image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: ssr
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.prep.outputs.ssr_tags }}
           cache-from: type=registry,ref=ghcr.io/poniverse/pony.fm:master
           cache-to: type=inline
           labels: |

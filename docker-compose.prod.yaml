@@ -1,7 +1,11 @@
 # Production compose file — web container plus Valkey; Postgres and
 # Elasticsearch are expected to be provided externally.
 #
-#   docker compose -f docker-compose.prod.yaml up -d
+#   IMAGE_TAG=sha-abc12345 docker compose -f docker-compose.prod.yaml up -d
+#
+# IMAGE_TAG selects the app + SSR images (CI publishes both per commit with
+# matching tags) and is required — compose refuses to start without it rather
+# than silently running :latest.
 #
 # Configuration comes from .env via `env_file`, which injects the values as
 # container environment variables — it does NOT mount a .env file into the
@@ -20,7 +24,7 @@
 
 services:
   web:
-    image: ghcr.io/poniverse/pony.fm:sha-9b589f2b
+    image: ghcr.io/poniverse/pony.fm:${IMAGE_TAG:?IMAGE_TAG is required}
     command:
       - web
     restart: unless-stopped
@@ -32,6 +36,15 @@ services:
       - /mnt/ponyfm-production-datastore:/app/storage/app/datastore
     depends_on:
       - valkey
+      - ssr
+
+  # Inertia SSR server, published by CI from the Dockerfile's `ssr` target.
+  # Set INERTIA_SSR_ENABLED=true and INERTIA_SSR_URL=http://ssr:13714 in .env
+  # to turn server rendering on; the app degrades to client-side rendering
+  # whenever this is unreachable.
+  ssr:
+    image: ghcr.io/poniverse/pony.fm-ssr:${IMAGE_TAG:?IMAGE_TAG is required}
+    restart: unless-stopped
 
   # Redis-compatible store for cache/sessions/queues. Reachable from the web
   # container as "valkey" — set REDIS_HOST=valkey in .env. Not exposed on the

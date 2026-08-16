@@ -4,3 +4,6 @@ vendor/
 .history/
 .idea/
 .env
+public/assets/
+bootstrap/ssr/
+public/build/

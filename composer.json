@@ -23,7 +23,8 @@
         "league/oauth2-client": "^2.7",
         "laravel/tinker": "^3.0",
         "james-heinrich/getid3": "^1.9.23",
-        "laravel/octane": "^2.19"
+        "laravel/octane": "^2.19",
+        "inertiajs/inertia-laravel": "^3.3"
     },
     "require-dev": {
         "mockery/mockery": "^1.6",
@@ -57,7 +58,7 @@
     "scripts": {
         "serve": [
             "Composer\\Config::disableProcessTimeout",
-            "PATH=\"$PWD/docker/bin:$PATH\" php -d upload_max_filesize=600M -d post_max_size=600M -S 127.0.0.1:8000 -t public server.php"
+            "PATH=\"$PWD/docker/bin:$PATH\" PHP_CLI_SERVER_WORKERS=\"${PHP_CLI_SERVER_WORKERS:-8}\" php -d upload_max_filesize=600M -d post_max_size=600M -d max_execution_time=0 -S \"${SERVE_HOST:-127.0.0.1}:${SERVE_PORT:-8000}\" -t public server.php"
         ],
         "queue": [
             "Composer\\Config::disableProcessTimeout",
