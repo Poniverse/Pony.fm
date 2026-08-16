@@ -21,6 +21,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Inertia\Inertia;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -55,5 +56,32 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Render web-facing error pages through Inertia so they get the app
+     * shell; API routes and debug-mode server errors keep the default
+     * behaviour.
+     */
+    public function render($request, Throwable $e)
+    {
+        $response = parent::render($request, $e);
+        $status = $response->getStatusCode();
+
+        if ($request->is('api/*') || $request->expectsJson()) {
+            return $response;
+        }
+
+        if ($status >= 500 && config('app.debug')) {
+            return $response;
+        }
+
+        if (in_array($status, [400, 403, 404, 500, 503], true)) {
+            return Inertia::render('errors/error', ['status' => $status])
+                ->toResponse($request)
+                ->setStatusCode($status);
+        }
+
+        return $response;
     }
 }
