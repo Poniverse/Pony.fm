@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/design-system/primiti
 import { cn } from '@/lib/utils';
 import { Transport } from './Transport';
 import { IconButton } from '../core/IconButton';
+import { Img } from '../core/Img';
 import { PonyfmMark } from '../core/PonyfmMark';
 import type { Track } from './TrackRow';
 
@@ -67,11 +68,15 @@ export function PlayerBar({ track, playing, progress = 0, buffered = 0, elapsed 
           track && onOpen && 'cursor-pointer',
         );
         const artContent = track ? (
-          <img
-            src={t.cover}
-            alt={t.title}
-            className={cn('pfm-anim size-full rounded-full object-cover', playing && 'animate-[pfm-spin_7s_linear_infinite]')}
-          />
+          <>
+            {/* Mark shows through until the cover loads (or if it fails). */}
+            <PonyfmMark className="absolute size-7" aria-hidden="true" />
+            <Img
+              src={t.cover}
+              alt={t.title}
+              className={cn('pfm-anim relative size-full rounded-full object-cover', playing && 'animate-[pfm-spin_7s_linear_infinite]')}
+            />
+          </>
         ) : (
           <PonyfmMark className="size-7" />
         );

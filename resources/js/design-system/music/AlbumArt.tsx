@@ -1,6 +1,7 @@
 import React from 'react';
 import { Music, Pause, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Img } from '../core/Img';
 import { Loader } from '../core/Loader';
 
 const S = { xs: 32, sm: 44, md: 64, lg: 120, xl: 260 } as const;
@@ -25,8 +26,9 @@ export function AlbumArt({ src, alt = '', size = 'md', playing, onPlay, loading,
     <span
       className={cn('group relative block flex-none overflow-hidden bg-surface-3 shadow-(--ring-inset)', vinyl ? 'rounded-full' : 'rounded-art')}
       style={{ width: px, height: px }}>
-      {src ? <img className={cn('pfm-anim block size-full object-cover', vinyl && playing && 'animate-[pfm-spin_7s_linear_infinite]')} src={src} alt={alt} />
-        : <span className="absolute inset-0 grid place-items-center text-faint" aria-hidden="true"><Music style={{ width: Math.max(12, px * 0.3), height: Math.max(12, px * 0.3) }} /></span>}
+      {/* Icon underlay shows until the art has loaded (or if it fails). */}
+      <span className="absolute inset-0 grid place-items-center text-faint" aria-hidden="true"><Music style={{ width: Math.max(12, px * 0.3), height: Math.max(12, px * 0.3) }} /></span>
+      {src ? <Img className={cn('pfm-anim relative block size-full object-cover', vinyl && playing && 'animate-[pfm-spin_7s_linear_infinite]')} src={src} alt={alt} /> : null}
       {vinyl ? <span aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-surface-1 shadow-[0_0_0_1px_rgba(0,0,0,0.35)]" style={{ width: Math.max(5, px * 0.14), height: Math.max(5, px * 0.14) }} /> : null}
       {onPlay ? (
         <button type="button" aria-label={playing ? 'Pause' : 'Play'} onClick={onPlay}

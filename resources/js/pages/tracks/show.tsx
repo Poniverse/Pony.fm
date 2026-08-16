@@ -14,6 +14,7 @@ import { Markdown } from '@/lib/markdown';
 import { api } from '@/lib/api';
 import { formatDate, formatDuration } from '@/lib/format';
 import { IconButton } from '@/design-system/core/IconButton';
+import { Img } from '@/design-system/core/Img';
 import { AddToPlaylist } from '@/components/AddToPlaylist';
 import { CommentsSection } from '@/components/CommentsSection';
 import { FavouriteButton } from '@/components/FavouriteButton';
@@ -142,7 +143,7 @@ export default function TrackShowPage({ track }: { track: TrackShow }) {
             <ShareDialog open={share} onClose={() => setShare(false)} title="this track" subtitle={track.title + ' · ' + track.user.name} share={track.share} />
 
             <Dialog open={lightbox} title={track.title} onClose={() => setLightbox(false)} width={720}>
-                <img src={track.covers.original} alt={track.title + ' cover art, full size'} className="block w-full" />
+                <Img src={track.covers.original} alt={track.title + ' cover art, full size'} className="block aspect-square w-full bg-surface-3 object-cover" />
             </Dialog>
         </div>
     );

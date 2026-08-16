@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { Check, Music, Pencil, Upload } from 'lucide-react';
+import { Img } from '@/design-system/core/Img';
 import AppLayout from '@/layouts/AppLayout';
 import { AccountHeader } from '@/components/AccountHeader';
 import { TrackEditor } from '@/components/TrackEditor';
@@ -58,7 +59,7 @@ export default function AccountTracksPage({ accountSlug, tracks, editId }: Accou
                         <div key={t.id}
                             className="flex items-center gap-3 rounded-sm px-2.5 py-2 transition-[background] duration-(--dur-fast) ease-(--ease-standard) hover:bg-surface-hover">
                             <Link href={base + '/edit/' + t.id} className="flex min-w-0 flex-1 items-center gap-3 no-underline">
-                                <img src={t.cover_url} alt="" className="h-10 w-10 flex-none rounded-art" />
+                                <Img src={t.cover_url} alt="" className="size-10 flex-none rounded-art bg-surface-3" />
                                 <span className="grid min-w-0 flex-1 gap-0.5">
                                     <span className="truncate text-sm font-semibold text-heading">{t.title}</span>
                                     <span className="text-2xs text-faint">
