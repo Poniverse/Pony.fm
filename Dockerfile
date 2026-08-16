@@ -1,4 +1,4 @@
-FROM jrottenberg/ffmpeg:4.3-alpine312 AS ffmpeg
+FROM jrottenberg/ffmpeg:7.1-alpine320 AS ffmpeg
 
 FROM alpine:3.12 AS atomicparsley_builder
 
@@ -31,7 +31,7 @@ COPY resources /app/resources/
 
 RUN gulp build
 
-FROM php:8.0-fpm-alpine
+FROM dunglas/frankenphp:1-php8.4-alpine
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
 
@@ -43,16 +43,21 @@ COPY --from=atomicparsley_builder /tmp/atomicparsley/AtomicParsley /usr/local/bi
 RUN apk update
 
 ## Common libraries required for ffmpeg & atomicparsley` to work
-RUN apk add libgcc libstdc++ ca-certificates libcrypto1.1 libssl1.1 libgomp expat git
-RUN apk add nginx sudo
+RUN apk add libgcc libstdc++ ca-certificates libcrypto3 libssl3 libgomp expat git
+RUN apk add sudo
 
-# Install php extensions
-RUN install-php-extensions mysqli pgsql pdo_mysql pdo_pgsql gmp gmagick redis
+# Install php extensions. gd is for color-thief (avatar colour extraction);
+# image resizing shells out to imagemagick's convert.
+RUN install-php-extensions mysqli pgsql pdo_mysql pdo_pgsql gmp gd redis pcntl opcache
 
 # not sure why but this needs to be after the php extensions otherwise some kind of dependency issue occurs
 RUN apk add imagemagick
 
-RUN mkdir /app && chown -R www-data: /app
+# Caddy (inside FrankenPHP) needs writable state dirs when running as www-data.
+RUN mkdir -p /config /data && chown -R www-data: /config /data
+
+# The frankenphp base image ships /app as its default workdir.
+RUN mkdir -p /app && chown -R www-data: /app
 
 USER www-data
 WORKDIR /app
@@ -66,6 +71,11 @@ COPY --chown=www-data --from=assets_builder /app /app
 COPY --chown=www-data . /app
 
 RUN composer dump-autoload -o
+
+# Octane's stub Caddyfile serves the worker from {$APP_PUBLIC_PATH};
+# this is the same copy `octane:install` performs, minus its side effects.
+RUN cp vendor/laravel/octane/src/Commands/stubs/frankenphp-worker.php public/frankenphp-worker.php
+
 RUN php artisan optimize
 
 USER root
@@ -73,11 +83,8 @@ USER root
 # Remove files no longer needed on the host
 RUN rm /usr/bin/composer /usr/bin/install-php-extensions
 
-COPY docker/nginx/site.conf /etc/nginx/http.d/default.conf
-
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/php.ini
-COPY docker/php/php.ini /usr/local/etc/php-fpm.d/php.ini
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["docker/entrypoint.sh"]

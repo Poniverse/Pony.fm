@@ -205,17 +205,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @param AccessToken $accessToken
      */
-    public function setAccessToken(AccessToken $accessToken)
-    {
-        DB::table('oauth2_tokens')
-            ->where('user_id', '=', $this->id)
-            ->update([
-                'access_token' => $accessToken->getToken(),
-                'refresh_token' => $accessToken->getRefreshToken(),
-                'expires' => Carbon::createFromTimestampUTC($accessToken->getExpires()),
-                // NOTE: external_user_id does not get updated!
-            ]);
-    }
 
     /**
      * Takes the given string, slugifies it, and increments a counter if needed
@@ -262,7 +251,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public static function findOrCreate(
         string $username,
         string $displayName,
-        string $email = null,
+        ?string $email = null,
         bool $createArchivedUser = false
     ) {
         $user = static::where(DB::raw('LOWER(username)'), Str::lower($username));

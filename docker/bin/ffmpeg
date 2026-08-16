@@ -8,7 +8,7 @@
 
 set -e
 
-IMAGE=jrottenberg/ffmpeg:4.3-alpine312
+IMAGE=jrottenberg/ffmpeg:7.1-alpine320
 
 exec docker run --rm -i \
   -v "$PWD:$PWD" \

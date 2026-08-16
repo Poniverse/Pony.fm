@@ -27,7 +27,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use SerializesModels;
+use Illuminate\Queue\SerializesModels;
 
 /**
  * Class RenameGenre.

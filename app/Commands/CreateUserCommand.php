@@ -34,7 +34,7 @@ class CreateUserCommand extends CommandBase
     public function __construct(
         string $username,
         string $displayName,
-        string $email = null,
+        ?string $email = null,
         bool $createArchivedUser = false
     ) {
         $this->username = $username;

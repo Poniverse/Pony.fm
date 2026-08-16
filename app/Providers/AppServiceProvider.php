@@ -21,14 +21,13 @@
 namespace App\Providers;
 
 use App\Library\Search;
+use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use PfmValidator;
-use Poniverse;
-
-use App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -51,13 +50,29 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(\Poniverse::class, function (Application $app) {
-            return new \Poniverse($app['config']->get('poniverse.client_id'), $app['config']->get('poniverse.secret'));
+        $this->app->singleton(Client::class, function (Application $app) {
+            $connection = $app['config']->get('elasticsearch.defaultConnection', 'default');
+            $config = $app['config']->get("elasticsearch.connections.{$connection}");
+
+            $hosts = array_map(function (array $host) {
+                return array_filter(
+                    array_intersect_key($host, array_flip(['host', 'port', 'scheme', 'path', 'user', 'pass'])),
+                    fn ($value) => $value !== null
+                );
+            }, $config['hosts']);
+
+            $builder = ClientBuilder::create()->setHosts($hosts);
+
+            if (!empty($config['retries'])) {
+                $builder->setRetries($config['retries']);
+            }
+
+            return $builder->build();
         });
 
         $this->app->bind(Search::class, function (Application $app) {
             return new Search(
-                \Elasticsearch::connection(),
+                $app->make(Client::class),
                 $app['config']->get('ponyfm.elasticsearch_index')
             );
         });

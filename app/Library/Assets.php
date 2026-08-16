@@ -50,7 +50,7 @@ class Assets
     {
         if (! config('app.debug')) {
             return '<script>document.write(\'<link rel="stylesheet" href="build/styles/'.$area.'.css?'.
-                   filemtime(public_path("/build/styles/${area}.css"))
+                   filemtime(public_path("/build/styles/{$area}.css"))
                    .'" />\');</script>';
         }
 
@@ -59,7 +59,7 @@ class Assets
 
         foreach ($styles as $style) {
             $filename = self::replaceExtensionWith($style, '.less', '.css');
-            $retVal .= "<link rel='stylesheet' href='/build/styles/$filename?".filemtime(public_path("/build/styles/${filename}"))."' />";
+            $retVal .= "<link rel='stylesheet' href='/build/styles/$filename?".filemtime(public_path("/build/styles/{$filename}"))."' />";
         }
 
         return $retVal;

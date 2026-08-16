@@ -50,19 +50,11 @@ class ImagesController extends Controller
             return redirect()->to($redirect);
         }
 
-        if (config('app.sendfile')) {
-            $response->header('X-Sendfile', $filename);
-        } else {
-            $response->header('X-Accel-Redirect', $filename);
-        }
-
-        $response->header('Content-Disposition', "filename=\"ponyfm-i${id}-${type}.{$image->extension}\"");
+        $response->header('X-Accel-Redirect', $filename);
+        $response->header('Content-Disposition', "filename=\"ponyfm-i{$id}-{$type}.{$image->extension}\"");
         $response->header('Content-Type', $image->mime);
-
-        $lastModified = filemtime($filename);
-
-        $response->header('Last-Modified', $lastModified);
         $response->header('Cache-Control', 'max-age='.(60 * 60 * 24 * 7));
+        $response->setLastModified(\DateTimeImmutable::createFromFormat('U', (string) filemtime($filename)));
 
         return $response;
     }

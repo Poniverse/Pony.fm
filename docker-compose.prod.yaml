@@ -1,0 +1,50 @@
+# Production compose file — web container plus Valkey; Postgres and
+# Elasticsearch are expected to be provided externally.
+#
+#   docker compose -f docker-compose.prod.yaml up -d
+#
+# Configuration comes from .env via `env_file`, which injects the values as
+# container environment variables — it does NOT mount a .env file into the
+# container. That distinction matters: the entrypoint only re-runs
+# `php artisan optimize` (rebuilding the config cache from the environment)
+# when no .env file exists in /app. A mounted .env would be ignored in favour
+# of the config cache baked into the image at build time.
+#
+# The datastore lives on the host at /mnt/ponyfm-production-datastore, bound
+# onto the container's default datastore path. It must be that path inside
+# the container (not the host path): the app sends the raw file path as
+# X-Accel-Redirect, and the image's nginx config only serves
+# /app/storage/app/datastore internally — anywhere else 404s under
+# USE_SENDFILE=true. Leave PONYFM_DATASTORE unset in .env (the default is
+# already /app/storage/app/datastore).
+
+services:
+  web:
+    image: ghcr.io/poniverse/pony.fm:sha-9b589f2b
+    command:
+      - web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-80}:80"
+    env_file:
+      - .env
+    volumes:
+      - /mnt/ponyfm-production-datastore:/app/storage/app/datastore
+    depends_on:
+      - valkey
+
+  # Redis-compatible store for cache/sessions/queues. Reachable from the web
+  # container as "valkey" — set REDIS_HOST=valkey in .env. Not exposed on the
+  # host.
+  valkey:
+    image: valkey/valkey:9-alpine
+    restart: unless-stopped
+    command:
+      - valkey-server
+      - --appendonly
+      - "yes"
+    volumes:
+      - valkey-data:/data
+
+volumes:
+  valkey-data:

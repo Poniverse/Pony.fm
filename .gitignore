@@ -14,3 +14,8 @@ npm-debug.log
 yarn-error.log
 /composer.phar
 .phpstorm.meta.php
+.phpunit.result.cache
+
+**/caddy
+frankenphp
+frankenphp-worker.php

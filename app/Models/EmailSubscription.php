@@ -20,7 +20,7 @@
 
 namespace App\Models;
 
-use Alsofronie\Uuid\UuidModelTrait;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,7 +50,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class EmailSubscription extends Model
 {
-    use UuidModelTrait, SoftDeletes;
+    use HasUuids, SoftDeletes;
     // Non-sequential UUID's are desirable for this model.
     protected $uuidVersion = 4;
 

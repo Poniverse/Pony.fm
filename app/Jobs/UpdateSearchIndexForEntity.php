@@ -20,7 +20,7 @@
 
 namespace App\Jobs;
 
-use Elasticsearch;
+use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -61,13 +61,13 @@ class UpdateSearchIndexForEntity extends Job implements ShouldQueue
 
     private function createOrUpdateElasticsearchEntry()
     {
-        Elasticsearch::connection()->index($this->elasticsearchBody);
+        app(Client::class)->index($this->elasticsearchBody);
     }
 
     private function deleteElasticsearchEntry()
     {
         try {
-            Elasticsearch::connection()->delete($this->elasticsearchBody);
+            app(Client::class)->delete($this->elasticsearchBody);
         } catch (Missing404Exception $e) {
             // If the entity we're trying to delete isn't indexed in Elasticsearch,
             // that's fine.

@@ -72,7 +72,6 @@ Route::get('/register', [AccountController::class, 'getRegister']);
 Route::get('/login', [AuthController::class, 'getLogin']);
 Route::post('/auth/logout', [AuthController::class, 'postLogout']);
 Route::get('/auth/oauth', [AuthController::class, 'getOAuth']);
-Route::post('/auth/poniverse-sync', [AuthController::class, 'postPoniverseAccountSync'])->middleware('throttle:60,1');
 
 Route::get('/about', function () {
     return View::make('pages.about');
@@ -108,11 +107,6 @@ Route::prefix('api/v1')->middleware('json-exceptions')->group(function () {
     Route::get('/tracks/radio-details/{hash}', [V1\TracksController::class, 'getTrackRadioDetails']);
     Route::post('/tracks/radio-details/{hash}', [V1\TracksController::class, 'getTrackRadioDetails']);
     Route::get('/tracks/{id}', [V1\TracksController::class, 'getTrackDetails'])->where('id', '\d+');
-
-    Route::middleware('auth.oauth:ponyfm:tracks:upload')->group(function () {
-        Route::post('tracks', [V1\TracksController::class, 'postUploadTrack']);
-        Route::get('/tracks/{id}/upload-status', [V1\TracksController::class, 'getUploadStatus']);
-    });
 });
 
 Route::prefix('api/web')->middleware('cors')->group(function () {

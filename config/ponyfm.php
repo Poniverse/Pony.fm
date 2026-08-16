@@ -17,20 +17,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Use sendfile?
-    |--------------------------------------------------------------------------
-    |
-    | sendfile is a way of letting the web server serve files that aren't
-    | normally in its document root. If the web server is configured for it,
-    | use this setting - otherwise, track files and images will be served by
-    | the PHP process.
-    |
-    */
-
-    'sendfile' => env('USE_SENDFILE', true),
-
-    /*
-    |--------------------------------------------------------------------------
     | Google Analytics ID
     |--------------------------------------------------------------------------
     |
@@ -120,16 +106,23 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Indexing queue name
+     | Web Push (VAPID) keys
      |--------------------------------------------------------------------------
      |
-     | Google Cloud Messaging API key. Needs to be generated in the Google Cloud
-     | Console as a browser key. This is used to send notifications to users
-     | with push notifications enabled.
+     | VAPID keypair used to send push notifications to users who have
+     | enabled them. Generate a keypair with:
+     |
+     |     vendor/bin/web-push generate-vapid-keys
+     |
+     | Push notifications are disabled when no keypair is configured.
      |
      */
 
-    'gcm_key' => env('GCM_KEY', 'default'),
+    'vapid' => [
+        'subject' => env('VAPID_SUBJECT', env('APP_URL', 'https://pony.fm')),
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
+    ],
 
     /*
      |--------------------------------------------------------------------------

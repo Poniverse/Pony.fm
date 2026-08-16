@@ -2,7 +2,7 @@
 # runs on the host (see DOCKER-README.md).
 #
 # Optional profiles:
-#   --profile queue    beanstalkd, for QUEUE_CONNECTION=beanstalkd
+#   --profile queue    redis, for QUEUE_CONNECTION=redis
 #   --profile app      the app itself, built from the production image
 #   --profile assets   gulp watcher in a Node 12 container
 
@@ -35,13 +35,15 @@ services:
     ports:
       - "${ELASTICSEARCH_PORT:-9200}:9200"
 
-  beanstalkd:
-    image: schickling/beanstalkd
+  redis:
+    image: redis:7-alpine
     profiles: ["queue"]
     ports:
-      - "11300:11300"
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
 
-  # Prod-like smoke test: runs the baked image (nginx + php-fpm + ffmpeg +
+  # Prod-like smoke test: runs the baked image (FrankenPHP/Octane + ffmpeg +
   # AtomicParsley in one container), no code mounts.
   #   docker compose --profile app up -d --build
   web:
@@ -50,7 +52,7 @@ services:
     profiles: ["app"]
     platform: linux/amd64
     ports:
-      - "8000:80"
+      - "8000:8080"
     command:
       - web
     environment:
@@ -71,7 +73,6 @@ services:
       - elasticsearch
     volumes:
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
-      - ./docker/php/php.ini:/usr/local/etc/php-fpm.d/php.ini:ro
 
   # Escape hatch if your host Node is too new for the gulp 4 / webpack 1
   # toolchain: runs the asset watcher in the same Node the prod image uses.
@@ -97,4 +98,5 @@ services:
 volumes:
   postgres-data:
   elasticsearch-data:
+  redis-data:
   assets-node-modules:

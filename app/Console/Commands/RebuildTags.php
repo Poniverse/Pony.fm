@@ -64,7 +64,7 @@ class RebuildTags extends Command
 
         $numberOfTracks = count($tracks);
 
-        $this->info("Updating tags for ${numberOfTracks} tracks...");
+        $this->info("Updating tags for {$numberOfTracks} tracks...");
         $bar = $this->output->createProgressBar($numberOfTracks);
 
         foreach ($tracks as $track) {

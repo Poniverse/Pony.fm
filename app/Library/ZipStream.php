@@ -55,38 +55,20 @@ class ZipStream
      * @param string $archiveName Name to send to the HTTP client.
      * @param string $contentType Content mime type. Optional, defaults to "application/zip".
      */
+    /**
+     * The archive is written straight to the output stream, so this class
+     * must be used inside a StreamedResponse callback - response headers
+     * (Content-Type, Content-Disposition) are the response's concern.
+     */
     public function __construct($archiveName = '', $contentType = 'application/zip')
     {
-        if (! function_exists('sys_get_temp_dir')) {
-            die('ERROR: ZipStream '.self::VERSION.' requires PHP version 5.2.1 or above.');
-        }
-
-        $headerFile = null;
-        $headerLine = null;
-        if (! headers_sent($headerFile, $headerLine) or die("<p><strong>Error:</strong> Unable to send file $archiveName. HTML Headers have already been sent from <strong>$headerFile</strong> in line <strong>$headerLine</strong></p>")) {
-            if ((ob_get_contents() === false || ob_get_contents() == '') or die("\n<p><strong>Error:</strong> Unable to send file <strong>$archiveName.epub</strong>. Output buffer contains the following text (typically warnings or errors):<br>".ob_get_contents().'</p>')) {
-                if (ini_get('zlib.output_compression')) {
-                    ini_set('zlib.output_compression', 'Off');
-                }
-
-                header('Pragma: public');
-                header('Last-Modified: '.gmdate('D, d M Y H:i:s T'));
-                header('Expires: 0');
-                header('Accept-Ranges: bytes');
-                //header("Connection: Keep-Alive");
-                header('Content-Type: '.$contentType);
-                header('Content-Disposition: attachment; filename="'.$archiveName.'";');
-                header('Content-Transfer-Encoding: binary');
-                flush();
-            }
-        }
+        //
     }
 
     public function __destruct()
     {
         $this->isFinalized = true;
         $this->cdRec = null;
-        exit;
     }
 
     /**

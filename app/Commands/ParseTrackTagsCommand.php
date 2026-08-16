@@ -280,8 +280,8 @@ class ParseTrackTagsCommand extends CommandBase
             // write temporary image file
             $tmpPath = config('ponyfm.files_directory').'/tmp';
 
-            $filename = $file->getFilename().".cover.${extension}";
-            $imageFilePath = "${tmpPath}/${filename}";
+            $filename = $file->getFilename().".cover.{$extension}";
+            $imageFilePath = "{$tmpPath}/{$filename}";
 
             File::put($imageFilePath, $image['data']);
             $imageFile = new UploadedFile($imageFilePath, $filename, $image['image_mime']);
