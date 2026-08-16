@@ -158,7 +158,7 @@ function Shell({ children }: { children: React.ReactNode }) {
             items: [
                 { label: 'About', icon: Info, href: '/about', active: path === '/about' },
                 { label: 'FAQ', icon: CircleHelp, href: '/faq', active: path === '/faq' },
-                { label: 'Forum', icon: ExternalLink, href: 'https://mlpforums.com/forum/42-music/' },
+                { label: 'Forum', icon: ExternalLink, href: 'https://mlpforums.com/forum/62-ponyfm/' },
             ],
         },
         // On mobile the top bar is just burger + search; the upload action
