@@ -15,28 +15,56 @@
 # of the config cache baked into the image at build time.
 #
 # The datastore lives on the host at /mnt/ponyfm-production-datastore, bound
-# onto the container's default datastore path. It must be that path inside
-# the container (not the host path): the app sends the raw file path as
-# X-Accel-Redirect, and the image's nginx config only serves
-# /app/storage/app/datastore internally — anywhere else 404s under
-# USE_SENDFILE=true. Leave PONYFM_DATASTORE unset in .env (the default is
-# already /app/storage/app/datastore).
+# to /mnt/datastore inside the container — the same layout the legacy stack
+# uses, so both stacks can share one .env. PONYFM_DATASTORE=/mnt/datastore
+# MUST be set in .env: the app derives file paths from it and sends them as
+# X-Accel-Redirect, and Caddy (docker/frankenphp/Caddyfile) reads the same
+# variable to decide which paths it will serve — if they disagree, downloads
+# and images come back empty under USE_SENDFILE=true.
+
+# While the legacy stack runs alongside this one, the shared Postgres database
+# is fine but cache and queues must not collide: the legacy stack uses Redis
+# DBs 0 (queues) and 1 (cache), so this stack is pinned to 2 and 3. Set here
+# rather than in .env so the isolation can't be lost by a stale .env edit.
 
 services:
-  web:
+  web2:
     image: ghcr.io/poniverse/pony.fm:${IMAGE_TAG:?IMAGE_TAG is required}
     command:
       - web
     restart: unless-stopped
     ports:
-      - "${WEB_PORT:-80}:80"
+      # Octane/FrankenPHP listens on 8080 inside the container (see
+      # docker/entrypoint.sh), not 80 like the old nginx image. Named
+      # WEB2_PORT so it can't collide with the legacy stack's WEB_PORT
+      # while both run from one compose project.
+      - "${WEB2_PORT:-8080}:8080"
     env_file:
       - .env
+    environment:
+      REDIS_DB: "2"
+      REDIS_CACHE_DB: "3"
     volumes:
-      - /mnt/ponyfm-production-datastore:/app/storage/app/datastore
+      - /mnt/ponyfm-production-datastore:/mnt/datastore
     depends_on:
       - valkey
       - ssr
+
+  # Queue worker: track encoding, notifications, and search indexing jobs.
+  worker2:
+    image: ghcr.io/poniverse/pony.fm:${IMAGE_TAG:?IMAGE_TAG is required}
+    command:
+      - worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      REDIS_DB: "2"
+      REDIS_CACHE_DB: "3"
+    volumes:
+      - /mnt/ponyfm-production-datastore:/mnt/datastore
+    depends_on:
+      - valkey
 
   # Inertia SSR server, published by CI from the Dockerfile's `ssr` target.
   # Set INERTIA_SSR_ENABLED=true and INERTIA_SSR_URL=http://ssr:13714 in .env
