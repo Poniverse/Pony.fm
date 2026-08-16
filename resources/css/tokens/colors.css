@@ -1,0 +1,116 @@
+:root {
+  /* ---- Brand hues, carried over from resources/styles/variables.less ---- */
+  --pfm-purple: #b885bd;        /* @pfm-purple */
+  --pfm-purple-deep: #84528a;   /* sidebar logotype / player transport */
+  --pfm-purple-light: #dac5db;  /* @pfm-light-purple */
+  --pfm-pink: #c2889c;          /* link + heading pink */
+  --pfm-pink-deep: #c1889e;     /* active tab / pagination */
+
+  /* ---- Purple ramp (new) ---- */
+  --purple-50: #f7f1f8;
+  --purple-100: #ecdcee;
+  --purple-200: #dac5db;
+  --purple-300: #c9a5cd;
+  --purple-400: #b885bd;
+  --purple-500: #a06aa6;
+  --purple-600: #84528a;
+  --purple-700: #6a4170;
+  --purple-800: #4b2e50;
+  --purple-900: #2e1c31;
+
+  /* ---- Pink ramp (new) ---- */
+  --pink-100: #f6e4ea;
+  --pink-200: #e8c2ce;
+  --pink-300: #d5a2b3;
+  --pink-400: #c2889c;
+  --pink-500: #a96b81;
+  --pink-600: #8a5165;
+
+  /* ---- Cool slate neutrals ---- */
+  --slate-000: #ffffff;
+  --slate-025: #f7f8fa;
+  --slate-050: #eef0f4;
+  --slate-100: #e1e4ea;
+  --slate-200: #c8cdd7;
+  --slate-300: #a4abb8;
+  --slate-400: #7d848f;
+  --slate-500: #5d646f;
+  --slate-600: #444b56;
+  --slate-700: #2f353e;
+  --slate-800: #22262d;
+  --slate-850: #1a1d23;
+  --slate-900: #14161b;
+  --slate-950: #0e1014;
+
+  /* ---- Semantic ---- */
+  --status-success: #4c9a6a;
+  --status-warning: #d99a2b;
+  --status-danger: #cf5a52;
+  --status-info: #5a86b8;
+  --status-lossless: #7fb3a8;
+
+  /* ---- Dark theme (default) ---- */
+  --bg-app: #0e1014;
+  --surface-1: #14161b;
+  --surface-2: #1a1d23;
+  --surface-3: #22262d;
+  --surface-raised: #2f353e;
+  --surface-card: var(--surface-2);
+  --surface-hover: rgba(184, 133, 189, 0.10);
+  --surface-active: rgba(184, 133, 189, 0.18);
+  --surface-sunken: #0b0c0f;
+
+  --text-primary: #f2f3f6;
+  --text-body: #d5d9e0;
+  --text-muted: #9aa1ad;
+  --text-faint: #6d747f;
+  --text-on-brand: #ffffff;
+  --text-link: var(--purple-300);
+  --text-link-hover: var(--purple-200);
+
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --border-focus: var(--purple-300);
+
+  --brand-solid: var(--purple-600);
+  --brand-solid-hover: var(--purple-500);
+  --brand-solid-active: var(--purple-700);
+  --brand-quiet: rgba(184, 133, 189, 0.14);
+  --brand-text: var(--purple-300);
+
+  --player-transport-track: rgba(255, 255, 255, 0.14);
+  --player-transport-buffer: rgba(255, 255, 255, 0.28);
+  --player-transport-played: var(--purple-400);
+  --favourite-star: #ffd76e;
+}
+
+[data-theme="light"] {
+  /* Content reads on white; the surrounding chrome (sidebar, top bar,
+     player) sits back on a soft gray so the page isn't a wall of white. */
+  --bg-app: #ffffff;
+  --surface-1: #f3f4f7;
+  --surface-2: #f7f8fa;
+  --surface-3: #eaecf1;
+  --surface-raised: #ffffff;
+  --surface-card: #f7f8fa;
+  --surface-hover: rgba(132, 82, 138, 0.07);
+  --surface-active: rgba(132, 82, 138, 0.13);
+  --surface-sunken: #eaecf1;
+
+  --text-primary: #14161b;
+  --text-body: #2f353e;
+  --text-muted: #5d646f;
+  --text-faint: #7d848f;
+  --text-link: var(--purple-600);
+  --text-link-hover: var(--purple-700);
+
+  --border-subtle: rgba(20, 22, 27, 0.07);
+  --border-default: rgba(20, 22, 27, 0.13);
+  --border-strong: rgba(20, 22, 27, 0.24);
+
+  --brand-text: var(--purple-600);
+  --brand-quiet: rgba(184, 133, 189, 0.18);
+  --player-transport-track: rgba(20, 22, 27, 0.12);
+  --player-transport-buffer: rgba(20, 22, 27, 0.22);
+}

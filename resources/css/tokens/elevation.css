@@ -1,0 +1,21 @@
+:root {
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.40);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --ring-focus: 0 0 0 2px var(--bg-app), 0 0 0 4px var(--purple-400);
+  --ring-inset: inset 0 0 0 1px var(--border-default);
+
+  --scrim-art: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+  --scrim-reveal: linear-gradient(to bottom, rgba(20, 22, 27, 0), rgba(20, 22, 27, 0.98));
+  --blur-overlay: blur(18px) saturate(1.15);
+}
+
+[data-theme="light"] {
+  --shadow-sm: 0 1px 2px rgba(20, 22, 27, 0.10);
+  --shadow-md: 0 2px 6px rgba(20, 22, 27, 0.12);
+  --shadow-lg: 0 8px 24px rgba(20, 22, 27, 0.14);
+  --shadow-pop: 0 12px 32px rgba(20, 22, 27, 0.18);
+  --scrim-reveal: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.98));
+}

@@ -1,0 +1,27 @@
+:root {
+  --dur-instant: 90ms;
+  --dur-fast: 160ms;
+  --dur-normal: 250ms;   /* the legacy site's house duration */
+  --dur-slow: 300ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); /* inherited from forms.less */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --transition-hover: background var(--dur-fast) var(--ease-standard),
+                      color var(--dur-fast) var(--ease-standard),
+                      border-color var(--dur-fast) var(--ease-standard);
+  --press-scale: 0.97;
+}
+
+/* Small, apt motions. Each is opt-in through a component prop, and all of them
+   stop for anyone who asked their OS for less motion. */
+@keyframes pfm-spin { to { transform: rotate(360deg); } }
+@keyframes pfm-eq { 0%, 100% { transform: scaleY(0.35); } 50% { transform: scaleY(1); } }
+@keyframes pfm-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45) rotate(-12deg); }
+  70% { transform: scale(0.92) rotate(6deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pfm-anim { animation: none !important; }
+}
