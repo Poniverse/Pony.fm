@@ -42,7 +42,7 @@ class TracksController extends Controller
         $random = $path === 'tracks/random';
 
         if ($path === 'tracks/popular') {
-            $filters['sort'] = 'plays';
+            $filters['sort'] = 'trending';
         }
 
         $page = max(1, (int) $request->query('page', 1));

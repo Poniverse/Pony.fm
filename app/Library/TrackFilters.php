@@ -29,9 +29,11 @@ class TrackFilters
 {
     public const PER_PAGE = 45;
 
-    /** sort key => [column, direction]; '' is the default (latest). */
+    /** sort key => [column, direction]; '' is the default (latest).
+     *  'trending' has no column — it's handled specially in listTracks. */
     public const SORTS = [
         '' => ['published_at', 'desc'],
+        'trending' => null,
         'plays' => ['play_count', 'desc'],
         'downloads' => ['download_count', 'desc'],
         'favourites' => ['favourite_count', 'desc'],
@@ -127,6 +129,23 @@ class TrackFilters
 
         if ($random) {
             $query->inRandomOrder();
+        } elseif ($filters['sort'] === 'trending') {
+            // Weighted engagement over the last 24 hours — the same formula
+            // as Track::popular on the home page (views 0.1, plays 1,
+            // downloads 2). Tracks with no recent activity fall back to
+            // newest-first below the trending ones.
+            $query->leftJoin(\DB::raw('(
+                SELECT track_id,
+                       SUM(CASE log_type WHEN 1 THEN 0.1 WHEN 3 THEN 1 WHEN 2 THEN 2 ELSE 0 END) AS weight
+                FROM resource_log_items
+                WHERE track_id IS NOT NULL AND created_at > now() - INTERVAL \'1\' DAY
+                GROUP BY track_id
+            ) trending'), 'tracks.id', '=', 'trending.track_id');
+            // Ordering by the output alias keeps DISTINCT (the show-song
+            // filter) happy — Postgres requires ORDER BY expressions to
+            // appear in the select list.
+            $query->orderByRaw('trending_weight DESC');
+            $query->orderBy('published_at', 'desc');
         } else {
             [$column, $direction] = self::SORTS[$filters['sort']];
             $query->orderBy($column, $direction);
@@ -134,8 +153,12 @@ class TrackFilters
 
         $query->take(self::PER_PAGE)->skip(self::PER_PAGE * ($page - 1));
 
+        $columns = ! $random && $filters['sort'] === 'trending'
+            ? ['tracks.*', \DB::raw('COALESCE(trending.weight, 0) AS trending_weight')]
+            : ['tracks.*'];
+
         $tracks = [];
-        foreach ($query->get(['tracks.*']) as $track) {
+        foreach ($query->get($columns) as $track) {
             $tracks[] = Track::mapPublicTrackSummary($track);
         }
 

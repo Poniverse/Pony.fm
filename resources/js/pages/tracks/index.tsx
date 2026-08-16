@@ -28,7 +28,14 @@ export default function TracksIndexPage({ tracks, currentPage, totalPages, filte
     const taxonomies = useTaxonomies();
     const [jump, setJump] = React.useState('');
 
+    // Optimistic copy of the filters: selections mark themselves instantly
+    // while the visit fetches the filtered data; server props re-sync it
+    // when the response lands (and are the source of truth on conflict).
+    const [local, setLocal] = React.useState(filters);
+    React.useEffect(() => setLocal(filters), [filters]);
+
     const apply = (next: TrackFilterState, page = 1) => {
+        setLocal(next);
         const filter = serializeFilters(next);
         router.get('/tracks', {
             ...(filter ? { filter } : {}),
@@ -36,7 +43,7 @@ export default function TracksIndexPage({ tracks, currentPage, totalPages, filte
         }, { preserveState: true, preserveScroll: false });
     };
 
-    const setPage = (page: number) => apply(filters, page);
+    const setPage = (page: number) => apply(local, page);
 
     // Options come from the taxonomies endpoint; entries with no tracks are
     // hidden, matching the old filter dropdowns.
@@ -54,28 +61,28 @@ export default function TracksIndexPage({ tracks, currentPage, totalPages, filte
     const songs = byName(taxonomies?.show_songs, (s) => s.title, (s) => s.id);
 
     const filterSpecs: FilterSpec[] = [
-        { id: 'genres', label: 'Genre', options: genres.options, selected: genres.fromIds(filters.genres) },
-        { id: 'types', label: 'Type', options: types.options, selected: types.fromIds(filters.types) },
-        { id: 'songs', label: 'Show song', options: songs.options, selected: songs.fromIds(filters.songs) },
-        { id: 'vocal', label: 'Vocals', options: ['Yes', 'No'], selected: filters.vocal ? [filters.vocal === 'yes' ? 'Yes' : 'No'] : [] },
-        { id: 'archive', label: 'Archive', options: ARCHIVE_OPTIONS.filter((a) => a.value).map((a) => a.label), selected: filters.archive ? [ARCHIVE_OPTIONS.find((a) => a.value === filters.archive)!.label] : [] },
+        { id: 'genres', label: 'Genre', options: genres.options, selected: genres.fromIds(local.genres) },
+        { id: 'types', label: 'Type', options: types.options, selected: types.fromIds(local.types) },
+        { id: 'songs', label: 'Show song', options: songs.options, selected: songs.fromIds(local.songs) },
+        { id: 'vocal', label: 'Vocals', options: ['Yes', 'No'], selected: local.vocal ? [local.vocal === 'yes' ? 'Yes' : 'No'] : [] },
+        { id: 'archive', label: 'Archive', options: ARCHIVE_OPTIONS.filter((a) => a.value).map((a) => a.label), selected: local.archive ? [ARCHIVE_OPTIONS.find((a) => a.value === local.archive)!.label] : [] },
     ];
 
     const onToggle = (filterId: string, option: string) => {
-        const next = { ...filters };
-        if (filterId === 'genres') { const g = genres.toId(option); if (g) next.genres = toggleId(filters.genres, g.id); }
-        else if (filterId === 'types') { const t = types.toId(option); if (t) next.types = toggleId(filters.types, t.id); }
-        else if (filterId === 'songs') { const s = songs.toId(option); if (s) next.songs = toggleId(filters.songs, s.id); }
-        else if (filterId === 'vocal') { const v = option === 'Yes' ? 'yes' : 'no'; next.vocal = filters.vocal === v ? null : v; }
+        const next = { ...local };
+        if (filterId === 'genres') { const g = genres.toId(option); if (g) next.genres = toggleId(local.genres, g.id); }
+        else if (filterId === 'types') { const t = types.toId(option); if (t) next.types = toggleId(local.types, t.id); }
+        else if (filterId === 'songs') { const s = songs.toId(option); if (s) next.songs = toggleId(local.songs, s.id); }
+        else if (filterId === 'vocal') { const v = option === 'Yes' ? 'yes' : 'no'; next.vocal = local.vocal === v ? null : v; }
         else if (filterId === 'archive') {
             const a = ARCHIVE_OPTIONS.find((x) => x.label === option)?.value as ArchiveKey | '';
-            next.archive = filters.archive === a ? null : (a || null);
+            next.archive = local.archive === a ? null : (a || null);
         }
         apply(next);
     };
 
     const onClear = (filterId: string) => {
-        const next = { ...filters };
+        const next = { ...local };
         if (filterId === 'genres') next.genres = [];
         else if (filterId === 'types') next.types = [];
         else if (filterId === 'songs') next.songs = [];
@@ -98,8 +105,8 @@ export default function TracksIndexPage({ tracks, currentPage, totalPages, filte
                     <div className="w-[190px]">
                         <Select
                             options={SORT_OPTIONS.map((s) => ({ value: s.value, label: 'Sort: ' + s.label }))}
-                            value={filters.sort}
-                            onChange={(e) => apply({ ...filters, sort: e.target.value as SortKey })}
+                            value={local.sort}
+                            onChange={(e) => apply({ ...local, sort: e.target.value as SortKey })}
                         />
                     </div>
                 }

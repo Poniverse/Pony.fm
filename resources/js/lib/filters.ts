@@ -3,7 +3,7 @@
  * /tracks URLs. Mirrors app/Library/TrackFilters.php — keep the two in sync.
  */
 
-export type SortKey = '' | 'plays' | 'downloads' | 'favourites' | 'alphabetical';
+export type SortKey = '' | 'trending' | 'plays' | 'downloads' | 'favourites' | 'alphabetical';
 export type ArchiveKey = 'eqbeats' | 'mlpma' | 'ponify';
 
 export interface TrackFilterState {
@@ -26,6 +26,7 @@ export const DEFAULT_FILTERS: TrackFilterState = {
 
 export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
     { value: '', label: 'Latest' },
+    { value: 'trending', label: 'Popular Today' },
     { value: 'plays', label: 'Most Played' },
     { value: 'downloads', label: 'Most Downloaded' },
     { value: 'favourites', label: 'Most Favourited' },
