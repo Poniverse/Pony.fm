@@ -28,12 +28,12 @@
     <meta property="fb:admins" content="1165335382" />
     <base href="/" />
 
-    {!! Assets::styleIncludes('embed') !!}
+    @vite(['resources/css/embed.css', 'resources/js/embed.ts'])
 </head>
 <body>
     @if($track->explicit && !(Auth::check() && Auth::user()->can_see_explicit_content))
         <div class="explicit alert alert-danger">
-            <em>Enable explicit content in <a href="{{ URL::to('/account/settings') }}" target="_blank">your account</a> to play this track.</em>
+            <em>Enable explicit content in <a href="{{ URL::to(Auth::check() ? '/'.Auth::user()->slug.'/account' : '/login') }}" target="_blank">your account</a> to play this track.</em>
             <div class="stats">
                 <span>Hosted by <a href="{{URL::to('/')}}" target="_blank">Pony.fm</a></span>
             </div>
@@ -62,7 +62,6 @@
         </div>
     @endif
 
-    {!! Assets::scriptIncludes('embed') !!}
 
     @if(config('ponyfm.google_analytics_id'))
         <script type="text/javascript">

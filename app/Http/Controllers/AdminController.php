@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0.
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,42 +20,56 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\View;
+use App\Models\Announcement;
+use App\Models\Genre;
+use App\Models\ShowSong;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class AdminController extends Controller
 {
     public function getIndex()
     {
-        return view('shared.null');
+        return Redirect::to('/admin/genres');
     }
 
     public function getGenres()
     {
-        return view('shared.null');
+        $genres = Genre::with(['trackCountRelation' => fn ($query) => $query->withTrashed()])
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('admin/genres', ['genres' => $genres->toArray()]);
     }
 
     public function getTracks()
     {
-        return view('shared.null');
+        return Inertia::render('admin/tracks');
     }
 
     public function getShowSongs()
     {
-        return view('shared.null');
+        $songs = ShowSong::with('trackCountRelation')
+            ->orderBy('title')
+            ->get();
+
+        return Inertia::render('admin/show-songs', ['songs' => $songs->toArray()]);
     }
 
     public function getUsers()
     {
-        return view('shared.null');
+        return Inertia::render('admin/users');
     }
 
     public function getClassifierQueue()
     {
-        return view('shared.null');
+        return Inertia::render('admin/unclassified');
     }
 
     public function getAnnouncements()
     {
-        return view('shared.null');
+        return Inertia::render('admin/announcements', [
+            'announcements' => Announcement::orderByDesc('start_time')->get()->toArray(),
+        ]);
     }
 }

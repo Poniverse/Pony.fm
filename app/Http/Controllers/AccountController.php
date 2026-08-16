@@ -20,15 +20,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class AccountController extends Controller
 {
-    public function getIndex()
+    public function getIndex(Request $request, $slug)
     {
-        return view('shared.null');
+        $user = User::whereSlug($slug)->whereNull('disabled_at')->firstOrFail();
+        Gate::authorize('edit', $user);
+
+        return Inertia::render('account/settings', [
+            'accountSlug' => $user->slug,
+            'settings' => [
+                'id' => $user->id,
+                'bio' => $user->bio,
+                'can_see_explicit_content' => $user->can_see_explicit_content == 1,
+                'display_name' => $user->display_name,
+                'slug' => $user->slug,
+                'username' => $user->username,
+                'gravatar' => $user->gravatar ? $user->gravatar : $user->email,
+                'avatar_url' => ! $user->uses_gravatar ? $user->getAvatarUrl() : null,
+                'uses_gravatar' => $user->uses_gravatar == 1,
+                'notification_email' => $user->email,
+                'notifications' => $user->getNotificationSettings(),
+            ],
+        ]);
     }
 
     public function getRegister()

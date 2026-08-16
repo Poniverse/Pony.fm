@@ -49,9 +49,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Announcement extends Model
 {
+    public $timestamps = false;
+
+    protected $fillable = ['title', 'text_content', 'announcement_type_id', 'start_time', 'end_time'];
+
     protected $casts = [
         'links' => 'array',
         'tracks' => 'array',
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
     ];
 
     const TYPE_GENERIC = 1;

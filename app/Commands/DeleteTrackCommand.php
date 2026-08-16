@@ -20,11 +20,16 @@
 
 namespace App\Commands;
 
+use App\Jobs\RecountPlaylistTracks;
 use App\Models\Track;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class DeleteTrackCommand extends CommandBase
 {
+    use DispatchesJobs;
+
     /** @var int */
     private $_trackId;
 
@@ -57,8 +62,17 @@ class DeleteTrackCommand extends CommandBase
             $this->_track->track_number = null;
             $this->_track->delete();
             $album->updateTrackNumbers();
+            $album->track_count = $album->tracks()->count();
+            $album->save();
         } else {
             $this->_track->delete();
+        }
+
+        // Deleted tracks leave every playlist they were in.
+        $playlistIds = DB::table('playlist_track')->where('track_id', $this->_track->id)->pluck('playlist_id');
+        if ($playlistIds->isNotEmpty()) {
+            DB::table('playlist_track')->where('track_id', $this->_track->id)->delete();
+            $this->dispatch(new RecountPlaylistTracks($playlistIds->all()));
         }
 
         return CommandResponse::succeed();

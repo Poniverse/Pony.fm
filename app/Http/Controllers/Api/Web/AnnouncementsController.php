@@ -21,13 +21,15 @@
 namespace App\Http\Controllers\Api\Web;
 
 use App\Commands\CreateAnnouncementCommand;
-use App\Http\Controllers\Controller;
+use App\Commands\DeleteAnnouncementCommand;
+use App\Commands\EditAnnouncementCommand;
+use App\Http\Controllers\ApiControllerBase;
 use App\Models\Announcement;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
-class AnnouncementsController extends Controller
+class AnnouncementsController extends ApiControllerBase
 {
     public function getIndex()
     {
@@ -76,8 +78,21 @@ class AnnouncementsController extends Controller
 
     public function postCreate(Request $request)
     {
-        $command = new CreateAnnouncementCommand($request->get('name'));
+        return $this->execute(new CreateAnnouncementCommand(
+            $request->only(['title', 'text_content', 'announcement_type_id', 'start_time', 'end_time'])
+        ));
+    }
 
-        return $this->execute($command);
+    public function putUpdate(Request $request, $id)
+    {
+        return $this->execute(new EditAnnouncementCommand(
+            (int) $id,
+            $request->only(['title', 'text_content', 'announcement_type_id', 'start_time', 'end_time'])
+        ));
+    }
+
+    public function deleteItem($id)
+    {
+        return $this->execute(new DeleteAnnouncementCommand((int) $id));
     }
 }

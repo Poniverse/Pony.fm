@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2015 Feld0.
+ * Copyright (C) 2026 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,22 +18,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Http\Controllers;
+namespace App\Commands;
 
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\Announcement;
 use Illuminate\Support\Facades\Gate;
-use Inertia\Inertia;
 
-class UploaderController extends Controller
+class DeleteAnnouncementCommand extends CommandBase
 {
-    public function getIndex(Request $request, $slug)
-    {
-        $user = User::whereSlug($slug)->whereNull('disabled_at')->firstOrFail();
-        Gate::authorize('edit', $user);
+    private $_announcement;
 
-        return Inertia::render('account/uploader', [
-            'accountSlug' => $user->slug,
-        ]);
+    public function __construct(int $announcementId)
+    {
+        $this->_announcement = Announcement::find($announcementId);
+    }
+
+    /**
+     * @return bool
+     */
+    public function authorize()
+    {
+        return $this->_announcement !== null && Gate::allows('delete-announcement');
+    }
+
+    /**
+     * @throws \Exception
+     * @return CommandResponse
+     */
+    public function execute()
+    {
+        $this->_announcement->delete();
+
+        return CommandResponse::succeed(['message' => 'Announcement deleted!']);
     }
 }
