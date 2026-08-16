@@ -1,0 +1,48 @@
+:root {
+  --font-display: "Josefin Sans", "Trebuchet MS", sans-serif;
+  --font-text: "Karla", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Type scale — 1.20 ratio off a 15px body */
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 15px;
+  --text-lg: 17px;
+  --text-xl: 21px;
+  --text-2xl: 26px;
+  --text-3xl: 32px;
+  --text-4xl: 42px;
+  --text-5xl: 56px;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-loose: 1.7;
+
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-display: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-caps: 0.10em;
+
+  /* Semantic roles */
+  --type-hero-family: var(--font-display);
+  --type-hero-size: var(--text-5xl);
+  --type-hero-weight: var(--weight-light);
+  --type-title-family: var(--font-display);
+  --type-title-size: var(--text-2xl);
+  --type-title-weight: var(--weight-semibold);
+  --type-section-size: var(--text-2xs);
+  --type-section-tracking: var(--tracking-caps);
+  --type-body-size: var(--text-md);
+  --type-body-leading: var(--leading-normal);
+  --type-meta-size: var(--text-xs);
+  --type-stat-family: var(--font-mono);
+  --type-stat-size: var(--text-xs);
+}

@@ -1,0 +1,85 @@
+/* Font Awesome 4 subset — icon font served from public/fonts/fontawesome-webfont.*.
+   Only the glyphs Pony.fm uses are declared here; the full set is available
+   from the same font file.
+   Usage: <i class="fa fa-play" aria-hidden="true"></i> */
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+.fa-fw { width: 1.2857em; text-align: center; }
+.fa-lg { font-size: 1.3333em; line-height: 0.75em; vertical-align: -15%; }
+.fa-spin { animation: fa-spin 2s infinite linear; }
+@keyframes fa-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(359deg); } }
+.fa-music:before { content: "\f001"; }
+.fa-search:before { content: "\f002"; }
+.fa-star:before { content: "\f005"; }
+.fa-star-o:before { content: "\f006"; }
+.fa-user:before { content: "\f007"; }
+.fa-check:before { content: "\f00c"; }
+.fa-times:before { content: "\f00d"; }
+.fa-clock-o:before { content: "\f017"; }
+.fa-download:before { content: "\f019"; }
+.fa-play:before { content: "\f04b"; }
+.fa-pause:before { content: "\f04c"; }
+.fa-fast-backward:before { content: "\f049"; }
+.fa-fast-forward:before { content: "\f050"; }
+.fa-step-backward:before { content: "\f048"; }
+.fa-step-forward:before { content: "\f051"; }
+.fa-repeat:before { content: "\f01e"; }
+.fa-random:before { content: "\f074"; }
+.fa-volume-up:before { content: "\f028"; }
+.fa-volume-off:before { content: "\f026"; }
+.fa-heart:before { content: "\f004"; }
+.fa-heart-o:before { content: "\f08a"; }
+.fa-comment:before { content: "\f075"; }
+.fa-comments:before { content: "\f086"; }
+.fa-plus:before { content: "\f067"; }
+.fa-minus:before { content: "\f068"; }
+.fa-upload:before { content: "\f093"; }
+.fa-bell:before { content: "\f0f3"; }
+.fa-chevron-down:before { content: "\f078"; }
+.fa-chevron-up:before { content: "\f077"; }
+.fa-chevron-left:before { content: "\f053"; }
+.fa-chevron-right:before { content: "\f054"; }
+.fa-microphone:before { content: "\f130"; }
+.fa-microphone-slash:before { content: "\f131"; }
+.fa-headphones:before { content: "\f025"; }
+.fa-list:before { content: "\f03a"; }
+.fa-th-large:before { content: "\f009"; }
+.fa-trash:before { content: "\f1f8"; }
+.fa-cog:before { content: "\f013"; }
+.fa-eye:before { content: "\f06e"; }
+.fa-tag:before { content: "\f02b"; }
+.fa-tags:before { content: "\f02c"; }
+.fa-share-alt:before { content: "\f1e0"; }
+.fa-ellipsis-h:before { content: "\f141"; }
+.fa-bars:before { content: "\f0c9"; }
+.fa-spinner:before { content: "\f110"; }
+.fa-circle-o-notch:before { content: "\f1ce"; }
+.fa-sort:before { content: "\f0dc"; }
+.fa-filter:before { content: "\f0b0"; }
+.fa-folder-open-o:before { content: "\f115"; }
+.fa-info-circle:before { content: "\f05a"; }
+.fa-exclamation-triangle:before { content: "\f071"; }
+.fa-external-link:before { content: "\f08e"; }
+.fa-play-circle:before { content: "\f144"; }
+.fa-plus-circle:before { content: "\f055"; }
+.fa-check-circle:before { content: "\f058"; }
+.fa-calendar:before { content: "\f073"; }
+.fa-sliders:before { content: "\f1de"; }
+.fa-link:before { content: "\f0c1"; }
+.fa-pencil:before { content: "\f040"; }
+.fa-bar-chart:before { content: "\f080"; }
+.fa-home:before { content: "\f015"; }
+.fa-users:before { content: "\f0c0"; }
+.fa-question-circle:before { content: "\f059"; }
+.fa-moon-o:before { content: "\f186"; }
+.fa-sun-o:before { content: "\f185"; }
+.fa-sign-out:before { content: "\f08b"; }
+.fa-globe:before { content: "\f0ac"; }
+.fa-file-text-o:before { content: "\f0f6"; }
+.fa-lock:before { content: "\f023"; }
+.fa-picture-o:before { content: "\f03e"; }

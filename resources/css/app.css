@@ -1,0 +1,172 @@
+/* Self-hosted webfonts via Fontsource — bundled and served with our assets. */
+@import "@fontsource/josefin-sans/300.css";
+@import "@fontsource/josefin-sans/400.css";
+@import "@fontsource/josefin-sans/600.css";
+@import "@fontsource/josefin-sans/700.css";
+@import "@fontsource/karla/400.css";
+@import "@fontsource/karla/400-italic.css";
+@import "@fontsource/karla/500.css";
+@import "@fontsource/karla/600.css";
+@import "@fontsource/karla/700.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@import "tailwindcss";
+
+@import "./tokens/fonts.css";
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+@import "./tokens/radius.css";
+@import "./tokens/elevation.css";
+@import "./tokens/motion.css";
+/* Layered so Tailwind utilities can override the element defaults below. */
+@import "./tokens/base.css" layer(base);
+
+/*
+ * Tailwind theme, bridged onto the design tokens. `inline` makes utilities
+ * resolve through the token var()s, so the dark/light [data-theme] swap in
+ * tokens/colors.css keeps working for every utility class.
+ *
+ * Naming follows shadcn conventions (background/foreground/primary/etc.) so
+ * registry components drop in, plus the Pony.fm-specific surfaces and ramps.
+ */
+@theme inline {
+    /* shadcn-style semantics */
+    --color-background: var(--bg-app);
+    --color-foreground: var(--text-body);
+    --color-heading: var(--text-primary);
+    --color-muted-foreground: var(--text-muted);
+    --color-faint: var(--text-faint);
+    --color-primary: var(--brand-solid);
+    --color-primary-foreground: var(--text-on-brand);
+    --color-card: var(--surface-card);
+    --color-card-foreground: var(--text-body);
+    --color-popover: var(--surface-raised);
+    --color-popover-foreground: var(--text-body);
+    --color-accent: var(--surface-hover);
+    --color-accent-foreground: var(--text-primary);
+    --color-muted: var(--surface-2);
+    --color-secondary: var(--surface-3);
+    --color-secondary-foreground: var(--text-primary);
+    --color-destructive: var(--status-danger);
+    --color-destructive-foreground: #ffffff;
+    --color-border: var(--border-default);
+    --color-input: var(--border-default);
+    --color-ring: var(--border-focus);
+    --color-link: var(--text-link);
+
+    /* Pony.fm surfaces & specials */
+    --color-surface-1: var(--surface-1);
+    --color-surface-2: var(--surface-2);
+    --color-surface-3: var(--surface-3);
+    --color-surface-raised: var(--surface-raised);
+    --color-surface-hover: var(--surface-hover);
+    --color-surface-active: var(--surface-active);
+    --color-surface-sunken: var(--surface-sunken);
+    --color-border-subtle: var(--border-subtle);
+    --color-border-strong: var(--border-strong);
+    --color-brand-quiet: var(--brand-quiet);
+    --color-brand-text: var(--brand-text);
+    --color-status-success: var(--status-success);
+    --color-status-warning: var(--status-warning);
+    --color-status-danger: var(--status-danger);
+    --color-status-info: var(--status-info);
+    --color-status-lossless: var(--status-lossless);
+    --color-favourite: var(--favourite-star);
+
+    /* Brand ramps */
+    --color-purple-50: var(--purple-50);
+    --color-purple-100: var(--purple-100);
+    --color-purple-200: var(--purple-200);
+    --color-purple-300: var(--purple-300);
+    --color-purple-400: var(--purple-400);
+    --color-purple-500: var(--purple-500);
+    --color-purple-600: var(--purple-600);
+    --color-purple-700: var(--purple-700);
+    --color-purple-800: var(--purple-800);
+    --color-purple-900: var(--purple-900);
+    --color-pink-100: var(--pink-100);
+    --color-pink-200: var(--pink-200);
+    --color-pink-300: var(--pink-300);
+    --color-pink-400: var(--pink-400);
+    --color-pink-500: var(--pink-500);
+    --color-pink-600: var(--pink-600);
+
+    /* Type */
+    --font-display: var(--font-display);
+    --font-text: var(--font-text);
+    --font-mono: var(--font-mono);
+    --text-2xs: var(--text-2xs);
+    --text-xs: var(--text-xs);
+    --text-sm: var(--text-sm);
+    --text-md: var(--text-md);
+    --text-lg: var(--text-lg);
+    --text-xl: var(--text-xl);
+    --text-2xl: var(--text-2xl);
+    --text-3xl: var(--text-3xl);
+    --text-4xl: var(--text-4xl);
+    --text-5xl: var(--text-5xl);
+    --tracking-caps: var(--tracking-caps);
+    --tracking-wide: var(--tracking-wide);
+    --tracking-display: var(--tracking-display);
+    --leading-tight: var(--leading-tight);
+    --leading-snug: var(--leading-snug);
+
+    /* Geometry & depth */
+    --radius-xs: var(--radius-xs);
+    --radius-sm: var(--radius-sm);
+    --radius-md: var(--radius-md);
+    --radius-lg: var(--radius-lg);
+    --radius-xl: var(--radius-xl);
+    --radius-pill: var(--radius-pill);
+    --radius-art: var(--radius-art);
+    --radius-card: var(--radius-card);
+    --radius-control: var(--radius-control);
+    --radius-avatar: var(--radius-avatar);
+    --shadow-sm: var(--shadow-sm);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-pop: var(--shadow-pop);
+
+    /* Motion */
+    --ease-standard: var(--ease-standard);
+    --ease-out: var(--ease-out);
+    --ease-in: var(--ease-in);
+    --duration-instant: var(--dur-instant);
+    --duration-fast: var(--dur-fast);
+    --duration-normal: var(--dur-normal);
+    --duration-slow: var(--dur-slow);
+}
+
+/* App-level chrome that isn't a component concern */
+html, body, #app {
+    height: 100%;
+}
+
+#app {
+    min-height: 0;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface-raised) transparent;
+}
+
+/* Detail pages: content column + sticky aside, stacking on small screens. */
+.detail-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--detail-aside, 300px);
+    gap: 28px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .detail-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-columns > aside {
+        position: static !important;
+    }
+}

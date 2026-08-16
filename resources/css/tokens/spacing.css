@@ -1,0 +1,27 @@
+:root {
+  /* 4px base. The legacy site was built on 5/10px steps; the modern grid
+     snaps to 4 with the row heights below preserved from the original. */
+  --space-0: 0;
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --space-6: 20px;
+  --space-7: 24px;
+  --space-8: 32px;
+  --space-9: 40px;
+  --space-10: 56px;
+  --space-11: 72px;
+
+  /* Layout constants carried over from layout.less */
+  --sidebar-width: 224px;      /* was 160px — widened for the new type */
+  --sidebar-width-compact: 72px;
+  --nowplaying-height: 72px;    /* was 64px */
+  --topbar-height: 64px;        /* header bar; the sidebar's plum band matches it */
+  --track-row-height: 56px;     /* was 43px */
+  --track-art-size: 44px;       /* was @icon-size: 42px */
+  --content-max: 1440px;
+  --content-pad: var(--space-6);
+  --hit-min: 44px;
+}

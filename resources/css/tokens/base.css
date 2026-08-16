@@ -1,0 +1,42 @@
+html {
+  background: var(--bg-app);
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-app);
+  color: var(--text-body);
+  font-family: var(--font-text);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-leading);
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+
+[data-theme="light"] { color-scheme: light; }
+
+a { color: var(--text-link); text-decoration: none; }
+a:hover { color: var(--text-link-hover); text-decoration: none; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+}
+
+::selection { background: var(--purple-600); color: #fff; }
+
+:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+
+/* Text entry shows focus with its own border state, not the ring. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible { box-shadow: none; }
+
+/* Menu items and options show focus with their highlight background instead. */
+[role='menuitem']:focus-visible,
+[role='menuitemcheckbox']:focus-visible,
+[role='menuitemradio']:focus-visible,
+[role='option']:focus-visible { box-shadow: none; }
