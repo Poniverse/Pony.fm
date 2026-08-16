@@ -32,6 +32,15 @@ services:
       - /mnt/ponyfm-production-datastore:/app/storage/app/datastore
     depends_on:
       - valkey
+      - ssr
+
+  # Inertia SSR server. Set INERTIA_SSR_ENABLED=true and
+  # INERTIA_SSR_URL=http://ssr:13714 in .env to turn server rendering on;
+  # the app degrades to client-side rendering whenever this is unreachable.
+  # CI needs to publish this image from the Dockerfile's `ssr` target.
+  ssr:
+    image: ghcr.io/poniverse/pony.fm-ssr:latest
+    restart: unless-stopped
 
   # Redis-compatible store for cache/sessions/queues. Reachable from the web
   # container as "valkey" — set REDIS_HOST=valkey in .env. Not exposed on the

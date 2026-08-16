@@ -9,27 +9,36 @@ RUN cd /tmp/atomicparsley \
   && cmake . \
   && cmake --build . --config Release
 
-FROM node:12-alpine AS assets_builder
+FROM node:26-alpine AS assets_builder
 
-# To handle 'not get uid/gid'
-RUN npm config set unsafe-perm true
-
-RUN npm install -g gulp
+# Node 25+ no longer bundles corepack; it activates the pnpm version pinned
+# by package.json's packageManager field.
+RUN npm install -g corepack && corepack enable
 
 WORKDIR /app
 
-COPY package.json /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /app/
 
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
-COPY gulpfile.js /app
-COPY webpack.base.config.js /app
-COPY webpack.dev.config.js /app
-COPY webpack.production.config.js /app
-COPY public /app/public/
+COPY vite.config.ts tsconfig.json /app/
 COPY resources /app/resources/
 
-RUN gulp build
+# Builds the client bundle into public/assets and the Inertia SSR bundle
+# into bootstrap/ssr.
+RUN pnpm run build
+
+# Standalone Inertia SSR server. Run with:
+#   docker build --target ssr
+FROM node:26-alpine AS ssr
+
+WORKDIR /app
+
+COPY --from=assets_builder /app/bootstrap/ssr /app/bootstrap/ssr
+
+EXPOSE 13714
+
+CMD ["node", "bootstrap/ssr/ssr.js"]
 
 FROM dunglas/frankenphp:1-php8.4-alpine
 
@@ -45,6 +54,9 @@ RUN apk update
 ## Common libraries required for ffmpeg & atomicparsley` to work
 RUN apk add libgcc libstdc++ ca-certificates libcrypto3 libssl3 libgomp expat git
 RUN apk add sudo
+
+# Tag writers getID3 shells out to: metaflac (FLAC) and vorbiscomment (OGG).
+RUN apk add flac vorbis-tools
 
 # Install php extensions. gd is for color-thief (avatar colour extraction);
 # image resizing shells out to imagemagick's convert.
@@ -67,8 +79,9 @@ COPY --chown=www-data composer.lock /app
 
 RUN composer install --no-scripts --no-autoloader --ignore-platform-reqs
 
-COPY --chown=www-data --from=assets_builder /app /app
 COPY --chown=www-data . /app
+COPY --chown=www-data --from=assets_builder /app/public/assets /app/public/assets
+COPY --chown=www-data --from=assets_builder /app/bootstrap/ssr /app/bootstrap/ssr
 
 RUN composer dump-autoload -o
 
