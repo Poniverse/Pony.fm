@@ -103,8 +103,13 @@ function Shell({ children }: { children: React.ReactNode }) {
     const page = usePage();
 
     // Off-canvas sidebar and the search panel close whenever a navigation
-    // starts, matching the old behaviour.
-    React.useEffect(() => router.on('start', () => { setSidebarOpen(false); search.clear(); }), []);
+    // starts, matching the old behaviour. Hover prefetches also fire 'start'
+    // and must not count — they'd wipe the search panel on every hover.
+    React.useEffect(() => router.on('start', (event) => {
+        if (event.detail.visit.prefetch) return;
+        setSidebarOpen(false);
+        search.clear();
+    }), []);
 
     const togglePanel = (id: 'queue' | 'notifications') => {
         setPanel((v) => {
