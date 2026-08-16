@@ -40,8 +40,13 @@ class AuthController extends Controller
 
             $request->session()->put('oauth2_state', $provider->getState());
             $request->session()->put('oauth2_pkce_code', $provider->getPkceCode());
+            $request->session()->put('oauth2_popup', $request->boolean('popup'));
 
             return redirect($authorizationUrl);
+        }
+
+        if ($request->boolean('popup')) {
+            return response()->view('auth.popup', ['success' => true]);
         }
 
         return redirect()->to('/');
@@ -131,11 +136,19 @@ class AuthController extends Controller
     {
         Auth::login($user, $rememberMe);
 
+        if (request()->session()->pull('oauth2_popup')) {
+            return response()->view('auth.popup', ['success' => true]);
+        }
+
         return redirect()->to('/');
     }
 
     protected function loginFailedRedirect()
     {
+        if (request()->session()->pull('oauth2_popup')) {
+            return response()->view('auth.popup', ['success' => false]);
+        }
+
         return redirect()->to('/')->with(
             'message',
             'Unfortunately we are having problems attempting to log you in at the moment. Please try again at a later time.'

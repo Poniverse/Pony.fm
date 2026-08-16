@@ -52,6 +52,12 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         if ($this->auth->guest()) {
+            // Login is an OIDC redirect; an XHR can't follow it, so tell the
+            // frontend to send the user there itself.
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+
             return redirect()->guest('login');
         }
 
