@@ -170,13 +170,17 @@ class Playlist extends Model implements Searchable, Commentable, Favouritable
         }
 
         $data = self::mapPublicPlaylistSummary($playlist);
+        $data['user']['avatars'] = [
+            'thumbnail' => $playlist->user->getAvatarUrl(Image::THUMBNAIL),
+            'small' => $playlist->user->getAvatarUrl(Image::SMALL),
+        ];
         $data['tracks'] = $tracks;
         $data['comments'] = $comments;
         $data['formats'] = $formats;
         $data['share'] = [
             'url' => action([PlaylistsController::class, 'getShortlink'], ['id' => $playlist->id]),
-            'tumblrUrl' => 'http://www.tumblr.com/share/link?url='.urlencode($playlist->url).'&name='.urlencode($playlist->title).'&description='.urlencode($playlist->description),
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$playlist->title.' by '.$playlist->user->display_name.' on Pony.fm',
+            'tumblrUrl' => 'https://www.tumblr.com/widgets/share/tool?posttype=link&canonicalUrl='.urlencode($playlist->url).'&title='.urlencode($playlist->title.' by '.$playlist->user->display_name),
+            'twitterUrl' => 'https://x.com/intent/post?text='.urlencode($playlist->title.' by '.$playlist->user->display_name.' on Pony.fm').'&url='.urlencode($playlist->url),
         ];
 
         return $data;

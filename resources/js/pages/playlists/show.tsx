@@ -3,6 +3,7 @@ import { router, usePage } from '@inertiajs/react';
 import { Lock, Pencil, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/AppLayout';
 import { Button } from '@/design-system/core/Button';
+import { IconButton } from '@/design-system/core/IconButton';
 import { Badge } from '@/design-system/core/Badge';
 import { Dialog } from '@/design-system/feedback/Dialog';
 import { CollectionShow } from '@/components/CollectionShow';
@@ -32,8 +33,8 @@ export default function PlaylistShowPage({ playlist }: { playlist: PlaylistShow 
                 extraBadges={!playlist.is_public ? <Badge tone="warning" icon={Lock}>Private</Badge> : null}
                 extraActions={isOwner ? (
                     <>
-                        <Button variant="ghost" icon={Pencil} onClick={() => setEditing(true)}>Edit</Button>
-                        <Button variant="ghost" icon={Trash2} onClick={() => setDeleting(true)}>Delete</Button>
+                        <IconButton icon={Pencil} label="Edit" onClick={() => setEditing(true)} />
+                        <IconButton icon={Trash2} label="Delete" onClick={() => setDeleting(true)} />
                     </>
                 ) : null}
             />

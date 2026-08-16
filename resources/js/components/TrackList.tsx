@@ -14,7 +14,7 @@ import type { SharedProps, TrackSummary } from '@/lib/types';
  * favouriting and navigation; the star toggles a favourite through the
  * existing /api/web endpoint.
  */
-export function TrackList({ tracks, showStats = true }: { tracks: TrackSummary[]; showStats?: boolean }) {
+export function TrackList({ tracks }: { tracks: TrackSummary[] }) {
     const player = usePlayer();
     const { auth } = usePage<SharedProps>().props;
     const [favourites, setFavourites] = React.useState<Record<number, boolean>>(() =>
@@ -50,7 +50,6 @@ export function TrackList({ tracks, showStats = true }: { tracks: TrackSummary[]
                         track={toDesignTrack(t)}
                         playing={player.isCurrent(t.id) && player.isPlaying}
                         favourited={!!favourites[t.id]}
-                        showStats={showStats}
                         onPlay={() => player.playTracks(tracks, i)}
                         onFavourite={() => toggleFavourite(t.id)}
                         href={t.url}

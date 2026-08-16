@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { SidebarNav, type SidebarSection } from '@/design-system/navigation/SidebarNav';
 import { SearchBox } from '@/design-system/navigation/SearchBox';
+import { SearchResults } from '@/components/SearchResults';
+import { Toaster } from '@/design-system/primitives/toast';
 import { PlayerBar } from '@/design-system/music/PlayerBar';
 import { QueuePanel } from '@/design-system/music/QueuePanel';
 import { Avatar } from '@/design-system/core/Avatar';
@@ -64,9 +66,9 @@ function Shell({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = React.useState(false);
     const page = usePage();
 
-    // Off-canvas sidebar closes whenever a navigation starts, matching the
-    // old mobile behaviour.
-    React.useEffect(() => router.on('start', () => setSidebarOpen(false)), []);
+    // Off-canvas sidebar and the search panel close whenever a navigation
+    // starts, matching the old behaviour.
+    React.useEffect(() => router.on('start', () => { setSidebarOpen(false); search.clear(); }), []);
 
     const togglePanel = (id: 'queue' | 'notifications') => {
         setPanel((v) => {
@@ -259,8 +261,7 @@ function Shell({ children }: { children: React.ReactNode }) {
                         <SearchBox
                             value={search.query}
                             onChange={(e) => search.setQuery(e.target.value)}
-                            results={search.hits}
-                            onPick={(r) => { const hit = r as (typeof search.hits)[number]; search.clear(); router.visit(hit.url); }}
+                            panel={search.results ? <SearchResults results={search.results} /> : null}
                         />
                     </div>
                     {!isMobile && environment !== 'production' ? (
@@ -343,7 +344,9 @@ function Shell({ children }: { children: React.ReactNode }) {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     return (
         <PlayerProvider>
-            <Shell>{children}</Shell>
+            <Toaster>
+                <Shell>{children}</Shell>
+            </Toaster>
         </PlayerProvider>
     );
 }

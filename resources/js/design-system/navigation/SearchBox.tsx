@@ -1,38 +1,51 @@
 import React from 'react';
-import { LayoutGrid, Music, Search, User } from 'lucide-react';
+import { Search } from 'lucide-react';
 
-/** Site search with a type-ahead result popover. */
-export interface SearchResult { title: string; kind: 'track' | 'album' | 'artist' | 'playlist' }
+/** Site search input with a type-ahead popover. The popover content comes
+ *  in via `panel` so the app can render real components (playable track
+ *  rows, cards) rather than this component owning the result markup. */
 export interface SearchBoxProps {
   value?: string;
   placeholder?: string;
-  results?: SearchResult[];
+  /** Rendered in the popover while the input is focused; null keeps it closed. */
+  panel?: React.ReactNode;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  onPick?: (r: SearchResult) => void;
 }
 
-export function SearchBox({ value, onChange, placeholder = 'Search Pony.fm…', results = [], onPick }: SearchBoxProps) {
-  const [focus, setFocus] = React.useState(false);
-  const open = focus && results.length > 0;
+export function SearchBox({ value, onChange, placeholder = 'Search Pony.fm…', panel }: SearchBoxProps) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [open, setOpen] = React.useState(false);
+  const show = open && panel != null;
+
+  // The panel can't be tied to input focus: right-clicking a track opens a
+  // portaled context menu that takes focus. Instead it stays open until a
+  // pointerdown lands outside both the box and any menu spawned from it.
+  React.useEffect(() => {
+    if (!show) return;
+    const onDown = (e: PointerEvent) => {
+      const t = e.target as Element | null;
+      if (t && (ref.current?.contains(t) || t.closest('[data-slot^="context-menu"]'))) return;
+      setOpen(false);
+    };
+    document.addEventListener('pointerdown', onDown);
+    return () => document.removeEventListener('pointerdown', onDown);
+  }, [show]);
+
   return (
-    <div className="relative">
-      <Search className="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-faint" aria-hidden="true" />
-      <input value={value} placeholder={placeholder} onChange={onChange}
-        onFocus={() => setFocus(true)} onBlur={() => setTimeout(() => setFocus(false), 120)}
-        className="w-full rounded-pill border border-border bg-surface-3 py-2.5 pr-3 pl-[34px] font-text text-sm text-heading outline-none transition-[background,color,border-color,box-shadow] duration-(--dur-fast) ease-(--ease-standard) focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50" />
-      {open ? (
-        <div className="absolute top-[calc(100%+6px)] right-0 left-0 z-[900] overflow-hidden rounded-md border border-border bg-surface-raised shadow-pop">
-          {results.map((r, i) => (
-            <button key={i} type="button" onClick={() => onPick && onPick(r)}
-              className="flex w-full cursor-pointer items-center gap-2.5 border-none bg-transparent px-3 py-[9px] text-left font-text text-sm text-foreground hover:bg-surface-hover">
-              {(() => {
-                const Icon = r.kind === 'artist' ? User : r.kind === 'album' ? LayoutGrid : Music;
-                return <Icon className="size-4 flex-none text-faint" aria-hidden="true" />;
-              })()}
-              <span className="min-w-0 flex-1 truncate text-heading">{r.title}</span>
-              <span className="text-2xs uppercase tracking-caps text-faint">{r.kind}</span>
-            </button>
-          ))}
+    <div ref={ref} className="relative">
+      {show ? (
+        <div aria-hidden="true" onPointerDown={() => setOpen(false)}
+          className="fixed inset-0 z-[890] bg-black/50 animate-in fade-in-0" />
+      ) : null}
+      <Search className="absolute top-1/2 left-3 z-[901] size-3.5 -translate-y-1/2 text-faint" aria-hidden="true" />
+      <input value={value} placeholder={placeholder}
+        onChange={(e) => { setOpen(true); onChange?.(e); }}
+        onFocus={() => setOpen(true)}
+        onKeyDown={(e) => { if (e.key === 'Escape') { setOpen(false); e.currentTarget.blur(); } }}
+        className="relative z-[900] w-full rounded-pill border border-border bg-surface-3 py-2.5 pr-3 pl-[34px] font-text text-sm text-heading outline-none transition-[background,color,border-color,box-shadow] duration-(--dur-fast) ease-(--ease-standard) focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50" />
+      {show ? (
+        <div className="absolute top-[calc(100%+6px)] left-0 z-[900] max-h-[75vh] w-[min(860px,calc(100vw-88px))] overflow-y-auto rounded-md border border-border bg-surface-raised p-4 shadow-pop">
+          {panel}
         </div>
       ) : null}
     </div>

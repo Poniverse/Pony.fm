@@ -21,7 +21,6 @@ export interface TrackRowProps {
   track: Track;
   playing?: boolean;
   favourited?: boolean;
-  showStats?: boolean;
   onPlay?: (t: Track) => void;
   onFavourite?: (t: Track) => void;
   /** Renders the title as a real link to the track's page. Prefer this over onOpen. */
@@ -29,7 +28,7 @@ export interface TrackRowProps {
   onOpen?: React.MouseEventHandler;
 }
 
-export function TrackRow({ track, playing, favourited, onPlay, onFavourite, href, onOpen, showStats = true }: TrackRowProps) {
+export function TrackRow({ track, playing, favourited, onPlay, onFavourite, href, onOpen }: TrackRowProps) {
   const t = track || ({} as Track);
   const stats = t.stats || {};
   const titleClass = cn('truncate font-text text-sm font-semibold', playing ? 'text-brand-text' : 'text-heading');
@@ -66,29 +65,29 @@ export function TrackRow({ track, playing, favourited, onPlay, onFavourite, href
           ))}
         </span>
       ) : null}
-      {t.duration ? <span className="font-mono text-xs text-faint">{t.duration}</span> : null}
-      {showStats ? (
-        <span className="flex gap-3 font-mono text-xs text-faint">
-          <span title={stats.plays + ' plays'}><Play className="mr-[5px] inline size-2.5" aria-hidden="true" />{stats.plays}</span>
-          <span title={stats.favourites + ' favourites'}><Star className="mr-[5px] inline size-2.5" aria-hidden="true" />{stats.favourites}</span>
-          <span title={stats.comments + ' comments'}><MessageSquare className="mr-[5px] inline size-2.5" aria-hidden="true" />{stats.comments}</span>
+      <span className="flex flex-col items-end gap-1">
+        <span className="flex items-center gap-0.5">
+          {t.duration ? <span className="mr-1.5 font-mono text-xs text-faint">{t.duration}</span> : null}
+          <span aria-hidden="true" title={t.isVocal ? 'Vocal' : 'Instrumental'}
+            className={cn('flex w-[18px] justify-center text-faint', !t.isVocal && 'opacity-50')}>
+            {t.isVocal ? <Mic className="size-3.5" /> : <MicOff className="size-3.5" />}
+          </span>
+          {onFavourite ? (
+            <button type="button" aria-label="Favourite" onClick={(e) => { e.stopPropagation(); onFavourite(t); }}
+              className={cn(
+                'relative z-10 cursor-pointer border-none bg-transparent p-1 text-sm',
+                favourited ? 'text-favourite [text-shadow:0_0_4px_rgba(0,0,0,0.6)]' : 'text-faint group-hover:text-muted-foreground',
+              )}>
+              <Star aria-hidden="true" fill={favourited ? 'currentColor' : 'none'}
+                className={cn('pfm-anim inline-block size-3.5', favourited && 'animate-[pfm-pop_380ms_var(--ease-out)]')} />
+            </button>
+          ) : null}
         </span>
-      ) : null}
-      <span className="flex w-[62px] items-center justify-end gap-0.5">
-        <span aria-hidden="true" title={t.isVocal ? 'Vocal' : 'Instrumental'}
-          className={cn('flex w-[18px] justify-center text-faint', !t.isVocal && 'opacity-50')}>
-          {t.isVocal ? <Mic className="size-3.5" /> : <MicOff className="size-3.5" />}
+        <span className="flex gap-2.5 font-mono text-xs text-faint">
+          <span title={stats.plays + ' plays'}><Play className="mr-1 inline size-2.5" aria-hidden="true" />{stats.plays}</span>
+          <span title={stats.favourites + ' favourites'}><Star className="mr-1 inline size-2.5" aria-hidden="true" />{stats.favourites}</span>
+          <span title={stats.comments + ' comments'}><MessageSquare className="mr-1 inline size-2.5" aria-hidden="true" />{stats.comments}</span>
         </span>
-        {onFavourite ? (
-          <button type="button" aria-label="Favourite" onClick={(e) => { e.stopPropagation(); onFavourite(t); }}
-            className={cn(
-              'relative z-10 cursor-pointer border-none bg-transparent p-1 text-sm',
-              favourited ? 'text-favourite [text-shadow:0_0_4px_rgba(0,0,0,0.6)]' : 'text-faint group-hover:text-muted-foreground',
-            )}>
-            <Star aria-hidden="true" fill={favourited ? 'currentColor' : 'none'}
-              className={cn('pfm-anim inline-block size-3.5', favourited && 'animate-[pfm-pop_380ms_var(--ease-out)]')} />
-          </button>
-        ) : null}
       </span>
     </div>
   );

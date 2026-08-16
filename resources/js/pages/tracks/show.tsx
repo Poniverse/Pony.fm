@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { ChartColumn, Eye, LayoutGrid, Mic, MicOff, Pause, Pencil, Play, Search, Share2, TriangleAlert } from 'lucide-react';
+import { ChartColumn, Eye, Mic, MicOff, Pause, Pencil, Play, Search, Share2, TriangleAlert } from 'lucide-react';
 import AppLayout from '@/layouts/AppLayout';
 import { AlbumArt } from '@/design-system/music/AlbumArt';
 import { StatList } from '@/design-system/music/StatList';
@@ -13,7 +13,7 @@ import { usePlayer } from '@/lib/player/PlayerContext';
 import { Markdown } from '@/lib/markdown';
 import { api } from '@/lib/api';
 import { formatDate, formatDuration } from '@/lib/format';
-import { ActionBar } from '@/components/ActionBar';
+import { IconButton } from '@/design-system/core/IconButton';
 import { AddToPlaylist } from '@/components/AddToPlaylist';
 import { CommentsSection } from '@/components/CommentsSection';
 import { FavouriteButton } from '@/components/FavouriteButton';
@@ -53,38 +53,52 @@ export default function TrackShowPage({ track }: { track: TrackShow }) {
             <Head title={track.title + ' - ' + track.user.name} />
             <div className="detail-columns">
                 <div className="grid gap-7">
-                    <header className="flex flex-col gap-5 md:flex-row md:items-end">
+                    <header className="flex flex-col gap-4 md:flex-row md:items-start">
                         <AlbumArt src={track.covers.normal} alt={track.title} size={132} playing={playing} onPlay={() => player.playTracks([track])} />
-                        <div className="grid min-w-0 flex-1 gap-2">
-                            <div className="flex flex-wrap items-center gap-1.5">
-                                <Badge tone={track.is_vocal ? 'vocal' : 'neutral'} icon={track.is_vocal ? Mic : MicOff}>
-                                    {track.is_vocal ? 'Vocal' : 'Instrumental'}
-                                </Badge>
-                                {!track.is_published ? <Badge tone="warning" icon={Eye}>Unpublished — only you can see this</Badge> : null}
-                                {track.is_explicit ? <Badge tone="danger" icon={TriangleAlert}>Explicit</Badge> : null}
-                                {track.album ? <Badge tone="brand" icon={LayoutGrid}>From {track.album.title}</Badge> : null}
+                        <div className="grid min-w-0 flex-1 gap-1.5">
+                            {!track.is_published || track.is_explicit ? (
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                    {!track.is_published ? <Badge tone="warning" icon={Eye}>Unpublished — only you can see this</Badge> : null}
+                                    {track.is_explicit ? <Badge tone="danger" icon={TriangleAlert}>Explicit</Badge> : null}
+                                </div>
+                            ) : null}
+                            <div className="flex items-start justify-between gap-3">
+                                <h1 className="min-w-0 flex-1 text-2xl font-semibold leading-tight md:text-3xl">{track.title}</h1>
+                                <div className="flex flex-none items-center gap-0.5">
+                                    {track.permissions?.edit ? (
+                                        <>
+                                            <IconButton icon={Pencil} label="Edit" render={<Link href={track.url + '/edit'} />} />
+                                            <IconButton icon={ChartColumn} label="Stats" render={<Link href={track.url + '/stats'} />} />
+                                        </>
+                                    ) : null}
+                                </div>
                             </div>
-                            <h1 className="text-2xl font-semibold leading-tight md:text-3xl">{track.title}</h1>
-                            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                                <Avatar name={track.user.name} size="xs" />
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+                                <Avatar src={track.user.avatars?.small} name={track.user.name} size="xs" />
                                 <Link href={track.user.url}>{track.user.name}</Link>
                                 <span className="text-faint">
-                                    {track.genre ? '· ' + track.genre.name + ' ' : ''}· {formatDuration(track.duration)}
+                                    {track.genre ? '· ' + track.genre.name + ' ' : ''}· {formatDuration(track.duration)} ·
                                 </span>
-                            </div>
-                            <ActionBar className="mt-1">
-                                <Button icon={playing ? Pause : Play} onClick={() => player.playTracks([track])}>{playing ? 'Pause' : 'Play'}</Button>
-                                {track.formats?.length ? <DownloadMenu formats={track.formats as DownloadFormat[]} resourceType="tracks" resourceId={track.id} /> : null}
-                                <FavouriteButton favourited={favourited} onToggle={toggleFavourite} what="tracks" />
-                                <AddToPlaylist trackId={track.id} />
-                                <Button variant="ghost" icon={Share2} onClick={() => { if (!shareNatively(track.share, track.title + ' \u00b7 ' + track.user.name)) setShare(true); }}>Share</Button>
-                                {track.permissions?.edit ? (
-                                    <>
-                                        <Button render={<Link href={track.url + '/edit'} />} variant="ghost" icon={Pencil}>Edit</Button>
-                                        <Button render={<Link href={track.url + '/stats'} />} variant="ghost" icon={ChartColumn}>Stats</Button>
-                                    </>
+                                <span title={track.is_vocal ? 'Vocal' : 'Instrumental'} className="inline-flex items-center text-faint">
+                                    {track.is_vocal ? <Mic aria-label="Vocal" className="size-3.5" /> : <MicOff aria-label="Instrumental" className="size-3.5" />}
+                                </span>
+                                {track.album ? (
+                                    <span className="text-faint">
+                                        · from <Link href={track.album.url} className="text-muted-foreground">{track.album.title}</Link>
+                                    </span>
                                 ) : null}
-                            </ActionBar>
+                            </div>
+                            <div className="mt-1.5 flex items-center gap-1.5">
+                                <IconButton icon={playing ? Pause : Play} label={playing ? 'Pause' : 'Play'} variant="filled" round size="lg"
+                                    onClick={() => player.playTracks([track])} />
+                                <FavouriteButton iconOnly iconRound iconSize="lg" favourited={favourited} onToggle={toggleFavourite} what="tracks" />
+                                {track.formats?.length ? (
+                                    <DownloadMenu iconOnly iconRound iconSize="lg" formats={track.formats as DownloadFormat[]} resourceType="tracks" resourceId={track.id} />
+                                ) : null}
+                                <AddToPlaylist iconOnly iconRound iconSize="lg" trackId={track.id} />
+                                <IconButton icon={Share2} label="Share" round size="lg"
+                                    onClick={() => { if (!shareNatively(track.share, track.title + ' · ' + track.user.name)) setShare(true); }} />
+                            </div>
                         </div>
                     </header>
 

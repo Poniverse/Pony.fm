@@ -2,6 +2,7 @@ import React from 'react';
 import { usePage } from '@inertiajs/react';
 import { Check, List, Plus } from 'lucide-react';
 import { Button } from '@/design-system/core/Button';
+import { IconButton } from '@/design-system/core/IconButton';
 import { Popover } from '@/design-system/feedback/Popover';
 import { PlaylistDialog } from '@/components/PlaylistDialog';
 import { api } from '@/lib/api';
@@ -16,7 +17,13 @@ interface OwnedPlaylist {
 }
 
 /** "Add to playlist" popover: the user's playlists + a new-playlist flow. */
-export function AddToPlaylist({ trackId }: { trackId: number }) {
+export function AddToPlaylist({ trackId, iconOnly, iconRound, iconSize }: {
+    trackId: number;
+    iconOnly?: boolean;
+    /** Icon-only styling: round shape and size, e.g. to match a round play button. */
+    iconRound?: boolean;
+    iconSize?: 'sm' | 'md' | 'lg';
+}) {
     const { auth } = usePage<SharedProps>().props;
     const [open, setOpen] = React.useState(false);
     const [creating, setCreating] = React.useState(false);
@@ -48,7 +55,11 @@ export function AddToPlaylist({ trackId }: { trackId: number }) {
 
     return (
         <span className="relative inline-flex">
-            <Button variant="ghost" icon={Plus} onClick={toggleOpen} active={open}>Add to playlist</Button>
+            {iconOnly ? (
+                <IconButton icon={Plus} label="Add to playlist" round={iconRound} size={iconSize} onClick={toggleOpen} active={open} />
+            ) : (
+                <Button variant="ghost" icon={Plus} onClick={toggleOpen} active={open}>Add to playlist</Button>
+            )}
             <Popover open={open} title="Add to playlist" placement="below" width={280} onClose={() => setOpen(false)}
                 footer={<a href="#new-playlist" onClick={(e) => { e.preventDefault(); setOpen(false); setCreating(true); }}>+ New playlist</a>}>
                 <div className="grid gap-0.5">

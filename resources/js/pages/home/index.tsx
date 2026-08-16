@@ -48,11 +48,11 @@ export default function HomePage({ recentTracks, popularTracks, announcement }: 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(340px,1fr))] gap-7">
                 <section>
                     <SectionHeader title="The newest tunes" action={<Link href="/tracks">See all</Link>} />
-                    <TrackList tracks={recentTracks} showStats={false} />
+                    <TrackList tracks={recentTracks} />
                 </section>
                 <section>
                     <SectionHeader title="What's popular today" action={<Link href="/tracks/popular">See all</Link>} />
-                    <TrackList tracks={popularTracks} showStats={false} />
+                    <TrackList tracks={popularTracks} />
                 </section>
             </div>
         </div>

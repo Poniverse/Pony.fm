@@ -210,6 +210,10 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         }
 
         $data = self::mapPublicAlbumSummary($album);
+        $data['user']['avatars'] = [
+            'thumbnail' => $album->user->getAvatarUrl(Image::THUMBNAIL),
+            'small' => $album->user->getAvatarUrl(Image::SMALL),
+        ];
         $data['tracks'] = $tracks;
         $data['comments'] = $comments;
         $data['formats'] = $formats;
@@ -217,8 +221,8 @@ class Album extends Model implements Searchable, Commentable, Favouritable
         $data['is_downloadable'] = $is_downloadable;
         $data['share'] = [
             'url' => action([AlbumsController::class, 'getShortlink'], ['id' => $album->id]),
-            'tumblrUrl' => 'http://www.tumblr.com/share/link?url='.urlencode($album->url).'&name='.urlencode($album->title).'&description='.urlencode($album->description),
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$album->title.' by '.$album->user->display_name.' on Pony.fm',
+            'tumblrUrl' => 'https://www.tumblr.com/widgets/share/tool?posttype=link&canonicalUrl='.urlencode($album->url).'&title='.urlencode($album->title.' by '.$album->user->display_name),
+            'twitterUrl' => 'https://x.com/intent/post?text='.urlencode($album->title.' by '.$album->user->display_name.' on Pony.fm').'&url='.urlencode($album->url),
         ];
 
         return $data;

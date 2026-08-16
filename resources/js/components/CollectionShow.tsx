@@ -1,17 +1,15 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { LayoutGrid, List, Pause, Play, Share2 } from 'lucide-react';
+import { Pause, Play, Share2 } from 'lucide-react';
 import { AlbumArt } from '@/design-system/music/AlbumArt';
 import { StatList } from '@/design-system/music/StatList';
 import { SectionHeader } from '@/design-system/feedback/SectionHeader';
-import { Button } from '@/design-system/core/Button';
-import { Badge } from '@/design-system/core/Badge';
+import { IconButton } from '@/design-system/core/IconButton';
 import { Avatar } from '@/design-system/core/Avatar';
 import { usePlayer } from '@/lib/player/PlayerContext';
 import { Markdown } from '@/lib/markdown';
 import { api } from '@/lib/api';
 import { formatDuration } from '@/lib/format';
-import { ActionBar } from '@/components/ActionBar';
 import { TrackList } from '@/components/TrackList';
 import { CommentsSection } from '@/components/CommentsSection';
 import { DownloadMenu, type DownloadFormat } from '@/components/DownloadMenu';
@@ -61,26 +59,31 @@ export function CollectionShow({ kind, data, extraBadges, extraActions }: {
             <Head title={data.title + ' - ' + data.user.name} />
             <div className="detail-columns">
                 <div className="grid gap-7">
-                    <header className="flex flex-col gap-5 md:flex-row md:items-end">
+                    <header className="flex flex-col gap-4 md:flex-row md:items-start">
                         <AlbumArt src={data.covers.normal} alt={data.title} size={132} playing={playing}
                             onPlay={() => player.playTracks(tracks)} />
-                        <div className="grid min-w-0 flex-1 gap-2">
-                            <div className="flex flex-wrap items-center gap-1.5">
-                                <Badge tone="brand" icon={kind === 'album' ? LayoutGrid : List}>{kind}</Badge>
-                                {extraBadges}
+                        <div className="grid min-w-0 flex-1 gap-1.5">
+                            {extraBadges ? (
+                                <div className="flex flex-wrap items-center gap-1.5">{extraBadges}</div>
+                            ) : null}
+                            <div className="flex items-start justify-between gap-3">
+                                <h1 className="min-w-0 flex-1 text-2xl font-semibold leading-tight md:text-3xl">{data.title}</h1>
+                                {extraActions ? (
+                                    <div className="flex flex-none items-center gap-0.5">{extraActions}</div>
+                                ) : null}
                             </div>
-                            <h1 className="text-2xl font-semibold leading-tight md:text-3xl">{data.title}</h1>
-                            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                                <Avatar name={data.user.name} size="xs" />
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+                                <Avatar src={data.user.avatars?.small} name={data.user.name} size="xs" />
                                 <Link href={data.user.url}>{data.user.name}</Link>
-                                <span className="text-faint">· {tracks.length} tracks · {formatDuration(totalSeconds)}</span>
+                                <span className="text-faint">· {kind} · {tracks.length} tracks · {formatDuration(totalSeconds)}</span>
                             </div>
-                            <ActionBar className="mt-1">
-                                <Button icon={playing ? Pause : Play} onClick={() => player.playTracks(tracks)}>
-                                    {playing ? 'Pause' : 'Play all'}
-                                </Button>
+                            <div className="mt-1.5 flex items-center gap-1.5">
+                                <IconButton icon={playing ? Pause : Play} label={playing ? 'Pause' : 'Play all'} variant="filled" round size="lg"
+                                    onClick={() => player.playTracks(tracks)} />
+                                <FavouriteButton iconOnly iconRound iconSize="lg" favourited={favourited} onToggle={toggleFavourite} what={kind + 's'} />
                                 {data.formats?.length ? (
                                     <DownloadMenu
+                                        iconOnly iconRound iconSize="lg"
                                         formats={data.formats as DownloadFormat[]}
                                         resourceType={kind === 'album' ? 'albums' : 'playlists'}
                                         resourceId={data.id}
@@ -89,10 +92,9 @@ export function CollectionShow({ kind, data, extraBadges, extraActions }: {
                                             : null}
                                     />
                                 ) : null}
-                                <FavouriteButton favourited={favourited} onToggle={toggleFavourite} what={kind + 's'} />
-                                <Button variant="ghost" icon={Share2} onClick={() => { if (!shareNatively(data.share, data.title + ' \u00b7 ' + data.user.name)) setShare(true); }}>Share</Button>
-                                {extraActions}
-                            </ActionBar>
+                                <IconButton icon={Share2} label="Share" round size="lg"
+                                    onClick={() => { if (!shareNatively(data.share, data.title + ' \u00b7 ' + data.user.name)) setShare(true); }} />
+                            </div>
                         </div>
                     </header>
 

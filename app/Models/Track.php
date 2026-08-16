@@ -501,6 +501,10 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     public static function mapPublicTrackShow(self $track)
     {
         $returnValue = self::mapPublicTrackSummary($track);
+        $returnValue['user']['avatars'] = [
+            'thumbnail' => $track->user->getAvatarUrl(Image::THUMBNAIL),
+            'small' => $track->user->getAvatarUrl(Image::SMALL),
+        ];
         $returnValue['description'] = $track->description;
         $returnValue['lyrics'] = $track->lyrics;
 
@@ -528,10 +532,10 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'url' => action([TracksController::class, 'getShortlink'], ['id' => $track->id]),
             'html' => '<iframe src="'.action([TracksController::class, 'getEmbed'], ['id' => $track->id]).'" width="100%" height="150" allowTransparency="true" frameborder="0" seamless allowfullscreen></iframe>',
             'bbcode' => '[url='.$track->url.'][img]'.$track->getCoverUrl().'[/img][/url]',
-            'twitterUrl' => 'https://platform.twitter.com/widgets/tweet_button.html?text='.$track->title.' by '.$track->user->display_name.' on Pony.fm',
+            'twitterUrl' => 'https://x.com/intent/post?text='.urlencode($track->title.' by '.$track->user->display_name.' on Pony.fm').'&url='.urlencode($track->url),
         ];
 
-        $returnValue['share']['tumblrUrl'] = 'http://www.tumblr.com/share/video?embed='.urlencode($returnValue['share']['html']).'&caption='.urlencode($track->title);
+        $returnValue['share']['tumblrUrl'] = 'https://www.tumblr.com/widgets/share/tool?posttype=link&canonicalUrl='.urlencode($track->url).'&title='.urlencode($track->title.' by '.$track->user->display_name);
 
         $returnValue['formats'] = $formats;
 

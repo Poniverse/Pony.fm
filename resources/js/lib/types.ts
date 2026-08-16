@@ -32,7 +32,7 @@ export interface GenreRef {
 export interface TrackSummary {
     id: number;
     title: string;
-    user: { id: number; name: string; url: string };
+    user: { id: number; name: string; slug?: string; url: string; avatars?: { thumbnail: string; small: string } };
     stats: TrackStats;
     url: string;
     slug: string;
@@ -71,7 +71,7 @@ export interface AlbumSummary {
     title: string;
     slug: string;
     url: string;
-    user: { id: number; name: string; url: string };
+    user: { id: number; name: string; slug?: string; url: string; avatars?: { thumbnail: string; small: string } };
     covers: { small: string; normal: string; original?: string };
     track_count: number;
     stats: { views: number; downloads: number; comments: number; favourites: number };
@@ -85,7 +85,7 @@ export interface PlaylistSummary {
     slug: string;
     url: string;
     is_public: boolean;
-    user: { id: number; name: string; url: string };
+    user: { id: number; name: string; slug?: string; url: string; avatars?: { thumbnail: string; small: string } };
     covers: { small: string; normal: string };
     track_count: number;
     stats?: { views: number; downloads: number; comments: number; favourites: number };

@@ -1,50 +1,46 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '@/lib/api';
+import type { AlbumSummary, PlaylistSummary, TrackSummary, UserSummary } from '@/lib/types';
 
-export interface SearchHit {
-    title: string;
-    kind: 'track' | 'album' | 'playlist' | 'artist';
-    url: string;
-}
-
-interface RawResults {
-    tracks?: { title: string; url: string }[];
-    albums?: { title: string; url: string }[];
-    playlists?: { title: string; url: string }[];
-    users?: { name: string; url: string }[];
+export interface SearchResultsData {
+    tracks: TrackSummary[];
+    users: UserSummary[];
+    albums: AlbumSummary[];
+    playlists: PlaylistSummary[];
 }
 
 /** Sidebar universal search: 300ms debounce, 3-character minimum — same
- *  behaviour as the old pfm-search directive. */
+ *  behaviour as the old pfm-search directive. `results` is null until a
+ *  long-enough query has answered, so the panel only opens with real data. */
 export function useSearch() {
     const [query, setQuery] = useState('');
-    const [hits, setHits] = useState<SearchHit[]>([]);
+    const [results, setResults] = useState<SearchResultsData | null>(null);
     const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
     const requestId = useRef(0);
 
     useEffect(() => {
         clearTimeout(timer.current);
         if (query.trim().length < 3) {
-            setHits([]);
+            setResults(null);
             return;
         }
         const id = ++requestId.current;
         timer.current = setTimeout(() => {
-            api.get<{ results: RawResults }>('/search', { params: { query } })
+            api.get<{ results: Partial<SearchResultsData> }>('/search', { params: { query } })
                 .then(({ data }) => {
                     if (id !== requestId.current) return;
                     const r = data.results;
-                    setHits([
-                        ...(r.tracks ?? []).map((t): SearchHit => ({ title: t.title, kind: 'track', url: t.url })),
-                        ...(r.users ?? []).map((u): SearchHit => ({ title: u.name, kind: 'artist', url: u.url })),
-                        ...(r.albums ?? []).map((a): SearchHit => ({ title: a.title, kind: 'album', url: a.url })),
-                        ...(r.playlists ?? []).map((p): SearchHit => ({ title: p.title, kind: 'playlist', url: p.url })),
-                    ]);
+                    setResults({
+                        tracks: r.tracks ?? [],
+                        users: r.users ?? [],
+                        albums: r.albums ?? [],
+                        playlists: r.playlists ?? [],
+                    });
                 })
-                .catch(() => setHits([]));
+                .catch(() => setResults(null));
         }, 300);
         return () => clearTimeout(timer.current);
     }, [query]);
 
-    return { query, setQuery, hits, clear: () => { setQuery(''); setHits([]); } };
+    return { query, setQuery, results, clear: () => { setQuery(''); setResults(null); } };
 }

@@ -82,7 +82,8 @@ function ContextMenuContent({
   return (
     <ContextMenuPrimitive.Portal>
       <ContextMenuPrimitive.Positioner
-        className="isolate z-50 outline-none"
+        // Above the search panel (z-900), which can spawn this menu.
+        className="isolate z-[1000] outline-none"
         align={align}
         alignOffset={alignOffset}
         side={side}
