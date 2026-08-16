@@ -27,7 +27,7 @@ export function SearchResults({ results }: { results: SearchResultsData }) {
             <div className="grid gap-5">
                 <Section title="Matching artists" count={results.users.length} empty="No artists found…">
                     {results.users.map((u) => (
-                        <Link key={u.id} href={u.url}
+                        <Link key={u.id} href={u.url} prefetch
                             className="flex items-center gap-2.5 rounded-sm px-1.5 py-1 no-underline transition-[background] duration-(--dur-fast) ease-(--ease-standard) hover:bg-surface-hover">
                             <Avatar src={u.avatars.small} name={u.name} size="sm" />
                             <span className="truncate font-text text-sm font-semibold text-heading">{u.name}</span>

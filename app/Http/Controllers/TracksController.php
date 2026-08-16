@@ -144,9 +144,12 @@ class TracksController extends Controller
         }
 
         // The Angular SPA logged a view through /api/web/tracks/{id}?log=true;
-        // with Inertia the page request itself is the visit.
-        ResourceLogItem::logItem('track', $track->id, ResourceLogItem::VIEW);
-        $track->view_count++;
+        // with Inertia the page request itself is the visit — except hover
+        // prefetches, which must not count as views.
+        if ($request->header('Purpose') !== 'prefetch') {
+            ResourceLogItem::logItem('track', $track->id, ResourceLogItem::VIEW);
+            $track->view_count++;
+        }
 
         $mapped = Track::mapPublicTrackShow($track);
         if ($mapped['is_downloadable'] != 1) {

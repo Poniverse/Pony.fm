@@ -33,6 +33,12 @@
 		root * "{$APP_PUBLIC_PATH}"
 		encode zstd br gzip
 
+		# Vite's built chunks are content-hashed, so browsers (and the
+		# background prefetcher) can cache them forever. The un-hashed
+		# manifest.json sits one level up at /assets/ and is untouched.
+		header /assets/assets/* Cache-Control "public, max-age=31536000, immutable"
+		header /assets/manifest.json Cache-Control "no-cache"
+
 		# Track uploads can be up to 600 MB (see also php upload_max_filesize).
 		request_body {
 			max_size 600MB

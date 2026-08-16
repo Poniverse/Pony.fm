@@ -54,7 +54,7 @@ function SidebarLink({ item }: { item: SidebarItem }) {
   if (item.href) {
     return /^[a-z]+:/.test(item.href)
       ? <a href={item.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
-      : <Link href={item.href} className={cls}>{inner}</Link>;
+      : <Link href={item.href} prefetch className={cls}>{inner}</Link>;
   }
   return <button type="button" onClick={item.onClick} className={cls}>{inner}</button>;
 }

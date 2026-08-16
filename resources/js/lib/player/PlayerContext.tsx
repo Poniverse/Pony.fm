@@ -32,13 +32,6 @@ export interface PlayerState {
     index: number;
     current: QueueEntry | null;
     isPlaying: boolean;
-    /** 0–1 through the current track */
-    progress: number;
-    /** 0–1 buffered */
-    buffered: number;
-    /** seconds */
-    elapsed: number;
-    duration: number;
     /** 0–100 */
     volume: number;
     repeatMode: RepeatMode;
@@ -63,6 +56,27 @@ export interface PlayerState {
 }
 
 const PlayerContext = React.createContext<PlayerState | null>(null);
+
+/** Playback position values, updated ~4×/second while audio plays. Kept out
+ *  of React state (and out of PlayerState) so the churn only re-renders the
+ *  components that opt in via usePlayerTime() — i.e. the player bar — rather
+ *  than every usePlayer() consumer in the tree. */
+export interface PlayerTime {
+    /** 0–1 through the current track */
+    progress: number;
+    /** 0–1 buffered */
+    buffered: number;
+    /** seconds */
+    elapsed: number;
+    duration: number;
+}
+
+interface PlayerTimeStore {
+    subscribe: (onChange: () => void) => () => void;
+    getSnapshot: () => PlayerTime;
+}
+
+const PlayerTimeContext = React.createContext<PlayerTimeStore | null>(null);
 
 /** sessionStorage: the queue is a per-tab listening session — localStorage
  *  would make tabs fight over it and resurrect stale queues. */
@@ -121,12 +135,24 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const [queue, setQueue] = React.useState<QueueEntry[]>([]);
     const [index, setIndex] = React.useState(0);
     const [isPlaying, setIsPlaying] = React.useState(false);
-    const [progress, setProgress] = React.useState(0);
-    const [buffered, setBuffered] = React.useState(0);
-    const [elapsed, setElapsed] = React.useState(0);
-    const [duration, setDuration] = React.useState(0);
     const [volume, setVolumeState] = React.useState(readVolumeCookie);
     const [repeatMode, setRepeatMode] = React.useState<RepeatMode>('off');
+
+    // Position/buffer values live in a subscription store, not React state —
+    // timeupdate fires ~4×/second and must not re-render the provider.
+    const timeRef = React.useRef<PlayerTime>({ progress: 0, buffered: 0, elapsed: 0, duration: 0 });
+    const timeListeners = React.useRef(new Set<() => void>());
+    const setTime = React.useCallback((patch: Partial<PlayerTime>) => {
+        timeRef.current = { ...timeRef.current, ...patch };
+        timeListeners.current.forEach((notify) => notify());
+    }, []);
+    const timeStore = React.useMemo<PlayerTimeStore>(() => ({
+        subscribe: (onChange) => {
+            timeListeners.current.add(onChange);
+            return () => timeListeners.current.delete(onChange);
+        },
+        getSnapshot: () => timeRef.current,
+    }), []);
 
     // Refs mirror state the audio event handlers need without re-binding.
     const stateRef = React.useRef({ queue, index, repeatMode });
@@ -162,11 +188,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         setRepeatMode(saved.repeatMode ?? 'off');
         elapsedRef.current = saved.elapsed || 0;
         pendingSeekRef.current = saved.elapsed || 0;
-        setElapsed(saved.elapsed || 0);
         const trackDuration = saved.duration || Number(track.duration) || 0;
         durationRef.current = trackDuration;
-        setDuration(trackDuration);
-        setProgress(trackDuration ? (saved.elapsed || 0) / trackDuration : 0);
+        setTime({
+            elapsed: saved.elapsed || 0,
+            duration: trackDuration,
+            progress: trackDuration ? (saved.elapsed || 0) / trackDuration : 0,
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -185,9 +213,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
             el.preload = 'auto';
             el.volume = readVolumeCookie() / 100;
             el.addEventListener('timeupdate', () => {
-                setElapsed(el.currentTime);
-                setDuration(el.duration || 0);
-                setProgress(el.duration ? el.currentTime / el.duration : 0);
+                setTime({
+                    elapsed: el.currentTime,
+                    duration: el.duration || 0,
+                    progress: el.duration ? el.currentTime / el.duration : 0,
+                });
                 elapsedRef.current = el.currentTime;
                 if (el.duration) durationRef.current = el.duration;
                 if (Date.now() - lastPersistRef.current > 5000) {
@@ -204,7 +234,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
             el.addEventListener('progress', () => {
                 try {
                     const b = el.buffered;
-                    setBuffered(b.length && el.duration ? b.end(b.length - 1) / el.duration : 0);
+                    setTime({ buffered: b.length && el.duration ? b.end(b.length - 1) / el.duration : 0 });
                 } catch {
                     // buffered ranges can be briefly unqueryable mid-load
                 }
@@ -259,10 +289,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         elapsedRef.current = seekTo;
         setQueue(tracks);
         setIndex(i);
-        setProgress(Number(track.duration) ? seekTo / Number(track.duration) : 0);
-        setElapsed(seekTo);
-        setBuffered(0);
-        setDuration(Number(track.duration) || 0);
+        setTime({
+            progress: Number(track.duration) ? seekTo / Number(track.duration) : 0,
+            elapsed: seekTo,
+            buffered: 0,
+            duration: Number(track.duration) || 0,
+        });
         el.src = src;
         void el.play();
         broadcastMediaSession(track);
@@ -357,10 +389,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
             }
             setQueue([]);
             setIndex(0);
-            setProgress(0);
-            setElapsed(0);
-            setBuffered(0);
-            setDuration(0);
+            setTime({ progress: 0, elapsed: 0, buffered: 0, duration: 0 });
             return;
         }
         // Removing the playing track: the next one takes its slot.
@@ -383,7 +412,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         const el = audio();
         if (!el || !el.duration) return;
         el.currentTime = fraction * el.duration;
-        setProgress(fraction);
+        setTime({ progress: fraction });
     };
 
     const setVolume = (v: number) => {
@@ -401,10 +430,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         index,
         current,
         isPlaying,
-        progress,
-        buffered,
-        elapsed,
-        duration,
         volume,
         repeatMode,
         playTracks,
@@ -422,11 +447,22 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         isCurrent: (id) => current != null && id != null && current.id === id,
     };
 
-    return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
+    return (
+        <PlayerContext.Provider value={value}>
+            <PlayerTimeContext.Provider value={timeStore}>{children}</PlayerTimeContext.Provider>
+        </PlayerContext.Provider>
+    );
 }
 
 export function usePlayer(): PlayerState {
     const ctx = React.useContext(PlayerContext);
     if (!ctx) throw new Error('usePlayer must be used within PlayerProvider');
     return ctx;
+}
+
+/** High-frequency playback position — subscribe only where it's rendered. */
+export function usePlayerTime(): PlayerTime {
+    const ctx = React.useContext(PlayerTimeContext);
+    if (!ctx) throw new Error('usePlayerTime must be used within PlayerProvider');
+    return React.useSyncExternalStore(ctx.subscribe, ctx.getSnapshot, ctx.getSnapshot);
 }

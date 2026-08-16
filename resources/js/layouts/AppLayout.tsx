@@ -14,7 +14,7 @@ import { Avatar } from '@/design-system/core/Avatar';
 import { IconButton } from '@/design-system/core/IconButton';
 import { Button } from '@/design-system/core/Button';
 import { Popover } from '@/design-system/feedback/Popover';
-import { PlayerProvider, usePlayer } from '@/lib/player/PlayerContext';
+import { PlayerProvider, usePlayer, usePlayerTime } from '@/lib/player/PlayerContext';
 import { CreditsDialog } from '@/components/CreditsDialog';
 import { TrackContextMenu } from '@/components/TrackContextMenu';
 import {
@@ -49,6 +49,42 @@ export function toDesignTrack(t: TrackSummary): DesignTrack {
         isVocal: t.is_vocal,
         stats: t.stats,
     };
+}
+
+/** The bottom player bar. Isolated so usePlayerTime()'s ~4 Hz updates while
+ *  audio plays re-render only this component, not the whole Shell. */
+function PlayerDock({ queueOpen, onToggleQueue }: { queueOpen: boolean; onToggleQueue: () => void }) {
+    const player = usePlayer();
+    const time = usePlayerTime();
+    const current = player.current;
+    return (
+        <PlayerBar
+            position="bottom"
+            track={current ? toDesignTrack(current) : undefined}
+            playing={player.isPlaying}
+            progress={time.progress}
+            buffered={time.buffered}
+            elapsed={formatDuration(time.elapsed)}
+            duration={formatDuration(time.duration || (current ? Number(current.duration) : 0))}
+            repeat={player.repeatMode !== 'off'}
+            repeatOne={player.repeatMode === 'one'}
+            onPlayPause={player.playPause}
+            onNext={player.playNext}
+            onPrev={player.playPrev}
+            onSeek={player.seekTo}
+            onToggleRepeat={player.toggleRepeat}
+            queueOpen={queueOpen}
+            onToggleQueue={onToggleQueue}
+            volume={player.volume}
+            onVolume={player.setVolume}
+            href={current?.url}
+            wrapNowPlaying={current ? (node) => (
+                <TrackContextMenu track={current} onPlayNow={() => player.playAt(player.index)}>
+                    {node}
+                </TrackContextMenu>
+            ) : undefined}
+        />
+    );
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
@@ -133,8 +169,6 @@ function Shell({ children }: { children: React.ReactNode }) {
             ? [{ title: 'Staff', items: [{ label: 'Admin area', icon: Settings, href: '/admin', active: section === '/admin' }] }]
             : []),
     ];
-
-    const current = player.current;
 
     const sidebar = (
         <SidebarNav
@@ -307,32 +341,7 @@ function Shell({ children }: { children: React.ReactNode }) {
                     ) : null}
                 </div>
 
-                <PlayerBar
-                    position="bottom"
-                    track={current ? toDesignTrack(current) : undefined}
-                    playing={player.isPlaying}
-                    progress={player.progress}
-                    buffered={player.buffered}
-                    elapsed={formatDuration(player.elapsed)}
-                    duration={formatDuration(player.duration || (current ? Number(current.duration) : 0))}
-                    repeat={player.repeatMode !== 'off'}
-                    repeatOne={player.repeatMode === 'one'}
-                    onPlayPause={player.playPause}
-                    onNext={player.playNext}
-                    onPrev={player.playPrev}
-                    onSeek={player.seekTo}
-                    onToggleRepeat={player.toggleRepeat}
-                    queueOpen={panel === 'queue'}
-                    onToggleQueue={() => togglePanel('queue')}
-                    volume={player.volume}
-                    onVolume={player.setVolume}
-                    href={current?.url}
-                    wrapNowPlaying={current ? (node) => (
-                        <TrackContextMenu track={current} onPlayNow={() => player.playAt(player.index)}>
-                            {node}
-                        </TrackContextMenu>
-                    ) : undefined}
-                />
+                <PlayerDock queueOpen={panel === 'queue'} onToggleQueue={() => togglePanel('queue')} />
             </div>
             <CreditsDialog open={creditsOpen} onClose={() => setCreditsOpen(false)} />
             <PlaylistDialog open={newPlaylistOpen} onClose={() => setNewPlaylistOpen(false)} onSaved={() => pinned.refresh()} />

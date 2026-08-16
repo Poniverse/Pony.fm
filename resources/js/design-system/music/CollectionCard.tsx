@@ -35,6 +35,6 @@ export function CollectionCard({ title, subtitle, cover, count, countLabel = 'tr
   );
 
   return href
-    ? <Link href={href} className={className}>{content}</Link>
+    ? <Link href={href} prefetch className={className}>{content}</Link>
     : <div onClick={onClick} className={className}>{content}</div>;
 }

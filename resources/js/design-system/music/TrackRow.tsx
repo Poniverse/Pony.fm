@@ -44,7 +44,7 @@ export function TrackRow({ track, playing, favourited, onPlay, onFavourite, href
       </span>
       <span className="grid min-w-0 flex-1 gap-0.5">
         {href ? (
-          <Link href={href} onClick={(e) => e.stopPropagation()}
+          <Link href={href} prefetch onClick={(e) => e.stopPropagation()}
             className={cn(titleClass, 'max-w-full justify-self-start no-underline hover:underline', 'static after:absolute after:inset-0')}>
             {t.title}
           </Link>
