@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import { List, Pause, Play, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react';
+import { ChevronUp, List, Pause, Play, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/design-system/primitives/popover';
 import { cn } from '@/lib/utils';
 import { Transport } from './Transport';
@@ -53,12 +53,18 @@ export function PlayerBar({ track, playing, progress = 0, buffered = 0, elapsed 
   const [volumeOpen, setVolumeOpen] = React.useState(false);
   return (
     <div className={cn(
-      'flex h-(--nowplaying-height) items-center gap-4 bg-surface-1 px-5 py-0',
+      'flex h-(--nowplaying-height) items-center gap-3 bg-surface-1 px-3 py-0 sm:gap-4 sm:px-5',
       position === 'top' && 'border-b border-border',
       position === 'bottom' && 'border-t border-border',
     )}>
-      <div className="flex flex-none items-center gap-0.5">
-        <IconButton icon={SkipBack} label="Previous" onClick={onPrev} />
+      {/* On phones the bar reduces to <expand> <info> <play> <skip> — the
+          transport cluster moves to the right (order-last), prev/time/extras
+          hide, and the pull-out sheet (onOpen) carries the full controls. */}
+      {onOpen ? (
+        <IconButton icon={ChevronUp} label="Now playing" className="-mr-1.5 flex-none sm:hidden" onClick={onOpen} />
+      ) : null}
+      <div className="flex flex-none items-center gap-0.5 max-sm:order-last">
+        <IconButton icon={SkipBack} label="Previous" className="max-sm:hidden" onClick={onPrev} />
         <IconButton icon={playing ? Pause : Play} label={playing ? 'Pause' : 'Play'} variant="filled" size="lg" round onClick={onPlayPause} />
         <IconButton icon={SkipForward} label="Next" onClick={onNext} />
       </div>
@@ -82,7 +88,7 @@ export function PlayerBar({ track, playing, progress = 0, buffered = 0, elapsed 
         );
         const titleClass = cn('truncate text-sm font-bold leading-snug text-heading', track && onOpen && 'cursor-pointer hover:underline');
         const cluster = (
-          <div className="flex min-w-0 flex-1 items-center gap-4">
+          <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
             {track && href ? (
               <Link href={href} className={artClass}>{artContent}</Link>
             ) : (
@@ -107,16 +113,17 @@ export function PlayerBar({ track, playing, progress = 0, buffered = 0, elapsed 
         );
         return wrapNowPlaying && track ? wrapNowPlaying(cluster) : cluster;
       })()}
-      <span className="flex-none font-mono text-xs text-muted-foreground">{elapsed} / {duration}</span>
-      <div className="flex flex-none items-center gap-0.5">
-        <IconButton icon={Shuffle} label="Shuffle" active={shuffle} onClick={onToggleShuffle} />
+      <span className="flex-none font-mono text-xs text-muted-foreground max-sm:hidden">{elapsed} / {duration}</span>
+      <div className="flex flex-none items-center gap-0.5 max-sm:hidden">
+        {onToggleShuffle ? <IconButton icon={Shuffle} label="Shuffle" active={shuffle} onClick={onToggleShuffle} /> : null}
         {onToggleQueue ? <IconButton icon={List} label="Queue" active={queueOpen} onClick={onToggleQueue} /> : null}
-        <IconButton icon={repeatOne ? Repeat1 : Repeat} label={repeatOne ? 'Repeat one' : 'Repeat'} active={repeat} onClick={onToggleRepeat} />
+        <IconButton icon={repeatOne ? Repeat1 : Repeat} label={repeatOne ? 'Repeat one' : 'Repeat'} active={repeat} className="max-sm:hidden" onClick={onToggleRepeat} />
         {onVolume != null ? (
           <Popover open={volumeOpen} onOpenChange={setVolumeOpen}>
-            {/* Glyph tracks the level: muted, quiet (≤ half) or loud. */}
+            {/* Glyph tracks the level: muted, quiet (≤ half) or loud. Hidden
+                on phones — hardware buttons own the volume there. */}
             <PopoverTrigger
-              render={<IconButton icon={volume === 0 ? VolumeX : (volume ?? 100) <= 50 ? Volume1 : Volume2} label="Volume" active={volumeOpen} />}
+              render={<IconButton icon={volume === 0 ? VolumeX : (volume ?? 100) <= 50 ? Volume1 : Volume2} label="Volume" active={volumeOpen} className="max-sm:hidden" />}
             />
             <PopoverContent side={position === 'bottom' ? 'top' : 'bottom'} align="center" sideOffset={8}
               className="grid w-auto place-items-center bg-surface-raised px-2.5 py-3.5">
@@ -126,7 +133,7 @@ export function PlayerBar({ track, playing, progress = 0, buffered = 0, elapsed 
             </PopoverContent>
           </Popover>
         ) : (
-          <IconButton icon={Volume2} label="Volume" />
+          <IconButton icon={Volume2} label="Volume" className="max-sm:hidden" />
         )}
       </div>
     </div>

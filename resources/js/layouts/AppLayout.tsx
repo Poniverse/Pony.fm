@@ -16,6 +16,7 @@ import { Button } from '@/design-system/core/Button';
 import { Popover } from '@/design-system/feedback/Popover';
 import { PlayerProvider, usePlayer, usePlayerTime } from '@/lib/player/PlayerContext';
 import { CreditsDialog } from '@/components/CreditsDialog';
+import { NowPlayingSheet } from '@/components/NowPlayingSheet';
 import { TrackContextMenu } from '@/components/TrackContextMenu';
 import {
     DropdownMenu,
@@ -57,7 +58,10 @@ function PlayerDock({ queueOpen, onToggleQueue }: { queueOpen: boolean; onToggle
     const player = usePlayer();
     const time = usePlayerTime();
     const current = player.current;
+    const isMobile = useMediaQuery(MOBILE_QUERY);
+    const [expanded, setExpanded] = React.useState(false);
     return (
+        <>
         <PlayerBar
             position="bottom"
             track={current ? toDesignTrack(current) : undefined}
@@ -77,13 +81,18 @@ function PlayerDock({ queueOpen, onToggleQueue }: { queueOpen: boolean; onToggle
             onToggleQueue={onToggleQueue}
             volume={player.volume}
             onVolume={player.setVolume}
-            href={current?.url}
+            // On phones, tapping the now-playing cluster pulls out the
+            // full-screen sheet instead of navigating to the track page.
+            href={isMobile ? undefined : current?.url}
+            onOpen={isMobile ? () => setExpanded(true) : undefined}
             wrapNowPlaying={current ? (node) => (
                 <TrackContextMenu track={current} onPlayNow={() => player.playAt(player.index)}>
                     {node}
                 </TrackContextMenu>
             ) : undefined}
         />
+        <NowPlayingSheet open={expanded && isMobile} onClose={() => setExpanded(false)} />
+        </>
     );
 }
 

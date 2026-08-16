@@ -29,6 +29,9 @@ export interface QueuePanelProps {
   /** Wrap a row (e.g. in a context menu). Must not alter layout. */
   wrapRow?: (row: React.ReactElement, index: number) => React.ReactNode;
   onClose?: () => void;
+  /** Overrides the default slide-in-column chrome (width, border) when
+   *  embedding the queue elsewhere, e.g. the mobile now-playing sheet. */
+  className?: string;
 }
 
 function QueueRow({ id, index, on, sortable, onClick, children }: {
@@ -53,7 +56,7 @@ function QueueRow({ id, index, on, sortable, onClick, children }: {
   );
 }
 
-export function QueuePanel({ items = [], itemIds, currentIndex, currentId, title = 'Up next', onPlay, onRemove, onReorder, wrapRow, onClose, footer }: QueuePanelProps) {
+export function QueuePanel({ items = [], itemIds, currentIndex, currentId, title = 'Up next', onPlay, onRemove, onReorder, wrapRow, onClose, footer, className }: QueuePanelProps) {
   const ids = React.useMemo(
     () => itemIds ?? items.map((t, i) => String(t.id ?? 'q') + '-' + i),
     [itemIds, items],
@@ -72,7 +75,7 @@ export function QueuePanel({ items = [], itemIds, currentIndex, currentId, title
   };
 
   return (
-    <aside className="flex w-[340px] flex-none flex-col border-l border-border bg-surface-1">
+    <aside className={cn('flex w-[340px] flex-none flex-col border-l border-border bg-surface-1', className)}>
       <div className="flex items-center gap-2 border-b border-border-subtle px-4 py-3.5">
         <span className="flex-1 text-2xs font-bold uppercase tracking-caps text-faint">{title}</span>
         <span className="font-mono text-2xs text-faint">{items.length}</span>
