@@ -42,16 +42,25 @@ CMD ["node", "bootstrap/ssr/ssr.js"]
 
 FROM dunglas/frankenphp:1-php8.4-alpine
 
-ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
+# ffmpeg 7.x images ship binaries in /bin and their libraries in /lib — the
+# /usr/local layout older tags used is gone. Keep the whole tree isolated
+# under /opt/ffmpeg and expose wrapper scripts that scope LD_LIBRARY_PATH to
+# ffmpeg's own process: a global LD_LIBRARY_PATH pointing at ffmpeg's bundled
+# libraries makes PHP load them too (its libxml2 shadows PHP's and breaks it).
+COPY --from=ffmpeg /bin/ffmpeg /bin/ffprobe /opt/ffmpeg/bin/
+COPY --from=ffmpeg /lib /opt/ffmpeg/lib
+RUN printf '#!/bin/sh\nexec env LD_LIBRARY_PATH=/opt/ffmpeg/lib /opt/ffmpeg/bin/ffmpeg "$@"\n' > /usr/local/bin/ffmpeg \
+ && printf '#!/bin/sh\nexec env LD_LIBRARY_PATH=/opt/ffmpeg/lib /opt/ffmpeg/bin/ffprobe "$@"\n' > /usr/local/bin/ffprobe \
+ && chmod 755 /usr/local/bin/ffmpeg /usr/local/bin/ffprobe
 
-COPY --from=ffmpeg /usr/local /usr/local
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/install-php-extensions
 COPY --from=atomicparsley_builder /tmp/atomicparsley/AtomicParsley /usr/local/bin/AtomicParsley
 
 RUN apk update
 
-## Common libraries required for ffmpeg & atomicparsley` to work
+## Common libraries required for atomicparsley to work (ffmpeg is
+## self-contained under /opt/ffmpeg and needs none of these)
 RUN apk add libgcc libstdc++ ca-certificates libcrypto3 libssl3 libgomp expat git
 RUN apk add sudo
 
