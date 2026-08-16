@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic.
+ * Copyright (C) 2026 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,20 +24,14 @@ use App\Models\Announcement;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
-class CreateAnnouncementCommand extends CommandBase
+class EditAnnouncementCommand extends CommandBase
 {
-    public const RULES = [
-        'title' => 'required|max:50',
-        'text_content' => 'nullable|max:500',
-        'announcement_type_id' => 'required|integer|in:1,2,3',
-        'start_time' => 'required|date',
-        'end_time' => 'required|date|after:start_time',
-    ];
-
+    private $_announcement;
     private $_input;
 
-    public function __construct(array $input)
+    public function __construct(int $announcementId, array $input)
     {
+        $this->_announcement = Announcement::find($announcementId);
         $this->_input = $input;
     }
 
@@ -46,7 +40,7 @@ class CreateAnnouncementCommand extends CommandBase
      */
     public function authorize()
     {
-        return Gate::allows('create-announcement');
+        return $this->_announcement !== null && Gate::allows('edit-announcement');
     }
 
     /**
@@ -55,13 +49,13 @@ class CreateAnnouncementCommand extends CommandBase
      */
     public function execute()
     {
-        $validator = Validator::make($this->_input, static::RULES);
+        $validator = Validator::make($this->_input, CreateAnnouncementCommand::RULES);
 
         if ($validator->fails()) {
             return CommandResponse::fail($validator);
         }
 
-        Announcement::create([
+        $this->_announcement->update([
             'title' => $this->_input['title'],
             'text_content' => $this->_input['text_content'] ?? '',
             'announcement_type_id' => $this->_input['announcement_type_id'],
@@ -69,6 +63,6 @@ class CreateAnnouncementCommand extends CommandBase
             'end_time' => $this->_input['end_time'],
         ]);
 
-        return CommandResponse::succeed(['message' => 'Announcement created!']);
+        return CommandResponse::succeed(['message' => 'Announcement updated!']);
     }
 }
