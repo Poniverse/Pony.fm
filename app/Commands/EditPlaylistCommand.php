@@ -67,7 +67,7 @@ class EditPlaylistCommand extends CommandBase
         }
 
         $this->_playlist->title = $this->_input['title'];
-        $this->_playlist->description = $this->_input['description'];
+        $this->_playlist->description = $this->_input['description'] ?? '';
         $this->_playlist->is_public = $this->_input['is_public'] == 'true';
 
         $this->_playlist->save();

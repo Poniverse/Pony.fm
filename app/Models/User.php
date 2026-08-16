@@ -376,7 +376,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         $email = $this->gravatar;
 
-        if (! strlen($email)) {
+        if ($email === null || $email === '') {
             $email = $this->email;
         }
 
@@ -395,7 +395,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         $email = $this->gravatar;
 
-        if (! strlen($email)) {
+        if ($email === null || $email === '') {
             $email = $this->email;
         }
 

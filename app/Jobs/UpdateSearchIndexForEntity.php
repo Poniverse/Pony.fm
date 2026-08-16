@@ -29,6 +29,9 @@ class UpdateSearchIndexForEntity extends Job implements ShouldQueue
 {
     use InteractsWithQueue;
 
+    /** Never index state that a rolled-back transaction could revert. */
+    public $afterCommit = true;
+
     protected array $elasticsearchBody;
     protected bool $removeFromIndex;
 

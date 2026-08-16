@@ -20,12 +20,48 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\View;
+use App\Models\Announcement;
+use App\Models\Track;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class HomeController extends Controller
 {
-    public function getIndex()
+    public function getIndex(Request $request): Response
     {
-        return view('home.index');
+        $recentQuery = Track::summary()
+            ->with(['genre', 'user', 'cover', 'user.avatar'])
+            ->whereIsLatest(true)
+            ->listed()
+            ->userDetails()
+            ->explicitFilter()
+            ->published()
+            ->orderByDesc('published_at')
+            ->whereHas('user', fn ($q) => $q->whereIsArchived(false))
+            ->take(12);
+
+        $recentTracks = $recentQuery->get()
+            ->map(fn (Track $track) => Track::mapPublicTrackSummary($track))
+            ->all();
+
+        $now = Carbon::now();
+        $announcement = Announcement::whereNotNull('start_time')
+            ->whereNotNull('end_time')
+            ->where('start_time', '<', $now)
+            ->where('end_time', '>', $now)
+            ->orderByDesc('start_time')
+            ->first();
+
+        return Inertia::render('home/index', [
+            'recentTracks' => $recentTracks,
+            'popularTracks' => array_slice(
+                Track::popular(30, $request->user()?->can_see_explicit_content ?? false),
+                0,
+                12
+            ),
+            'announcement' => $announcement,
+        ]);
     }
 }

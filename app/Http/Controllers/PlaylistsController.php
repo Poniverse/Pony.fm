@@ -29,17 +29,70 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class PlaylistsController extends Controller
 {
-    public function getIndex()
+    const PER_PAGE = 40;
+
+    /** sort key from the URL filter string => [column, direction] */
+    const SORTS = [
+        'favourites' => ['favourite_count', 'desc'],
+        'plays' => ['view_count', 'desc'],
+        'downloads' => ['download_count', 'desc'],
+        'alphabetical' => ['title', 'asc'],
+        'latest' => ['created_at', 'desc'],
+        'tracks' => ['track_count', 'desc'],
+    ];
+
+    public function getIndex(Request $request)
     {
-        return view('playlists.index');
+        $page = max(1, (int) $request->query('page', 1));
+
+        $sort = 'favourites';
+        foreach (explode('!', (string) $request->query('filter')) as $part) {
+            $tokens = explode('-', $part);
+            if ($tokens[0] === 'sort' && isset($tokens[1]) && array_key_exists($tokens[1], self::SORTS)) {
+                $sort = $tokens[1];
+            }
+        }
+
+        $query = Playlist::summary()
+            ->with('user', 'user.avatar', 'tracks', 'tracks.cover', 'tracks.user', 'tracks.user.avatar', 'tracks.album', 'tracks.album.user')
+            ->userDetails()
+            // A playlist with only one track is not much of a list.
+            ->where('track_count', '>', 1)
+            ->whereIsPublic(true);
+
+        $count = $query->count();
+        [$column, $direction] = self::SORTS[$sort];
+        $query->orderBy($column, $direction)->skip(($page - 1) * self::PER_PAGE)->take(self::PER_PAGE);
+
+        return Inertia::render('playlists/index', [
+            'playlists' => $query->get()->map(fn (Playlist $playlist) => Playlist::mapPublicPlaylistSummary($playlist))->all(),
+            'currentPage' => $page,
+            'totalPages' => (int) ceil($count / self::PER_PAGE),
+            'sort' => $sort,
+        ]);
     }
 
     public function getPlaylist(Request $request, $id, $slug)
     {
-        $playlist = Playlist::find($id);
+        $playlist = Playlist::with([
+            'tracks' => fn ($query) => $query->userDetails(),
+            'tracks.user',
+            'tracks.genre',
+            'tracks.cover',
+            'tracks.album',
+            'tracks.trackFiles',
+            'user',
+            'user.avatar',
+            'comments',
+            'comments.user',
+        ])
+            ->userDetails()
+            ->find($id);
+
         if (! $playlist || ! $playlist->canView($request->user())) {
             abort(404);
         }
@@ -48,7 +101,16 @@ class PlaylistsController extends Controller
             return Redirect::action([static::class, 'getPlaylist'], [$id, $playlist->slug]);
         }
 
-        return view('playlists.show');
+        ResourceLogItem::logItem('playlist', $playlist->id, ResourceLogItem::VIEW);
+        $playlist->view_count++;
+
+        $mapped = Playlist::mapPublicPlaylistShow($playlist);
+        if ($request->user()) {
+            $mapped['user_data']['is_pinned'] = $playlist->hasPinFor($request->user()->id);
+        }
+
+        return Inertia::render('playlists/show', ['playlist' => $mapped])
+            ->withViewData(['meta' => View::make('meta.playlist', ['playlist' => $playlist])->render()]);
     }
 
     public function getShortlink(Request $request, $id)

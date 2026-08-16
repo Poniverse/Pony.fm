@@ -46,7 +46,9 @@ abstract class Job
      */
     protected function beforeHandle()
     {
-        if (App::environment() !== 'testing') {
+        // Reconnecting inside an open transaction (sync queue jobs dispatched
+        // mid-transaction) would silently discard the uncommitted changes.
+        if (App::environment() !== 'testing' && DB::transactionLevel() === 0) {
             DB::reconnect();
         }
     }

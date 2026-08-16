@@ -107,6 +107,7 @@ class Album extends Model implements Searchable, Commentable, Favouritable
             'slug',
             'created_at',
             'cover_id',
+            'track_count',
             'comment_count',
             'download_count',
             'view_count',
@@ -156,7 +157,10 @@ class Album extends Model implements Searchable, Commentable, Favouritable
     {
         $trackIds = $this->tracks->pluck('id');
 
-        return TrackFile::join('tracks', 'tracks.current_version', '=', 'track_files.version')->whereIn('track_id', $trackIds);
+        return TrackFile::join('tracks', 'tracks.id', '=', 'track_files.track_id')
+            ->whereColumn('track_files.version', 'tracks.current_version')
+            ->whereIn('track_files.track_id', $trackIds)
+            ->select('track_files.*');
     }
 
     public function comments():HasMany
