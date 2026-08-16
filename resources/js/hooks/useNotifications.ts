@@ -9,8 +9,8 @@ export function useNotifications(enabled: boolean) {
 
     const refresh = useCallback(() => {
         if (!enabled) return;
-        api.get<NotificationData[]>('/notifications')
-            .then(({ data }) => setNotifications(Array.isArray(data) ? data : []))
+        api.get<{ notifications: NotificationData[] }>('/notifications')
+            .then(({ data }) => setNotifications(Array.isArray(data?.notifications) ? data.notifications : []))
             .catch(() => undefined);
     }, [enabled]);
 
