@@ -30,12 +30,31 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
+use TrackFilters;
 
 class TracksController extends Controller
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
-        return view('tracks.index');
+        $path = $request->path();
+        $filters = TrackFilters::parse($request->query('filter'));
+        $random = $path === 'tracks/random';
+
+        if ($path === 'tracks/popular') {
+            $filters['sort'] = 'plays';
+        }
+
+        $page = max(1, (int) $request->query('page', 1));
+        $listing = TrackFilters::listTracks($filters, $page, $random);
+
+        return Inertia::render('tracks/index', [
+            'tracks' => $listing['tracks'],
+            'currentPage' => $listing['current_page'],
+            'totalPages' => $listing['total_pages'],
+            'filters' => $filters,
+            'mode' => $path === 'tracks/popular' ? 'popular' : ($random ? 'random' : 'all'),
+        ]);
     }
 
     public function getEmbed(Request $request, $id)
@@ -115,7 +134,7 @@ class TracksController extends Controller
 
     public function getTrack(Request $request, $id, $slug)
     {
-        $track = Track::find($id);
+        $track = Track::userDetails()->withComments()->find($id);
         if (! $track || ! $track->canView($request->user())) {
             abort(404);
         }
@@ -124,12 +143,28 @@ class TracksController extends Controller
             return Redirect::action([static::class, 'getTrack'], [$id, $track->slug]);
         }
 
-        return view('tracks.show', ['track' => $track]);
+        // The Angular SPA logged a view through /api/web/tracks/{id}?log=true;
+        // with Inertia the page request itself is the visit.
+        ResourceLogItem::logItem('track', $track->id, ResourceLogItem::VIEW);
+        $track->view_count++;
+
+        $mapped = Track::mapPublicTrackShow($track);
+        if ($mapped['is_downloadable'] != 1) {
+            unset($mapped['formats']);
+        }
+
+        return Inertia::render('tracks/show', ['track' => $mapped])
+            ->withViewData(['meta' => View::make('meta.track', ['track' => $track])->render()]);
     }
 
     public function getEdit(Request $request, $id, $slug)
     {
-        return $this->getTrack($request, $id, $slug);
+        $track = Track::with('user')->find($id);
+        if (! $track) {
+            abort(404);
+        }
+
+        return Redirect::to('/'.$track->user->slug.'/account/tracks/edit/'.$track->id);
     }
 
     public function getShortlink(Request $request, $id)
@@ -151,7 +186,6 @@ class TracksController extends Controller
 
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
 
-        $response = response()->noContent(200);
         $filename = $trackFile->getFile();
 
         if (! file_exists($filename)) {
@@ -160,6 +194,13 @@ class TracksController extends Controller
 
         ResourceLogItem::logItem('track', $id, ResourceLogItem::PLAY, $trackFile->getFormat()['index']);
 
+        if (! config('ponyfm.use_sendfile')) {
+            return response()->file($filename, [
+                'Content-Type' => $trackFile->getFormat()['mime_type'],
+            ]);
+        }
+
+        $response = response()->noContent(200);
         $response->header('X-Accel-Redirect', $filename);
         $response->header('Content-Type', $trackFile->getFormat()['mime_type']);
         $response->setLastModified(\DateTimeImmutable::createFromFormat('U', (string) filemtime($filename)));
@@ -178,9 +219,15 @@ class TracksController extends Controller
         $trackFile = TrackFile::findOrFailByExtension($track->id, $extension);
         ResourceLogItem::logItem('track', $id, ResourceLogItem::DOWNLOAD, $trackFile->getFormat()['index']);
 
-        $response = response()->noContent(200);
         $filename = $trackFile->getFile();
 
+        if (! config('ponyfm.use_sendfile')) {
+            return response()->download($filename, $trackFile->getDownloadFilename(), [
+                'Content-Type' => $trackFile->getFormat()['mime_type'],
+            ]);
+        }
+
+        $response = response()->noContent(200);
         $response->header('X-Accel-Redirect', $filename);
         $response->header(
             'Content-Disposition',
@@ -189,7 +236,6 @@ class TracksController extends Controller
         $response->setLastModified(\DateTimeImmutable::createFromFormat('U', (string) filemtime($filename)));
         $response->isNotModified($request);
 
-        $response->header('Last-Modified', $time);
         $response->header('Content-Type', $trackFile->getFormat()['mime_type']);
 
         return $response;

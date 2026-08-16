@@ -2,7 +2,7 @@
 
 /**
  * Pony.fm - A community for pony fan music.
- * Copyright (C) 2016 Logic.
+ * Copyright (C) 2016 Feld0.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Track;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class StatsController extends Controller
 {
-    public function getIndex()
+    public function getIndex(Request $request, $id, $slug)
     {
-        return view('tracks.stats');
+        $track = Track::userDetails()->find($id);
+        if (! $track || ! $track->canView($request->user())) {
+            abort(404);
+        }
+
+        if ($track->slug != $slug) {
+            return Redirect::action([static::class, 'getIndex'], [$id, $track->slug]);
+        }
+
+        return Inertia::render('tracks/stats', [
+            'track' => Track::mapPublicTrackSummary($track),
+        ])->withViewData(['meta' => View::make('meta.track', ['track' => $track])->render()]);
     }
 }

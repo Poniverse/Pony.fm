@@ -287,6 +287,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'slug',
             'is_vocal',
             'is_explicit',
+            'is_listed',
             'created_at',
             'published_at',
             'duration',
@@ -440,7 +441,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                     ORDER BY weight DESC
                     LIMIT '.$count;
 
-                $countQuery = DB::select(DB::raw($queryText));
+                $countQuery = DB::select($queryText);
 
                 $results = [];
 
@@ -799,11 +800,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
      */
     public function canView($user)
     {
-        if ($this->isPublished() || $user->hasRole('admin')) {
+        if ($this->isPublished()) {
             return true;
         }
 
-        return $this->user_id == $user->id;
+        if ($user === null) {
+            return false;
+        }
+
+        return $user->hasRole('admin') || $this->user_id == $user->id;
     }
 
     /**
