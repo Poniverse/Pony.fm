@@ -20,12 +20,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\View;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 
 class UploaderController extends Controller
 {
-    public function getIndex()
+    public function getIndex(Request $request, $slug)
     {
-        return view('shared.null');
+        $user = User::whereSlug($slug)->whereNull('disabled_at')->firstOrFail();
+        Gate::authorize('edit', $user);
+
+        return Inertia::render('account/uploader', [
+            'accountSlug' => $user->slug,
+        ]);
     }
 }

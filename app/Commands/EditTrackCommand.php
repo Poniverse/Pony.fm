@@ -142,7 +142,7 @@ class EditTrackCommand extends CommandBase
                 $cover = $this->_input['cover'];
                 $track->cover_id = Image::upload($cover, $track->user_id)->id;
             } else {
-                if ($this->_input['remove_cover'] == 'true') {
+                if (isset($this->_input['remove_cover']) && $this->_input['remove_cover'] == 'true') {
                     $track->cover_id = null;
                 }
             }
