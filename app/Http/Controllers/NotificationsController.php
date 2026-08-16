@@ -67,8 +67,11 @@ class NotificationsController extends Controller
         }
     }
 
-    public function getEmailUnsubscribePage()
+    public function getEmailUnsubscribePage(Request $request)
     {
-        return view('shared.null');
+        return \Inertia\Inertia::render('account/email-unsubscribed', [
+            'unsubscribedMessageKey' => $request->query('unsubscribedMessageKey'),
+            'unsubscribedUser' => $request->query('unsubscribedUser'),
+        ]);
     }
 }
