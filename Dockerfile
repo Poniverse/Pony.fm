@@ -77,7 +77,11 @@ WORKDIR /app
 COPY --chown=www-data composer.json /app
 COPY --chown=www-data composer.lock /app
 
-RUN composer install --no-scripts --no-autoloader --ignore-platform-reqs
+# GitHub's API intermittently 504s on zipball downloads, and preferred-install
+# "dist" means there's no source fallback — retry before failing the build.
+RUN composer install --no-scripts --no-autoloader --ignore-platform-reqs \
+  || (sleep 15 && composer install --no-scripts --no-autoloader --ignore-platform-reqs) \
+  || (sleep 60 && composer install --no-scripts --no-autoloader --ignore-platform-reqs)
 
 COPY --chown=www-data . /app
 COPY --chown=www-data --from=assets_builder /app/public/assets /app/public/assets
