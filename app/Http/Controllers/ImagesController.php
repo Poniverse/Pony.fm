@@ -41,7 +41,6 @@ class ImagesController extends Controller
             abort(404);
         }
 
-        $response = response()->noContent(200);
         $filename = $image->getFile($coverType['id']);
 
         if (! is_file($filename)) {
@@ -50,6 +49,15 @@ class ImagesController extends Controller
             return redirect()->to($redirect);
         }
 
+        if (! config('ponyfm.use_sendfile')) {
+            return response()->file($filename, [
+                'Content-Type' => $image->mime,
+                'Content-Disposition' => "filename=\"ponyfm-i{$id}-{$type}.{$image->extension}\"",
+                'Cache-Control' => 'max-age='.(60 * 60 * 24 * 7),
+            ]);
+        }
+
+        $response = response()->noContent(200);
         $response->header('X-Accel-Redirect', $filename);
         $response->header('Content-Disposition', "filename=\"ponyfm-i{$id}-{$type}.{$image->extension}\"");
         $response->header('Content-Type', $image->mime);

@@ -20,22 +20,92 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\View;
+use App\Models\Album;
+use App\Models\Image;
+use App\Models\Playlist;
+use App\Models\Track;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 
 class ContentController extends Controller
 {
-    public function getTracks()
+    public function getTracks(Request $request, $slug, $id = null)
     {
-        return view('shared.null');
+        $user = $this->accountUser($slug);
+
+        $tracks = Track::summary()
+            ->where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(fn (Track $track) => Track::mapPrivateTrackSummary($track))
+            ->all();
+
+        return Inertia::render('account/tracks', [
+            'accountSlug' => $user->slug,
+            'tracks' => $tracks,
+            'editId' => $id !== null ? (int) $id : null,
+        ]);
     }
 
-    public function getAlbums()
+    public function getAlbums(Request $request, $slug, $id = null)
     {
-        return view('shared.null');
+        $user = $this->accountUser($slug);
+
+        $albums = Album::summary()
+            ->where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(fn (Album $album) => [
+                'id' => $album->id,
+                'title' => $album->title,
+                'slug' => $album->slug,
+                'url' => $album->url,
+                'created_at' => $album->created_at->format('c'),
+                'cover_url' => $album->getCoverUrl(Image::SMALL),
+                'track_count' => $album->track_count,
+            ])
+            ->all();
+
+        return Inertia::render('account/albums', [
+            'accountSlug' => $user->slug,
+            'albums' => $albums,
+            'editId' => $id !== null ? (int) $id : null,
+            'creating' => str_ends_with($request->path(), '/create'),
+        ]);
     }
 
-    public function getPlaylist()
+    public function getPlaylists(Request $request, $slug)
     {
-        return view('shared.null');
+        $user = $this->accountUser($slug);
+
+        $playlists = Playlist::summary()
+            ->with('user', 'tracks', 'tracks.cover', 'pins')
+            ->userDetails()
+            ->where('user_id', $user->id)
+            ->orderBy('title')
+            ->get()
+            ->map(function (Playlist $playlist) {
+                $mapped = Playlist::mapPublicPlaylistSummary($playlist);
+                $mapped['description'] = $playlist->description;
+                $mapped['is_pinned'] = $playlist->pins->isNotEmpty();
+
+                return $mapped;
+            })
+            ->all();
+
+        return Inertia::render('account/playlists', [
+            'accountSlug' => $user->slug,
+            'playlists' => $playlists,
+        ]);
+    }
+
+    private function accountUser(string $slug): User
+    {
+        $user = User::whereSlug($slug)->whereNull('disabled_at')->firstOrFail();
+        Gate::authorize('edit', $user);
+
+        return $user;
     }
 }

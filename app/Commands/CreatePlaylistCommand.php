@@ -65,7 +65,7 @@ class CreatePlaylistCommand extends CommandBase
         $playlist = new Playlist();
         $playlist->user_id = Auth::user()->id;
         $playlist->title = $this->_input['title'];
-        $playlist->description = $this->_input['description'];
+        $playlist->description = $this->_input['description'] ?? '';
         $playlist->is_public = $this->_input['is_public'] == 'true';
 
         $playlist->save();

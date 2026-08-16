@@ -24,29 +24,70 @@ use App\AlbumDownloader;
 use App\Models\Album;
 use App\Models\ResourceLogItem;
 use App\Models\Track;
-use Illuminate\Support\Facades\App;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 class AlbumsController extends Controller
 {
-    public function getIndex()
+    const PER_PAGE = 40;
+
+    public function getIndex(Request $request)
     {
-        return view('albums.index');
+        $page = max(1, (int) $request->query('page', 1));
+
+        $query = Album::summary()
+            ->with('user', 'user.avatar', 'cover')
+            ->userDetails()
+            // An album with only one track is not really an album.
+            ->where('track_count', '>', 1);
+
+        $count = $query->count();
+        $query->orderBy('title')->skip(($page - 1) * self::PER_PAGE)->take(self::PER_PAGE);
+
+        return Inertia::render('albums/index', [
+            'albums' => $query->get()->map(fn (Album $album) => Album::mapPublicAlbumSummary($album))->all(),
+            'currentPage' => $page,
+            'totalPages' => (int) ceil($count / self::PER_PAGE),
+        ]);
     }
 
-    public function getShow($id, $slug)
+    public function getShow(Request $request, $id, $slug)
     {
-        $album = Album::find($id);
+        $album = Album::with([
+            'tracks' => fn ($query) => $query->userDetails(),
+            'tracks.cover',
+            'tracks.genre',
+            'tracks.user',
+            'tracks.user.avatar',
+            'tracks.trackFiles',
+            'user',
+            'user.avatar',
+            'comments',
+            'comments.user',
+        ])
+            ->userDetails()
+            ->find($id);
+
         if (! $album) {
             abort(404);
         }
 
         if ($album->slug != $slug) {
-            return Redirect::action([AlbumsController::class, 'getAlbum'], [$id, $album->slug]);
+            return Redirect::action([static::class, 'getShow'], [$id, $album->slug]);
         }
 
-        return view('albums.show');
+        ResourceLogItem::logItem('album', $album->id, ResourceLogItem::VIEW);
+        $album->view_count++;
+
+        $mapped = Album::mapPublicAlbumShow($album);
+        if ($mapped['is_downloadable'] == 0) {
+            unset($mapped['formats']);
+        }
+
+        return Inertia::render('albums/show', ['album' => $mapped])
+            ->withViewData(['meta' => View::make('meta.album', ['album' => $album])->render()]);
     }
 
     public function getShortlink($id)
