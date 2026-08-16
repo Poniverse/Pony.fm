@@ -140,4 +140,18 @@ return [
      */
 
     'ffmpeg_prefix' => env('FFMPEG_PREFIX', 'ffmpeg'),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sendfile (X-Accel-Redirect)
+     |--------------------------------------------------------------------------
+     |
+     | Outside the local environment, audio streams, downloads and images
+     | are served by handing the file path to the fronting server
+     | (Caddy/nginx) via the X-Accel-Redirect header. Locally there is no
+     | server configured to intercept it, so PHP streams the files itself
+     | (Range-aware, so seeking still works).
+     */
+
+    'use_sendfile' => env('APP_ENV', 'production') !== 'local',
 ];

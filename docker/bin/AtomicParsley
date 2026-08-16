@@ -16,5 +16,7 @@ exec docker run --rm -i \
   -v "$PWD:$PWD" \
   -v /tmp:/tmp \
   -v /var/folders:/var/folders \
+  -v /private/var/folders:/private/var/folders \
+  -v /private/tmp:/private/tmp \
   -w "$PWD" \
   "$IMAGE" "$@"
