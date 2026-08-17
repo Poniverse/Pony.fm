@@ -25,7 +25,10 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./resources/js', import.meta.url)),
-        },
+        },blob/master/vite.config.ts
+    },
+    ssr: {
+        noExternal: true,
     },
     build: {
         rollupOptions: {
