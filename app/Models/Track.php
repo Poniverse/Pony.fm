@@ -500,8 +500,11 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             $processed[] = $trackModel;
         }
 
+        // Most popular first — the whereIn re-fetch loses the SQL ordering,
+        // and this re-sort used to be ascending, which surfaced the WEAKEST
+        // of the top N (home then sliced 12 of those).
         usort($processed, function ($a, $b) {
-            return $a['weight'] <=> $b['weight'];
+            return $b['weight'] <=> $a['weight'];
         });
 
         $processed = array_reverse($processed);
