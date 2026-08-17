@@ -141,9 +141,12 @@ class TrackFilters
                 WHERE track_id IS NOT NULL AND created_at > now() - INTERVAL \'1\' DAY
                 GROUP BY track_id
             ) trending'), 'tracks.id', '=', 'trending.track_id');
-            // Ordering by the output alias keeps DISTINCT (the show-song
-            // filter) happy — Postgres requires ORDER BY expressions to
-            // appear in the select list.
+            // The alias must go into the select via addSelect: get($columns)
+            // silently ignores its argument once a select list exists (and
+            // summary() always sets one). Ordering by the output alias keeps
+            // DISTINCT (the show-song filter) happy — Postgres requires
+            // ORDER BY expressions to appear in the select list.
+            $query->addSelect(\DB::raw('COALESCE(trending.weight, 0) AS trending_weight'));
             $query->orderByRaw('trending_weight DESC');
             $query->orderBy('published_at', 'desc');
         } else {
@@ -153,12 +156,8 @@ class TrackFilters
 
         $query->take(self::PER_PAGE)->skip(self::PER_PAGE * ($page - 1));
 
-        $columns = ! $random && $filters['sort'] === 'trending'
-            ? ['tracks.*', \DB::raw('COALESCE(trending.weight, 0) AS trending_weight')]
-            : ['tracks.*'];
-
         $tracks = [];
-        foreach ($query->get($columns) as $track) {
+        foreach ($query->get() as $track) {
             $tracks[] = Track::mapPublicTrackSummary($track);
         }
 
