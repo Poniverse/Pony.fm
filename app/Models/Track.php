@@ -286,6 +286,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     ];
 
     /**
+     * How much each interaction counts toward 24-hour popularity. Shared by
+     * the home page's "What's popular today" (Track::popular) and the browse
+     * page's trending sort (TrackFilters) so the two can never drift apart.
+     * Log types: 1 = view, 2 = download, 3 = play.
+     */
+    public const POPULARITY_WEIGHT_SQL =
+        "SUM(CASE log_type WHEN 1 THEN 0.1 WHEN 3 THEN 1 WHEN 2 THEN 2 ELSE 0 END)";
+
+    /**
      * Prepares a query builder object with typical fields used for a track
      * "tile" around the site and eager-loaded relations that are almost always
      * relevant.
@@ -448,10 +457,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
                 $queryText = '
                     SELECT track_id,
-                    SUM(CASE WHEN log_type = 1 THEN 0.1
-                        WHEN log_type = 3 THEN 1
-                        WHEN log_type = 2 THEN 2
-                        ELSE 0 END) AS weight
+                    '.self::POPULARITY_WEIGHT_SQL.' AS weight
                     FROM "resource_log_items"
                     WHERE track_id IS NOT NULL AND log_type IS NOT NULL AND "created_at" > now() - INTERVAL \'1\' DAY
                     '.$explicitFilter.'

@@ -130,13 +130,13 @@ class TrackFilters
         if ($random) {
             $query->inRandomOrder();
         } elseif ($filters['sort'] === 'trending') {
-            // Weighted engagement over the last 24 hours — the same formula
-            // as Track::popular on the home page (views 0.1, plays 1,
-            // downloads 2). Tracks with no recent activity fall back to
-            // newest-first below the trending ones.
+            // Weighted engagement over the last 24 hours — the exact same
+            // formula as Track::popular on the home page (they share
+            // Track::POPULARITY_WEIGHT_SQL). Tracks with no recent activity
+            // fall back to newest-first below the trending ones.
             $query->leftJoin(\DB::raw('(
                 SELECT track_id,
-                       SUM(CASE log_type WHEN 1 THEN 0.1 WHEN 3 THEN 1 WHEN 2 THEN 2 ELSE 0 END) AS weight
+                       '.Track::POPULARITY_WEIGHT_SQL.' AS weight
                 FROM resource_log_items
                 WHERE track_id IS NOT NULL AND created_at > now() - INTERVAL \'1\' DAY
                 GROUP BY track_id
