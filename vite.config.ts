@@ -25,8 +25,10 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./resources/js', import.meta.url)),
-        },blob/master/vite.config.ts
+        },
     },
+    // The ssr container runs bootstrap/ssr/ssr.js with no node_modules
+    // alongside it, so the server bundle has to be self-contained.
     ssr: {
         noExternal: true,
     },
