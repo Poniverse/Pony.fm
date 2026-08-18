@@ -190,6 +190,27 @@ class OpusFormatTest extends TestCase
         );
     }
 
+    public function testBackfillReEncodesInterruptedEncodes()
+    {
+        $this->callUploadWithParameters(['auto_publish' => false]);
+        $track = Track::findOrFail(1);
+        $track->ensureDirectoryExists();
+        File::put($track->trackFiles()->where('is_master', true)->first()->getFile(), 'fake-flac-data');
+
+        // A kill mid-ffmpeg leaves a truncated file with the row stuck at
+        // PROCESSING — the resume pass must re-encode, not bless the stump.
+        $opusFile = $track->trackFiles()->where('format', 'Opus')->firstOrFail();
+        File::put($opusFile->getFile(), 'truncated-partial-data');
+        $opusFile->status = TrackFile::STATUS_PROCESSING;
+        $opusFile->save();
+
+        Artisan::call('backfill:opus', ['--force' => true]);
+
+        $this->assertFileDoesNotExist($opusFile->getFile());
+        Bus::assertDispatchedSync(EncodeTrackFile::class);
+        $this->assertStringContainsString('1 encoded', Artisan::output());
+    }
+
     public function testBackfillLogsMissingMasterWithoutAborting()
     {
         $this->callUploadWithParameters(['auto_publish' => false]);

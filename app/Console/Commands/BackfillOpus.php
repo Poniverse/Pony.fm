@@ -100,14 +100,25 @@ class BackfillOpus extends Command
         // disk needs no encode — but heal row metadata left behind by an
         // interrupted or failed earlier run.
         if ($trackFile !== null && File::exists($trackFile->getFile())) {
-            if ((int) $trackFile->status !== TrackFile::STATUS_NOT_BEING_PROCESSED || $trackFile->filesize === null) {
-                $trackFile->status = TrackFile::STATUS_NOT_BEING_PROCESSED;
-                $trackFile->save();
-                $trackFile->updateFilesize();
-            }
-            $counts['skipped']++;
+            // EncodeTrackFile sets PROCESSING before running ffmpeg and only
+            // clears it after success, so PROCESSING alongside a file means
+            // the encode was killed mid-write and the file is truncated.
+            // Delete it and fall through to re-encode.
+            if ((int) $trackFile->status === TrackFile::STATUS_PROCESSING) {
+                if (! $isDryRun) {
+                    File::delete($trackFile->getFile());
+                }
+            } else {
+                if (! $isDryRun
+                    && ((int) $trackFile->status !== TrackFile::STATUS_NOT_BEING_PROCESSED || $trackFile->filesize === null)) {
+                    $trackFile->status = TrackFile::STATUS_NOT_BEING_PROCESSED;
+                    $trackFile->save();
+                    $trackFile->updateFilesize();
+                }
+                $counts['skipped']++;
 
-            return;
+                return;
+            }
         }
 
         // The encode source is always the master file — never a lossy
