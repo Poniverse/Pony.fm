@@ -238,6 +238,20 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'mime_type' => 'audio/mp4',
             'command' => '2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a alac {$target}',
         ],
+        // Opus lives in an Ogg container but takes the `.opus` extension:
+        // extension→format resolution is first-match-wins and `.ogg` belongs
+        // to Vorbis (see ALAC's `alac.m4a` for the same disambiguation).
+        // Tags are written by ffmpeg (stream copy) because the vorbiscomment
+        // tool behind updateTagsWithGetId3 can't write Opus streams.
+        'Opus' => [
+            'index' => 5,
+            'is_lossless' => false,
+            'extension' => 'opus',
+            'tag_format' => 'opus',
+            'tag_method' => 'updateTagsWithFfmpeg',
+            'mime_type' => 'audio/ogg',
+            'command' => '2>&1 -y -i {$source} -map 0:a -map_metadata -1 -codec:a libopus -b:a 128k -vbr on -ar 48000 -f ogg {$target}',
+        ],
     ];
 
     /**
@@ -272,6 +286,15 @@ class Track extends Model implements Searchable, Commentable, Favouritable
     ];
 
     /**
+     * How much each interaction counts toward 24-hour popularity. Shared by
+     * the home page's "What's popular today" (Track::popular) and the browse
+     * page's trending sort (TrackFilters) so the two can never drift apart.
+     * Log types: 1 = view, 2 = download, 3 = play.
+     */
+    public const POPULARITY_WEIGHT_SQL =
+        "SUM(CASE log_type WHEN 1 THEN 0.1 WHEN 3 THEN 1 WHEN 2 THEN 2 ELSE 0 END)";
+
+    /**
      * Prepares a query builder object with typical fields used for a track
      * "tile" around the site and eager-loaded relations that are almost always
      * relevant.
@@ -292,6 +315,10 @@ class Track extends Model implements Searchable, Commentable, Favouritable
             'published_at',
             'duration',
             'is_downloadable',
+            // getFileFor() builds "{id}-v{version}.{ext}" paths — without
+            // this column, summary-loaded models probe "-v." paths and the
+            // streams map suppresses every format that needs an is_file check.
+            'current_version',
             'genre_id',
             'track_type_id',
             'cover_id',
@@ -430,10 +457,7 @@ class Track extends Model implements Searchable, Commentable, Favouritable
 
                 $queryText = '
                     SELECT track_id,
-                    SUM(CASE WHEN log_type = 1 THEN 0.1
-                        WHEN log_type = 3 THEN 1
-                        WHEN log_type = 2 THEN 2
-                        ELSE 0 END) AS weight
+                    '.self::POPULARITY_WEIGHT_SQL.' AS weight
                     FROM "resource_log_items"
                     WHERE track_id IS NOT NULL AND log_type IS NOT NULL AND "created_at" > now() - INTERVAL \'1\' DAY
                     '.$explicitFilter.'
@@ -610,10 +634,16 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 'normal' => $track->getCoverUrl(Image::NORMAL),
                 'original' => $track->getCoverUrl(Image::ORIGINAL),
             ],
+            // Only advertise streams whose file actually exists: Opus is
+            // absent until the backfill reaches this track, and AAC/Vorbis
+            // are cacheable (deleted after upload, regenerated on demand).
+            // A client must never be offered a stream that would 418 — MP3
+            // is the only format guaranteed on disk.
             'streams' => [
+                'opus' => is_file($track->getFileFor('Opus')) ? $track->getStreamUrl('Opus') : null,
                 'mp3' => $track->getStreamUrl('MP3'),
-                'aac' => (! config('app.debug') || is_file($track->getFileFor('AAC'))) ? $track->getStreamUrl('AAC') : null,
-                'ogg' => (config('app.debug') || is_file($track->getFileFor('OGG Vorbis'))) ? $track->getStreamUrl('OGG Vorbis') : null,
+                'aac' => is_file($track->getFileFor('AAC')) ? $track->getStreamUrl('AAC') : null,
+                'ogg' => is_file($track->getFileFor('OGG Vorbis')) ? $track->getStreamUrl('OGG Vorbis') : null,
             ],
             'user_data' => $userData,
             'permissions' => [
@@ -1215,6 +1245,57 @@ class Track extends Model implements Searchable, Commentable, Favouritable
                 '<br /><br />',
                 $tagWriter->errors
             ));
+        }
+    }
+
+    /**
+     * Writes a TrackFile's tags with ffmpeg itself, via a stream copy (no
+     * re-encode). This is useful for Opus files, whose vorbis comments can't
+     * be written by the vorbiscomment tool that updateTagsWithGetId3 relies
+     * on. This function is called from updateTagsForTrackFile.
+     *
+     * @noinspection PhpUnusedPrivateMethodInspection
+     * @param string $format one of the format keys from the `$Formats` array
+     */
+    private function updateTagsWithFfmpeg(string $format)
+    {
+        $file = $this->getFileFor($format);
+        $tempFile = $file.'.tagging';
+
+        $tags = [
+            'title' => $this->title,
+            'artist' => $this->user->display_name,
+            'date' => (string) $this->year,
+            'genre' => $this->genre != null ? $this->genre->name : '',
+            'comment' => 'Downloaded from: https://pony.fm/',
+            'copyright' => '© '.$this->year.' '.$this->user->display_name,
+            'organization' => 'Pony.fm - https://pony.fm/',
+            'encoded_by' => 'https://pony.fm/',
+        ];
+
+        if ($this->album_id !== null) {
+            $tags['album'] = $this->album->title;
+            $tags['tracknumber'] = (string) $this->track_number;
+        }
+
+        $prefix = Config::get('ponyfm.ffmpeg_prefix');
+        if (str_contains($prefix, '$(pwd)')) {
+            $prefix = str_replace('$(pwd)', app()->basePath(), $prefix);
+        }
+
+        $command = $prefix.' 2>&1 -y -i "'.$file.'" -map 0:a -codec:a copy -map_metadata -1';
+        foreach ($tags as $key => $value) {
+            $command .= ' -metadata '.escapeshellarg($key.'='.$value);
+        }
+        $command .= ' -f ogg "'.$tempFile.'"';
+
+        External::execute($command);
+
+        if (\File::exists($tempFile) && \File::size($tempFile) > 0) {
+            \File::move($tempFile, $file);
+        } else {
+            Log::error('Track #'.$this->id.': ffmpeg failed to write tags for '.$format.'!');
+            \File::delete($tempFile);
         }
     }
 

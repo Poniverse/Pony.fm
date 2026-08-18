@@ -79,8 +79,10 @@ interface PlayerTimeStore {
 const PlayerTimeContext = React.createContext<PlayerTimeStore | null>(null);
 
 /** sessionStorage: the queue is a per-tab listening session — localStorage
- *  would make tabs fight over it and resurrect stale queues. */
-const QUEUE_STORAGE_KEY = 'pfm-queue-v1';
+ *  would make tabs fight over it and resurrect stale queues.
+ *  v2: persisted entries snapshot the full streams map, so the Opus rollout
+ *  bumps the key to discard queues that predate the format. */
+const QUEUE_STORAGE_KEY = 'pfm-queue-v2';
 
 interface PersistedQueue {
     queue: QueueEntry[];
@@ -118,16 +120,22 @@ export function isAudioPlaying(): boolean {
     return !!liveAudio && !liveAudio.paused && !liveAudio.ended;
 }
 
+/** Streaming prefers Opus, falling back to AAC then MP3 for clients that
+ *  can't play it (pre-18.4 Safari / older Apple devices). The server only
+ *  advertises streams whose file exists, so a track the Opus backfill
+ *  hasn't reached yet (streams.opus === null) degrades to MP3 here rather
+ *  than erroring. */
 function pickSource(track: TrackSummary, audio: HTMLAudioElement): string | null {
-    const candidates: [string | undefined, string][] = [
+    const candidates: [string | null | undefined, string][] = [
+        [track.streams.opus, 'audio/ogg; codecs="opus"'],
+        [track.streams.aac, 'audio/mp4; codecs="mp4a.40.2"'],
         [track.streams.mp3, 'audio/mpeg'],
         [track.streams.ogg, 'audio/ogg; codecs="vorbis"'],
-        [track.streams.aac, 'audio/mp4; codecs="mp4a.40.2"'],
     ];
     for (const [url, mime] of candidates) {
         if (url && audio.canPlayType(mime)) return url;
     }
-    return track.streams.mp3 ?? track.streams.ogg ?? track.streams.aac ?? null;
+    return track.streams.mp3 ?? track.streams.opus ?? track.streams.ogg ?? track.streams.aac ?? null;
 }
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {

@@ -45,7 +45,9 @@ export interface TrackSummary {
     genre: GenreRef | null;
     track_type_id: number;
     covers: { thumbnail: string; small: string; normal: string; original: string };
-    streams: { mp3?: string; aac?: string; ogg?: string };
+    /** Only streams whose file exists are non-null; opus is absent until
+     *  the backfill reaches the track. mp3 is always available. */
+    streams: { opus?: string | null; mp3?: string; aac?: string | null; ogg?: string | null };
     user_data?: { stats: Record<string, number>; is_favourited: boolean };
     permissions?: { delete: boolean; edit: boolean };
     album?: { title: string; url: string };

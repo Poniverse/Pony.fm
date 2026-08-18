@@ -60,4 +60,4 @@ app:
 
 # Pass-through to artisan, e.g. `just artisan migrate`
 artisan *args:
-    php artisan {{args}}
+    PATH="$PWD/docker/bin:$PATH" php artisan {{args}}
