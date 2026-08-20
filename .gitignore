@@ -1,6 +1,5 @@
 /vendor
 /node_modules
-/public/build
 /public/hot
 /logs
 Homestead.yaml
@@ -10,7 +9,6 @@ Homestead.yaml
 _ide_helper.php
 .idea
 npm-debug.log
-yarn-error.log
 /composer.phar
 .phpstorm.meta.php
 .phpunit.result.cache

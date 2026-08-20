@@ -14,8 +14,6 @@ export default defineConfig({
                 'resources/css/embed.css',
             ],
             ssr: 'resources/js/ssr.tsx',
-            // The legacy gulp pipeline still owns public/build until the
-            // embed widget is ported; Vite gets its own directory.
             buildDirectory: 'assets',
             refresh: true,
         }),

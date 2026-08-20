@@ -58,8 +58,4 @@ class AccountController extends Controller
         return redirect()->to(config('poniverse.urls')['register']);
     }
 
-    public function getNotifications()
-    {
-        return view('shared.null');
-    }
 }

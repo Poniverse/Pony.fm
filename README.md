@@ -54,52 +54,24 @@ To begin development, do the following:
 
 5. Run `vagrant ssh`, `cd /vagrant`, and `php artisan poni:setup`.
 
-6. Follow the instructions in the "Asset pipeline" section below to set that up.
-
 Once everything is up and running, you'll be able to access the site at [http://ponyfm-dev.poni/](http://ponyfm-dev.poni/). You can access the PostgreSQL database by logging into **ponyfm-dev.poni:5432** with the username **homestead** and the password **secret**. Pony.fm's database is named **homestead**.
 
 Asset pipeline
 --------------
 
-Pony.fm uses [gulp](http://gulpjs.com/) to mange its asset pipeline.
+Frontend assets are built with [Vite](https://vitejs.dev/). Install
+dependencies with `pnpm install`, then run `pnpm dev` while developing
+(or `pnpm build` for a production build).
 
-**In macOS**, you must have XCode Command Line Tools installed. This may be downloaded at [https://developer.apple.com/download/more/?=command%20line%20tools](https://developer.apple.com/download/more/?=command%20line%20tools)
+### Email templates
 
-**Important:** Run `npm` and `gulp` from your host machine and not within the VM. You must first have it installed globally:
+Email templates are plain Blade views:
 
-    npm install -g gulp
-
-And then install all of the required local packages by invoking:
-
-    npm install
-
-Finally, to compile and serve the assets in real time, run the following (and leave it running while you develop):
-
-    gulp watch
-
-
-### Developing email templates
-
-Pony.fm's email templates are based on the Sass version of
-[ZURB's Foundation for Emails](http://foundation.zurb.com/emails/docs/index.html)
-framework, including their "Inky" markup language. This tooling takes  the pain
-out of HTML email markup - see their site for the full documentation.
-
-Email templates live in two directories:
-
-- [`resources/emails/src`](resources/emails/src), for HTML emails
+- [`resources/views/emails/html`](resources/views/emails/html), for HTML emails
 - [`resources/views/emails/plaintext`](resources/views/emails/plaintext), for plaintext emails
 
-**Be aware that plaintext emails are vanilla Blade templates!** Foundation is only used for HTML emails.
-
-HTML emails are marked up as Handlebars templates which compile into Blade templates -
-Pony.fm's asset pipeline automatically does this for you. Variables meant for
-Blade need to be escaped with a backslash in the `.hbs` files (like so: `\{{ $myVariableName }}`).
-
-During development, email templates will also be written to `public/build/emails`
-to save you from resending emails to see how they look. For example, if you're
-working on the "new track notification" template, you'll be able to view it in your browser at
-[http://ponyfm-dev.poni/build/emails/notifications/new-track.blade.php.html](http://ponyfm-dev.poni/build/emails/notifications/new-track.blade.php.html).
+In dev, sent mail is caught by Mailpit (started by `docker compose up -d`) and
+viewable at [http://localhost:8025](http://localhost:8025).
 
 
 Configuring the servers

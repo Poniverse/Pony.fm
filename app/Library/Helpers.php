@@ -30,16 +30,6 @@ class Helpers
         return strtolower($value);
     }
 
-    public static function template($template)
-    {
-        echo file_get_contents('templates/'.$template);
-    }
-
-    public static function angular($expression)
-    {
-        return '{{'.$expression.'}}';
-    }
-
     public static function formatBytes($bytes, $precision = 2)
     {
         if ($bytes == 0) {
