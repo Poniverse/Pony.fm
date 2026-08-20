@@ -4,7 +4,6 @@
 # Optional profiles:
 #   --profile queue    redis, for QUEUE_CONNECTION=redis
 #   --profile app      the app itself, built from the production image
-#   --profile assets   gulp watcher in a Node 12 container
 
 services:
   # Host ports come from .env (compose reads it for ${VAR} interpolation), so
@@ -95,29 +94,7 @@ services:
     profiles: ["app"]
     platform: linux/amd64
 
-  # Escape hatch if your host Node is too new for the gulp 4 / webpack 1
-  # toolchain: runs the asset watcher in the same Node the prod image uses.
-  assets:
-    image: node:12
-    # phantomjs (via uncss) and the imagemin binaries only ship x86-64 glibc
-    # builds, so this must be amd64 debian — emulated on Apple Silicon.
-    platform: linux/amd64
-    profiles: ["assets"]
-    working_dir: /app
-    volumes:
-      - .:/app
-      # Keep the container's node_modules separate from the host's — native
-      # binaries (imagemin etc.) aren't portable between macOS and alpine.
-      - assets-node-modules:/app/node_modules
-    # --ignore-engines: sass declares node>=14 but the prod image builds with
-    # node 12 + npm, which only warns; yarn would hard-fail without this.
-    command: sh -c "yarn install --ignore-engines && yarn dev"
-    ports:
-      - "35729:35729" # livereload
-      - "61999:61999" # webpack-dev-server (script tags point here in debug)
-
 volumes:
   postgres-data:
   elasticsearch-data:
   redis-data:
-  assets-node-modules:

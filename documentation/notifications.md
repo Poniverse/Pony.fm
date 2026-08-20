@@ -67,7 +67,7 @@ Adding new notification delivery methods
    Use how email delivery is implemented as a guide.
 
 2. Add UI for subscribing and unsubscribing to the delivery method to the
-   [`account settings area`](../public/templates/account/settings.html).
+   account settings area (`resources/js/pages/account`).
    
 
 Architectural notes

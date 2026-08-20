@@ -39,8 +39,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Vite builds into public/assets; public/build belongs to gulp until
-        // the legacy frontend is removed.
         Vite::useBuildDirectory('assets');
 
         Validator::resolver(function ($translator, $data, $rules, $messages) {

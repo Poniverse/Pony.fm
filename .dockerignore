@@ -6,4 +6,3 @@ vendor/
 .env
 public/assets/
 bootstrap/ssr/
-public/build/

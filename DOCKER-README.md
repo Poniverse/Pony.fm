@@ -4,10 +4,10 @@ Pony.fm runs in a container in production (FrankenPHP running Laravel
 Octane, plus ffmpeg + AtomicParsley all baked into one image — see
 `Dockerfile`). For local development the recommended setup is:
 
-- **Dependencies in Docker** — `docker compose up -d` gives you Postgres and
-  Elasticsearch (and optionally redis).
-- **The app on the host** — `composer serve` for PHP, `yarn dev` for the
-  asset watcher.
+- **Dependencies in Docker** — `docker compose up -d` gives you Postgres,
+  Elasticsearch, and Mailpit (and optionally redis).
+- **The app on the host** — `composer serve` for PHP, `pnpm dev` for the
+  Vite dev server.
 - **ffmpeg & AtomicParsley via `docker run`** — shims in `docker/bin/` mean
   you don't need either installed locally.
 
@@ -15,9 +15,7 @@ Octane, plus ffmpeg + AtomicParsley all baked into one image — see
 
 - Docker (Desktop or equivalent)
 - PHP 8.4+ with composer
-- Node 12 with yarn — the gulp 4 / webpack 1 asset toolchain predates modern
-  Node; use nvm/volta, or skip local Node entirely and use the `assets`
-  compose profile below.
+- Node 26 with pnpm (see `.nvmrc`; `corepack enable` gets you pnpm)
 
 You do **not** need ffmpeg, AtomicParsley, Postgres, or Elasticsearch
 installed on your machine.
@@ -25,12 +23,12 @@ installed on your machine.
 ## Quick start
 
 If you have [`just`](https://github.com/casey/just), `just setup` runs all of
-the below, then it's `just dev` (deps + PHP server) and `just assets` (the
-watcher) in a second terminal — see `just --list` for the rest. By hand:
+the below, then `just dev` starts everything (deps + PHP server + Vite) —
+see `just --list` for the rest. By hand:
 
 ```sh
 cp .env.example .env       # works as-is, no editing needed
-docker compose up -d       # postgres + elasticsearch
+docker compose up -d       # postgres + elasticsearch + mailpit
 
 composer install
 php artisan migrate --seed
@@ -38,26 +36,15 @@ php artisan migrate --seed
 composer serve             # app on http://localhost:8000
 ```
 
-And in a second terminal, the asset watcher (leave it running while you
+And in a second terminal, the Vite dev server (leave it running while you
 develop):
 
 ```sh
-yarn install
-yarn dev
+pnpm install
+pnpm dev
 ```
 
-If your host Node is too new for the old gulp toolchain (Node 17+ breaks
-webpack 1), run the watcher in a Node 12 container instead — `just dev` does
-this automatically when it detects a too-new host Node:
-
-```sh
-docker compose --profile assets up
-```
-
-The container is x86-64 Debian (emulated on Apple Silicon) because the email
-pipeline's phantomjs/imagemin dependencies only ship x86-64 glibc binaries.
-The first start runs a full `yarn install` and is slow; after that the
-`node_modules` volume is reused.
+Mail sent in dev is caught by Mailpit — browse it at http://localhost:8025.
 
 ## How ffmpeg & AtomicParsley work in dev
 

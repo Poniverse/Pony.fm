@@ -93,8 +93,6 @@ Route::get('playlist/{id}-{slug}', [PlaylistsController::class, 'getPlaylist']);
 Route::get('p{id}', [PlaylistsController::class, 'getShortlink'])->where('id', '\d+');
 Route::get('p{id}/dl.{extension}', [PlaylistsController::class, 'getDownload']);
 
-Route::get('notifications', [AccountController::class, 'getNotifications']);
-
 Route::prefix('notifications/email')->group(function () {
     Route::get('/unsubscribe/{subscriptionKey}', [NotificationsController::class, 'getEmailUnsubscribe'])->name('email:unsubscribe');
     Route::get('/unsubscribed', [NotificationsController::class, 'getEmailUnsubscribePage'])->name('email:confirm-unsubscribed');
