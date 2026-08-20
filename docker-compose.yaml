@@ -43,6 +43,14 @@ services:
     volumes:
       - redis-data:/data
 
+  # Local mail catcher: SMTP on ${MAIL_PORT}, web UI on ${MAILPIT_UI_PORT}.
+  # Point the app at it with MAIL_MAILER=smtp (see .env.example).
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "${MAIL_PORT:-1025}:1025"
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+
   # Prod-like smoke test: runs the baked image (FrankenPHP/Octane + ffmpeg +
   # AtomicParsley in one container), no code mounts.
   #   docker compose --profile app up -d --build
