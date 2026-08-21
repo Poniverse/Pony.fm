@@ -333,7 +333,8 @@ function Shell({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <div className="flex min-h-0 flex-1">
-                    <main className="min-w-0 flex-1 overflow-y-auto">
+                    {/* scroll-region: Inertia restores this pane's scroll position on back/forward and resets it on new visits. */}
+                    <main scroll-region="" className="min-w-0 flex-1 overflow-y-auto">
                         {children}
                     </main>
                     {panel === 'queue' ? (
