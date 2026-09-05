@@ -125,9 +125,9 @@ class Comment extends Model
     }
 
     /**
-     * @return Commentable
+     * @return Commentable|null null if the commented-on resource has been deleted
      */
-    public function getResourceAttribute():Commentable
+    public function getResourceAttribute():?Commentable
     {
         if ($this->track_id !== null) {
             return $this->track;
@@ -151,11 +151,11 @@ class Comment extends Model
     /**
      * Returns the class name of the object that this is a comment on.
      *
-     * @return string
+     * @return string|null null if the commented-on resource has been deleted
      */
-    public function getResourceClass():string
+    public function getResourceClass():?string
     {
-        return get_class($this->resource);
+        return $this->resource !== null ? get_class($this->resource) : null;
     }
 
     public function delete()
