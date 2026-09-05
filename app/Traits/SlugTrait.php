@@ -30,6 +30,17 @@ trait SlugTrait
         $this->attributes['title'] = $value;
     }
 
+    /**
+     * Rows written before makeNonemptySlug() existed can hold an empty slug,
+     * which breaks {id}-{slug} URL generation.
+     */
+    public function getSlugAttribute()
+    {
+        $slug = $this->attributes['slug'] ?? '';
+
+        return $slug === '' ? '-' : $slug;
+    }
+
     private static function makeNonemptySlug($title)
     {
         $slug = Str::slug($title);
