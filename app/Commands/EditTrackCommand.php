@@ -74,9 +74,9 @@ class EditTrackCommand extends CommandBase
             'genre_id' => 'required|exists:genres,id',
             'cover' => 'image|mimes:png,jpeg|min_width:350|min_height:350',
             'track_type_id' => 'required|exists:track_types,id|not_in:'.TrackType::UNCLASSIFIED_TRACK,
-            'cover_id' => 'exists:images,id',
-            'album_id' => 'exists:albums,id',
-            'username' => 'exists:users,username',
+            'cover_id' => 'nullable|exists:images,id',
+            'album_id' => 'nullable|exists:albums,id',
+            'username' => 'nullable|exists:users,username',
         ];
 
         if (isset($this->_input['track_type_id']) && $this->_input['track_type_id'] == TrackType::OFFICIAL_TRACK_REMIX) {
