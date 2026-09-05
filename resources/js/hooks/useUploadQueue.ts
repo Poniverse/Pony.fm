@@ -35,7 +35,14 @@ export function useUploadQueue(userSlug: string) {
                     setTimeout(() => pollStatus(key, trackId), 5000);
                 }
             })
-            .catch((e) => patch(key, { status: 'error', error: e.response?.data?.error ?? 'Processing failed.' }));
+            .catch((e) => {
+                // A dropped poll request says nothing about the track; keep polling.
+                if (!e.response) {
+                    setTimeout(() => pollStatus(key, trackId), 5000);
+                    return;
+                }
+                patch(key, { status: 'error', error: e.response.data?.error ?? 'Processing failed.' });
+            });
     };
 
     const upload = (file: File) => {
@@ -46,9 +53,13 @@ export function useUploadQueue(userSlug: string) {
         form.append('track', file);
         form.append('user_slug', userSlug);
 
+        let fullySent = false;
+
         api.post<{ id?: number; track_id?: number }>('/tracks/upload', form, {
             onUploadProgress: (e) => {
-                if (e.total) patch(key, { progress: Math.round((e.loaded / e.total) * 100) });
+                if (!e.total) return;
+                if (e.loaded >= e.total) fullySent = true;
+                patch(key, { progress: Math.round((e.loaded / e.total) * 100) });
             },
         })
             .then(({ data }) => {
@@ -61,8 +72,20 @@ export function useUploadQueue(userSlug: string) {
                 setTimeout(() => pollStatus(key, trackId), 5000);
             })
             .catch((e) => {
-                const errors = e.response?.data?.errors as Record<string, string[]> | undefined;
-                const message = errors ? Object.values(errors).flat().join(' ') : (e.response?.data?.message ?? 'Upload failed.');
+                // No response means the connection dropped. Only when the whole
+                // file went out could the server have processed the upload
+                // anyway; a partial or failed send can't have created a track.
+                if (!e.response) {
+                    patch(key, {
+                        status: 'error',
+                        error: fullySent
+                            ? 'Connection interrupted. The upload may still have completed. Check your tracks before uploading this file again.'
+                            : 'Connection failed. Check your connection and try again.',
+                    });
+                    return;
+                }
+                const errors = e.response.data?.errors as Record<string, string[]> | undefined;
+                const message = errors ? Object.values(errors).flat().join(' ') : (e.response.data?.message ?? 'Upload failed.');
                 patch(key, { status: 'error', error: message });
             });
     };

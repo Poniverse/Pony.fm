@@ -91,7 +91,15 @@ class Notification extends Model
 
     public function toArray()
     {
-        if (is_null($this->activity->resource)) {
+        $resource = $this->activity->resource;
+
+        if (is_null($resource)) {
+            return '';
+        }
+
+        // A comment notification whose commented-on resource (track, album,
+        // playlist, or profile) has since been deleted cannot be rendered.
+        if ($resource instanceof Comment && is_null($resource->resource)) {
             return '';
         }
 

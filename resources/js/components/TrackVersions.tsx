@@ -52,8 +52,13 @@ export function TrackVersions({ trackId }: { trackId: number }) {
                 }
             })
             .catch((e) => {
+                // A dropped poll request says nothing about the track; keep polling.
+                if (!e.response) {
+                    timer.current = setTimeout(pollStatus, 5000);
+                    return;
+                }
                 setUploading(null);
-                setError(e.response?.data?.error ?? 'Processing the new version failed.');
+                setError(e.response.data?.error ?? 'Processing the new version failed.');
             });
     };
 
@@ -62,14 +67,27 @@ export function TrackVersions({ trackId }: { trackId: number }) {
         setUploading('sending');
         const fd = new FormData();
         fd.append('track', file);
-        api.post('/tracks/' + trackId + '/version-upload', fd)
+        let fullySent = false;
+        api.post('/tracks/' + trackId + '/version-upload', fd, {
+            onUploadProgress: (e) => {
+                if (e.total && e.loaded >= e.total) fullySent = true;
+            },
+        })
             .then(() => {
                 setUploading('processing');
                 timer.current = setTimeout(pollStatus, 5000);
             })
             .catch((e) => {
                 setUploading(null);
-                const errors = e.response?.data?.errors as Record<string, string[]> | undefined;
+                // No response means the connection dropped. Only when the whole
+                // file went out could the server have processed it anyway.
+                if (!e.response) {
+                    setError(fullySent
+                        ? 'Connection interrupted. The upload may still have completed. Refresh to check for the new version before uploading again.'
+                        : 'Connection failed. Check your connection and try again.');
+                    return;
+                }
+                const errors = e.response.data?.errors as Record<string, string[]> | undefined;
                 setError(errors ? Object.values(errors).flat().join(' ') : 'Upload failed.');
             });
     };
