@@ -151,7 +151,16 @@ class EditTrackCommand extends CommandBase
         $oldid = null;
 
         if (isset($this->_input['username'])) {
-            $newid = User::where('username', $this->_input['username'])->first()->id;
+            // Usernames are not unique: imports create archived placeholder
+            // accounts that can share a username with a real one. Prefer the
+            // active, non-disabled account, then the oldest, so a save can't
+            // silently reassign the track to a duplicate.
+            $newid = User::where('username', $this->_input['username'])
+                ->orderBy('is_archived')
+                ->orderByRaw('(disabled_at IS NOT NULL)')
+                ->orderBy('id')
+                ->first()
+                ->id;
 
             if ($track->user_id != $newid) {
                 $oldid = $track->user_id;

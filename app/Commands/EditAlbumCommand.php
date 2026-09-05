@@ -97,7 +97,16 @@ class EditAlbumCommand extends CommandBase
         }
 
         if (isset($this->_input['username'])) {
-            $newid = User::where('username', $this->_input['username'])->first()->id;
+            // Usernames are not unique: imports create archived placeholder
+            // accounts that can share a username with a real one. Prefer the
+            // active, non-disabled account, then the oldest, so a save can't
+            // silently reassign the album to a duplicate.
+            $newid = User::where('username', $this->_input['username'])
+                ->orderBy('is_archived')
+                ->orderByRaw('(disabled_at IS NOT NULL)')
+                ->orderBy('id')
+                ->first()
+                ->id;
 
             if ($this->_album->user_id != $newid) {
                 $this->_album->user_id = $newid;
