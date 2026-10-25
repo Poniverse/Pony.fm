@@ -10,7 +10,7 @@
     "license": "AGPL",
     "type": "project",
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "laravel/framework": "^13.0",
         "codescale/ffmpeg-php": "^3.2",
         "guzzlehttp/guzzle": "^7.8",
@@ -83,7 +83,7 @@
     "config": {
         "preferred-install": "dist",
         "platform": {
-            "php": "8.4.0"
+            "php": "8.5.0"
         },
         "allow-plugins": {
             "php-http/discovery": true
