@@ -40,7 +40,7 @@ EXPOSE 13714
 
 CMD ["node", "bootstrap/ssr/ssr.js"]
 
-FROM dunglas/frankenphp:1-php8.4-alpine
+FROM dunglas/frankenphp:1-php8.5-alpine
 
 # ffmpeg 7.x images ship binaries in /bin and their libraries in /lib — the
 # /usr/local layout older tags used is gone. Keep the whole tree isolated

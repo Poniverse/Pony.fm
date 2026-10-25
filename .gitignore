@@ -1,5 +1,6 @@
 /vendor
 /node_modules
+/.pnpm-store
 /public/hot
 /logs
 Homestead.yaml
